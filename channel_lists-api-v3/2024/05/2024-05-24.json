@@ -1,0 +1,136 @@
+[
+  {
+    "poster": {
+      "poster_name": "Will",
+      "poster_handle": "wdowd"
+    },
+    "time_stamp": "2024-05-24 08:52:09",
+    "text": "No, the lists api does not accept emails as identifiers for a record. The response object for your creates should tell you what the recordIds are which you can then pipe into the v3 add endpoint"
+  },
+  {
+    "poster": {
+      "poster_name": "Luigi Cutolo",
+      "poster_handle": "luigi.cutolo"
+    },
+    "time_stamp": "2024-05-24 08:54:05",
+    "edited": {
+      "time_stamp": "2024-05-24 08:54:35"
+    },
+    "text": "But I need to handle also case in which the `POST /crm/v3/objects/contacts/` throws 409 because a contact with that email already exists. In that case from where can I get the already created contact id?"
+  },
+  {
+    "poster": {
+      "poster_name": "Luigi Cutolo",
+      "poster_handle": "luigi.cutolo"
+    },
+    "time_stamp": "2024-05-24 08:54:25",
+    "text": "can I get a contact by email?"
+  },
+  {
+    "poster": {
+      "poster_name": "Will",
+      "poster_handle": "wdowd"
+    },
+    "time_stamp": "2024-05-24 09:08:39",
+    "text": "Yes, I believe there is a crm endpoint which you can fetch records by email from (but I don't have it in my back pocket to link to you unfortunately)"
+  },
+  {
+    "poster": {
+      "poster_name": "Will",
+      "poster_handle": "wdowd"
+    },
+    "time_stamp": "2024-05-24 09:09:24",
+    "text": "`contacts/v1/contacts/email/<mailto:abc@xyz.com|abc@xyz.com>` might be right?"
+  },
+  {
+    "poster": {
+      "poster_name": "Luigi Cutolo",
+      "poster_handle": "luigi.cutolo"
+    },
+    "time_stamp": "2024-05-24 09:14:02",
+    "text": "Yes, it seems to be this one:\n<https://legacydocs.HubSpot.com/docs/methods/contacts/get_contact_by_email>\nit really seems in contacts v3 apis there is no way to get contact by email. Is a pity that is not allowed anymore, and I don't know if I should rely on a legacy v1 api that could go \"sunset\" like the lists v1."
+  },
+  {
+    "poster": {
+      "poster_name": "Will",
+      "poster_handle": "wdowd"
+    },
+    "time_stamp": "2024-05-24 09:16:07",
+    "text": "Pretty sure it'll get added to v3 as soon as someone surfaces the gap to the team if you have a path there. I can try to surface internally if you like"
+  },
+  {
+    "poster": {
+      "poster_name": "Will",
+      "poster_handle": "wdowd"
+    },
+    "time_stamp": "2024-05-24 09:16:58",
+    "text": "Looks like there's also a batch endpoint to save you some calls `contacts/v1/contacts/email/batch` which accepts [email1,email2,email3, ...] in the body"
+  },
+  {
+    "poster": {
+      "poster_name": "Luigi Cutolo",
+      "poster_handle": "luigi.cutolo"
+    },
+    "time_stamp": "2024-05-24 09:18:59",
+    "text": "or maybe I could use POST*`/crm/v3/objects/contacts/batch/read`*\n<https://developers.HubSpot.com/docs/api/crm/contacts>\nwhich allows to specify a unique property"
+  },
+  {
+    "poster": {
+      "poster_name": "Will",
+      "poster_handle": "wdowd"
+    },
+    "time_stamp": "2024-05-24 09:20:28",
+    "text": "That might work; not 100% sure if email is technically a unique property or not to enable that functionality"
+  },
+  {
+    "poster": {
+      "poster_name": "Luigi Cutolo",
+      "poster_handle": "luigi.cutolo"
+    },
+    "time_stamp": "2024-05-24 09:21:22",
+    "text": "Doc says yes :smile:\nFor the batch read endpoint, you can use the optional `idProperty` parameter to retrieve contacts by `email` or a custom <https://developers.HubSpot.com/docs/api/crm/properties#create-unique-identifier-properties|unique identifier property>"
+  },
+  {
+    "poster": {
+      "poster_name": "Luigi Cutolo",
+      "poster_handle": "luigi.cutolo"
+    },
+    "time_stamp": "2024-05-24 09:21:59",
+    "edited": {
+      "time_stamp": "2024-05-24 09:22:51"
+    },
+    "text": "another really strange thing I found in the POST `/crm/v3/objects/contacts/` is that if the contact already exists (returns 409), in the response there is an error message with the contact recordId, but is not sent back as property. But I don't think I can rely on an error message to avoid one additional call"
+  },
+  {
+    "poster": {
+      "poster_name": "Luigi Cutolo",
+      "poster_handle": "luigi.cutolo"
+    },
+    "time_stamp": "2024-05-24 09:22:23",
+    "text": "I should extract the id from a string, not the proper way :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Will",
+      "poster_handle": "wdowd"
+    },
+    "time_stamp": "2024-05-24 09:23:05",
+    "text": "Hah. Ok well its a common enough use case that either documenting it explciitly or standing up an endpoint which does the sugar for you is probably worthwhile"
+  },
+  {
+    "poster": {
+      "poster_name": "Will",
+      "poster_handle": "wdowd"
+    },
+    "time_stamp": "2024-05-24 09:23:37",
+    "text": "I pinged the team that owns that part of the system"
+  },
+  {
+    "poster": {
+      "poster_name": "Luigi Cutolo",
+      "poster_handle": "luigi.cutolo"
+    },
+    "time_stamp": "2024-05-24 09:24:40",
+    "text": "ok, cool!\nIn the meanwhile I think I will go for the POST*`/crm/v3/objects/contacts/batch/read`*\nthanks a lot for your help :wink:"
+  }
+]

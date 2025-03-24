@@ -1,0 +1,1359 @@
+[
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2018-07-17 04:08:34",
+    "edited": {
+      "time_stamp": "2018-07-17 07:03:30"
+    },
+    "text": "I can send a `dyct` to a macro like `{{ macro( dyct ) }}`\nbut can't send a string `{{ macro( string ) }}` (I got null)\nI have to quote the string `{{ macro( \"{{ string }}\" }}`\n\nis that on purpose?",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2018-07-17 06:53:21"
+      },
+      {
+        "time_stamp": "2018-07-17 06:55:12"
+      },
+      {
+        "time_stamp": "2018-07-17 07:00:46"
+      },
+      {
+        "time_stamp": "2018-07-17 07:04:45"
+      },
+      {
+        "time_stamp": "2018-07-17 07:11:45"
+      }
+    ]
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-07-17 06:53:21",
+    "edited": {
+      "time_stamp": "2018-07-17 06:54:00"
+    },
+    "text": "weird. maybe it’s because dicts are arrays and not strings or integers and because of it they are treated differently?"
+  },
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2018-07-17 06:55:12",
+    "edited": {
+      "time_stamp": "2018-07-17 06:55:37"
+    },
+    "text": "Sure, but doesn't have too much logic for me.\nI think parsing a string should been handled in the same way too"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-07-17 07:00:46",
+    "edited": {
+      "time_stamp": "2018-07-17 07:01:33"
+    },
+    "text": "agreed. We had a similar issue to this recently, another dev here solved it/worked around it and he’s out today so I’m not really sure. maybe you can do that array trick in reverse some how"
+  },
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2018-07-17 07:04:45",
+    "text": "I mean, the issue is solved if you use the second notation `{{ macro( \"{{ string }}\" }}` is just that when I forget about that I usually put just the string without quotes and then all my macro is broken :grin:"
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-07-17 07:11:45",
+    "text": "not certain why it works, but glad it’s not that rediculous of a solution"
+  },
+  {
+    "poster": {
+      "poster_name": "Christine Austin",
+      "poster_handle": "caustin"
+    },
+    "time_stamp": "2018-07-17 07:37:50",
+    "text": "In the older version of the Design manager, I have a choice module in a custom module that’s using ‘export_to_template_context=True’, but as of last week, it seems I’m no longer able to access those values. Was something changed?",
+    "reply_count": 8,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2018-07-17 07:40:32"
+      },
+      {
+        "time_stamp": "2018-07-17 07:42:50"
+      },
+      {
+        "time_stamp": "2018-07-17 08:26:27"
+      },
+      {
+        "time_stamp": "2018-07-17 08:36:20"
+      },
+      {
+        "time_stamp": "2018-07-17 08:38:22"
+      },
+      {
+        "time_stamp": "2018-07-17 08:38:34"
+      },
+      {
+        "time_stamp": "2018-07-17 08:43:03"
+      },
+      {
+        "time_stamp": "2018-07-17 08:43:22"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2018-07-17 07:40:32",
+    "edited": {
+      "time_stamp": "2018-07-17 07:41:22"
+    },
+    "text": "thats correct, on the new IDE you can't defined fields (choices, or any other fields by HubL), because those will been set to `overrideable=FALSE` so they are useless in the CM env."
+  },
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2018-07-17 07:42:50",
+    "edited": {
+      "time_stamp": "2018-07-17 07:43:35"
+    },
+    "text": "<https://designers.HubSpot.com/docs/modules/reference>\nSo if you can't set a select with the new field type (for example, because you generate the select dynamically ), I suggest move that code to a `{% macro %}` and call it at the template level"
+  },
+  {
+    "poster": {
+      "poster_name": "Christine Austin",
+      "poster_handle": "caustin"
+    },
+    "time_stamp": "2018-07-17 08:26:27",
+    "edited": {
+      "time_stamp": "2018-07-17 08:26:37"
+    },
+    "text": "But wouldn’t I still need a choice module? I am generating the choices dynamically through a hubDB table, but in order for those to be selectable in the template, wouldn’t i need a choice module anyway?"
+  },
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2018-07-17 08:36:20",
+    "edited": {
+      "time_stamp": "2018-07-17 08:36:48"
+    },
+    "text": "You can put the HubL code in the HTML wrap of any widget (or even in the head of the template), thats the only way to can have a dynamic choice field now :disappointed:"
+  },
+  {
+    "poster": {
+      "poster_name": "Christine Austin",
+      "poster_handle": "caustin"
+    },
+    "time_stamp": "2018-07-17 08:38:22",
+    "text": "Do you mind screenshotting/showing a dummy example? (I think i get what your saying..) :sweat_smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Christine Austin",
+      "poster_handle": "caustin"
+    },
+    "time_stamp": "2018-07-17 08:38:34",
+    "text": "And I appreciate the help"
+  },
+  {
+    "text": "<@U7ADCU3BM> uploaded a file: <https://HubSpotdev.slack.com/files/U7ADCU3BM/FBS0BRJN6/2018-07-17_16_40_44-design_manager___HubSpot.png|Head of the template on the right sidebar>",
+    "time_stamp": "2018-07-17 08:42:18"
+  },
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2018-07-17 08:43:03",
+    "text": "(you can expand that textarea to full width to work more confortable on the \"expand\" link right before the textarea"
+  },
+  {
+    "poster": {
+      "poster_name": "Christine Austin",
+      "poster_handle": "caustin"
+    },
+    "time_stamp": "2018-07-17 08:43:22",
+    "text": "Ah I see, ill try that, thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-07-17 09:31:54",
+    "text": "anyone know if HubL supports shorthand(ternary) if statements?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-17 09:33:08",
+    "text": "Do inline if else expressions not work?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-07-17 09:34:12",
+    "text": "what do you mean by inline?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-17 09:34:59",
+    "text": "Hi guys :slightly_smiling_face:\n```\n&lt;form id=\"form_id\" method=\"get\"&gt;\n   \n    &lt;div&gt;\n        &lt;div&gt;\n        \t&lt;input name=\"airline_name\" type=\"text\" id=\"search-by\" class=\"autocomplete\" placeholder=\"Search by Airline\"&gt;\n    \t\t&lt;/div&gt;\n        &lt;input id=\"submit-button\" type=\"submit\" value=\"search\"&gt;\n    &lt;/div&gt;\n    \n\t&lt;/form&gt;\n  \n  {% set queryparam = \"\" %}\n  \n  {% if request.query_dict.airline_name == \"\" %}\n    {% set queryparam = queryparam ~ \"&amp;type=\"~request.query_dict.type|urlencode %}\n\t{% endif %}\n  {% if request.query_dict.airline_name != \"\" %}\n    {% set queryparam = queryparam ~ request.query_dict.type|urlencode~\"&amp;airline_name__icontains=\"~request.query_dict.airline_name|urlencode %}\n\t{% endif %}\n\t{% if request.query_dict.airline_name != \"\" %}\n    {% set queryparam = queryparam ~ \"&amp;airline_name__icontains=\"~request.query_dict.airline_name|urlencode %}\n\t{% endif %}\n```\nI'm trying to build a search feature that pulls results from my HubDB when a user searches for that name. Has anyone built a search feature before? The one above is throwing errors preventing me from publishing, but nothing seems obviously wrong :thinking_face:",
+    "reply_count": 44,
+    "reply_users_count": 6,
+    "replies": [
+      {
+        "time_stamp": "2018-07-17 09:35:17"
+      },
+      {
+        "time_stamp": "2018-07-17 09:36:39"
+      },
+      {
+        "time_stamp": "2018-07-17 09:40:13"
+      },
+      {
+        "time_stamp": "2018-07-17 09:40:44"
+      },
+      {
+        "time_stamp": "2018-07-17 09:40:46"
+      },
+      {
+        "time_stamp": "2018-07-17 09:41:19"
+      },
+      {
+        "time_stamp": "2018-07-17 09:42:05"
+      },
+      {
+        "time_stamp": "2018-07-17 09:42:39"
+      },
+      {
+        "time_stamp": "2018-07-17 09:42:41"
+      },
+      {
+        "time_stamp": "2018-07-17 09:43:05"
+      },
+      {
+        "time_stamp": "2018-07-17 09:43:06"
+      },
+      {
+        "time_stamp": "2018-07-17 09:43:09"
+      },
+      {
+        "time_stamp": "2018-07-17 09:43:38"
+      },
+      {
+        "time_stamp": "2018-07-17 09:44:16"
+      },
+      {
+        "time_stamp": "2018-07-17 09:44:35"
+      },
+      {
+        "time_stamp": "2018-07-17 09:44:41"
+      },
+      {
+        "time_stamp": "2018-07-17 09:45:00"
+      },
+      {
+        "time_stamp": "2018-07-17 09:45:05"
+      },
+      {
+        "time_stamp": "2018-07-17 09:45:11"
+      },
+      {
+        "time_stamp": "2018-07-17 09:45:52"
+      },
+      {
+        "time_stamp": "2018-07-17 09:45:59"
+      },
+      {
+        "time_stamp": "2018-07-17 09:46:10"
+      },
+      {
+        "time_stamp": "2018-07-17 09:46:46"
+      },
+      {
+        "time_stamp": "2018-07-17 09:47:27"
+      },
+      {
+        "time_stamp": "2018-07-17 09:47:28"
+      },
+      {
+        "time_stamp": "2018-07-17 09:47:31"
+      },
+      {
+        "time_stamp": "2018-07-17 09:48:12"
+      },
+      {
+        "time_stamp": "2018-07-17 09:51:29"
+      },
+      {
+        "time_stamp": "2018-07-17 09:53:00"
+      },
+      {
+        "time_stamp": "2018-07-17 09:55:04"
+      },
+      {
+        "time_stamp": "2018-07-17 10:03:13"
+      },
+      {
+        "time_stamp": "2018-07-17 10:03:14"
+      },
+      {
+        "time_stamp": "2018-07-17 10:03:52"
+      },
+      {
+        "time_stamp": "2018-07-17 10:07:22"
+      },
+      {
+        "time_stamp": "2018-07-17 10:07:34"
+      },
+      {
+        "time_stamp": "2018-07-17 10:07:44"
+      },
+      {
+        "time_stamp": "2018-07-17 10:08:31"
+      },
+      {
+        "time_stamp": "2018-07-17 10:09:17"
+      },
+      {
+        "time_stamp": "2018-07-17 10:09:26"
+      },
+      {
+        "time_stamp": "2018-07-17 10:09:51"
+      },
+      {
+        "time_stamp": "2018-07-17 10:10:00"
+      },
+      {
+        "time_stamp": "2018-07-17 10:10:35"
+      },
+      {
+        "time_stamp": "2018-07-17 10:10:37"
+      },
+      {
+        "time_stamp": "2018-07-17 10:10:55"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "James Davies",
+      "poster_handle": "james"
+    },
+    "time_stamp": "2018-07-17 09:35:17",
+    "text": "<@U25PYL3Q8> Do you know of anything?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-17 09:35:32",
+    "text": "<http://jinja.pocoo.org/docs/2.10/templates/#if-expression>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-17 09:36:10",
+    "text": "`{% \"YES\" if test else \"NO\" %}`",
+    "reply_count": 8,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2018-07-17 09:43:24"
+      },
+      {
+        "time_stamp": "2018-07-17 09:53:25"
+      },
+      {
+        "time_stamp": "2018-07-17 09:54:11"
+      },
+      {
+        "time_stamp": "2018-07-17 09:54:42"
+      },
+      {
+        "time_stamp": "2018-07-17 09:55:04"
+      },
+      {
+        "time_stamp": "2018-07-17 09:55:18"
+      },
+      {
+        "time_stamp": "2018-07-17 09:55:34"
+      },
+      {
+        "time_stamp": "2018-07-17 09:55:59"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2018-07-17 09:36:30",
+    "text": "oo, never tried that"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-07-17 09:36:39",
+    "edited": {
+      "time_stamp": "2018-07-17 09:40:56"
+    },
+    "text": "HubSpot has a default site search module you could look at, also <@U6GNQ7JBU> is a Search God, and his search lair is <#C9LPMCT35|site-search-feedback> in ask politely for his wisdom and he will bestow it"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-17 09:37:04",
+    "text": "Hopefully it works, not sure"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-17 09:37:18",
+    "text": "If not, add an issue here: <https://github.com/HubSpot/jinjava/issues>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-07-17 09:38:29",
+    "text": "I will give it a whirl"
+  },
+  {
+    "text": "<@U7SL518D6> uploaded a file: <https://HubSpotdev.slack.com/files/U7SL518D6/FBT2SD38X/the_more_you_know.gif|the more you know.gif>",
+    "time_stamp": "2018-07-17 09:38:29"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 09:40:13",
+    "text": "I see your problem :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-17 09:40:39",
+    "text": "It's best to search the Jinja docs first for core HubL functionality and hope that Jinjava has already ported over that behavior. If not you can see if there is already an issue up for it in the Jinjava repo and add a comment or file a new issue"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 09:40:44",
+    "text": "you’re not querying for “&amp;type=“~request.query_dict.type"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2018-07-17 09:40:46",
+    "text": "request.query_dict.type"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-17 09:41:19",
+    "text": "The `type` is for the filter select dropdown though, right? :thinking_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-17 09:42:05",
+    "text": "Oh I see, my second `if`, removed that but no joy"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2018-07-17 09:42:39",
+    "text": "I think this line is not right"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2018-07-17 09:42:41",
+    "text": "{% set queryparam = queryparam ~ request.query_dict.type|urlencode~\"&amp;airline_name__icontains=\"~request.query_dict.airline_name|urlencode %}"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2018-07-17 09:43:05",
+    "text": "*    {% set queryparam = queryparam ~ request.query_dict.type|urlencode~\"&amp;airline_name__icontains=\"~request.query_dict.airline_name|urlencode %}*"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-17 09:43:06",
+    "text": "New code:\n```\n{% if request.query_dict.airline_name == \"\" %}\n    {% set queryparam = queryparam ~ request.query_dict|urlencode %}\n\t{% endif %}\n  {% if request.query_dict.airline_name != \"\" %}\n    {% set queryparam = queryparam ~ request.query_dict|urlencode~\"&amp;airline_name__icontains=\"~request.query_dict.airline_name|urlencode %}\n\t{% endif %}\n\t{% if request.query_dict.airline_name != \"\" %}\n    {% set queryparam = queryparam ~ \"&amp;airline_name__icontains=\"~request.query_dict.airline_name|urlencode %}\n\t{% endif %}\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2018-07-17 09:43:09",
+    "text": "LOL How do you slack"
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2018-07-17 09:43:24",
+    "text": "I can confirm this magic works."
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-17 09:43:38",
+    "text": "Still getting the following error:\n```\nBadRequestException: error when listing rows for datatable 844770 for portal 490937: Invalid value for filter 'icontains'\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2018-07-17 09:44:16",
+    "text": "request.query_dict.type|urlencode~"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2018-07-17 09:44:35",
+    "text": "I think that should be removed, you are inserting just the type into that with no query"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 09:44:41",
+    "text": "that’s what I said!"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-17 09:45:00",
+    "text": "Remove it from all `if` statements?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2018-07-17 09:45:05",
+    "text": "set queryparam = queryparam ~ \"airline_name__icontains"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2018-07-17 09:45:11",
+    "text": "is how that line should start I am pretty sure"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2018-07-17 09:45:52",
+    "text": "LOL <@U4RP6AGV9> is correct, if you want to insert the type"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2018-07-17 09:45:59",
+    "text": "I'm correct if you don't want to insert the type into the query"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2018-07-17 09:46:10",
+    "text": "but that line in your second if statement is the one that isn't right"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 09:46:46",
+    "text": "You can try debugging this way too… I cleaned up the queries so if there’s nothing in the url it won’t show ```{% set queryparam = \"\" %}\n\n{% if request.query_dict.airline_name &amp;&amp; request.query_dict.airline_name != \"\" %}\n    {% set airline_query = \"airline_name__icontains=\"~request.query_dict.airline_name|urlencode %}\n{% endif %}\n{% if request.query_dict.type &amp;&amp; request.query_dict.type != \"\" %}\n        {% set type_query = \"type__icontains=\"~request.query_dict.type|urlencode %}\n{% endif %}\n\n{% set queryparams = [airline_query,type_query] %}\n{% set query = queryparams|reject('none')|join('&amp;') %}\n\n{% set result = hudb_table_rows(&lt;tableid&gt;,query) %}\n{{result|pprint}}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 09:47:27",
+    "text": "I just had to re-write your code so I could understand it better… i don’t even know if this works :X but it attempts to check for nulls / blank"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2018-07-17 09:47:28",
+    "text": "also a huge pro time"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2018-07-17 09:47:31",
+    "text": "tip: {{result|pprint}}"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2018-07-17 09:48:12",
+    "text": "|pprint all the stuff you are doing so you can read it and make sure you are getting data in there. I like to place it in an &lt;h2&gt;{{ variable|pprint }}&lt;/h2&gt; so that it is just large on the screen"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-07-17 09:50:44",
+    "text": "<https://gph.is/1KjihQe>"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-17 09:51:29",
+    "text": "Hmm, got rid of the errors but my table is now blank and nothing returns :cry:"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-07-17 09:52:01",
+    "text": "I think the above image needs to be recreated with either <@U6GNQ7JBU> or <@U22PJPGK0> doing this. Would hands down be the most used gif in this slack"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-07-17 09:52:10",
+    "text": "hahaha"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2018-07-17 09:52:41",
+    "text": "Sounds like an INBOUND Dev Day challenge to me.....",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2018-07-17 09:55:01"
+      },
+      {
+        "time_stamp": "2018-07-17 09:55:13"
+      },
+      {
+        "time_stamp": "2018-07-17 09:59:45"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Claudio Cappelletti",
+      "poster_handle": "cca"
+    },
+    "time_stamp": "2018-07-17 09:52:55",
+    "text": "Hi everyone, \n\nI would like to create a multi language blog, but the current language manager of HubSpot is not working fine. If I create 2 different blog the page will be recognized as default language and the links will broke.\nIs it correct to create 2 different blog and a coded page to recreate a blog listing/blog detail page using HUBL for loading the correct posts?\n\nLet me know if exist a better way to manage it.\n\nThanks!",
+    "reply_count": 10,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2018-07-17 09:55:00"
+      },
+      {
+        "time_stamp": "2018-07-17 09:55:28"
+      },
+      {
+        "time_stamp": "2018-07-17 09:55:48"
+      },
+      {
+        "time_stamp": "2018-07-17 09:56:12"
+      },
+      {
+        "time_stamp": "2018-07-17 09:56:33"
+      },
+      {
+        "time_stamp": "2018-07-17 09:57:28"
+      },
+      {
+        "time_stamp": "2018-07-17 10:01:37"
+      },
+      {
+        "time_stamp": "2018-07-17 10:02:06"
+      },
+      {
+        "time_stamp": "2018-07-17 10:02:21"
+      },
+      {
+        "time_stamp": "2018-07-17 10:07:42"
+      }
+    ]
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-17 09:53:00",
+    "text": "If you put `hsDebug=true` and scroll down to the bottom you can see the exact query string that is used in the hubdb table rows list"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-07-17 09:53:25",
+    "edited": {
+      "time_stamp": "2018-07-17 09:53:40"
+    },
+    "text": "`{{ foo or bar }}` and `{% set baz = foo or bar %}` also work"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-07-17 09:54:11",
+    "text": "curious, when you print baz what do you get?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-07-17 09:54:42",
+    "text": "If foo is truthy, `baz == foo`, otherwise `baz == bar`"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 09:55:00",
+    "text": "You could put all posts in the same blog with all english posts having a tag of &lt;EN&gt; and all french with &lt;FR&gt; or Italian with &lt;IT&gt; etc…"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-07-17 09:55:01",
+    "text": "I think that would be awesome if for Developer day there was a breakout where they made \"teams\" of the different developers and then said \"Build the following\" without any direction and see what people come up with."
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-17 09:55:04",
+    "text": "I think I'm just going to have to include the filter as well as the search for now, until I can research more about HubL and how it works"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-07-17 09:55:04",
+    "text": "ahhh very handy to know"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-07-17 09:55:13",
+    "text": "<@U22PKFRU5> thoughts?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-07-17 09:55:18",
+    "text": "lotta code that could be shortened up"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 09:55:28",
+    "text": "then code the template for the blog / posts to recognize the /tag/&lt;post_slug&gt; structure and look for the language code"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-07-17 09:55:34",
+    "text": "I often use that to set defaults. I know there's a |default filter, but I just find this easier to read"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 09:55:48",
+    "text": "then output a different lang=XX in the header based on that"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-07-17 09:55:59",
+    "text": "`{% set baz = foo or 'default value' %}`, or whatever"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 09:56:12",
+    "text": "Or… same principle but with a dropdown for the language in the blog post edit section (as a custom widget / module)"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 09:56:33",
+    "text": "then read the widget / module and perform the same {% hubl %} template manipulation of the HTML"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-07-17 09:56:40",
+    "text": "so now that website pages have AB testing and Expiration... what's the major difference between those and Landing pages?"
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-07-17 09:57:16",
+    "text": "I'm writing up a training for a client and thats a common question i get asked. Before, it was the A/B and Expiration that set them apart but now I can't really think of anything to use"
+  },
+  {
+    "poster": {
+      "poster_name": "Claudio Cappelletti",
+      "poster_handle": "cca"
+    },
+    "time_stamp": "2018-07-17 09:57:28",
+    "text": "so at the end is always a template and then do all the hubl magic and manage the language via the page manager of HubSpot"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-07-17 09:57:48",
+    "text": "The statistics displayed are different I think"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 09:59:15",
+    "text": "But realistically… the difference besides that doesn’t seem too significant"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 09:59:27",
+    "text": "and If WE are having a hard time understanding it… imagine what a normal user thinks"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-07-17 09:59:33",
+    "text": "I'm not seeing a difference in stats"
+  },
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2018-07-17 09:59:45",
+    "text": "seems like I am going to miss a nice dev. day this year :_"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-07-17 10:00:45",
+    "text": "because the intent of a Landing page is different than a site page. Landing pages are about funneling someone through the “journey” so theoretically it should show stats about conversions and forms filled out, perhaps quantity of people added to a list.\n\nSite pages are more just informational and may contain CTA’s  but are less about the Journey aspect."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-07-17 10:01:12",
+    "text": "if there’s no difference in stats, then maybe there’s no true difference other than organization anymore"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 10:01:37",
+    "text": "that’s what I would do. So in the case of a blog post that had to be in 2 languages… you’d have to create 2 blog posts (one in each language) with the main difference between them (other than the obvious post_body content being in another language) is that there’s a language selector in the page (blog detail) manager where you’d tell the template which language it should render the HTML in (or any other static elements that need to be translated)"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 10:02:06",
+    "text": "For the rest of those elements (things like the subscribe CTA, section headers, etc) you can store translations in a HubDB table that you query for the language"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 10:02:21",
+    "text": "OR you can just store everything in variables in the template if there aren’t too many things that need to be translated"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-17 10:03:13",
+    "edited": {
+      "time_stamp": "2018-07-17 10:04:44"
+    },
+    "text": "<@U4RP6AGV9> Tried your code and got a little further..."
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-17 10:03:14",
+    "text": "<https://www.oag.com/stars-copy>"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 10:03:38",
+    "edited": {
+      "time_stamp": "2018-07-17 10:04:29"
+    },
+    "text": "#Idea : pull stats for a page depending on the HubSpot Modules / elements present… EX: if there’s a form module / field in the page, it shows conversion percent on the overview… if there’s a CTA it shows the click through… whereas if the page has none of those things… it just shows visits (not moving this to Ideas until some more people chime in and I can refine the thought)"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-17 10:03:52",
+    "text": "It's outputting results and when you search for an airline it returns the correct query string, but now I'm unsure how to display this in my table"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 10:07:22",
+    "text": "so what you’d want to do is use the {{results}} variable as a loop… ```{% for result in results %} {# your loop to display the table... each result has your airline_name, annual_otp, etc on the object so you can use {{result.airline_name}} etc etc #} {% endfor %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2018-07-17 10:07:34",
+    "text": "<@U9MAWTESW> what should I search for as an example?"
+  },
+  {
+    "poster": {
+      "poster_name": "Claudio Cappelletti",
+      "poster_handle": "cca"
+    },
+    "time_stamp": "2018-07-17 10:07:42",
+    "text": ":+1: Perfect thanks! Most probably tomorrow I will try it"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2018-07-17 10:07:44",
+    "text": "AHH okay that is the question"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-17 10:08:31",
+    "text": "Think it's working, few tweaks might need doing, like searching without the page reloading and how to cancel the search etc"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 10:09:17",
+    "text": "there’s a new javascript endpoint for hubdb queries that <@U6GNQ7JBU> put together… you can use that instead and do it client-side if you want"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2018-07-17 10:09:26",
+    "text": "WHERE IS THAT"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-17 10:09:51",
+    "text": "<#CBA9UA4EN|javascript>"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 10:10:00",
+    "text": "<https://docs.google.com/document/d/e/2PACX-1vTuu12oFF4bQY1zVD2-WKFuM2dEDN81-fZRV1tGaCL5Z_OcjC-B6O3mHXR6chaq25BU1D2FuvKIjc49/pub>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2018-07-17 10:10:35",
+    "text": "nice"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2018-07-17 10:10:37",
+    "text": "thank you for this"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2018-07-17 10:10:55",
+    "text": "I haven't caught up on these rooms since I got back from vacation yesterday"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonathan Pavoni - Level 9",
+      "poster_handle": "jonathanpavoni"
+    },
+    "time_stamp": "2018-07-17 13:19:29",
+    "text": "What is the best way to take the  unix timestamp and convert it back to a readable date?",
+    "reply_count": 16,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2018-07-17 13:23:51"
+      },
+      {
+        "time_stamp": "2018-07-17 13:24:24"
+      },
+      {
+        "time_stamp": "2018-07-17 13:29:30"
+      },
+      {
+        "time_stamp": "2018-07-17 13:32:39"
+      },
+      {
+        "time_stamp": "2018-07-17 13:33:30"
+      },
+      {
+        "time_stamp": "2018-07-17 13:34:37"
+      },
+      {
+        "time_stamp": "2018-07-17 13:35:09"
+      },
+      {
+        "time_stamp": "2018-07-17 13:35:11"
+      },
+      {
+        "time_stamp": "2018-07-17 13:40:42"
+      },
+      {
+        "time_stamp": "2018-07-17 13:41:19"
+      },
+      {
+        "time_stamp": "2018-07-17 13:42:30"
+      },
+      {
+        "time_stamp": "2018-07-17 13:43:10"
+      },
+      {
+        "time_stamp": "2018-07-17 14:37:28"
+      },
+      {
+        "time_stamp": "2018-07-17 14:56:17"
+      },
+      {
+        "time_stamp": "2018-07-17 14:57:08"
+      },
+      {
+        "time_stamp": "2018-07-17 15:15:35"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jonathan Pavoni - Level 9",
+      "poster_handle": "jonathanpavoni"
+    },
+    "time_stamp": "2018-07-17 13:19:36",
+    "text": "Any best practices there ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-07-17 13:21:53",
+    "text": "Look in the documentation under filters, theres a format date one"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonathan Pavoni - Level 9",
+      "poster_handle": "jonathanpavoni"
+    },
+    "time_stamp": "2018-07-17 13:23:45",
+    "text": "thank you <@U7SL518D6>"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-07-17 13:23:51",
+    "text": "I usually use ```time_variable|datetimeformat('%B %e, %Y')```"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-07-17 13:24:24",
+    "text": "If you want to convert it back you’ll need to use js unfortunately"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 13:29:30",
+    "text": "idk if that’s necessarily true <@U26DA9CQ0> but it would be one heck of a HubL function doing a whole bunch of un-necessary math"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-07-17 13:32:39",
+    "text": "lol"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-07-17 13:33:30",
+    "text": "Yeah I didn’t want to fall into a hole with that one!"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-07-17 13:34:37",
+    "text": "```var currentdate = Date.parse('{{ local_dt|datetimeformat('%B %e, %Y') }}');```"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-07-17 13:35:09",
+    "text": "in case anyone was wondering"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 13:35:11",
+    "text": "that the other direction? Unix &gt;&gt; readable?"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-07-17 13:40:42",
+    "text": "Wait that’s converting readable into epoch"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-07-17 13:41:19",
+    "text": "I’m not sure what the date parse bit is all about but the datetimeformat formats the time however you want it to be"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-07-17 13:42:30",
+    "text": "it can’t go back to epoch though right?"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-07-17 13:43:10",
+    "text": "I think that was why I was doing that in the first place because hubdb time was given in epoch and I needed to compare it to current time"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2018-07-17 14:37:28",
+    "text": "`Date.parse` is definitely unsupported. There’s an open issue for a HubL function though <https://github.com/HubSpot/jinjava/issues/56>"
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-07-17 14:56:17",
+    "text": "<@U2LEJ045D> <@U22PJPGK0> That was some JS with a hubl tag slammed in there."
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-07-17 14:57:08",
+    "text": "I had to build that in to be able to compare values for an event listing."
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2018-07-17 15:15:35",
+    "text": "oh ok."
+  },
+  null
+]

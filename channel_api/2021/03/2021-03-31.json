@@ -1,0 +1,115 @@
+[
+  {
+    "poster": {
+      "poster_name": "Marek Nogieć",
+      "poster_handle": "marek.nogiec"
+    },
+    "time_stamp": "2021-03-31 08:19:31",
+    "text": "Hey folks! Anyone can point me to a resource explaining the difference between:\n• `app_id`\n• `portal_id`\n• `hub_id`\n? I tried searching docs but with little success\nI got webhook subscriptions in my app and I’m trying to identify which account did those events originate from. AFAIK in the event there’s `portal_id` or `app_id` but from what I can see the ‘account’ actually correlates to `hub_id` (which isn’t available in the event data)",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2021-03-31 12:32:49"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Alfredo",
+      "poster_handle": "alfredo"
+    },
+    "time_stamp": "2021-03-31 09:54:54",
+    "text": "you can do something like this:"
+  },
+  {
+    "poster": {
+      "poster_name": "Alfredo",
+      "poster_handle": "alfredo"
+    },
+    "time_stamp": "2021-03-31 09:55:07",
+    "edited": {
+      "time_stamp": "2021-03-31 09:55:17"
+    },
+    "text": "`results = HubSpot_api.crm.companies.get_all(properties=['name', 'domain', 'linkedin_company_page'])`"
+  },
+  {
+    "poster": {
+      "poster_name": "Alfredo",
+      "poster_handle": "alfredo"
+    },
+    "time_stamp": "2021-03-31 09:55:49",
+    "text": "where `properties`  is a list of strings that correspond to the internal name of the property"
+  },
+  {
+    "poster": {
+      "poster_name": "Eucimar Raposo",
+      "poster_handle": "eraposo"
+    },
+    "time_stamp": "2021-03-31 10:07:10",
+    "text": "Hey guys. I am searching contacts by Phone Number using the api (\n```<https://api.hubapi.com/crm/v3/objects/contacts/search>?```\n)\n. It is saved in various format in my CRM.\nSo when I do the search if the format matches it returns otherwise it does not.\n\nDoes anybody know how to solve this ?\n\nThanks",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2021-03-31 10:15:04"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Eucimar Raposo",
+      "poster_handle": "eraposo"
+    },
+    "time_stamp": "2021-03-31 10:15:04",
+    "text": "Found the solution. we should look search by the field hs_searchable_calculated_phone_number instead of phone"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Yager",
+      "poster_handle": "stephen.yager"
+    },
+    "time_stamp": "2021-03-31 12:32:49",
+    "text": "Portal ID is the ID of the portal you are looking at / getting data from. It can be found in the URL of the dashboard you are looking at. The APP iD is the ID of the APP you are working with / created. And as far as the HUB ID, that can mean several different things from what i know. But my guess from this context would be the internal ID of the record you are looking at."
+  },
+  {
+    "poster": {
+      "poster_name": "Bryan Dyck",
+      "poster_handle": "bryan.dyck"
+    },
+    "time_stamp": "2021-03-31 14:50:51",
+    "text": "Thanks Alfredo!"
+  },
+  {
+    "poster": {
+      "poster_name": "Junhan Ouyang",
+      "poster_handle": "junhano"
+    },
+    "time_stamp": "2021-03-31 20:19:28",
+    "text": "Hello can anyone help me about how to associate lineitems to deal?"
+  },
+  {
+    "poster": {
+      "poster_name": "Junhan Ouyang",
+      "poster_handle": "junhano"
+    },
+    "time_stamp": "2021-03-31 20:22:06",
+    "text": "```const createDealResponse = await HubSpotClient.crm.deals.basicApi.create(\n      Deal\n    );\n\nconst createLineItemResponse = await HubSpotClient.crm.lineItems.batchApi.create(\n      { inputs: LineitemInput }\n    );\ncreateLineItemResponse.body.results.forEach(async (element) =&gt; {\n      const request = {\n        fromObjectId: createDealResponse.body.id,\n        toObjectId: element.id,\n        toObjectType: \"lineitems\",\n        category: \"HubSpot_DEFINED\",\n        definitionId: 19,\n      };\n      console.log(request);\n      await HubSpotClient.crm.deals.associationsApi.create(request);\n    });```\nUp there is my code. Deal is just a single deal with required properties. However lineitem is a batch of different product. I want to create association between those two. After some research if I guess correctly since the way I create lineitem, lineitem will be return as array so I have to associate them 1 by 1 (Please Correct Me if I am wrong) However after running above code I get\n```Error: Required parameter toObjectType was null or undefined when calling create.```\nCan someone help me and tell me what's wrong?"
+  },
+  {
+    "poster": {
+      "poster_name": "Junhan Ouyang",
+      "poster_handle": "junhano"
+    },
+    "time_stamp": "2021-03-31 20:22:08",
+    "text": "Thanks"
+  },
+  {
+    "poster": {
+      "poster_name": "Junhan Ouyang",
+      "poster_handle": "junhano"
+    },
+    "time_stamp": "2021-03-31 20:22:51",
+    "text": "```   const LineitemInput = lineItemKeys.map((element) =&gt; {\n      return {\n        name: \"deal\" + element,\n        hs_object_id: hs_object_dict[element],\n        quantity: data.lineitem[element],\n      };\n    });```\nAbove is how I create the deal"
+  }
+]

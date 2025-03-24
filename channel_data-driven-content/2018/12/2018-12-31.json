@@ -1,0 +1,45 @@
+[
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-12-31 08:19:10",
+    "edited": {
+      "time_stamp": "2018-12-31 08:19:16"
+    },
+    "text": "Upsert is an interesting operation. Let me look into adding this"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-12-31 09:13:16",
+    "text": "I guess the issue is that the primary key is generated on row creation, so you would need to wait for that endpoint to return in order to update it."
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Burton",
+      "poster_handle": "scott.burton"
+    },
+    "time_stamp": "2018-12-31 12:05:23",
+    "text": "Yep the problem is there _isn't_ a natural primary key, just a row id, so the Cassandra style of upserting values to a \"row location\" identified by primary key won't work.\n\nThat's why I think something like MongoDB's `collection.update()` with `upsert: true` is the way to implement this in HubDB. It maps closer to ACID and supports row ids, and allows you to treat the query as a natural primary key."
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Burton",
+      "poster_handle": "scott.burton"
+    },
+    "time_stamp": "2018-12-31 12:09:22",
+    "text": "Not that HubDB needs to be more like MongoDB :see_no_evil:"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Burton",
+      "poster_handle": "scott.burton"
+    },
+    "time_stamp": "2018-12-31 12:14:18",
+    "text": "But all of the \"eventually consistent\" databases have this problem. Each chooses to solve it differently. Some take the last write to the primary key. I think Mongo does a batch-resolve after the fact."
+  }
+]

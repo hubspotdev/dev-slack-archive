@@ -1,0 +1,24 @@
+[
+  {
+    "poster": {
+      "poster_name": "Mitja Lewin",
+      "poster_handle": "m.lewin"
+    },
+    "time_stamp": "2022-06-29 09:43:50",
+    "edited": {
+      "time_stamp": "2022-06-29 09:44:24"
+    },
+    "text": "<@U03LYURG1L3> Not sure if it's count from crawler budget, but you can define the query parameter for the website URL in the google search console. See link for details: <https://www.seerinteractive.com/labs/the-seo-starter-guide-to-google-search-console/using-url-parameters-in-webmaster-tools/>"
+  },
+  {
+    "poster": {
+      "poster_name": "Mitja Lewin",
+      "poster_handle": "m.lewin"
+    },
+    "time_stamp": "2022-06-29 11:39:00",
+    "edited": {
+      "time_stamp": "2022-06-29 11:43:04"
+    },
+    "text": "<@UMWRTGBMZ> The HubSpot tag pages are auto. generated objects for the template type blog_listing. In short, they are already category pages; no extra setup needed.\n\nNote: You can view the tag pages by clicking on the tags name in the _backend &gt; marketing &gt; website &gt; blog &gt; left panel &gt; tags_ section.\n\nTo add a custom tag page meta description you need to code it by hand, like <@U0374EL02G1> said. To do that we first need to know when a tag page is requested by the user:\n\n*Step 1* Determinate a tag page with HubL:\n```{% if tag_id %} \n  (...) \n{% endif %}```\n*Step 2* Most Templates share a `base.html` file, there you can find the `head` section and the meta description. Look in the Design-Manager at your _theme &gt; templates &gt; layouts_ folder. There you can find this line of code. We will come back to this line later.\n```&lt;meta name=\"description\" content=\"{{ page_meta.meta_description }}\"&gt;```\n*Step 3* Now to the custom part. Create a globale Modul in the Design-Manager, and copy the code from _step1_ into the `module`.  Add a editor `field` of the type `tag`. Choose as Response for the field the option `ID`.  Add a second `field` of the type `text`. And  `group` both fields by clicking on the _actions_ button. Scroll down for the `group` and activate the repeater option. Choose _tag_ as label. Now the group is an object we can iterate.\n\n*Step 4* To iterate a group, we loop throw the `field_group` object with HubL. There we can look if a description exist in the `text_field` and if so, we output the field variable within the html meta tag. If no description for the tag exist or its not an tag listig page, we add a fallback to the default meta description. The module code in the end should look like this:\n```{% if tag_id %}\n  {% for item in module.field_group %}\n    {% if item.tag_field == tag_id %}\n      &lt;meta name=\"description\" content=\"{{ item.text_field }}\"&gt;\n    {% else %}\n      &lt;meta name=\"description\" content=\"{{ page_meta.meta_description }}\"&gt;\n    {% endif %}\n  {% endfor %}\n{% else %}\n  &lt;meta name=\"description\" content=\"{{ page_meta.meta_description }}\"&gt;\n{% endif %}```\n*Step 5* Implementation of the module in the head of the `base.html` . Search the line from _step2_ and replace it with your module. If you need help to find the syntax for your module, scroll on the end of the right sidebar in your Design-Manager module window, there you find a _snippet_. Copy that _snippet_ and replace the default meta description tag in the `base.html`. It should look similar to the below code. And very important, add the attribute `no_wrapper=True` to the module snippet code!\n```{% module \"meta_description\" path=\"../meta_description\", no_wrapper=True %}```\n*Step 7* Now try it. Add a tag with description to the global context of our module, save it, and check the tag listing page meta description. Maybe you see now that the open graph and twitter description are still the default ones. But Search Engines will work with the HTML standard tag.\n\nNote: You can add tags with custom descriptions to the module with the design manager by click on the edit button for the globale editor in the module window. Or by open a page editor and navigate to the content tab of any page that is based on the theme. And enter the globale editor from there."
+  }
+]

@@ -1,0 +1,361 @@
+[
+  {
+    "poster": {
+      "poster_name": "Federico Ricchiuto",
+      "poster_handle": "fed.ricchiuto"
+    },
+    "time_stamp": "2023-09-28 01:59:30",
+    "text": "Hello guys, this is my first message here, nice to meet you.\n\nI'm wondering if someone can help me with the php sdk: I'm trying to create a deal with an association (contact).\n\nAs far as I can see, the documentation doesn't mention <https://developers.HubSpot.com/docs/api/crm/deals#associations|the sdk for this particular call> (see create), I can see only the curl implementation.\n\nAnyway, the sdk supports the deal endpoint and associations. Now I've set the properties, but I'm not sure on how to set the associations: `DealSimplePublicObjectWithAssociations` accepts only `array&lt;string,string&gt;` wich is not compatible with the structure that I've used in postman (`array&lt;string,array&gt;`):\n```\"associations\": [{\n    \"to\": {\n      \"id\": \"101\"\n    },\n    \"types\": [\n      {\n        \"associationCategory\": \"HubSpot_DEFINED\",\n        \"associationTypeId\": 3\n      }\n     ]\n}] ```\nDo you have any example?\nThank you",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-09-28 02:10:21"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Ricchiuto",
+      "poster_handle": "fed.ricchiuto"
+    },
+    "time_stamp": "2023-09-28 02:10:21",
+    "edited": {
+      "time_stamp": "2023-09-28 02:16:43"
+    },
+    "text": "My bad, for some reason I was looking at the wrong object, `SimplePublicObjectInputForCreate -&gt; setAssociations` wants a `PublicAssociationsForObject` , which has all the required properties :slightly_smiling_face:\n\nBtw wouldn't be nice to have the documentation updated?"
+  },
+  {
+    "poster": {
+      "poster_name": "Mustafa AKIN",
+      "poster_handle": "makinuk"
+    },
+    "time_stamp": "2023-09-28 04:16:03",
+    "text": "Hello,\n\nWhen I merge contact A with contact B, I think contact B's `lastmodifieddate` should be updated, but the `lastmodifieddate` is not changing. Therefore, I cannot access merged records using the v3 API search endpoint. Is there an endpoint or method to retrieve merged records within a specific date range?"
+  },
+  {
+    "poster": {
+      "poster_name": "Neil Junsan",
+      "poster_handle": "neiljunsan09"
+    },
+    "time_stamp": "2023-09-28 06:09:25",
+    "edited": {
+      "time_stamp": "2023-09-30 10:03:45"
+    },
+    "text": "Hi Guys,\n\nI want to get the domain name after axios calls are made. Because the axios calls need the domain URL to make them work.\n\nThe API call is static I tried to place my domain URL and the calls works fine. We plan to make our theme installed to another domain so my code will definitely won't work :disappointed:. So I need to make it dynamic so the code will work on any domain to be installed.\n\nHere's the code below I tried to run but I can't get any working results :(\n```const axios = require(\"axios\"); \n\nexports.main = async (context, sendResponse) => {\n  // Use axios to make a GET request to the search API \n  const config = {\n    method: \"get\",\n    url: `\n<https://api.hubapi.com/crm/v3/objects/contacts/${context.contact.vid}/associations/deals>`,\n    headers: {\n      Authorization: \"Bearer testapikey\",\n    },\n  }; \n  try {\n    \n    const host = window.location.hostname;\n    \n    const deals = [];\n    const { data: dealIds } = await axios(config);   \n    for await (const dealId of dealIds.results) {\n      const { data: deal } = await axios.get(\n        `${\"https://\" + host }/_hcms/api/congratsdeal_new?id=${dealId.id}`\n      );\n      deals.push(deal);\n    }\n    sendResponse({ statusCode: 200, body: JSON.stringify(deals) });\n  } catch (error) {\n    sendResponse({ statusCode: 400, body: JSON.stringify(error) });\n  }\n}; ```\nI want to make API calls work when installed to another domains. to make it dynamic because what if non coder will install the theme and won't be able to replace the static url we placed to the JS file just to make it work and It's not good :(",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-09-29 13:13:22"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kunal Rwt",
+      "poster_handle": "jagmohanrwt1210"
+    },
+    "time_stamp": "2023-09-28 07:00:17",
+    "text": "Where can I learn api integration if I am  a beginner?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-09-28 07:13:13"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Mustafa AKIN",
+      "poster_handle": "makinuk"
+    },
+    "time_stamp": "2023-09-28 07:13:13",
+    "text": "<https://developers.HubSpot.com/docs/api/overview>"
+  },
+  {
+    "poster": {
+      "poster_name": "shakti singh",
+      "poster_handle": "shakti"
+    },
+    "time_stamp": "2023-09-28 07:30:51",
+    "text": "Hello, I am using the below api calls to get the contact-specific deals with associated products/line items details\n\n1. Search deals to get contact specific deals using this Search API call:\n   POST - <https://api.hubapi.com/crm/v3/objects/deals/search>\n   request body:\n   {\n    \"filterGroups\":[\n      {\n        \"filters\":[\n            {\n                \"propertyName\": \"associations.contact\",\n                \"operator\": \"EQ\",\n                \"value\": \"101\"\n            }\n        ]\n      }\n    ],\n    \"associations\":[ \"line items\" ]\n   }\n   Response:\n   {\n    \"total\": 2,\n    \"results\": [\n        {\n            \"id\": \"15232958816\",\n            \"properties\": {\n                \"amount\": \"200\",\n                \"closedate\": \"2023-09-30T11:34:07.217Z\",\n                \"createdate\": \"2023-09-19T11:34:46.322Z\",\n                \"dealname\": \"Matthew Rocha - New Deal\",\n                \"dealstage\": \"appointmentscheduled\",\n                \"hs_lastmodifieddate\": \"2023-09-19T11:34:47.375Z\",\n                \"hs_object_id\": \"15232958816\",\n                \"pipeline\": \"default\"\n            },\n            \"createdAt\": \"2023-09-19T11:34:46.322Z\",\n            \"updatedAt\": \"2023-09-19T11:34:47.375Z\",\n            \"archived\": false\n        },\n        {\n            \"id\": \"15337977642\",\n            \"properties\": {\n                \"amount\": \"6000\",\n                \"closedate\": \"2023-09-27T11:29:30.849Z\",\n                \"createdate\": \"2023-09-27T11:29:59.994Z\",\n                \"dealname\": \"Test Deal\",\n                \"dealstage\": \"closedwon\",\n                \"hs_lastmodifieddate\": \"2023-09-27T11:30:01.303Z\",\n                \"hs_object_id\": \"15337977642\",\n                \"pipeline\": \"default\"\n            },\n            \"createdAt\": \"2023-09-27T11:29:59.994Z\",\n            \"updatedAt\": \"2023-09-27T11:30:01.303Z\",\n            \"archived\": false\n        }\n    ]\n}\nin the above response we are not getting line_items or products associated with the deals.\n2. So to get associated line_items with specific deal use this API call:\n   GET - <https://api.hubapi.com/crm/v3/objects/deals/15337977642?associations=line_items>\n   Response:\n   {\n    \"id\": \"15337977642\",\n    \"properties\": {\n        \"amount\": \"6000\",\n        \"closedate\": \"2023-09-27T11:29:30.849Z\",\n        \"createdate\": \"2023-09-27T11:29:59.994Z\",\n        \"dealname\": \"Test Deal\",\n        \"dealstage\": \"closedwon\",\n        \"hs_lastmodifieddate\": \"2023-09-27T11:30:01.303Z\",\n        \"hs_object_id\": \"15337977642\",\n        \"pipeline\": \"default\"\n    },\n    \"createdAt\": \"2023-09-27T11:29:59.994Z\",\n    \"updatedAt\": \"2023-09-27T11:30:01.303Z\",\n    \"archived\": false,\n    \"associations\": {\n        \"line items\": {\n            \"results\": [\n                {\n                    \"id\": \"6969104203\",\n                    \"type\": \"deal_to_line_item\"\n                }\n            ]\n        }\n    }\n}\nAgain we only get line items id not associated product and product name.\n3. So to get associated product detail we use this API Call:\n   GET - <https://api.hubapi.com/crm/v3/objects/line_items/6969104203>\n   Response:\n   {\n    \"id\": \"6969104203\",\n    \"properties\": {\n        \"amount\": \"500.000\",\n        \"createdate\": \"2023-09-27T11:30:00.472Z\",\n        \"hs_lastmodifieddate\": \"2023-09-27T11:30:00.472Z\",\n        \"hs_object_id\": \"6969104203\",\n        \"hs_product_id\": \"2296518185\",\n        \"quantity\": \"1\"\n    },\n    \"createdAt\": \"2023-09-27T11:30:00.472Z\",\n    \"updatedAt\": \"2023-09-27T11:30:00.472Z\",\n    \"archived\": false\n}\nAgain we only get product id not the product name.\n4. So to get product name we call this API call:\n   GET - <https://api.hubapi.com/crm/v3/objects/products/2296518185>\n   Response: {\n    \"id\": \"2296518185\",\n    \"properties\": {\n        \"createdate\": \"2023-09-27T11:28:32.448Z\",\n        \"description\": null,\n        \"hs_lastmodifieddate\": \"2023-09-27T11:28:32.448Z\",\n        \"hs_object_id\": \"2296518185\",\n        \"name\": \"Monthly Subscription Plan\",\n        \"price\": \"500\"\n    },\n    \"createdAt\": \"2023-09-27T11:28:32.448Z\",\n    \"updatedAt\": \"2023-09-27T11:28:32.448Z\",\n    \"archived\": false\n}\nThen I finally got the product name. but this is not the right way to use the number of API calls to get associated products/line_items of a deal. please suggest if there is any API available that gives us contact specific deals with all associated line_items/products details in one API call response.",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-09-28 07:51:19"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kellen Rogers",
+      "poster_handle": "kellenr"
+    },
+    "time_stamp": "2023-09-28 07:51:19",
+    "text": "Hello Shakti, you could try the <https://developers.HubSpot.com/docs/cms/data/query-HubSpot-data-using-graphql#make-an-api-request-to-the-collector-graphql-endpoint|graphql endpoint > \n\nIt has worked well for us. "
+  },
+  {
+    "poster": {
+      "poster_name": "Mubariz Muneer",
+      "poster_handle": "mubariz.muneer"
+    },
+    "time_stamp": "2023-09-28 08:05:38",
+    "edited": {
+      "time_stamp": "2023-09-28 08:08:03"
+    },
+    "text": "Hey can anyone please tell me why an *Image URL* gets added with _*Expiry and Signature*_ when submitted through forms ? And moreover when I remove this slug the Image is not getting displayed.",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-09-28 08:24:31"
+      },
+      {
+        "time_stamp": "2023-09-28 08:37:45"
+      },
+      {
+        "time_stamp": "2023-09-28 08:39:44"
+      },
+      {
+        "time_stamp": "2023-09-28 08:40:25"
+      },
+      {
+        "time_stamp": "2023-09-28 08:42:23"
+      },
+      {
+        "time_stamp": "2023-09-28 08:51:50"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kellen Rogers",
+      "poster_handle": "kellenr"
+    },
+    "time_stamp": "2023-09-28 08:24:31",
+    "text": "Hello Mubariz, it’s HubSpot’s way of controlling image access. The signature is essentially a password allowing you to access the image. Where are you trying to display the image?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt",
+      "poster_handle": "mtunney"
+    },
+    "time_stamp": "2023-09-28 08:37:10",
+    "text": "Hi - Is it possible to use the HubSpot api to report on marketing emails?"
+  },
+  {
+    "poster": {
+      "poster_name": "Mubariz Muneer",
+      "poster_handle": "mubariz.muneer"
+    },
+    "time_stamp": "2023-09-28 08:37:45",
+    "text": "<@U05B94E8VF0> Hey Kellen thanks for the reply, I am trying to add URLS on google sheets but without the expiry and signatures, kindly help with this"
+  },
+  {
+    "poster": {
+      "poster_name": "Kellen Rogers",
+      "poster_handle": "kellenr"
+    },
+    "time_stamp": "2023-09-28 08:39:44",
+    "text": "<@U0466HLJ3AM> Is the Google sheet for internal use by HubSpot users or something that non HubSpot users would access?"
+  },
+  {
+    "poster": {
+      "poster_name": "Mubariz Muneer",
+      "poster_handle": "mubariz.muneer"
+    },
+    "time_stamp": "2023-09-28 08:40:25",
+    "text": "Both <@U05B94E8VF0>"
+  },
+  {
+    "poster": {
+      "poster_name": "Mubariz Muneer",
+      "poster_handle": "mubariz.muneer"
+    },
+    "time_stamp": "2023-09-28 08:42:23",
+    "text": "<@U05B94E8VF0> and this issue arises when Image is submitted via Froms"
+  },
+  {
+    "poster": {
+      "poster_name": "Kellen Rogers",
+      "poster_handle": "kellenr"
+    },
+    "time_stamp": "2023-09-28 08:51:50",
+    "edited": {
+      "time_stamp": "2023-09-28 08:52:02"
+    },
+    "text": "<@U0466HLJ3AM> Someone from HubSpot may need to weigh-in on this and I believe any image submitted through a form must have the signature in the URL. If you need access to an image without the signature the image would need to be added via the Marketing-&gt;Files manager and marked as public. Any image uploaded via a form or as an attachment to a record is automatically marked as private and hidden, thus requiring the signature."
+  },
+  {
+    "poster": {
+      "poster_name": "shaonan Hua",
+      "poster_handle": "shaonan.hua"
+    },
+    "time_stamp": "2023-09-28 10:26:22",
+    "text": "hello I'm trying to find the meeting with contacts associations filter"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-09-28 10:27:18"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-09-28 10:27:43"
+  },
+  {
+    "poster": {
+      "poster_name": "shaonan Hua",
+      "poster_handle": "shaonan.hua"
+    },
+    "time_stamp": "2023-09-28 10:28:15",
+    "text": "why is it not showing any meetings with the hs_object_id of contact"
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2023-09-28 10:29:38",
+    "text": "hi please help with showing meetings by contact with email"
+  },
+  {
+    "text": "I tried to do the legacy API contact to meetings but it's giving me just some ids and I'm not sure how that would help me. They don't seem to correspond to the meeting id",
+    "subtype": "thread_broadcast",
+    "time_stamp": "2023-09-28 10:43:38"
+  },
+  {
+    "poster": {
+      "poster_name": "Logan Armstrong",
+      "poster_handle": "logan565"
+    },
+    "time_stamp": "2023-09-28 11:38:58",
+    "text": "has anybody come up with a way to sync LinkedIn messages back to HubSpot automatically?"
+  },
+  {
+    "poster": {
+      "poster_name": "Tristan Saunders",
+      "poster_handle": "tristan776"
+    },
+    "time_stamp": "2023-09-28 11:39:46",
+    "text": "Hi all :wave:,\n\nI'm interested in getting contact information via the API. More specifically, I want to fetch the *lifecycle stage* for a list of contacts. However, when I query contacts the lifecycle stage is not available in the responses body (on the object's properties) despite it being set and visible in my CRM.\n\nExample:\nGET <https://api.hubapi.com/crm/v3/objects/contacts/2701>\n\n```{\n    \"id\": \"2701\",\n    \"properties\": {\n        \"createdate\": \"2022-11-15T14:59:49.954Z\",\n        \"email\": \"<mailto:jane.doe@company.com|jane.doe@company.com>\",\n        \"firstname\": \"Jane\",\n        \"hs_object_id\": \"2701\",\n        \"lastmodifieddate\": \"2023-09-26T09:15:00.304Z\",\n        \"lastname\": \"Doe\"\n    },\n    \"createdAt\": \"2022-11-15T14:59:49.954Z\",\n    \"updatedAt\": \"2023-09-26T09:15:00.304Z\",\n    \"archived\": false\n}```\n\nI'm expecting the `lifecyclestage` property to be there but it does not appear\n\nAny help would be appreciated :pray:",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-09-28 11:43:34"
+      },
+      {
+        "time_stamp": "2023-09-28 11:47:18"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Harun Kumar Siva",
+      "poster_handle": "harun"
+    },
+    "time_stamp": "2023-09-28 11:43:34",
+    "text": "It is a frequently asked question on this forum. From earlier: <https://HubSpotdev.slack.com/archives/C2YHAHB6K/p1689870743403749?thread_ts=1689868740.985979&amp;cid=C2YHAHB6K>"
+  },
+  {
+    "poster": {
+      "poster_name": "Tristan Saunders",
+      "poster_handle": "tristan776"
+    },
+    "time_stamp": "2023-09-28 11:47:18",
+    "text": "Spot on, thanks Harun !"
+  },
+  {
+    "poster": {
+      "poster_name": "Casey Vassios",
+      "poster_handle": "cvassios"
+    },
+    "time_stamp": "2023-09-28 12:21:57",
+    "text": "I haven't used webhooks, but sounds like that could do it. Was hoping not to slow user's progress with a spinner, but it may be necessary. Thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Tilghman  Lesher",
+      "poster_handle": "tlesher"
+    },
+    "time_stamp": "2023-09-28 12:24:48",
+    "text": "The benefit of using the webhook is that in the best case, the user may never see it at all, because you're dismissing it when you see that the Deal has been created"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2023-09-28 14:25:21",
+    "text": "Anyone know a way to get all the properties that are assigned to a specific group?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-09-28 16:48:35"
+      },
+      {
+        "time_stamp": "2023-09-28 16:49:20"
+      },
+      {
+        "time_stamp": "2023-09-28 16:50:33"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kellen Rogers",
+      "poster_handle": "kellenr"
+    },
+    "time_stamp": "2023-09-28 16:48:35",
+    "text": "There is an endpoint in the API for this in the properties section called \"Read a property group\".   <https://developers.HubSpot.com/docs/api/crm/properties>\n\nGET*`/crm/v3/properties/{objectType}/groups/{groupName}`*"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2023-09-28 16:49:20",
+    "text": "Right. That doesn't pull in the properties in that group. \n\nI built a workaround"
+  },
+  {
+    "poster": {
+      "poster_name": "Kellen Rogers",
+      "poster_handle": "kellenr"
+    },
+    "time_stamp": "2023-09-28 16:50:33",
+    "text": "You're correct. I apologize, I misread your original message"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Pohl",
+      "poster_handle": "ben.pohl"
+    },
+    "time_stamp": "2023-09-28 19:02:31",
+    "edited": {
+      "time_stamp": "2023-09-28 19:02:45"
+    },
+    "text": "Does anyone know if HubSpot is accepting pull requests on their open source libraries?"
+  },
+  {
+    "poster": {
+      "poster_name": "Avinash",
+      "poster_handle": "avinash"
+    },
+    "time_stamp": "2023-09-29 00:33:43",
+    "text": "Hi, Everyone, I'm new to the forum and happy to be here. I have an issue that I have been struggling with and was hoping to gain some insight from someone who might have experienced this before. Essentially I'm using the HubSpot API's to create/update a deal. I also have revenue attribution for landing pages showing revenue etc. I'm able to create and update a deal through its various stages via the API correctly, associate contacts and company etc, however upon updating/closing the deal via the API ( 50-Won status ), I'm not getting the attribution report to display the Amount from the deal. If I close the deal via the UI, then everything shows fine in the attribution reports, however not via the API. I have read all the documentation on attribution report basics, meet all the requirements etc and done all the necessary things but cannot get the attribution report for landing pages to properly display the revenue, once the deal is closed via the API, instead of the UI. Has anyone ever had this problem and can you kindly suggest anything that I might try. Thanks",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-09-29 15:31:46"
+      },
+      {
+        "time_stamp": "2023-09-30 02:07:07"
+      },
+      {
+        "time_stamp": "2023-10-05 06:15:02"
+      }
+    ]
+  }
+]

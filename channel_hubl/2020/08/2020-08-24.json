@@ -1,0 +1,55 @@
+[
+  {
+    "poster": {
+      "poster_name": "Brad Angelcyk",
+      "poster_handle": "brad965"
+    },
+    "time_stamp": "2020-08-24 07:39:51",
+    "text": "I instead captured the email address on the initial form and am passing it along in the query string so that I have access to it on the next page.  however I get an empty object when I attempt to pull back the contact with `crm_object(\"contact\", \"<mailto:email=me@mydomain.com|email=me@mydomain.com>\")` .  the email exists in the contacts within the HubSpot console.  I thought maybe it was a delay with saving data but it is still not returning after the night.  do I have to do anything to confirm a contact in order to pull it back on a following page via hubl?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-08-24 07:42:27"
+      },
+      {
+        "time_stamp": "2020-08-24 07:58:19"
+      },
+      {
+        "time_stamp": "2020-08-24 07:59:42"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Brad Angelcyk",
+      "poster_handle": "brad965"
+    },
+    "time_stamp": "2020-08-24 07:40:31",
+    "text": "I also tried to use `crm_object(\"contact\", 2601)` (which is the id of the contact found on the HubSpot console)"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2020-08-24 07:42:27",
+    "text": "Can u link me to the page and template?"
+  },
+  {
+    "poster": {
+      "poster_name": "Brad Angelcyk",
+      "poster_handle": "brad965"
+    },
+    "time_stamp": "2020-08-24 07:58:19",
+    "text": "the template that attempts to load the contact is pretty simple.\n```&lt;!--\n  templateType: page\n  isAvailableForNewContent: true\n  label: test_contact_pull\n  screenshotPath: ../images/template-previews/about.png\n--&gt;\n\n{% set contact1 = crm_object(\"contact\", \"email=me@mydomain.com\") %}\n{% set contact2 = crm_object(\"contact\", 2601) %}\n\n{% block body %}\n&lt;pre&gt;{{ contact1|pprint }}&lt;/pre&gt;\n&lt;pre&gt;{{ contact2|pprint }}&lt;/pre&gt;\n{% endblock body %}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Brad Angelcyk",
+      "poster_handle": "brad965"
+    },
+    "time_stamp": "2020-08-24 07:59:42",
+    "text": "I don’t think this part matters but this is how I’m passing the email address over from the form submission:\n```onFormSubmitted: function($form) {\n    const inputMatches = $form.find(\"[name='email']\");\n    if (inputMatches.length) {\n        setTimeout(function() {\n          var formData = inputMatches.serialize();\n          window.location = \"/form_new?\" + formData;\n        }, 250);\n    }```\n"
+  }
+]

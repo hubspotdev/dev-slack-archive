@@ -1,0 +1,75 @@
+[
+  {
+    "poster": {
+      "poster_name": "Federico Bartoli",
+      "poster_handle": "federico.bartoli"
+    },
+    "time_stamp": "2024-01-31 03:34:46",
+    "text": "I'm working on implementing best practices for image optimization. My current approach involves using HubSpot's `resize_image_url` tag to resize the images uploaded by clients, aiming to serve different quality levels based on screen size.\nHowever, I'm facing a challenge: I can't seem to set a minimum and maximum quality level during the resize process. For instance, if a client uploads a 4MB image for the hero section, I'd like to be able to resize it to, say, 350KB for desktop, 300KB for tablet, and so on. Do you have any suggestions on how to achieve this? The issue is that I'm unable to optimize HubSpot sites effectively because clients often change things. I know HubSpot's image tag includes an automatic `srcset`, but it doesn't address the problem of large image files being uploaded.\nAlso, when giving clients the ability to change modules, we lose some accessibility. For example, a module might have an `h2` tag, but instead of placing it after an `h1`, it ends up after an `h4` (to give a simple example). Any ideas on how to manage this?\nThanks for your insights!",
+    "reply_count": 6,
+    "reply_users_count": 5,
+    "replies": [
+      {
+        "time_stamp": "2024-01-31 03:34:53"
+      },
+      {
+        "time_stamp": "2024-01-31 04:49:23"
+      },
+      {
+        "time_stamp": "2024-01-31 04:52:31"
+      },
+      {
+        "time_stamp": "2024-01-31 05:01:22"
+      },
+      {
+        "time_stamp": "2024-01-31 10:32:33"
+      },
+      {
+        "time_stamp": "2024-03-04 13:38:12"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Bartoli",
+      "poster_handle": "federico.bartoli"
+    },
+    "time_stamp": "2024-01-31 03:34:53",
+    "text": "cc <@U01QVR44MEY>"
+  },
+  {
+    "poster": {
+      "poster_name": "Alberto Zordan",
+      "poster_handle": "alberto.zordan"
+    },
+    "time_stamp": "2024-01-31 04:49:23",
+    "edited": {
+      "time_stamp": "2024-01-31 06:20:16"
+    },
+    "text": "This is indeed a relevant topic.\nSpeaking of native `img` tags used in custom modules through the \"copy snippet\" action, HS does seem to inject all sorts of attributes to help performance. Inspecting the DOM, the result is something like this:\n```<img src=\"...\" alt=\"...\" width=\"3400\" height=\"1944\" srcset=\"...?width=1700&height=972&name=... 1700w, ...?width=3400&height=1944&name=... 3400w, ...?width=5100&height=2916&name=... 5100w, ...?width=6800&height=3888&name=... 6800w, ...?width=8500&height=4860&name=... 8500w, ...?width=10200&height=5832&name=... 10200w\" sizes=\"(max-width: 3400px) 100vw, 3400px\">```\n(replaced the actual image path with three dots for the sake of brevity).\nSo, HS adds `width` and `height` attributes to minimize CLS and adapts them accordingly via query string parameters to properly resize them, also providing `w` descriptors for the actual source's width in px.\nThere is a `sizes` attribute too, that's all well and good but... how does HS inject those things? I mean, which algorithm does it use? But more importantly, do we have any control over it?\n\n<@U04AQA0QM8E>, do you happen to have any useful insights about this?\nThank you."
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Henri",
+      "poster_handle": "sean615"
+    },
+    "time_stamp": "2024-01-31 04:52:31",
+    "text": "I know this doesn’t fully answer your question, but:\n\n1) add inline help text or tooltips guiding marketers on proper image compression and proper file type \n\n2) always add width and height attributes so HubSpot will auto-generate srcset and convert to webp <https://developers.HubSpot.com/docs/cms/guides/speed?uuid=2182b68d-0290-4e9a-b3dc-17b651226992|https://developers.HubSpot.com/docs/cms/guides/speed?uuid=2182b68d-0290-4e9a-b3dc-17b651226992>\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Henri",
+      "poster_handle": "sean615"
+    },
+    "time_stamp": "2024-01-31 05:01:22",
+    "text": "On the h2/h3 part, rather than wrapping a field in a heading tag, we use single text fields or rich text, and set the recommended heading type via default text, allowing them to change as needed. \n\nThen, if we absolutely need to maintain style for the heading despite their changes, we’ll add rules like .module-name h2, module-name h3, that override default heading styles. That comes with some cons though. "
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2024-01-31 10:32:33",
+    "text": "Re heading levels: there’s simply no automatic solution for this, and I don’t know of any that actually exist. The HTML Document Outline Algorithm spec proposed a solution for this, but it was never implemented by any user agents and has since been deprecated. For the time being, the only solution is training your users — even if that’s easier said than done.\n\nWith regards to image resizing, setting a maximum image size is relatively manageable: the `resize_image_url`<https://developers.HubSpot.com/docs/cms/hubl/functions#resize-image-url| function has an >`upscale`<https://developers.HubSpot.com/docs/cms/hubl/functions#resize-image-url| flag> that’s set to `false` by default — that effectively makes it serve as a “maximum size” gate by default. If you follow <@UDK7MSQUE>’s advice of including the `width` and `height` attributes, HubSpot’s automatic image size optimization will step in to do the majority of the heavy lifting. Do note that `resize_image_url` won’t give you updated width and height values for the new image, so you’ll need to do a little bit of logic to get those values in cases where the source image is larger than the maximum allowed size."
+  }
+]

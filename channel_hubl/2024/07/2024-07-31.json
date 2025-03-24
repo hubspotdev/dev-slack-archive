@@ -1,0 +1,125 @@
+[
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-07-31 07:32:58",
+    "edited": {
+      "time_stamp": "2024-07-31 07:47:15"
+    },
+    "text": "If I have a sequence of dictionary like this\n\n```[\n\t{\n\t\t'name':'bill',\n\t\t'id':3,\n\t\t'label':'medium'\n\t},\n\t{\n\t\t'name':'jack',\n\t\t'id':5,\n\t\t'label':'medium'\n\t},\n\t{\n\t\t'name':'Suzie',\n\t\t'id':6,\n\t\t'label':'medium',\n        'author':'false'\n\t},\n]```\nAnd I want to add ‘author’:‘true’\nto all the dictionaries that don’t already have a value\n\nis there a nice function to do it without looping through them all?\n\nMaybe someway to do it with a map and a put?\n\n(this is overly simplified, I’m wanting to do something else where I’ve got empty values in hubdb and the sort function throws an error if the column doesn’t have a value)",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-07-31 08:16:27"
+      },
+      {
+        "time_stamp": "2024-07-31 08:21:46"
+      },
+      {
+        "time_stamp": "2024-07-31 18:54:51"
+      },
+      {
+        "time_stamp": "2024-08-01 02:53:22"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-07-31 08:16:27",
+    "edited": {
+      "time_stamp": "2024-07-31 08:16:51"
+    },
+    "text": "I wrote this macro\n```{%- macro updateEmptyRows(seq,key,val,hubdb=false) -%}\n\t{%- set seq = seq|tojson|fromjson if hubdb -%}\n\t{%- for row in seq|selectattr(key,'none') -%}\n        {%- do row.put(key,val) -%}\n    {%- endfor -%}\n\t{-seq-}}\n{%- endmacro -%}```\nOnly annoying thing is if the rows are empty it returns a string so need to add an extra if when using the variable"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-07-31 08:21:46",
+    "edited": {
+      "time_stamp": "2024-07-31 08:21:52"
+    },
+    "text": "Note the |tojson|fromjson is a hacky way of making a hubdb object behave like a sequence of dicts but it can break on some html, my table is simple though"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-07-31 18:54:51",
+    "text": "nice job!"
+  },
+  {
+    "poster": {
+      "poster_name": "Gustavo Graeff",
+      "poster_handle": "gustavo.graeff"
+    },
+    "time_stamp": "2024-07-31 23:57:50",
+    "edited": {
+      "time_stamp": "2024-08-01 00:00:00"
+    },
+    "text": "Is it possible to do something like this?\n`<{% module.tag %} class=\"heading {{ module.size }}\">{{ module.heading }}</{% module.tag %}>`\nor\n`<{{ module.tag }} class=\"heading {{ module.size }}\">{{ module.heading }}</{{ module.tag }}>`",
+    "reply_count": 17,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-08-01 01:40:54"
+      },
+      {
+        "time_stamp": "2024-08-01 01:48:17"
+      },
+      {
+        "time_stamp": "2024-08-01 01:49:31"
+      },
+      {
+        "time_stamp": "2024-08-01 01:53:07"
+      },
+      {
+        "time_stamp": "2024-08-01 01:53:14"
+      },
+      {
+        "time_stamp": "2024-08-01 01:53:26"
+      },
+      {
+        "time_stamp": "2024-08-01 01:54:44"
+      },
+      {
+        "time_stamp": "2024-08-01 01:55:19"
+      },
+      {
+        "time_stamp": "2024-08-01 01:55:26"
+      },
+      {
+        "time_stamp": "2024-08-01 01:55:51"
+      },
+      {
+        "time_stamp": "2024-08-01 01:57:00"
+      },
+      {
+        "time_stamp": "2024-08-01 01:57:08"
+      },
+      {
+        "time_stamp": "2024-08-01 01:57:18"
+      },
+      {
+        "time_stamp": "2024-08-01 01:58:11"
+      },
+      {
+        "time_stamp": "2024-08-01 01:58:50"
+      },
+      {
+        "time_stamp": "2024-08-01 01:58:58"
+      },
+      {
+        "time_stamp": "2024-08-07 13:04:45"
+      }
+    ]
+  }
+]

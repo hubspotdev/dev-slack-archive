@@ -1,0 +1,57 @@
+[
+  {
+    "poster": {
+      "poster_name": "Vineeth Kumar",
+      "poster_handle": "vineeth.kumar"
+    },
+    "time_stamp": "2024-11-19 05:19:40",
+    "text": "Hello Team,\nI am trying to integrate the iOS SDK with my existing Objective-C code. However, I am encountering an error: _\"Use of undeclared identifier 'HubSpotManager'.\"_ Could anyone share a configuration example or guide on how to use this in Objective-C?",
+    "reply_count": 9,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-11-19 05:42:21"
+      },
+      {
+        "time_stamp": "2024-11-19 08:31:34"
+      },
+      {
+        "time_stamp": "2024-12-18 23:48:55"
+      },
+      {
+        "time_stamp": "2024-12-19 02:53:44"
+      },
+      {
+        "time_stamp": "2024-12-19 05:33:46"
+      },
+      {
+        "time_stamp": "2024-12-19 05:35:01"
+      },
+      {
+        "time_stamp": "2024-12-19 05:44:41"
+      },
+      {
+        "time_stamp": "2024-12-19 05:49:18"
+      },
+      {
+        "time_stamp": "2024-12-19 05:50:09"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Connery",
+      "poster_handle": "jason.connery"
+    },
+    "time_stamp": "2024-11-19 05:42:21",
+    "text": "The SDK only supports swift, and relies on some swift only features so its not exposed to objective c code by default.\n\nObjective C and Swift code can be mixed in the same project, so I would suggest doing new features like HubSpot integration, new app features, ui, etc in swift regardless.\n\nYou could attempt to create a wrapper in Swift that contains `objc` annotations, but keep in mind you'll need your functions, etc, to be objc compatible.\n\nThen interact with the swift framework from within that, and access your wrapper from your objective c code.\n\nA minimal example, hopefully this gets the idea across and you can see how to expand on it , after that, it'd be normal style of swift &lt;-&gt; objective c bridging that you're hopefully familiar with by now:\n```import HubSpotMobileSDK\nimport Foundation\n\n@objc @MainActor\nclass HubSpotBridgingWrapper: NSObject {\n  \n  @objc\n  func configure() {\n    try! HubSpotManager.shared.configure()\n  }\n  \n  @objc\n  func someAction() {\n    /// interact with HubSpot manager, create view controllers for chat, etc etc.\n  }\n}```\nThis would expose a bridging / wrapper class to objective c.\n\nFrom objective C, you'd import MyModule-Swift.h , then be able to access the wrapper:\n\n```@implementation SomeClass\n\n-(void) setupHubSpot {\n  [[HubSpotBridgingWrapper new] configure];\n}\n\n@end```"
+  },
+  {
+    "poster": {
+      "poster_name": "Vineeth Kumar",
+      "poster_handle": "vineeth.kumar"
+    },
+    "time_stamp": "2024-11-19 08:31:34",
+    "text": "Thank you for the help, Let me check with this."
+  }
+]

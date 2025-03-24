@@ -1,0 +1,109 @@
+[
+  {
+    "poster": {
+      "poster_name": "Marc Pozzuoli",
+      "poster_handle": "marc293"
+    },
+    "time_stamp": "2023-05-05 07:57:28",
+    "text": "I'm wanting to setup a workflow to set a property on a ticket when it has no open tasks or meetings associated with it and then a workflow that reverses that setting when there are open tasks.  I'm probably just missing it but how do I accomplish the equivalent of a SQL \"WHERE NOT EXISTS\"?",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-05-05 09:56:16"
+      },
+      {
+        "time_stamp": "2023-05-05 10:01:41"
+      },
+      {
+        "time_stamp": "2023-05-05 13:48:32"
+      },
+      {
+        "time_stamp": "2023-05-05 14:15:09"
+      },
+      {
+        "time_stamp": "2023-05-08 16:19:46"
+      },
+      {
+        "time_stamp": "2023-05-08 16:31:23"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2023-05-05 09:56:16",
+    "edited": {
+      "time_stamp": "2023-05-05 09:56:24"
+    },
+    "text": "<@U01KM1T7ZU3> do you have Ops Hub Pro (or Higher)?"
+  },
+  {
+    "poster": {
+      "poster_name": "Marc Pozzuoli",
+      "poster_handle": "marc293"
+    },
+    "time_stamp": "2023-05-05 10:01:41",
+    "text": "<@U03REFNRMB3> We do"
+  },
+  {
+    "poster": {
+      "poster_name": "Joshua Beatty",
+      "poster_handle": "joshua429"
+    },
+    "time_stamp": "2023-05-05 11:31:38",
+    "text": "Weird bug with the new Clean Up Feature:"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-05-05 11:32:00"
+  },
+  {
+    "poster": {
+      "poster_name": "Joshua Beatty",
+      "poster_handle": "joshua429"
+    },
+    "time_stamp": "2023-05-05 11:32:21",
+    "text": "I have this workflow with a branch on a custom code value and a branch on the value of a delay until a date action"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-05-05 11:32:34"
+  },
+  {
+    "poster": {
+      "poster_name": "Joshua Beatty",
+      "poster_handle": "joshua429"
+    },
+    "time_stamp": "2023-05-05 11:32:49",
+    "text": "And its trying to combine them into a single value equals which I dont think actually works here",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-05-09 07:39:41"
+      },
+      {
+        "time_stamp": "2023-05-10 12:13:05"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2023-05-05 13:48:32",
+    "text": "<@U01KM1T7ZU3> working on something for you."
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2023-05-05 14:15:09",
+    "text": "So the way I would go about this:\n1. Grab all the tasks from the ticket. Example code:\n```const axios = require('axios');\n\nlet config = {\n  method: 'get',\n  maxBodyLength: Infinity,\n  url: '<https://api.hubapi.com/crm/v4/objects/tickets/{{objectID}}/associations/tasks>',\n  headers: { \n    'Authorization': 'Bearer pat-na1-6414ef8d-dfa3-42ee-94a9-c6c1a418127e'\n  }\n};\n\naxios.request(config)\n.then((response) =&gt; {\n  console.log(JSON.stringify(response.data));\n  //Loop over to see if any of these tasks are still status: WAITING\n  //If there is open, return a true.\n})\n.catch((error) =&gt; {\n  console.log(error);\n});```\n2. Grab all the meetings from the ticket. Example code:\n```const axios = require('axios');\n\nlet config = {\n  method: 'get',\n  maxBodyLength: Infinity,\n  url: '<https://api.hubapi.com/crm/v4/objects/tickets/{{objectID}}/associations/meetings>',\n  headers: { \n    'Authorization': 'Bearer pat-na1-6414ef8d-dfa3-42ee-94a9-c6c1a418127e'\n  }\n};\n\naxios.request(config)\n.then((response) =&gt; {\n  console.log(JSON.stringify(response.data));\n  //Loop over to see if any of these meetings are still hs_meeting_outcome: SCHEDULED\n  //If there is open, return a true.\n})\n.catch((error) =&gt; {\n  console.log(error);\n});```\n3. Then use a value branch to see what is TRUE to then trigger your notifications."
+  }
+]

@@ -1,0 +1,37 @@
+[
+  {
+    "text": "Hi everyone,\nI’m encountering an issue with a dynamically loaded menu in HubSpot CMS using React. Despite setting up the fields and components correctly, the menu isn’t being found or rendered as expected. I’d greatly appreciate any insights or suggestions from this group.\n\nContext:\nHere’s how I’ve structured my code:\n*`fields.tsx`:*\nI’ve defined four columns, each with a `MenuField` tied to a menu ID.\n```    &lt;FieldGroup expanded={false} name=\"group_column_1\" label=\"Column 1\"&gt;\n      &lt;TextField label=\"Label\" name=\"text\" default=\"Kennisbank\" /&gt;\n      &lt;MenuField name=\"website_footer_1\" label=\"Menu Column 1\" default={MENU_ID_COLUMN_1} /&gt;\n    &lt;/FieldGroup&gt;\n\n    &lt;FieldGroup expanded={false} name=\"group_column_2\" label=\"Column 2\"&gt;\n      &lt;TextField label=\"Label\" name=\"text\" default=\"Over BFNL\" /&gt;\n      &lt;MenuField name=\"website_footer_2\" label=\"Menu Column 2\" default={MENU_ID_COLUMN_2} /&gt;\n    &lt;/FieldGroup&gt;\n\n    &lt;FieldGroup expanded={false} name=\"group_column_3\" label=\"Column 3\"&gt;\n      &lt;TextField label=\"Label\" name=\"text\" default=\"Product\" /&gt;\n      &lt;MenuField name=\"website_footer_3\" label=\"Menu Column 3\" default={MENU_ID_COLUMN_3} /&gt;\n    &lt;/FieldGroup&gt;\n\n    &lt;FieldGroup expanded={false} name=\"group_column_4\" label=\"Column 4\"&gt;\n      &lt;TextField label=\"Label\" name=\"text\" default=\"Legal\" /&gt;\n      &lt;MenuField name=\"website_footer_4\" label=\"Menu Column 4\" default={MENU_ID_COLUMN_4} /&gt;\n    &lt;/FieldGroup&gt;```\n(Similar structure for `group_column_2`, `group_column_3`, and `group_column_4`.)\n*`island.tsx`:*\nI’m looping through `menuArray` to dynamically render the menus:\n```&lt;div className=\"grid lg:grid-cols-4 grid-cols-1 md:grid-cols-2 gap-8 w-full\"&gt;\n        {menuArray.map((item, index) =&gt; {\n          const menuFieldId = `website_footer_${index + 1}` as const;\n          const menuId = item[menuFieldId as keyof typeof item];\n           \n          console.log({ menuFieldId }, { menuId });\n\n          return (\n            &lt;div key={menuFieldId} className=\"flex flex-col min-h-28\"&gt;\n              &lt;h3 className=\"font-bold mb-4 text-white\"&gt;{item.text}&lt;/h3&gt;\n              &lt;Menu\n                fieldPath={menuFieldId}\n                id={menuId}\n                className=\"text-white flex flex-col gap-2\"\n              /&gt;\n            &lt;/div&gt;\n          );\n        })}\n      &lt;/div&gt;```\nconsole.log\n```{ menuFieldId: 'website_footer_1' } { menuId: '187925959873' }\n{ menuFieldId: 'website_footer_2' } { menuId: '187925959927' }\n{ menuFieldId: 'website_footer_3' } { menuId: '187925609720' }\n{ menuFieldId: 'website_footer_4' } { menuId: '187925960950' }```\nIssue:\nThe menu isn’t loading correctly. It seems the `MenuField` or its `id` isn’t being recognized in the CMS.\nWhat I’ve Checked:\n• *Field Configuration:* The `MenuField` names (`website_footer_1`, `website_footer_2`, etc.) are set up in HubSpot.\n• *Menu IDs:* The `MENU_ID_COLUMN_*` constants point to valid menu IDs.\n• *Data Flow:* The `menuArray` is populated correctly, and the `menuId` seems to match the field.\n• *Rendering:* Tested with hardcoded menu IDs, and the `Menu` component renders fine.\nDespite these checks, the dynamically loaded menus don’t seem to appear. I think this is because of the dynamic loading. My header menu is working fine because this is static.\n\nQuestion:\nWhat could I be missing in the configuration, or are there specific debugging steps I should try to resolve this?\nThank you in advance for your help! I look forward to any advice or suggestions from the community.\n\nPS:",
+    "time_stamp": "2024-12-13 02:14:42",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-12-16 01:21:14"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Given Loyiso",
+      "poster_handle": "given.loyiso"
+    },
+    "time_stamp": "2024-12-13 04:59:03",
+    "edited": {
+      "time_stamp": "2024-12-13 05:13:19"
+    },
+    "text": "Hi everyone,\nI’m working on a custom Post Listing module in HubSpot CMS and need to pass field values as variables to a GraphQL query. The module works, but I’m unsure of the best way to map field values to query variables.\nContext:\n\nHere’s the relevant code:\n*Fields Setup (`fields.tsx`):*\n\n```   {/* Posts per page configuration */}\n    <NumberField name=\"posts_per_page\" label=\"Posts per page\" default={3} />\n\n    {/* Sorting options */}\n    <ChoiceField\n      name=\"sort_by\"\n      label=\"Sort by\"\n      default=\"publish_date_\"\n      choices={[\n        ['publish_date_', 'Publish Date'],\n        ['name', 'Post Title'],\n        ['updated', 'Last Updated'],\n        ['created', 'Date Created'],\n      ]}\n    />\n\n    {/* Sort order */}\n    <ChoiceField\n      name=\"sort_order\"\n      label=\"Sort order\"\n      default=\"desc\"\n      choices={[\n        ['desc', 'Descending'],\n        ['asc', 'Ascending'],\n      ]}\n    />```\nComponent Code (`index.tsx`):\n```export const Component = ({ fieldValues, dataQueryResult }: any) => {\n  const { state, slug, limit } = fieldValues;\n\n  return (\n    <Island\n      module={ComponentIsland}\n      hydrateOn=\"load\"\n      variables={{\n        state,\n        slug,\n        limit: parseInt(limit, 10),\n      }}\n      posts={dataQueryResult?.data?.BLOG?.post_collection?.items}\n    />\n  );\n};\n\nexport const query = `\n  query {\n    BLOG {\n      post_collection(\n        filter: { slug__icontains: \"/article\", state__eq: \"PUBLISHED\"}\n        limit: 3\n      ){\n        total\n        items {\n          id\n          name\n          featured_image\n          post_body\n          post_summary\n          url\n          publish_date\n          created\n          updated\n        }\n      }\n    }\n  }\n`;```\nI would like something like this:\n```export const query = `\n  query ($state: String, $slug: String, $limit: Int) { \n    BLOG {\n      post_collection(\n        filter: { slug__icontains: $slug, state__eq: $state }\n        limit: $limit\n      ) {\n        total\n        items {\n          id\n          name\n          featured_image\n          post_body\n          post_summary\n          url\n          publish_date\n        }\n      }\n    }\n  }\n`;```\nQuestion:\nIs this the correct way to pass field values as query variables in HubSpot CMS, or is there a more efficient approach? Any insights would be appreciated!",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-02-11 03:50:53"
+      },
+      {
+        "time_stamp": "2025-02-11 05:13:05"
+      },
+      {
+        "time_stamp": "2025-02-14 01:10:46"
+      }
+    ]
+  }
+]

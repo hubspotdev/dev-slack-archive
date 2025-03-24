@@ -1,0 +1,969 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 07:14:17",
+    "text": "clarifying: Projects as a whole is not being sunset - the opposite is true we're expanding their capabilities over time.\n\nThe sunset is specifically the first version of projects - There are a couple core changes, node versions are no longer in the serverless.json. They're controlled by the projects version. Additionally we're changing how serverless works in CMS Projects to make it work consistently with the CRM way of working.\n\nThis means you'll learn one way to build serverless functions and it will apply whether you're building for CMS or CRM UIE"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 07:14:39",
+    "text": "Very sorry for my slow response. I actually typed out a response like 2 weeks ago and forgot to actually post it :facepalm:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 07:20:19",
+    "text": "The endpoint information is what you need if you want to call your serverless function from the front-end.\n\nAnyone who had serverless function access in CMS should have the equivalent access in this version.\n<https://developers.HubSpot.com/docs/platform/serverless-functions#configuration>\n\nthe endpoint object is what you need to configure."
+  },
+  {
+    "poster": {
+      "poster_name": "Anthony Pizzurro",
+      "poster_handle": "anthonypizzurro"
+    },
+    "time_stamp": "2024-04-12 07:28:11",
+    "text": "Thanks for clarifying, Jon! I was just caught off guard that existing code would stop working and that the migration guide didn't mention that endpoint URLs would change. So it was a bit more work than expected to fix and test.\n\nBut I agree, this is definitely a net improvement!"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 07:29:14",
+    "text": "I appreciate that catch, I'll see if we can update the documentation to make it more clear."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 08:42:31",
+    "text": "If your function is projects based you get some logging capability in the projects interface as well as the private app's log screen.\n\n2 seconds does indeed feel long, but I'm not sure what the task is that you're having the function do. If you're doing some heavy processing of data or like image editing in a serverless function I would expect that could take awhile."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 08:44:47",
+    "text": "it's used in a cms-react project but it's not a project itself"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 08:46:50",
+    "text": "when I log using `hs logs my-function --follow` I get a range of times, last one is:\n```SUCCESS - Execution Time: 5643ms```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 08:47:40",
+    "text": "the only thing it's doing is processing a graphql query"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 08:47:50",
+    "edited": {
+      "time_stamp": "2024-04-12 08:48:54"
+    },
+    "text": "Some other tips:\n• if you're making several HubSpot API calls in your serverless function, consider using the graphQL endpoint.\n• Filter data using the API's filters/parameters vs trying to do all the filtering in the function.\n• Unclear based on what you said if the serverless function itself is inside the cms-react project but if it's not I would migrate it to be inside of it. I would also update your Projects version to 2023.2 if you haven't already (this will impact which Node version is used potentially giving some performance improvements) having the serverless function inside the project also comes with a benefit. Your deploys of your front-end code and your serverless code will happen at the same time, and you can revert back to previous deploy if something goes wrong."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 08:50:07",
+    "text": "• it's a graphQL endpoint \n• yup, filtered entirely in the filters/params \n• I just meant that I make calls from the cms-react project. I can move the functions inside of that project but I heard that's a little buggy still and didn't want to risk it"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 08:51:11",
+    "text": "the query is largeish...it's about 5000 complexity points"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 08:51:44",
+    "text": "I can reduce it down to 1000 if I do some of the processing client side (use tag_ids instead of blog_ids)"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 08:54:30",
+    "text": "I'll try to move it into the project and take that opportunity to refactor/optimize a bit"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 08:55:10",
+    "text": "<@U7SL518D6> is there any documentation that you can share for how to add functions to a cms-react project?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 09:01:02",
+    "text": "I checked and 5k points is a ways off from our maximum which is 30k points. That said, depending on what it's needing to do, that could still take a bit.\n\n\nAs for migrating the serverless function into projects:\n<https://developers.HubSpot.com/docs/platform/serverless-functions>\n\nNote the way you config the serverless functions is different, not drastically different but still a little different. The reason for the difference is that projects based serverless functions regardless of if you're building for CMS or UI Extensions they now work the same. (with exception that UI Extension focused functions don't need to have public endpoints)"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 09:03:33",
+    "text": "<@U7SL518D6>\n```Due to system limitations, logs will not be surfaced in HubSpot or the CLI for project-based serverless functions with endpoints.```\nis this a temporary limitation? I'm not sure I could have built my functions without being able to tweak and log"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 09:03:50",
+    "text": "is that referring to logs using the CLI? or some other log?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 09:04:16",
+    "text": "I can double check for you, that may just be referring to the in-app logs."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 09:05:56",
+    "text": "related, this guide for migrating from projects v2023.1 to v2023.2 may be helpful for migrating your serverless function even though you didn't have it in your project at 2023.1 (The way serverless worked in 2023.1 for CMS was basically the same as serverless not inside of a project):\n<https://developers.HubSpot.com/docs/platform/platform-versioning#changes-in-2023-2>"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 09:08:35",
+    "text": "thank you, I think I am partially using this setup now...the secrets part is either confusing or I'm already doing it..."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 09:09:02",
+    "text": "in my function I'm already using `process.env` to get the token"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 09:09:08",
+    "text": "```const accessToken = process.env.blog_posts_access_code;```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 09:09:48",
+    "text": "```// serverless.json\n...\n  \"secrets\": [\"blog_posts_access_code\"],\n...```"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 09:10:58",
+    "text": "this is the confusing part:\n```In your serverless.json file, list the names of the secrets needed by each function. Do not include PRIVATE_APP_ACCESS_TOKEN, as this is automatically created for you and already available in the serverless function.```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 09:12:43",
+    "text": "<@U7SL518D6> based on this note in the release notes:\n```Increased log size from 4KB to 256KB with logs now in order of execution```\nCLI logs will work (and love the size bump!)"
+  },
+  {
+    "text": "typo?",
+    "time_stamp": "2024-04-12 09:17:55"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 09:18:28",
+    "text": "`/src/app/.functions` folder or `/src/app/app.functions` folder"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 09:21:29",
+    "text": "great question. will have to think about how we document this. I'm pretty sure it's that we don't care the name of the folder so long as it ends in `.functions`"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 09:21:38",
+    "text": "app.functions being our example"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 09:22:21",
+    "text": "`[any-name].functions` maybe"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 09:23:38",
+    "text": "a folder being named `.anything` causes it to be hidden locally at least on Windows, and we're not trying to do that with this folder type since it's not directly containing sensitive auth data.\n\n&gt; [any-name].functions\nThat is a possibility."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 09:24:26",
+    "text": "interesting, documentation is always tough. I'm happy to \"idiot test\" this now"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 09:26:20",
+    "edited": {
+      "time_stamp": "2024-04-12 09:27:09"
+    },
+    "text": "Indeed. trying to iterate on documentation is always a good learning experience I've found. You run into so many odd things that you don't realize are either confusing or problematic.\n\nSomething we try to do but admittedly doesn't always happen is we try to write the developer docs as we build the product itself, and we use the developer docs to validate \"Hey does our thinking actually make sense to external developers here?\"\n\nIf we can't send someone to the documentation and have them figure out how to use the thing, then we dun goofed something up."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 09:28:20",
+    "text": "I'll let you know soon if you dun goofed, trying things out now. Having a \"working\" version should hopefully make this easier"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 09:28:44",
+    "text": "the new \"secrets\" approach is confusing maybe but I need to read more carefully — doesn't count yet"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 09:29:20",
+    "text": "soon we'll either have AI writing the documentation as we go or trying out what we document as we write it"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 09:30:15",
+    "text": "I think I'll name it `server.functions` in the end..."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 09:30:32",
+    "text": "or even better `serverless.functions`"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 09:34:20",
+    "text": "<@U7SL518D6> typo:\n```exports.main = async myFunction = (context = {}) =&gt; {```\nshould be\n```exports.main = async (context = {}) =&gt; {```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 09:36:14",
+    "text": "where are you seeing that?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 09:36:49",
+    "text": "<https://developers.HubSpot.com/docs/platform/platform-versioning#changes-in-2023-2>"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 09:36:59",
+    "text": "in the \"After\" example"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 09:52:01",
+    "text": "&gt; soon we'll either have AI writing the documentation as we go or trying out what we document as we write it\nSadly reality is the tech is a ways off from actually being good at this. The reason Copilot is good at explaining code is that it's trained on documentation that exists for common libraries etc as well as the code for the open source libraries.\n\nUnfortunately for things like HubL etc. If you try to feed it the raw underlying code and go \"Gimmie some documentation\" what it can do well is comment the code itself. What it sucks at is explaining why anything is the way it is, or how you should think about your code.\n\nSo some things lend themselves well to AI generation like API endpoint documentation to some degree can be done this way - but that's kinda unnecessary as we already have tools that auto generate the details of the parameters etc. The part it can't do well is what we do in our overview docs, because that's all human context, that you have to have an understanding of the bigger picture to write.\n\nAll of that said though what AI can be great for is putting existing documentation into a format that helps you learn/understand something in the unique context that you're trying to use it in. (Like copilot helping you resolve a bug). A drawback in current LLMs though is they don't know/care what version of the packages/libraries you're using are. So you can get given instructions for an outdated version, or be told to install new packages that aren't necessary."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 09:53:56",
+    "text": "yea, my approach when using AI has been to feed it the smallest parts of a problem/request instead of asking it to do anything with multiple parts"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 09:54:09",
+    "text": "One day I hope we (meaning ai devs collectively) can solve those 2 issues, because AI for assiting in development will get so much better."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 09:54:39",
+    "text": "\"soon\" is probably a 1-2 years though. It's bound to take leaps forward"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 09:55:11",
+    "edited": {
+      "time_stamp": "2024-04-12 09:55:46"
+    },
+    "text": "there's that quote, something like \"people overestimate what they can do in 1 month and underestimate what they can do in 1 year\""
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 09:57:04",
+    "text": "I asked AI to find the quote for me...`\"Most people overestimate what they can do in one year and underestimate what they can do in ten years.\"`"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 09:58:01",
+    "text": "I'm about to deploy these new functions. I didn't create a new secret or private app because all of that is now handled by the project (hopefully)"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 09:58:53",
+    "text": "`const accessToken = process.env[\"PRIVATE_APP_ACCESS_TOKEN\"];`\n\nif the documentation is to be believed, that key will be created for me and work without anything else...feel weirdly suspicious or that I am already doing something wrong"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 10:36:26",
+    "edited": {
+      "time_stamp": "2024-04-12 10:38:30"
+    },
+    "text": "<@U7SL518D6> :expressionless: ~it's not looking good:~ (forgot to import axios)\n```[ERROR] A AxiosError has occurred. Request failed with status code 404```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 10:39:05",
+    "text": "after importing axios hows it goin'"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 10:39:27",
+    "text": "re-deploying now — I'll let you know in one sec"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 10:45:40",
+    "text": "<@U7SL518D6> still getting a 404 but now for the actual endpoint path...hmmm"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 10:47:28",
+    "text": "oh, it changed to `/hs/serverless/endpoint-path`?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 10:47:34",
+    "text": "The endpoint path you hit on the front-end may have changed in projects 2023.2 to `/hs/` instead of `/hs_cms/`."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 10:47:49",
+    "text": "unsure about that `/serverless/` doublechecking the doc"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 10:48:55",
+    "text": "okay yes doc says `/hs/serverless/`"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 10:49:10",
+    "text": "ok, updated that"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 10:49:39",
+    "text": "I have to deploy again I think, I usually work over \"proxy\" but that url doesn't seem to be working..."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 10:50:07",
+    "text": "shows as `:3000/hs/serverless/posts?q=&amp;offset=0:1`\n\nnot sure what it used to be"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 10:50:57",
+    "text": "might have to ask someone from `cms-react` channel about that one, but in any case, deploying and..."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 10:53:30",
+    "text": "if I type the endpoint url in directly it shows:\n```{\"status\":\"error\",\"message\":\"Couldn't find the requested GET posts. Make sure your path is correct and that the function for GET posts is deployed, and then try again.\",\"correlationId\":\"3c04ece8-f6fc-4584-b7dd-f85eb8a5d62c\",\"context\":{\"PATH\":[\"posts\"],\"METHOD\":[\"GET\"]},\"category\":\"OBJECT_NOT_FOUND\",\"subCategory\":\"ServerlessGatewayErrorType.GATEWAY_NOT_FOUND\"}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 10:54:23",
+    "edited": {
+      "time_stamp": "2024-04-12 10:55:37"
+    },
+    "text": "I'm not 100% sure been a bit since I last played with it. I think... but am not 100% confident, the serverless functions may be able to be run locally when running the local dev server in cms-react <https://github.com/HubSpot/cms-react/tree/main/examples/hello-world#4-developing-locally>\n\nIf that is not working, you would need to deploy to get the function to work.\n\nThe serverless functions do work for UI Extensions when testing locally so I am making a partial assumption here."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 10:54:51",
+    "text": "Also yes the folks in <#C04AY1H2204|cms-react> are closer to it than I am and will have better guidance."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 10:55:40",
+    "text": "even in production the url is not found"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 10:55:41",
+    "text": "hmm"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 10:56:02",
+    "text": "```{\n  \"appFunctions\": {\n    \"functionName\": {\n      \"file\": \"posts.js\",\n      \"endpoint\": {\n        \"path\": \"posts\",\n        \"method\": [\"GET\"]\n      }\n    }\n  }\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 10:56:21",
+    "text": "`return axios(\"/hs/serverless/posts\", {`"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 10:56:21",
+    "edited": {
+      "time_stamp": "2024-04-12 10:56:30"
+    },
+    "text": "try just `/hs/posts`"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 10:56:55",
+    "text": "see if that works. Hopefully it should be the /serverless but I'm just testing a theory"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 10:57:51",
+    "text": "nope, still 404 (at least over proxy)"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 10:57:55",
+    "text": "trying to redeploy again now"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 10:57:57",
+    "text": "huh..."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:00:01",
+    "text": "is axios still automatically available? maybe it has to be installed now"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:02:45",
+    "text": "looks like it is `/hs/serverless/posts` — that shows\n```{\n  \"status\": \"error\",\n  \"message\": \"Couldn't find the requested GET posts. Make sure your path is correct and that the function for GET posts is deployed, and then try again.\",\n  \"correlationId\": \"c9572c73-ea83-466b-9278-e8793a988800\",\n  \"context\": {\n    \"PATH\": [\n      \"posts\"\n    ],\n    \"METHOD\": [\n      \"GET\"\n    ]\n  },\n  \"category\": \"OBJECT_NOT_FOUND\",\n  \"subCategory\": \"ServerlessGatewayErrorType.GATEWAY_NOT_FOUND\"\n}```\nvs a literal 404 page the other way (if entered directly)"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:06:14",
+    "text": "```  \"platformVersion\": \"2023.2\"```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:06:20",
+    "text": "that seems right"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:06:22",
+    "text": "hmm"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 11:07:39",
+    "edited": {
+      "time_stamp": "2024-04-12 11:07:59"
+    },
+    "text": "Unfortunately the documentation isn't great in regards to if axios is included anymore or not. Try manually including it in your package.json\n<https://developers.HubSpot.com/docs/platform/serverless-functions#including-dependencies>\n\nVery sorry for the frustrating issues here, clearly we need to improve our documentation on this."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 11:08:41",
+    "text": "The axios question though shouldn't cause a 404 hitting the endpoint from the front-end. Instead you'd expect a 500 error."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:08:47",
+    "text": "k, I'll give that a try now"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:12:23",
+    "text": "no luck over proxy (which did work before)"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:12:26",
+    "text": "checking after deploy"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:17:47",
+    "text": "no luck, I'm going to remove axios from the server side of the request just to simplify and remove variables"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 11:20:12",
+    "text": "still getting this?\n```{\n  \"status\": \"error\",\n  \"message\": \"Couldn't find the requested GET posts. Make sure your path is correct and that the function for GET posts is deployed, and then try again.\",\n  \"correlationId\": \"c9572c73-ea83-466b-9278-e8793a988800\",\n  \"context\": {\n    \"PATH\": [\n      \"posts\"\n    ],\n    \"METHOD\": [\n      \"GET\"\n    ]\n  },\n  \"category\": \"OBJECT_NOT_FOUND\",\n  \"subCategory\": \"ServerlessGatewayErrorType.GATEWAY_NOT_FOUND\"\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:20:40",
+    "text": "I removed axios and trying to redeploy"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:20:47",
+    "text": "set `posts.js` to\n```exports.main = async (context) =&gt; {\n  return {\n    statusCode: 200,\n    body: { message: \"Hello World\" },\n  };\n};```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:20:49",
+    "text": "to keep it simple"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 11:21:12",
+    "text": "the axios issue would theoretically cause a 500 error, not a 404.\n\nSo I'm thinking it's a config issue"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 11:21:55",
+    "text": "as dumb as it sounds and as contradictory as it'd be to what I told you previously. My suggestion is try updating the `.functions` folder to `app.functions` see if that alone does the trick"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:22:05",
+    "text": "ha, ok, one sec"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:23:25",
+    "text": "thanks for sticking with me through this so far...here's hoping this last deploy does it"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:23:37",
+    "text": "`serverless.functions` is a waaay better name though"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 11:24:34",
+    "text": "I agree with you, but lol it could be something as simple as that causing the issue"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:26:26",
+    "text": "no luck"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:26:31",
+    "text": "same 404"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:27:01",
+    "text": "maaybe \"posts\" is a bad name for some reason..."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:27:38",
+    "text": "I asked in the `cms-react` channel too but no luck yet"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 11:47:07",
+    "edited": {
+      "time_stamp": "2024-04-12 11:47:47"
+    },
+    "text": "I mean I was gonna comment that \"posts\" as an API endpoint period feels like a naming faux pas because POST is a method. but I wouldn't think there's anything on our end that would care about it. I think it's more just kinda like naming a variable a name that could be misconstrued."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:47:33",
+    "text": "yea"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:47:42",
+    "text": "maybe my folder structure is weird?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:48:22",
+    "text": "I had a parent folder `src/project/app/`"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:48:26",
+    "text": "trying without it..."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:52:36",
+    "text": "although I doubt that matters"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:52:52",
+    "text": "although now I'm a little worried to deploy....the path is not set by my folder name pretty sure"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 11:53:54",
+    "text": "parent folder shouldn't matter"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:56:17",
+    "text": "it was\n```parent/src/project/app\nparent/src/project/hsproject.json```\nnow it's\n```parent/src/app\nparent/src/hsproject.json```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:56:47",
+    "text": "seems weird now"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 12:12:47",
+    "text": "yea, no luck, I might have to give up soon to keep making progress but it all looked promising"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 12:16:44",
+    "text": "<@U7SL518D6> maybe my portal needs to be unlocked?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 12:42:09",
+    "text": "has anyone successfully used serverless functions inside of a cms-react project?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 12:56:45",
+    "edited": {
+      "time_stamp": "2024-04-12 12:57:02"
+    },
+    "text": "hmm, I've alerted the team behind cms-react. Not expecting a response till next week unfortunately since it's a Friday."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 13:01:20",
+    "text": "ok, thanks, I'll undo and try again when I hear back from someone"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-04-12 13:07:01",
+    "text": "Sorry for the frustrating experience. I've relayed a lot of feedback to the team based on this conversation though so hopefully we can make the overall experience better from docs to error messages etc."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 13:08:18",
+    "text": "no worries, I'm happy to help keep this stuff moving forward"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 13:08:58",
+    "text": "I appreciate all the help/insights"
+  }
+]

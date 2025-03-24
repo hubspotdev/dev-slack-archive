@@ -1,0 +1,13 @@
+[
+  {
+    "poster": {
+      "poster_name": "Mitja Lewin",
+      "poster_handle": "m.lewin"
+    },
+    "time_stamp": "2022-07-24 07:20:16",
+    "edited": {
+      "time_stamp": "2022-07-24 07:28:26"
+    },
+    "text": "<@U01UAPFG9K4> Yes, you can create a blank *HTML* file of type \"email\" and write your own code:\n```&lt;!--\n  templateType: \"email\"\n  isAvailableForNewContent: true\n  label: MyRSS-Mail\n--&gt;```\nHubSpot await the `email_body` module in the context of an email:\n```{% module \"email_body\" path=\"@HubSpot/email_body\" %}```\nBut if you create a new *RSS-Mail* with your custom Template, the `email_body` get replaced by the default token-markup from HubSpot. That means you have to copy your custom Markup Code manually into the code view field of the Rich-Text Editor. _That is very annoying._ \n\nA better way is to create the *RSS-Part* by using programmable E-Mail and get the latest Blog-Post with HubL. The posts we are able to load with `blog_recent_posts()` function. We use the variable `content.subscription` to selected the blog_id chosen on the RSS-Mail creation process. For the missing `email_body` , just ignore the Design-Manager _warning_, it will work anyway.\n```{% set posts = blog_recent_posts(content.subscription, 3) %}\n{% for post in posts %}\n  (...)\n{% endfor %}```\nNow you have full access to the blog-post template object by using the `post` variable from the loop."
+  }
+]

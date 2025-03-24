@@ -1,0 +1,209 @@
+[
+  {
+    "poster": {
+      "poster_name": "Francesc León",
+      "poster_handle": "francesc873"
+    },
+    "time_stamp": "2023-10-06 02:32:27",
+    "text": "Hello! I have a question :slightly_smiling_face: There is an API to manage documents section. To add/remove files in these section?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-10-06 11:33:07"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2023-10-06 11:33:07",
+    "text": "<@U05TP7RM1H7>  there is no API for the sales document section."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Zimo",
+      "poster_handle": "matt_zimo"
+    },
+    "time_stamp": "2023-10-06 11:59:20",
+    "edited": {
+      "time_stamp": "2023-10-06 12:00:57"
+    },
+    "text": "With the new code samples on the API documentation, I don't know how to pass on the secret and record ID in API calls.\n```var http = require(\"https\");  \nvar options = { \n \"method\": \"GET\",\n \"hostname\": \"api.hubapi.com\",\n \"port\": null,\n \"path\": \"/crm/v3/objects/contacts/RECORD_ID?propertiesWithHistory=firstname&archived=false\",\n \"headers\": {\n \"accept\": \"application/json\",\n \"authorization\": \"Bearer ACCESS_TOKEN\" } \n};```",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-10-06 12:28:12"
+      },
+      {
+        "time_stamp": "2023-10-06 12:51:58"
+      },
+      {
+        "time_stamp": "2023-10-06 13:06:59"
+      },
+      {
+        "time_stamp": "2023-10-06 13:16:44"
+      },
+      {
+        "time_stamp": "2023-10-06 13:22:05"
+      },
+      {
+        "time_stamp": "2023-10-06 13:39:45"
+      },
+      {
+        "time_stamp": "2023-10-06 13:40:36"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Zimo",
+      "poster_handle": "matt_zimo"
+    },
+    "time_stamp": "2023-10-06 12:28:12",
+    "text": "I'm used to passing on the access token and variables this way\n\n```const HubSpotClient = new HubSpot.Client({\"accessToken\":process.env.ACCESS_TOKEN});\n\nconst company_id = event.inputFields[\"company_id\"];```"
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2023-10-06 12:51:58",
+    "text": "The right syntax is going to vary based on where you’re executing the code, in addition to the specific endpoint being used. If you are trying to figure out how to access a specific endpoint, providng some details will increase the likelihood of someone being able to help.\n\n\nThe npm readme for the hs api client <https://www.npmjs.com/package/@HubSpot/api-client|here >might help you figure it out too.\n\nIf you’re a developer and/or expect to work with APIs even occasionally in the future, learning to use some of the more global api clients such as <https://axios-http.com/docs/intro|axios >\nwould be a solid addition to your toolkit."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Zimo",
+      "poster_handle": "matt_zimo"
+    },
+    "time_stamp": "2023-10-06 13:06:59",
+    "text": "This is in a custom coded workflow action. The endpoint I'm querying is the contacts read endpoint."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Zimo",
+      "poster_handle": "matt_zimo"
+    },
+    "time_stamp": "2023-10-06 13:16:44",
+    "text": "The npm documentation in your link is how I'm used to connecting to the api. It's how other code samples in <https://developers.HubSpot.com/docs/api/crm/associations|HubSpot associations api> documentation are presented, for example.  But when I'm trying to connect to <https://developers.HubSpot.com/docs/api/crm/contacts|read contacts>, I have to somehow pass my secret key in a text field in the header and put the contact id in the path parameter?\n```var http = require(\"https\");\n\nvar options = {\n  \"method\": \"GET\",\n  \"hostname\": \"<http://api.hubapi.com|api.hubapi.com>\",\n  \"port\": null,\n  \"path\": \"/crm/v3/objects/contacts/12345?properties=fullname%2C%20job_title&amp;propertiesWithHistory=email&amp;archived=false\",\n  \"headers\": {\n    \"accept\": \"application/json\",\n    \"authorization\": \"Bearer YOUR_ACCESS_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.end();```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Zimo",
+      "poster_handle": "matt_zimo"
+    },
+    "time_stamp": "2023-10-06 13:22:05",
+    "text": "Maybe this axios library would be easier. I see you can append stuff to url's with it!"
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2023-10-06 13:39:45",
+    "edited": {
+      "time_stamp": "2023-10-06 13:40:27"
+    },
+    "text": "for sure - I use it all of the time. One additional little parameter you can use to make creating the query perhaps a bit easier, is using the “params”, parameter, which allows you to provide the query parameters as an object. Those parameters will then be translated as url query parameters when you make your request. I wrote a quick snippet that might be helpful:\n\n```exports.main = async (event, callback) => {\t\nlet getContactOptions = {\n\t\tmethod: \"GET\",\n\t\turl: `<https://api.hubapi.com/crm/v3/objects/contacts/${contactId}>`,\n\t\theaders: {\n\t\t\t\"Content-type\": \"application/json\",\n\t\t\tAuthorization: `Bearer ${hsKey}`\n\t\t},\n\t\tparams: {\n\t\t\tproperties: \"firstname, lastname, phone\",\n\t\t\tpropertiesWithHistory: \"domain, address\"\n\t\t}\n\t};\n\n\tlet contactRes = await axios(getContactOptions);\n\tlet contact = contactRes.data;\n\tconsole.log(\"contact\", contact);\n}```\nGood luck!"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Zimo",
+      "poster_handle": "matt_zimo"
+    },
+    "time_stamp": "2023-10-06 13:40:36",
+    "text": "that's fantastic. Thank you so much!"
+  },
+  {
+    "poster": {
+      "poster_name": "Pankaj Sharma",
+      "poster_handle": "pankaj.sharma346"
+    },
+    "time_stamp": "2023-10-06 14:47:27",
+    "text": "Hello"
+  },
+  {
+    "poster": {
+      "poster_name": "Pankaj Sharma",
+      "poster_handle": "pankaj.sharma346"
+    },
+    "time_stamp": "2023-10-06 14:47:48",
+    "text": "We are using a deal pipeline in HubSpot and when someone is moved to a certain stage of the pipeline, we want to send their contact information to Emblue, another email provider.",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-10-06 15:50:52"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Pankaj Sharma",
+      "poster_handle": "pankaj.sharma346"
+    },
+    "time_stamp": "2023-10-06 14:48:31",
+    "edited": {
+      "time_stamp": "2023-10-06 14:49:05"
+    },
+    "text": "How I can do this. I have json code to trigger api"
+  },
+  {
+    "poster": {
+      "poster_name": "Fahad",
+      "poster_handle": "fahad.waseem"
+    },
+    "time_stamp": "2023-10-06 14:49:59",
+    "text": "Hello, I've been using the v1 batch API to create or update groups of contacts in HubSpot. Since there is no v1 API to create/update group of companies, could some please provide me with the v3 APIs for creating and updating groups of companies and contacts?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-10-06 15:49:24"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2023-10-06 15:49:24",
+    "text": "Batch endpoints are here\n<https://developers.HubSpot.com/docs/api/crm/companies|https://developers.HubSpot.com/docs/api/crm/companies>"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2023-10-06 15:50:52",
+    "text": "Have access to workflows?  Can do thhat with a custom coded action or use a webhook and subscribe to the appropriate prop change"
+  },
+  {
+    "poster": {
+      "poster_name": "Dean Winc",
+      "poster_handle": "mahi"
+    },
+    "time_stamp": "2023-10-07 00:35:28",
+    "text": "How do I Retrieve  A single record details from my custom object records?\nI tried this This API call  : `<https://api.hubapi.com/crm/v3/objects/custom/925172716>`  from <https://developers.HubSpot.com/docs/api/crm/crm-custom-objects|documentation >but it gives the following error :\n `\"status\": \"error\",`\n  `\"message\": \"Unable to infer object type from: custom\",`",
+    "reply_count": 4,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-10-07 06:47:58"
+      },
+      {
+        "time_stamp": "2023-10-07 08:21:05"
+      },
+      {
+        "time_stamp": "2023-10-08 04:01:40"
+      },
+      {
+        "time_stamp": "2023-10-09 01:57:55"
+      }
+    ]
+  }
+]

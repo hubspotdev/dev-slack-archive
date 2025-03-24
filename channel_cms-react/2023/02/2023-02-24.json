@@ -1,0 +1,384 @@
+[
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-24 01:30:50",
+    "edited": {
+      "time_stamp": "2023-02-24 01:32:59"
+    },
+    "text": "Hi All, How the debug works, I tried with vs code, console, debugger, but couldn’t get break points to hit. Are there some `cli` options that you can give to the dev server?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-02-24 06:39:53"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-24 02:27:21",
+    "text": "How I can use modules in partials?",
+    "reply_count": 4,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-02-24 02:33:00"
+      },
+      {
+        "time_stamp": "2023-02-24 02:33:33"
+      },
+      {
+        "time_stamp": "2023-02-24 06:06:55"
+      },
+      {
+        "time_stamp": "2023-02-24 07:29:09"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-24 02:33:00",
+    "edited": {
+      "time_stamp": "2023-02-24 04:40:48"
+    },
+    "text": "answer to my self, normal way,\n```import { Component as TestModule } from '../modules/test-module/index.jsx';```"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-24 02:33:33",
+    "text": "And in partials you need to also use default export"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-24 05:15:21",
+    "text": "<@UAYBXDG4U> I can’t use this in a customer project, without better css rendering with Goober, it’s causing too many problems. ExtractCss on the client side with component library just doesn’t work and it’s too cumbersome. So I have to wait before you get that fixed. If I look the documentation, it doesn’t look so hard. IMO You could add a setting in the project settings, like `cssInJs?: goober | styled-components | etc` and then add it in the rendering phase.\n<https://codesandbox.io/s/p305zp30lm?file=/src/index.js>"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-02-24 06:06:55",
+    "text": ":wave: - We don't have any wiring in place now for getting field information into a module within a partial. So if you do what you suggest above, it will render the component but any field information defined as part of that module won't be passed into the module component."
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-02-24 06:39:53",
+    "text": "Are you trying to debug the server side rendering?"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-02-24 06:56:04",
+    "edited": {
+      "time_stamp": "2023-02-24 06:56:09"
+    },
+    "text": "&gt; Btw, Do I have to always deploy the project after any changes? I guess the idea is to use dev until it’s finished and then run `deploy` (edited)\n:yesyes:"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-02-24 06:57:09",
+    "text": "&gt; My node version is `v18.9.0` could this cause some problems?\nMaybe ... I would recommend `16.13.2` as that's what were specifying in our environments."
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-02-24 06:57:41",
+    "text": "We’ll definitely work on it. The tricky part I’m worried about are styles that cross the server island boundary. Because if we call extractCSS at the end of the server render, inject that in the HTML, then later some client component state changes that change styles,and then goober may need to inject new styles. But goober on the client is only rendering the island portion of the react tree and “doesn’t know” about the server rendered components and styles. So we need to make sure those sever styles don’t disappear (or are overlapped in a problematic way). \n\nI do believe it is possible (and I’m guessing a lot before we’ve investigated deeper) but just following up with Byron’s expectation setting because there is more too it with the Island approach. "
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-02-24 07:29:09",
+    "text": "We also still need to setup wiring so that when a JS module is used inside a JS partial the page editor knows that module is there and shows it in the sidebar for someone to edit."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew James",
+      "poster_handle": "matthew929"
+    },
+    "time_stamp": "2023-02-24 12:03:59",
+    "edited": {
+      "time_stamp": "2023-02-24 12:04:48"
+    },
+    "text": "Easy way to setup tailwindcss since theres been a handful of comments about it. (basically followed the vite installation for tailwind <https://tailwindcss.com/docs/guides/vite>)\n1. cd into `cms-assets` \n2. Run these two commands\n    a. `npm install -D tailwindcss postcss autoprefixer`  \n    b. `npx tailwindcss init -p` \n3. Update `tailwind.config.js` to have the `content` array to include the components directory\n    a. EX:\n```module.exports = {\n  content: [`./components/**/*.{js,ts,jsx,tsx}`],\n  theme: {\n    extend: {},\n  },\n  plugins: [],\n}```\n4. create a `tailwind.css` file in the `styles` directory and include this as the 3 lines in that file\n```@tailwind base;\n@tailwind components;\n@tailwind utilities;```\n5. import the `tailwind.css` file in the components you wish to use (import into your layout file to not import it in every component)",
+    "reply_count": 5,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-02-24 12:12:24"
+      },
+      {
+        "time_stamp": "2023-02-24 12:13:24"
+      },
+      {
+        "time_stamp": "2023-02-24 12:29:25"
+      },
+      {
+        "time_stamp": "2023-02-24 12:37:46"
+      },
+      {
+        "time_stamp": "2023-02-24 12:45:07"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-02-24 12:12:24",
+    "text": "Have you done a project upload/deploy with those yet? I am from my phone right now, but wanted to double check that the correct things are deps vs devDeps for our build process."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew James",
+      "poster_handle": "matthew929"
+    },
+    "time_stamp": "2023-02-24 12:13:24",
+    "text": "I pushed a project up to a sandbox dev server following these steps and tailwind works"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew James",
+      "poster_handle": "matthew929"
+    },
+    "time_stamp": "2023-02-24 12:29:25",
+    "text": "```--- Hello World - React failed to build with the following error ---\n[ERROR] Building JS Project with error message `/tmp/cms_WwIM9q/cms-js-build/customer-package/components/modules/TodoList/fields.jsx defines some of the named exports for a module, but doesn't have all of them (needs fields, meta, and Component)\n(node:76) Warning: To load an ES module, set \"type\": \"module\" in the package.json or use the .mjs extension.\n(Use `node --trace-warnings ...` to show where the warning was created)\n[vite:css] Failed to load PostCSS config (searchPath: /tmp/cms_WwIM9q/cms-js-build/customer-package): [SyntaxError] Cannot use import statement outside a module\n/tmp/cms_WwIM9q/cms-js-build/customer-package/postcss.config.cjs:1\nimport tailwind from 'tailwindcss';\n^^^^^^\n\nSyntaxError: Cannot use import statement outside a module\n    at Object.compileFunction (node:vm:352:18)\n    at wrapSafe (node:internal/modules/cjs/loader:1033:15)\n    at Module._compile (node:internal/modules/cjs/loader:1069:27)\n    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1159:10)\n    at Module.load (node:internal/modules/cjs/loader:981:32)\n    at Function.Module._load (node:internal/modules/cjs/loader:822:12)\n    at ModuleWrap.&lt;anonymous&gt; (node:internal/modules/esm/translators:163:29)\n    at ModuleJob.run (node:internal/modules/esm/module_job:198:25)\n    at async Promise.all (index 0)\n    at async ESMLoader.import (node:internal/modules/esm/loader:385:24)\nfile: /tmp/cms_WwIM9q/cms-js-build/customer-package/styles/header.module.css?used\n[Failed to load PostCSS config: Failed to load PostCSS config (searchPath: /tmp/cms_WwIM9q/cms-js-build/customer-package): [SyntaxError] Cannot use import statement outside a module\n/tmp/cms_WwIM9q/cms-js-build/customer-package/postcss.config.cjs:1\nimport tailwind from 'tailwindcss';\n^^^^^^\n\nSyntaxError: Cannot use import statement outside a module\n    at Object.compileFunction (node:vm:352:18)\n    at wrapSafe (node:internal/modules/cjs/loader:1033:15)\n    at Module._compile (node:internal/modules/cjs/loader:1069:27)\n    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1159:10)\n    at Module.load (node:internal/modules/cjs/loader:981:32)\n    at Function.Module._load (node:internal/modules/cjs/loader:822:12)\n    at ModuleWrap.&lt;anonymous&gt; (node:internal/modules/esm/translators:163:29)\n    at ModuleJob.run (node:internal/modules/esm/module_job:198:25)\n    at async Promise.all (index 0)\n    at async ESMLoader.import (node:internal/modules/esm/loader:385:24)] {\n  code: 'PLUGIN_ERROR',\n  plugin: 'vite:css',\n  hook: 'transform',\n  id: '/tmp/cms_WwIM9q/cms-js-build/customer-package/styles/header.module.css?used',\n  watchFiles: [\n    '/tmp/cms_WwIM9q/cms-js-build/customer-package/components/partials/Cars.jsx',\n    '/tmp/cms_WwIM9q/cms-js-build/customer-package/components/partials/Footer.jsx',\n    '/tmp/cms_WwIM9q/cms-js-build/customer-package/components/partials/Header.jsx',\n    '/tmp/cms_WwIM9q/cms-js-build/customer-package/components/partials/Home.jsx',\n    '/tmp/cms_WwIM9q/cms-js-build/customer-package/components/modules/TodoList/index.jsx',\n    '/tmp/cms_WwIM9q/cms-js-build/customer-package/styles/header.module.css?used',\n    '/tmp/cms_WwIM9q/cms-js-build/customer-package/components/Layout.jsx',\n    '/tmp/cms_WwIM9q/cms-js-build/customer-package/components/islands/TodoList.jsx?island',\n    '/tmp/cms_WwIM9q/cms-js-build/customer-package/components/modules/TodoList/fields.jsx',\n    '/tmp/cms_WwIM9q/cms-js-build/customer-package/styles/cars.module.css?used',\n    '/tmp/cms_WwIM9q/cms-js-build/customer-package/assets/tacoma.jpg',\n    '/tmp/cms_WwIM9q/cms-js-build/customer-package/assets/vw-id.jpg',\n    '/tmp/cms_WwIM9q/cms-js-build/customer-package/assets/orange-line.jpg',\n    '/tmp/cms_WwIM9q/cms-js-build/customer-package/assets/huayra.jpg',\n    '/tmp/cms_WwIM9q/cms-js-build/customer-package/styles/footer.module.css?used',\n    '/tmp/cms_WwIM9q/cms-js-build/customer-package/components/islands/TodoList.jsx',\n    '/tmp/cms_WwIM9q/cms-js-build/customer-package/styles/tailwind.css',\n    '/tmp/cms_WwIM9q/cms-js-build/customer-package/components/islands/Button.jsx',\n    '/tmp/cms_WwIM9q/cms-js-build/customer-package/styles/todo.module.css?used'\n  ]\n}\n` and cause `Build failure`.\n--------------------------------------------------```\nScratch this now its causing a build error?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-02-24 12:37:46",
+    "edited": {
+      "time_stamp": "2023-02-24 12:38:04"
+    },
+    "text": "<@U04NGGHDXC0> i think you either need to switch to `.mjs` or `.js` for the file extension there or use CJS imports like `require('tailwindcss')` in your config file"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew James",
+      "poster_handle": "matthew929"
+    },
+    "time_stamp": "2023-02-24 12:45:07",
+    "text": "Baller, thanks Ben. Threw me off bc it was working before that haha"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew James",
+      "poster_handle": "matthew929"
+    },
+    "time_stamp": "2023-02-24 12:45:58",
+    "text": "Update to above. Ensure that your postcss.config.cjs file looks like this\n```const tailwind = require('tailwindcss');\nconst autoprefixer = require('autoprefixer');\nconst tailwindConfig = require('./tailwind.config.cjs');\n\nmodule.exports = {\n  plugins: [tailwind(tailwindConfig), autoprefixer()],\n};```"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew James",
+      "poster_handle": "matthew929"
+    },
+    "time_stamp": "2023-02-24 12:46:11",
+    "text": "update it to cjs imports instead of the regular imports"
+  },
+  {
+    "text": "Think i ran into a bug. After pushing up a couple of builds,\nWhen i am editing the page i see the correct content (now without tailwind styles applied - i dont see the import thats suppose to be importing the tailwind.css files), however when i view the actual page link the old home content is being shown with the HubSpot logo",
+    "time_stamp": "2023-02-24 13:00:45",
+    "reply_count": 7,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-02-24 13:01:30"
+      },
+      {
+        "time_stamp": "2023-02-24 13:03:24"
+      },
+      {
+        "time_stamp": "2023-02-24 13:41:51"
+      },
+      {
+        "time_stamp": "2023-02-24 13:44:31"
+      },
+      {
+        "time_stamp": "2023-02-24 13:56:32"
+      },
+      {
+        "time_stamp": "2023-02-24 13:59:48"
+      },
+      {
+        "time_stamp": "2023-02-24 14:04:21"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-02-24 13:01:30",
+    "text": "Can you try hitting the page with `?hsDebug=true`"
+  },
+  {
+    "text": "Then here is an image from the local dev perspective of what its suupose to look like\neverything is pushed up",
+    "time_stamp": "2023-02-24 13:01:52",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-02-24 13:04:28"
+      },
+      {
+        "time_stamp": "2023-02-24 13:06:16"
+      },
+      {
+        "time_stamp": "2023-02-24 13:07:03"
+      },
+      {
+        "time_stamp": "2023-02-24 13:07:11"
+      },
+      {
+        "time_stamp": "2023-02-24 13:07:41"
+      },
+      {
+        "time_stamp": "2023-02-24 13:07:58"
+      },
+      {
+        "time_stamp": "2023-02-24 13:08:04"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew James",
+      "poster_handle": "matthew929"
+    },
+    "time_stamp": "2023-02-24 13:03:24",
+    "text": "okay this fixed that part. now its not importing the tailwind.css file"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-02-24 13:04:28",
+    "text": "Is the \"proxy\" scenario where you are doing page \"rendering\" locally?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew James",
+      "poster_handle": "matthew929"
+    },
+    "time_stamp": "2023-02-24 13:06:16",
+    "text": "This is the local dev scenario using the &lt;domain&gt;localhost&lt;page-url&gt; trick"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew James",
+      "poster_handle": "matthew929"
+    },
+    "time_stamp": "2023-02-24 13:07:03",
+    "text": "when searching through the elements in the dev tool bar it is importing a tailwind.css file where as the live version is not"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-02-24 13:07:11",
+    "text": "Got it, so under the hood this is a local Vite dev server rendering the React bits, whereas when live it's a somewhat different render flow."
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-02-24 13:07:41",
+    "text": "So, good to know the local proxy scenario is :white_check_mark: - let's see what we can do about the \"live\" render"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-02-24 13:07:58",
+    "edited": {
+      "time_stamp": "2023-02-24 13:08:03"
+    },
+    "text": "Would you DM me your portalId ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew James",
+      "poster_handle": "matthew929"
+    },
+    "time_stamp": "2023-02-24 13:08:04",
+    "text": "yeah"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-02-24 13:41:51",
+    "text": "Looks to me there is a missing piece on our end to ensure proper tailwind output gets imported."
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-02-24 13:44:31",
+    "text": "Hm, I haven’t peeked at tailwind in a little while. But it may be worth comparing to the previous test/example I put up at <https://github.com/HubSpot/cms-js-building-blocks-hello-world/compare/main...tf/try-tailwind>"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-02-24 13:56:32",
+    "text": "Ok <@U04NGGHDXC0>...\n\n```// tailwind.config.js\n\nconst componentsDir = new URL('./components', import.meta.url).pathname;\n\nexport default {\n  content: [`${componentsDir}/**/*.{js,ts,jsx,tsx}`],\n  theme: {\n    extend: {},\n  },\n  plugins: [],\n};```\n```// postcss.config.js\n\nimport tailwind from 'tailwindcss';\nimport autoprefixer from 'autoprefixer';\nimport tailwindConfig from './tailwind.config.js';\n\nexport default {\n  plugins: [tailwind(tailwindConfig), autoprefixer()],\n};```"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-02-24 13:59:48",
+    "text": ":point_up_2: This is working in my test <https://99603606.hs-sitesqa.com/hello-world-home>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew James",
+      "poster_handle": "matthew929"
+    },
+    "time_stamp": "2023-02-24 14:04:21",
+    "text": "yeah that works.\nit gives a warning locally until you run a deploy with that change"
+  }
+]

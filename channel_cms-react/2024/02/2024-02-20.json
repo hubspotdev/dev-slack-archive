@@ -1,0 +1,425 @@
+[
+  {
+    "poster": {
+      "poster_name": "Mattis Rosenkranz",
+      "poster_handle": "m.rosenkranz"
+    },
+    "time_stamp": "2024-02-20 05:08:18",
+    "edited": {
+      "time_stamp": "2024-02-20 05:08:46"
+    },
+    "text": "Hey, have been asking myself that too. Have you found out anything?"
+  },
+  {
+    "poster": {
+      "poster_name": "Arrigo Lupori",
+      "poster_handle": "arrigo.lupori270"
+    },
+    "time_stamp": "2024-02-20 05:33:25",
+    "text": "Hi <@U05CAJG8D98> <@U055N3S0WPP>, are you still having this problem? Do you use VScode?\n\nI had the same exact issue for a while and solved it using a separate `tailwind-intellisense.js` file at the root of the project which foregoes the `import.meta.url` (that's what caused the issues for me), using only the local directory instead as Chris showed.\n\nThen you simply open the VScode tailwind extension settings and halfway through you will find an \"experimental\" config file setting, open it in settings.json and simply add the following:\n\n`\"tailwindCSS.experimental.configFile\": \"./tailwind-intellisense.js\"`"
+  },
+  {
+    "poster": {
+      "poster_name": "Arrigo Lupori",
+      "poster_handle": "arrigo.lupori270"
+    },
+    "time_stamp": "2024-02-20 05:34:38",
+    "text": "That will use the separate file for intellisense and you won't have to update the official one every time.\n\nYou can even separate the tailwind theme object so you don't have to rewrite it twice in each file.\n\nSimply import it in both."
+  },
+  {
+    "poster": {
+      "poster_name": "Arrigo Lupori",
+      "poster_handle": "arrigo.lupori270"
+    },
+    "time_stamp": "2024-02-20 05:34:41",
+    "text": "Hope this helps!"
+  },
+  {
+    "poster": {
+      "poster_name": "Arrigo Lupori",
+      "poster_handle": "arrigo.lupori270"
+    },
+    "time_stamp": "2024-02-20 05:35:43",
+    "text": "Just to clarify, the `tailwind-intellisense.js` follows the same convention of a Tailwind config file, just without the import.meta.url directory."
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-02-20 05:56:39",
+    "edited": {
+      "time_stamp": "2024-02-20 05:58:16"
+    },
+    "text": "A component only becomes an island when it is imported via ...\n\n```import MyIsland ../path/to/MyIsland?island```\nAnd then used with the `Island` components like\n\n```import { Island } from '@HubSpot/cms-components'\nimport MyIsland ../path/to/MyIsland?island\n\n...\n\nexport function Component() {\n  return <Island module={MyIsland} />\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-02-20 05:58:34",
+    "text": "anything that is imported and rendered within `MyIsland` is therefor in an island."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-02-20 06:47:49",
+    "text": "I haven't but I'm definitely still searching for the right approach here. I know there are react image optimization hooks that can be used. Maybe HubSpot can provide something like that <@UCY83QS6Q> <@UAYBXDG4U>?"
+  },
+  {
+    "poster": {
+      "poster_name": "George Grigorita",
+      "poster_handle": "george.grigorita"
+    },
+    "time_stamp": "2024-02-20 07:14:37",
+    "text": "Is it possible to use GraphQL data in module fields? For example: in a ChoiceField have the choices populated with what I get from a GraphQL query? Basically what I need to list is some countries I have in a HubDB table.",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-02-20 07:20:12"
+      },
+      {
+        "time_stamp": "2024-02-20 07:46:18"
+      },
+      {
+        "time_stamp": "2024-02-20 08:47:30"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-02-20 07:20:12",
+    "text": "There's no way to do this real time - i.e. at render time have the module definition be dynamic to data in HubDB.\n\nHowever, you could do a thing where you use the collector API to dynamically build your module fields JSX. You would need to create your own script/tooling around this. And then run it before you do a project deploy."
+  },
+  {
+    "poster": {
+      "poster_name": "George Grigorita",
+      "poster_handle": "george.grigorita"
+    },
+    "time_stamp": "2024-02-20 07:46:18",
+    "text": "Thanks, Byron!"
+  },
+  {
+    "poster": {
+      "poster_name": "Mattis Rosenkranz",
+      "poster_handle": "m.rosenkranz"
+    },
+    "time_stamp": "2024-02-20 08:06:53",
+    "text": "Im not really sure, but I think images inserted in hubl are automatically provided with multiple sources in srcset. Not the case here as far as I saw"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-02-20 08:16:42",
+    "text": "Yes, as of right now auto-srcset generation will happen when deployed _if_ there are width and height attributes set in the img element (necessary for us to know the aspect ratio even if other styles set max-width/other dimension styles). \n\nAlso auto image type conversion should happen even without width/height but I believe that requires certain domains (i.e. not sure off the top of my head about local dev and local proxying)"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-02-20 08:25:56",
+    "text": ":wave: - Good Day Everyone.\n\n:alert: :alert: :alert:\n\n\"CMS JS Building Blocks\" is becoming \"CMS React\"!\n\nThe <https://github.com/HubSpot/cms-js-building-block-examples|Building Blocks Repo> is being deprecated in favor of <https://github.com/HubSpot/cms-react|CMS React Repo>. This has no functional change for the current usage of the CMS React feature/platform. In fact it represents a continued investment of this development direction for the CMS. In this new repo you will also find `default-react-modules` which are Default Modules our internal teams are building on the CMS React platform. What this means is that new \"Default Modules\" will be open sourced in GitHub, and when a developer wishes to create a new module from a default module, they will have the ability to pull down modules from this open source location, make changes, and they deploy with projects. There will be more tooling around this behavior coming soon in the CLI.\n\nAs always, let us know of any questions/conerns.",
+    "reply_count": 19,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2024-02-20 08:53:24"
+      },
+      {
+        "time_stamp": "2024-02-20 09:19:28"
+      },
+      {
+        "time_stamp": "2024-02-20 09:20:30"
+      },
+      {
+        "time_stamp": "2024-02-20 09:21:23"
+      },
+      {
+        "time_stamp": "2024-02-20 09:21:54"
+      },
+      {
+        "time_stamp": "2024-02-20 09:55:45"
+      },
+      {
+        "time_stamp": "2024-02-20 11:12:43"
+      },
+      {
+        "time_stamp": "2024-02-20 11:15:17"
+      },
+      {
+        "time_stamp": "2024-02-20 11:16:50"
+      },
+      {
+        "time_stamp": "2024-02-20 11:17:59"
+      },
+      {
+        "time_stamp": "2024-02-20 11:18:28"
+      },
+      {
+        "time_stamp": "2024-02-20 11:19:36"
+      },
+      {
+        "time_stamp": "2024-02-20 11:20:38"
+      },
+      {
+        "time_stamp": "2024-02-20 11:21:11"
+      },
+      {
+        "time_stamp": "2024-02-20 11:22:30"
+      },
+      {
+        "time_stamp": "2024-02-20 11:25:21"
+      },
+      {
+        "time_stamp": "2024-02-20 11:25:25"
+      },
+      {
+        "time_stamp": "2024-02-21 06:01:35"
+      },
+      {
+        "time_stamp": "2024-02-21 06:07:06"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "George Grigorita",
+      "poster_handle": "george.grigorita"
+    },
+    "time_stamp": "2024-02-20 08:39:31",
+    "text": "I followed the steps from Roger and can confirm that this works fine."
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-02-20 08:42:29",
+    "text": "Hello,\n\nWe are working towards releasing a new component, `Icon`, which can work your module's icon fields and renders SVGs\n\nPlease let me know if anyone is interested in helping test it out, thanks!",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-03-15 13:37:54"
+      },
+      {
+        "time_stamp": "2024-03-15 13:40:39"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "George Grigorita",
+      "poster_handle": "george.grigorita"
+    },
+    "time_stamp": "2024-02-20 08:47:30",
+    "text": "I just realized that if I already have the data in HudDB I can use HubDbTableField and HubDbRowField as module fields to enable the user to make a selection.\n\nAlso, both fields throw a 404 in the documentation:\n<https://github.HubSpot.com/cms-js-building-block-examples/field-types/type-aliases/type-alias.HubDbRowFieldType.html>\n\n<https://github.HubSpot.com/cms-js-building-block-examples/field-types/type-aliases/type-alias.HubDbTableFieldType.html>"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-02-20 08:47:36",
+    "text": "yup, can also confirm this works. Just need to be careful that you don't also have a parent that includes the CLI"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-02-20 08:53:24",
+    "text": "interesting approach to getting data in the `BlogPosts` module example. Is that the recommended way to get HubL data at the moment (a `module.hubl.html` fille)? I've been doing pretty much the same thing but getting it from a regular HubSpot module and then passing it in."
+  },
+  {
+    "poster_handle": "cms-react",
+    "subtype": "channel_name",
+    "text": "has renamed the channel from \"cms-js-rendering\" to \"cms-react\"",
+    "time_stamp": "2024-02-20 09:15:33"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-02-20 09:16:55",
+    "text": "To make the channel easier to find and reflect how developers are actually referring to this functionality, I've renamed the channel to cms-react, hope it helps you find it easier in slack! :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-02-20 09:19:28",
+    "text": "Yes, it's a new way to get HubL context attached and passed to React modules\n\nWe haven't documented it yet, but have been using it for Default React Modules\n\nThe API is:\n\n`export const hublDataTemplate = \"...\"`\n\nWhere the template string sets a hubl variable `hublData`\n\nE.g. a full example\n\n\n`export const hublDataTemplate = \"{% set hublData = \"hello from HubL\" %}\"`\n\n\nThis gets passed to your module at a top level prop as `hublData`\n\nWill get this added as official documentation ASAP as we just finished up adding better local development support for it"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-02-20 09:20:30",
+    "text": "^ amazing. this will definitely be useful and means that I can use fewer oldschool modules"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-02-20 09:21:23",
+    "text": "my use case is pretty much exactly the blogPosts example"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-02-20 09:21:54",
+    "text": "although ideally, squeaky wheeling it here, it would be even better if I could use a graphql query with tag filtering"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-02-20 09:55:45",
+    "text": "<@U04DLJH3W94> do you have an example of that `BlogPosts-V0` module rendered on a page?"
+  },
+  {
+    "subtype": "channel_topic",
+    "topic": "Server-side CMS rendering powered by React JS: <https://github.HubSpot.com/cms-react/>",
+    "text": "set the channel topic: Server-side CMS rendering powered by React JS: <https://github.HubSpot.com/cms-react/>",
+    "time_stamp": "2024-02-20 10:18:48"
+  },
+  {
+    "subtype": "channel_topic",
+    "topic": "Server-side CMS rendering powered by React: <https://github.HubSpot.com/cms-react/>",
+    "text": "set the channel topic: Server-side CMS rendering powered by React: <https://github.HubSpot.com/cms-react/>",
+    "time_stamp": "2024-02-20 10:19:04"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-02-20 11:12:43",
+    "text": "This page has a Blog Posts module on it\n<https://44276152.hs-sites.com/blog>\n\nShould be Drag and droppable on Blog listing pages"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-02-20 11:15:17",
+    "text": "is the \"post\" a module on a post template?"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-02-20 11:16:50",
+    "text": "Can you clarify, sorry"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-02-20 11:17:59",
+    "text": "HubSpot has a \"blog post template\" that can be defined per blog. It doesn't look like this is using that"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-02-20 11:18:28",
+    "text": "This module is just for Blog Listing pages, and isn't used automatically in that template yet"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-02-20 11:19:36",
+    "text": "so when I click on a post on that page and it loads `/blog/post`—that's staying on the blog listing template and rendering different content?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-02-20 11:20:38",
+    "text": "I'm mostly asking so that I can figure out how to do my actual blog setup. I was going to use the HubSpot defined \"blog post template\" and not render the post from the blog listing template"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-02-20 11:21:11",
+    "text": "but not sure if I should wait while that workflow / template setup updates"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-02-20 11:22:30",
+    "edited": {
+      "time_stamp": "2024-02-20 11:22:37"
+    },
+    "text": ">  so when I click on a post on that page and it loads `/blog/post`—that's staying on the blog listing template and rendering different content?\nNo, when clicking on those links it's going to a different template"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-02-20 11:25:21",
+    "text": "oh, ok. so normal blog post templates for the actual post content"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-02-20 11:25:25",
+    "text": "got it. thanks"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-02-20 12:57:07",
+    "text": "We do not have an ideal solution for this.\n\nHowever I believe you can:\n• Remove the service worker code from the React project\n• Upload  it as a regular file in the dev filesystem or Designer Manager\n• Use HS <https://knowledge.HubSpot.com/domains-and-urls/create-and-manage-url-redirects|URL redirects> to redirect from `&lt;domain&gt;/sw.js` to the publicly available URL for that moved service worker asset\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-02-20 12:59:27",
+    "text": "While I don’t think we’ll have a “serve a JS from the root of a domain” solution other than URL redirects anytime soon… we do soon-ish want to make it easier for React projects to build JS files that are referenced elsewhere (right now there is no way to so “build this JS file so it can be referenced from a template/HTML page” (the only “entry points” or “exports” from a React build right now are modules or partials and not arbitrary public JS files)"
+  },
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2024-02-21 00:29:52",
+    "text": "I'm still a but confused here <@U044BTK3EGP> could you share your tailwind conig and the tailwind intellisense files in here"
+  }
+]

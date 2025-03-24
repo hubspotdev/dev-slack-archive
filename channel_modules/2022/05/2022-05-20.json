@@ -1,0 +1,92 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jonathan",
+      "poster_handle": "jonathan080"
+    },
+    "time_stamp": "2022-05-20 09:05:58",
+    "edited": {
+      "time_stamp": "2022-05-20 09:06:37"
+    },
+    "text": "Hi all, I'm trying to add a box-shadow to a dnd_column in a section file but it's not displaying the shadow. Am I using the wrong attributes? I've tried the following:\n```  {% dnd_column\n        width=4,\n        background_color={{ context.background_color || \"#eaf3fb\" }}, \n        box-shadow = {\n        \"h-offset\": 0,\n        \"v-offset\": 2,\n        \"blur\": 8,\n        \"spread\": 0,\n        \"color\": 000000,\n        }\n      %}```\nI've also tried it like this:\n```box_shadow = {{ \"0 0 10px #000\" }}\n        }```",
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2022-05-20 09:08:38"
+      },
+      {
+        "time_stamp": "2022-05-20 09:12:52"
+      },
+      {
+        "time_stamp": "2022-05-20 14:28:49"
+      },
+      {
+        "time_stamp": "2022-05-20 15:20:28"
+      },
+      {
+        "time_stamp": "2022-05-20 17:40:20"
+      },
+      {
+        "time_stamp": "2022-05-21 12:22:47"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-05-20 09:08:38",
+    "text": "As far as I know there isnt a box-shadow attribute for dnd_columns <https://developers.HubSpot.com/docs/cms/hubl/tags/dnd-areas#dnd-column>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonathan",
+      "poster_handle": "jonathan080"
+    },
+    "time_stamp": "2022-05-20 09:12:52",
+    "text": "yea, I had seen this page but was hoping that those were just the basic parameters - thanks for the reply."
+  },
+  {
+    "poster": {
+      "poster_name": "Akash",
+      "poster_handle": "designer26.vikash"
+    },
+    "time_stamp": "2022-05-20 10:04:25",
+    "edited": {
+      "time_stamp": "2022-05-20 10:04:46"
+    },
+    "text": "```{# Social links #}\n\n&lt;div class=\"social-links\"&gt;\n\n  {# Loops through each social link in the social links repeater #}\n\n  {% for item in module.social_links %}\n\n    {# Sets attributes used for the link field #}\n\n    {% set href = item.social_link.url.href %}\n    {% if item.social_link.url.type is equalto \"EMAIL_ADDRESS\" %}\n      {% set href = \"mailto:\" + href %}\n    {% endif %}\n    {% set rel = [] %}\n    {% if item.social_link.no_follow %}\n      {% do rel.append(\"nofollow\") %}\n    {% endif %}\n    {% if item.social_link.open_in_new_tab %}\n      {% do rel.append(\"noopener\") %}\n    {% endif %}\n\n    {# Sets a custom icon if the custom option is selected #}\n\n    {% if item.social_account != \"custom_icon\" %}\n      {% set social_icon = item.social_account %}\n    {% else %}\n      {% set social_icon = item.custom_icon.name %}\n    {% endif %}\n\n    {# Icon #}\n\n    &lt;a class=\"social-links__link\" href=\"{{ href }}\"\n    {% if item.social_link.open_in_new_tab %}target=\"_blank\"{% endif %}\n    {% if rel %}rel=\"{{ rel|join(\" \") }}\"{% endif %}&gt;\n      {% icon\n        extra_classes=\"social-links__icon\",\n        name=\"{{ social_icon }}\",\n        purpose=\"semantic\",\n        style=\"SOLID\",\n        title=\"{{ item.accessibility.title }}\",\n        unique_in_loop=True\n      %}\n    &lt;/a&gt;\n\n  {% endfor %}\n&lt;/div&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin Ordener",
+      "poster_handle": "k.ordener.dev"
+    },
+    "time_stamp": "2022-05-20 14:28:49",
+    "edited": {
+      "time_stamp": "2022-05-20 14:31:22"
+    },
+    "text": "What you can do is add a class to the dnd_area and target down. It's a bit convoluted but it works in a pinch. I.e: `.area-class &gt; dnd_section:nth-child(section that has the column) &gt; .row-fluid &gt; .dnd_column:nth-child(number of the column you need)`"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonathan",
+      "poster_handle": "jonathan080"
+    },
+    "time_stamp": "2022-05-20 15:20:28",
+    "text": "yea, I ended up adding a class to the dnd_section and targeted all the columns except the full width (.span12) - thanks again\n```.btaCallouts .span1.widget-type-cell.dnd-column,\n.btaCallouts .span2.widget-type-cell.dnd-column,\n.btaCallouts .span3.widget-type-cell.dnd-column,\n.btaCallouts .span4.widget-type-cell.dnd-column,\n.btaCallouts .span5.widget-type-cell.dnd-column,\n.btaCallouts .span6.widget-type-cell.dnd-column,\n.btaCallouts .span7.widget-type-cell.dnd-column,\n.btaCallouts .span8.widget-type-cell.dnd-column,\n.btaCallouts .span9.widget-type-cell.dnd-column,\n.btaCallouts .span10.widget-type-cell.dnd-column,\n.btaCallouts .span11.widget-type-cell.dnd-column{\n  box-shadow:0 0 10px rgba(0,0,0,0.5);\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin Ordener",
+      "poster_handle": "k.ordener.dev"
+    },
+    "time_stamp": "2022-05-20 17:40:20",
+    "edited": {
+      "time_stamp": "2022-05-20 17:42:42"
+    },
+    "text": "Oh cool. That works. Just a suggestion: You can simplify and clean up that CSS quite a bit by doing something like this:\n```.btaCallouts &gt; .row-fluid &gt; [class*='dnd-column span'] {\n  box-shadow:0 0 10px rgba(0,0,0,0.5);\n}\n\n.btaCallouts &gt; .row-fluid &gt; [class*='dnd-column span12'] {\n  box-shadow: none;\n}```\n1: you don't need to add all the classes attached to the element i.e. `.widget-type-cell`\n2: I would recommend adding the `&gt; row-fluid &gt;`. The way you have it targets every element below the `.btnCallouts` that might have the other classes, which means it could target children even further down and add the shadow to things you don't want. Using the `&gt;`  makes it only target direct children and nothing else, so `&gt; .row-fluid &gt;` targets direct children of `.row-fluid` only if it is a direct child of `.btaCallouts` .\n3. The brackets allow you to choose any element that has classes containing `dnd-column` and `span` . Then you just need to last line to remove it from the one you don't want it on."
+  }
+]

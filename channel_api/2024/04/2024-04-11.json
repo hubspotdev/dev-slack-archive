@@ -1,0 +1,596 @@
+[
+  {
+    "poster": {
+      "poster_name": "Stacey Thomas",
+      "poster_handle": "stacey.thomas"
+    },
+    "time_stamp": "2024-04-11 02:09:45",
+    "text": "Hi Stefan. The reason I was thinking of a list of static IP addresses is that the 3rd party API can whitelist these. Currently their API has security built in so that the login call to get a token, and the subsequent get/post/put call must come from the same IP address in order to meet their validation. If a login and the subsequent call with that token comes from a different IP it is blocked.\n\nThis is totally fine for when enrolling one-by-one, however when bulk enrolling contacts into the workflow it means there is a series of Login calls at the same time from various IP addresses, each time overwriting the 'most recent' IP and token in the 3rd party, and those subsequent GET calls are happening after and being blocked as they don't match the 'currently held' IP and Login token.\n\nThe API logs on their side basically look like this when bulk enrolling:\nLOGIN (IP1), LOGIN (IP2), LOGIN (IP3), LOGIN (IP4), GET (IP1), GET (IP2), GET (IP3), GET (IP4), LOGIN (IP5), GET (IP5) &lt; just to add context on the ordering, it's all over the place. I'll find that the Login and Get works on the 4th and 5th one only, and all others are blocked in the 3rd party. Sometimes there is a login/get in a nice order and it works, other times there are multiple logins and then gets.\n\nI'm currently doing this via a custom coded action in a workflow as I need to schedule it to run each evening/night"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-04-11 04:44:00",
+    "text": "The issue is that the association API does not work for newly/custom association labels.\nBut the above will indeed work."
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-04-11 05:30:00",
+    "edited": {
+      "time_stamp": "2024-04-11 05:31:08"
+    },
+    "text": "I am using Node in a private app and there is a package in NPM called node-cron that allows my app to schedule tasks easily and I do that instead of a workflow.  I can launch some tasks once or twice a day while others run every five or ten minutes.  Good to have options."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Cruz",
+      "poster_handle": "matt.cruz"
+    },
+    "time_stamp": "2024-04-11 06:24:25",
+    "text": "<@U046C9LKJP8> you sure about that? I use a custom events object and have custom coded actions that set custom labels. my trick is to use a GET call on them first to see what HubSpot thinks they are"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-04-11 06:25:42",
+    "text": "This is related to the Nodejs Library as well FYI. I've been having lots of issues lately with associations, custom objects and the V3 version, so I moved to V4 if I can and use axios instead of the Library."
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-04-11 06:26:23",
+    "text": "I do the same, get the Association ID via the schema api call, but I've had lots of \"The association ID is invalid\" errors."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Cruz",
+      "poster_handle": "matt.cruz"
+    },
+    "time_stamp": "2024-04-11 06:27:08",
+    "text": "in my custom coded actions im def using the node library, but maybe I am just not using ad advanced cases as yours"
+  },
+  {
+    "text": "Yhea it's quite inconsistent sometimes, Most likely you're on the V10, because I got so frustrated some time ago I made them put up this message here: <https://developers.HubSpot.com/docs/api/crm/associations> :smile:",
+    "time_stamp": "2024-04-11 06:28:35"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Cruz",
+      "poster_handle": "matt.cruz"
+    },
+    "time_stamp": "2024-04-11 06:30:01",
+    "text": "lmao nice, yea I am on v10, with all the movement they've been doing (I suspect they swooped up a lot of twitter talent) I expect shit to change rapidly. look at the 'objectification' for lack of a better word of all these other _things_ in the toolset"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-04-11 06:31:03",
+    "text": "Just know, if it doesn't work, try to use postman, if it works, use axios instead of the library for that call :smile:\nBeen there done that"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Cruz",
+      "poster_handle": "matt.cruz"
+    },
+    "time_stamp": "2024-04-11 06:31:46",
+    "text": "lmao yea I almost exclusively use axios for anything that isn't a simple get/patch lately"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-04-11 06:32:28",
+    "text": "But then again, I also love the API, you can do so much more with it. And I'm so happy the engagements have their own API now, that work with the v4 associations :party_think:"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Cruz",
+      "poster_handle": "matt.cruz"
+    },
+    "time_stamp": "2024-04-11 06:33:40",
+    "text": "yea I need marketing email data and form data to be improved next those would be huge wins for me"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-04-11 06:38:39",
+    "text": "I agree on that completely!"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-11 06:56:46",
+    "text": "does anyone have any advice on how to speed up a serverless function + graphql query? I have one that seems relatively small but takes almost 2 seconds to finish",
+    "reply_count": 21,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-04-11 07:41:28"
+      },
+      {
+        "time_stamp": "2024-04-11 09:28:41"
+      },
+      {
+        "time_stamp": "2024-04-11 13:32:30"
+      },
+      {
+        "time_stamp": "2024-04-11 13:32:47"
+      },
+      {
+        "time_stamp": "2024-04-11 13:33:22"
+      },
+      {
+        "time_stamp": "2024-04-11 13:33:37"
+      },
+      {
+        "time_stamp": "2024-04-11 13:34:44"
+      },
+      {
+        "time_stamp": "2024-04-11 14:06:34"
+      },
+      {
+        "time_stamp": "2024-04-11 14:07:13"
+      },
+      {
+        "time_stamp": "2024-04-11 14:07:39"
+      },
+      {
+        "time_stamp": "2024-04-11 14:08:10"
+      },
+      {
+        "time_stamp": "2024-04-11 14:08:30"
+      },
+      {
+        "time_stamp": "2024-04-11 14:08:44"
+      },
+      {
+        "time_stamp": "2024-04-11 14:09:56"
+      },
+      {
+        "time_stamp": "2024-04-11 14:12:29"
+      },
+      {
+        "time_stamp": "2024-04-11 14:16:27"
+      },
+      {
+        "time_stamp": "2024-04-11 14:16:30"
+      },
+      {
+        "time_stamp": "2024-04-11 14:20:11"
+      },
+      {
+        "time_stamp": "2024-04-11 14:22:09"
+      },
+      {
+        "time_stamp": "2024-04-11 14:23:14"
+      },
+      {
+        "time_stamp": "2024-04-11 14:41:36"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Parker Short",
+      "poster_handle": "parker"
+    },
+    "time_stamp": "2024-04-11 07:27:26",
+    "text": "did you guys figure this out? I’m trying to set association labels via the import api, and it’s not really documented"
+  },
+  {
+    "poster": {
+      "poster_name": "Parker Short",
+      "poster_handle": "parker"
+    },
+    "time_stamp": "2024-04-11 07:28:22",
+    "text": "has anyone had any luck setting association labels via the import api? It’s possible in the import UI, so it seems like it should be possible, but it’s not really documented",
+    "reply_count": 7,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-04-11 07:39:34"
+      },
+      {
+        "time_stamp": "2024-04-11 07:40:02"
+      },
+      {
+        "time_stamp": "2024-04-11 07:40:38"
+      },
+      {
+        "time_stamp": "2024-04-11 07:41:06"
+      },
+      {
+        "time_stamp": "2024-05-22 00:59:53"
+      },
+      {
+        "time_stamp": "2024-05-22 01:00:24"
+      },
+      {
+        "time_stamp": "2024-05-26 03:30:58"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-04-11 07:39:34",
+    "text": "Yes!"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-04-11 07:40:02",
+    "text": "Here is the documentation.\n<https://developers.HubSpot.com/docs/api/crm/associations>"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-04-11 07:40:38",
+    "text": "Ah, IMPORT API, via the API, yes, Import API I don't know."
+  },
+  {
+    "poster": {
+      "poster_name": "Parker Short",
+      "poster_handle": "parker"
+    },
+    "time_stamp": "2024-04-11 07:41:06",
+    "text": "all good! I’ll stay on the hunt"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-04-11 07:41:28",
+    "text": "Could you show what exactly you are calling?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Johnson",
+      "poster_handle": "ryan569"
+    },
+    "time_stamp": "2024-04-11 08:22:27",
+    "text": "<@U01QVR44MEY> Any thoughts on this, or if it's possible?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-04-11 08:25:40",
+    "text": "I think you can only use that chatbot (to get the results) on pages that also have SSO"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Johnson",
+      "poster_handle": "ryan569"
+    },
+    "time_stamp": "2024-04-11 08:28:10",
+    "text": "Meaning the chatbot will only search the domain that it is on? The chatflow is on coach.domain and the actual knowledge base is on coachsupport.domain - both have SSO, but the former is not on HubSpot"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-04-11 08:31:08",
+    "text": "Interesting, yeah I think you need the HubSpot SSO cookie for the chatbot to search on a different domain"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-04-11 08:31:51",
+    "text": "You could also just create a hidden knowledge base (clone the other knowledge base) and put it on a random domain and have the chatbot search that one instead"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Johnson",
+      "poster_handle": "ryan569"
+    },
+    "time_stamp": "2024-04-11 08:33:08",
+    "text": "So that it's not behind SSO, right? As far as I can tell, that seems to be the limitation. We use the same chatflow on the KB itself and the search produces results."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-04-11 08:33:46",
+    "text": "yep yep, because the chatbot would be able to see the SSO token"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Johnson",
+      "poster_handle": "ryan569"
+    },
+    "time_stamp": "2024-04-11 08:34:06",
+    "text": "We set up the Visitor Identification API, but while it recognizes visitors, it doesn't seem to check the SSO component &amp; that they have access"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-04-11 08:34:15",
+    "text": "but unfortunately if the other domain doesn't use the same SSO setup the token probably won't be the same"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2024-04-11 09:28:41",
+    "text": "Might be a cold start too. I'm pretty sure HubSpot use AWS Lambda, so you'll always have a cold start (a second min)\n\nFor non-pii and things such as config, you can also store variables outside of the main function - treat these like cache."
+  },
+  {
+    "poster": {
+      "poster_name": "Juergen Koeck",
+      "poster_handle": "juergen.koeck"
+    },
+    "time_stamp": "2024-04-11 10:09:26",
+    "text": "Hi guys\n\nI am trying to use this API: `<https://api.hubapi.com/communication-preferences/v3/resubscribe>`\nBut getting this response:\n\n```{\n    \"status\": \"error\",\n    \"message\": \"The scope needed for this API call isn't available for public use. If you have questions, contact support or post in our developer forum.\",\n    \"correlationId\": \"8602c4c8-5cc5-41fd-a2e4-bfe3c6bc5ce0\",\n    \"links\": {\n        \"support\": \"<https://help.HubSpot.com/>\",\n        \"forum\": \"<https://community.HubSpot.com/t5/APIs-Integrations/bd-p/integrations>\"\n    },\n    \"category\": \"MISSING_SCOPES\"\n}```\nThe endpoint is listed here: <https://developers.HubSpot.com/docs/api/marketing-api/subscriptions-preferences>\nAnybody an idea why that is?",
+    "reply_count": 5,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2024-04-11 11:06:04"
+      },
+      {
+        "time_stamp": "2024-04-11 12:40:53"
+      },
+      {
+        "time_stamp": "2024-04-12 05:39:30"
+      },
+      {
+        "time_stamp": "2024-04-14 22:10:55"
+      },
+      {
+        "time_stamp": "2024-07-03 10:47:44"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Rodrigo Mansueli",
+      "poster_handle": "rodrigo176"
+    },
+    "time_stamp": "2024-04-11 11:06:04",
+    "text": "Are you using a private app?\n\nLooks like it is missing the scopes necessary (you might need oauth scopes depending on what you are trying to do)"
+  },
+  {
+    "poster": {
+      "poster_name": "Parker Short",
+      "poster_handle": "parker"
+    },
+    "time_stamp": "2024-04-11 11:16:30",
+    "text": "a little random, but it looks like you can only read imports via API that were created via api. I was trying to mimic something in the UI via the API, but trying to read imports that weren’t created via API return a 404"
+  },
+  {
+    "poster": {
+      "poster_name": "Juergen Koeck",
+      "poster_handle": "juergen.koeck"
+    },
+    "time_stamp": "2024-04-11 12:40:53",
+    "text": "Yep a private app and the Bearer token. I have already selected all the scopes available and it does not help."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-11 13:32:30",
+    "text": "<@U046C9LKJP8> I can share a simplified example but there isn't much going on — the function accepts some params, runs a graphql query, and returns the results"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-11 13:32:47",
+    "text": "<@UQERM7BLY> thanks, that's good to know"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-11 13:33:22",
+    "text": "it looks like the query uses about 5000 \"points\" (out of 30000)"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-11 13:33:37",
+    "text": "so that doesn't seem too crazy. If I remove \"blog_tags\" it goes down to under 1000"
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2024-04-11 13:34:44",
+    "text": "I assume complexity is correlated with speed"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Johnson",
+      "poster_handle": "ryan569"
+    },
+    "time_stamp": "2024-04-11 13:41:59",
+    "text": "<@U01QVR44MEY> I just saw HubSpot released the AI Chatbot beta yesterday - going to look into whether this can be a workaround since the bot could theoretically pull answers from the restricted KB"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-04-11 13:45:22",
+    "text": "oh I didn't realize they released that yet"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-04-11 13:45:26",
+    "text": "good thinking!"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-04-11 13:45:30",
+    "text": "let me know how it goes"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2024-04-11 14:06:34",
+    "text": "can you dm me your code <@UDHT6N5SM>?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-11 14:07:13",
+    "text": "<@UQERM7BLY> no, sorry, I can't really share it. I'm checking now to see if it's a \"complexity\" issue"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2024-04-11 14:07:39",
+    "text": "What is it trying to show - just blog posts with their tags?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-11 14:08:10",
+    "text": "yea"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-11 14:08:30",
+    "text": "`blog_tags` in graphql seems like it takes up a lot of points"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-11 14:08:44",
+    "text": "I think it might be that, `tag_ids` is smaller and I can map it later"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2024-04-11 14:09:56",
+    "text": "yeah, so are you using an actual serverless function eg:\n\n```\nexports.main = (context, sendResponse) =&gt; {\n  // your code called when the function is executed\n\n  // query in here... for blog posts?\n \n  sendResponse({body: {message:\"my response\"}, statusCode: 200});\n};```"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-11 14:12:29",
+    "edited": {
+      "time_stamp": "2024-04-11 14:12:46"
+    },
+    "text": "yea, here are the relevant bits:\n```\n// query\n  const query = {\n    operationName: \"BlogPostsQuery\",\n    query: `query BlogPostsQuery($tags: [Number], $offset: Int) {\n      BLOG {\n        post_collection(limit: 9, offset: $offset, orderBy: publish_date__desc, filter: {\n          tag_ids__in: $tags,\n          state__eq: \"PUBLISHED\",\n          content_group_id__in: [\"xxx\", \"yyy\"]\n        }) {\n          items {\n            id\n            featured_image\n            featured_image_alt_text\n            tag_ids\n            widgets\n            url\n            html_title\n            name\n            publish_date\n            blog_tags {\n              id\n              name\n            }\n          }\n          total\n        }\n      }\n    }`,\n    variables: {\n      tags: queryTags,\n      offset: offset,\n    },\n  };\n\n  async function graphQuery() {\n    try {\n      const response = await axios.post(postsEndpoint, query, {\n        headers: {\n          Authorization: `Bearer ${accessToken}`,\n        },\n      });\n\n      const formattedPostsAndStatus = {\n        statusCode: 200,\n        posts: response.data?.data.BLOG.post_collection.items,\n        total: response.data?.data.BLOG.post_collection.total,\n      };\n      sendResponse({\n        statusCode: 200,\n        body: formattedPostsAndStatus,\n      });\n    } catch (error) {\n      console.error(error);\n    }\n  }```"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-11 14:16:27",
+    "text": "it's down to a little over a second for the \"execution time\" after removing `blog_tags` from the query"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-11 14:16:30",
+    "edited": {
+      "time_stamp": "2024-04-11 14:19:02"
+    },
+    "text": "that seems pretty good... (although, it does fluctuate, maybe too soon to tell...)"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2024-04-11 14:20:11",
+    "edited": {
+      "time_stamp": "2024-04-11 14:26:51"
+    },
+    "text": "yeah - so you could do something like this:\n\n\n```const cache = new Map();\n\n\nfunction getTags() {\n\n  const tags = []; // update to be graphql query\n\n  // Query all tags and run\n  for (const tag of tags) {\n    cache.set(tag.id, tag);\n  }\n}\n\nexports.main = async (context, sendResponse) => {\n  // your code called when the function is executed\n\n  if (cache.size === 0) {\n    // Invoke this here.\n    await getTags();\n  }\n\n  let cleanedPosts = [];\n  // query blog posts and fetch tag info from \n  for (const post of posts) {\n    cleanedPosts.push({...post, tags: post.tagIds.map(tagId => cache.get(tagId))})\n  }\n\n  //sendResponse is what you will send back to services hitting your serverless function.\n  sendResponse({body: {message:\"my response\"}, statusCode: 200});\n};```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2024-04-11 14:22:09",
+    "edited": {
+      "time_stamp": "2024-04-11 14:22:33"
+    },
+    "text": "This is generally true of any serverless platform (esp. lambda) - once it is warm, you can maintain a local cache outside the exports.main function."
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2024-04-11 14:23:14",
+    "edited": {
+      "time_stamp": "2024-04-11 14:25:40"
+    },
+    "text": "AWS lambdas are generally warm for 5+mins (varies a lot), so it can make a pretty significant difference if you get a good number of requests. So the idea above is you fetch all of the tags up front and keep them cached.\n\nAlternatively, you could just keep it simple and have a variable outside of the function with all of the blog posts and store the result in the \"cache\" so subsequent requests pull from the already cached value."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-11 14:41:36",
+    "text": "I appreciate the help. trying some of this out, had no idea that was possible. I think I can deal with the actual tags over the client potentially...but if this works it'll be helpful"
+  }
+]

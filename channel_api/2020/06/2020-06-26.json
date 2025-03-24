@@ -1,0 +1,99 @@
+[
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-06-26 08:55:31",
+    "text": "Cool, glad it worked, I had to go HTML for my use case."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-06-26 08:55:51",
+    "text": "They really should document it better what syntax actually works in those fields, right now it is secret and not so standard."
+  },
+  {
+    "poster": {
+      "poster_name": "David F Jones",
+      "poster_handle": "david568"
+    },
+    "time_stamp": "2020-06-26 10:22:01",
+    "text": "Hey all, I'm having an issue with using the Create a contact property api - <https://legacydocs.HubSpot.com/docs/methods/contacts/v2/create_contacts_property>\n\nHere is the code I am using on my page to call a serverless function\n\n`var passInfo = {id : '{{dynamic_page_hubdb_row.hs_id}}', description : '{{dynamic_page_hubdb_row.lesson_name}}'};`\n`  `\n    `var requestOptions = {`\n      `'method': 'POST',`\n      `'headers': {`\n      `'Content-Type' : 'application/json',`\n      `},`\n      `body: JSON.stringify(passInfo)`\n    `};`\n`  `\n  `fetch(\"<https://www.example.com/_hcms/api/createProperty>\", requestOptions)`\n  `.then(response =&gt; response.text())`\n  `.then(result =&gt; {`\n    `console.log(result);`\n  `})`\n  `.catch(error =&gt; console.log('error', error));`\n\nAnd here is the actual function, which includes the api calls\n\n`exports.main = (context, sendResponse) =&gt; {`\n  `// your code called when the function is executed`\n`const axios = require('axios');`\n\n`const group =  `<https://api.hubapi.com/properties/v1/contacts/groups?hapikey=${process.env.apiKey}>`;`\n`const property = `<https://api.hubapi.com/properties/v1/contacts/properties?hapikey=${process.env.apiKey}>`;`\n\n`async function createGroup(){`\n  `const groupUpdate =`\n  `{`\n    `\"name\": \"lms_progress\",`\n    `\"displayName\": \"LMS Progress\"`\n  `}`\n  `try{`\n    `const resp = await <http://axios.post|axios.post>(group, groupUpdate);`\n    `const info = resp.data;`\n    `return info;`\n  `}catch(err){`\n      `return err;`\n  `}`\n`}`\n`var returnResp;`\n`async function createProperty() {`\n    `const propUpdate =`\n    `{`\n      `\"name\": `${context.body.id}_progress`,`\n      `\"label\": `${context.body.description} Progress`,`\n      `\"description\": `${context.body.description} Progress`,`\n      `\"groupName\": \"lms_progress\",`\n      `\"type\": \"number\",`\n      `\"fieldType\": \"number\",`\n      `\"formField\": true`\n    `}`\n  `try{`\n    `const resp = await <http://axios.post|axios.post>(property, propUpdate);`\n    `returnResp = resp.data;`\n    `return returnResp;`\n  `}catch(err){`\n      `return err;`\n  `}`\n`}`\n`createGroup().then(createProperty()).then(sendResponse({body: returnResp, statusCode: 200}));`\n`};`\n\nThe first api call to create the group works, I can change out the \"groupUpdate\" payload and this will be added to my HubSpot account. However the \"createProperty\" call where I want to actually make the property doesn't seem to work. When I look at my console, the final result that is printed is an empty string."
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2020-06-26 10:29:38",
+    "text": "i imagine part of your issue will be using a global variable with async functions."
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2020-06-26 10:30:10",
+    "text": "you’re going to have issues with using returnResp like that"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2020-06-26 10:31:02",
+    "edited": {
+      "time_stamp": "2020-06-26 10:31:22"
+    },
+    "text": "```createGroup()\n.then(createProperty())\n.then(res =&gt; sendResponse({body: res, statusCode: 200}));```",
+    "reply_count": 5,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2020-06-26 12:12:02"
+      },
+      {
+        "time_stamp": "2020-06-26 19:38:23"
+      },
+      {
+        "time_stamp": "2020-06-26 19:39:30"
+      },
+      {
+        "time_stamp": "2020-06-27 01:59:44"
+      },
+      {
+        "time_stamp": "2020-06-29 09:14:21"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "David F Jones",
+      "poster_handle": "david568"
+    },
+    "time_stamp": "2020-06-26 12:12:02",
+    "text": "So I've gone in an seperated my two api calls, so that each uses it's own serverless function. This way I could better see what's happening. So I'm still having issues calling the Create Property API\n\n`exports.main = (context, sendResponse) =&gt; {`\n  `// your code called when the function is executed`\n`const axios = require('axios');`\n\n`const property = `<https://api.hubapi.com/properties/v1/contacts/properties?hapikey=${process.env.apiKey}>`;`\n\n`async function createProperty() {`\n    `const propUpdate =`\n    `{`\n      `\"name\": `${context.body.id}_progress`,`\n      `\"label\": `${context.body.description} Progress`,`\n      `\"description\": `${context.body.description} Progress`,`\n      `\"groupName\": \"lms_progress\",`\n      `\"type\": \"number\",`\n      `\"fieldType\": \"number\",`\n      `\"formField\": true`\n    `}`\n  `try{`\n    `const resp = await <http://axios.post|axios.post>(property, propUpdate);`\n    `const info = resp.data;`\n    `return info;`\n  `}catch(err){`\n      `return err;`\n  `}`\n`}`\n`createProperty()`\n`.then(res =&gt; sendResponse({body: res, statusCode: 200}));`\n`};`\n\nWhen I run this I get the following error returned.\n\n`{`\n    `\"message\":\"Request failed with status code 400\",`\n    `\"name\":\"Error\",`\n\n    `\"stack\":\"Error: Request failed with status code 400\\n`    \n    `at createError (/opt/nodejs/node_modules/axios/lib/core/createError.js:16:15)\\n`    \n    `at settle (/opt/nodejs/node_modules/axios/lib/core/settle.js:17:12)\\n`    \n    `at IncomingMessage.handleStreamEnd (/opt/nodejs/node_modules/axios/lib/adapters/http.js:236:11)\\n`    \n    `at IncomingMessage.emit (events.js:322:22)\\n    at endReadableNT (_stream_readable.js:1187:12)\\n`    \n    `at processTicksAndRejections (internal/process/task_queues.js:84:21)\",`\n    \n    `\"config\":{\"url\":\"<https://api.hubapi.com/properties/v1/contacts/properties?hapikey=xxxxxx>\",`\n    `\"method\":\"post\",`\n    `\"data\":\"{\\\"name\\\":\\\"30552840160_progress\\\",`\n    `\\\"label\\\":\\\"Lesson 3 Progress\\\",`\n    `\\\"description\\\":\\\"Lesson 3 Progress\\\",`\n    `\\\"groupName\\\":\\\"lms_progress\\\",`\n    `\\\"type\\\":\\\"number\\\",`\n    `\\\"fieldType\\\":\\\"number\\\",`\n    `\\\"formField\\\":true}\",`\n    `\"headers\":{\"Accept\":\"application/json,`\n    `text/plain,`\n    `*/*\",`\n    `\"Content-Type\":\"application/json;charset=utf-8\",`\n    `\"User-Agent\":\"axios/0.19.2\",`\n    `\"Content-Length\":174},`\n    `\"transformRequest\":[null],`\n    `\"transformResponse\":[null],`\n    `\"timeout\":0,`\n    `\"xsrfCookieName\":\"XSRF-TOKEN\",`\n    `\"xsrfHeaderName\":\"X-XSRF-TOKEN\",`\n    `\"maxContentLength\":-1}`\n`}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-06-26 19:38:23",
+    "edited": {
+      "time_stamp": "2020-06-26 19:39:10"
+    },
+    "text": "I am not a NodeJS programmer by trade, but generally what is happening here architecturally speaking, is that the Axios library is throwing an exception when the API call returns HTTP 400 Bad Request, without giving you the failed payload so that you can dump it out and find out what you sent which was bad.\n\nSo, follow this GH bug, to get Axios to quit doing the dumb thing it is doing, and let you get the payload, and check the error code yourself and log the failed output instead of having the exception with no useful data, then you will get the real error message to debug it and fix the error in your API call.\n\n<https://legacydocs.HubSpot.com/docs/methods/contacts/v2/create_contacts_property>\n\n<https://github.com/axios/axios/issues/41>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-06-26 19:39:30",
+    "text": "<@U0133U3RYE8>"
+  }
+]

@@ -1,0 +1,37 @@
+[
+  {
+    "poster": {
+      "poster_name": "Tim Munro",
+      "poster_handle": "tim809"
+    },
+    "time_stamp": "2024-10-11 01:15:28",
+    "edited": {
+      "time_stamp": "2024-10-11 01:15:39"
+    },
+    "text": "As part of the more recent API work (version 3+) the HubSpot API pretty much always passes record id values as strings. With this in mind it seems there is a bug in the associations v4<https://developers.HubSpot.com/docs/api/crm/associations| batch read endpoint>:\n`/crm/v4/associations/{fromObjectType}/{toObjectType}/batch/read`\n\nThe API documentation correctly reports that the \"toObjectId\" property will present string values. I am finding that it returns numeric (integer) values, example response:\n``` {\n  \"status\": \"COMPLETE\",\n  \"results\": [\n    {\n      \"to\": [\n        {\n          \"toObjectId\": 22208856474,\n          \"associationTypes\": [\n            {\n              \"label\": \"Primary\",\n              \"typeId\": 1,\n              \"category\": \"HubSpot_DEFINED\"\n            },\n            {\n              \"label\": null,\n              \"typeId\": 279,\n              \"category\": \"HubSpot_DEFINED\"\n            }\n          ]\n        }\n      ],\n      \"from\": {\n        \"id\": \"46245548422\"\n      }\n    }\n  ],\n  \"startedAt\": \"2024-10-11T07:07:12.603Z\",\n  \"completedAt\": \"2024-10-11T07:07:12.637Z\"\n}```\nThe use of numeric IDs will cause issues in NodeJS /browser environments if the ID is a full range int64 value, hence the need to use strings.\n\nIs this the best place to report the issue?"
+  },
+  {
+    "poster": {
+      "poster_name": "Camille Markentive",
+      "poster_handle": "camille.saute"
+    },
+    "time_stamp": "2024-10-11 04:54:30",
+    "text": "<https://api.hubapi.com/crm/v3/objects/deals/{dealid}?associations=line_item>"
+  },
+  {
+    "poster": {
+      "poster_name": "Camille Markentive",
+      "poster_handle": "camille.saute"
+    },
+    "time_stamp": "2024-10-11 04:54:39",
+    "text": "<https://developers.HubSpot.com/beta-docs/reference/api/crm/objects/deals#get-%2Fcrm%2Fv3%2Fobjects%2Fdeals%2F%7Bdealid%7D>"
+  },
+  {
+    "poster": {
+      "poster_name": "Enielys Hernández",
+      "poster_handle": "enielys"
+    },
+    "time_stamp": "2024-10-11 14:42:38",
+    "text": "Hi community, i have a question about native objects (Contacts, Deals, Companies, etc) and menu items (Marketing, Content, Automation, etc) in HubSpot\n\nI need to know if there's a way to hide the left sidebar menus, for example Marketing in its entirety, and i would also like to know if I can change the name and api name of native objects?\n\nthanks :raised_hands:"
+  }
+]

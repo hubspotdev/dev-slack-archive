@@ -1,0 +1,484 @@
+[
+  {
+    "poster": {
+      "poster_name": "Frank Steiner",
+      "poster_handle": "frank695"
+    },
+    "time_stamp": "2024-06-18 01:02:49",
+    "text": "API question from a non-developer (me :relaxed:), following scenario:\n1. I \"just\" want to sync specific companies (once they become a customers) to a 3rd party finance tool\n2. I then want to sync when specific properties of these companies get updated\nMy very uneducated question, how would I do that with the API? Is there some sort of trigger/listening for a change API?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-06-18 04:59:28"
+      },
+      {
+        "time_stamp": "2024-06-18 07:46:20"
+      },
+      {
+        "time_stamp": "2024-06-18 09:52:09"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Richter",
+      "poster_handle": "tom.richter"
+    },
+    "time_stamp": "2024-06-18 02:25:30",
+    "text": "Hi Guys,\nCurrently, I'm adding Line Items (with existing products from our HubSpot DB) to a Deal via the API. The thing that bugs me is that the deal amount doesn't get updated when the line items are added. It only updates when I change the amount through the UI. Am I missing something? Is there a setting I need to adjust?\nBest Regards,\nTom Richter",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-06-18 05:08:53"
+      },
+      {
+        "time_stamp": "2024-06-18 05:28:10"
+      },
+      {
+        "time_stamp": "2024-06-18 05:34:27"
+      }
+    ]
+  },
+  {
+    "text": "Hey there, i am getting this weird error lately when using the search endpoint of the tickets API:\n• only when i try to search for a specific pipeline, i am getting 400 Bad Request\n• searching for any other property works (the problem is the pipeline)\n• on the deals api it works with the pipeline (for some reason)\nI can't make out the Problem here, hope that any of you guys got an idea :)",
+    "time_stamp": "2024-06-18 02:27:33",
+    "edited": {
+      "time_stamp": "2024-06-18 02:28:01"
+    },
+    "reply_count": 3,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-06-18 02:32:37"
+      },
+      {
+        "time_stamp": "2024-06-18 02:34:15"
+      },
+      {
+        "time_stamp": "2024-06-18 02:39:47"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Richter",
+      "poster_handle": "tom.richter"
+    },
+    "time_stamp": "2024-06-18 02:32:37",
+    "text": "are you sure that the property name is \"pipeline\"? I had a similiar issue and the solution was the property name"
+  },
+  {
+    "poster": {
+      "poster_name": "Aviv Shuker",
+      "poster_handle": "aviv189"
+    },
+    "time_stamp": "2024-06-18 02:34:15",
+    "edited": {
+      "time_stamp": "2024-06-18 02:38:37"
+    },
+    "text": "I think the propertyName should be `hs_pipeline`"
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2024-06-18 02:39:47",
+    "text": "Wow yes for Tickets it is \"hs_pipeline\" but for deals it's just\" pipeline\"\n\nThanks guys, didn't see that"
+  },
+  {
+    "poster": {
+      "poster_name": "Aviv Shuker",
+      "poster_handle": "aviv189"
+    },
+    "time_stamp": "2024-06-18 03:53:53",
+    "edited": {
+      "time_stamp": "2024-06-18 03:57:59"
+    },
+    "text": "Hey everyone,\nIf I have some `ticket_id` and I want some details about this ticket,\nFor example:\n• the email of who created this ticket (which customer)\n• the thread associated with this ticket\nHow can I achieve that (always with associations API)?\nThanks :pray:",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-06-18 05:20:31"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-06-18 04:19:57",
+    "text": "the routine has error checking in it and will send back an appropriate error message.  That is if you call it with no associations.  The calling code should check and not call if if there is none."
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-06-18 04:34:50",
+    "edited": {
+      "time_stamp": "2024-06-18 04:36:36"
+    },
+    "text": "The routine works like this.  Imagine you first call a searchCRM that returns a whole bunch of records.  The data parameter in the call to getAssociatedObjects contains that data.  Then the routine calls a batch read on the associations API (HubSpotClient.crm.associations.v4.batchApi.getPage) to get the associations using the fromObjectType and toObjectType to know what associations its looking for.  Then the associated objects that are returned are processed in groups of 50 in a loop and a call is made each time to batch read the actual objects (deals, line items, companies, etc - HubSpotClient.crm.deals.batchApi.read).  Finally all that data is returned.  So one call to the method returns all the actual object data for how ever many objects that is.  It works pretty good but it did take a while to write and test.  Each step along the way has error checking built in."
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-06-18 04:46:04",
+    "text": "This is where webhooks come in play.  Instead of you \"polling\" the API to see if a change has been made you set up a webhook to watch for the change and then your code is called when that happens.  If you have a private app you can set the webhooks right there in the app.  If you have an OAuth app model then you can add the webhooks there.  You can also set up a workflow and call the webhook from there.  In  addition there is a Webhooks API.  If you need more info let me know."
+  },
+  {
+    "text": "The HubSpot default modules include the posting module where you can retrieve the most recent posts.  Does this help you?  <https://knowledge.HubSpot.com/design-manager/use-default-modules-in-your-template>",
+    "time_stamp": "2024-06-18 04:51:17"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-06-18 04:59:28",
+    "text": "You could set up a workflow and trigger it when an object (contact, company, etc.) is created or updated (the \"is known\" trigger will do this).   More advanced method is using webhooks to watch for changes.  Any of that may be a lot for a non-developer and you hopefully can find some help along the way."
+  },
+  {
+    "text": "This is a workflow I made just for this situation.  It triggers on a field called Total Contract Value which will update when you update your line items.  Then when this is triggered I simply update the deal amount.",
+    "time_stamp": "2024-06-18 05:08:53"
+  },
+  {
+    "poster": {
+      "poster_name": "Aviv Shuker",
+      "poster_handle": "aviv189"
+    },
+    "time_stamp": "2024-06-18 05:20:31",
+    "text": "Just found in the docs I can use params to mention which associations I want to include in the response"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Richter",
+      "poster_handle": "tom.richter"
+    },
+    "time_stamp": "2024-06-18 05:28:10",
+    "edited": {
+      "time_stamp": "2024-06-18 05:28:23"
+    },
+    "text": "Damn is there a reason it doesnt get supported by the API? Seems more like a bug to me. But thank you for the workaround Scott! :raised_hands:"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-06-18 05:34:27",
+    "edited": {
+      "time_stamp": "2024-06-18 05:36:50"
+    },
+    "text": "I think the reason it's not automatically updated is because the UI asks you if you want to update the deal amount when a change is saved.  Automatically doing it would circumvent this.  I am really not sure why a user wouldn't want to update the deal amount but I guess there are situations where that would be the case.  It might be nice if they would add an attribute on the create or save line item methods whether to update the deal amount or not."
+  },
+  {
+    "text": ":wave: Hello, team! Can anyone help to reach request body for next activity: I'm doing this export from UI:\nis there any way to get full API request that happens when this export is triggered? I know about <https://api.hubapi.com/crm/v3/exports/export/async>, but I need to find out about \"include all associations\", what should be in request parameters?",
+    "time_stamp": "2024-06-18 06:18:37",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-06-18 06:20:03"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ihor Petriv",
+      "poster_handle": "ihor.petriv"
+    },
+    "time_stamp": "2024-06-18 06:20:03",
+    "text": "I have asked support (HubSpot Ticket #15454640) - adviced to contact developers"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Cruz",
+      "poster_handle": "matt.cruz"
+    },
+    "time_stamp": "2024-06-18 06:24:49",
+    "text": "Anyone tried / had success importing survey data from a diff system into HubSpot? We were using a custom object for a while and I want to backfill my old responses, but it doesn't seem like that's supported anywhere?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-06-18 06:25:49"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Cruz",
+      "poster_handle": "matt.cruz"
+    },
+    "time_stamp": "2024-06-18 06:25:49",
+    "text": "```Please note: the feedback submissions endpoints are currently read only. Feedback submissions cannot be submitted or edited through the API. ```\nfuuuuuuuuuuuuuuugggg"
+  },
+  {
+    "poster": {
+      "poster_name": "Frank Steiner",
+      "poster_handle": "frank695"
+    },
+    "time_stamp": "2024-06-18 07:46:20",
+    "text": "Cheers <@U01GW2U4WMA> - the \"is known\" has been my favourite trigger for quite some time :sunglasses:\nHow do I get from a WF to an API call though - custom coded actions; sorry if that is a stupid questions?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthieu Veillon",
+      "poster_handle": "matthieu.veillon004"
+    },
+    "time_stamp": "2024-06-18 08:35:52",
+    "edited": {
+      "time_stamp": "2024-06-18 08:36:09"
+    },
+    "text": "Hi folks,\n\nWe’re experiencing an issue that seems to be a recurring one with the `oAuth`  flow :\n\n- If they are already logged into HubSpot in another browser tab and have an active session, it will take them to the oauth authorisation page where they can authorise the required app permissions\n- If they are NOT already logged into HubSpot in another browser tab with an active HubSpot session, then, when we call the authorisation URL, it will take them to the HubSpot login page where they can login and select their account. After logging in it does not redirect them back to the authorisation page, instead it just logs them into HubSpot and takes them to their dashboard.\n\nThis seems to have been mentioned <https://community.HubSpot.com/t5/APIs-Integrations/No-redirect-back-to-Oauth-authorization-page-after-logging-in/m-p/521424|several times in the community> and HubSpot <https://community.HubSpot.com/t5/APIs-Integrations/OAuth-bug-Scopes-are-Null-if-user-was-not-logged-in-before-the/m-p/892023|seems to argue that this is an expected behaviour>.\n\nFrom <https://HubSpotdev.slack.com/archives/C2YHAHB6K/p1677167407260259|this existing thread>, I think this should work (and also because all the other oAuth providers I know allow you to do that, i.e logging as part of the oAuth flow) . Allow me to tag you directly guys as you might have the answer already vs the thread mentioned: <@U01QVR44MEY> <@U04RBVBG5CZ>",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-06-18 08:40:16"
+      },
+      {
+        "time_stamp": "2024-06-18 08:58:08"
+      },
+      {
+        "time_stamp": "2024-06-18 08:58:43"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-06-18 08:40:16",
+    "text": "Yes, this is an annoying behavior. Honestly, I get frustrated with the entire login experience, even after they rebuilt it. <@UD53A9UUR> has opened a couple of tickets with the internal teams about this issue, and he can correct me if I'm wrong, but I think that the method you use to log in will have different outcomes (e.g., email and password might work as expected, whereas Google OAuth won't)."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-06-18 08:43:14",
+    "text": "You'll probably need to provide a localhost port number, EX: localhost:3000 if you have your server running on port 3000. Common ports are 3000, 8000, 8080"
+  },
+  {
+    "poster": {
+      "poster_name": "Logan Armstrong",
+      "poster_handle": "logan565"
+    },
+    "time_stamp": "2024-06-18 08:55:09",
+    "text": "I'm trying to add an association label to already-associated tickets and companies, and I'm getting an error during association that it's an invalid object id, but I have no idea why. Here's my code:\n\n```const HubSpot = require('@HubSpot/api-client');\nconst axios = require('axios');\nconst searchApi = \"<https://api.hubapi.com/crm/v3/objects/companies/search>\";\n\nexports.main = async (event, callback) =&gt; {\n \n  const HubSpotClient = new HubSpot.Client({ accessToken: process.env.HubSpot_API });\n  \n  const objectId = event.object.objectId;\n  let toObjectId = \"\";\n  \n  const objectType = \"ticket\";\n  const toObjectType = \"company\";\n \n const AssociationSpec = [\n    {\n      \"associationCategory\": \"USER_DEFINED\",\n      \"associationTypeId\": 42\n    }   \n  ];\n\n  const payload = {\n    filterGroups: [\n      {\n        filters: [\n          {\n            propertyName: \"associations.ticket\",\n            operator: \"EQ\",\n            value: objectId.toString(),\n          },\n          {\n            propertyName: \"is_customer_binary\",\n            operator: \"EQ\",\n            value: \"1\"\n          },\n        ],\n        \n      },\n    ],\n    properties: [\"name\",\"HubSpot_owner_id\", \"lifecyclestage\"],\n  };\n\n  try {\n    \n    const response = await <http://axios.post|axios.post>(searchApi, payload, {\n      headers: {\n        Authorization: Bearer ${process.env.HubSpot_API},\n        'Content-Type': 'application/json',\n      },\n    });\n    \n    const companies = response.data.results;\n\t\n    console.log(companies);\n\n      toObjectId = companies[0].properties.hs_object_id;\n    \n    console.log(toObjectId);\n      try {\n        const apiResponse = await HubSpotClient.crm.associations.v4.basicApi.create(objectType, objectId, toObjectType, toObjectId, AssociationSpec);\n        console.log(JSON.stringify(apiResponse, null, 2));\n      }\n\n      catch (err) {\n        console.error('Error processing the association:', err);\n      }   \n      \n    }\n    catch (err) {\n        console.error('Error processing the company:', err);\n      }    \n  \n \n}```",
+    "reply_count": 9,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2024-06-18 08:55:54"
+      },
+      {
+        "time_stamp": "2024-06-18 08:56:06"
+      },
+      {
+        "time_stamp": "2024-06-18 10:05:26"
+      },
+      {
+        "time_stamp": "2024-06-18 10:06:27"
+      },
+      {
+        "time_stamp": "2024-06-18 10:14:16"
+      },
+      {
+        "time_stamp": "2024-06-18 10:22:02"
+      },
+      {
+        "time_stamp": "2024-06-18 10:25:32"
+      },
+      {
+        "time_stamp": "2024-06-18 11:42:35"
+      },
+      {
+        "time_stamp": "2024-06-18 14:42:18"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Logan Armstrong",
+      "poster_handle": "logan565"
+    },
+    "time_stamp": "2024-06-18 08:55:54",
+    "text": "and here's the error I'm getting:\n```WARNING: The logs for this function have exceeded the 4KB limit.\n...\n34232412 is not valid\"],\"objectId\":[\"2734232412\"],\"objectType\":[\"COMPANY\"]},\"category\":\"VALIDATION_ERROR\"}\nHeaders: {\"access-control-allow-credentials\":\"false\",\"cf-cache-status\":\"DYNAMIC\",\"cf-ray\":\"895c1bdeecae399e-IAD\",\"connection\":\"keep-alive\",\"content-length\":\"272\",\"content-type\":\"application/json;charset=utf-8\",\"date\":\"Tue, 18 Jun 2024 14:53:26 GMT\",\"nel\":\"{\\\"success_fraction\\\":0.01,\\\"report_to\\\":\\\"cf-nel\\\",\\\"max_age\\\":604800}\",\"report-to\":\"{\\\"endpoints\\\":[{\\\"url\\\":\\\"https:\\\\/\\\\/a.nel.cloudflare.com\\\\/report\\\\/v4?s=JCNiJfrMlqaIpQl%2BUlw7lTBPWbbb%2BgJM8g2rSyI1OqntOdXJo7BPjpM9nNxy6j0kYtP7hU1sbPbT9in57OzHGTRxy9CaP0iAh0PJGwE9T6Fmu7TwfnBchtLa4cAUYWIa\\\"}],\\\"group\\\":\\\"cf-nel\\\",\\\"max_age\\\":604800}\",\"server\":\"cloudflare\",\"strict-transport-security\":\"max-age=31536000; includeSubDomains; preload\",\"vary\":\"origin, Accept-Encoding\",\"x-content-type-options\":\"nosniff\",\"x-envoy-upstream-service-time\":\"154\",\"x-evy-trace-listener\":\"listener_https\",\"x-evy-trace-route-configuration\":\"listener_https/all\",\"x-evy-trace-route-service-name\":\"envoyset-translator\",\"x-evy-trace-served-by-pod\":\"iad02/hubapi-td/envoy-proxy-5d47c8d44f-4ldzq\",\"x-evy-trace-virtual-host\":\"all\",\"x-HubSpot-correlation-id\":\"47c8a241-b097-4118-87e6-225a07823c73\",\"x-HubSpot-ratelimit-daily\":\"500000\",\"x-HubSpot-ratelimit-daily-remaining\":\"499986\",\"x-HubSpot-ratelimit-interval-milliseconds\":\"10000\",\"x-HubSpot-ratelimit-max\":\"150\",\"x-HubSpot-ratelimit-remaining\":\"149\",\"x-HubSpot-ratelimit-secondly\":\"15\",\"x-HubSpot-ratelimit-secondly-remaining\":\"14\",\"x-request-id\":\"47c8a241-b097-4118-87e6-225a07823c73\"}\n    at BasicApiResponseProcessor.&lt;anonymous&gt; (/opt/nodejs/node_modules/@HubSpot/api-client/lib/codegen/crm/associations/v4/apis/BasicApi.js:199:23)\n    at Generator.next (&lt;anonymous&gt;)\n    at fulfilled (/opt/nodejs/node_modules/@HubSpot/api-client/lib/codegen/crm/associations/v4/apis/BasicApi.js:5:58)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {\n  code: 400,\n  body: {\n    status: 'error',\n    message: 'One or more associations are invalid',\n    correlationId: '47c8a241-b097-4118-87e6-225a07823c73',\n    context: {\n      INVALID_OBJECT_IDS: [Array],\n      objectId: [Array],\n      objectType: [Array]\n    },\n    category: 'VALIDATION_ERROR'\n  },\n  headers: {\n    'access-control-allow-credentials': 'false',\n    'cf-cache-status': 'DYNAMIC',\n    'cf-ray': '895c1bdeecae399e-IAD',\n    connection: 'keep-alive',\n    'content-length': '272',\n    'content-type': 'application/json;charset=utf-8',\n    date: 'Tue, 18 Jun 2024 14:53:26 GMT',\n    nel: '{\"success_fraction\":0.01,\"report_to\":\"cf-nel\",\"max_age\":604800}',\n    'report-to': '{\"endpoints\":[{\"url\":\"https:\\\\/\\\\/a.nel.cloudflare.com\\\\/report\\\\/v4?s=JCNiJfrMlqaIpQl%2BUlw7lTBPWbbb%2BgJM8g2rSyI1OqntOdXJo7BPjpM9nNxy6j0kYtP7hU1sbPbT9in57OzHGTRxy9CaP0iAh0PJGwE9T6Fmu7TwfnBchtLa4cAUYWIa\"}],\"group\":\"cf-nel\",\"max_age\":604800}',\n    server: 'cloudflare',\n    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',\n    vary: 'origin, Accept-Encoding',\n    'x-content-type-options': 'nosniff',\n    'x-envoy-upstream-service-time': '154',\n    'x-evy-trace-listener': 'listener_https',\n    'x-evy-trace-route-configuration': 'listener_https/all',\n    'x-evy-trace-route-service-name': 'envoyset-translator',\n    'x-evy-trace-served-by-pod': 'iad02/hubapi-td/envoy-proxy-5d47c8d44f-4ldzq',\n    'x-evy-trace-virtual-host': 'all',\n    'x-HubSpot-correlation-id': '47c8a241-b097-4118-87e6-225a07823c73',\n    'x-HubSpot-ratelimit-daily': '500000',\n    'x-HubSpot-ratelimit-daily-remaining': '499986',\n    'x-HubSpot-ratelimit-interval-milliseconds': '10000',\n    'x-HubSpot-ratelimit-max': '150',\n    'x-HubSpot-ratelimit-remaining': '149',\n    'x-HubSpot-ratelimit-secondly': '15',\n    'x-HubSpot-ratelimit-secondly-remaining': '14',\n    'x-request-id': '47c8a241-b097-4118-87e6-225a07823c73'\n  }\n}```\nIt for some reason is thinking the ticket objectType is company, and I have no clue why. even tried swapping out the values of the variables and swapping the variables in the association function, no luck."
+  },
+  {
+    "poster": {
+      "poster_name": "Logan Armstrong",
+      "poster_handle": "logan565"
+    },
+    "time_stamp": "2024-06-18 08:56:06",
+    "edited": {
+      "time_stamp": "2024-06-18 08:56:16"
+    },
+    "text": "2734232412 is the Ticket ID (ID of the object enrolled in the workflow)."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthieu Veillon",
+      "poster_handle": "matthieu.veillon004"
+    },
+    "time_stamp": "2024-06-18 08:58:08",
+    "text": "thanks for the quick reply <@U01QVR44MEY> this is aligned with what we experienced (email vs google oauth) - I guess we’ll try to notify the user beforehand for now"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-06-18 08:58:43",
+    "text": "yeah it's definitely a bit annoying"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Anoruo",
+      "poster_handle": "canoruo"
+    },
+    "time_stamp": "2024-06-18 09:11:13",
+    "text": "Thanks <@U01GW2U4WMA>\nBut I have to retrieve the blogs sort by publish date."
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-06-18 09:48:50",
+    "text": "hubL filter \"sort\" <https://developers.HubSpot.com/docs/cms/hubl/filters>"
+  },
+  {
+    "text": "",
+    "time_stamp": "2024-06-18 09:50:52"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-06-18 09:52:09",
+    "text": "Custom Code or Webhook"
+  },
+  {
+    "text": "Hmmm, Where did you get the ID value of 42 for an association between ticket and company.  When I query the associations schema API i get this:",
+    "time_stamp": "2024-06-18 10:05:26"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Anoruo",
+      "poster_handle": "canoruo"
+    },
+    "time_stamp": "2024-06-18 10:05:26",
+    "text": "ah... thank you very much for your quick response."
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Anoruo",
+      "poster_handle": "canoruo"
+    },
+    "time_stamp": "2024-06-18 10:05:50",
+    "text": "I'd like to retrieve sort by publish date. not sort after fetched/"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-06-18 10:06:27",
+    "text": "Oh, I see, yours is USER_DEFINED - hmm..."
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Anoruo",
+      "poster_handle": "canoruo"
+    },
+    "time_stamp": "2024-06-18 10:11:40",
+    "text": "sort by publish date is useless after fetched by created date(is default)"
+  },
+  {
+    "poster": {
+      "poster_name": "Stacey Thomas",
+      "poster_handle": "stacey.thomas"
+    },
+    "time_stamp": "2024-06-18 10:14:16",
+    "text": "Should it be companies[0].id instead of companies[0].properties.hs_object_id ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-06-18 10:22:02",
+    "edited": {
+      "time_stamp": "2024-06-18 10:29:00"
+    },
+    "text": "maybe so - in theory they should contain the same value - does your result show you got a companies list returned?"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-06-18 10:25:32",
+    "text": "It can help also in your console log calls to do:  JSON.stringify(response.data.results, \"\", 2); - this makes it a bit more readable"
+  },
+  {
+    "text": "Hi all, is it possible to create webhook on the lastmodifieddate for contact and company object type? I see this but is `hs_lastmodifieddate` same as the contact response `lastmodifieddate` that is provided?",
+    "time_stamp": "2024-06-18 11:06:54"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Anoruo",
+      "poster_handle": "canoruo"
+    },
+    "time_stamp": "2024-06-18 11:42:35",
+    "text": "Hi <@U0446K6RTGX>\nHow can we use the serverless function on HubSpot?"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Reverman",
+      "poster_handle": "mark.reverman"
+    },
+    "time_stamp": "2024-06-18 13:04:54",
+    "text": "Hello, When creating a Custom Object using the API is there a way to limit the property access to super admins?"
+  },
+  {
+    "text": "<@U01GW2U4WMA> This is what I see listed?",
+    "time_stamp": "2024-06-18 14:41:33"
+  },
+  {
+    "poster": {
+      "poster_name": "Logan Armstrong",
+      "poster_handle": "logan565"
+    },
+    "time_stamp": "2024-06-18 14:42:18",
+    "text": "the search is working fine, i've console logged the ID and it's correct, it's only the association that is giving me trouble"
+  },
+  {
+    "poster": {
+      "poster_name": "Dilip Adityan",
+      "poster_handle": "dilip.adityan"
+    },
+    "time_stamp": "2024-06-18 16:48:15",
+    "text": "As a developer, how would you develop an Application for SMS if you have not purchased the SMS Messages subscription? <https://knowledge.HubSpot.com/sms/create-and-send-sms-messages|Create and send SMS messages in HubSpot>",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-06-19 02:46:22"
+      },
+      {
+        "time_stamp": "2024-06-19 17:12:40"
+      }
+    ]
+  }
+]

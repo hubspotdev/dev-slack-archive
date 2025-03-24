@@ -1,0 +1,74 @@
+[
+  {
+    "poster": {
+      "poster_name": "Crystal Payton",
+      "poster_handle": "crystal285"
+    },
+    "time_stamp": "2023-11-28 14:23:45",
+    "edited": {
+      "time_stamp": "2023-11-28 14:36:26"
+    },
+    "text": "Any ideas why a simple image module that I created would only work in preview but doesn't once added to a webpage?",
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-11-28 14:44:21"
+      },
+      {
+        "time_stamp": "2023-11-28 14:45:55"
+      },
+      {
+        "time_stamp": "2023-11-28 14:46:23"
+      },
+      {
+        "time_stamp": "2023-11-28 14:51:35"
+      },
+      {
+        "time_stamp": "2023-11-28 15:02:28"
+      },
+      {
+        "time_stamp": "2023-11-30 18:28:05"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-11-28 14:44:21",
+    "edited": {
+      "time_stamp": "2023-11-28 14:45:41"
+    },
+    "text": "Could you give a little more clarification about what you mean by “doesn’t work?” That’ll help to potentially work out a cause. :)\n\nSome details that might help to narrow things down:\n• Could you share some details about what the module does and how it works? If you’re using a custom module instead of the built-in image module, I imagine it must be doing something different.\n• Is the module concise enough that you could share its code here for us to review?\n• How are you adding the module to the page? Are you using the DnD builder, or adding it to a template via the `{% module %}` tag?\n• If you inspect the page source, do you see any markup related to the module? Either the markup of the module itself, or even just its module wrapper?\n• If you change something else on the page and publish it, do you see that change?\n• Do you see this issue on multiple pages, or have you only observed it on one?\nYou don’t have to answer _all_ of these, but any additional information helps!"
+  },
+  {
+    "poster": {
+      "poster_name": "Crystal Payton",
+      "poster_handle": "crystal285"
+    },
+    "time_stamp": "2023-11-28 14:45:55",
+    "text": "image module code:\n```{% if module.image_field.src %}\n\t{% set sizeAttrs = 'width=\"{{ module.image_field.width }}\" height=\"{{ module.image_field.height }}\"' %}\n\t{% if module.image_field.size_type == 'auto' %}\n\t\t{% set sizeAttrs = 'width=\"{{ module.image_field.width }}\" height=\"{{ module.image_field.height }}\" style=\"max-width: 100%; height: auto;\"' %}\n\t{% elif module.image_field.size_type == 'auto_custom_max' %}\n\t\t{% set sizeAttrs = 'width=\"{{ module.image_field.max_width }}\" height=\"{{ module.image_field.max_height }}\" style=\"max-width: 100%; height: auto;\"' %}\n\t{% endif %}\n\t {% set loadingAttr = module.image_field.loading != 'disabled' ? 'loading=\"{{ module.image_field.loading }}\"' : '' %}\n\t&lt;img src=\"{{ module.image_field.src }}\" alt=\"{{ module.image_field.alt }}\" {{ loadingAttr }} {{ sizeAttrs }}&gt;\n{% endif %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Crystal Payton",
+      "poster_handle": "crystal285"
+    },
+    "time_stamp": "2023-11-28 14:46:23",
+    "text": "snippet added here:\n```&lt;!--\n    templateType: page\n    isAvailableForNewContent: true\n--&gt;\n<!doctype html>\n&lt;html&gt;\n  &lt;head&gt;\n    &lt;meta charset=\"utf-8\"&gt;\n    {% if content.html_title %}&lt;title&gt;{{ content.html_title }}&lt;/title&gt;{% endif %}\n    &lt;meta name=\"description\" content=\"{{ content.meta_description }}\"&gt;\n    {% if brand_settings.primaryFavicon.src %}\n      &lt;link rel=\"shortcut icon\" href=\"{{ brand_settings.primaryFavicon.src }}\" /&gt;\n    {% endif %}\n    {{ standard_header_includes }}\n  &lt;/head&gt;\n  {% global_partial path=\"/CMS for Developers Practicum Theme by Crystal Payton from ThrivePOP/partials/header.html\" %}\n\n  &lt;body&gt;\n\n    {% dnd_area \"dnd-area\", class=\"dnd-area\" %} \n      {% dnd_section padding={\"top\": \"1em\",\"bottom\": \"1em\",\"left\": \"1em\",\"right\": \"1em\"} %} \n        {% dnd_row %}\n\n            {% dnd_column width=\"4\" %} \n              {% dnd_row padding={\"top\": \"1em\",\"bottom\": \"1em\",\"left\": \"1em\",\"right\": \"1em\"} %}  \n                {% dnd_module \"module_17007926619015\" path=\"/CMS for Developers Practicum Theme by Crystal Payton from ThrivePOP/modules/image-module\", label=\"image-module\" %}\n                {% end_dnd_module %}\n              {% end_dnd_row %}\n            {% end_dnd_column %}\n\n            {% dnd_column width=\"8\", offset=\"4\" %}\n              {% dnd_row padding={\"top\": \"1em\",\"bottom\": \"1em\",\"left\": \"1em\",\"right\": \"1em\"} %} \n                {% dnd_module \"module_17007927905147\" path=\"/CMS for Developers Practicum Theme by Crystal Payton from ThrivePOP/modules/rich-text-module\", label=\"rich-text-module\" %}              \n                {% end_dnd_module %}\n              {% end_dnd_row %}\n            {% end_dnd_column %}  \n\n        {% end_dnd_row %}\n      {% end_dnd_section %}\n    {% end_dnd_area %}\n\n\n    \n  {% global_partial path=\"/CMS for Developers Practicum Theme by Crystal Payton from ThrivePOP/partials/footer.html\" %}\n\n    {{ standard_footer_includes }}\n  &lt;/body&gt;\n&lt;/html&gt;```"
+  },
+  {
+    "text": "preview of module vs added to page",
+    "time_stamp": "2023-11-28 14:51:35"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-11-28 15:02:28",
+    "text": "Hmm, I see a few “shouldn’t do”s in your code, but I don’t know if any of it would entirely prevent these from appearing. If you preview that page and open it in a new tab, then inspect the page source, do you see the markup for these modules?\n\nAnother couple of thoughts, seeing that you’re seemingly working entirely from scratch and skipping the boilerplate: do you have CSS/styling in place for your DnD grid? I’m also curious about the editor placeholders — are those something you built into the module, or are those something that HubSpot is displaying automatically?"
+  }
+]

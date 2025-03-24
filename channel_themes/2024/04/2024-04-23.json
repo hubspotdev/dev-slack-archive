@@ -1,0 +1,205 @@
+[
+  {
+    "poster": {
+      "poster_name": "Sam Sharples",
+      "poster_handle": "sam.sharples"
+    },
+    "time_stamp": "2024-04-23 03:57:20",
+    "text": "downloading/cloning the default HubSpot modules is a good place to start, to see how the modules work. here is a list of the modules and how to fetch them: <https://developers.HubSpot.com/docs/cms/building-blocks/modules/default-modules>"
+  },
+  {
+    "poster": {
+      "poster_name": "Kyle Maguire",
+      "poster_handle": "kyle.maguire"
+    },
+    "time_stamp": "2024-04-23 05:35:54",
+    "text": "Hi guys, i’m not sure if this is the right channel but I am new to HubSpot theme development. I need to create something similar to a custom post type like in wordpress with an archive and single page and grab info from the single post page and show cause it on cards on the archive. How am i best achieving this? Thank you :slightly_smiling_face:",
+    "reply_count": 4,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2024-04-23 06:30:02"
+      },
+      {
+        "time_stamp": "2024-04-23 07:13:19"
+      },
+      {
+        "time_stamp": "2024-04-26 11:52:34"
+      },
+      {
+        "time_stamp": "2024-05-09 10:10:31"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kyle Maguire",
+      "poster_handle": "kyle.maguire"
+    },
+    "time_stamp": "2024-04-23 05:58:38",
+    "text": "Thanks Sam :+1::skin-tone-2:"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Sharples",
+      "poster_handle": "sam.sharples"
+    },
+    "time_stamp": "2024-04-23 06:00:43",
+    "text": "FYI I would still use modules, rather than hardcoding a template, for the blog archive page as this can be built using drag and drop"
+  },
+  {
+    "poster": {
+      "poster_name": "Kyle Maguire",
+      "poster_handle": "kyle.maguire"
+    },
+    "time_stamp": "2024-04-23 06:02:40",
+    "edited": {
+      "time_stamp": "2024-04-23 06:03:05"
+    },
+    "text": "I have build a few of my own modules so far but I can’t seem to work out how best to build a blog archive module, the default HubSpot one’s just seem very cluttered - I prefer starting from scratching and adding features that I need as and when"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Sharples",
+      "poster_handle": "sam.sharples"
+    },
+    "time_stamp": "2024-04-23 06:05:54",
+    "text": "ok well all you need to get started for the listing is the content loop:\n\n```{% for content in contents %}\n&lt;h1&gt;{{ content.name }}&lt;/h1&gt;\n{% endfor %} ```"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Sharples",
+      "poster_handle": "sam.sharples"
+    },
+    "time_stamp": "2024-04-23 06:06:15",
+    "text": "the number of posts per page is set in the blog settings in the HubSpot main menu"
+  },
+  {
+    "poster": {
+      "poster_name": "Kyle Maguire",
+      "poster_handle": "kyle.maguire"
+    },
+    "time_stamp": "2024-04-23 06:06:45",
+    "text": "Thank you, any idea how to display a pagination based off this? :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Sharples",
+      "poster_handle": "sam.sharples"
+    },
+    "time_stamp": "2024-04-23 06:06:45",
+    "text": "then you can either include the pagination in that module or create a separate module for that too"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Sharples",
+      "poster_handle": "sam.sharples"
+    },
+    "time_stamp": "2024-04-23 06:07:56",
+    "text": "there are a number of ways to create pagination but here is one:\n```\n{% if contents.total_page_count &gt; 1 %}\n    &lt;nav aria-label=\"Pagination navigation\" role=\"navigation\" class=\"pagination\"&gt;\n\n      {% set current_page_count = contents.total_page_count - current_page_num %}\n\n      {% set page_list = [-2, -1, 0, 1, 2] %}\n\n      {% if current_page_count == 1 %}\n        {% set offset = -1 %}\n      {% elif current_page_count == 0 %}\n        {% set offset = -2 %}\n      {% elif current_page_num == 2 %}\n        {% set offset = 1 %}\n      {% elif current_page_num == 1 %}\n        {% set offset = 2 %}\n      {% else %}\n        {% set offset = 0 %}\n      {% endif %}\n\n      {% for page in page_list %}\n        {% set this_page = current_page_num + page + offset %}\n        {% if this_page &gt; 0 &amp;&amp; this_page &lt;= contents.total_page_count %}\n          &lt;a class=\"pagination__link pagination__link--number {{ \"pagination__link--active\" if this_page == current_page_num }}\" aria-label=\"Go to page {{ this_page }}\" {{ 'aria-current=\"true\"' if this_page == current_page_num }} href=\"{% if this_page == 1 %}{{ group.absolute_url }}{% else %}{{ blog_page_link(this_page) }}{% endif %}\"&gt;{{ this_page }}&lt;/a&gt;\n        {% endif %}\n      {% endfor %}\n\n    &lt;/nav&gt;\n  {% endif %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Sharples",
+      "poster_handle": "sam.sharples"
+    },
+    "time_stamp": "2024-04-23 06:09:06",
+    "text": "I think that logic comes from the default HubSpot pagination module. If you do a quick search online you’ll find other ways of achieving it but theres no need to get any more complex than this tbh"
+  },
+  {
+    "poster": {
+      "poster_name": "Kyle Maguire",
+      "poster_handle": "kyle.maguire"
+    },
+    "time_stamp": "2024-04-23 06:10:19",
+    "text": "Thank you Sam, I also am struggling a bit with custom post types? how do you approach this? for example say i need a ‘resources’ post type with taxonomies like ‘webinar’, ‘podcasts’ etc"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Sharples",
+      "poster_handle": "sam.sharples"
+    },
+    "time_stamp": "2024-04-23 06:13:00",
+    "text": "So you can create multiple blogs with different slugs like /resources and /news and then use tags"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Sharples",
+      "poster_handle": "sam.sharples"
+    },
+    "time_stamp": "2024-04-23 06:14:34",
+    "text": "It’s not as complex as Wordpress (i’m guessing thats where you’ve come from?) so you may have to rethink how you approach certain things. There are workarounds and hacky ways to achieve them so don’t panic if you think it’s not going to be possible in HubSpot, there is usually a way"
+  },
+  {
+    "poster": {
+      "poster_name": "Kyle Maguire",
+      "poster_handle": "kyle.maguire"
+    },
+    "time_stamp": "2024-04-23 06:15:01",
+    "text": "Thank you Sam, I really appreciate your help!"
+  },
+  {
+    "poster": {
+      "poster_name": "Kyle Maguire",
+      "poster_handle": "kyle.maguire"
+    },
+    "time_stamp": "2024-04-23 06:15:35",
+    "text": "and yes i’m from WordPress and Shopify :muscle::skin-tone-2:"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Sharples",
+      "poster_handle": "sam.sharples"
+    },
+    "time_stamp": "2024-04-23 06:16:06",
+    "text": "keep shopify in your friends list but you can say goodbye to Wordpress now :joy:"
+  },
+  {
+    "poster": {
+      "poster_name": "Kyle Maguire",
+      "poster_handle": "kyle.maguire"
+    },
+    "time_stamp": "2024-04-23 06:16:59",
+    "text": "I haven’t been turned yet :joy: - WordPress all the way :eyes:"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Sharples",
+      "poster_handle": "sam.sharples"
+    },
+    "time_stamp": "2024-04-23 06:17:23",
+    "text": "_has blocked Kyle Maguire_"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Sharples",
+      "poster_handle": "sam.sharples"
+    },
+    "time_stamp": "2024-04-23 06:18:23",
+    "text": "I’m usually around so hit me up if you need a hand with anything."
+  },
+  {
+    "poster": {
+      "poster_name": "Kyle Maguire",
+      "poster_handle": "kyle.maguire"
+    },
+    "time_stamp": "2024-04-23 06:18:50",
+    "text": "I will do thank you :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Julian Vidal",
+      "poster_handle": "julian.vidal123"
+    },
+    "time_stamp": "2024-04-23 06:30:02",
+    "text": "Hey <@U070Q7P0W80> - The equivalent will be a custom object. FYI - Custom objects only are available in enterprise plans. Details here: <https://developers.HubSpot.com/docs/cms/guides/dynamic-pages/crm-objects>"
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2024-04-23 07:13:19",
+    "text": "your best bet is using hubdb for this, custom objects requires an enterprise plan and are usually not ideal for your use case"
+  }
+]

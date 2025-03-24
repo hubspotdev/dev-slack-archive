@@ -1,0 +1,58 @@
+[
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-08-14 03:52:55",
+    "text": "You’re combining JS and Hubl in a way that won’t work,\n\nYou need to remember hubl is run by HubSpot’s server and will render as html that is then sent to the browser, the browser then runs the JS"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-08-14 03:55:12",
+    "text": "Not sure you can use js vars in schema, so I guess you’d have to do it all in hubl"
+  },
+  {
+    "poster": {
+      "poster_name": "Alexandre Smadja",
+      "poster_handle": "alexandre014"
+    },
+    "time_stamp": "2024-08-14 06:48:02",
+    "text": "Yes that’s also my thought.\n\nHow should I do that ? "
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-08-14 07:12:42",
+    "text": "can you do\n```{% set url = page_meta.canonical_url %}\n\n{% if url is string_containing 'carburant' %}\n    {% set quest1 = \"Comment fonctionne une carte carburant ?\" %}\n    {% set answ1 = \"&lt;p&gt;Une carte carburant est un moyen de paiement utilisé pour régler les achats de carburant et d'autres services dans les stations-service. Elles sont généralement utilisées par les entreprises pour gérer les dépenses de leur parc automobile, mais peuvent également être utilisées par les particuliers.&lt;/p&gt;\" %}\n{% elif url is string_containing 'RSE' %}\n    {% set quest1 = \"Qu'est-ce que la RSE ? \" %}\n    {% set answ1 = \"&lt;p&gt;La RSE définit la prise en compte des enjeux environnementaux et sociétaux dans le modèle d'affaires des entreprises.&lt;/p&gt;\" %}  \n{% endif %}```\n<https://developers.HubSpot.com/docs/cms/hubl/operators-and-expression-tests#string-containing>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-08-14 07:19:20",
+    "text": "If you really need to use the regex maybe you could hack the regex_replace filter with keywords that you know wouldn’t appear in the url\n`{% set url =  url|regex_replace('/\\bcarburant\\b/','FILTER1MATCH')|regex_replace('/\\bRSE\\b/','FILTER2MATCH') %}`\n\nthen  in your if statement\n```{% if url is string_containing 'FILTER1MATCH' %}```\nThis would give you the equivalent of your regex"
+  },
+  {
+    "poster": {
+      "poster_name": "Ted Larson",
+      "poster_handle": "ted676"
+    },
+    "time_stamp": "2024-08-14 10:55:23",
+    "text": "Yes - that's what I am suggesting <@U06FT8U7HV3> - Rewrite the URL's as you proxy the response.  I don't think HubSpot can do it for you.  I wish :wink:"
+  },
+  {
+    "poster": {
+      "poster_name": "Ted Larson",
+      "poster_handle": "ted676"
+    },
+    "time_stamp": "2024-08-14 10:56:48",
+    "text": "We had a similar problem with the SEO tool flagging mixed content because one of our web people had accidentally put a bunch of images on pages without https: in front of them.  It was easier to make a rewirte rule than to track all the bad content down."
+  }
+]

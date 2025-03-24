@@ -1,0 +1,62 @@
+[
+  {
+    "poster": {
+      "poster_name": "George Grigorita",
+      "poster_handle": "george.grigorita"
+    },
+    "time_stamp": "2023-09-20 03:18:17",
+    "text": "<@U044BTK3EGP> thanks for the video, the editing experience does look exactly like on a regular theme and module. I would love to see some code samples.\n\nI’m planning on building a theme with modules in React but that will probably take a lot of time since it would be a side project. Right now I have in production a much simpler implementation - just some react forms that synchronise with the HS API via a middleware."
+  },
+  {
+    "text": "Hey everyone, I have in production my first implementation of React on HubSpot (CMS JS rendering). It’s nothing complicated, just a few React components used as partials in different HubSpot templates. First I want to say thanks to the community and to the HubSpot team, for helping with the issues I had during development. Secondly, I want to share a curious side-effect — not sure if a bug or feature yet.\n\nMy react components render two different forms (I’m using react-hook-form) and on submit I make an Axios POST call to an endpoint from a custom middleware, which then uses the HubSpot API to sync the properties. The side effect I’m talking about is illustrated in the screenshot. On the contact record, I see property errors for properties I don’t use in my code. For example, “address_line_1” is just the label and name of the input I use in React. The property I sync “address_line_1\" in HubSpot is “rf___address_line_1” which is a company object property. My explanation for these errors would be this one: all the custom (react) forms show up in the Forms section of HubSpot under a single name (originally this was “unnamed form [date]“. On any form submitted HubSpot gets the data and tries to map it the best it can. However, we’re not using the regular submit flow, we’re synching the form data using the forms API. So we’re bypassing the regular submission flow of HubSpot forms. This is why these errors show up: HubSpot doesn’t know to which object to map those properties (by default it tries the contact object, but those are company properties).\n\nI’m curious if I’m right about this and if this is expected behaviour or not. To fix this I changed the button type from submit to regular button and I’m calling the Axios function on click. The issue was that when someone submitted multiple forms, we were getting duplicate (or more) companies created in HubSpot (we do want to create a company based on user input fields, but just one, not multiple with the same name). This happened because in this case, the form properties matched the company object properties from HubSpot.",
+    "time_stamp": "2023-09-20 03:59:37",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-09-20 06:55:37"
+      },
+      {
+        "time_stamp": "2023-09-20 07:09:49"
+      },
+      {
+        "time_stamp": "2023-09-20 07:26:39"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-09-20 06:49:51",
+    "text": "<@U044BTK3EGP> Thank you for the feedback here. Long term we want to integrate the documentation. At this time however, the current setup allows us a faster iteration cycle for those docs which is important given the amount of active development in this area. For that reason we will stick with the VitePress GitHub style docs for now."
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-09-20 06:55:37",
+    "text": "Given your flow of custom handling the Form submission by passing those attributes to a endpoint elsewhere you don't wan to be \"submitting\" the form in the traditional sense.\n\nIt sounds like your solution was to stop the actual \"Form Submission\" and rely on your custom endpoint. I would agree that is probably the way to go because you want to control the data being posted to HubSpot."
+  },
+  {
+    "poster": {
+      "poster_name": "George Grigorita",
+      "poster_handle": "george.grigorita"
+    },
+    "time_stamp": "2023-09-20 07:09:49",
+    "edited": {
+      "time_stamp": "2023-09-20 07:10:10"
+    },
+    "text": "This has the interesting effect that if I had all my inputs in React named exactly like the ones in HubSpot, it could have worked without me needing a middleware or a serverless function."
+  },
+  {
+    "poster": {
+      "poster_name": "George Grigorita",
+      "poster_handle": "george.grigorita"
+    },
+    "time_stamp": "2023-09-20 07:26:39",
+    "text": "For now, we reverted back to submitting the Form in the traditional sense because we need the marketing data associated with the form-submitting process (source, medium, ads etc.) in HubSpot.\n\nTo fix the multiple companies creation bug we will add a 30sec delay to the middleware to HS sync. This is so HS has time to fill in the properties it can match, and then we update the properties via de middleware."
+  }
+]

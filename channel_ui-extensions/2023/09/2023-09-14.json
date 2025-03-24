@@ -1,0 +1,180 @@
+[
+  {
+    "poster": {
+      "poster_name": "Pablo Gutiérrez Alfaro",
+      "poster_handle": "pablo.gutierrez"
+    },
+    "time_stamp": "2023-09-14 02:11:20",
+    "edited": {
+      "time_stamp": "2023-09-14 02:12:39"
+    },
+    "text": "In the component code I have this code\n```const Extension = ({ context, runServerless, sendAlert }) =&gt; {\n....\n  runServerless({\n    name: 'getDemo',\n    propertiesToSend: ['hs_object_id'],\n  }).then((resp) =&gt; {\n    console.log(resp)\n  });\n....```\nI added the new `getDemo` function to `src/app/app.functions/serverless.json` This is the file content:\n```{\n  \"runtime\": \"nodejs16.x\",\n  \"version\": \"1.0\",\n  \"appFunctions\": {\n    \"getDemo\": {\n      \"file\": \"getDemo.js\",\n      \"secrets\": []\n    }\n  }\n}```\nAlso I created a file `src/app/app.functions/getDemo.js` This is the file content:\n```exports.main = (context = {}, sendResponse) =&gt; {\n\n  var myHeaders = new Headers();\n  var requestOptions = {\n    method: 'GET',\n    headers: myHeaders,\n    redirect: 'follow'\n  };\n\n  return fetch(\"<https://jsonplaceholder.typicode.com/todos/1>\", requestOptions)\n    .then(response =&gt; sendResponse(response.text()))\n    .catch(error =&gt; ...);\n\n};```"
+  },
+  {
+    "poster": {
+      "poster_name": "Pablo Gutiérrez Alfaro",
+      "poster_handle": "pablo.gutierrez"
+    },
+    "time_stamp": "2023-09-14 02:13:00",
+    "text": "This was only a test but is working :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Pablo Gutiérrez Alfaro",
+      "poster_handle": "pablo.gutierrez"
+    },
+    "time_stamp": "2023-09-14 02:24:33",
+    "text": "Probably will need to add `runServerless` inside `useEffect` to only call it once"
+  },
+  {
+    "poster": {
+      "poster_name": "Pablo Gutiérrez Alfaro",
+      "poster_handle": "pablo.gutierrez"
+    },
+    "time_stamp": "2023-09-14 03:23:45",
+    "text": ":wave: Hi! I keep working on the serverless functions and I have another problem… the runServerless functions return a JSON with a status and a response. After doing an api call I would like to throw an error in the backend, because if I try to send the error this code `sendResponse({ status: 'ERROR', message: e.message });` at the end, I’m getting `{status:\"SUCCESS\", response: {status: 'ERROR', message: \"….\"}}`",
+    "reply_count": 12,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2023-09-14 03:25:40"
+      },
+      {
+        "time_stamp": "2023-09-14 03:27:32"
+      },
+      {
+        "time_stamp": "2023-09-14 03:27:46"
+      },
+      {
+        "time_stamp": "2023-09-14 03:28:11"
+      },
+      {
+        "time_stamp": "2023-09-14 03:29:34"
+      },
+      {
+        "time_stamp": "2023-09-14 03:35:10"
+      },
+      {
+        "time_stamp": "2023-09-14 03:41:44"
+      },
+      {
+        "time_stamp": "2023-09-14 03:42:35"
+      },
+      {
+        "time_stamp": "2023-09-14 04:02:16"
+      },
+      {
+        "time_stamp": "2023-09-14 04:03:54"
+      },
+      {
+        "time_stamp": "2023-09-14 04:53:34"
+      },
+      {
+        "time_stamp": "2023-09-14 05:42:51"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2023-09-14 03:25:40",
+    "text": "Can you send a screenshot of your serverless function? how are you handling errors in there?"
+  },
+  {
+    "poster": {
+      "poster_name": "Pablo Gutiérrez Alfaro",
+      "poster_handle": "pablo.gutierrez"
+    },
+    "time_stamp": "2023-09-14 03:27:32",
+    "text": "```const axios = require('axios');\n\nexports.main = (context = {}, sendResponse) =&gt; {\n  const apikey = process.env['CODER_API_TOKEN'];\n\n  fetchDemo(apikey)\n    .then(() =&gt; {\n      sendResponse({ status: 'SUCCESS' });\n    })\n    .catch((e) =&gt; {\n      sendResponse({ status: 'ERROR', message: e.message });\n    });\n};\n\nconst fetchDemo = (apikey) =&gt; {\n  let config = {\n    method: 'get',\n    maxBodyLength: Infinity,\n    url: '<https://thisapiisnotworking.com>',\n    headers: {\n      'Coder-Session-Token': apikey\n    }\n  };\n\n  return axios.request(config)\n\n};```"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-09-14 03:27:46"
+  },
+  {
+    "poster": {
+      "poster_name": "Pablo Gutiérrez Alfaro",
+      "poster_handle": "pablo.gutierrez"
+    },
+    "time_stamp": "2023-09-14 03:28:11",
+    "text": "try to copy more or less the with-crm-components example"
+  },
+  {
+    "poster": {
+      "poster_name": "Pablo Gutiérrez Alfaro",
+      "poster_handle": "pablo.gutierrez"
+    },
+    "time_stamp": "2023-09-14 03:29:34",
+    "text": "this is the code in the frontend\n\n``` useEffect(() =&gt; {\n    runServerless({\n      name: 'getDemo',\n      propertiesToSend: ['hs_object_id'],\n    }).then((resp) =&gt; {\n      console.log(resp)\n      if (resp.status === 'SUCCESS') {\n        setStep('form');\n      } else {\n        setStep('fetch-error');\n      }\n    });\n  }, [runServerless]);```"
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2023-09-14 03:35:10",
+    "text": "I don't see anything wrong here, maybe you can try replacing the then-catch with a try catch block like that:\n```try {\n const response = await fetchDemo(apikey)\n sendResponse({ status: 'SUCCESS' });\n} catch((e) =&gt; {\n sendResponse({ status: 'ERROR', message: e.message });\n});```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Harun Kumar Siva",
+      "poster_handle": "harun"
+    },
+    "time_stamp": "2023-09-14 03:41:44",
+    "text": "I have little experience with this but I think you will need to provide a 4XX statusCode\nthe argument that you are currently calling sendResponse is with is just the Response body and a default statusCode of 200 is assumed which translates to status: \"SUCCESS\"\n\nso try changing to `sendResponse({ statusCode: 400, message: e.message })`\nor any other relevant HTTP 4XX status code to see a non SUCCESS status."
+  },
+  {
+    "poster": {
+      "poster_name": "Harun Kumar Siva",
+      "poster_handle": "harun"
+    },
+    "time_stamp": "2023-09-14 03:42:35",
+    "text": "Here is a <https://developers.HubSpot.com/docs/cms/data/serverless-functions/reference#redirect-by-sending-a-header|HTTP 301 example from the documentation> (to redirect)."
+  },
+  {
+    "poster": {
+      "poster_name": "Pablo Gutiérrez Alfaro",
+      "poster_handle": "pablo.gutierrez"
+    },
+    "time_stamp": "2023-09-14 04:02:16",
+    "text": "If i use sendResponse to send and error i will receive {status:“SUCCESS”…} It’s right because the serverless function didn’t have an error but is quite annoying to send errors inside a success and don’t handle all the errors together"
+  },
+  {
+    "poster": {
+      "poster_name": "Pablo Gutiérrez Alfaro",
+      "poster_handle": "pablo.gutierrez"
+    },
+    "time_stamp": "2023-09-14 04:03:54",
+    "text": "if I recuce the code to\n\n```exports.main = (context = {}, sendResponse) =&gt; {\n  var myHeaders = new Headers();\n  myHeaders.append(\"Coder-Session-Token\", process.env['CODER_API_TOKEN']);\n\n  var requestOptions = {\n    method: 'GET',\n    headers: myHeaders,\n    redirect: 'follow'\n  };\n\n\n  return fetch('<https://thisapiisnotworking.com>', requestOptions)\n    .then(response =&gt; { sendResponse(response) })\n};```\nThis will return the error properly\n\n{status: ‘ERROR’, message: “[runServerlessFunction]: The serverless function ‘…Demo’ failed to execute: TypeError: fetch failed.“}"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Niederberger",
+      "poster_handle": "thomas.niederberger"
+    },
+    "time_stamp": "2023-09-14 04:19:31",
+    "text": "Thank You. Let me play with it."
+  },
+  {
+    "poster": {
+      "poster_name": "Pablo Gutiérrez Alfaro",
+      "poster_handle": "pablo.gutierrez"
+    },
+    "time_stamp": "2023-09-14 04:53:34",
+    "text": ":white_check_mark:  Calling `throw new Error(` returns properly the error not calling `sendResponse({ status: 'ERROR''…`\n\n```return fetch(url, requestOptions)\n    .then(response =&gt; {\n      if (response.status === 200) {\n        sendResponse(response.json())\n      } else if (response.status === 404) {\n        throw new Error('Resource not found');\n      } else {\n        throw new Error('Unexpected response status: ' + response.status); // Handle other statuses as errors\n      }\n    });```"
+  },
+  {
+    "poster": {
+      "poster_name": "Seth Kaplan",
+      "poster_handle": "skaplan"
+    },
+    "time_stamp": "2023-09-14 05:42:51",
+    "edited": {
+      "time_stamp": "2023-09-14 05:43:20"
+    },
+    "text": "if the severless function returns a 200 response it'll be `status: SUCCESS` . In order to trigger `status: ERROR` you'll have to reject a promise in some async function or throw an error."
+  }
+]

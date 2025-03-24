@@ -1,0 +1,323 @@
+[
+  {
+    "poster": {
+      "poster_name": "Alexandros Spyropoulos",
+      "poster_handle": "alexandros"
+    },
+    "time_stamp": "2024-01-29 01:03:54",
+    "text": "Hey all, I am using the webhook integration to get some entities and store them to our db. One thing that I noticed is that the id number of any entity ie a Company entity is extremely big already currently 9795562993. After playing a bit with creating and deleting  companies I also noticed this number is not incremented by 1 but by many more which makes believe that this table is being used by all the HubSpot users besides the users of my company. Is this true? if yes would it make sense to store the id of any entity as type varchar instead of int or bigint in MySQL? I am just conscious of the size that it would soon reach the limit of any int/bigint type."
+  },
+  {
+    "poster": {
+      "poster_name": "Hugo Enrile",
+      "poster_handle": "hugo.enrile"
+    },
+    "time_stamp": "2024-01-29 01:12:57",
+    "text": "Good morning! :slightly_smiling_face:\n\nWe want to make requests to a proprietary service to include certain data within HubSpot via REST API. This API is exposed from our servers and we want to protect the connection to restrict it only to the range of IPs from which your product operates in terms of requests. The problem is that I don't know this range. Could you tell me where I can find it or if you know it directly tell me what it is?\nOur subscription number is 4960096.\n\nThanks in advance"
+  },
+  {
+    "poster": {
+      "poster_name": "Neil Junsan",
+      "poster_handle": "neiljunsan09"
+    },
+    "time_stamp": "2024-01-29 02:09:42",
+    "text": "Hello @everyone im having error once tried to  \"create a POST request from a Data value from the HTML and send it to server code and fetch it to make a request.\":\n\n```&lt;div class=\"file-wrapper\"&gt;\n    &lt;div id=\"fileIdNumber\" class=\"file_id_val\" data-file-id=\"{{ module.file_id }}\"&gt;\n      {{ module.file_id }}\n    &lt;/div&gt;\n    &lt;button id=\"generateLinkBtn\"&gt;Generate File Link&lt;/button&gt;\n    &lt;a id=\"file_link_href\" class=\"file_text_val\" href=\"\" target=\"_blank\"&gt;\n      {{ module.file_text }}\n    &lt;/a&gt;\n    &lt;br&gt;\n    &lt;hr&gt;\n    &lt;div class=\"file-wrapper\"&gt;\n      &lt;div id=\"file-link\"&gt;&lt;/div&gt;\n      &lt;span class=\"expires-at-label\"&gt;&lt;/span&gt;\n    &lt;/div&gt;\n  &lt;/div&gt;\n\n  &lt;script&gt;\n    document.getElementById('generateLinkBtn').addEventListener('click', async () =&gt; {\n      const fileId = document.getElementById('fileIdNumber').dataset.fileId;\n\n      try {\n        const response = await fetch('/createfilelink', {\n          method: 'POST',\n          headers: {\n            'Content-Type': 'application/json',\n          },\n          body: JSON.stringify({ fileId }),\n        });\n\n        if (response.ok) {\n          const responseData = await response.json();\n          const fileLink = responseData.body; // Assuming the file link is in the response body\n          \n          // Update the HTML with the generated file link\n          document.getElementById('file_link_href').href = fileLink;\n        } else {\n          console.error('Error:', response.status, response.statusText);\n        }\n      } catch (error) {\n        console.error('Network error:', error.message);\n      }\n    });\n  &lt;/script&gt;```\nHere is my servercode:\n```const axios = require('axios');\n\nexports.main = async (context, sendResponse) =&gt; {\n\n  const fileId = context.body.fileId;  // I want to make fileID dynamic value from html\n\n      if (!fileId) {\n        sendResponse({ body: 'File ID not provided in the request', statusCode: 400 });\n        return;\n      }\n  \n  const fileId = \"150642554699\"; // this const is working with static FileIdnumber  \n  \n    var config = {\n      method: 'get',\n      maxBodyLength: Infinity,\n      url: `<https://api.hubapi.com/files/v3/files/${fileId}/signed-url?expirationSeconds=900>`,\n      headers: { \n        Authorization: \"Bearer sample-tokenhere\"\n      }\n    };\n\n    axios(config)\n      .then((response) =&gt; {\n      const data = JSON.stringify(response.data);\n      sendResponse({ body: data, statusCode: 200 });\n//       document.getElementById('file-link').textContent = response.data.url;\n    })\n      .catch(function (error) {\n      console.log(error);\n      sendResponse({ body: error, statusCode: 400 });\n    });\n\n    return;\n};```\nHope someone can help me recheck the code what is the issue :pray:",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-01-29 06:12:07"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Uyen Le",
+      "poster_handle": "uyen"
+    },
+    "time_stamp": "2024-01-29 02:24:58",
+    "text": "the integration is pre-built by HubSpot and we can only send {{ lifecycle stage }} and no extra property. But if you know a way to customize it (beside a 3rd-party app like Zapier or Make), it'd be massive!"
+  },
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2024-01-29 03:36:02",
+    "edited": {
+      "time_stamp": "2024-01-29 03:39:13"
+    },
+    "text": "Does anyone have experience with submitting Custom Behavioral Events via API? I'm on a project where we're integrating HubSpot into an Event Driven Architecture, and we're exploring using CBE's to track non-HubSpot form submits on a website. The reason being that keeping a sync of website forms and corresponding HubSpot forms (to leverage the Form Submit API) may not be desireable.\n\nIn this situation, the middleware flow would roughly be:\n1. Receive event about form submission\n2. Fetch form submission data from website API\n3. Create or update contact in HubSpot using Create Contact API\n4. Create CBE for contact with form data, including session source information\nBut from a HubSpot perspective, if we use CBE's for form submits, I'd want to track session source data. According to CBE API documentation, I am able to submit `hs_touchpoint_source` with one of HubSpot's source values, but then of course I need to know what the source was. Could I instruct the website developer to extract this data from the hutk and make it available for the form submission, so the middleware can retrieve it in the API call, then dynamically populate it in the Send CBE request? I.e. can it be found there?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-01-29 03:41:43"
+      },
+      {
+        "time_stamp": "2024-01-29 03:44:08"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2024-01-29 03:41:43",
+    "text": "That sounds like reinventing the wheel honestly, why not just submitting the form with forms API and pass the hutk so you'll track everything automatically?"
+  },
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2024-01-29 03:44:08",
+    "text": "Oh it is, I'm aware. But HubSpot in this case is but one part in a larger data landscape and I have the overall solution architect to deal with as well. I'm mostly brainstorming alternative solutions in case he doesn't want to solve for keeping HubSpot and the CMS in sync when it comes to forms and their fields."
+  },
+  {
+    "poster": {
+      "poster_name": "Maximilian Holzer",
+      "poster_handle": "maximilian.holzer"
+    },
+    "time_stamp": "2024-01-29 05:09:51",
+    "edited": {
+      "time_stamp": "2024-01-29 05:10:49"
+    },
+    "text": "i checked the secrets two times and the access token is correctly saved\nwhen i try to do it like this:\n```const HubSpot = require('@HubSpot/api-client');\nconst apikey = process.env.Access_Token\nconst HubSpotClient = new HubSpot.Client({ apiKey: process.env.Access_Token});```\nstill tells me the 401 authentication error :confused: and when i try to log it says that the logs have exceeded 4KB and it doesnt show :confused:"
+  },
+  {
+    "poster": {
+      "poster_name": "Maximilian Holzer",
+      "poster_handle": "maximilian.holzer"
+    },
+    "time_stamp": "2024-01-29 05:12:20",
+    "edited": {
+      "time_stamp": "2024-01-29 05:12:35"
+    },
+    "text": "this is Python or? I can only /barely read java :disappointed: <@U03BA1PRV7S>"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Ridng",
+      "poster_handle": "mike708"
+    },
+    "time_stamp": "2024-01-29 05:50:03",
+    "text": "Hello, hope you can help with possibly a silly question. I am attempting to set up an API with HubSpot to our phone system (PBX) and I need an API key but all the guides are telling me to do the below\n\n• In your HubSpot account, click the settings *settings icon* in the main navigation bar.\n• In the left sidebar menu, navigate to *Integrations* &gt; *API key*.\n    ◦ If a key has never been generated for your account, click *Generate API key*.\n    ◦ If you've already generated an API key, click *Show* to display your key.\nWhile in settings and integrations there is no option for Generate API key. Any help will be appreciated.",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-01-29 06:13:04"
+      }
+    ]
+  },
+  {
+    "text": "as an FYI, this is what I see",
+    "time_stamp": "2024-01-29 05:51:18"
+  },
+  {
+    "poster": {
+      "poster_name": "Neil Junsan",
+      "poster_handle": "neiljunsan09"
+    },
+    "time_stamp": "2024-01-29 06:12:07",
+    "text": "hello <@U01QVR44MEY> any ideas and suggestions sir :pray:"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-01-29 06:13:04",
+    "text": "API key has been deprecated - make a private app instead and it will give you a key"
+  },
+  {
+    "poster": {
+      "poster_name": "kevin romero",
+      "poster_handle": "kevin.romero"
+    },
+    "time_stamp": "2024-01-29 06:48:41",
+    "text": "Hello @everyone, I am new to HubSpot and I have a question, how can I do a get to a custom object and obtain specific properties, additionally how to update a custom record.  thanks.",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-01-29 06:56:40"
+      },
+      {
+        "time_stamp": "2024-01-29 06:57:30"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-01-29 06:56:40",
+    "text": "<https://knowledge.HubSpot.com/crm-setup/create-custom-objects>"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-01-29 06:57:30",
+    "text": "<https://developers.HubSpot.com/docs/api/crm/crm-custom-objects>"
+  },
+  {
+    "text": "Hello, I'm new to HubSpot and APIs, I'm trying to create a webhook that allows me to GET an Association (custom object to contacts). Right now, my Zapier step allows me to find all associations related to my custom object and contacts as shown below. How do I edit the \"Query String Params\" so that my action will only get association labels with the label called \"academy\"?",
+    "time_stamp": "2024-01-29 10:26:39",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-01-29 10:26:58"
+      },
+      {
+        "time_stamp": "2024-01-29 10:30:54"
+      },
+      {
+        "time_stamp": "2024-01-29 12:29:38"
+      }
+    ]
+  },
+  {
+    "text": "",
+    "time_stamp": "2024-01-29 10:26:58"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2024-01-29 10:30:54",
+    "text": "The <https://developers.HubSpot.com/docs/api/crm/associations?uuid=6aa85595-8f71-49ac-b2f1-79a3fe00148a|API endpoint> doesn’t allow you to filter down. You would need to use Zapier to loop over the results and find your label."
+  },
+  {
+    "poster": {
+      "poster_name": "Avinash",
+      "poster_handle": "avinash"
+    },
+    "time_stamp": "2024-01-29 11:27:50",
+    "text": "Hi, Everyone, does anyone know how to make a contact on a Deal, a Primary Contact via the API?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-01-29 13:02:03"
+      },
+      {
+        "time_stamp": "2024-01-29 13:18:29"
+      },
+      {
+        "time_stamp": "2024-01-29 13:20:32"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jeanette Ewy",
+      "poster_handle": "jewy"
+    },
+    "time_stamp": "2024-01-29 12:29:38",
+    "text": "<@U03REFNRMB3>, coolio, thank you for the fast response! Thought I was going crazy, so this makes sense of things I'm seeing."
+  },
+  {
+    "poster": {
+      "poster_name": "Sonia Saraf",
+      "poster_handle": "sarafs"
+    },
+    "time_stamp": "2024-01-29 13:01:24",
+    "edited": {
+      "time_stamp": "2024-01-29 13:01:56"
+    },
+    "text": "Hello, hoping to get answers on some questions I have on integration with HubSpot via OAuth and import limits on Company and Contact records.\n\nIf an application is integrated with HubSpot CRM using OAuth to allow users of the application to send Company and Contact records from that application to their HubSpot CRM via the HubSpot CRM APIs:\n\n1. How many Company and Contact records can be sent/ imported into a HubSpot Paid and Free CRM version at a time/in a single batch per user?\n2. What is the storage capacity/ total number of Company and Contact records allowed on HubSpot Paid and Free CRM?\n3.  With multiple users logging in to the application and triggering imports- to mitigate any potential risk of exceeding storage capacity and ensure that each user's imports can fit within the available storage capacity, what would be the best way to determine the import limits per user when multiple users are involved?"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2024-01-29 13:02:03",
+    "text": "Yes, you need to use the “associations” parameters when creating a deal via the <https://developers.HubSpot.com/docs/api/crm/deals?uuid=c01112f9-c526-4636-89e6-d17dde6fa197|API>."
+  },
+  {
+    "poster": {
+      "poster_name": "Avinash",
+      "poster_handle": "avinash"
+    },
+    "time_stamp": "2024-01-29 13:18:29",
+    "text": "Thanks Justin, got it working."
+  },
+  {
+    "poster": {
+      "poster_name": "Avinash",
+      "poster_handle": "avinash"
+    },
+    "time_stamp": "2024-01-29 13:20:32",
+    "text": "I used the associations V4 endpoint, with a custom label.... much appreciated."
+  },
+  {
+    "poster": {
+      "poster_name": "S Harsha Padma",
+      "poster_handle": "s.padma"
+    },
+    "time_stamp": "2024-01-29 22:50:52",
+    "text": "Hi Everyone, i am new to HubSpot APIs. Any help would be appreciated.\n\nwhen i create a deal:\nAPI URL: <https://api.hubapi.com/crm/v3/objects/deals>\nRequest Type: POST\nBody: {\"properties\":{\"dealstage\":\"checkout_completed\",\"dealname\":\"5000004078-DataForensics-.-CAD\",\"amount\":\"22448.3300\",\"pipeline\":\"75e28846-ad0d-4be2-a027-5e1da6590b98\",\"discount_amount\":\"0.0000\",\"order_number\":\"5000004078\",\"tax_amount\":\"2405.1800\",\"order_creation_date\":1706486400000,\"contact_is_guest\":\"No\",\"contact_email\":\"<mailto:DataForensics_test_uat1@bentley.m8r.co|DataForensics_test_uat1@bentley.m8r.co>\",\"channel_partner_id\":\"1006341637\",\"reseller_name\":\"Data Forensicstest\",\"payment_method\":\"Credit Card\\/Debit Card\",\"deal_customer_currency_code\":\"USD\",\"webshop_order_id\":\"44389\",\"first_name__to_be_copied_from_contact_\":\"DataForensics\",\"last_name\":\".\",\"license_administrator_first_name\":\"test\",\"license_administrator_surname\":\"test\",\"license_administrator_email\":\"<mailto:test@test.com|test@test.com>\",\"product_brand\":\"MicroStation\",\"product_brand_multi_select\":\"MicroStation,OpenFlows\",\"deal_status\":\"processing\",\"psp_reference_number\":\"WDVRQQJTX8NKGK82\"}}\n\nAuthorization: Bearer &lt;token&gt;\nContent-Type: application/json\n\nHere, product_brand_multi_select is a custom attribute with multiple select configured in HubSpot, but when passing as comma separated values is throwing this error.\n\nCan anybody pls help?",
+    "reply_count": 11,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-01-31 15:09:57"
+      },
+      {
+        "time_stamp": "2024-01-31 15:10:03"
+      },
+      {
+        "time_stamp": "2024-02-01 11:42:39"
+      },
+      {
+        "time_stamp": "2024-02-01 13:18:39"
+      },
+      {
+        "time_stamp": "2024-02-01 13:19:20"
+      },
+      {
+        "time_stamp": "2024-02-01 13:22:00"
+      },
+      {
+        "time_stamp": "2024-02-01 13:22:14"
+      },
+      {
+        "time_stamp": "2024-02-01 13:22:59"
+      },
+      {
+        "time_stamp": "2024-02-01 13:24:08"
+      },
+      {
+        "time_stamp": "2024-02-01 13:26:30"
+      },
+      {
+        "time_stamp": "2024-02-01 13:35:23"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Shadab Faisal",
+      "poster_handle": "shadab.faisal"
+    },
+    "time_stamp": "2024-01-29 23:35:35",
+    "text": "Hi Everyone,\nI am redirecting my users to round robin meeting link on filling up of my custom form on website (using POST request). I have 3 questions regarding this:-\n1. Is it possible to handle redirection from FE only once booking is confirmed? Something like onSuccess API available so we can add redirections according to our use case instead of just inserting an external link in the confirmation tab?\n2. Currently 2 step procedure is followed on round robin links - \n    a. Pick a time slot\n    b. Confirming Your info\nCan we pls skip the 2nd part? Are there any params / payload we can send to make this only 1 step of selecting time.\n3. Also if possible can we just open the calendars to pick time slot on my website only (in some modal or something) instead of redirecting to meeting hubpsot link?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jui Guram",
+      "poster_handle": "datawarehouse"
+    },
+    "time_stamp": "2024-01-29 23:35:50",
+    "text": "Hi <@U01QVR44MEY>, can you point me to the HubSpot endpoint which lets me see the downloaded files on my website?"
+  }
+]

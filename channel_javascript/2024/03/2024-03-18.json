@@ -1,0 +1,33 @@
+[
+  {
+    "poster": {
+      "poster_name": "Parameshwaran Palanisamy",
+      "poster_handle": "parameshwaran.palanis"
+    },
+    "time_stamp": "2024-03-18 03:13:56",
+    "text": "Hi Team,\n\nNeed some input here, I am trying associate deals with contacts using custom code\n\nconst HubSpot = require('@HubSpot/api-client');\nexports.main = (event, callback) =&gt; {\n\n  const HubSpotClient = new HubSpot.Client({\n    accessToken: process.env.Oauth\n  });\n\n  // Retrive the currently enrolled contacts \"Record ID\" property\n\n const properties = [\"main_salesforce_contact\", \"hs_object_id\"];\n   HubSpotClient.crm.deals.basicApi.getById(event.object.objectId,[\"hs_object_id\"])\n\n    .then(results =&gt; {\n\t// Get data from the results and store in variables\n\n\tlet RecordIDValue = results.body.properties.hs_object_id;\n\n        //console.log(\"SEARCH TERM: \" + RecordIDValueValue); // - FOR DEBUG\n\t// Create search criteria\n\tconst filter = { propertyName: 'hs_object_id', operator: 'EQ', value: RecordIDValue }\n\tconst filterGroup = { filters:\t[filter] \t}\n        const sort = JSON.stringify({ propertyName: 'hs_object_id', direction: 'DESCENDING'})\n\n        const limit = 1\n        const after = 0\n\n        const searchCriteria = {\n          filterGroups: [filterGroup],\n          sorts: [sort],\n          properties,\n          limit,\n          after\n        }\n\n      // Search the CRM for Deals matching \"RecordIDValue\" variable defined earlier\n      HubSpotClient.crm.contacts.searchApi.doSearch(searchCriteria).then(searchDealResponse =&gt; {\n\n         //console.log(\"RESULTS: \" + searchDealResponse.body.total); // - FOR DEBUG\n\n         // If total equals 0 no results found\n         if(searchDealResponse.body.total == 0){ console.log(\"DEAL WITH Record ID \" + RecordIDValue  + \"NOT FOUND.\") // - FOR DEBUG\n\n         }else{ // MATCH FOUND - ASSOCIATE DEAL TO CONTACT\n           // console.log(\"DEAL \" + MRecord ID + \" FOUND: ASSOCIATE RECORDS\"); // - FOR DEBUG\n          //Associate Deal with Contact\n           HubSpotClient.crm.deals.associationsApi.create(searchDealResponse.body.results[0].id,'contacts', event.object.objectId,'hs_object_id');\n         }\n      });\n\n      callback({outputFields: {}});\n\n    })\n    .catch(err =&gt; {\n      console.error(err);\n    });\n}\n\n\n\nfor some reason I am getting this below which I couldn't fix-\n```ERROR\tTypeError: Cannot read properties of undefined (reading 'properties')\n    at /var/task/file.js:16:35\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)```\nAnyone can shed some light on this?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-03-19 02:13:28"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Marcio Oliveira",
+      "poster_handle": "marcio.oliveira"
+    },
+    "time_stamp": "2024-03-18 12:23:00",
+    "text": "Guys, i'm still have issues about this theme.\n\nI'm sending the events and get some updates on HubSpot reports and properties like hs_city but i didnt see this updates on contact properties.\n\nDo you have some idea of what this problem happens ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcio Oliveira",
+      "poster_handle": "marcio.oliveira"
+    },
+    "time_stamp": "2024-03-18 17:26:22",
+    "text": "There's anyway to create and update contact with event properties automaticaly without workflow, just with event trigger ?"
+  }
+]

@@ -1,0 +1,177 @@
+[
+  {
+    "text": "I was wondering if it's possible to customize the theme module icon and text color in the CMS editor. Also, is it possible to ONLY show theme modules? I noticed the styles are injected via iframe and I know the difficulties overriding them.",
+    "time_stamp": "2021-12-16 09:53:39",
+    "reply_count": 3,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2021-12-16 09:56:25"
+      },
+      {
+        "time_stamp": "2021-12-16 09:59:26"
+      },
+      {
+        "time_stamp": "2021-12-16 22:18:47"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2021-12-16 09:56:25",
+    "edited": {
+      "time_stamp": "2021-12-16 09:57:31"
+    },
+    "text": "I’m pretty confident that this isn’t possible, and that they’re using secure iframes in part to prevent us from being able to do this. They want to keep the core UI and experience consistent for the user I believe."
+  },
+  {
+    "poster": {
+      "poster_name": "Shannon Walker",
+      "poster_handle": "swalker"
+    },
+    "time_stamp": "2021-12-16 09:59:26",
+    "text": "I kind of figured as much. Thanks for the feedback <@U021H3TV338> ."
+  },
+  {
+    "poster": {
+      "poster_name": "Ilya Komarov",
+      "poster_handle": "i.komarov"
+    },
+    "time_stamp": "2021-12-16 11:42:02",
+    "text": "Good evening.\nI am currently exploring the possibility of making seamless authorization between HubSpot blog and my platform. Is it possible to implement it somehow using modules? If not, can you point me in the right direction? Thanks"
+  },
+  {
+    "poster": {
+      "poster_name": "Olivia Durr",
+      "poster_handle": "olivia.durr"
+    },
+    "time_stamp": "2021-12-16 12:03:08",
+    "edited": {
+      "time_stamp": "2021-12-16 12:04:37"
+    },
+    "text": "Im working on building a custom module that pulls related rows from HubDB. When I go to print my query, it shows up null. This is the code that I have:\n``` &lt;div class=\"{{ module_name }}__related-projects\"&gt;\n                &lt;h3&gt;\n                  Related Projects\n                &lt;/h3&gt;\n                {% set count = module.related_projects_count %}\n                {% for capability in capabilities %}\n                  {% if loop.first %}\n                    {% set relatedProjectsQuery = '&amp;limit='~count~'&amp;'~'capability__contains='~capability.name|replace(' ','%20')|replace('&amp;','%26')~'&amp;hs_path__not_like='~path~'&amp;disable_project=false' %}\n                    {% set relatedProjects = hubdb_table_rows(dynamic_page_hubdb_table_id, relatedProjectsQuery) %}\n\n                    {% for item in relatedProjects %}\n                      {{ project_card(module_name,item) }}\n                    {% endfor %}\n                  {% endif %}\n                {% endfor %}\n{{relatedProjectsQuery|pprint}}\n\t\t\t\t\t\t\t\t{{dynamic_page_dubdb_table_id|pprint}}\n                &lt;a class=\"cta-link\" href=\"{{ content.absolute_url|replace(dynamic_page_hubdb_row.hs_path,'') }}\"&gt;\n                  &lt;span class=\"icon\"&gt;{{ icon('gallery') }}&lt;/span&gt;\n                  &lt;span&gt;View All Projects&lt;/span&gt;\n                &lt;/a&gt;\n              &lt;/div&gt;```\nAnd I have this earlier in the code:\n```{% set capabilities = dynamic_page_hubdb_row.capability %}```\nWhen I print the 'count', it shows up fine. It's the rest of the string that I'm having an issue with",
+    "reply_count": 11,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-12-16 12:55:37"
+      },
+      {
+        "time_stamp": "2021-12-16 13:12:44"
+      },
+      {
+        "time_stamp": "2021-12-16 13:19:12"
+      },
+      {
+        "time_stamp": "2021-12-16 13:55:14"
+      },
+      {
+        "time_stamp": "2021-12-16 13:56:09"
+      },
+      {
+        "time_stamp": "2021-12-16 14:04:40"
+      },
+      {
+        "time_stamp": "2021-12-16 14:15:13"
+      },
+      {
+        "time_stamp": "2021-12-16 15:47:37"
+      },
+      {
+        "time_stamp": "2021-12-16 16:52:54"
+      },
+      {
+        "time_stamp": "2021-12-17 07:58:03"
+      },
+      {
+        "time_stamp": "2021-12-17 08:57:08"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Michele Herzog",
+      "poster_handle": "michele.herzog24"
+    },
+    "time_stamp": "2021-12-16 12:55:37",
+    "text": "Hey <@U02J3EFR2MB>! HubL variables set in `for` loops are just scoped to that block- if you move your `{{relatedProjectsQuery|pprint}}` up a little higher, into the `{% if loop.first %}` block, it should print out information.\n\nJust a heads up here though, you might hit the limit on `hubdb_table_rows` calls with the above (limited to 10 calls per page). You can get the HubDB rows once at the top with:\n```{% set allHubDBRows = hubdb_table_rows(dynamic_page_hubdb_table_id) %}```\nand then, in your for loop, select only the rows you need with something like:\n```{% set relatedProjects = allHubDBRows|selectattr(\"capability_contains\", \"equals\", capability.name)|rejectattr(\"disable_project\", \"equals\", false) %}```\nYour call, but should help if that limit becomes an issue."
+  },
+  {
+    "poster": {
+      "poster_name": "Olivia Durr",
+      "poster_handle": "olivia.durr"
+    },
+    "time_stamp": "2021-12-16 13:12:44",
+    "text": "<@U02NJACH5QS> thank you for your help! I can get the string to print now, but it doesn't call up the referenced module. Would you have any insight into why this might be?"
+  },
+  {
+    "poster": {
+      "poster_name": "Michele Herzog",
+      "poster_handle": "michele.herzog24"
+    },
+    "time_stamp": "2021-12-16 13:19:12",
+    "text": "Hmm, a little bit tough to tell from just this block, but I’d try `{{item|pprint}}` in `{% for item in relatedProjects %}`. If that’s printing the information you need, there might be an issue with your `project_card` call.\n\nIf that’s not printing the information you need, I’d try removing individual pieces of your `relatedProjectsQuery` to see if something is preventing you from getting results."
+  },
+  {
+    "poster": {
+      "poster_name": "Olivia Durr",
+      "poster_handle": "olivia.durr"
+    },
+    "time_stamp": "2021-12-16 13:55:14",
+    "text": "So I updated the code to be:\n```&lt;h3&gt;Related Projects&lt;/h3&gt;\n{% set count = module.related_projects_count %}\n{% set query1 = '&amp;limit='~count %}\n{% set query2 = '&amp;capability__contains='~name|replace(' ', '%20')|replace('&amp;','%26') %}\n{% for capability in capabilities %}\n  {% set relatedProjectsQuery = '&amp;limit='~count~'&amp;'~'capability__contains='~capability.name|lower|replace(' ','%20')|replace('&amp;','%26')~'&amp;hs_path__not_like='~path~'&amp;disable_project=false' %}\n  {% if loop.first %}\n\t{% set relatedProjects = allHubDBRows|selectattr(\"capability_contains\", \"equals\", capability.name)|rejectattr(\"disable_project\", \"equals\", false) %}\n\t{{relatedProjectsQuery|pprint}}\n\t{{relatedProjects|pprint}}\n\t\t{% for item in relatedProjects %}\n\t\t\t{{item|pprint}}\n\t\t\t{{ project_card(module_name,item) }}\n\t\t{% endfor %}\n\t{% endif %}\n{% endfor %}```\nAnd the result I get on the staging site is: `(String: &amp;limit=2&amp;capability__contains=engineering%20design&amp;hs_path__not_like=mid-barataria-sediment-diversion&amp;disable_project=false) null`\nNot entirely sure if I put the lines in the right spot? Towards the top of the module, I put the `{% set allHubDBRows = hubdb_table_rows(dynamic_page_hubdb_table_id) %}` code"
+  },
+  {
+    "poster": {
+      "poster_name": "Olivia Durr",
+      "poster_handle": "olivia.durr"
+    },
+    "time_stamp": "2021-12-16 13:56:09",
+    "text": "I've tried removing pieces of the `relatedProjectsQuery` to see if something is preventing it, and I still get the same results"
+  },
+  {
+    "poster": {
+      "poster_name": "Olivia Durr",
+      "poster_handle": "olivia.durr"
+    },
+    "time_stamp": "2021-12-16 14:04:40",
+    "text": "I got the module to show up! I should have been doing `{% for item in loop %}` instead of item in relatedProjects"
+  },
+  {
+    "poster": {
+      "poster_name": "Olivia Durr",
+      "poster_handle": "olivia.durr"
+    },
+    "time_stamp": "2021-12-16 14:15:13",
+    "text": "Actually-- I've realized it just duplicates the current row, but in the smaller modules, so I'm still kind of stuck. This is the current block:\n``` {% if showRelatedProjects %}\n              &lt;div class=\"{{ module_name }}__related-projects\"&gt;\n\t\t\t\t\t\t\t\t&lt;h3&gt;Related Projects&lt;/h3&gt;\n\t\t\t\t\t\t\t\t{% set count = module.related_projects_count %}\n\t\t\t\t\t\t\t\t{% set query1 = '&amp;limit='~count %}\n\t\t\t\t\t\t\t\t{% set query2 = '&amp;capability__contains='~name|replace(' ', '%20')|replace('&amp;','%26') %}\n\t\t\t\t\t\t\t\t{% for capability in capabilities %}\n\t\t\t\t\t\t\t\t\t{% set relatedProjectsQuery = '&amp;limit='~count~'&amp;'~'capability__contains='~capability.name|lower|replace(' ','%20')|replace('&amp;','%26')~'&amp;hs_path__not_like='~path~'&amp;disable_project=false' %}\n\t\t\t\t\t\t\t\t\t{{relatedProjectsQuery|pprint}}\n\t\t\t\t\t\t\t\t\t{% if loop.first %}\n\t\t\t\t\t\t\t\t\t{% set relatedProjects = allHubDBRows|selectattr(\"capability_contains\", \"equals\", capability.name)|rejectattr(\"disable_project\", \"equals\", false) %}\n\t\t\t\t\t\t\t\t\t\t{% for item in loop %}\n\t\t\t\t\t\t\t\t\t\t\t{{ project_card(module_name,item) }}\n\t\t\t\t\t\t\t\t\t\t{% endfor %}\n\t\t\t\t\t\t\t\t\t{% endif %}\n\t\t\t\t\t\t\t\t{% endfor %}\n\n                &lt;a class=\"cta-link\" href=\"{{ content.absolute_url|replace(dynamic_page_hubdb_row.hs_path,'') }}\"&gt;\n                  &lt;span class=\"icon\"&gt;{{ icon('gallery') }}&lt;/span&gt;\n                  &lt;span&gt;View All Projects&lt;/span&gt;\n                &lt;/a&gt;\n              &lt;/div&gt;\n            \n            {% endif %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Michele Herzog",
+      "poster_handle": "michele.herzog24"
+    },
+    "time_stamp": "2021-12-16 15:47:37",
+    "text": "Hmm, could duplicating the current row because you’re using `{% if loop.first %}`? That would mean the content in that block is only iterating over the first `capability` in `capabilities`."
+  },
+  {
+    "poster": {
+      "poster_name": "Olivia Durr",
+      "poster_handle": "olivia.durr"
+    },
+    "time_stamp": "2021-12-16 16:52:54",
+    "text": "hmm... I'm going to keep playing around with it... Do you happen to know what `(SizeLimitingPyList: [])` means? I keep getting that when I print things"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-12-16 22:18:47",
+    "edited": {
+      "time_stamp": "2021-12-16 22:26:09"
+    },
+    "text": "Dustin is correct here in that we're using iframes and not allowing custom code to style elements in the editor UI itself. Prevents consistency issues as well as usability issues.\n\nThat doesn't mean though that either of the bits of functionality you want are off the table. While custom CSS, HTML, or JS are unlikely to be allowed in the editor, that doesn't mean we wouldn't add a parameter you can use to control color or a parameter to hide default modules or noon theme modules. If we can see there's high demand and business use case for a feature it helps the teams prioritize it.\n\nI suggest checking for an existing idea forum post on this. If there is one upvote it to show support. If not create one. Then share the post in the <#C26E7JT8V|ideas> channel to rally some votes from fellow developers."
+  }
+]

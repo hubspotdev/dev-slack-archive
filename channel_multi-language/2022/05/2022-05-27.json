@@ -1,0 +1,21 @@
+[
+  {
+    "poster": {
+      "poster_name": "Michele Herzog",
+      "poster_handle": "michele.herzog24"
+    },
+    "time_stamp": "2022-05-27 09:55:01",
+    "edited": {
+      "time_stamp": "2022-05-31 09:39:23"
+    },
+    "text": "Hey <@U03HJ9C5881>! If it’s helpful, here’s how I’m doing that at the bottom of our website:\n\n```// labels - these are actually stored in another file\n{% set langMap = {\n  \"en\": \"English\",\n  \"de\": \"Deutsch\",\n  \"fr\": \"Français\",\n  \"en-gb\": \"UK English\"\n}\n%}\n\n// checking if the current page I'm on (content) has published pages in translated_content\n{% set translatedContent = content.translated_content|selectattr(\"published\", \"equalto\", true) %}\n\n&lt;div&gt;\n  // the there is translatedContent from above\n  {% if translatedContent %}\n\n// Include a link to the current page in it's current language\n    &lt;a class=\"hs-skip-lang-url-rewrite\" lang=\"{{content.language}}\" href=\"{{content.absolute_url}}\"&gt;{{langMap[content.language]}}&lt;/a&gt; | \n\n// for the other translations in translatedContent    \n{% for translation in translatedContent %}\n      &lt;a class=\"hs-skip-lang-url-rewrite hs-lang-{{translation.language}}\" lang=\"{{translation.language}}\" href=\"{{translation.absolute_url}}\"&gt;{{langMap[translation.language]}}&lt;/a&gt;\n    {% endfor %}\n  {% endif %}\n  &lt;br&gt;\n&lt;/div&gt;```\nIt’s in the footer of <https://www.betterup.com/|this page> if you want to take a look!\n\nquick note on the variables:\n• `content.translated_content` is a dict of the current page’s other language variations. It does, however, include unpublished versions, which is why I’m only grabbing the published ones.\n• `content.language` is the language of the current page\n• `langMap` is just how I’m storing localized labels \n• `hs-skip-lang-url-rewrite` prevents the <https://knowledge.HubSpot.com/domains-and-urls/edit-a-domain-s-language-setting#manage-language-specific-redirects|language-specific redirects> feature from applying to these links."
+  },
+  {
+    "poster": {
+      "poster_name": "Jess",
+      "poster_handle": "jessica230"
+    },
+    "time_stamp": "2022-05-27 18:06:57",
+    "text": "<@U02NJACH5QS> Thank you, this is awesome! I'm curious how content.absolute_url works. I want to be able to link each language to its assigned translated url, can you elaborate on the logic behind this? :0 where am I assigning the urls?"
+  }
+]

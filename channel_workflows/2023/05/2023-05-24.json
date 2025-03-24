@@ -1,0 +1,105 @@
+[
+  {
+    "poster": {
+      "poster_name": "Katie Broyles",
+      "poster_handle": "katie966"
+    },
+    "time_stamp": "2023-05-24 11:49:45",
+    "text": "Hi everyone, I wanted to update the workflow I use to automatically validate emails with kickbox, but since twilighting from the O-Auth API to the private apps, I've been having trouble with getting it to work.  Here's a link to the code specifically that I use <https://gist.github.com/jackcoldrick90/cfdceb271cf14be70e441c6ee79849ef>.  In the place of where HAPIKEY is used, I have a secret linking to a private app, and then for KICKBOXAPI I created a secret that connects to our kickbox account's API, but I haven't had much luck with getting things to move through.  This leads me to think that the likely culprit could be our HAPIKey, as previously the Kickbox API would have been working the same. That being said, I'm not sure how I should go about and updating the HAPIKey so that this custom code works once again?",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-05-24 12:06:31"
+      },
+      {
+        "time_stamp": "2023-05-24 12:06:35"
+      },
+      {
+        "time_stamp": "2023-05-24 13:47:32"
+      },
+      {
+        "time_stamp": "2023-05-24 13:47:45"
+      },
+      {
+        "time_stamp": "2023-05-24 13:49:10"
+      },
+      {
+        "time_stamp": "2023-05-24 14:40:48"
+      },
+      {
+        "time_stamp": "2023-05-25 09:25:51"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Schuyler Maclay",
+      "poster_handle": "smaclay"
+    },
+    "time_stamp": "2023-05-24 12:06:31",
+    "text": "I think you need to use the pricate app key like so:"
+  },
+  {
+    "poster": {
+      "poster_name": "Schuyler Maclay",
+      "poster_handle": "smaclay"
+    },
+    "time_stamp": "2023-05-24 12:06:35",
+    "text": "```  const HubSpotClient = new HubSpot.Client({\n    accessToken: process.env.SECRET_NAME\n  });```"
+  },
+  {
+    "poster": {
+      "poster_name": "Katie Broyles",
+      "poster_handle": "katie966"
+    },
+    "time_stamp": "2023-05-24 13:47:32",
+    "text": "That's what I had done, but it's still giving me some trouble, so for the first 20 rows of code I have:"
+  },
+  {
+    "poster": {
+      "poster_name": "Katie Broyles",
+      "poster_handle": "katie966"
+    },
+    "time_stamp": "2023-05-24 13:47:45",
+    "text": "```//Import required libraries\nconst HubSpot = require('@HubSpot/api-client');\nconst request = require('request');\n\nexports.main = (event, callback) =&gt; {\n  //Create a new HubSpot Client\n  const HubSpotClient = new HubSpot.Client({\n    apiKey: process.env.HAPIKEY\n  });\n  \n  //  Get the email address of the currently enrolled contact\n  HubSpotClient.crm.contacts.basicApi.getById(event.object.objectId, [\"email\"])\n    .then(results =&gt; {\n      let email = results.body.properties.email;\n\n        // Form the GET request to the Kickbox API to verify email address\n        var options = {\n            \"method\": \"GET\",\n            \"url\": \"<https://api.kickbox.com/v2/verify?email=>\" + email + \"&amp;apikey=\" + process.env.KICKBOXAPI\n        };```"
+  },
+  {
+    "text": "All while I have HAPIKEY and KICKBOXAPI as secrets . Hapikey secret going to one of our private apps, Kickboxapi going to the API I got from my kickbox account",
+    "time_stamp": "2023-05-24 13:49:10"
+  },
+  {
+    "poster": {
+      "poster_name": "Schuyler Maclay",
+      "poster_handle": "smaclay"
+    },
+    "time_stamp": "2023-05-24 14:40:48",
+    "text": "you need to change `apiKey` to `accessToken` inside `const HubSpotClient = new HubSpot.Client({`"
+  },
+  {
+    "poster": {
+      "poster_name": "Rod Waynick",
+      "poster_handle": "rodwaynick"
+    },
+    "time_stamp": "2023-05-24 17:14:33",
+    "text": "Hi all, need some help with a custom coded action.\n\nFirst off, I'm very new to custom coded actions and coding in general. Very little experience at all.\n\n\n\nI've looked over lots of documentation and can't seem to get this to work.\n\nI'd like to include a deal property in a custom coded action. I've added the property to the list of properties to include and given it a key. I've referenced this in the code the way this article says to: <https://developers.HubSpot.com/docs/api/workflows/custom-code-actions#add-HubSpot-properties-to-your-custom-code|https://developers.HubSpot.com/docs/api/workflows/custom-code-actions#add-HubSpot-properties-to-your-custom-code>\n\n\nHowever, I'm getting the following error:\n\n`2023-05-24T20:52:21.317Z    ERROR    Invoke Error     {\"errorType\":\"ReferenceError\",\"errorMessage\":\"event is not defined\",\"stack\":[\"ReferenceError: event is not defined\",\"    at Object.main (/var/task/file.js:11:13)\",\"    at Runtime.exports.HubSpot_handler [as handler] (/var/task/HubSpotHandler.js:6:21)\",\"    at Runtime.handleOnceNonStreaming (file:///var/runtime/index.mjs:1086:29)\"]}`\n\n\n\"event is not defined\" and it's pointing to the const ein = event.inputFields['ein'].\n\n\n\nWhat am I missing here? I've copied and pasted directly from articles, tutorials, and code examples.\n\n\n\nvar axios = require('axios');\n\nfunction main(){\nconst ein = event.inputFields['ein'];\nvar data = JSON.stringify({\n  \"ticket\": {\n    \"comment\": {\n      \"body\": `The smoke is very colorful. \\n EIN: ${ein}`\n    },\n    \"priority\": \"urgent\",\n    \"subject\": \"My printer is on fire!\"\n  }\n});\n\nvar config = {\n  method: 'POST',\n  url: '<https://example.zendesk.com/api/v2/tickets|https://example.zendesk.com/api/v2/tickets>',\n  headers: {\n    'Content-Type': 'application/json',\n    'Authorization': 'Basic &lt;token&gt;', // Base64 encoded \"username:password\"\n  },\n  data : data,\n};\n\naxios(config)\n.then(function (response) {\n  console.log(JSON.stringify(response.data));\n})\n.catch(function (error) {\n  console.log(error);\n})}`\n\n module.exports.main = main;",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-05-24 18:41:39"
+      },
+      {
+        "time_stamp": "2023-05-25 07:39:14"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Pokorniecki",
+      "poster_handle": "byron.pokorniecki.ext"
+    },
+    "time_stamp": "2023-05-24 18:41:39",
+    "text": "function main(event, callback) {"
+  }
+]

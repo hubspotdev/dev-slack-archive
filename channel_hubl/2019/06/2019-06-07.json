@@ -1,0 +1,91 @@
+[
+  {
+    "poster": {
+      "poster_name": "Chris Abplanalp",
+      "poster_handle": "cabplanalp"
+    },
+    "time_stamp": "2019-06-07 10:42:00",
+    "text": "what is the HubL variable to retrieve just the root domain of the portal, I have tried {{ request.domain }} but for blog posts that return everything <http://domain.com/blog/example|domain.com/blog/example>, I need a variable that just returns “<http://domain.com|domain.com>”",
+    "reply_count": 7,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2019-06-07 10:47:05"
+      },
+      {
+        "time_stamp": "2019-06-07 10:56:29"
+      },
+      {
+        "time_stamp": "2019-06-07 11:13:12"
+      },
+      {
+        "time_stamp": "2019-06-07 12:49:05"
+      },
+      {
+        "time_stamp": "2019-06-07 15:18:22"
+      },
+      {
+        "time_stamp": "2019-06-07 15:20:59"
+      },
+      {
+        "time_stamp": "2019-06-07 15:24:15"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Tim L",
+      "poster_handle": "tim462"
+    },
+    "time_stamp": "2019-06-07 10:47:05",
+    "text": "There may be a more efficient way, but a quick and dirty solution would be to split the string after that `/`"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Abplanalp",
+      "poster_handle": "cabplanalp"
+    },
+    "time_stamp": "2019-06-07 10:56:29",
+    "text": "<@UH67QP59T>, so I tried this: {{ request.domain|split(‘/’) }} but that did not work, can you guide me the proper syntax to split"
+  },
+  {
+    "poster": {
+      "poster_name": "Tim L",
+      "poster_handle": "tim462"
+    },
+    "time_stamp": "2019-06-07 11:13:12",
+    "text": "Now I’m rethinking. The best way _might_ be to dif `request.domain` against `request.path_and_query`\n\nI can’t test it right now but something like `request.domain|reject(request.path_and_query)` maybe?"
+  },
+  {
+    "poster": {
+      "poster_name": "Tony Strack",
+      "poster_handle": "tstrack"
+    },
+    "time_stamp": "2019-06-07 12:49:05",
+    "text": "`{{ company_domain }}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Abplanalp",
+      "poster_handle": "cabplanalp"
+    },
+    "time_stamp": "2019-06-07 15:18:22",
+    "text": "{{company.domain}} worked, strange cause I tried this before and was not getting that correct result"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Abplanalp",
+      "poster_handle": "cabplanalp"
+    },
+    "time_stamp": "2019-06-07 15:20:59",
+    "text": "<@UB690RZA7> oh wait I was right, that doesnt work, cause if I have a blog post that has multiple sub-directories like <http://domain.com/blog/2018/example|domain.com/blog/2018/example>, then the URL link is <http://domain.com/blog/2018/example/author/[author-name]|domain.com/blog/2018/example/author/[author-name]>"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Abplanalp",
+      "poster_handle": "cabplanalp"
+    },
+    "time_stamp": "2019-06-07 15:24:15",
+    "text": "<@UH67QP59T>, the ```request.domain|reject(request.path_and_query)``` did not work, my biggest issue is with blog posts that have sub-directories in the path that were imported from WP that retained that path structure"
+  }
+]

@@ -1,0 +1,225 @@
+[
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-09-16 08:07:35",
+    "text": "Does the property `data-hs-saved-src` have anything to do with cms-react? I'm running into an issue where video iframes with that property do not properly update their style values (they end up not showing up as full width)",
+    "reply_count": 16,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-09-16 08:42:37"
+      },
+      {
+        "time_stamp": "2024-09-16 08:47:58"
+      },
+      {
+        "time_stamp": "2024-09-16 08:53:33"
+      },
+      {
+        "time_stamp": "2024-09-16 08:56:30"
+      },
+      {
+        "time_stamp": "2024-09-16 08:57:00"
+      },
+      {
+        "time_stamp": "2024-09-16 09:02:34"
+      },
+      {
+        "time_stamp": "2024-09-16 09:03:20"
+      },
+      {
+        "time_stamp": "2024-09-16 09:04:18"
+      },
+      {
+        "time_stamp": "2024-09-16 09:05:52"
+      },
+      {
+        "time_stamp": "2024-09-16 09:08:23"
+      },
+      {
+        "time_stamp": "2024-09-16 09:08:41"
+      },
+      {
+        "time_stamp": "2024-09-16 09:09:30"
+      },
+      {
+        "time_stamp": "2024-09-16 09:11:31"
+      },
+      {
+        "time_stamp": "2024-09-16 09:12:03"
+      },
+      {
+        "time_stamp": "2024-09-16 09:16:33"
+      },
+      {
+        "time_stamp": "2024-09-16 10:22:01"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-09-16 08:16:11",
+    "text": "the video also works as expected in the preview but not on the published site. This looks like it might be some kind of frozen cache thing maybe?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-09-16 08:19:06",
+    "text": "it also works when I proxy the page—just not in production"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Hominick",
+      "poster_handle": "never.go.hollow.trill"
+    },
+    "time_stamp": "2024-09-16 08:33:03",
+    "edited": {
+      "time_stamp": "2024-09-16 08:33:13"
+    },
+    "text": "Afaik, there isn't a solution. I whipped up a script to export and then import pages and blog posts via the API but it was a dead end because all the instance module ids don't map between environments."
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-09-16 08:42:37",
+    "text": "I don’t know much about it, but from internal poking I see that `data-hs-saved-src` is related to the HS cookie banner"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-09-16 08:47:58",
+    "text": "ah, that makes sense. We recently updated to use the HS cookie banner. Is there a way to report this to that team as a bug? It's also interesting/weird that it doesn't happen in every instance of that video module"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-09-16 08:53:33",
+    "text": "Is this a HS video or another custom video frame?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-09-16 08:56:30",
+    "text": "it's a custom video frame"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-09-16 08:57:00",
+    "text": "I'm checking to see if I can add the missing styles globally without any issues"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-09-16 09:02:34",
+    "text": "I can apply the styles globally but it won't fix the autoplay issue"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-09-16 09:03:20",
+    "text": "looks like the library being used to play the video depends on a `src` attribute and the cookie manager removes that"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-09-16 09:04:18",
+    "text": "Yeah, I believe the cookie banner is doing something to hide/block some elements with a `src` so that it prevents arbitrary image/iframe/etc HTTP fetches from being set before cookie consent is  given"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-09-16 09:05:52",
+    "text": "I’d start with looking into the cookie scanning/blocking settings on that portal. And then next if you don’t find anything useful there, testing the issue with permutations of cookie consent given/rejected"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-09-16 09:08:23",
+    "text": "And if none of that is helpful…\n• I can try passing more info on internally\n• You can do something to manually move the value of `data-hs-saved-src` to `src`  (and clone/reinert the element if needed?) :grimacing: "
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-09-16 09:08:41",
+    "text": "I've definitely looked through all of the various cookie options. There's nothing that would control this kind of thing there. I'll check to see what happens when cookies are not allowed (currently this happens with cookies allowed) but I think I need to message that team / report it"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-09-16 09:09:30",
+    "text": "for the manual move value approach I wonder if there's a trigger that makes sense AND if that trigger can just be included on the react side of things"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-09-16 09:11:31",
+    "text": "when cookies are disabled nothing loads...interesting / uh oh"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-09-16 09:12:03",
+    "text": "maybe I can move to necessary cookies as a fix"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-09-16 09:16:33",
+    "text": "I think that would work but I don't know how long the HubSpot \"cookie category\" cache lasts. Is there a channel for the HS cookie banner?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-09-16 10:22:01",
+    "text": "<@UCY83QS6Q> can you ask someone from the cookie banner team to reach out to me here? It looks like both youtube and vimeo have options for cookieless versions but the HS banner does not consider them when blocking scripts. This is a tough one to test without doing live so some additional help would be very much appreciated"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Coles",
+      "poster_handle": "chris.coles"
+    },
+    "time_stamp": "2024-09-16 10:40:11",
+    "text": "I had also grappled with the issue of cloning webpages between portals, and given up due to mismatching module ids... but recently saw an improvement in that we are now able to identify the module by path  instead of ID. So if they are in the same folder you may be able to programmatically populate the path from the module name, and automate the mapping process"
+  }
+]

@@ -1,0 +1,50 @@
+[
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2024-12-18 03:24:44",
+    "text": "Thanks <@U05V246PA3F>!\n\nIt's unfortunate that we need to include the naming of the HubDB in the type declaration.\nI'm using this for building out a multi HubDB query.\nWe have various HubDBs, with content for different parts of the business.\nSo we have  `cases_dk_td_collection`  ,  `cases_no_td_collection` and more. We fetch the right table, based on a param with `dk_td` or `no_td` , etc.\n\nSo this solution is only viable for _one_ of these, since we're not using a generic type, but instead a table-specific type."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-12-18 07:32:00",
+    "text": "would using @skip and @include to skip or include only the particular table for that query work to overcome that <@UCBDLK6SU>?"
+  },
+  {
+    "poster": {
+      "poster_name": "Noel Williams",
+      "poster_handle": "noel.williams"
+    },
+    "time_stamp": "2024-12-18 09:12:43",
+    "text": "The issue was resolved after submitting a support ticket. I was able to publish."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-12-18 09:34:27",
+    "text": "Beautiful! Nice work <@UCTAN7RPA> '"
+  },
+  {
+    "text": "Carter, I'm not that familiar with that usage of `@skip` and `@include`, so forgive me for skipping over your suggestion. I'd be interested to see an example if it works though.\n\n&gt; We fetch the right table, based on a param with `dk_td` or `no_td` , etc.\n<@UCBDLK6SU> could you do the same for variable names? If so, you could define your query with an `orderBy` variable for each table, then specify the appropriate one the same way you're doing the table. Something akin to this screenshot. It's not the most flexible solution, but maybe it'll work?\n\nI poked at the schema generation backend and GraphQL spec for a while this morning, and this might be the best we can do with current state, in large part because of the limitations of GraphQL `enum` and Input types. We could conceivably do it with a new custom scalar (`HS_Enum` doesn't quite fit), but it'd be significant work (FE and BE), likely with schema bloat and/or breaking changes. It _does_ look like they have _finally, after many years of discussion,_ settled on <https://github.com/graphql/graphql-spec/pull/825|a potential solution> for this kind of input union/polymorphism scenario in the upcoming draft spec that'd make the problem easier to address though. I added an item to our backlog to revisit this in the future when it's available to us.",
+    "time_stamp": "2024-12-18 10:26:59"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-12-18 10:32:58",
+    "text": "<https://dgraph.io/docs/graphql/queries/skip-include/>\n\nHey <@U05V246PA3F>, not a problem at all, basically just like you said but instead of getting both tables back every time if you use the skip or include you can 'skip' or 'include' only the table that is pertinent to that request"
+  },
+  {
+    "text": "Ahh, gotcha. I was hyper-focused on the orderBy input problem and forgot about the table inclusion part of the question. That does seem like a good fit for Matias' use-case and could work well! As long as the variable-per-table solution isn't a problem that is.",
+    "time_stamp": "2024-12-18 10:51:47"
+  }
+]

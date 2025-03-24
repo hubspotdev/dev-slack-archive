@@ -1,0 +1,89 @@
+[
+  {
+    "poster": {
+      "poster_name": "Magnus Foldager",
+      "poster_handle": "magnus"
+    },
+    "time_stamp": "2024-04-24 04:17:06",
+    "edited": {
+      "time_stamp": "2024-04-24 05:58:17"
+    },
+    "text": "Hey all - in desperate need of a hand here. I’m trying to use the `|regex_replace()` filter to replace a URL built into a rich text field.\nThere’s only one URL, but it’s a link to a HubSpot-hosted file. I’ve tried the following:\n```{{ module.rich_text_field|regex_replace(\"https.*?\\.pdf\", replacement_url) }}```\nBut it seems to not work as expected. I’ve wasted an hour on this now, and I can’t seem to find the reason it wouldn’t work.\nCan someone help me solve this or point me in the right direction? I’m not sure if the issue is with the file URL, some special thing I need to do to rich text before regex_replacing, some RE2 complication, or just bad regex or understanding from my side.\n\nThe pprint of the rich text field looks something like..\n```(String: File can be found <a href=\"<https://our.custom.url/hubfs/Document%20Hosted%20With%20HubSpot.pdf>\" rel=\"noopener\" target=\"_blank\">here</a>.)```",
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-04-24 04:27:18"
+      },
+      {
+        "time_stamp": "2024-04-24 05:34:59"
+      },
+      {
+        "time_stamp": "2024-04-24 05:58:07"
+      },
+      {
+        "time_stamp": "2024-04-24 06:09:57"
+      },
+      {
+        "time_stamp": "2024-04-24 06:10:21"
+      },
+      {
+        "time_stamp": "2024-04-24 06:12:28"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Sharples",
+      "poster_handle": "sam.sharples"
+    },
+    "time_stamp": "2024-04-24 04:27:18",
+    "text": "Is it because you’re missing a closing parenthesis after replacement_url?\n\nshould be:\n\n```{{ module.rich_text_field|regex_replace(\"https.*?\\.pdf\", replacement_url) }}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Edmond Deema",
+      "poster_handle": "edmond"
+    },
+    "time_stamp": "2024-04-24 05:34:59",
+    "text": "I think you are in the tight track maybe try this {{ module.rich_text_field|regex_replace: '/https:\\/\\/[^\\s\"]+\\.pdf/', replacement_url }} let us know:raised_hands:"
+  },
+  {
+    "poster": {
+      "poster_name": "Magnus Foldager",
+      "poster_handle": "magnus"
+    },
+    "time_stamp": "2024-04-24 05:58:07",
+    "text": "Thanks for the suggestions, both. Neither change/correction worked. I’m at my wits’ end here."
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Sharples",
+      "poster_handle": "sam.sharples"
+    },
+    "time_stamp": "2024-04-24 06:09:57",
+    "edited": {
+      "time_stamp": "2024-04-24 06:10:04"
+    },
+    "text": "```{{ module.rich_text_field|regex_replace(\"https.*?\\\\.pdf\", replacement_url) }}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Magnus Foldager",
+      "poster_handle": "magnus"
+    },
+    "time_stamp": "2024-04-24 06:10:21",
+    "text": "It seems my own stupidity was to blame. I was testing with the replacement string “test”, which resulted in the a href being “test”, which the browser will interpret as “/test” → “<http://HubSpot-preview-whatever-url.com/test|HubSpot-preview-whatever-url.com/test>” and I just dismissed it as soon as I saw “HubSpot”."
+  },
+  {
+    "poster": {
+      "poster_name": "Magnus Foldager",
+      "poster_handle": "magnus"
+    },
+    "time_stamp": "2024-04-24 06:12:28",
+    "edited": {
+      "time_stamp": "2024-04-24 06:19:40"
+    },
+    "text": "The filter I’m using that works: `|regex_replace(\"https.+?pdf\", replacement_url)` - which I’ll probably rewrite to be a bit stricter on the URL match"
+  }
+]

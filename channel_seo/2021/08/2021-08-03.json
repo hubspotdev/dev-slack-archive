@@ -1,0 +1,36 @@
+[
+  {
+    "poster": {
+      "poster_name": "Bantu Nonyukela",
+      "poster_handle": "bantu.nonyukela"
+    },
+    "time_stamp": "2021-08-03 02:59:47",
+    "edited": {
+      "time_stamp": "2021-08-03 03:04:49"
+    },
+    "text": "Here's a lazy loading script that should help improve your page loading speed."
+  },
+  {
+    "poster": {
+      "poster_name": "Bantu Nonyukela",
+      "poster_handle": "bantu.nonyukela"
+    },
+    "time_stamp": "2021-08-03 02:59:49",
+    "text": "export default () =&gt; {\n  let lazyImages = [].slice.call(document.querySelectorAll(\"img.lazy\"))\n  if (lazyImages.length &lt; 1) return\n\n  // If the browser does NOT support IntersectionObserver\n  if ( !('IntersectionObserver' in window) ) {\n    lazyImages.forEach(lazyImage =&gt; updateSrc(lazyImage) )\n    return\n  }\n\n\n\n  let lazyImageObserver = new IntersectionObserver((entries, observer) =&gt; {\n    entries.forEach(entry =&gt; {\n      if (entry.isIntersecting) {\n        let lazyImage = entry.target\n        updateSrc(lazyImage)\n        lazyImageObserver.unobserve(lazyImage)\n      }\n    })\n  }, {rootMargin: '0px 0px 200px 0px'})\n  // load 200px in advance\n\n  lazyImages.forEach(lazyImage =&gt; {\n    lazyImageObserver.observe(lazyImage)\n  })\n}\n\nfunction updateSrc(lazyImage) {\n  if (lazyImage.dataset.src) {\n    lazyImage.src=lazyImage.dataset.src\n  }\n  if (lazyImage.dataset.srcset) {\n    lazyImage.srcset = lazyImage.dataset.srcset\n  }\n  if (lazyImage.dataset.sizes) {\n    lazyImage.sizes = lazyImage.dataset.sizes\n  }\n\n  lazyImage.classList.add('loaded')\n}",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2021-08-03 08:25:49"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-08-03 08:25:49",
+    "text": "for anyone who stumbles across this as it was posted in several channels - we would generally advise favoring browser-based lazy loading when possible as it eliminates the download of the extra JavaScript and it’s execution time, is a progressive enhancement and works with JS disabled. We offer convenient ways to integrate lazy loading into your modules. <https://developers.HubSpot.com/docs/cms/guides/speed/lazy-loading>"
+  }
+]

@@ -1,0 +1,276 @@
+[
+  {
+    "poster": {
+      "poster_name": "Witold",
+      "poster_handle": "witold.rosendaal"
+    },
+    "time_stamp": "2023-12-04 01:12:11",
+    "text": "Hi everyone,\n\nI am currently delving into the capabilities of Custom UI cards within HubSpot, specifically aiming to integrate them in the middle column of an object. I’ve come across a few areas where my findings are a bit uncertain, and I would greatly appreciate your insights or any clarifications from your experiences. Here are my questions and the conclusions I’ve drawn so far:\n\n1. *Selecting Rows in a Custom UI Card Table*: Is it possible to select one or multiple rows within a table in a Custom UI card? My current understanding is that using an Association table might be necessary. Although selecting multiple lines seems unfeasible, opening an object seems possible, which would likely trigger a sidebar pop-up (as standard in HubSpot) when clicking on a deal. In the standard Deals table, it’s possible to select one or several records and then edit them. This functionality isn’t clearly detailed in the developer documentation. What is the community’s view on this? Is this something you’ve managed to implement or see as feasible?\n2. *Checkbox Option within a Custom UI Card Table:* I couldn’t find a direct way to include a checkbox option within a table in a Custom UI card. The Multi-select input seems to be the closest alternative. Is there any workaround or method that can be used to incorporate a checkbox option directly in the table?\n3. *Horizontal and Vertical Scrollbars in a Custom UI Card Table:* My research hasn’t led me to concrete evidence about the implementation of horizontal and vertical scrollbars within a table in a Custom UI card. Pagination is documented, and many standard UI elements in HubSpot support vertical scrolling. However, horizontal scrolling isn’t readily apparent. Do any of you know a way to implement both horizontal and vertical scrolling in such tables?\nYour thoughts, experiences, or any examples you might have encountered would be incredibly helpful. Thank you in advance for your assistance and insights!",
+    "reply_count": 14,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-12-04 06:46:01"
+      },
+      {
+        "time_stamp": "2023-12-04 07:18:16"
+      },
+      {
+        "time_stamp": "2023-12-04 07:58:05"
+      },
+      {
+        "time_stamp": "2023-12-04 08:23:28"
+      },
+      {
+        "time_stamp": "2023-12-04 09:06:15"
+      },
+      {
+        "time_stamp": "2023-12-04 09:06:57"
+      },
+      {
+        "time_stamp": "2023-12-04 10:40:50"
+      },
+      {
+        "time_stamp": "2023-12-04 10:41:06"
+      },
+      {
+        "time_stamp": "2023-12-04 10:41:16"
+      },
+      {
+        "time_stamp": "2023-12-05 02:21:04"
+      },
+      {
+        "time_stamp": "2023-12-05 07:01:20"
+      },
+      {
+        "time_stamp": "2023-12-05 07:21:16"
+      },
+      {
+        "time_stamp": "2023-12-05 07:21:24"
+      },
+      {
+        "time_stamp": "2023-12-05 07:54:54"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Yogesh Jindal",
+      "poster_handle": "yjindal"
+    },
+    "time_stamp": "2023-12-04 02:02:56",
+    "text": "<@U03FJQPSC0Y> both features sound great. Can you please share a documentation link for the first one?"
+  },
+  {
+    "text": "Hello,\nIm in the process of building a CRM card for my client on a sandbox portal. Me and all my colleagues can view it but the client can’t seem to see it. He is receiving a 403 forbidden on sandbox.html in the console.\n\nI’ve checked through previous messages on here and seems someone had a similar error due to a firewall issue.\n\nWould this also be the case for this error? Thanks in advance",
+    "time_stamp": "2023-12-04 06:16:13",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-12-04 07:10:14"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Bashir",
+      "poster_handle": "ayo_idan"
+    },
+    "time_stamp": "2023-12-04 06:46:01",
+    "text": "Let me attempt some as I can \n\n1) Selecting Rows: I wonder if this means clicking a row and it opens up to another view. There’s no onClick for table rows, what you will do is wrap your table cell/row within a Link and add some function to be carried out when clicked. If you’re thinking of selecting multiple rows, you can implement something like a cart where rows you click are added to the cart, and you have a button that triggers a function on all the rows(selected rows). \n\n2) Checkbox option: Use the toggle group component. Has a radio option (returns string) or checkbox list option (returns array of strings)\n\n3) Horizontal scrolling: Yes, it is supported"
+  },
+  {
+    "poster": {
+      "poster_name": "Seth Kaplan",
+      "poster_handle": "skaplan"
+    },
+    "time_stamp": "2023-12-04 07:10:14",
+    "text": "Our rendering environment is served from `<http://static.HubSpot-extensions.com|static.HubSpot-extensions.com>` . If they have a strict firewall they may need to add the domain to an allowlist"
+  },
+  {
+    "text": "<@U05FPHAQVAQ>, we have an independent Checkbox component that is available for use but is currently undocumented. Here is the type definition for the component. It should be in our official docs soon . You can use this to support UI like so:\n```export interface Checkbox {\n  /**\n   * A string representing the value of the input. This is not displayed on the client-side,\n   * but on the server this is the value given to the data submitted with the checkbox's name.\n   */\n  value?: string;\n  /**\n   * The current status of the input.\n   */\n  checked?: boolean;\n  /**\n   * When set to `true`, the option cannot be selected.\n   */\n  readonly?: boolean;\n  /**\n   * The string that displays below the toggle.\n   */\n  description?: string;\n  /**\n   * The unique identifier for the checkbox element.\n   */\n  name?: string;\n  /**\n   * The size variation of the checkbox.\n   *\n   * @defaultValue `\"default\"`\n   */\n  variant?: 'default' | 'small';\n  /**\n   * A function that is called when the `checked` input status changes.\n   *\n   * @event\n   */\n  onChange?: (checked: boolean, value: string) => void;\n  /** The text that displays in the dropdown menu. */\n  children?: React.ReactNode;\n  /**\n   * Use the inline prop to arrange checkboxes side-by-side.\n   */\n  inline?: boolean;\n  /**\n   * When set to `true`, the option will be selected by default. Use it to\n   * set the default `checked` state when the component is **uncontrolled**.\n   */\n  initialIsChecked?: boolean;\n  /**\n   * Accessibility label. It should be present when the checkbox has no label(children).\n   */\n  'aria-label'?: string;\n}```",
+    "time_stamp": "2023-12-04 07:18:16",
+    "edited": {
+      "time_stamp": "2023-12-04 07:18:56"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Witold",
+      "poster_handle": "witold.rosendaal"
+    },
+    "time_stamp": "2023-12-04 07:58:05",
+    "text": "thanks both!\n\n<@U05CJMDM467> is vertical scrolling supported as well?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-12-04 08:10:58",
+    "text": "Does someone have a working example of the new await async functions? I thought I had a working version but I really don't think so at this point. Been stuck on this for a while",
+    "reply_count": 9,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-12-04 08:12:31"
+      },
+      {
+        "time_stamp": "2023-12-04 08:13:08"
+      },
+      {
+        "time_stamp": "2023-12-04 08:13:34"
+      },
+      {
+        "time_stamp": "2023-12-04 08:14:12"
+      },
+      {
+        "time_stamp": "2023-12-04 08:23:08"
+      },
+      {
+        "time_stamp": "2023-12-07 09:35:38"
+      },
+      {
+        "time_stamp": "2023-12-07 09:37:14"
+      },
+      {
+        "time_stamp": "2023-12-07 09:38:57"
+      },
+      {
+        "time_stamp": "2023-12-07 09:39:09"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-12-04 08:12:31",
+    "text": "Here's what my current code looks like:\n```function getRecords() {\n    runServerless({ name: \"getRecords\", parameters: { serial: \"FNS18220QG9\" } }).then((response) =&gt; {\n        setRecords(response);\n        sendAlert({\n          message: `Found ${response.length} records`\n        })\n    });\n  }```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-12-04 08:13:08",
+    "text": "Function:\n\n```const axios = require('axios');\nexports.main = async (context = {}) =&gt; {\n  const { serial } = context.parameters;\n\n  console.log(serial);\n\n  let config = {\n    method: 'get',\n    url: `<https://api.airtable.com>\")`,\n    headers: {\n      'Authorization': 'Bearer XXXXXXXX'\n    }\n  };\n\n  console.log(config.url);\n\n  axios(config)\n    .then(function (response) {\n      console.log(JSON.stringify(response.data));\n      return response.data.records;\n    })\n    .catch(function (error) {\n      console.log(error);\n      return error;\n    });\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-12-04 08:13:34",
+    "text": "I see the function is getting hit and it's console logging data in the cli but nothing ever seems to get to the card"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-12-04 08:14:12",
+    "text": "the alert just has undefined"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-12-04 08:23:08",
+    "text": "NM found the issue:\n\nbad await structure in the function:\n```const axios = require('axios');\n\n// Correct anonymous function assignment to exports.main\nexports.main = async (context) =&gt; {\n  const { serial } = context.parameters;\n\n  console.log(serial);\n\n  let config = {\n    method: 'get',\n    url: `<https://api.airtable.com/v0/>\")`,\n    headers: {\n      'Authorization': 'Bearer '\n    }\n  };\n\n  console.log(config.url);\n\n  try {\n    const response = await axios(config);\n    console.log(JSON.stringify(response.data.records));\n    return response.data.records;\n  }\n  catch (error) {\n    console.log(error);\n    throw error;\n  }\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Seth Kaplan",
+      "poster_handle": "skaplan"
+    },
+    "time_stamp": "2023-12-04 08:23:28",
+    "text": "We don't support it at the moment <@U05FPHAQVAQ>."
+  },
+  {
+    "poster": {
+      "poster_name": "Witold",
+      "poster_handle": "witold.rosendaal"
+    },
+    "time_stamp": "2023-12-04 09:06:15",
+    "text": "<@U04EJHVD8FM> you mean vertical scrolling right? thanks"
+  },
+  {
+    "poster": {
+      "poster_name": "Seth Kaplan",
+      "poster_handle": "skaplan"
+    },
+    "time_stamp": "2023-12-04 09:06:57",
+    "text": "Yeah. Cards will just continue to get longer + longer as you add more content. We're working on other ways like Panels/etc to help organize the UI better"
+  },
+  {
+    "text": "Hello everyone!\n\nI'm experiencing a problem with React-based CRM cards. We've built a page that 'i-frames' a HubSpot CRM record page and the JSON-based CRM cards are working fine. With the transition to React, the CRM cards are not working on this i-frame and I can see a message on the console in regards to the UI Extensions.\n\nWill this be fixed?",
+    "time_stamp": "2023-12-04 09:22:41",
+    "reply_count": 8,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-12-05 07:02:20"
+      },
+      {
+        "time_stamp": "2023-12-05 07:25:49"
+      },
+      {
+        "time_stamp": "2023-12-05 14:29:14"
+      },
+      {
+        "time_stamp": "2023-12-06 06:40:13"
+      },
+      {
+        "time_stamp": "2023-12-14 09:35:05"
+      },
+      {
+        "time_stamp": "2023-12-14 12:12:43"
+      },
+      {
+        "time_stamp": "2023-12-14 12:13:11"
+      },
+      {
+        "time_stamp": "2023-12-14 12:13:27"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Sejal Parikh (HubSpot PM)",
+      "poster_handle": "sparikh"
+    },
+    "time_stamp": "2023-12-04 10:11:29",
+    "edited": {
+      "time_stamp": "2023-12-04 10:11:53"
+    },
+    "text": "Hi Yogesh, here's the link to the doc for the first one: <https://developers.HubSpot.com/docs/platform/create-ui-extensions#fetch-account-user-and-extension-context>"
+  },
+  {
+    "poster": {
+      "poster_name": "Witold",
+      "poster_handle": "witold.rosendaal"
+    },
+    "time_stamp": "2023-12-04 10:40:50",
+    "text": "thanks. horizontol is possible as Bashir says right?"
+  },
+  {
+    "poster": {
+      "poster_name": "Seth Kaplan",
+      "poster_handle": "skaplan"
+    },
+    "time_stamp": "2023-12-04 10:41:06",
+    "text": "Its possible in tables"
+  },
+  {
+    "poster": {
+      "poster_name": "Seth Kaplan",
+      "poster_handle": "skaplan"
+    },
+    "time_stamp": "2023-12-04 10:41:16",
+    "text": "If you set all of the content width to be `min`"
+  }
+]

@@ -1,0 +1,89 @@
+[
+  {
+    "text": "Is anyone else having trouble with working code suddenly failing? We are suddenly getting “stackoverflowerror” on a lot of code that was working just fine a couple weeks ago. The errors prevent us from publishing yet when we try to restore a previous version, the errors are in those versions too (which wouldn’t be possible since it wouldn’t have let us publish with errors then either).",
+    "time_stamp": "2021-12-20 16:00:40",
+    "edited": {
+      "time_stamp": "2021-12-20 16:15:38"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Olivia Durr",
+      "poster_handle": "olivia.durr"
+    },
+    "time_stamp": "2021-12-20 17:44:23",
+    "text": "Hi-- I'm working on building a custom module that pulls from HubDB. However, I run into the limit of 10 row calls per page. Does anyone know of a work around for this? This is the code block that I have:\n```{# Base Naming #}\n{% set module_name = 'db-cards' %}\n{% set modifier = ' module--' %}\n\n{% set tableID = module.db_setting.table %}\n{% set allHubDBRows = hubdb_table_rows(tableID) %}\n{% set table_select = hubdb_table_column(tableID, 'state') %}\n{% set location = table_select.optionsByName %}\n\n{% for item in location|sort(False, False, 'name') %}\n  {% set query = '&amp;state__eq='~item.name|replace(' ','%20')~'&amp;orderBy=location_name' %}\n  {% set locations = hubdb_table_rows(tableID, query) %}\n  {% set locations2 = allHubDBRows|selectattr('state', 'equalto', 'item.name' ) %}\n  &lt;h2&gt;{{item.name}}&lt;/h2&gt;\n  {% for row in locations %}\n    &lt;h3&gt;{{ row[\"location_name\"] }}&lt;/h3&gt;\n    &lt;h4&gt;{{ row[\"address_name\"] }}&lt;/h4&gt;\n\t\t&lt;h4&gt;{{ row[\"address_1\"] }}&lt;/h4&gt;\n\t\t&lt;h4&gt;{{ row[\"address_2\"] }}&lt;/h4&gt;\n\t\t&lt;h4&gt;{{ row[\"office_number\"] }}&lt;/h4&gt;\n\t\t&lt;h4&gt;{{ row[\"office_email\"] }}&lt;/h4&gt;\n\t{% endfor %}\n{% endfor %}```",
+    "reply_count": 20,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2021-12-20 20:28:16"
+      },
+      {
+        "time_stamp": "2021-12-21 07:29:06"
+      },
+      {
+        "time_stamp": "2021-12-21 14:30:09"
+      },
+      {
+        "time_stamp": "2021-12-21 14:31:54"
+      },
+      {
+        "time_stamp": "2021-12-21 14:32:36"
+      },
+      {
+        "time_stamp": "2021-12-21 14:33:31"
+      },
+      {
+        "time_stamp": "2021-12-21 14:33:54"
+      },
+      {
+        "time_stamp": "2021-12-21 14:38:53"
+      },
+      {
+        "time_stamp": "2021-12-21 14:42:11"
+      },
+      {
+        "time_stamp": "2021-12-21 14:42:13"
+      },
+      {
+        "time_stamp": "2021-12-21 14:45:33"
+      },
+      {
+        "time_stamp": "2021-12-21 14:45:43"
+      },
+      {
+        "time_stamp": "2021-12-21 14:46:32"
+      },
+      {
+        "time_stamp": "2021-12-21 14:46:43"
+      },
+      {
+        "time_stamp": "2021-12-21 14:49:41"
+      },
+      {
+        "time_stamp": "2021-12-21 14:50:07"
+      },
+      {
+        "time_stamp": "2021-12-21 15:07:58"
+      },
+      {
+        "time_stamp": "2021-12-21 15:08:17"
+      },
+      {
+        "time_stamp": "2021-12-21 15:08:21"
+      },
+      {
+        "time_stamp": "2021-12-21 16:09:37"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2021-12-20 20:28:16",
+    "text": "In general, the best practice is to call hubdb_table_rows once per table, then use HubL and/or JS to filter the results. For your example, I’d comment out the `locations` variable and instead use `locations2`. My guess is you tried that route, but the `selectattr` filter didn’t work due to the `'item.name'` argument. This may need some trial and error, but that should either not use quotes, or be `'{{ item.name }}'`  to ensure the variable is passed correctly. If that doesn’t work, you could do an `if` statement within the row loop."
+  }
+]

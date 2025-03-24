@@ -1,0 +1,109 @@
+[
+  {
+    "poster": {
+      "poster_name": "Angus Gibbs",
+      "poster_handle": "agibbs"
+    },
+    "time_stamp": "2021-07-20 06:36:33",
+    "text": "Hey <@U028G1LM4F7>, I don’t think the HubSpot node API client has support for custom objects yet, so you might need to use the <https://github.com/HubSpot/HubSpot-api-nodejs#not-wrapped-endpoints|client methods for calling unwrapped endpoints> to manually call the <https://developers.HubSpot.com/docs/api/crm/crm-custom-objects|custom objects API> to fetch the invoice.\n\nThen to fetch the contact you can follow the <https://github.com/HubSpot/HubSpot-api-nodejs#example-search-contacts|example for searching a contact>.\n\nThen to associate the objects you can <https://github.com/HubSpot/HubSpot-api-nodejs#example-create-contact-company-and-associate-created-objects|follow the example in the docs to associate two objects> (you might need to use the unwrapped endpoint client method to manually call the <https://developers.HubSpot.com/docs/api/crm/associations|associations API> again here).\n\nHope that helps! Also, in the future, there is a <#C019VT42R8X|workflows> channel that you can ask questions about custom code actions in"
+  },
+  {
+    "poster": {
+      "poster_name": "Pedro Henrique Ferreira Cardoso Lima",
+      "poster_handle": "pedrohenriquefelima"
+    },
+    "time_stamp": "2021-07-20 07:21:56",
+    "text": "Thanks <@U0157R7AQ84>,\n\nreally appreciate the links. I have been trying to get all the data from a custom object within HubSpot using the following request:"
+  },
+  {
+    "text": "",
+    "time_stamp": "2021-07-20 07:23:02"
+  },
+  {
+    "poster": {
+      "poster_name": "Pedro Henrique Ferreira Cardoso Lima",
+      "poster_handle": "pedrohenriquefelima"
+    },
+    "time_stamp": "2021-07-20 07:23:24",
+    "text": "But I still cannot see the right records"
+  },
+  {
+    "poster": {
+      "poster_name": "Manju",
+      "poster_handle": "manjunath.l"
+    },
+    "time_stamp": "2021-07-20 07:28:34",
+    "text": "Hi Pedro"
+  },
+  {
+    "poster": {
+      "poster_name": "Manju",
+      "poster_handle": "manjunath.l"
+    },
+    "time_stamp": "2021-07-20 07:29:40",
+    "text": "Hi Team, need your help on resloving this issue"
+  },
+  {
+    "poster": {
+      "poster_name": "Manju",
+      "poster_handle": "manjunath.l"
+    },
+    "time_stamp": "2021-07-20 07:29:52",
+    "text": "*Fatal error*: Uncaught HubSpot\\Client\\Crm\\Contacts\\ApiException: [400] Client error: `POST <https://api.hubapi.com/crm/v3/objects/contacts?hapikey=6a58a628-6d7f-4347-bba2-a94d74f7644d>` resulted in a `400 Bad Request` response: {\"status\":\"error\",\"message\":\"Invalid input JSON on line 1, column 15: Cannot construct instance of `java.util.LinkedHash (truncated...) in /var/www/html/inmotion-rest/vendor/HubSpot/api-client/codegen/Crm/Contacts/Api/BasicApi.php:397 Stack trace: #0 /var/www/html/inmotion-rest/vendor/HubSpot/api-client/codegen/Crm/Contacts/Api/BasicApi.php(373): HubSpot\\Client\\Crm\\Contacts\\Api\\BasicApi-&gt;createWithHttpInfo(Object(HubSpot\\Client\\Crm\\Contacts\\Model\\SimplePublicObjectInput)) #1 /var/www/html/inmotion-rest/api/HubSpot.php(32): HubSpot\\Client\\Crm\\Contacts\\Api\\BasicApi-&gt;create(Object(HubSpot\\Client\\Crm\\Contacts\\Model\\SimplePublicObjectInput)) #2 {main} thrown in */var/www/html/inmotion-rest/vendor/HubSpot/api-client/codegen/Crm/Contacts/Api/BasicApi.php* on line *397*"
+  },
+  {
+    "poster": {
+      "poster_name": "Matteo Panarotto",
+      "poster_handle": "matteo.panarotto941"
+    },
+    "time_stamp": "2021-07-20 08:12:42",
+    "text": "Hi all,\nI was wondering if anyone knows how to export all form submissions after a specific date?\nI'm not interested in exporting datas from a single form, but from all forms within a specific time period.\nFor instance: I need to know how my contacts have submitted a specific field that is recurrent in all forms.\nAny help appreciated."
+  },
+  {
+    "poster": {
+      "poster_name": "Jonathan Pavoni - Level 9",
+      "poster_handle": "jonathanpavoni"
+    },
+    "time_stamp": "2021-07-20 12:03:59",
+    "text": "is it possible to send a visitor to different thank you pages depending on their form response ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2021-07-20 12:12:17",
+    "text": "Yes"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2021-07-20 12:12:30",
+    "text": "But with js"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Ainslie",
+      "poster_handle": "rainslie"
+    },
+    "time_stamp": "2021-07-20 20:18:42",
+    "edited": {
+      "time_stamp": "2021-07-20 20:28:57"
+    },
+    "text": "It is possible to use the HubSpot node client with custom objects, at least for getting/creating the object, but the notation is a bit different.\nHere's a snippet for a custom object with fully qualified name of `p123_product_incident`. Note that you pass the object name as the first argument and the object ID as the second argument\n``` HubSpotClient.crm.objects.basicApi.getById('p123_product_incident',event.object.objectId, [\"product_name\", \"product_sku\"])\n    .then(results =&gt; {console.log(results.body)})```"
+  },
+  {
+    "text": "But, as Angus said, the flow of your code will essentially just follow:\n1. Use the above snippet to get the email address on the invoice that triggered the workflow.\n2. Use the Contact Search API to find a contact with that email\n3. Use the CRM Associations API to associate the two together. The endpoint you're looking for is listed in the CRM Custom Objects endpoint list page. Here's a screenshot, because it's kinda hard to find\n",
+    "time_stamp": "2021-07-20 20:27:41"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Ainslie",
+      "poster_handle": "rainslie"
+    },
+    "time_stamp": "2021-07-20 20:28:20",
+    "text": "You will need to list the associations of your custom object so that you know the association type, and then use then in the 'Associate an object with another object'"
+  }
+]

@@ -1,0 +1,135 @@
+[
+  {
+    "poster": {
+      "poster_name": "Chris Robock",
+      "poster_handle": "crobock"
+    },
+    "time_stamp": "2021-09-21 09:01:37",
+    "text": "Hey all.\nI’m working on a bit of custom code in a HS workflow.  It pulls the address from the company record and uses a geocoding API to get the location data for that address.  I then want to pull the lat and lon out of the returned data and feed that back into the company record.  Where I’m running into trouble is that the JSON.parse() is stripping double quotes out of the return data and making invalid key pairs.\n\nThe return data looks like this:\n```[{\"place_id\":\"292523685\",\"licence\":\"https:\\/\\/locationiq.com\\/attribution\",\"osm_type\":\"way\",\"osm_id\":\"13157616\",\"boundingbox\":[\"38.410061523566\",\"38.410161523566\",\"-96.203381098595\",\"-96.203281098595\"],\"lat\":\"38.41011152356648\",\"lon\":\"-96.20333109859524\",\"display_name\":\"1017, Sunnyslope Street, Emporia, Lyon County, Kansas, 66801, USA\",\"class\":\"place\",\"type\":\"house\",\"importance\":0.5309999999999999}]```\nwhile running that through JSON.parse() gives me this:\n```[\n  {\n    place_id: '292523685',\n    licence: '<https://locationiq.com/attribution>',\n    osm_type: 'way',\n    osm_id: '13157616',\n    boundingbox: [\n      '38.410061523566',\n      '38.410161523566',\n      '-96.203381098595',\n      '-96.203281098595'\n    ],\n    lat: '38.41011152356648',\n    lon: '-96.20333109859524',\n    display_name: '1017, Sunnyslope Street, Emporia, Lyon County, Kansas, 66801, USA',\n    class: 'place',\n    type: 'house',\n    importance: 0.5309999999999999\n  }\n]```\nAnd not having the quotes around the key name is causing me to be unable to pull the value.  I’ll post my code in the first comment",
+    "reply_count": 11,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-09-21 09:02:10"
+      },
+      {
+        "time_stamp": "2021-09-21 09:53:04"
+      },
+      {
+        "time_stamp": "2021-09-21 10:14:55"
+      },
+      {
+        "time_stamp": "2021-09-21 10:17:03"
+      },
+      {
+        "time_stamp": "2021-09-21 10:35:09"
+      },
+      {
+        "time_stamp": "2021-09-21 10:36:44"
+      },
+      {
+        "time_stamp": "2021-09-21 10:43:11"
+      },
+      {
+        "time_stamp": "2021-09-21 10:55:24"
+      },
+      {
+        "time_stamp": "2021-09-21 10:59:17"
+      },
+      {
+        "time_stamp": "2021-09-21 11:00:17"
+      },
+      {
+        "time_stamp": "2021-09-21 11:03:18"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Robock",
+      "poster_handle": "crobock"
+    },
+    "time_stamp": "2021-09-21 09:02:10",
+    "text": "```// Import required libraries\nconst HubSpot = require('@HubSpot/api-client');\nconst request = require('request');\n\nexports.main = (event, callback) =&gt; {\n  \n    // Create a new HubSpot API client\n    const HubSpotClient = new HubSpot.Client({\n        apiKey: process.env.HAPIKEY\n    });\n  \t\n  \tconst properties = [\n      \"address\",\n      \"city\",\n      \"state\",\n      \"country\",\n      \"zip\"\n    ];\n\n    // Use the API client to get the address of the company we need location data for - NOT DONE\n    HubSpotClient.crm.companies.basicApi.getById(event.object.objectId, properties).then(results =&gt; {\n\t\t\n        let companyAddress = encodeURIComponent(results.body.properties.address); //Store company address in variable to use in later request to OpenStreetMaps API\n      \tlet companyCity = encodeURIComponent(results.body.properties.city);\n      \tlet companyState = encodeURIComponent(results.body.properties.state);\n      \tlet companyCountry = encodeURIComponent(results.body.properties.country);\n      \tlet companyPostalCode = encodeURIComponent(results.body.properties.zip);\n      \n      \tlet getUrl = \"<https://us1.locationiq.com/v1/search.php?key=>\" + process.env.LOCATIONTOKEN + \"&amp;street=\" + companyAddress + \"&amp;city=\" + companyCity + \"&amp;state=\" + companyState + \"&amp;country=\" + companyCountry + \"&amp;postalcode=\" + companyPostalCode + \"&amp;format=json\";\n      \n\n\n        //Make a request to OpenStreetMaps to request the geolocation of the address - NOT DONE\n        var options = {\n            \"method\": \"GET\",\n          \t\"url\": getUrl,\n          \t\t\n        };\n        \n        request(options, function (error, response, body) {\n\n            /* \n              Information returned from OpenStreetMaps can be stored in variables.  I've included the internal name of the \n              properties in HubSpot as I will use the CRM API to update them towards the end of the custom code. - NOT DONE\n            */\n          \tconst returnValues = JSON.parse(response.body);\n          \tconsole.log(returnValues);\n          \tvar companyLat = returnValues.lat // add to gps_location\n            var companyLon\t= returnValues.lon // add to gps_location\n            console.log(returnValues.lat);\n          \tvar companyGPS = companyLat + \",\" + companyLon;\n          \n          \n          console.log(companyGPS);\n            //Using the data returned update the relevant company properties within HubSpot. - NOT DONE\n            HubSpotClient.crm.companies.basicApi.update(event.object.objectId, \n                { \n                \t\"properties\": \n                \t{ \n                      \"gps_location\": companyGPS\n                \t}\n                });\n            \n            // Optional but we could provide data output to use as an input in the Copy to Property workflow action at a later stage.\n            callback({ outputFields: {} });\n\n            if (error) throw new Error(error);\n            console.log(response.body);\n        });\n    });\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Hein Haraldson Berg",
+      "poster_handle": "hein"
+    },
+    "time_stamp": "2021-09-21 09:53:04",
+    "text": "It’s unclear to me how the parsed JSON make you unable to get the values..?"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Robock",
+      "poster_handle": "crobock"
+    },
+    "time_stamp": "2021-09-21 10:14:55",
+    "text": "with these lines:\n```var companyLat = returnValues.lat // add to gps_location\n            var companyLon\t= returnValues.lon // add to gps_location```\nconsole.log(returnValues.lat) is returning “undefined” instead of the value of lat in the json.  I had figured the key name required quotes around it and was causing the issue, but if not, then what could it be?"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Robock",
+      "poster_handle": "crobock"
+    },
+    "time_stamp": "2021-09-21 10:17:03",
+    "text": "same goes for returnValues.lon"
+  },
+  {
+    "poster": {
+      "poster_name": "Hein Haraldson Berg",
+      "poster_handle": "hein"
+    },
+    "time_stamp": "2021-09-21 10:35:09",
+    "text": "So-called dot notation is perfectly fine to access these values. Did you check what `returnValues` is?"
+  },
+  {
+    "poster": {
+      "poster_name": "Hein Haraldson Berg",
+      "poster_handle": "hein"
+    },
+    "time_stamp": "2021-09-21 10:36:44",
+    "text": "It’s been a while since I used plain `request` – my guess is that you’re unpacking the response the wrong way"
+  },
+  {
+    "poster": {
+      "poster_name": "Hein Haraldson Berg",
+      "poster_handle": "hein"
+    },
+    "time_stamp": "2021-09-21 10:43:11",
+    "text": "Adding `json: true` to your `options` object should fix it for you;\n\n```var options = {\n    method: \"GET\",\n    url: getUrl,\n    json: true\n};\n\n// Also remove the manual JSON.parse() – your data will already be parsed and ready, provided the API didn't return with some  kind of error```"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Robock",
+      "poster_handle": "crobock"
+    },
+    "time_stamp": "2021-09-21 10:55:24",
+    "text": "Using this:\n```const returnValues = response.body;\n          \tconsole.log(returnValues);```\nreturns the following in the log\n```[{\"place_id\":\"292523685\",\"licence\":\"https:\\/\\/locationiq.com\\/attribution\",\"osm_type\":\"way\",\"osm_id\":\"13157616\",\"boundingbox\":[\"38.410061523566\",\"38.410161523566\",\"-96.203381098595\",\"-96.203281098595\"],\"lat\":\"38.41011152356648\",\"lon\":\"-96.20333109859524\",\"display_name\":\"1017, Sunnyslope Street, Emporia, Lyon County, Kansas, 66801, USA\",\"class\":\"place\",\"type\":\"house\",\"importance\":0.5309999999999999}]```\nbut using console.log(returnValues.lat) returns “undefined”"
+  },
+  {
+    "poster": {
+      "poster_name": "Hein Haraldson Berg",
+      "poster_handle": "hein"
+    },
+    "time_stamp": "2021-09-21 10:59:17",
+    "text": "Well as you can see, it’s wrapped in an array. I guess this is in case your address could resolve to multiple locations. `returnValues[0].lat` should give you what you want"
+  },
+  {
+    "poster": {
+      "poster_name": "Hein Haraldson Berg",
+      "poster_handle": "hein"
+    },
+    "time_stamp": "2021-09-21 11:00:17",
+    "text": "And it’d be up to you how to handle any responses with more than one result, always assuming the first one to be the best match might not work every time."
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Robock",
+      "poster_handle": "crobock"
+    },
+    "time_stamp": "2021-09-21 11:03:18",
+    "text": "Oh wow.  I completely missed that it was an array.  What you said worked, and in my use case, it should only return a single result so this works for me.  If things change, I’ll figure it out then.\n\nThank you so much"
+  }
+]

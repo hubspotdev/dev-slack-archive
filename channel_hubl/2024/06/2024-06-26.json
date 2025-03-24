@@ -1,0 +1,66 @@
+[
+  {
+    "poster": {
+      "poster_name": "Paulo Barcelos",
+      "poster_handle": "paulo"
+    },
+    "time_stamp": "2024-06-26 03:17:51",
+    "text": "Thanks for the reply. Yeah, it could explain why the filters are not working on it.\n\nIt's a bit too much details to explain why I really _need_ this, but basically I need to have the Cookiebot integration activated (as it does change some deep obscure configurations in how HubSpot works), but I do not want to use the integration markup, as it does't support multiple domain groups, and instead load it manually.\n\nThere may be other ways of solving it, but is a bit of a chicken/egg situation so far.\n\nOn my particular case simply stripping it out of the rendered html (before it gets executed and starts loading the scripts) felt like the cleanest way forward.\n\nDo you, or any other expert has more clarity as to _when_ exactly is the integration markup rendered?"
+  },
+  {
+    "poster": {
+      "poster_name": "Paulo Barcelos",
+      "poster_handle": "paulo"
+    },
+    "time_stamp": "2024-06-26 04:20:22",
+    "text": "Ok seems that indeed `standard_header_includes` contain some further functions that should be evaluated later.\n\nDoes anyone knows when `js_integration_head_start`is defined? Or it its possible to tap into it to filter its outputs?\n```{{ js_integration_head_start() }}\n{{ head_elements() }}\n{{ head_css() }}\n{{ head_js() }}\n{{ js_integration_head() }}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Paulo Barcelos",
+      "poster_handle": "paulo"
+    },
+    "time_stamp": "2024-06-26 04:53:29",
+    "edited": {
+      "time_stamp": "2024-06-26 04:54:02"
+    },
+    "text": "Ok, found the solution. Feels a little hacky, but does the job. Just need to \"nest\" the replace call, like this:\n```{{ standard_header_includes|replace('{{ js_integration_head_start() }}', '{{ js_integration_head_start()|replace(\"foo\", \"bar\") }}') }}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2024-06-26 12:00:56",
+    "text": "Oh, that’s a really, really neat find — I had no idea about those functions! How’d you manage to uncover those?"
+  },
+  {
+    "text": "Hey all, wanted to share a snippet with you. This tag will turn any HubL object into a tree for easier property hunting.\n\n```{{YOUR_VARIABLE_HERE|tojson|replace(\"{\", \"&nbsp{<div style='margin-left: 2rem;'>\")|replace(\"}\", \"</div>}\")|replace(\",\", \",<br>\")}}```",
+    "time_stamp": "2024-06-26 16:43:52",
+    "edited": {
+      "time_stamp": "2024-06-28 17:10:12"
+    },
+    "reply_count": 6,
+    "reply_users_count": 5,
+    "replies": [
+      {
+        "time_stamp": "2024-06-27 01:31:50"
+      },
+      {
+        "time_stamp": "2024-06-27 07:57:11"
+      },
+      {
+        "time_stamp": "2024-06-27 15:16:24"
+      },
+      {
+        "time_stamp": "2024-06-28 17:09:40"
+      },
+      {
+        "time_stamp": "2024-06-28 17:09:50"
+      },
+      {
+        "time_stamp": "2024-07-03 07:01:29"
+      }
+    ]
+  }
+]

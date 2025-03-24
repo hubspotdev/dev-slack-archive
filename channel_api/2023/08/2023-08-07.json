@@ -1,0 +1,138 @@
+[
+  {
+    "subtype": "tombstone",
+    "text": "This message was deleted.",
+    "time_stamp": "2023-08-07 02:53:28",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-08-07 03:30:56"
+      },
+      {
+        "time_stamp": "2023-08-07 04:23:50"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Harun Kumar Siva",
+      "poster_handle": "harun"
+    },
+    "time_stamp": "2023-08-07 03:30:56",
+    "text": "<@U05J8HX78TF> Remove the Bearer Token from the Authorization header from your code snapshot above to prevent exposure.\nIf it is linked to a production account, make sure to expire this key and use a new one instead."
+  },
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2023-08-07 03:49:45",
+    "text": "Is it possible to register webhook urls on HubSpot. for example I have a client that wants to have certain functionality of the quote where when a user clicks a product it sends that product choice in a webhook to be processed in the CRM workflows, is that possible within HubSpot or would i need external hosting and a subdomain for this?",
+    "reply_count": 9,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-08-09 00:52:52"
+      },
+      {
+        "time_stamp": "2023-08-09 00:53:21"
+      },
+      {
+        "time_stamp": "2023-08-09 01:06:48"
+      },
+      {
+        "time_stamp": "2023-08-09 03:42:59"
+      },
+      {
+        "time_stamp": "2023-08-09 04:53:09"
+      },
+      {
+        "time_stamp": "2023-08-09 05:03:35"
+      },
+      {
+        "time_stamp": "2023-08-09 05:03:42"
+      },
+      {
+        "time_stamp": "2023-08-09 05:04:23"
+      },
+      {
+        "time_stamp": "2023-08-09 05:45:47"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Md Tanzinul Kabir Tonmoy",
+      "poster_handle": "tanzinulkabir"
+    },
+    "time_stamp": "2023-08-07 04:23:50",
+    "text": "Thanks for letting me know."
+  },
+  {
+    "poster": {
+      "poster_name": "Md Tanzinul Kabir Tonmoy",
+      "poster_handle": "tanzinulkabir"
+    },
+    "time_stamp": "2023-08-07 04:28:51",
+    "text": "I am new at HubSpot development. Need help on workflow custom code.\nI want to close the chat when the last activity is more than 3 minutes ago.\nThe closing part works perfectly but I also want to send a message before closing but that is not working.\nPlease guide me.\n\n```const http = require('https');\n\nfunction updateStatus(conversationId, status, callback) {\n  const options = {\n    method: 'PATCH',\n    hostname: '<http://api.hubapi.com|api.hubapi.com>',\n    path: `/conversations/v3/conversations/threads/${conversationId}`,\n    headers: {\n      'accept': 'application/json',\n      'content-type': 'application/json',\n      'Authorization': 'Bearer ' + process.env.API_KEY,\n    },\n  };\n\n  const body = JSON.stringify({\n    status\n  });\n\n  const req = http.request(options, (res) =&gt; {\n    let data = '';\n\n    res.on('data', (chunk) =&gt; {\n      data += chunk;\n    });\n\n    res.on('end', () =&gt; {\n      if (res.statusCode &gt;= 200 &amp;&amp; res.statusCode &lt;= 299) {\n        console.log(`Request Successful`);\n        callback(null);\n      } else {\n        callback(`Request failed. Status Code: ${res.statusCode}`);\n      }\n    });\n  });\n\n  req.on('error', (error) =&gt; {\n    callback(`Request failed. Error: ${error.message}`);\n  });\n\n  req.write(body);\n  req.end();\n\n  req.on('close', () =&gt; {\n    const message = 'Oh oh. Onze reactie duurt langer dan verwacht. We komen zo spoedig mogelijk bij je terug. Als je toch staat te wachten… Pinkcube is genomineerd voor de Online Leverancier van het Jaar 2023 award! Help ons de prijs in de wacht te slepen en stem op Pinkcube via <https://pinkcu.be/stemoppinkcube>. Geen tijd om te wachten? Laat je e-mailadres achter en we beantwoorden je vraag per e-mail.';\n    sendMessage(conversationId, message, callback);\n  });\n}\n\nfunction sendMessage(conversationId, messageText, callback) {\n  const options = {\n    method: 'POST',\n    hostname: '<http://api.hubapi.com|api.hubapi.com>',\n    path: `/conversations/v3/conversations/threads/${conversationId}/messages`,\n    headers: {\n      'accept': 'application/json',\n      'content-type': 'application/json',\n      'Authorization': 'Bearer ' + process.env.API_KEY,\n    },\n  };\n\n  const body = JSON.stringify({\n    text: messageText,\n    type: 'PLAIN_TEXT'\n  });\n\n  const req = http.request(options, (res) =&gt; {\n    let data = '';\n\n    res.on('data', (chunk) =&gt; {\n      data += chunk;\n    });\n\n    res.on('end', () =&gt; {\n      if (res.statusCode &gt;= 200 &amp;&amp; res.statusCode &lt;= 299) {\n        console.log(`Message sent successfully`);\n        callback(true);\n      } else {\n        callback(`Request failed. Status Code: ${res.statusCode}`);\n      }\n    });\n  });\n\n  req.on('error', (error) =&gt; {\n    //callback(`Request failed. Error: ${error.message}`);\n    callback(false);\n  });\n\n  req.write(body);\n  req.end();\n}\n\nexports.main = async (event, callback) =&gt; {\n  const conversationId = event.inputFields.conversationId;\n  const lastActivity = event.inputFields.lastActivity;\n  console.log(conversationId, lastActivity)\n\n  let lastActivityTime = lastActivity;\n\n  const now = Date.now();\n  if (lastActivityTime === null || now - lastActivityTime &gt; 180000) {\n    updateStatus(conversationId, 'CLOSED', callback);\n  }\n};```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Alex Schwage",
+      "poster_handle": "alex.schwager"
+    },
+    "time_stamp": "2023-08-07 06:16:59",
+    "text": "Hello - I have an error and can't figure out the issue\nAttributeError: module 'HubSpot' has no attribute 'Client'\n\nhere is my Python codes:\n\nimport HubSpot\nfrom pprint import pprint\nfrom HubSpot.cms.hubdb import ApiException\n\n# Function to read access token from file\ndef read_access_token_from_file(file_path):\n    with open(file_path, 'r') as file:\n        return file.read().strip()\n\n# Get the access token from the file\nfile_path = r\"xxxxx\"\naccess_token = read_access_token_from_file(file_path)\n\nclient = HubSpot.Client()\nclient.set_access_token(access_token)\n\ntry:\n    api_response = client.cms.hubdb.tables_api.get_table_details(table_id_or_name=\"xxxxx\")\n    pprint(api_response)\nexcept ApiException as e:\n    print(\"Exception when calling tables_api-&gt;get_table_details: %s\\n\" % e)"
+  },
+  {
+    "poster": {
+      "poster_name": "Ashan Tharindu",
+      "poster_handle": "ashan.tharindu"
+    },
+    "time_stamp": "2023-08-07 10:20:05",
+    "text": "hello\ncan we get pandadoc file details from HubSpot api?\nthanks"
+  },
+  {
+    "poster": {
+      "poster_name": "Dave Busch",
+      "poster_handle": "dave.busch"
+    },
+    "time_stamp": "2023-08-07 10:21:00",
+    "text": "Hello. Looking for a little help. We are following the documentation and video on migrating our calls to the HubSpot API (via an API key) to using Private Apps:\n<https://developers.HubSpot.com/docs/api/migrate-an-api-key-integration-to-a-private-app>\n\nWe ran into one question regarding what \"Scopes\" to enable. Currently, the API call we use (a very old one that is not in current documentation) posts data to this endpoint to send an email:\n<http://api.hubapi.com/email/public/v1/singleEmail/send?hapikey={HubSpotApiKey}>\n\nWe need to set up our new Private App to allow the same thing - to have the same \"Scopes\". Can you please advise what these need to be?\n\nAlso, is there a path we should use to \"upgrade\" the API call we make today? What would replace the `public/v1/singleEmail/` endpoint?"
+  },
+  {
+    "poster": {
+      "poster_name": "Phil Grey",
+      "poster_handle": "phil349"
+    },
+    "time_stamp": "2023-08-07 21:29:32",
+    "text": "Hey there, trying to do what feels like a pretty search query but i’m getting `There was a problem with the request`  Details in :thread:",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-08-07 21:31:03"
+      },
+      {
+        "time_stamp": "2023-08-07 21:31:35"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Phil Grey",
+      "poster_handle": "phil349"
+    },
+    "time_stamp": "2023-08-07 21:31:03",
+    "text": "<https://api.hubapi.com/crm/v3/objects/2-12033310/search>\n\n```{\n  \"filterGroups\": [\n    {\n      \"filters\": [\n        {\n          \"propertyName\": \"associations.tickets\",\n          \"operator\": \"EQ\",\n          \"value\": \"[ID OF TICKET]\"\n        }\n      ]\n    }\n]\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Phil Grey",
+      "poster_handle": "phil349"
+    },
+    "time_stamp": "2023-08-07 21:31:35",
+    "text": "afaik i should be able to filter by the ticket association, shouldn’t i? Or is that not working because it’s linked FROM a custom object?"
+  }
+]

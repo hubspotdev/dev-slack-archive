@@ -1,0 +1,80 @@
+[
+  {
+    "poster": {
+      "poster_name": "mathes waran",
+      "poster_handle": "matheskrishna"
+    },
+    "time_stamp": "2023-02-22 06:31:45",
+    "text": "Hi team,\n\nI am having the data in the Hubdb column as select a data type, I am having 20+ category data, but due to some reasons, I used 12 category name only.\n\nso now, I need to fetch rows based on the category column used ones...\n\nso I tried this code, but it does iterate that 8 times only, not more than that, any reason.? how could I solve this.?\n\n\n```   &lt;div class=\"col-12 col-lg-9\"&gt;\n       &lt;div id=\"integration-container\" class=\"scrollspy-example\"&gt;\n\n{% for row in hubdb_table_rows(tableId) %}\n  {% set category = row.category %}\n  {% if category not in used_values %}\n    {% set used_values = used_values + [category] %}\n  &lt;div id=\"{{value.name}}\" class=\"mb-64 item\" data-my-attribute=\"list-item-{{value.id}}\"&gt;\n   \n &lt;div class=\"category-row\"&gt;{{ category.name }}&lt;/div&gt;\n    {% set catgeorytitle =category.name %}\n    {{ catgeorytitle }}\n    {% set filterquery = '&amp;category='~catgeorytitle %}\n    &lt;div class=\"row row-cols-1 row-cols-md-2\"&gt;\n      {% for row in hubdb_table_rows(tableId, filterquery ) %}\n      &lt;a class=\"info-exapnd position-relative text-decoration-none px-0 d-flex align-items-stretch\" href=\"#\"\n        data-connector=\"{{row.connector_name}}\" onclick=\"integrationModal('{{ row.hs_id }}')\"&gt;\n        &lt;div class=\"col card integration-card\"&gt;\n          &lt;div class=\"row g-0  d-flex justify-content-center text-center text-md-start pb-8\"&gt;\n            &lt;div class=\"col-md-auto d-flex justify-content-around d-md-block\"&gt;\n              &lt;img class=\"img-fluid\" src=\"{{row.logo_url}}\" alt=\"integrator image\"&gt;\n            &lt;/div&gt;\n            &lt;div class=\"col\"&gt;\n              &lt;div class=\"card-body p-0\"&gt;\n                &lt;h6 class=\"medium h6 text-charcoal700\"&gt;{{row.connector_name}}&lt;/h6&gt;\n              &lt;/div&gt;\n            &lt;/div&gt;\n          &lt;/div&gt;\n          &lt;div class=\"row g-0  d-flex  text-center text-md-start\"&gt;\n            &lt;div class=\"col-md-auto d-flex justify-content-around d-md-block\"&gt;\n              &lt;p class=\"text-charcoal300 regular mb-0\"&gt;{{row.description}}&lt;/p&gt;\n            &lt;/div&gt;\n          &lt;/div&gt;\n        &lt;/div&gt;\n      &lt;/a&gt;\n      {% endfor %}\n    &lt;/div&gt;\n  &lt;/div&gt;\n  {% endif %}\n  {% endfor %}\n&lt;/div&gt;\n      &lt;/div&gt;```",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-02-22 06:32:50"
+      },
+      {
+        "time_stamp": "2023-02-22 06:41:27"
+      },
+      {
+        "time_stamp": "2023-02-22 06:43:27"
+      },
+      {
+        "time_stamp": "2023-02-22 06:43:36"
+      },
+      {
+        "time_stamp": "2023-02-22 06:45:44"
+      },
+      {
+        "time_stamp": "2023-02-22 06:48:59"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "mathes waran",
+      "poster_handle": "matheskrishna"
+    },
+    "time_stamp": "2023-02-22 06:32:50",
+    "text": "<@U01QVR44MEY>, any idea.?"
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2023-02-22 06:41:27",
+    "text": "You're doing multiple hubdb_table_rows fetch on a for loop, you have a limit of 10 hubdb_table_rows calls per page, that's why it stops, best thing you can do is fetch unfiltered data and then filter it in the for loop with a selectattr filter"
+  },
+  {
+    "poster": {
+      "poster_name": "mathes waran",
+      "poster_handle": "matheskrishna"
+    },
+    "time_stamp": "2023-02-22 06:43:27",
+    "text": "oh okay, any reference link , so that I can change as per.?"
+  },
+  {
+    "poster": {
+      "poster_name": "mathes waran",
+      "poster_handle": "matheskrishna"
+    },
+    "time_stamp": "2023-02-22 06:43:36",
+    "text": "<@UV23JHEJY>"
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2023-02-22 06:45:44",
+    "text": "<https://developers.HubSpot.com/docs/cms/hubl/filters#selectattr>"
+  },
+  {
+    "poster": {
+      "poster_name": "mathes waran",
+      "poster_handle": "matheskrishna"
+    },
+    "time_stamp": "2023-02-22 06:48:59",
+    "text": "sure thanks, il check this"
+  }
+]

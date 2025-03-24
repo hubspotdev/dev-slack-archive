@@ -1,0 +1,50 @@
+[
+  {
+    "poster": {
+      "poster_name": "Corey King",
+      "poster_handle": "cking"
+    },
+    "time_stamp": "2021-03-15 07:53:31",
+    "text": "Hey <@UJLMJNX6G> thanks for the info. I'm running into some trouble with the toggling of the filters using a Boolean field.\n\nThe problem is if I hide the filter, I lose some code that is needed to filter the database properly:\n\n```{% if module.show_hide_partner_product %}\n\n   &lt;div&gt;\n        &lt;h4&gt;Filter by partner product: &lt;/h4&gt;\n        &lt;select name=\"partner_products\" form=\"form_id\"&gt;\n          &lt;option value=\"show-all\"&gt;Show All&lt;/option&gt;\n          {% set partner_products = hubdb_table_column((3420769), \"partner_products\").options %}\n          {% for product in partner_products %}\n          {% set product_list = product_list~product.id|list%}\n          {% if product.id == request.query_dict.partner_products%}\n          &lt;option selected=\"selected\" value=\"{{ product.id }}\" onclick=\"resourceFilter()\"&gt;{{ product.name }}&lt;/option&gt;\n          {% else %}\n          &lt;option value=\"{{ product.id }}\"&gt;{{ product.name }}&lt;/option&gt;\n          {% endif %}\n          {% endfor %}\n        &lt;/select&gt;\n      &lt;/div&gt;\n  \n{% endif %}```\nI'm wondering how I can hide the field/filter but keep the necessary code to run the queries"
+  },
+  {
+    "text": "Here's a screenshot of the code as it's a littler easier to read",
+    "time_stamp": "2021-03-15 07:53:49"
+  },
+  {
+    "text": "Oh actually this seems only not work if it's a certain combination of filters that are hidden.\n\nIf I hide the partner product or partner type, my partner country filter no longer works.\n\nI have a feeling it has to do with my queries.\n\n```{% set queryparam = \"\" %}\n&lt;!-- Dropdown Query + No Country Entry --&gt;\n{% if request.query_dict.partner_type in [\"1\", \"2\"] and request.query_dict.partner_country == \"\" %}\n    {% set queryparam = queryparam ~ \"&amp;partner_type=\"~request.query_dict.partner_type|urlencode %}\n{% endif %}\n&lt;!-- Dropdown Query + Country Entry --\n{% if request.query_dict.partner_type in [\"1\", \"2\"] and request.query_dict.partner_country != \"\" %}\n    {% set queryparam = queryparam ~ \"&amp;partner_type=\"~request.query_dict.partner_type|urlencode~\"&amp;partner_country__contains=\"~request.query_dict.partner_country|urlencode %}\n{% endif %}\n&lt;!-- Multi-Select Query + No Country Entry --&gt;\n{% if request.query_dict.partner_products in [\"1\", \"2\", \"3\"] and request.query_dict.partner_country == \"\" %}\n    {% set queryparam = queryparam ~ \"&amp;partner_products__in=\"~request.query_dict.partner_products|urlencode %}\n{% endif %}\n&lt;!-- Multi-Select Query + Country Entry --&gt;\n{% if request.query_dict.partner_products in [\"1\", \"2\", \"3\"] and request.query_dict.partner_country != \"\" %}\n  {% set queryparam = queryparam ~ \"&amp;partner_products__in=\"~request.query_dict.partner_products|urlencode~\"&amp;partner_country__contains=\"~request.query_dict.partner_country|urlencode %}\n{% endif %}\n&lt;!-- No Dropdown or Multi-Select + Country Search --&gt;\n{% if request.query_dict.partner_type == \"show-all\" and request.query_dict.partner_products == \"show-all\" and request.query_dict.partner_country != \"\" %}\n    {% set queryparam = queryparam~\"&amp;partner_country__contains=\"~request.query_dict.partner_country|urlencode %}\n{% endif %}\n&lt;!-- Show All + No Country Entry --&gt;\n{% if request.query_dict.partner_type == \"show-all\" and request.query_dict.partner_products == \"show-all\" %}\n    {% set queryparam = queryparam %}\n{% endif %}\n\n&lt;!-- end --&gt;```\n",
+    "time_stamp": "2021-03-15 08:06:10"
+  },
+  {
+    "poster": {
+      "poster_name": "Corey King",
+      "poster_handle": "cking"
+    },
+    "time_stamp": "2021-03-15 08:14:56",
+    "text": "I got it working. Of course that's the case after I reach out for assistance haha."
+  },
+  {
+    "poster": {
+      "poster_name": "Sami Sundberg",
+      "poster_handle": "sami.sundberg"
+    },
+    "time_stamp": "2021-03-15 09:03:00",
+    "text": ":smile: great job! That happens quite often so no worries"
+  },
+  {
+    "poster": {
+      "poster_name": "Corey King",
+      "poster_handle": "cking"
+    },
+    "time_stamp": "2021-03-15 11:03:18",
+    "text": "Hey Sami, I do have another question if you have a minute."
+  },
+  {
+    "poster": {
+      "poster_name": "Douglas Welcome",
+      "poster_handle": "dwelcome"
+    },
+    "time_stamp": "2021-03-15 11:57:53",
+    "text": "Thanks <@UJLMJNX6G> Good point on the LP tracking."
+  }
+]

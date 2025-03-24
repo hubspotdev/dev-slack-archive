@@ -1,0 +1,45 @@
+[
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2022-12-23 08:23:00",
+    "text": "Yeah there seems to be a smattering of different information in regards to it, for example the custom objects page I believe has a bit more info as well as a blog post mentioning it can successfully be used in PATCH requests. It does seem to be limited to endpoints which call a single objectType. I'm going to test and see if I name the properties the same on each object if it can be tricked!\n\nThat being said I did find an interesting little tidbit and am happy I can share it since you helped me so much! If you take a look at the notes API endpoint you'll notice:\n```// Example POST request to <https://api.HubSpot.com/crm/v3/objects/notes>\n{\n  \"properties\": {\n     \"hs_timestamp\": \"2021-11-12T15:48:22Z\",\n     \"hs_note_body\": \"Spoke with decision maker Carla. Attached the proposal and draft of contract.\",\n     \"HubSpot_owner_id\": \"14240720\",\n     \"hs_attachment_ids\": \"24332474034;24332474044\"\n  },\n\"associations\": [\n    {\n     \"to\": {\n        \"id\": 301\n      },\n      \"types\": [\n        {\n          \"associationCategory\": \"HubSpot_DEFINED\",\n          \"associationTypeId\": 190\n        } ]\n    }, \n    {\n     \"to\": {\n        \"id\": 401\n      },\n      \"types\": [\n        {\n          \"associationCategory\": \"HubSpot_DEFINED\",\n          \"associationTypeId\": 214\n        } ]\n}]\n}```\nWell for giggles I decided to try and use it to associate my contact to my ticket on creation...*AND IT WORKS! You can specify associations on object creation.* Caveat being I haven't tested it with every object type, but USER_DEFINED association labels are no problem. It seems to infer the `toObjectType` from the `assotiationTypeId` .\n\nI hope it comes in handy for you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-12-23 08:54:51",
+    "text": "Very interesting, I did know that worked fine for engagements but thought (wrongly) that you wouldn't be able to use in on all objects"
+  },
+  {
+    "poster": {
+      "poster_name": "Vibhu Jain",
+      "poster_handle": "vibhu"
+    },
+    "time_stamp": "2022-12-23 12:25:20",
+    "text": "Removing @ was the key! It got verified now. Thanks a lot <@U039FTRBQ93>  for your help."
+  },
+  {
+    "poster": {
+      "poster_name": "Phillip Hargrave",
+      "poster_handle": "phillip"
+    },
+    "time_stamp": "2022-12-23 17:52:11",
+    "edited": {
+      "time_stamp": "2022-12-23 17:54:08"
+    },
+    "text": "So on further investigation I think this has to do with the <https://app.HubSpot.com/whats-new/20114339/all?productUpdateId=13868243|BETA> for defining associations on record creation. I looked back through my POSTMAN collection and the same request has previously failed.\n\nFor the record no batch endpoint works in this manner, the only way to accomplish this is at record creation.\n\nNext task: Attempting to do this via the unique properties. Given the forms API endpoint has now been updated I'm going to take a stab at using these fields in a connected support form and see if it works! I'll keep you posted on how it works out, but that's a job for tomorrow."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-12-23 21:07:22",
+    "edited": {
+      "time_stamp": "2022-12-23 21:07:25"
+    },
+    "text": "very interesting stuff, I also just looked through postman and can confirm I have tested that method on the object endpoints as well but with no success (until now)"
+  }
+]

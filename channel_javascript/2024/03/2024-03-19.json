@@ -1,0 +1,135 @@
+[
+  {
+    "poster": {
+      "poster_name": "SixStep Solutions",
+      "poster_handle": "sixstepsolutions"
+    },
+    "time_stamp": "2024-03-19 02:13:28",
+    "text": "result.body is undefined due to getbyid not returing deal.\n\nBe sure you are getting deal by getbyid function."
+  },
+  {
+    "poster": {
+      "poster_name": "Satyam Chaudhary",
+      "poster_handle": "satyamc.wot2022"
+    },
+    "time_stamp": "2024-03-19 06:53:43",
+    "text": "Also, you can just put the whole script in your JS file rather than calling CDN - That might help as well"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Vaughan-Jones",
+      "poster_handle": "mattvj97"
+    },
+    "time_stamp": "2024-03-19 17:27:40",
+    "text": "Hi all,\n\nI am trying to upload a file using the @HubSpot/api-client npm library.\n\nHere is my code:\n\n`let file = fs.readFileSync('./tmp/airtable_files/att0IMq6ria7RlMK9.png');`\n        `let options = {`\n            `access: 'PUBLIC_NOT_INDEXABLE',`\n            `overwrite: false,`\n        `}`\n\n        `let uploadResponse = await HubSpotClient.files.filesApi.upload(`\n            `{`\n                `data: file,`\n                `name: 'test upload'`\n            `},`\n            `'160809862233',`\n            `undefined,`\n            `'file name',`\n            `undefined,`\n            `{'access': 'PUBLIC_NOT_INDEXABLE'}`\n        `);`\n\nFor one thing, I think the type definitions for the upload method are wrong, because it specifies `options: string`, but the API returns an error requesting that an object be passed.\n\nPushing on, with the above code, I receive the following error:\n\nTypeError: source.on is not a function\n    at DelayedStream.create (/Users/mattvaughan-jones/Projects/winki/airtableMigration/node_modules/delayed-stream/lib/delayed_stream.js:33:10)\n    at CombinedStream.append (/Users/mattvaughan-jones/Projects/winki/airtableMigration/node_modules/combined-stream/lib/combined_stream.js:45:37)\n    at FormData.append (/Users/mattvaughan-jones/Projects/winki/airtableMigration/node_modules/form-data/lib/form_data.js:74:3)\n    at FilesApiRequestFactory.&lt;anonymous&gt; (/Users/mattvaughan-jones/Projects/winki/airtableMigration/node_modules/@HubSpot/api-client/lib/codegen/files/apis/FilesApi.js:414:36)\n    at Generator.next (&lt;anonymous&gt;)\n    at /Users/mattvaughan-jones/Projects/winki/airtableMigration/node_modules/@HubSpot/api-client/lib/codegen/files/apis/FilesApi.js:8:71\n    at new Promise (&lt;anonymous&gt;)\n    at __awaiter (/Users/mattvaughan-jones/Projects/winki/airtableMigration/node_modules/@HubSpot/api-client/lib/codegen/files/apis/FilesApi.js:4:12)\n    at FilesApiRequestFactory.upload (/Users/mattvaughan-jones/Projects/winki/airtableMigration/node_modules/@HubSpot/api-client/lib/codegen/files/apis/FilesApi.js:381:16)\n    at ObservableFilesApi.upload (/Users/mattvaughan-jones/Projects/winki/airtableMigration/node_modules/@HubSpot/api-client/lib/codegen/files/types/ObservableAPI.js:164:59)\n\nNode.js v21.7.1\n\n\nAm I right to suspect an error in how the POST request is constructed by the library? Any help would be greatly appreciated. I've been stuck here for a couple of days now.",
+    "reply_count": 11,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-03-19 17:45:53"
+      },
+      {
+        "time_stamp": "2024-03-19 17:50:47"
+      },
+      {
+        "time_stamp": "2024-03-19 18:00:18"
+      },
+      {
+        "time_stamp": "2024-03-19 18:11:30"
+      },
+      {
+        "time_stamp": "2024-03-19 18:16:55"
+      },
+      {
+        "time_stamp": "2024-03-19 18:49:11"
+      },
+      {
+        "time_stamp": "2024-03-19 19:03:17"
+      },
+      {
+        "time_stamp": "2024-03-19 19:06:19"
+      },
+      {
+        "time_stamp": "2024-03-19 19:36:21"
+      },
+      {
+        "time_stamp": "2024-03-19 22:56:12"
+      },
+      {
+        "time_stamp": "2024-03-20 02:14:06"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Christensen Magtoto",
+      "poster_handle": "chris858"
+    },
+    "time_stamp": "2024-03-19 17:45:53",
+    "text": "File should be in base64 I think."
+  },
+  {
+    "text": "That returned the same error, and also a type warning shown below, which says `file` should be a `Buffer`",
+    "time_stamp": "2024-03-19 17:50:47"
+  },
+  {
+    "poster": {
+      "poster_name": "Christensen Magtoto",
+      "poster_handle": "chris858"
+    },
+    "time_stamp": "2024-03-19 18:00:18",
+    "text": "Yes, a buffer in base64 encoding."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Vaughan-Jones",
+      "poster_handle": "mattvj97"
+    },
+    "time_stamp": "2024-03-19 18:11:30",
+    "text": "Sorry, I'm not exactly sure what you mean.\nIs `let file = fs.readFileSync('./tmp/airtable_files/att0IMq6ria7RlMK9.png', {encoding: 'base64'});` not what you were suggesting?\nIt didn't work."
+  },
+  {
+    "poster": {
+      "poster_name": "Christensen Magtoto",
+      "poster_handle": "chris858"
+    },
+    "time_stamp": "2024-03-19 18:16:55",
+    "text": "Yes, because it's not a Buffer. It should be something like this:\n\n```fs.readFile('./tmp/airtable_files/att0IMq6ria7RlMK9.png', (err, data) =&gt; {\n    if (err) throw err;\n    let base64Image = Buffer.from(data, 'binary').toString('base64');\n    // Code upload to HubSpot API\n});```\n"
+  },
+  {
+    "text": "Thank you for the time you've put into helping me out. I really appreciate it.\n\ncalling .toString() on the buffer will of course return a string, so I'm still getting the same error. Maybe I'm not interpreting you correctly.",
+    "time_stamp": "2024-03-19 18:49:11"
+  },
+  {
+    "poster": {
+      "poster_name": "Christensen Magtoto",
+      "poster_handle": "chris858"
+    },
+    "time_stamp": "2024-03-19 19:03:17",
+    "text": "Actually that's my fault as I only grab a quick snips of the code to give you the idea. What is needed is a Buffer with base64 encoding so you need to read your file as a binary and put it to Buffer and it should be encoded in base64.\n\nI can't really test the code right now but can you remove the \".toString('base64')\" in the code and run it?"
+  },
+  {
+    "poster": {
+      "poster_name": "Christensen Magtoto",
+      "poster_handle": "chris858"
+    },
+    "time_stamp": "2024-03-19 19:06:19",
+    "text": "If it uploads the file as a broken/corrupted file then you need to encode your buffer to base64."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Vaughan-Jones",
+      "poster_handle": "mattvj97"
+    },
+    "time_stamp": "2024-03-19 19:36:21",
+    "text": "It doesn't upload anything because it throws an error before the request is made to the API.\n\nFrom the reading I have done, buffers don't have an inherent encoding. A base64 encoded buffer is a string, and when passing that string to `data`, I still receive same error as above. Pasted again below:\n\nTypeError: source.on is not a function\n    at DelayedStream.create (/Users/mattvaughan-jones/Projects/winki/airtableMigration/node_modules/delayed-stream/lib/delayed_stream.js:33:10)\n    at CombinedStream.append (/Users/mattvaughan-jones/Projects/winki/airtableMigration/node_modules/combined-stream/lib/combined_stream.js:45:37)\n    at FormData.append (/Users/mattvaughan-jones/Projects/winki/airtableMigration/node_modules/form-data/lib/form_data.js:74:3)\n    at FilesApiRequestFactory.&lt;anonymous&gt; (/Users/mattvaughan-jones/Projects/winki/airtableMigration/node_modules/@HubSpot/api-client/lib/codegen/files/apis/FilesApi.js:414:36)\n    at Generator.next (&lt;anonymous&gt;)\n    at /Users/mattvaughan-jones/Projects/winki/airtableMigration/node_modules/@HubSpot/api-client/lib/codegen/files/apis/FilesApi.js:8:71\n    at new Promise (&lt;anonymous&gt;)\n    at __awaiter (/Users/mattvaughan-jones/Projects/winki/airtableMigration/node_modules/@HubSpot/api-client/lib/codegen/files/apis/FilesApi.js:4:12)\n    at FilesApiRequestFactory.upload (/Users/mattvaughan-jones/Projects/winki/airtableMigration/node_modules/@HubSpot/api-client/lib/codegen/files/apis/FilesApi.js:381:16)\n    at ObservableFilesApi.upload (/Users/mattvaughan-jones/Projects/winki/airtableMigration/node_modules/@HubSpot/api-client/lib/codegen/files/types/ObservableAPI.js:164:59)\n\nNode.js v21.7.1"
+  },
+  {
+    "poster": {
+      "poster_name": "Christensen Magtoto",
+      "poster_handle": "chris858"
+    },
+    "time_stamp": "2024-03-19 22:56:12",
+    "text": "I was able to upload a png file by using the following code below. I don't know why but in a different project it requires me to encode it to base64 before uploading it.\n\n```let file = readFileSync(\"eb32d5ebf091495abc8a2257622577e5.png\");\n  let uploadResponse = await HubSpotClient.files.filesApi.upload(\n    {\n      data: Buffer.from(file),\n      name: \"eb32d5ebf091495abc8a2257622577e5.png\",\n    },\n    undefined,\n    \"/\",\n    undefined,\n    undefined,\n    JSON.stringify({ access: \"PRIVATE\" })\n  );```"
+  }
+]

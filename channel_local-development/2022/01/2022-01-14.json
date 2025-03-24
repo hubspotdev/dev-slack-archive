@@ -1,0 +1,49 @@
+[
+  {
+    "poster": {
+      "poster_name": "Anthony Pizzurro",
+      "poster_handle": "anthonypizzurro"
+    },
+    "time_stamp": "2022-01-14 08:53:09",
+    "text": "<@U01ANR052SF> I have a hunch that this has something to do with the source path `/` . It’s likely being interpreted as an absolute path to the root of the filesystem. Can you try a relative path?\n\nHere is an example: <https://github.com/HubSpot/cms-theme-boilerplate/blob/main/.github/workflows/deploy.yml#L14>"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Purdy",
+      "poster_handle": "timothy"
+    },
+    "time_stamp": "2022-01-14 10:05:26",
+    "text": "<@U26B530N6> Sure thing! Although, my assumption was that the src would be the root of the repo. Is that not the case? If it is, what would I use instead of `/` ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Anthony Pizzurro",
+      "poster_handle": "anthonypizzurro"
+    },
+    "time_stamp": "2022-01-14 10:11:09",
+    "text": "If your source code is at the root of your repo you could try “.”"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Purdy",
+      "poster_handle": "timothy"
+    },
+    "time_stamp": "2022-01-14 10:11:36",
+    "text": "ahhh ok - I'll try that shortly and report back with the results!"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Purdy",
+      "poster_handle": "timothy"
+    },
+    "time_stamp": "2022-01-14 16:13:52",
+    "edited": {
+      "time_stamp": "2022-01-14 16:15:19"
+    },
+    "text": "<@U26B530N6> Your hunch was right!\n\nI started with a fresh repo and fresh copy of cms-theme-boilerplate, changed the src path from `/` to `.` in the deploy.yml file -- and has resulted in successful auto deployment!\n\nHere is what my deploy.yml file that includes the corrected path\n```on:\n  push:\n    branches:\n    - main\njobs:\n  deploy:\n    runs-on: ubuntu-latest\n    steps:\n      - name: Checkout\n        uses: actions/checkout@v2.3.3\n      - name: HubSpot Deploy Action\n        uses: HubSpot/HubSpot-cms-deploy-action@v1.5\n        with:\n          src_dir: .\n          dest_dir: /Testing/evo_boilerplate\n          portal_id: ${{ secrets.HubSpot_portal_id }}\n          personal_access_key: ${{ secrets.HubSpot_timothy_access_key }}```\nand here is my successful logs ( attached as a snippet )\n\nThank you so much <@U26B530N6>"
+  },
+  {
+    "text": "",
+    "time_stamp": "2022-01-14 16:15:30"
+  }
+]

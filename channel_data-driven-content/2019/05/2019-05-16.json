@@ -1,0 +1,258 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jaimik Patel",
+      "poster_handle": "jaimik.patel"
+    },
+    "time_stamp": "2019-05-16 09:14:27",
+    "text": "Hi, I am creating the Real Estate Listing page, but the filter is not working for me. I am not sure what I am doing wrong, putting the code in thread. Looking forward to your help. Thanks.",
+    "reply_count": 7,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2019-05-16 09:15:11"
+      },
+      {
+        "time_stamp": "2019-05-16 09:15:14"
+      },
+      {
+        "time_stamp": "2019-05-16 09:15:41"
+      },
+      {
+        "time_stamp": "2019-05-16 09:16:09"
+      },
+      {
+        "time_stamp": "2019-05-16 09:16:53"
+      },
+      {
+        "time_stamp": "2019-05-16 09:17:25"
+      },
+      {
+        "time_stamp": "2019-05-16 09:38:43"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2019-05-16 09:15:11",
+    "text": "Which filter u r trying?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jaimik Patel",
+      "poster_handle": "jaimik.patel"
+    },
+    "time_stamp": "2019-05-16 09:15:14",
+    "text": "&lt;!-- set the filter by drop down, search bar, and submit button --&gt;\n\n&lt;div&gt;\n&lt;form id=\"form_id\" method=\"get\"&gt;\n\n    &lt;div&gt;\n        &lt;h4&gt;FILTER BY LISTING TYPE: &lt;/h4&gt;\n        &lt;select name=\"type\" form=\"form_id\" onChange=\"this.form.submit()\"&gt;\n            &lt;option value=\"show-all\"&gt;Show All&lt;/option&gt;\n            {% set types = hubdb_table_column(1041693, \"type\").options %}\n            {% for choice in types %}\n                {% set type_list = type_list~choice.id|list%}\n                {% if choice.id == request.query_dict.type%}\n                    &lt;option selected=\"selected\" value=\"{{ choice.id }}\"&gt;{{ choice.name }}&lt;/option&gt;\n                {% else %}\n                    &lt;option value=\"{{ choice.id }}\"&gt;{{ choice.name }}&lt;/option&gt;\n                {% endif %}\n            {% endfor %}\n        &lt;/select&gt;\n    &lt;/div&gt;\n    &lt;div&gt;\n        &lt;input name=\"listing_address\" type=\"text\" id=\"search-by\" class=\"autocomplete\" placeholder=\"Search by City or Zip Code...\"&gt;\n    &lt;/div&gt;\n        &lt;input id=\"submit-button\" type=\"submit\" value=\"search\"&gt;\n\n&lt;/form&gt;\n&lt;/div&gt;\n\n\n&lt;!-- sets the different query parameters using submitted input for hubdb query --&gt;\n{% set queryparam = \"\" %}\n{% if request.query_dict.type in [\"1\", \"2\", \"3\", \"4\"] and request.query_dict.listing_address == \"\" %}\n    {% set queryparam = queryparam ~ \"&amp;type=\"~request.query_dict.type|urlencode %}\n{% endif %}\n{% if request.query_dict.type in [\"1\", \"2\", \"3\", \"4\"] and request.query_dict.listing_address != \"\" %}\n    {% set queryparam = queryparam~\"&amp;type=\"~request.query_dict.type|urlencode~\"&amp;listing_address__icontains=\"~request.query_dict.listing_address|urlencode %}\n{% endif %}\n{% if request.query_dict.type == \"show-all\" and request.query_dict.listing_address != \"\" %}\n    {% set queryparam = queryparam~\"&amp;listing_address__icontains=\"~request.query_dict.listing_address|urlencode %}\n{% endif %}\n\n\n{% set table = hubdb_table_rows(1041693, queryparam) %}\n\n{% if table == [] %}\n    &lt;p class='align-center'&gt;Sorry, no listings found for that Search. Try changing your filter and search again.&lt;/p&gt;\n{% else %}\n  {% for row in table %}\n&lt;div&gt;\n    &lt;div class=\"{{ row[\"type\"].name }}\"&gt;\n        &lt;div&gt;&lt;img src=\"{{ row[\"listing_image\"].url}}\"&gt;&lt;/div&gt;\n            &lt;div&gt;\n              &lt;h2&gt;{{ row[\"listing_price\"] }}&lt;/h2&gt;\n              &lt;h3&gt;{{ row[\"listing_address\"] }}&lt;/h3&gt;\n              &lt;h4&gt;{{ row[\"type\"].name }}&lt;/h4&gt;\n              &lt;div&gt;\n                  &lt;ul&gt;\n                      &lt;li&gt;&lt;span&gt;{{ row[\"listing_bedrooms\"] }}&lt;/span&gt;&lt;br&gt;bd&lt;/li&gt;\n                      &lt;li&gt;&lt;span&gt;{{ row[\"listing_baths\"] }}&lt;/span&gt;&lt;br&gt;ba&lt;/li&gt;\n                      &lt;li&gt;&lt;span&gt;{{ row[\"listing_sq_ft\"] }}&lt;/span&gt;&lt;br&gt;sq ft&lt;/li&gt;\n                      &lt;li&gt;&lt;span&gt;{{ row[\"listing_acres\"] }}&lt;/span&gt;&lt;br&gt;acres&lt;/li&gt;\n                  &lt;/ul&gt;\n              &lt;/div&gt;\n              &lt;div class=\"button\"&gt;&lt;a href=\"{{ row[\"listing_url\"] }}\"&gt;Details&lt;/a&gt;&lt;/div&gt;\n            &lt;/div&gt;\n    &lt;/div&gt;\n&lt;/div&gt;\n  {% endfor %}\n  {% endif %}"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2019-05-16 09:15:41",
+    "edited": {
+      "time_stamp": "2019-05-16 09:16:24"
+    },
+    "text": "can u link me to your portal and template?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jaimik Patel",
+      "poster_handle": "jaimik.patel"
+    },
+    "time_stamp": "2019-05-16 09:16:09",
+    "text": "sure"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-05-16 09:16:53",
+    "text": "What is the current results?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jaimik Patel",
+      "poster_handle": "jaimik.patel"
+    },
+    "time_stamp": "2019-05-16 09:17:25",
+    "text": "page is okay, but not filtering any data."
+  },
+  {
+    "poster": {
+      "poster_name": "Jaimik Patel",
+      "poster_handle": "jaimik.patel"
+    },
+    "time_stamp": "2019-05-16 09:38:43",
+    "edited": {
+      "time_stamp": "2019-05-16 09:39:32"
+    },
+    "text": "when ever I click on search button there was nothing happened in URL\n\nand data are coming from API"
+  },
+  {
+    "poster": {
+      "poster_name": "elevine",
+      "poster_handle": "elevine"
+    },
+    "time_stamp": "2019-05-16 12:15:05",
+    "text": "Hey Devs, I am using the foreign ID selector on a dynamic page. I am running into an issue where when I have more than one row, all images selected are looped for both dynamic pages. How do I specify I only want the selected data showing per row. Screenshots to follow!"
+  },
+  {
+    "text": "foreign ID column is labeled “portfolio”",
+    "time_stamp": "2019-05-16 12:15:46"
+  },
+  {
+    "text": "but here on this page, both portfolio options are printing on a single page",
+    "time_stamp": "2019-05-16 12:16:20"
+  },
+  {
+    "poster": {
+      "poster_name": "elevine",
+      "poster_handle": "elevine"
+    },
+    "time_stamp": "2019-05-16 12:16:44",
+    "text": "```                    {% for row in hubdb_table_rows(dynamic_page_hubdb_table_id, \"&amp;orderBy=name\") %}\n                    {% for portfolio in row.portfolio %}\n                    &lt;span id=\"hs_cos_wrapper_partner_flex_1\" class=\"hs_cos_wrapper hs_cos_wrapper_widget_container hs_cos_wrapper_type_widget_container\" style=\"\" data-hs-cos-general-type=\"widget_container\" data-hs-cos-type=\"widget_container\"&gt;\n                        &lt;div id=\"hs_cos_wrapper_widget_1474884943740\" class=\"hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_custom_widget\" style=\"\" data-hs-cos-general-type=\"widget\" data-hs-cos-type=\"custom_widget\"&gt;\n                            &lt;div class=\"col-md-3 col-sm-4 col-xs-12 partner-logo\"&gt;\n                                &lt;a href=\"//www.edisonpartners.com/portfolio/financial-technology/Clearpool\" target=\"_blank\"&gt;\n                                    &lt;img src=\"{{portfolio.logo.url}}\"&gt;\n                                &lt;/a&gt;\n                            &lt;/div&gt;\n                        &lt;/div&gt;\n                    &lt;/span&gt;     \n                    {% endfor %}\n                    {% endfor %}```",
+    "reply_count": 8,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-05-16 12:54:16"
+      },
+      {
+        "time_stamp": "2019-05-16 12:59:13"
+      },
+      {
+        "time_stamp": "2019-05-16 13:00:21"
+      },
+      {
+        "time_stamp": "2019-05-16 13:04:46"
+      },
+      {
+        "time_stamp": "2019-05-16 13:07:02"
+      },
+      {
+        "time_stamp": "2019-05-16 13:16:21"
+      },
+      {
+        "time_stamp": "2019-05-16 13:18:52"
+      },
+      {
+        "time_stamp": "2019-05-16 13:27:27"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "elevine",
+      "poster_handle": "elevine"
+    },
+    "time_stamp": "2019-05-16 12:17:14",
+    "text": "and here is my code ^ Any help is appreciated!"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-16 12:54:16",
+    "text": "Hey <@U26BPJGS0> it looks like you have a situation where you're still looping though both rows, as opposed to having a stop point for your loop after it's shown whatever one you want to show. Question: is the page itself being generated dynamically, or is it just the one section?"
+  },
+  {
+    "poster": {
+      "poster_name": "elevine",
+      "poster_handle": "elevine"
+    },
+    "time_stamp": "2019-05-16 12:59:13",
+    "text": "It is a dynamic page! "
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-16 13:00:21",
+    "text": "and your table is being defined from within the template settings?"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-16 13:04:46",
+    "text": "```\n{% if dynamic_page_hubdb_row %}\n     {% for porfolio in dynamic_page_hubdb_row.porfolio %}\n           {{ portfolio.logo.url }}\n      {% endfor %}\n{% endif %}\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-16 13:07:02",
+    "edited": {
+      "time_stamp": "2019-05-16 13:10:36"
+    },
+    "text": "Try that if your table is being defined from within the page settings. You shouldn't need to do the `{% for row in hubdb_table_rows(dynamic_page_hubdb_table_id, \"&amp;orderBy=name\") %}` loop for this context. The way you have it set up above looks like it is redefining the table to grab from and telling it to loop through both rows and grab the image value through each loop."
+  },
+  {
+    "poster": {
+      "poster_name": "elevine",
+      "poster_handle": "elevine"
+    },
+    "time_stamp": "2019-05-16 13:16:21",
+    "text": "Interesting, ok I am defining the table within the page settings."
+  },
+  {
+    "poster": {
+      "poster_name": "elevine",
+      "poster_handle": "elevine"
+    },
+    "time_stamp": "2019-05-16 13:18:52",
+    "text": "It worked! Thank you so much for the assistance!"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-16 13:27:27",
+    "text": "No problem!"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-16 13:57:33",
+    "text": "fyi - It seems like there is an issue in the DB when you convert a select/multi-select column to a foreign Id column. After updating the column content the table will consistently fail to save until that column is deleted and re-added. The only message received is 'failed to save'",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-05-16 13:59:26"
+      },
+      {
+        "time_stamp": "2019-05-16 13:59:52"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2019-05-16 13:59:26",
+    "text": "I will look into this"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-16 13:59:52",
+    "text": "thanks <@UG52C29EE>"
+  }
+]

@@ -1,0 +1,78 @@
+[
+  {
+    "poster": {
+      "poster_name": "Joshua Pichugin",
+      "poster_handle": "joshua.pichugin"
+    },
+    "time_stamp": "2024-06-18 03:55:54",
+    "edited": {
+      "time_stamp": "2024-06-18 03:56:24"
+    },
+    "text": "Hello Everyone :wave:\n\nI am new here and havent got a huge amount of experience with HubSpot to be honest...\n\nI am a cloud admin for my company and my CEO has asked me to clear out all his email logging in HubSpot.\nHe must have enabled it at some point and now regrets it :smile:\n\n*would anyone by any chance have a script that deletes specified email address's from all activity feeds in bulk.*\n\nAlso if this is the wrong channel for this question feel free to direct me somewhere else.",
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-06-18 04:06:33"
+      },
+      {
+        "time_stamp": "2024-06-18 04:16:33"
+      },
+      {
+        "time_stamp": "2024-06-18 04:17:12"
+      },
+      {
+        "time_stamp": "2024-06-18 04:21:31"
+      },
+      {
+        "time_stamp": "2024-06-18 05:28:11"
+      },
+      {
+        "time_stamp": "2024-06-18 07:48:46"
+      }
+    ]
+  },
+  {
+    "text": "Hey <@U078LFBQXKM>,\nnot sure if I got you right but if you'd like to get rid of automatic emails you could create a filter in the email client with the sending domain and something from the subject(optional) and then route it to the trash-can or a seperate folder.\n\nSomething like this",
+    "time_stamp": "2024-06-18 04:06:33"
+  },
+  {
+    "text": "Hi <@UJAPS2K4N>\nNo I dont think that is it :relaxed:\n\nFrom what I underestand there is a feature in which a user can activate logging of their email address. I think any correspondance then puts this email address into the contatcs activity feed whenever it is triggered.",
+    "time_stamp": "2024-06-18 04:16:33"
+  },
+  {
+    "poster": {
+      "poster_name": "Joshua Pichugin",
+      "poster_handle": "joshua.pichugin"
+    },
+    "time_stamp": "2024-06-18 04:17:12",
+    "text": "The CEO wants to delete this logging reference of his email everywhere in HubSpot."
+  },
+  {
+    "poster": {
+      "poster_name": "Joshua Pichugin",
+      "poster_handle": "joshua.pichugin"
+    },
+    "time_stamp": "2024-06-18 04:21:31",
+    "edited": {
+      "time_stamp": "2024-06-18 04:22:07"
+    },
+    "text": "I tried feeding my request into ChatGPT and it gave me this... Thoughts?\n\nimport requests\n\nAPI_KEY = 'your_HubSpot_api_key'\nBASE_URL = '<https://api.hubapi.com>'\nHEADERS = {'Authorization': f'Bearer {API_KEY}'}\n\ndef get_email_logs(email_addresses, start_date, end_date):\n    url = f\"{BASE_URL}/engagements/v1/engagements/paged\"\n    params = {\n        'email': ','.join(email_addresses),\n        'startDate': start_date,\n        'endDate': end_date\n    }\n    response = requests.get(url, headers=HEADERS, params=params)\n    return response.json()['results']\n\ndef delete_email_log(log_id):\n    url = f\"{BASE_URL}/engagements/v1/engagements/{log_id}\"\n    response = requests.delete(url, headers=HEADERS)\n    return response.status_code == 204\n\nemail_addresses = [<mailto:Example@example.com|Example@example.com>]\nstart_date = '2022-01-01'\nend_date = '2023-06-17'\n\nlogs = get_email_logs(email_addresses, start_date, end_date)\nfor log in logs:\n    if delete_email_log(log['engagement']['id']):\n        print(f\"Deleted log {log['engagement']['id']}\")\n    else:\n        print(f\"Failed to delete log {log['engagement']['id']}\")"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-06-18 05:28:11",
+    "text": "I am just guessing here but I would think that ChatGPT code would delete the logs but not remove the setting and they would start recreating them.  I also don't know about this but I found it using some AI:  In your HubSpot account, click the settings settings icon in the top navigation bar. In the left sidebar menu, navigate to Objects &gt; Activities. Click the Email Logging tab. In the Never Log section, click Add emails or domains."
+  },
+  {
+    "poster": {
+      "poster_name": "Joshua Pichugin",
+      "poster_handle": "joshua.pichugin"
+    },
+    "time_stamp": "2024-06-18 07:48:46",
+    "text": "thanks"
+  }
+]

@@ -1,0 +1,62 @@
+[
+  {
+    "poster": {
+      "poster_name": "Dennis K",
+      "poster_handle": "dennis579"
+    },
+    "time_stamp": "2024-05-28 13:09:41",
+    "text": "Awesome! Using this one now for a HubSpot project on my work. Before I was just using my own boilerplate with webpack and Tailwind, but this one looks neat. Few questions:\n\n1. Do you recommend to create all kinds of stuf in Lit? Like button (variants), Header/Footer, blog article layouts?\n2. How do you deal with links? Create a button with Lit and wrap that button with `&lt;a&gt;` in Hudl?\n3. I guess Tailwind isnt going to work? Tried setting that up inside the workflow, but quite complicated \n"
+  },
+  {
+    "poster": {
+      "poster_name": "Stuart Grant",
+      "poster_handle": "stuart-g"
+    },
+    "time_stamp": "2024-05-28 13:38:57",
+    "text": "1. The main approach I take is, use as much basic HTML and CSS as you can. If a button needs to have a callback attached, or emit an event of some kind, or manage some kind of side effect; this is when I consider a custom Lit wrapper that manages that side effect. In this scenario, I would create that Lit wrapper and provide a `&lt;slot&gt;` for a basic HTML button. I rarely, if ever, manage a button's styles in the shadow DOM.\n2. Links are the same as buttons above, keep as much of it as basic as you can. The smallest nodes - links, buttons, text blocks, even forms and inputs - I manage via stylesheets. There are exceptions, but most are related to the things HubSpot renders, like CTAs or form containers.\n3. Tailwind can work for Lit development, but as you may have seen in my post, I keep to PostCSS or some other preprocessors. Tailwind development w/ Lit is definitely possible."
+  },
+  {
+    "text": "Thanks for your answer! I did read your blog post, and since you mentioned you develop everything first in Storybook, I assumed you did all the work with Lit. So the button example in my screenshot, would be considered ‘bad practice’ and I should just use a macro for buttons in Hubl/HS?\n\nThe way I did understand was: I will create all the components with Lit and using Storybook. Like NavItems, Header, Cards, Badges, Images and have Content Block wrappers (like a Content - Image section) build als LitElement as well (like you did in the example with that Hero Banner.\n\nContent inside that would be just filling slots within your HubSpot module",
+    "time_stamp": "2024-05-28 13:48:18"
+  },
+  {
+    "poster": {
+      "poster_name": "Stuart Grant",
+      "poster_handle": "stuart-g"
+    },
+    "time_stamp": "2024-05-28 14:11:10",
+    "text": "Correct, I would stay away from managing base elements' styles inside of the shadow DOM, at least for elements that you use broadly or could be user-provided through RTFs. I've only found trouble when I attempted to do so. Typically, if something isn't provided explicitly by the DOM API as an element, or if I see something with stateful requirements, I'll start thinking about how to create my own custom element with Lit. This often includes components that deal with stylistic choices, like Cards, Banners, Wells, etc.\n\nI do all my styling for base elements in Storybook, as well - great tool for mocking up entire pages before you start migrating the code into a theme.\n\nNavItems, Header, Cards, Badges, Content Blocks, Wells, Banners - all sound like good choices for components. Utilizing slots for CMS content, CTAs/buttons within their templates is a perfect approach."
+  },
+  {
+    "poster": {
+      "poster_name": "Stuart Grant",
+      "poster_handle": "stuart-g"
+    },
+    "time_stamp": "2024-05-28 14:13:11",
+    "text": "If you absolutely need to have a base element render within your Lit element - which means you cannot get what you want from slotting the element - you can always import the styles into the element. I typically name my button file `styles/_buttons.css` , so I would render that file into the component's CSS file, and it will provide the styles within that shadow DOM."
+  },
+  {
+    "poster": {
+      "poster_name": "SJ Morris (she/her)",
+      "poster_handle": "sjmorris"
+    },
+    "time_stamp": "2024-05-28 16:29:12",
+    "text": "Same question :) <@U07587UNJ8M>, this channel is reserved for showcasing things built on HubSpot. "
+  },
+  {
+    "poster": {
+      "poster_name": "Dennis K",
+      "poster_handle": "dennis579"
+    },
+    "time_stamp": "2024-05-28 17:13:14",
+    "text": "Great. That is super clear. Doing the very basic html components like buttons now in Storybook as well, using plain HTML. So after this has been done it’s just a matter of copy and paste those elements to the theme, and the rest of the modules/components will be build and imported in to the HubSpot theme.\n\nWill probably spend another day setting up Tailwind in the HubSpot dir but I guess that would be just installing Tailwind and run JIT on every save and output a tailwind.css. Couldn’t get tailwind+lit working in combination with generating the css after running the HubSpot build &amp; deploy, so will skip that for now unfortunately\n\nSo flow looks like this:\n\n• Building the components and modules using Storybook -&gt; Vanilla CSS\n• After that will build up the modules/building blocks in the HubSpot theme. Will use Tailwind CSS there\n\nKinda worried about compatibility of Web Components and SEO, but that is just a lack of knowledge on my side"
+  },
+  {
+    "poster": {
+      "poster_name": "Stuart Grant",
+      "poster_handle": "stuart-g"
+    },
+    "time_stamp": "2024-05-28 18:51:23",
+    "text": "Web components can be purely structural, and any element you slot has the same SEO impact as an unslotted element - they're both light DOM. Shadow DOM is where things can get iffy with SEO."
+  }
+]

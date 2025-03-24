@@ -1,0 +1,34 @@
+[
+  {
+    "poster": {
+      "poster_name": "Andrei Axinoi",
+      "poster_handle": "andreiaxinoi"
+    },
+    "time_stamp": "2024-08-13 08:05:29",
+    "text": "Thanks, Nicholas ! This is really helpful."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrei Axinoi",
+      "poster_handle": "andreiaxinoi"
+    },
+    "time_stamp": "2024-08-13 08:27:19",
+    "text": "Hey Nicholas, I saw you mentioned using Puppeteer. I'm currently implementing a Lambda function to generate PDFs and ran into a bit of a roadblock. I managed to create a Lambda Layer with the `@sparticuz/chromium` and `puppeteer-core` packages, and I’m importing them successfully into my function like this:\n```import chromium from '@sparticuz/chromium';\nimport puppeteer from 'puppeteer-core';\n\nexport const handler = async (event, context) =&gt; {\n  let browser = null;\n\n  try {\n    console.log('Launching browser...');\n    browser = await puppeteer.launch({\n      executablePath: await chromium.executablePath(),\n      headless: true,\n      args: [\n        '--disable-dev-shm-usage',\n        '--disable-setuid-sandbox',\n        '--no-first-run',\n        '--no-sandbox',\n        '--no-zygote',\n        '--deterministic-fetch',\n        '--disable-features=IsolateOrigins',\n        '--disable-site-isolation-trials',\n      ],\n    });\n\n    console.log('Opening new page...');\n    const page = await browser.newPage();\n\n    const url = event.url || '<https://example.com>';\n    console.log(`Navigating to ${url}...`);\n\n    try {\n      await page.goto(url, { waitUntil: 'networkidle2' });\n      console.log('Page loaded successfully.');\n    } catch (gotoError) {\n      console.error('Error during page navigation:', gotoError.message);\n      throw new Error(`Failed to navigate to ${url}`);\n    }\n\n    console.log('Fetching page title...');\n    const result = await page.title();\n\n    console.log('Result:', result);\n\n    return {\n      statusCode: 200,\n      body: JSON.stringify({ title: result || 'No title found' }),\n    };\n  } catch (error) {\n    console.error('Error:', error.message);\n    return {\n      statusCode: 500,\n      body: JSON.stringify({ error: error.message }),\n    };\n  } finally {\n    if (browser !== null) {\n      console.log('Closing browser...');\n      await browser.close();\n    }\n  }\n};```\nIt took me quite a bit to match the correct versions and zip them properly, but I’m running into an issue where the function gets stuck at `await browser.newPage();` and returns null. Any idea what I might be doing wrong? Since you’ve been using Puppeteer, I was wondering if you could point me in the right direction.\nThanks in advance!"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-13 09:27:34",
+    "text": "lol — we have our server randomly hanging on that as well"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-13 09:27:46",
+    "text": "I’ll keep you up to date, but I have to reset the server every so often"
+  }
+]

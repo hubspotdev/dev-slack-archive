@@ -1,0 +1,130 @@
+[
+  {
+    "text": "Hi all, I've a strange problem regarding global module content being reset after `hs sync`.  Any ideas? Thanks in advance!",
+    "time_stamp": "2019-11-25 07:18:16"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-25 07:27:32",
+    "edited": {
+      "time_stamp": "2019-11-25 07:31:54"
+    },
+    "text": "<@UNZ1FR2UX> so could be wrong - but i’m pretty sure whats happening is the following: when you edit defaults in the design manager that’s configuration, not content. So if you edit something in DM you should do a hs fetch first. You likely have the template locally as a JSON file, so when you run hs sync it’s just overriding the changes you’ve made in the interface with your local copy of the template."
+  },
+  {
+    "poster": {
+      "poster_name": "Quido Hoekman",
+      "poster_handle": "quido"
+    },
+    "time_stamp": "2019-11-25 07:33:27",
+    "text": "<@UQERM7BLY> You're totally right! It wasn't clear that for me that we needed to `hs fetch`. Thanks for making that clear!"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-25 07:33:32",
+    "text": "yeah"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-25 07:33:35",
+    "edited": {
+      "time_stamp": "2019-11-25 07:33:55"
+    },
+    "text": "I think sync is a misleading name, and it seems that has been deprecated in the newer tools. It’s been renamed to hs upload"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-25 07:34:08",
+    "text": "see: <https://designers.HubSpot.com/docs/tools/local-development-reference#sync>"
+  },
+  {
+    "poster": {
+      "poster_name": "Quido Hoekman",
+      "poster_handle": "quido"
+    },
+    "time_stamp": "2019-11-25 07:34:10",
+    "text": "Yeah, i just installed the new one"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-25 07:35:07",
+    "edited": {
+      "time_stamp": "2019-11-25 07:35:58"
+    },
+    "text": "Just be careful with the fetch command - it’s very easy to wipe a bunch of WIP changes. It may even be worth creating a wrapper for it and throwing it in your local bin - with a “are you sure” or a commit beforehand."
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-25 07:37:03",
+    "edited": {
+      "time_stamp": "2019-11-25 07:37:24"
+    },
+    "text": "and of course you’ll need to pull to the src/ dir if you’re using gulp/webpack. All things which have caught me out :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Quido Hoekman",
+      "poster_handle": "quido"
+    },
+    "time_stamp": "2019-11-25 07:37:42",
+    "text": "We've separate our build process, so that everytime after the gulp process with transpiling Sass to CSS and JS is done. We firstly thought the fields.json and meta.json were not being edited afterwards, so our local copy in the src/ resets the server-side version. We need to make some adjustments in our build flow  to make it work again :wink:"
+  },
+  {
+    "poster": {
+      "poster_name": "Quido Hoekman",
+      "poster_handle": "quido"
+    },
+    "time_stamp": "2019-11-25 07:38:26",
+    "text": "Yeah, it's a bit complicated because we're generating fields which are more common like foreground and background colors etc."
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-25 07:38:59",
+    "text": "Yeah, i have a similar process - src which contains my modules/ etc - all of which are processed by webpack and thrown into a build dir."
+  },
+  {
+    "poster": {
+      "poster_name": "Quido Hoekman",
+      "poster_handle": "quido"
+    },
+    "time_stamp": "2019-11-25 07:39:01",
+    "text": "But atleast I know that the problem is now, thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-25 07:39:05",
+    "text": "no worries :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Quido Hoekman",
+      "poster_handle": "quido"
+    },
+    "time_stamp": "2019-11-25 09:03:27",
+    "text": "<@UQERM7BLY> I fixed our build flow by merging our locally generated fields.json with the remote one using `json-merger`."
+  }
+]

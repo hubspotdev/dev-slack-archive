@@ -1,0 +1,64 @@
+[
+  {
+    "text": "Thank you for your help!\n\nJust so I am following, this is what I changed:\n\nbase.html file now has the preload/prefetch instances:\n\n```&lt;!--\n    templateType: page\n    label: Page Template\n    isAvailableForNewContent: true\n--&gt;\n<!doctype html>\n&lt;html lang=\"en\"&gt;\n  &lt;head&gt;\n    &lt;meta charset=\"utf-8\"&gt;\n    &lt;title&gt;{{ content.html_title }}&lt;/title&gt;\n    &lt;meta name=\"description\" content=\"{{ content.meta_description }}\"&gt;\n    &lt;meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"&gt;\n    \n    {{ require_css(get_asset_url(\"/best-practies-theme/CSS/main.css\")) }}\n    \n    {% if module.image_field %}\n  &lt;link rel=\"preload\" as=\"image\" href=\"{{ module.image_field }}\"&gt;\n  &lt;link rel=\"prefetch\" href=\"{{ module.image_field }}\"&gt;\n  {% endif %}\n    \n    &lt;link rel=\"dns-prefetch\" href=\"//46341312.fs1.HubSpotusercontent-na1.net\"&gt;\n  &lt;link rel=\"preconnect\" href=\"//46341312.fs1.HubSpotusercontent-na1.net\"&gt;\n  &lt;link rel=\"preconnect\" href=\"<https://static.hsappstatic.net>\"&gt;\n    \n  &lt;/head&gt;\n  &lt;body&gt;\n    &lt;!-- Header Section --&gt;\n    {% global_partial path='/best-practies-theme/templates/partials/header.html' %}\n    \n    &lt;!-- Main Content Section --&gt;\n    &lt;main id=\"main-content\"&gt;\n      &lt;!-- Main content wrapper --&gt;\n      &lt;div class=\"page-wrap\"&gt;\n        {% dnd_area \"main_area\" label=\"main area\" %}\n          &lt;!-- Content goes here --&gt;\n        {% end_dnd_area %}\n      &lt;/div&gt;\n    &lt;/main&gt;\n    \n    &lt;!-- Footer Section --&gt;\n    {% global_partial path='/best-practies-theme/templates/partials/footer.html' %}\n    \n    &lt;!-- Standard Footer Scripts and Includes --&gt;\n  &lt;/body&gt;\n&lt;/html&gt;```\nI updated my main.css file to\n```.col {width: 50%;}```\nLastly, I updated the two-col-right-img module, to include the prefetch as well.\n\n```{% require_head %}\n      &lt;link rel=\"prefetch\" href=\"{{ module.image_field }}\"&gt;\n{% end_require_head %}\n\n&lt;div class=\"two-col-row\"&gt;\n  &lt;div class=\"wrapper {{ module.choice_field }}\"&gt;\n    &lt;div class=\"col content\"&gt;\n        {% inline_rich_text field=\"copy\" value=\"{{ module.copy }}\" %}\n    &lt;/div&gt;\n    \n    &lt;div class=\"col img\"&gt;\n      {% if module.image_field.src %}\n        {% set defaultWidth = module.image_field.width|default(845) %}\n        {% set defaultHeight = module.image_field.height|default(617) %}\n        {% set sizeAttrs = 'width=\"' ~ defaultWidth ~ '\" height=\"' ~ defaultHeight ~ '\"' %}\n        \n        {% if module.image_field.size_type == 'auto' %}\n          {% set sizeAttrs = 'width=\"' ~ defaultWidth ~ '\" height=\"' ~ defaultHeight ~ '\" style=\"max-width: 100%; height: auto;\"' %}\n        {% elif module.image_field.size_type == 'auto_custom_max' %}\n          {% set sizeAttrs = 'width=\"' ~ module.image_field.max_width|default(defaultWidth) ~ '\" height=\"' ~ module.image_field.max_height|default(defaultHeight) ~ '\" style=\"max-width: 100%; height: auto;\"' %}\n        {% endif %}\n        \n        {% set loadingAttr = module.image_field.loading != 'disabled' ? 'loading=\"' ~ module.image_field.loading|escape_attr ~ '\"' : '' %}\n        &lt;img \n          src=\"{{ module.image_field.src|escape_url }}\" \n          alt=\"{{ module.image_field.alt|escape_attr }}\" \n          {{ loadingAttr }} \n          {{ sizeAttrs }}&gt;\n      {% endif %}\n    &lt;/div&gt;\n  &lt;/div&gt;\n&lt;/div&gt;```\nWhen I run the test in dev tools, I get 0 CLS.\n\nHowever, when I run it from the browser <https://pagespeed.web.dev/analysis/https-46341312-hs-sites-com-demo/xv5nm2sxg9?form_factor=desktop>\n\nI get a 1 still and it claims it's the body.",
+    "time_stamp": "2025-01-16 06:01:34"
+  },
+  {
+    "text": "Looking at what is flagged – the treemap says it's HubSpot scripts that is causing the CLS.\n\nHow do I avoid this from happening? This is for my practicum for devs 2 – trying to make sure I have a 0 CLS.\n<@U0225RX4QET>\n\nPlease read above to follow a little more.",
+    "time_stamp": "2025-01-16 06:10:56"
+  },
+  {
+    "poster": {
+      "poster_name": "Libby Noffsinger",
+      "poster_handle": "libbyn"
+    },
+    "time_stamp": "2025-01-16 06:13:28",
+    "text": "I'm also confused because if I place my module specific CSS outside of the module file into my main.css file – I have 0 CLS in devtools, but if I keep the css in the modules – I have shift."
+  },
+  {
+    "poster": {
+      "poster_name": "Aleksandar Perisic",
+      "poster_handle": "fizikaneri"
+    },
+    "time_stamp": "2025-01-16 06:20:53",
+    "edited": {
+      "time_stamp": "2025-01-16 06:31:06"
+    },
+    "text": "I think we made mistake somewhere, as I see part of <head> is inside <footer> , which could be this `<link rel=\"prefetch\" href=\"{{ module.image_field }}\">`\n```{# make it like this #}\n<link rel=\"preload\" as=\"image\" href=\"{{ module.image_field.src }}\">```\n• where we added `src` as we just want image url not an array and to be `preload` not `prefetch`"
+  },
+  {
+    "poster": {
+      "poster_name": "Aleksandar Perisic",
+      "poster_handle": "fizikaneri"
+    },
+    "time_stamp": "2025-01-16 06:34:01",
+    "text": "updated code for this `two-col-right-img`\n• <https://gist.github.com/apsolut/2cb25f3866971a666550c03617be7f58> "
+  },
+  {
+    "poster": {
+      "poster_name": "Aleksandar Perisic",
+      "poster_handle": "fizikaneri"
+    },
+    "time_stamp": "2025-01-16 06:40:48",
+    "text": "also if on mobile you also `above the fold` are showing 5 images\n• then those 5 images should not be `lazy loaded` \n    ◦ add `eager`  to each of them that are loaded on-screen on the first load"
+  },
+  {
+    "poster": {
+      "poster_name": "Aleksandar Perisic",
+      "poster_handle": "fizikaneri"
+    },
+    "time_stamp": "2025-01-16 06:43:53",
+    "edited": {
+      "time_stamp": "2025-01-17 03:59:33"
+    },
+    "text": "CSS, the browser will love you for each calculation that you help them, so\n• *.col {width: 50%;}* , and inside as you have `img` then would require \n    ◦ *.col img {width: 100%; height: auto; _aspect-ratio: auto 800 / 584;_ }*\n• if you want them stacked on mobile then different CSS would be for the parent element where you have flex (`.img-right`)\n    ◦ for *mobile media* query add *flex-direction: column;* and .col then need to be 100%"
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2025-01-16 08:13:21",
+    "text": "The prefetch is a great idea. Something I'd recommend is:\nCreate a seperate file like system_macros.html somewhere in your theme structure.\nlike\n`theme/macros/system_macros.html`\n\nPut following macro into the file:\n```{% macro preload_image(url)%}\n    {% require_head %}\n        &lt;link rel=\"preload\" as=\"image\" href=\"{{ url }}\"&gt;\n    {% end_require_head %}\n{% endmacro %}```\nIf you're working with custom modules, you can import this file like\n`{% _from_ \"../../macros/system_macros.html\" _import preload_image_ %}` or simply\n`{% _import_ \"../../macros/system_macros.html\" %}`\n\nbelow this - or basically anywhere; doesn't really matters since the macro has a \"require_head\" - write it like this:\n\n`{{ preload_image(module.image.src) }}` if your image selector in the module is called \"first Image\" it would be something like `{{ preload_image(module.first_image.src) }}` ."
+  }
+]

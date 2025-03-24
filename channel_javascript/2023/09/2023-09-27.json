@@ -1,0 +1,18 @@
+[
+  {
+    "poster": {
+      "poster_name": "Einav Maya",
+      "poster_handle": "einav"
+    },
+    "time_stamp": "2023-09-27 06:01:17",
+    "text": "Hi all,\n\nIm using marketing hub and Im trying to pass UTM on click in Landing Page, from incoming URL parameters to a landing page with HubSpot code on it (the page was built on HubSpot Landing Pages), to outgoing button links.\nWe implemented the code in the head HTML according to your guidance with a slight change:\n\n&lt;script&gt;\n// Function to capture and apply UTM parameters to outgoing links\nfunction applyUTMParameters() {\nconst params = new URLSearchParams(window.location.search);\n\n// Get the value of the 'source' query parameter\nconst source = params.get('ref');\nconst ad_id = params.get('ad_id');\n\n//var source = '{{ request.query_string.ref }}'; // Get the ref parameter\n//var ad_id = '{{ request.<http://query_string.ad|query_string.ad>_id }}'; // Get the 'ad_id' parameter\n\n// Find and update outgoing button links\nvar buttons = document.querySelectorAll('div.button.secondary a');\n\n// Replace 'button-class' with your actual button class\nbuttons.forEach(function(button) {\nvar href = button.getAttribute('href');\nhref += (href.includes('?') ? '&amp;' : '?') + 'ref=' + source + '&amp;ad_id=' + ad_id;\nbutton.setAttribute('href', href);\n});\n}\n// Call the function when the page loads\nwindow.addEventListener('DOMContentLoaded', applyUTMParameters);\n&lt;/script&gt;\n\nBUT the problem is that it works on a button from type button and NOT on type CTA.\nI need to work with CTA otherwise I dont see clicks on the reporting.\n\nAlso, we attempted to try alone, we figured that is seems a timing issue that hsCtaTracking is overriding the applyUTMParameters function.\n\nI need a solution that both reporting and passing UTM works. can someine pls guide me how to update the code? Did anyone experience this issue before? How do you track UTMs from HubSpot pages?"
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2023-09-27 10:16:37",
+    "text": "Owners aren’t represented as an object in the way the standard objects, or COs are. And as a result, you won’t be able to identify them via association.\n\nInstead, you’ll want to read the HubSpot_owner_id value on the contact, and use that to query through: GET*`/crm/v3/owners/{ownerId}`*\n\n<https://developers.HubSpot.com/docs/api/crm/owners>"
+  }
+]

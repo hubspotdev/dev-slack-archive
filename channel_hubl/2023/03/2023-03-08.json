@@ -1,0 +1,157 @@
+[
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2023-03-08 07:12:52",
+    "text": "• all html tags? \n• what type of crm field/property is `rich_text`? \n• what happens when you `{{ contact.rich_text|pprint }}` ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Pablo Lorenzatti",
+      "poster_handle": "pablo630"
+    },
+    "time_stamp": "2023-03-08 07:18:12",
+    "text": "|pprint It doesn’t work. The problem is that when rendering the property in the frontend, HubSpot removes the tags that do appear in the property"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2023-03-08 07:21:57",
+    "text": "Can you try testing out a contact with a simple line of text in that field – no html – on a clean/blank template with no other code?"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2023-03-08 07:34:59",
+    "text": "utilize this variable for items with children to conditionally set the full url\n```{% if item.hs_child_table_id %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2023-03-08 08:21:05",
+    "text": "Why in the world does this work?\n```{%- set query = [] -%}\n  {%- do query.append( 'limit=' ~ module.count ) -%}\n{%- set query = query|join('&amp;') -%}\n{%- set locations = hubdb_table_rows(module.locationsdb, query) if module.locationsdb -%}```\nBut this does not? (`locations` is null)\n```{%- set query = [] -%}\n  {%- do query.append( 'limit={{ module.count }}' ) -%}\n{%- set query = query|join('&amp;') -%}\n{%- set locations = hubdb_table_rows(module.locationsdb, query) if module.locationsdb -%}```\nIn both cases, `query` pretty prints the same thing: `limit=6` but only the first case returns locations.",
+    "reply_count": 4,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-03-08 08:24:02"
+      },
+      {
+        "time_stamp": "2023-03-08 08:25:37"
+      },
+      {
+        "time_stamp": "2023-03-08 08:53:56"
+      },
+      {
+        "time_stamp": "2023-03-08 08:55:26"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin.perolio"
+    },
+    "time_stamp": "2023-03-08 08:24:02",
+    "edited": {
+      "time_stamp": "2023-03-08 08:26:10"
+    },
+    "text": "I have struggled with this often over the last couple of years. It has caused some real headache situations that I’ve spent hours debugging. I have concluded, because:tm:. It must have something to do with how HubSpot processes the HubL, but I still don’t understand it.\n<https://media.giphy.com/media/YSk7b2efrNwhbDKSep/giphy.gif>"
+  },
+  {
+    "time_stamp": "2023-03-08 08:25:37",
+    "text": "because"
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2023-03-08 08:53:56",
+    "edited": {
+      "time_stamp": "2023-03-08 08:56:09"
+    },
+    "text": "Nested interpretation really only happens in expression nodes. And in some HubL tags. I'd avoid doing it at all costs as it also opens the door for security issues from HubL injection.\nIn your example:\n```{%- set query = [] -%} {# query is [] #}\n  {%- do query.append( 'limit={{ module.count }}' ) -%} {# query is ['limit={{ module.count }}'] #}\n{%- set query = query|join('&amp;') -%} {# query is 'limit={{ module.count }}' #}\n{%- set locations = hubdb_table_rows(module.locationsdb, query) if module.locationsdb -%} {# this calls hubdb_table_rows(12345, 'limit={{ module.count }}')```\n`limit` is supposed to be a number, but you're passing in a string `{{ module.count }}`. The query is literally a query string that gets passed to the hubdb api, which doesn't support any HubL"
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2023-03-08 08:55:26",
+    "text": "Also `{% print query %}` will show you that it is not set to `limit=6`"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Sharples",
+      "poster_handle": "sam.sharples"
+    },
+    "time_stamp": "2023-03-08 09:59:26",
+    "text": "Is there a way to get the timestamp from a date field crm_association field rather than a formatted date?\n\n``` {% set associated_events = crm_associations(123, \"USER_DEFINED\", \"46\",\"\",\"event_name,event_date\")%}\n\n{{associated_events.results.event_date}} ```\nreturns a formatted date such as 10/05/23 but I would like the unicode version",
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-03-08 10:00:01"
+      },
+      {
+        "time_stamp": "2023-03-08 10:00:20"
+      },
+      {
+        "time_stamp": "2023-03-08 10:35:44"
+      },
+      {
+        "time_stamp": "2023-03-09 06:36:05"
+      },
+      {
+        "time_stamp": "2023-03-09 06:50:11"
+      },
+      {
+        "time_stamp": "2023-03-09 07:39:41"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-08 10:00:01",
+    "text": "just to double check this is a date field right?"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Sharples",
+      "poster_handle": "sam.sharples"
+    },
+    "time_stamp": "2023-03-08 10:00:20",
+    "text": "yes"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-08 10:35:44",
+    "text": "Very interesting that should come through as a epoc millisecond timestamp"
+  },
+  {
+    "text": "I want to create this type of main menu in HubSpot what is the best way to do that\n\nI'm beginner in HubSpot and also know about html,css,js",
+    "time_stamp": "2023-03-08 11:50:47",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-03-09 05:43:35"
+      }
+    ]
+  }
+]

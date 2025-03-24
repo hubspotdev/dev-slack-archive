@@ -1,0 +1,220 @@
+[
+  {
+    "poster": {
+      "poster_name": "G T",
+      "poster_handle": "graemetulip"
+    },
+    "time_stamp": "2023-08-02 04:24:02",
+    "text": "how to do this: {% if line_item.hs_sku == \"062\" %} do something {% endif %}\ni can't work out how to use deal data within the if module\n• this doesn't work",
+    "reply_count": 6,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2023-08-02 04:26:00"
+      },
+      {
+        "time_stamp": "2023-08-02 04:53:34"
+      },
+      {
+        "time_stamp": "2023-08-02 05:22:31"
+      },
+      {
+        "time_stamp": "2023-08-02 08:08:40"
+      },
+      {
+        "time_stamp": "2023-08-02 08:09:00"
+      },
+      {
+        "time_stamp": "2023-08-04 05:02:31"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Laurijn Deschepper",
+      "poster_handle": "laurijn"
+    },
+    "time_stamp": "2023-08-02 04:25:16",
+    "edited": {
+      "time_stamp": "2023-08-02 04:25:24"
+    },
+    "text": "Then there is probably something wrong with the variable before you try to assign it. Try debugging that one:\n```{{line_item|pprint}}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom-Erik Paulsen",
+      "poster_handle": "tom-erik"
+    },
+    "time_stamp": "2023-08-02 04:26:00",
+    "text": "What does {{line_item.hs_sku}} contain when printed"
+  },
+  {
+    "poster": {
+      "poster_name": "G T",
+      "poster_handle": "graemetulip"
+    },
+    "time_stamp": "2023-08-02 04:53:34",
+    "text": "062"
+  },
+  {
+    "poster": {
+      "poster_name": "Swapit Hub",
+      "poster_handle": "info458"
+    },
+    "time_stamp": "2023-08-02 05:22:31",
+    "text": "Are you sure that there is no whitespace etc in {{line_item.hs_sku}}. you can try below code to remove any extra space.\n\n{% if line_item.hs_sku|trim == \"062\" %} do something {% endif %}\n\nIt might help you"
+  },
+  {
+    "poster": {
+      "poster_name": "Laurijn Deschepper",
+      "poster_handle": "laurijn"
+    },
+    "time_stamp": "2023-08-02 05:54:46",
+    "edited": {
+      "time_stamp": "2023-08-02 05:55:11"
+    },
+    "text": "I dont think there is a HUBL filter for that. What you could do is create a reference table in HUBL with all days of the year and a conversion to # weeks. Then you could loop to all your dates and match them with weeks based on your reference table."
+  },
+  {
+    "poster": {
+      "poster_name": "G T",
+      "poster_handle": "graemetulip"
+    },
+    "time_stamp": "2023-08-02 08:08:40",
+    "text": "yeah pretty sure, i thought about this"
+  },
+  {
+    "poster": {
+      "poster_name": "G T",
+      "poster_handle": "graemetulip"
+    },
+    "time_stamp": "2023-08-02 08:09:00",
+    "text": "i think the issue is you can't pull HubSpot data inside a module"
+  },
+  {
+    "poster": {
+      "poster_name": "G T",
+      "poster_handle": "graemetulip"
+    },
+    "time_stamp": "2023-08-02 08:10:07",
+    "text": "I've also been working at this problem for some time\n\ni think it boils down to not being able to pass object data into a module"
+  },
+  {
+    "poster": {
+      "poster_name": "G T",
+      "poster_handle": "graemetulip"
+    },
+    "time_stamp": "2023-08-02 08:12:31",
+    "text": "when you print it, it prints it as text, i.e. line_item.hs_sku rather than the value\n\ni need to work out how to tell hubl, I'm assigning an object property"
+  },
+  {
+    "poster": {
+      "poster_name": "G T",
+      "poster_handle": "graemetulip"
+    },
+    "time_stamp": "2023-08-02 08:15:05",
+    "text": "what code are you using?"
+  },
+  {
+    "poster": {
+      "poster_name": "Laurijn Deschepper",
+      "poster_handle": "laurijn"
+    },
+    "time_stamp": "2023-08-02 08:22:41",
+    "text": "can you show me a screenshot of the output and the code?"
+  },
+  {
+    "poster": {
+      "poster_name": "G T",
+      "poster_handle": "graemetulip"
+    },
+    "time_stamp": "2023-08-02 08:29:49",
+    "text": "essentially what i'm trying to do is just sort a list of products in an order summary email but i can't do it no matter what i try"
+  },
+  {
+    "poster": {
+      "poster_name": "G T",
+      "poster_handle": "graemetulip"
+    },
+    "time_stamp": "2023-08-02 08:30:12",
+    "text": "&lt;div class=\"order-summary\"&gt;&lt;h2 style=\"margin-top: 20px;\"&gt;Using Email_Each with sort&lt;/h2&gt;\n\n  {% email_each list=\"deal.line_items\" item=\"line_item\"  | sort(False, False, \"line_item.name\") %}\n        &lt;table class=\"templateColumnWrapper\" cellpadding=\"10\" style=\"margin-top: 20px;\"&gt;\n            &lt;tbody&gt;\n                &lt;tr&gt;\n                    &lt;td class=\"column\" style=\"vertical-align: middle;\"&gt;\n                        &lt;img src=\"{{line_item.hs_images}}\" width=\"130\" style=\"max-width: 130px;\"&gt;\n                    &lt;/td&gt;\n                    &lt;td class=\"column summary\" style=\"vertical-align: middle;\"&gt;\n                        &lt;strong&gt;{{line_item.name}}&lt;/strong&gt;\n                        {{line_item.quantity}} @ {{line_item.price}} = {{line_item.amount}}&lt;br&gt;\n                        SKU: {{line_item.hs_sku}}\n                    &lt;/td&gt;\n                &lt;/tr&gt;\n            &lt;/tbody&gt;\n        &lt;/table&gt;\n    {% endemail_each %}\n\n&lt;/div&gt;"
+  },
+  {
+    "text": "It seems like you can not use filters on any \"personalisation\" variables such as deals within emails. For what I can see I am afraid this is a HS limitation.\n<https://developers.HubSpot.com/docs/cms/hubl/filters>",
+    "time_stamp": "2023-08-02 09:15:39"
+  },
+  {
+    "poster": {
+      "poster_name": "G T",
+      "poster_handle": "graemetulip"
+    },
+    "time_stamp": "2023-08-02 09:17:53",
+    "text": "thank you, I appreciate that\n\ni've been looking at many solutions\n\neven trying to change the line items order, so that they'd display in the order i want without a filter but I can't think of any solution\n\ncan you think of any answer that i may not have tried?"
+  },
+  {
+    "poster": {
+      "poster_name": "Laurijn Deschepper",
+      "poster_handle": "laurijn"
+    },
+    "time_stamp": "2023-08-02 09:29:55",
+    "text": "I'm not super familiar with coding emails in HUBL. The only thing I can think of is manipulating the object outside the email syntax and then using that new object as your base for your email syntax."
+  },
+  {
+    "poster": {
+      "poster_name": "G T",
+      "poster_handle": "graemetulip"
+    },
+    "time_stamp": "2023-08-02 09:33:03",
+    "edited": {
+      "time_stamp": "2023-08-02 09:33:57"
+    },
+    "text": "yes, i'd considered this.\n\ni think there's a value in the line_items call hs_position_on_quote:\n<https://community.HubSpot.com/t5/APIs-Integrations/displayOrder-API-Change-display-order-of-products-line-items/m-p/757102/highlight/true#M61503>\n\nI was looking to do this with the api\n• may need a bit of python coding to determine the order, then update each line item"
+  },
+  {
+    "poster": {
+      "poster_name": "Laurijn Deschepper",
+      "poster_handle": "laurijn"
+    },
+    "time_stamp": "2023-08-02 09:35:55",
+    "text": "Yes that looks like a good solution! A little bit complex but if it works it works :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "G T",
+      "poster_handle": "graemetulip"
+    },
+    "time_stamp": "2023-08-02 09:36:49",
+    "text": "yeah, it needs to be done - so i may have to do it"
+  },
+  {
+    "poster": {
+      "poster_name": "G T",
+      "poster_handle": "graemetulip"
+    },
+    "time_stamp": "2023-08-02 09:37:56",
+    "text": "i also considered simply using an {% if x} module to not list the shipping line items, but it seems you also can't use modules on personalisation tokens"
+  },
+  {
+    "poster": {
+      "poster_name": "Manuel Ramirez",
+      "poster_handle": "manuel.ramirez"
+    },
+    "time_stamp": "2023-08-02 12:38:28",
+    "text": "I seem to be unable to publish this html code in a HubSpot module.  The issue seems to be the variable \"request.contact.contact_vid\". If I instead enter in the contact ID I can publish. Any help here? HubSpot support was unfortunately not too helpful\n```&lt;!-- HTML --&gt;\n{% set contact = crm_object(\"contact\", request.contact.contact_vid, \"progress_bar\") %}\n\n\n&lt;div class=\"progress-wrap progress\" data-progress-percent=\"{{contact.progress_bar}}\"&gt;\n\n  &lt;div class=\"progress-bar progress\"&gt;&lt;/div&gt;\n\n&lt;/div&gt;```",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-08-02 19:56:59"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-08-02 19:56:59",
+    "text": "Can’t say with complete confidence, but `request.contact` doesn’t seem to be a valid HTTP request header variable — you might be looking for `request_contact` instead.\n\nIf that doesn’t wind up being it, it might be the case that `crm_object` is fussy about using variables or interpolated strings as function arguments, like `hubdb_table_row` can be. Potential workarounds for that can be a lot more context-dependent, though."
+  }
+]

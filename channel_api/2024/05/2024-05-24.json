@@ -1,0 +1,118 @@
+[
+  {
+    "poster": {
+      "poster_name": "Gil Tvil",
+      "poster_handle": "gilt707"
+    },
+    "time_stamp": "2024-05-24 05:21:24",
+    "edited": {
+      "time_stamp": "2024-05-24 05:22:40"
+    },
+    "text": "Hey, I am trying to utilize the <https://developers.HubSpot.com/beta-docs/guides/api/crm/search|CRM Search API> and I want to be sure I am using it correctly.\n\nAs far as I understand, to filter the search results I need to send a body parameter called `filterGroups` which can contain up to 3 filter groups and each filter group can contain up to 3 filters, according to the docs:\n> • To apply _AND_ logic, include a comma separated list of conditions within one set of `filters`.\n> • To apply _OR_ logic, include multiple `filters` within a `filterGroup`.You can include a maximum of three `filterGroups` with up to three `filters` in each group.For example, the request below searches for contacts with the first name `Alice` AND a last name other than `Smith`_,_ OR contacts that don't have a value for the property `email`.\n> ```curl <https://api.hubapi.com/crm/v3/objects/contacts/search> \\\n>   --request POST \\\n>   --header \"Content-Type: application/json\" \\\n>   --data '{\n>   \"filterGroups\": [\n>     {\n>       \"filters\": [\n>         {\n>           \"propertyName\": \"firstname\",\n>           \"operator\": \"EQ\",\n>           \"value\": \"Alice\"\n>         },\n>         {\n>           \"propertyName\": \"lastname\",\n>           \"operator\": \"NEQ\",\n>           \"value\": \"Smith\"\n>         }\n>       ]\n>     },\n>     {\n>       \"filters\": [\n>         {\n>           \"propertyName\": \"email\",\n>           \"operator\": \"NOT_HAS_PROPERTY\"\n>         }\n>       ]\n>     }\n>   ]\n> }'```\nIt is not very clear from the docs what are the structural rules of `filterGroups` and whether it is possible to nest `filterGroups` inside `filterGroups`\nI can only assume that `filterGroups`  can contain only `filters` objects and therefore OR queries are essentially being done only between filter groups.\n\nSo in order to be clear I want to take the following scenario:\nSuppose I want to do the following query -> `WHERE (aaa > 1 OR bbb < 7) AND ccc EXIST`\nAm I correct to assume that the corresponding HubSpot filter payload should look like below (?):\n```{\n    \"filterGroups\": [\n        {\n            \"filters\": [\n                {\"propertyName\": \"aaa\", \"operator\": \"GT\", \"value\": 1},\n                {\"propertyName\": \"ccc\", \"operator\": \"HAS_PROPERTY\"},\n            ]\n        },\n        {\n            \"filters\": [\n                {\"propertyName\": \"bbb\", \"operator\": \"LT\", \"value\": 7},\n                {\"propertyName\": \"ccc\", \"operator\": \"HAS_PROPERTY\"},\n            ]\n        },\n    ]\n}```\nIf there is any other way I would like to learn.\nThanks in advance!",
+    "reply_count": 5,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-05-27 04:19:24"
+      },
+      {
+        "time_stamp": "2024-05-29 05:32:42"
+      },
+      {
+        "time_stamp": "2024-05-29 05:32:51"
+      },
+      {
+        "time_stamp": "2024-05-29 06:29:37"
+      },
+      {
+        "time_stamp": "2024-05-29 11:55:55"
+      }
+    ]
+  },
+  {
+    "text": "Anyone had this error when using a newly created Private App token?",
+    "time_stamp": "2024-05-24 05:53:49",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-05-24 05:54:46"
+      },
+      {
+        "time_stamp": "2024-05-24 06:18:07"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2024-05-24 05:54:46",
+    "text": "```{\n  status: 'error',\n  message: 'The OAuth token used to make this call expired 19867 day(s) ago.',\n  correlationId: '4e1aa46b-d331-4a7b-a429-3652341a120e',\n  category: 'EXPIRED_AUTHENTICATION',\n  context: { 'expire time': [ '1970-01-01T00:00:00Z' ] }\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2024-05-24 06:18:07",
+    "text": "Rotating the PA fixed it"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonatan Ryd",
+      "poster_handle": "jonatan.ryd"
+    },
+    "time_stamp": "2024-05-24 06:47:01",
+    "text": "Hello all.\n\nI have been tasked to build a reverse-ETL pipeline that updates/creates contacts in our HubSpot based on information we have on them in our database. My plan is to use this endpoint `<https://api.hubapi.com/contacts/v1/contact/batch/>` which matches on either vid or email, and updates/creates a user depending on if the user is found or not.\n\nA question: I want to associate the contact with a company as well, we have the objectId for the company connected to the user, can I just send the objectId and HubSpot takes care of the association? Or do I need to do some other config?\n\nThanks in advance!"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrew Brode",
+      "poster_handle": "abrode"
+    },
+    "time_stamp": "2024-05-24 08:46:10",
+    "text": "I am using the quoting API. The property hs_pdf_download_link address gets a 404 error. Property hs_pdf_generation_status is PDF_GENERATED. This looks like something new. Anyone else experiencing this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Daniel Kesher",
+      "poster_handle": "dan166"
+    },
+    "time_stamp": "2024-05-24 10:24:22",
+    "text": "&gt; [portalId: 144XXXXXX] Limit calling-minutes-per-portal could not be found for portalId\n\nDoes anyone know how to set this property?"
+  },
+  {
+    "poster": {
+      "poster_name": "Parag Jagdale",
+      "poster_handle": "parag"
+    },
+    "time_stamp": "2024-05-24 12:22:10",
+    "text": "Thank you for the context <@U04B32JHTUZ>!"
+  },
+  {
+    "poster": {
+      "poster_name": "Gustavo Barbosa",
+      "poster_handle": "gbarbosa"
+    },
+    "time_stamp": "2024-05-24 12:38:09",
+    "text": "Hey guys is it possible to put a whatszap button on HubSpot chatbots to put on my site?"
+  },
+  {
+    "poster": {
+      "poster_name": "Felipe Vilas Boas",
+      "poster_handle": "felipevilas"
+    },
+    "time_stamp": "2024-05-24 13:37:11",
+    "text": "Hello guys, anyone has a tutorial how to integrate HubSpot in Mautic?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carlos Rodriguez",
+      "poster_handle": "crodriguez952"
+    },
+    "time_stamp": "2024-05-24 14:16:38",
+    "text": "thanks"
+  }
+]

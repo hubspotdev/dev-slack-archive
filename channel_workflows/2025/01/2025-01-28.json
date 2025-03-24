@@ -1,0 +1,184 @@
+[
+  {
+    "poster": {
+      "poster_name": "Camille Markentive",
+      "poster_handle": "camille.saute"
+    },
+    "time_stamp": "2025-01-28 03:58:10",
+    "text": "Hi there,\nDo you know if we have the possibility to trigger a workflow when a line item is updated, and allow re-enrollment ?\nSounds simple, but I didn’t find an easy way to do so :thinking_face:\nThanks for your ideas !",
+    "reply_count": 9,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-01-28 05:25:10"
+      },
+      {
+        "time_stamp": "2025-01-28 05:47:23"
+      },
+      {
+        "time_stamp": "2025-01-28 05:49:59"
+      },
+      {
+        "time_stamp": "2025-01-28 05:51:17"
+      },
+      {
+        "time_stamp": "2025-01-28 06:46:29"
+      },
+      {
+        "time_stamp": "2025-01-28 06:49:35"
+      },
+      {
+        "time_stamp": "2025-01-28 06:50:13"
+      },
+      {
+        "time_stamp": "2025-01-29 00:23:43"
+      },
+      {
+        "time_stamp": "2025-01-29 00:23:55"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ahmed Hassan",
+      "poster_handle": "ahmed703"
+    },
+    "time_stamp": "2025-01-28 05:25:10",
+    "text": "Triggering a workflow when a line item is updated is not straightforward because HubSpot's workflows natively support triggers based on objects like contacts, deals or companies, but not directly on changes to line items. You can however use OPS Hub for this.\n\nAlternatively you can also use a custom property on Deals or Line Items to act as a trigger of the workflow. So when this custom property is updated then it enrols in the workflow."
+  },
+  {
+    "poster": {
+      "poster_name": "Camille Markentive",
+      "poster_handle": "camille.saute"
+    },
+    "time_stamp": "2025-01-28 05:47:23",
+    "text": "Hi <@U0623BNGR5H>\n2 questions :\n• How OpsHub provides a solution here? It doesn’t add anything to the triggers of the workflows, only to the actions. What’s on your mind on this point?\n• Custom property : how would it be filled in and updated as soon as a Line Item is udpated? It’s basically the whole point of the discussion here :thinking_face: "
+  },
+  {
+    "poster": {
+      "poster_name": "Ahmed Hassan",
+      "poster_handle": "ahmed703"
+    },
+    "time_stamp": "2025-01-28 05:49:59",
+    "text": "Aloha <@U06K19BGMNE>, so with OPS Hub you can create a custom code action to get the associated line items for the deal then fetch the details.\n\n`// Process updates (example logic)`\n`const isUpdated = updatedLineItems.some(lineItem =&gt; {`\n  `// Compare current line item values to previous state stored in a deal property`\n  `const previousValue = deal.properties[`line_item_${lineItem.id}_value`];`\n  `return previousValue !== lineItem.properties.amount; // Example: comparing amounts`\n`});`\n\n`if (isUpdated) {`\n  `// Update a custom property to indicate change`\n  `await HubSpotClient.crm.deals.basicApi.update(dealId, {`\n    `properties: { line_item_last_updated: new Date().toISOString() }`\n  `});`\n`}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Ahmed Hassan",
+      "poster_handle": "ahmed703"
+    },
+    "time_stamp": "2025-01-28 05:51:17",
+    "text": "The custom property is actually a bit of a pickle from my experience specially if you will be editing the product library, this will require lots of manual work for the custom properties side and also the workflow(s)."
+  },
+  {
+    "poster": {
+      "poster_name": "Ahmed Hassan",
+      "poster_handle": "ahmed703"
+    },
+    "time_stamp": "2025-01-28 06:18:31",
+    "text": "Create date works, also add a delay if needed i.e: another workflow needs to run before this workflow just to ensure that the deal is fully processed."
+  },
+  {
+    "poster": {
+      "poster_name": "Ahmed Hassan",
+      "poster_handle": "ahmed703"
+    },
+    "time_stamp": "2025-01-28 06:20:00",
+    "text": "This is a common challenge, the best approach depends on the specific requirements of your client’s workflows. A combination of these strategies i.e: delaying email collection, tagging chatbot contacts or even adjusting re-enrolment settings can minimise disruptions."
+  },
+  {
+    "poster": {
+      "poster_name": "Camille Markentive",
+      "poster_handle": "camille.saute"
+    },
+    "time_stamp": "2025-01-28 06:46:29",
+    "text": "Get the associated line items is not an issue, my issue is only the trigger of the workflow which should allow *re-enrolmen*t. And this last point is a bit more tricky"
+  },
+  {
+    "poster": {
+      "poster_name": "Ahmed Hassan",
+      "poster_handle": "ahmed703"
+    },
+    "time_stamp": "2025-01-28 06:49:35",
+    "text": "You can detect the update via a webhook or a scheduled API job."
+  },
+  {
+    "poster": {
+      "poster_name": "Ahmed Hassan",
+      "poster_handle": "ahmed703"
+    },
+    "time_stamp": "2025-01-28 06:50:13",
+    "text": "When it was done before with my team we used to do it once in the morning and then another end of day."
+  },
+  {
+    "poster": {
+      "poster_name": "Josh Hanson",
+      "poster_handle": "jhanson"
+    },
+    "time_stamp": "2025-01-28 08:00:25",
+    "text": "Thank you for your reply! By \"tagging chatbot contacts\" do you mean updating a custom contact property when someone uses the chatbot?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ahmed Hassan",
+      "poster_handle": "ahmed703"
+    },
+    "time_stamp": "2025-01-28 08:10:02",
+    "text": "You're most welcome! Yes, this way you can differentiate these contacts i.e: avoid enrolling contacts in workflows"
+  },
+  {
+    "poster": {
+      "poster_name": "Josh Hanson",
+      "poster_handle": "jhanson"
+    },
+    "time_stamp": "2025-01-28 08:13:59",
+    "text": "If Contact A is in an email dripping workflow that sends emails over the course of a few months, but does the chat, gets merged and is unenrolled...do you hope they re-enroll automatically and then have some branches in the workflow that pushes them forward if they've already received emails?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ahmed Hassan",
+      "poster_handle": "ahmed703"
+    },
+    "time_stamp": "2025-01-28 08:18:21",
+    "text": "It would be more efficient to structure the workflow with conditions or branches that check the contact’s previous activity to avoid unnecessary re-sending of emails.\n\nSo the following could maybe help:\n\n1. Tag contact with custom property\n2. Create conditional branches in the workflow to check if they've already received certain emails i.e: if email received email 1 then skip to email 2\n3. Ensure that the workflows allows contact re-enrollment\nI would say concentrate on the conditional logic and custom properties to avoid this issue"
+  },
+  {
+    "poster": {
+      "poster_name": "Josh Hanson",
+      "poster_handle": "jhanson"
+    },
+    "time_stamp": "2025-01-28 08:21:37",
+    "text": "Okay thank you. I didn't notice this issue being widespread until HubSpot implemented the new Record ID for merged contacts. Is that true or has this been an issue for a while?"
+  },
+  {
+    "poster": {
+      "poster_name": "Rolando Carias",
+      "poster_handle": "rolando"
+    },
+    "time_stamp": "2025-01-28 17:33:04",
+    "text": "Hi folks. I have a workflow that triggers through from a form submission (firstname and email) , which then runs custom code. However, it seems that `inputFields` isn’t capturing the FORM POST DATA - is that property `inputFields`  not from the entered values on the Form (I see the network post sending them)? Also, console.log(…) doesn’t seem to yield anything. Any help is appreciated.\n```const email = event.inputFields['email'] || 'n/a';\n  const firstName = event.inputFields['firstname'] || 'n/a';```",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2025-02-13 05:08:56"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Camille Markentive",
+      "poster_handle": "camille.saute"
+    },
+    "time_stamp": "2025-01-29 00:23:43",
+    "text": "Hi there,\nFYI : I found a very easy solution using deal lists.\nI’ve created a list of deals associated with Line Items that have been updated in the last day.\nMy workflow is event-based on this list membership, which allows re-enrollment."
+  },
+  {
+    "poster": {
+      "poster_name": "Camille Markentive",
+      "poster_handle": "camille.saute"
+    },
+    "time_stamp": "2025-01-29 00:23:55",
+    "text": "Thanks for your idea though !!"
+  }
+]

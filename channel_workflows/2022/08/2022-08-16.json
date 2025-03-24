@@ -1,0 +1,10 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jamie Jackson",
+      "poster_handle": "jamie340"
+    },
+    "time_stamp": "2022-08-16 08:27:53",
+    "text": "`const HubSpot = require('@HubSpot/api-client');`\n\n`exports.main = async (event, callback) =&gt; {`\n\n  `const HubSpotClient = new HubSpot.Client({`\n    `apiKey: process.env.apikey`\n  `});`\n  `const company = event.inputFields['company_id'];`\n  `let closedates = [];`\n\n    `await HubSpotClient.crm.companies.associationsApi`\n    `.getAll(company, 'deal')`\n    `.then(results =&gt; {`\n      `results.body.results.map(deal =&gt; deal.id).forEach(deal =&gt; {`\n        `HubSpotClient.crm.deals.basicApi.getById(deal, ['closedate', 'dealstage'])`\n    `.then(dealResults =&gt; {`\n      `if (dealResults.body.dealstage == \"closedwon\") {`\n        `console.log(dealResults.body.closedate);`\n        `closedates.push(dealResults.body.properties.closedate);`\n      `}`\n    `});`\n      `});`\n    `});`\n    `console.log(closedates.join(','));`\n  `callback({`\n    `outputFields: {`\n      `days: 0`\n    `}`\n  `});`\n`}`\n\nWhy doesn't this work?"
+  }
+]

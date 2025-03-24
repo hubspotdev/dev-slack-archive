@@ -1,0 +1,155 @@
+[
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-09-19 08:44:18",
+    "text": "it would be great if the HS cookie banner worked on a proxied page (hard to test otherwise)"
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Langenfeld",
+      "poster_handle": "main.bowl4612"
+    },
+    "time_stamp": "2024-09-19 09:19:18",
+    "text": "Hey all, longtime HubSpot API consumer here, checking out cms-react. :wave:\n\nImagine a contact form connected to a couple of multi checkbox properties, each with 100 options. Presenting the visitor with hundreds of checkboxes is not super user-friendly. Is it possible to create a custom input component and make it available in the form builder? :thinking_face:",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-09-19 09:54:11"
+      },
+      {
+        "time_stamp": "2024-09-19 09:56:57"
+      },
+      {
+        "time_stamp": "2024-09-19 09:57:15"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-09-19 09:54:11",
+    "text": "I don't think anything in cms-react can update the form builder. Cool idea though—which parts of HubSpot can be customized like that is a huge blind spot for me"
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Langenfeld",
+      "poster_handle": "main.bowl4612"
+    },
+    "time_stamp": "2024-09-19 09:56:57",
+    "text": "I suppose calling `js_module` or `js_partial` in hubl is probably doable, even if not ideal"
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Langenfeld",
+      "poster_handle": "main.bowl4612"
+    },
+    "time_stamp": "2024-09-19 09:57:15",
+    "text": "Thanks for the input, <@UDHT6N5SM>!"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-09-19 11:13:08",
+    "text": "would it be crazy to try to identify the HubSpot cookie banner scan bot in this way (see inside)",
+    "reply_count": 8,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-09-19 11:13:15"
+      },
+      {
+        "time_stamp": "2024-09-19 11:50:06"
+      },
+      {
+        "time_stamp": "2024-09-19 11:50:46"
+      },
+      {
+        "time_stamp": "2024-09-19 13:43:32"
+      },
+      {
+        "time_stamp": "2024-09-19 13:46:47"
+      },
+      {
+        "time_stamp": "2024-09-19 13:47:16"
+      },
+      {
+        "time_stamp": "2024-09-19 13:47:49"
+      },
+      {
+        "time_stamp": "2024-09-19 13:48:04"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-09-19 11:13:15",
+    "text": "```import { useEffect, useState } from 'react';\n\nfunction App() {\n  const [isBot, setIsBot] = useState(false);\n\n  useEffect(() =&gt; {\n    // Fetch the client's IP address\n    fetch('<https://ipapi.co/json/>')\n      .then(response =&gt; response.json())\n      .then(data =&gt; {\n        const ip = data.ip;\n        // Check if the IP falls within the specified CIDR range\n        if (isIpInRange(ip, '54.174.58.224/27')) {\n          setIsBot(true);\n        }\n      });\n  }, []);\n\n  // Function to check if IP is in CIDR range\n  function isIpInRange(ip, range) {\n    const [rangeIp, prefixLength] = range.split('/');\n    const ipBits = ipToBits(ip);\n    const rangeBits = ipToBits(rangeIp);\n    const maskBits = -1 &lt;&lt; (32 - prefixLength);\n\n    return (ipBits &amp; maskBits) === (rangeBits &amp; maskBits);\n  }\n\n  function ipToBits(ip) {\n    return ip.split('.').reduce((acc, part) =&gt; {\n      return (acc &lt;&lt; 8) + parseInt(part, 10);\n    }, 0) &gt;&gt;&gt; 0;\n  }\n\n  return (\n    &lt;div&gt;\n      {isBot ? (\n        &lt;p&gt;This user is a bot.&lt;/p&gt;\n      ) : (\n        &lt;p&gt;This user is not a bot.&lt;/p&gt;\n      )}\n    &lt;/div&gt;\n  );\n}\n\nexport default App;```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-09-19 11:50:06",
+    "text": "^ this does seem to work to block the HubSpot HS cookie banner bot"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-09-19 11:50:46",
+    "text": "<@UAYBXDG4U> when. you get back from the conference maybe you can do a quick \"crazy\" check on this"
+  },
+  {
+    "poster": {
+      "poster_name": "Dennis K",
+      "poster_handle": "dennis579"
+    },
+    "time_stamp": "2024-09-19 13:43:32",
+    "text": "You should check bots on server side. And what is the usecase"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-09-19 13:46:47",
+    "text": "the root issue is that I can't add a `data-hs-ignore` attribute to the video iframe returned by: <https://github.com/cookpete/react-player>"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-09-19 13:47:16",
+    "text": "and this is a workaround to make sure the HS cookie banner does not prevent a cookie from loading"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-09-19 13:47:49",
+    "text": "I can't do it serverside because I need it to reload when cookies are accepted"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-09-19 13:48:04",
+    "text": "I have most of a solution working I think..."
+  }
+]

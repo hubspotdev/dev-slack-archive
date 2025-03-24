@@ -1,0 +1,134 @@
+[
+  {
+    "poster": {
+      "poster_name": "Thorlak Fink",
+      "poster_handle": "thorlak.fink"
+    },
+    "time_stamp": "2024-02-29 01:46:52",
+    "text": "Hi\nIs it possible to change change the secondary display properties for contacts?\nI know how to do it for custom objects. So my question specifically relates to the Contact object."
+  },
+  {
+    "poster": {
+      "poster_name": "Nikunj Bhimani",
+      "poster_handle": "nikunj"
+    },
+    "time_stamp": "2024-02-29 08:29:16",
+    "text": "```{% set search_query = request.query_dict.q %}\n\n&lt;section class=\"blog_index blog_listing_section\" id=\"blog_listing\"&gt;\n  &lt;div class=\"blog_filter_div\"&gt;\n    &lt;div class=\"container\"&gt;\n      &lt;div class=\"d-flex flex-wrap justify-content-between\"&gt;\n        \n        &lt;div class=\"filter_left\"&gt;\n          &lt;div class=\"blog_topics\"&gt;\n            &lt;div class=\"bf_dropdown\"&gt;\n              &lt;span class=\"filter_select\"&gt;All Topics&lt;/span&gt;\n              {% set my_topics = blog_topics(module.select_blog, 250) %}\n              {% if !tag %}\n              &lt;ul id=\"filters\" class=\"filter_list\"&gt;\n                &lt;li&gt;&lt;a href=\"/tsib-blog-2024\"&gt;All Topics&lt;/a&gt;&lt;/li&gt;\n                {% for item in my_topics %}\n                &lt;li&gt;&lt;a href=\"{{ blog_tag_url(group.id, item.slug) }}\"&gt;{{ item }}&lt;/a&gt;&lt;/li&gt;\n                {% endfor %}\n              &lt;/ul&gt;\n              {% else %}\n              &lt;ul id=\"filters\" class=\"filter_list\"&gt;\n                &lt;li&gt;&lt;a href=\"/tsib-blog-2024\"&gt;All Topics&lt;/a&gt;&lt;/li&gt;\n                {% for item in my_topics %}\n                &lt;li&gt;&lt;a href=\"{{ blog_tag_url(group.id, item.slug) }}\"&gt;{{ item }}&lt;/a&gt;&lt;/li&gt;\n                {% endfor %}\n              &lt;/ul&gt;\n              {% endif %} \n            &lt;/div&gt;\n          &lt;/div&gt;\n        &lt;/div&gt;\n        \n        &lt;div class=\"filter_right\"&gt;\n          &lt;div class=\"blog_seach_form\"&gt;\n            &lt;form actiotn=\"{{ request.path }}/\" method=\"GET\"&gt;\n              &lt;input type=\"text\" id=\"search_\" name=\"q\" value=\"{{ search_query }}\" placeholder=\"Search posts, topics and authors...\"&gt;\n              &lt;button type=\"submit\"&gt;\n                &lt;i class=\"fa-solid fa-magnifying-glass\"&gt;&lt;/i&gt;\n              &lt;/button&gt;\n            &lt;/form&gt;\n          &lt;/div&gt;\n        &lt;/div&gt;\n      &lt;/div&gt;\n    &lt;/div&gt;\n  &lt;/div&gt;\n  &lt;div class=\"blog_subscribe_div\"&gt;\n    &lt;div class=\"subscribe_toggler\"&gt;\n      &lt;div class=\"container\"&gt;\n        &lt;h3&gt;\n          &lt;a href=\"javascript:;\" target=\"_self\"&gt;\n            {{ module.subscribe_button_text }}\n          &lt;/a&gt;\n        &lt;/h3&gt;\n      &lt;/div&gt;\n    &lt;/div&gt;\n    &lt;div class=\"subscribe_form_div\"&gt;\n      &lt;div class=\"container\"&gt;\n        {% form\n          form_to_use=\"{{ module.select_subscribe_form.form_id }}\"\n          response_response_type=\"{{ module.select_subscribe_form.response_type }}\"\n          response_message=\"{{ module.select_subscribe_form.message }}\"\n          response_redirect_id=\"{{ module.select_subscribe_form.redirect_id }}\"\n          response_redirect_url=\"{{module.select_subscribe_form.redirect_url}}\"\n          gotowebinar_webinar_key=\"{{ module.select_subscribe_form.gotowebinar_webinar_key }}\"\n        %}\n      &lt;/div&gt; \n    &lt;/div&gt;\n  &lt;/div&gt;\n  &lt;div class=\"blog_listing_div\"&gt;\n    &lt;div class=\"container\"&gt;\n      &lt;div class=\"grid\"&gt;\n        {% for content in contents %}\n        &lt;div class=\"grid-item blog_col {% for tag in content.tag_list %}{{ tag.name|replace(' ', '') }} {% endfor %}\"&gt;\n          &lt;div class=\"blog_card\"&gt;\n            &lt;div class=\"blog_image\" style=\"background-image: url({{ content.featured_image }});\" aria-label=\"{{ module.default_text.full_blog_post_summary_text }}\"&gt;\n              &lt;a class=\"blog_image_link\" href=\"{{ content.absolute_url }}\"&gt;&lt;/a&gt;\n            &lt;/div&gt;\n            &lt;div class=\"blog_content\"&gt;\n              &lt;div class=\"blog_content_div\"&gt;\n                {% if content.tag_list %}\n                &lt;div class=\"blog_tags hs-blog-post-listing__post-tags\"&gt;\n                  {% for tag in content.tag_list %}\n                  &lt;a class=\"hs-blog-post-listing__post-tag\" href=\"{{ blog_tag_url(group.id, tag.slug) }}\"&gt;{{ tag.name }}&lt;/a&gt;\n                  {% endfor %}\n                &lt;/div&gt;\n                {% endif %}\n                {% if content.name %}\n                &lt;div class=\"title\"&gt;\n                  &lt;a href=\"{{ content.absolute_url }}\"&gt;\n                    &lt;h4&gt;\n                      {{ content.name }}\n                    &lt;/h4&gt;\n                  &lt;/a&gt;\n                &lt;/div&gt;\n                {% endif %}\n                {% if content.post_list_content %}\n                &lt;div class=\"content\"&gt;\n                  {{ content.post_list_content|striptags|truncatehtml(150) }}\n                &lt;/div&gt;\n                {% endif %}\n              &lt;/div&gt;\n              {% if module.post_link_button_text %}\n              &lt;div class=\"readmore\"&gt;\n                &lt;a href=\"{{ content.absolute_url }}\"&gt;{{ module.post_link_button_text }}&lt;/a&gt;\n              &lt;/div&gt;\n              {% endif %}\n            &lt;/div&gt;\n          &lt;/div&gt;\n        &lt;/div&gt;\n        {% endfor %}\n      &lt;/div&gt;\n      &lt;div class=\"zero_item_msg\" id=\"zeroItemsMessage\" style=\"display: none;\"&gt;\n        &lt;h4&gt;\n          Sorry, there are no posts available.\n        &lt;/h4&gt;\n      &lt;/div&gt;\n    &lt;/div&gt;\n  &lt;/div&gt;\n  &lt;div class=\"pagination_main\"&gt;\n    &lt;div class=\"container\"&gt;\n      &lt;div id=\"pagination\" class=\"pagination\"&gt;\n      &lt;/div&gt;\n    &lt;/div&gt;\n  &lt;/div&gt;\n&lt;/section&gt;\n\n@channel Could any one can help me how to impliment custom search in my custom blog listing ?```"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Sharples",
+      "poster_handle": "sam.sharples"
+    },
+    "time_stamp": "2024-02-29 09:20:32",
+    "text": "Is it possible to create a custom form with a file upload field, process the submission data and send an email? We don’t want to use a HubSpot form as we don’t want the contact information to be stored anywhere and we also want to attach the file to an email whereas HubSpot links to the file.\n\nBy custom form I just mean a HTML form eg.\n\n```&lt;form action=\"??\" method=\"post\"&gt;\n&lt;input type=\"text\" id=\"name\" name=\"name\"&gt;\n&lt;input type=\"file\" id=\"file\" name=\"file\"&gt;&lt;br&gt;&lt;br&gt;\n&lt;input type=\"submit\" value=\"Submit\"&gt;\n&lt;/form&gt;```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Lee M",
+      "poster_handle": "lee467"
+    },
+    "time_stamp": "2024-02-29 10:02:31",
+    "text": "Are there proper procedures for HubSpot admins to handle when a sales rep leaves and a new replaces them?   Is everyone just re-assigning owners in each object?  Even for the Deal object?If there is another post about this let me know, how",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-02-29 10:58:51"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-02-29 10:58:51",
+    "edited": {
+      "time_stamp": "2024-02-29 10:59:11"
+    },
+    "text": "My experience - the biggest challenge has been re-assigning tasks associated to the objects. To my knowledge - this can't be done via workflow."
+  },
+  {
+    "text": "This is new right?",
+    "time_stamp": "2024-02-29 12:45:36",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-02-29 12:45:45"
+      },
+      {
+        "time_stamp": "2024-02-29 15:12:52"
+      },
+      {
+        "time_stamp": "2024-02-29 15:15:29"
+      },
+      {
+        "time_stamp": "2024-02-29 15:16:53"
+      },
+      {
+        "time_stamp": "2024-02-29 15:16:58"
+      },
+      {
+        "time_stamp": "2024-02-29 17:20:00"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-02-29 12:45:45",
+    "text": "Associated record filters in views"
+  },
+  {
+    "poster": {
+      "poster_name": "Adam",
+      "poster_handle": "ajwtech"
+    },
+    "time_stamp": "2024-02-29 13:46:54",
+    "text": "I have pages that are deployed through <http://fly.io|fly.io> and I want HubSpot to be able to route to them as a page but keep the HS header, footer, etc. Can I do that in HS CMS pro?"
+  },
+  {
+    "poster": {
+      "poster_name": "Goran Ilievski",
+      "poster_handle": "goran308"
+    },
+    "time_stamp": "2024-02-29 15:12:52",
+    "text": "Where'd you find this <@U01QVR44MEY>? Is it just in Contacts"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-02-29 15:15:29",
+    "text": "This was on tickets, but I think it would work for all list views "
+  },
+  {
+    "poster": {
+      "poster_name": "Goran Ilievski",
+      "poster_handle": "goran308"
+    },
+    "time_stamp": "2024-02-29 15:16:53",
+    "text": "Cool, I'll keep looking through portals, might be a gradual rollout :smiley:"
+  },
+  {
+    "poster": {
+      "poster_name": "Goran Ilievski",
+      "poster_handle": "goran308"
+    },
+    "time_stamp": "2024-02-29 15:16:58",
+    "text": "Thanks"
+  },
+  {
+    "text": "Found it, it's a beta",
+    "time_stamp": "2024-02-29 17:20:00"
+  },
+  {
+    "text": "Hey Everyone, Good Day.\n\nI'm currently working on the global search functionality for CMS content across our blogs, site page, and listing pages. However, I've encountered an issue where some records for site pages are pulling data from a non-existent HubDB table, resulting in duplicate records.\nCan someone provide guidance on how to fix the cache issue for the HubDB tables and suggest solutions to rectify this issue?\n\nPlease review the following screenshots regarding the global search issue. I attempted to search for \"Bangalore,\" but the data does not exist in the current HubDB table. It is present in a previous HubDB table that has been removed, yet the result still appears. Is there a way to force clear the cache to address this issue? This is occurring in multiple projects. Kindly advise on any available solutions.",
+    "time_stamp": "2024-02-29 23:46:09"
+  }
+]

@@ -1,0 +1,72 @@
+[
+  null,
+  null,
+  {
+    "poster": {
+      "poster_name": "James Cutler",
+      "poster_handle": "jcutler"
+    },
+    "time_stamp": "2019-01-24 03:32:48",
+    "text": "ahh, that makes perfect sense, thank you.\nWhether you're querying HubDB using HubL, or via API, the filter query is formatted like a URL query would be. To URL-encode a space, you would use `%20`, so your query would look like `...&amp;track=Data%20Pipelines%20%26%20Systems` (the `%26` is URL encoding for the `&amp;`)"
+  },
+  null,
+  null,
+  {
+    "poster": {
+      "poster_name": "Furqan Asghar",
+      "poster_handle": "mfa213"
+    },
+    "time_stamp": "2019-01-24 05:24:43",
+    "text": "cool, thanks"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe",
+      "poster_handle": "joe"
+    },
+    "time_stamp": "2019-01-24 07:07:52",
+    "edited": {
+      "time_stamp": "2019-01-24 07:08:43"
+    },
+    "text": "any suggestions for a hubdb query to limit rows based on a number in a column?\nboth `contains` and `like` gave similar results.\nie:\nI have 2 rows in a hubdb table with a comma-separated set of numbers `14,18` and `1,8,12`.\nthese values are in a `text` column type\nquerying the hubdb table for ID: 12, I get one row result as I'd expect.\nquerying the hubdb table for ID: 1, I get both rows, even though the id `1` is only in one row.\nmy assumption is since these are text fields, that the query is finding the `1` within the string parts of `12`, `14`, and `18` values.\n\ncode i'm using below:\n```\n{% set query = cat_id ? '&amp;categories__contains='~cat_id : '' %}\n{% set results = hubdb_table_rows(products, query) %}\n{% for row in results %}\n... displaying row data ...\n{% endfor %}\n```",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-01-24 10:06:11"
+      },
+      {
+        "time_stamp": "2019-01-24 11:51:03"
+      },
+      {
+        "time_stamp": "2019-01-24 11:52:44"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "James Cutler",
+      "poster_handle": "jcutler"
+    },
+    "time_stamp": "2019-01-24 10:06:11",
+    "text": "I think you're on the right track here, <@UAQHN1F2Q>\nGiven the current setup, you may not be able to accurately do this with the query alone.\nWhat you could do is add logic within your for loop that:\n1. Uses the `|split` filter to enable you to parse the individual numbers in the `categories` column\n2. If `cat_id` is a number (not a string), use the `|int` filter to convert the values to numbers\n3. If none of the numbers are equal to `cat_id`, ignore that row."
+  },
+  null,
+  null,
+  {
+    "poster": {
+      "poster_name": "Joe",
+      "poster_handle": "joe"
+    },
+    "time_stamp": "2019-01-24 11:51:03",
+    "text": "<@UE24LMGSZ> Yeah... that's what I ended up going with, basically nixing the `{% set query ... %}` bit and moving the logic into the `{% for row in results %}`\nIts a bit ugly code, but it gets the effect I needed and maybe this'll help someone else with similar situations\n\n```\n{# set some default variables #}\n{# page's hubdb table for dynamic pages #}\n{% set dynamic_page_hubdb_table_id = &lt;hubdb_table_id&gt; %}\n{# getting the table id for products' display from the custom module #}\n{% set products = module.products_table_id %}\n{% set cat_id = '' %}\n\n{% if dynamic_page_route_level == 0 %}\n... top-level page ...\n{% elif dynamic_page_route_level == 1 %}\n... child-category page ...\n  {% set cat_id = dynamic_page_hubdb_row.category_id %}\n{% endif %}\n\n{# rows of products #}\n{% set results = hubdb_table_rows(products) %}\n{% for row in results %}\n  {% set row_cats = row.categories|split(',', 50) %}\n  {% if cat_id == '' %}\n  ... main products listing, show all product rows ...\n  {% else %}\n    {% for cat in row_cats %}\n      {% if cat == cat_id %}\n      ... show matching products ...\n      {% endif %}\n    {% endfor %}\n  {% endif %}\n{% endfor %}\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "James Cutler",
+      "poster_handle": "jcutler"
+    },
+    "time_stamp": "2019-01-24 11:52:44",
+    "text": "Nice work, Joe, thanks for sharing this!"
+  }
+]

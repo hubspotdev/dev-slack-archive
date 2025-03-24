@@ -1,0 +1,65 @@
+[
+  {
+    "poster": {
+      "poster_name": "Melissa Nault",
+      "poster_handle": "melissa525"
+    },
+    "time_stamp": "2023-04-04 10:42:42",
+    "text": "Hello all!  I just created a super simple module that I then dropped into our blog post template below the body copy to make it easier for the marketing team to insert a clickable image (they are on HS starter so they do not have access to the CTA tool). The module is just a clickable image however, it is NOT clickable and I am not sure what I did wrong - I know just enough to be dangerous :confused:  The image is at the bottom of <https://info.kellerheartt.com/blogs/do-i-have-to-have-a-low-voc-brake-cleaner|THIS POST PAGE> and here is the module code:\n\n&lt;div class=\"linked-image\"&gt;\n{% if module.linked_image_group.image_field.src %}\n\t{% set sizeAttrs = 'width=\"{{ module.linked_image_group.image_field.width }}\" height=\"{{ module.linked_image_group.image_field.height }}\"' %}\n\t{% if module.linked_image_group.image_field.size_type == 'auto' %}\n\t\t{% set sizeAttrs = 'width=\"{{ module.linked_image_group.image_field.width }}\" height=\"{{ module.linked_image_group.image_field.height }}\" style=\"max-width: 100%; height: auto;\"' %}\n\t{% elif module.linked_image_group.image_field.size_type == 'auto_custom_max' %}\n\t\t{% set sizeAttrs = 'width=\"{{ module.linked_image_group.image_field.max_width }}\" height=\"{{ module.linked_image_group.image_field.max_height }}\" style=\"max-width: 100%; height: auto;\"' %}\n\t{% endif %}\n\t {% set loadingAttr = module.linked_image_group.image_field.loading != 'disabled' ? 'loading=\"{{ module.linked_image_group.image_field.loading }}\"' : '' %}\n\t&lt;img src=\"{{ module.linked_image_group.image_field.src }}\" alt=\"{{ module.linked_image_group.image_field.alt }}\" {{ loadingAttr }} {{ sizeAttrs }}&gt;\n{% endif %}\n{% set href = module.linked_image_group.link_field.url.href %}\n{% if module.linked_image_group.link_field.url.type is equalto \"EMAIL_ADDRESS\" %}\n\t{% set href = \"mailto:\" + href %}\n{% endif %}\n&lt;a href=\"{{ href }}\"\n\t{% if module.linked_image_group.link_field.open_in_new_tab %}target=\"_blank\"{% endif %}\n\t{% if module.linked_image_group.link_field.rel %}rel=\"{{ module.linked_image_group.link_field.rel }}\"{% endif %}\n\t&gt;\n\n&lt;/a&gt;\n\n&lt;/div&gt;",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-04-04 12:30:25"
+      },
+      {
+        "time_stamp": "2023-04-04 12:45:57"
+      },
+      {
+        "time_stamp": "2023-04-04 14:28:04"
+      },
+      {
+        "time_stamp": "2023-04-04 14:36:59"
+      },
+      {
+        "time_stamp": "2023-04-04 15:11:45"
+      }
+    ]
+  },
+  {
+    "text": "Hi <@U025L73EMA6> it is clickable for me. This image?",
+    "time_stamp": "2023-04-04 12:30:25"
+  },
+  {
+    "poster": {
+      "poster_name": "Melissa Nault",
+      "poster_handle": "melissa525"
+    },
+    "time_stamp": "2023-04-04 12:45:57",
+    "text": "No, sorry, I removed it while I was working on it. I just dropped it in but it is not linking so I hate to leave it too long. Here:  <https://info.kellerheartt.com/blogs/three-questions-to-ask-before-choosing-hydraulic-fluid>"
+  },
+  {
+    "poster": {
+      "poster_name": "Amy Andrews",
+      "poster_handle": "aandrews610"
+    },
+    "time_stamp": "2023-04-04 14:28:04",
+    "text": "you will need to move the image tag inside the a tag so that the link is around the image: `&lt;div class=\"linked-image\"&gt;`\n  {% set href = module.linked_image_group.link_field.url.href %}\n  {% if module.linked_image_group.link_field.url.type is equalto “EMAIL_ADDRESS” %}\n  {% set href = “mailto:” + href %}\n  {% endif %}\n  &lt;a href=“{{ href }}”\n     {% if module.linked_image_group.link_field.open_in_new_tab %}target=“_blank”{% endif %}\n     {% if module.linked_image_group.link_field.rel %}rel=“{{ module.linked_image_group.link_field.rel }}“{% endif %}\n     &gt;\n    {% if module.linked_image_group.image_field.src %}\n    {% set sizeAttrs = ‘width=“{{ module.linked_image_group.image_field.width }}” height=“{{ module.linked_image_group.image_field.height }}“’ %}\n    {% if module.linked_image_group.image_field.size_type == ‘auto’ %}\n    {% set sizeAttrs = ‘width=“{{ module.linked_image_group.image_field.width }}” height=“{{ module.linked_image_group.image_field.height }}” style=“max-width: 100%; height: auto;“’ %}\n    {% elif module.linked_image_group.image_field.size_type == ‘auto_custom_max’ %}\n    {% set sizeAttrs = ‘width=“{{ module.linked_image_group.image_field.max_width }}” height=“{{ module.linked_image_group.image_field.max_height }}” style=“max-width: 100%; height: auto;“’ %}\n    {% endif %}\n    {% set loadingAttr = module.linked_image_group.image_field.loading != ‘disabled’ ? ‘loading=“{{ module.linked_image_group.image_field.loading }}“’ : ‘’ %}\n    &lt;img src=“{{ module.linked_image_group.image_field.src }}” alt=“{{ module.linked_image_group.image_field.alt }}” {{ loadingAttr }} {{ sizeAttrs }}&gt;\n    {% endif %}\n  &lt;/a&gt;\n&lt;/div&gt;"
+  },
+  {
+    "poster": {
+      "poster_name": "Amy Andrews",
+      "poster_handle": "aandrews610"
+    },
+    "time_stamp": "2023-04-04 14:36:59",
+    "text": "if you view the source there is an extra } in your url: <https://www.kellerheartt.com/pages/contact-us>},"
+  },
+  {
+    "poster": {
+      "poster_name": "Melissa Nault",
+      "poster_handle": "melissa525"
+    },
+    "time_stamp": "2023-04-04 15:11:45",
+    "text": "Thanks. I got it straightened out."
+  }
+]

@@ -1,0 +1,133 @@
+[
+  {
+    "poster": {
+      "poster_name": "Kevin Ordener",
+      "poster_handle": "k.ordener.dev"
+    },
+    "time_stamp": "2022-04-20 08:13:19",
+    "text": "Is anyone else having issues with global modules not correctly handling defaults? Anytime I create a global module such as my header and footer, I always have to go into the global module editor and add all the correct values into the fields before they show at all. Additionally, and this maybe happening with regular modules as well sometimes, when I change the field name on a repeating field (not full tested with non repeating fields) the system doesn't register the change. Everything shows the field names correctly (developer tools, calling the parent variable to see its children, etc.) but it just wont print out the data with the change."
+  },
+  {
+    "poster": {
+      "poster_name": "Michele Herzog",
+      "poster_handle": "michele.herzog24"
+    },
+    "time_stamp": "2022-04-20 09:56:09",
+    "text": "Hey folks, I’m having an issue with some HubL that I can’t quite figure out.\n\nI’ve been using the page’s language to filter a HubDB table. Been working a-okay. However, today I noticed it stopped working for a UK English page (en-gb). I narrowed it down to the issue below- when I concatenate a value with the `content.language` variable, the `-` becomes a `_` , and it’ll be in all caps (which breaks my HubDB filtering). The same transformation doesn’t seem to happen when I plug a string in for `content.language`.\n\nUse some raw filters to lay out my code <https://production-sandbox-betterup-21110076.hs-sites.com/en-gb/test-1|here> - is there anything I’m missing? I’m pretty confident this was working a few weeks ago.",
+    "reply_count": 8,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2022-04-20 10:01:12"
+      },
+      {
+        "time_stamp": "2022-04-20 10:04:00"
+      },
+      {
+        "time_stamp": "2022-04-20 10:12:45"
+      },
+      {
+        "time_stamp": "2022-04-20 10:17:32"
+      },
+      {
+        "time_stamp": "2022-04-20 10:17:46"
+      },
+      {
+        "time_stamp": "2022-04-20 10:31:08"
+      },
+      {
+        "time_stamp": "2022-04-20 10:36:47"
+      },
+      {
+        "time_stamp": "2022-04-20 10:47:30"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-04-20 10:01:12",
+    "text": "Hmmm odd — but you could run a replace on languageFilter to patch this. `languageFilter|replace('_', '-')|lower` should do the trick in standardizing it all down to lowercase and hyphens"
+  },
+  {
+    "poster": {
+      "poster_name": "Michele Herzog",
+      "poster_handle": "michele.herzog24"
+    },
+    "time_stamp": "2022-04-20 10:04:00",
+    "text": "It does! That’s basically what I’ve done in the meantime. A little bit weird that it changed though (and brought down my UK English navigation in the meantime :grimacing: )"
+  },
+  {
+    "poster": {
+      "poster_name": "Danielle Peters",
+      "poster_handle": "dpeters"
+    },
+    "time_stamp": "2022-04-20 10:12:45",
+    "text": ":wave:  Have you tried `{{ content.language.languageTag }}` instead of `{{ content.language }}` ? Looks like `{{ content.language }}` returns a Dict which might be why it's rendering weirdly"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-04-20 10:17:32",
+    "text": "Come to think of it I think I always just use `locale`  `{% _if_ locale == \"de\"%}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Michele Herzog",
+      "poster_handle": "michele.herzog24"
+    },
+    "time_stamp": "2022-04-20 10:17:46",
+    "text": "I haven’t, because this was working two weeks ago! Did that recently change to a dict?"
+  },
+  {
+    "poster": {
+      "poster_name": "Michele Herzog",
+      "poster_handle": "michele.herzog24"
+    },
+    "time_stamp": "2022-04-20 10:31:08",
+    "text": "(It also looks like a string in the developer info)"
+  },
+  {
+    "poster": {
+      "poster_name": "Danielle Peters",
+      "poster_handle": "dpeters"
+    },
+    "time_stamp": "2022-04-20 10:36:47",
+    "text": "Unsure! Not seeing any obvious changes, but definitely odd that it was working before"
+  },
+  {
+    "poster": {
+      "poster_name": "Michele Herzog",
+      "poster_handle": "michele.herzog24"
+    },
+    "time_stamp": "2022-04-20 10:47:30",
+    "text": "Cool cool. Flagging to support as a bug then."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Fall",
+      "poster_handle": "matthew506"
+    },
+    "time_stamp": "2022-04-20 17:16:44",
+    "text": "can HubSpot’s `{{ request.query_dict }}` variable handle multiple values for the same url query param? For example, if I have query params `?category=marketing_agency&amp;category=branding_agency` , HubSpot only returns `[marketing_agency]`",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-04-20 17:41:40"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2022-04-20 17:41:40",
+    "text": "Yeah, I noticed that the other day too. It's strange to me that it's stayed that way for over 7 years. We convert an array into just taking the first element of it"
+  }
+]

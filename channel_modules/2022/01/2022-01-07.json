@@ -1,0 +1,201 @@
+[
+  {
+    "text": "I am working on a module showing results from a HubDB.\n\n I want that the images on mobile version fill 100 % width. See screenshot How can I solve this issue?\n\nThe code is here:\n\n{% set queryparam = \"&amp;orderBy=startdate\" %}\n{% set queryparam = queryparam + \"&amp;startdate__gt=\" + local_dt|unixtimestamp %}\n{% set table = hubdb_table_rows(5314127, queryparam) %}\n{% if dynamic_page_hubdb_row %}\n&lt;div class=\"event-banner-area\" style=\"background-image: url('{{ dynamic_page_hubdb_row.image.url }}'); background-size: cover;\"&gt;\n\n\n&lt;/div&gt;\n&lt;div class=\"events-listing container\"&gt;\n  &lt;div class=\"event-details-container\"&gt;\n     &lt;div class=\"event-section\"&gt;\n      &lt;hr&gt;\n      &lt;H1&gt;\n        {{ dynamic_page_hubdb_row.name }}\n      &lt;/H1&gt;\n    &lt;/div&gt;\n\n    &lt;div class=\"event-section\"&gt;\n      &lt;hr&gt;\n      &lt;h2 class=\"event-section-header\"&gt;\n        Om arrangementet\n      &lt;/h2&gt;\n      &lt;p&gt;\n        {{ dynamic_page_hubdb_row.description }}\n      &lt;/p&gt;\n    &lt;/div&gt;\n    &lt;div class=\"event-section\"&gt;\n      &lt;hr&gt;\n      &lt;h2 class=\"event-section-header\"&gt;\n        Program\n      &lt;/h2&gt;\n      &lt;p&gt;\n         {{ dynamic_page_hubdb_row.agenda }}\n      &lt;/p&gt;\n\n    &lt;/div&gt;\n     &lt;div class=\"event-section\"&gt;\n      &lt;hr&gt;\n      &lt;h2 class=\"event-section-header\"&gt;\n        Påmelding\n      &lt;/h2&gt;\n      &lt;p&gt;\n        Klikk &lt;a href=\"{{ dynamic_page_hubdb_row.paamelding }}\"&gt;her&lt;/a&gt; for påmelding.\n      &lt;/p&gt;\n\n    &lt;/div&gt;\n\n  &lt;/div&gt;\n&lt;/div&gt;\n{% elif 5314127 %}\n{% set table = hubdb_table_rows(5314127, queryparam) %}\n&lt;div class=\"events container\"&gt;\n  &lt;div class=\"events-results\"&gt;\n    {% for row in table %}\n    &lt;div class=\"event-item\"&gt;\n      &lt;div class=\"event-item-content\"&gt;\n        &lt;div class=\"event-image-container\"&gt;\n\n          &lt;a href=\"{{ request.path }}/{{ row.hs_path }}\"&gt;\n            &lt;img src=\"{{ row.image.url }}\"&gt;\n          &lt;/a&gt;\n        &lt;/div&gt;\n        &lt;div class=\"event-text-container\" &gt;\n          &lt;h4&gt;\n            {{ row.name }}\n          &lt;/h4&gt;\n          &lt;p&gt;\n\n\n\n\n            {{ row.startdate|datetimeformat('%e %B %Y') }}\n{% if row.enddate %}\n- {{ row.enddate|datetimeformat('%e %B %Y')  }},\n{% endif %} -\n{{ row.region }}\n\n\n          &lt;/p&gt;\n          &lt;a href=\"{{ request.path }}/{{ row.hs_path }}\" class=\"event-cta\"&gt;Mer info »&lt;/a&gt;\n        &lt;/div&gt;\n      &lt;/div&gt;\n    &lt;/div&gt;\n    {% endfor %}\n  &lt;/div&gt;\n&lt;/div&gt;\n{% endif %}\n\n\n\nCSS:\n\n            body {\n    -webkit-font-smoothing: antialiased;\n    -moz-osx-font-smoothing: grayscale;\n    color: #33475B;\n    background-color: rgb(245, 248, 250);\n    font-family: \"AvenirNext\",\"Helvetica Neue\",Helvetica,Arial,sans-serif;\n    line-height: 1.625;\n    margin: 0;\n    padding: 0;\n}\n\nbody .container {\n    max-width: 1141px;\n    margin: 0 auto;\n    display: flex;\n    justify-content: space-between;\n}\n\n.event-banner-area {\n  color: #fff;\n  position: relative;\n  padding-bottom: relative;\n  background-color: #425B76;\n}\n\n.event-banner-edge {\n    position: absolute;\n    left: 0;\n    width: 100%;\n\n}\n\n.event-header-container {\n    padding: 7.5rem 0;\n  position: relative;\n}\n\n.event-header-content {\n    box-sizing: content-box;\n    max-width: 1080px;\n    margin-left: auto;\n    margin-right: auto;\n    padding: 0 2rem;\n}\n\n.event-header-text {\n    text-align: center;\n    max-width: 710px;\n    margin: 0 auto;\n}\n\n.event-header-text h1 {\n  font-weight: 700;\n  font-size: 3.4375rem;\n  line-height: 1.1818;\n}\n\n.event-header-text p {\n    font-size: 1em;\n    margin-top: 1em;\n    margin-bottom: 1em;\n}\n\n\n.event-details-container {\n  text-align: left;\n}\n\n.event-section {\n  margin: 2.5rem 0;\n}\n\n.event-section .speaker-image {\n  border-radius: 50%;\n}\n\n.events-results {\ndisplay: -webkit-box;\n    display: flex;\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n    flex-direction: row;\n    flex-wrap: wrap;\n    -webkit-box-pack: start;\n    justify-content: flex-start;\n    margin-bottom: 2.5rem;\n    padding-top: 2rem;\n    padding-bottom: 2rem;\n}\n\n.event-item {\n    -webkit-box-flex: 1;\n    flex: 1 1 33.33%;\n    max-width: calc(33.33% - 2rem);\n    margin: 1rem;\n}\n\n.event-item .event-item-container {\n  position: relative;\n}\n\n.event-text-container h4 {\n    font-size: 1.375rem;\n    font-weight: 600;\n    line-height: 1.3636;\n    margin: 0.5em 0!important;\n}\n\n.event-text-container p {\n    font-size: 1em;\n    margin-top: 1em;\n    margin-bottom: 1em;\n}\n\n.event-text-container a {\n    color: #0091AE;\n    font-weight: 500;\n    text-decoration: none;\n}\n\n.event-text-container a:hover {\n    color: #007A8C;\n    text-decoration: underline;\n}",
+    "time_stamp": "2022-01-07 04:19:54",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-01-07 05:33:28"
+      }
+    ]
+  },
+  {
+    "text": "",
+    "time_stamp": "2022-01-07 04:20:59"
+  },
+  {
+    "poster": {
+      "poster_name": "Simon Åberg",
+      "poster_handle": "simon.aberg"
+    },
+    "time_stamp": "2022-01-07 05:33:28",
+    "text": "You probably need to use Media queries  <https://www.w3schools.com/css/css_rwd_mediaqueries.asp> to first order the flex-direction to column and then maybe change the container for the results to have full width."
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2022-01-07 16:25:25",
+    "edited": {
+      "time_stamp": "2022-01-07 16:27:59"
+    },
+    "text": "Can someone explain to me `{% require_css %}` a bit better? I know it moves your styles to the `&lt;head&gt;` but what exactly is the point of using it rather than `&lt;style&gt;` tags directly? I notice the boilerplate doesn't use it with `scope_css` but the docs I've seen do use it. Can someone give me a practical, preferably visual, example of when you should use it and when you should not use it?",
+    "reply_count": 17,
+    "reply_users_count": 5,
+    "replies": [
+      {
+        "time_stamp": "2022-01-07 16:27:44"
+      },
+      {
+        "time_stamp": "2022-01-07 16:27:52"
+      },
+      {
+        "time_stamp": "2022-01-07 16:28:22"
+      },
+      {
+        "time_stamp": "2022-01-07 16:28:42"
+      },
+      {
+        "time_stamp": "2022-01-07 16:28:44"
+      },
+      {
+        "time_stamp": "2022-01-07 16:29:43"
+      },
+      {
+        "time_stamp": "2022-01-07 16:29:48"
+      },
+      {
+        "time_stamp": "2022-01-07 16:31:09"
+      },
+      {
+        "time_stamp": "2022-01-07 16:31:24"
+      },
+      {
+        "time_stamp": "2022-01-07 16:32:04"
+      },
+      {
+        "time_stamp": "2022-01-07 16:32:10"
+      },
+      {
+        "time_stamp": "2022-01-07 16:35:10"
+      },
+      {
+        "time_stamp": "2022-01-07 16:35:41"
+      },
+      {
+        "time_stamp": "2022-01-23 11:34:01"
+      },
+      {
+        "time_stamp": "2022-01-23 11:35:25"
+      },
+      {
+        "time_stamp": "2022-01-23 12:41:54"
+      },
+      {
+        "time_stamp": "2022-02-23 05:58:06"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2022-01-07 16:27:44",
+    "text": "CSS in the head reduces the chances of FOUC. I love me some `require_css` and `require_js`"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2022-01-07 16:27:52",
+    "text": "`require_css` moves the CSS up into the `&lt;head&gt;` .\n\nSimilar to `{% require_css() %}`\n\n`scope_css` scopes the CSS to be based on the individual module."
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2022-01-07 16:28:22",
+    "text": "Yes, I know, Jon. &gt;&lt;"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2022-01-07 16:28:42",
+    "text": "Sorry I was writing it before you edited your message"
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2022-01-07 16:28:44",
+    "edited": {
+      "time_stamp": "2022-01-07 16:29:19"
+    },
+    "text": "But what benefit does moving the CSS into the head give you? EDIT: I see Mark's answer though. So you should always be using it? When shouldn't you? And why is the boilerplate not using it then?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2022-01-07 16:29:43",
+    "text": "well for one `&lt;style&gt;` tags aren’t valid in the `&lt;body&gt;`"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2022-01-07 16:29:48",
+    "text": "I always do, no clue on the boilerplate"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2022-01-07 16:31:09",
+    "text": "Unsure why it wouldn’t be used in the boilerplate. It may be an accident. Thankfully it’s a trivial thing to fix."
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2022-01-07 16:31:24",
+    "text": "&gt;  I always do,\nThat's good enough for me, thanks."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2022-01-07 16:32:04",
+    "text": "I see the instance of it not wrapped in require_css I’ll report it to the team."
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2022-01-07 16:32:10",
+    "edited": {
+      "time_stamp": "2022-01-07 16:35:06"
+    },
+    "text": "I had previously always used it, but then I saw the boilerplate didn't, so I stopped, and I was now questioning it. Thanks for the info guys."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2022-01-07 16:35:10",
+    "text": "I’m creating a PR/Issue to address it"
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2022-01-07 16:35:41",
+    "text": "It's in every module."
+  }
+]

@@ -1,0 +1,25 @@
+[
+  {
+    "poster": {
+      "poster_name": "Stefano Chiala",
+      "poster_handle": "stefano599"
+    },
+    "time_stamp": "2024-08-30 05:41:49",
+    "text": "Hi everyone, I am experiencing a weird issue with a graphql query.\nWeird because in Content Graphiql UI from HubSpot the query returns the correct data structure but on my app this happens only 'sometimes'. It seems like when do little changes on the query and override the cache than I get the correct result at the first refrash. The error seems to be isolated to what's need to be returned from a hubdb foreign id column.\n\nThe `Using cached GraphQL Query for ...` appears but I would have hoped at some point this could cache the correct query.\n\nHere's my index file:\n```import { Island } from '@HubSpot/cms-components';\n\nimport MyApp from '../../islands/MyApp/MyApp.tsx?island';\nimport { HBDB_QUERY } from './graphql/hbDBQuery';\n\n\nexport const Component = (props) =&gt; {\n  return (\n    &lt;Layout&gt;\n      &lt;Island module={MyApp} hydrateOn='load' content={props} /&gt;\n    &lt;/Layout&gt;\n  );\n};\n\nexport const meta = {\n  label: `My App JS`,\n};\nexport { fields } from './fields.jsx';\n\nexport const query = HBDB_QUERY;```\nHere is my query:\n```export const HBDB_QUERY = `\nquery dataQuery {\n  HUBDB {\n    templates_collection(filter: {is_visible__eq: true}) {\n      items {\n        id\n        title\n        compatible_connectors\n      }\n    }\n  }\n}\n`;```\n`compatible_connectors` is the foreign id I would expect to be returned correctly.\n\nAny clue on this? :slightly_smiling_face:",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-08-30 07:04:01"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Stefano Chiala",
+      "poster_handle": "stefano599"
+    },
+    "time_stamp": "2024-08-30 07:04:01",
+    "text": "I have tried to tweak my query as follows and looks more stable (actually I haven't seen any issue so far):\n```export const HBDB_QUERY = `\nquery dataQuery {\n  HUBDB {\n    templates_collection(filter: {is_visible__eq: true}) {\n      items {\n        id\n        title\n        associations {\n          datasourceauto_collection__compatible_connectors {\n            items {\n              hs_id\n            }\n          }\n        }\n      }\n    }\n  }\n}\n`;```\nI am still open and happy to learn more if there's any insights to share :slightly_smiling_face:"
+  }
+]

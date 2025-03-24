@@ -1,0 +1,13 @@
+[
+  {
+    "poster": {
+      "poster_name": "Daniel Wong",
+      "poster_handle": "dan.wong"
+    },
+    "time_stamp": "2020-11-16 00:33:54",
+    "edited": {
+      "time_stamp": "2020-11-16 00:35:08"
+    },
+    "text": "<@U011YHRTQDT> try outputting {{ types }} and see what comes out.\n\nI don't think you need \".options\" at the end of your table query:\n\n```{% set types = hubdb_table_column(module.hubdb_table, \"name\") %}```\nAlso, variables set within a loop are bound to the loop. You cannot access the variable outside of it, so if you plan to use _type_list_ after the loop, i would recommend creating an empty array then joining it after:\n\n```{% set type_list = [] %}\n{% for choice in types %}\n{% set tmp =  type_list.append(choice.id)  %}\n{% endfor %}```\nThis will allow you to access the updated type_list array outside of the loop"
+  }
+]

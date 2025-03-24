@@ -1,0 +1,320 @@
+[
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2023-12-06 01:03:39",
+    "text": "Is it possible to use the timeline API with private apps?\n\nI saw there is a scope for it but in the docs it only talks about how to use it with developer apps"
+  },
+  {
+    "poster": {
+      "poster_name": "Hanna Storaker",
+      "poster_handle": "hs054"
+    },
+    "time_stamp": "2023-12-06 03:54:25",
+    "text": "Hi! Does anyone know if it exists webhooks/api to listen for events on custom objects? for example on creation of a new instance of a custom object?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-01-13 18:32:02"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "José Figueiredo",
+      "poster_handle": "jose.figueiredo"
+    },
+    "time_stamp": "2023-12-06 04:57:33",
+    "text": "Hey everyone, how can I set a quote template when creating a quote by API? I cant find this info anywhere. Thanks!",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-12-06 05:33:42"
+      },
+      {
+        "time_stamp": "2023-12-06 05:33:55"
+      },
+      {
+        "time_stamp": "2023-12-06 05:34:36"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Casper Kraken (HubDo)",
+      "poster_handle": "casper928"
+    },
+    "time_stamp": "2023-12-06 05:33:42",
+    "text": "Hey Jose, I also had some trouble getting this info, but you can actually find this from the overview of the quotes object in the docs (I think this must be really newly updated as I have been searching sometime)\n\nYou need to associate through the associations API and you can get the portals template ids from this endpoint:\n```/crm/v3/objects/quote_template?properties=hs_name```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Casper Kraken (HubDo)",
+      "poster_handle": "casper928"
+    },
+    "time_stamp": "2023-12-06 05:33:55",
+    "text": "<https://developers.HubSpot.com/docs/api/crm/quotes>"
+  },
+  {
+    "poster": {
+      "poster_name": "José Figueiredo",
+      "poster_handle": "jose.figueiredo"
+    },
+    "time_stamp": "2023-12-06 05:34:36",
+    "text": "Thats great I didnt find a quote template api page either. Thank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Nikolas Artadi",
+      "poster_handle": "nikolas.artadi"
+    },
+    "time_stamp": "2023-12-06 06:41:11",
+    "text": "<@U25PYL3Q8> <@U067RBGN328> here is the code:\nI'm having issues with the pagination. After 100 ticks, it breaks, the documentation on pagination isn't good. Do you know how it works?\n```import HubSpot\nfrom HubSpot.crm.objects.notes import PublicObjectSearchRequest, ApiException, BatchInputSimplePublicObjectId\nimport time\n\nclient = HubSpot.Client.create(access_token=\"YOUR_API_KEY\")\nlimit = 100\nafter = '100'\nticker = 0\n\npublic_object_search_request = PublicObjectSearchRequest(\\\n                                limit=1,\\\n                                filter_groups=[\\\n                                    {\\\n                                    \"filters\":[{\"propertyName\":\"hs_object_source_id\",\"value\":\"168764\",\"operator\":\"EQ\"},\\\n                                            {\"propertyName\":\"hs_body_preview\",\"value\":\"<http://app.pleo.io|app.pleo.io>\",\"operator\":\"CONTAINS_TOKEN\"},\\\n                                                {\"propertyName\":\"hs_body_preview\",\"value\":\"*/register/*\",\"operator\":\"NOT_CONTAINS_TOKEN\"}]\\\n                                                }\\\n                                            ]\\\n                                    )\ntry:\n    api_response = client.crm.objects.notes.search_api.do_search(public_object_search_request=public_object_search_request)\n    total = api_response.to_dict()\nexcept ApiException as e:\n    print(\"Exception when calling default_api-&gt;archive: %s\\n\" % e)\n\ninputs_outside_loop = []\n\nwhile total['total'] != len(inputs_outside_loop):\n    inputs = []\n    public_object_search_request = PublicObjectSearchRequest(\\\n                                    limit=100,after=after,\\\n                                    filter_groups=[\\\n                                        {\\\n                                        \"filters\":[{\"propertyName\":\"hs_object_source_id\",\"value\":\"168764\",\"operator\":\"EQ\"},\\\n                                                {\"propertyName\":\"hs_body_preview\",\"value\":\"<http://app.pleo.io/*|app.pleo.io/*>\",\"operator\":\"CONTAINS_TOKEN\"},\\\n                                                    {\"propertyName\":\"hs_body_preview\",\"value\":\"*/register/*\",\"operator\":\"NOT_CONTAINS_TOKEN\"}]\\\n                                                    }\\\n                                                ]\\\n                                        )\n    try:\n        api_response = client.crm.objects.notes.search_api.do_search(public_object_search_request=public_object_search_request)\n        dic_api_response = api_response.to_dict()\n\n        [inputs_outside_loop.append(i['id']) for i in dic_api_response['results']]\n        [inputs.append(i['id']) for i in dic_api_response['results']]\n\n        batch_input_simple_public_object_id = BatchInputSimplePublicObjectId(inputs=inputs)\n        try:\n            api_response = client.crm.objects.notes.batch_api.archive(batch_input_simple_public_object_id=batch_input_simple_public_object_id)\n            ticker += 1\n            print('deletion success number: ',ticker)\n        except ApiException as e:\n            print(\"Exception when calling default_api-&gt;archive: %s\\n\" % e)\n            time.sleep(20)\n            break\n\n        time.sleep(10)\n    except ApiException as e:\n        print(\"Exception when calling default_api-&gt;do_search: %s\\n\" % e)\n        break\n\n    print(dic_api_response['paging']['next']['after'])\n    after = dic_api_response['paging']['next']['after']\n    stop_while_loop = int(after)```"
+  },
+  {
+    "poster": {
+      "poster_name": "Craig Bosco",
+      "poster_handle": "craigbosco"
+    },
+    "time_stamp": "2023-12-06 06:57:01",
+    "edited": {
+      "time_stamp": "2023-12-06 06:57:17"
+    },
+    "text": "<@U051F1U6C31> I experienced the same thing. It seems that the “after” variable can’t go above 9,900. \n\nInstead I configured it to sort on the HubSpot ID ascending, and then filtered for “GT” greater than the last ID returned on the previous request. \n\nAlthough, I ended up sticking with the Requests library and implementing it all myself instead of the HubSpot-provided python wrapper. "
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2023-12-06 07:28:27",
+    "text": "so needy, louis :face_with_rolling_eyes:"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2023-12-06 08:13:24",
+    "text": "short answer.  you cannot create this object type via the API"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2023-12-06 08:13:40",
+    "text": "working on seeing if those endpoints can be removed from the public docs"
+  },
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2023-12-06 11:34:22",
+    "edited": {
+      "time_stamp": "2023-12-06 11:37:46"
+    },
+    "text": "I'm pulling my hair out over this. I'm sure it's mentioned somewhere here but not sure how to search for it, but I think the Associations API documentation is wrong. I'm using the example code from the documentation for listing the associations of an object, but I get returned that it can't find basicApi:\n\nMy code:\n`const apiResponse = await HubSpotClient.crm.associations.v4.basicApi.getPage(objectType, objectId, toObjectType, after, limit);`\n\nThe error:\n `2023-12-06T18:33:08.751Z\tERROR\tError fetching associated contact: Cannot read properties of undefined (reading 'basicApi')`\n\nSame happens when I use the batchApi instead of basicApi.\n\nI saw this on the community as well but it was just a bit of a different case.  Does anyone know what the correct endpoints for the Associations API should be (relative to what's in the documentation)?",
+    "reply_count": 9,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-12-06 11:50:44"
+      },
+      {
+        "time_stamp": "2023-12-06 16:03:02"
+      },
+      {
+        "time_stamp": "2023-12-06 16:05:42"
+      },
+      {
+        "time_stamp": "2023-12-06 16:07:11"
+      },
+      {
+        "time_stamp": "2023-12-07 00:52:10"
+      },
+      {
+        "time_stamp": "2023-12-07 03:52:48"
+      },
+      {
+        "time_stamp": "2023-12-07 04:24:44"
+      },
+      {
+        "time_stamp": "2023-12-07 05:10:10"
+      },
+      {
+        "time_stamp": "2023-12-07 08:27:02"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Harun Kumar Siva",
+      "poster_handle": "harun"
+    },
+    "time_stamp": "2023-12-06 11:50:44",
+    "text": "Not a JS dev myself. But does <https://HubSpotdev.slack.com/archives/C05R599UA12/p1698342785406549?thread_ts=1698342084.432599&amp;cid=C05R599UA12|this> help?"
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2023-12-06 13:21:32",
+    "edited": {
+      "time_stamp": "2023-12-06 13:24:09"
+    },
+    "text": "Hi People! Looks like the API for pipelines only gives you a LOT of meta data, I am wondering if there is a filter for ONLY the list Pipeline names and ids associated with an object and not all the rest of the metadata. I'm running into an issue where the size of the return packet is too big for custom coded action workflow I think?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-12-06 20:48:23"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2023-12-06 13:22:42",
+    "text": "```  #URL of the Pipelines metadata API <https://developers.HubSpot.com/docs/api/crm/pipelines>:\n  pipeline_url = f\"<https://api.hubapi.com/crm/v3/pipelines/{from_object_type}>\"\n  \n  # Get the list of pipelines related to Deliverable object:\n  pipelineresponse = requests.get(pipeline_url, headers=headers)\n  pipelineresponse_json = json.loads(pipelineresponse.text)\n  print(\"Pipeline Response JSON:\", pipelineresponse_json)```"
+  },
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2023-12-06 16:03:02",
+    "edited": {
+      "time_stamp": "2023-12-06 16:04:17"
+    },
+    "text": "Sorry, I should have specified. Yes, I'm loading that library, but this is all in a custom code action, so I'm assuming the version is up to date."
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2023-12-06 16:05:42",
+    "text": "Are both objects standard objects?"
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2023-12-06 16:07:11",
+    "text": "So one of them is contact but the other is?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ricky Thai",
+      "poster_handle": "ricky.thai"
+    },
+    "time_stamp": "2023-12-06 18:59:16",
+    "text": "Hi there! Is it possible to choose where associated line items go in a custom quote template through the create quote API? Also, can we add comments to quotes through the API?",
+    "reply_count": 12,
+    "reply_users_count": 5,
+    "replies": [
+      {
+        "time_stamp": "2023-12-06 21:10:54"
+      },
+      {
+        "time_stamp": "2023-12-06 21:11:49"
+      },
+      {
+        "time_stamp": "2023-12-06 21:13:16"
+      },
+      {
+        "time_stamp": "2023-12-06 21:15:26"
+      },
+      {
+        "time_stamp": "2023-12-06 21:16:06"
+      },
+      {
+        "time_stamp": "2023-12-06 21:16:49"
+      },
+      {
+        "time_stamp": "2023-12-06 21:19:16"
+      },
+      {
+        "time_stamp": "2023-12-07 07:39:55"
+      },
+      {
+        "time_stamp": "2023-12-07 10:54:16"
+      },
+      {
+        "time_stamp": "2023-12-08 03:12:15"
+      },
+      {
+        "time_stamp": "2023-12-08 12:08:20"
+      },
+      {
+        "time_stamp": "2023-12-11 09:09:02"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2023-12-06 20:48:23",
+    "text": "I did not work this out. I instead just pulled the data from the API once, made it into what I needed and saved it into a variable in python. If anyone finds a way of handling these types of large sets of json data inside custom workflow actions would love to hear how."
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2023-12-06 21:10:54",
+    "text": "Hi Ricky, I can answer the second part of your question. I believe the first can be answered fairly easily using the associations api from the HubSpot documentation but I have not dug into that too deeply yet."
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2023-12-06 21:11:49",
+    "text": "The API endpoint you are looking for in order to post to comments is PATCH`*/crm/v3/objects/quotes/{quoteId} from* <https://developers.HubSpot.com/docs/api/crm/quotes>` "
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2023-12-06 21:13:16",
+    "text": "I used the network tab in chrome to determine the name of the comments tab, its called hs_comments, put it into the json packet as follows and it updated the quote id I gave it. If you need to append comments you may need to get smart by pulling in what has already been written by the user and appending to it, that could get a little complex but if you just need to write new comments it should be fairly easy. Here are some screenshots:"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-12-06 21:15:26"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-12-06 21:16:06"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-12-06 21:16:49"
+  },
+  {
+    "text": "A bit of reverse engineering done here to figure out the field names but I believe that those \"Search\" network entries in the response contain the full schema of the various quotes. Looks like HubSpot is using their own api to manage their stuff.",
+    "time_stamp": "2023-12-06 21:19:16"
+  },
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2023-12-07 00:52:10",
+    "text": "No, the other is a custom object, but it's not even getting to that part before the error."
+  }
+]

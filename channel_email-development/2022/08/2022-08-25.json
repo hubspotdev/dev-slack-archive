@@ -1,0 +1,72 @@
+[
+  {
+    "text": "I am having an issue with columns in Windows 11 Mail.\nI suspect that HubSpot is altering my raw code, is there any way to prevent this?\n\nHere is the long explanation:\n\n==============================================================\n\nI am using Mail Studio to design and develop. When I send tests out straight from Mail Studio, everything works fine. It's only when I send tests from HubSpot that it breaks.\nMy suspicion is  that it is these types of declarations that are being altered by HubSpot.\n\n```!--[if mso]&gt;\n&lt;/td&gt;\n&lt;/tr&gt;&lt;/table&gt;\n&lt;![endif]--&gt;```\n==============================================================\n\nIt was also suggested by Mail Studio support that\n\n&gt; One possible cause could be reformatting the source code and removing or adding extra whitespace. This can cause columns to overflow.\n==============================================================\n\nI've attached some screenshots of some testing I've done. Most notable is that the previews in HubSpot work fine, it's only broken in the actual client.",
+    "time_stamp": "2022-08-25 07:06:58",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-08-25 07:07:58"
+      },
+      {
+        "time_stamp": "2022-08-25 07:24:34"
+      },
+      {
+        "time_stamp": "2022-08-25 07:47:48"
+      },
+      {
+        "time_stamp": "2022-08-25 08:26:08"
+      },
+      {
+        "time_stamp": "2022-08-25 08:28:04"
+      },
+      {
+        "time_stamp": "2022-08-25 08:53:37"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "James Wilson",
+      "poster_handle": "james.wilson"
+    },
+    "time_stamp": "2022-08-25 07:07:58",
+    "text": "Here is a snippet of the code, as pasted into HubSpot email template HTML\n\n```&lt;table class=\"row h-align-left v-align-top\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse;width: 100%;\"&gt;\n                                        &lt;tbody&gt;\n                                            &lt;tr&gt;\n                                                &lt;td class=\"row-content\" style=\"vertical-align: top;text-align: left;\"&gt;&lt;!--[if mso]&gt;\n&lt;table role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"41%\" style=\"width:41%;\"&gt;\n&lt;tr&gt;\n&lt;td style=\"vertical-align:top;width:100%;\" width=\"100%\"&gt;\n&lt;![endif]--&gt;&lt;div class=\"col col-5\" style=\"text-align: left;display: inline-block;width: 41.66%;max-width: 41.66%;vertical-align: top;\"&gt;\n                                                        &lt;table class=\"ms-t2 col-table\" width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse;width: 100%;vertical-align: top;\"&gt;\n                                                            &lt;tbody&gt;\n                                                                &lt;tr&gt;\n                                                                    &lt;td class=\"col-content\" style=\"vertical-align: top;\"&gt; \n                                                                        &lt;p style=\"margin: 0 0 10px 0;mso-line-height-rule: exactly;font-size: 14px;line-height: 20px;\"&gt;5 column widde&amp;nbsp; eger sed rutrum nisl. Etiam scelerisque quam vel nisi. eger sed rutrum nisl. Etiam scelerisque quam vel nisi eger sed rutrum nisl. Etiam scelerisque quam vel nisi eger sed rutrum nisl. Etiam scelerisque quam vel nisi eger sed rutrum nisl. Etiam scelerisque quam vel nisi eger sed rutrum nisl. Etiam scelerisque quam vel nisi eger sed rutrum nisl. Etiam scelerisque quam vel nisi eger sed rutrum nisl. Etiam scelerisque quam vel nisieger sed rutrum nisl. Etiam scelerisque quam vel nisieger sed rutrum nisl. Etiam scelerisque quam vel nisieger sed rutrum nisl. Etiam scelerisque quam vel nisieger sed rutrum nisl. Etiam scelerisque quam vel nisieger sed rutrum nisl. Etiam scelerisque quam vel nisi&lt;br&gt;&lt;br&gt;&lt;/p&gt;\n                                                                    &lt;/td&gt;\n                                                                &lt;/tr&gt;\n                                                            &lt;/tbody&gt;\n                                                        &lt;/table&gt;\n                                                    &lt;/div&gt;&lt;!--[if mso]&gt;\n&lt;/td&gt;\n&lt;/tr&gt;&lt;/table&gt;\n&lt;![endif]--&gt;&lt;/td&gt;\n                                            &lt;/tr&gt;\n                                        &lt;/tbody&gt;\n                                    &lt;/table&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Courtney Fantinato",
+      "poster_handle": "courtneyfantinato"
+    },
+    "time_stamp": "2022-08-25 07:24:34",
+    "text": "Without being at a computer to test, I'm going to take a guess that it may be the 100% width set on the `td` inside of the `mso` specific code. It may be ignoring the width set on the `div` inside of that."
+  },
+  {
+    "text": "<@UKGV272KS> Thanks, I have tested that now but still getting the same result. Only wish I could inspect element in my mail client.",
+    "time_stamp": "2022-08-25 07:47:48"
+  },
+  {
+    "poster": {
+      "poster_name": "Courtney Fantinato",
+      "poster_handle": "courtneyfantinato"
+    },
+    "time_stamp": "2022-08-25 08:26:08",
+    "text": "Have you tried not using percentages? I’m not sure why it’s going to 100%, but I have found issues where widths will render as a % of a %. That will happen if you removed the `mso` wrappers, for example.\n\nTypically in the `mso` code I would use px values, unless it’s 100% width, as Outlook/Windows Mail won’t be responsive anyways. And then on the `div` use a 100% width, with a px max-width."
+  },
+  {
+    "poster": {
+      "poster_name": "Courtney Fantinato",
+      "poster_handle": "courtneyfantinato"
+    },
+    "time_stamp": "2022-08-25 08:28:04",
+    "text": "Usually for me in the table in the `mso` code would be the full width of the email, and the `td` is what “mimics” the `div` that it surrounds. Have you tried adding a 2nd column?"
+  },
+  {
+    "poster": {
+      "poster_name": "James Wilson",
+      "poster_handle": "james.wilson"
+    },
+    "time_stamp": "2022-08-25 08:53:37",
+    "text": "We have done some testing and confirmed it appears to be ignoring the MSO code completely.\n\nWorth noting, we have also tried using the HubSpot visual designer to create columns.... with the same problem that they get ignored by Windows 11 Mail client.\n\nWe think we may resolve that Windows 11 simply won't get support for columns."
+  }
+]

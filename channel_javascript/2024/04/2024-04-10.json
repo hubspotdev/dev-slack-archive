@@ -1,0 +1,183 @@
+[
+  {
+    "poster": {
+      "poster_name": "Matt Cruz",
+      "poster_handle": "matt.cruz"
+    },
+    "time_stamp": "2024-04-10 10:46:50",
+    "text": "load them as Raw HTML and style them with your CSS"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2024-04-10 10:49:11",
+    "text": "How would a content creator do that? What off they change a form? What if that form was in multiple places?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Cruz",
+      "poster_handle": "matt.cruz"
+    },
+    "time_stamp": "2024-04-10 10:49:34",
+    "text": "First thing I am going to say is: *take all of this with a grain of salt, they have been putting a lot of work into forms all of a sudden, and this will likely change.* Forms sat basically untouched for years and now suddenly there's betas about deleting form submissions, *multi-step forms,* etc.\n\nThat said, this is indeed possible, right now, with js/jquery.\nHowever if you're not a dev you might find learning the ins-and-outs of manipulating the DOM (document object model, aka _shtuff on the page_) a bit of a learning curve at first, but not impossible! This is an open-source field and there's lots of stuff available to assist (<https://community.HubSpot.com/t5/Lists-Lead-Scoring-Workflows/Multi-Step-Forms-Possible/m-p/218073|like this thread I found>)\n\nThere is a <https://legacydocs.HubSpot.com/docs/methods/forms/advanced_form_options|way to edit the HubSpot Form embed code to execute a script>. You (or your hired dev) could then write a script that hides/shows values depending on them meeting your rules.\nI like to use CSS classes in tandem with this, adding a class 'show' or 'hide' and then having a snippet of CSS that corresponds"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Cruz",
+      "poster_handle": "matt.cruz"
+    },
+    "time_stamp": "2024-04-10 10:50:13",
+    "text": "This depends a bit: are you using a HubSpot Page and a HubSpot forms module?\nNon-HubSpot page and a form embed code?"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2024-04-10 12:30:26",
+    "text": "on hs cms page. HubSpot forms module still uses js to create form. View page source code or view without js and you’ll see that there is no html form code"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Cruz",
+      "poster_handle": "matt.cruz"
+    },
+    "time_stamp": "2024-04-10 12:35:19",
+    "text": "yea the html loads via the embed code so you won't see it on view source but you can see the rendered output with the inspect tool, the forms module just uses a more advanced version of the embed code. I sometimes use the embed code in a rich text module to have a bit more control and avoid the default sizing.\n\nTaking a step back, any layout shift you see is a result of the style on the page doing _a thing_\nso, what I would recommend is inspecting the CSS of the page to see if there's some margin or padding or something funny being applied somewhere to the form that is extending beyond the area you expect it to. I tend to avoid the WYSIWYG styling tool on the page editor where I can as well, it can cause unexpected results.\nbiggest culprits in my experience are input fields and the hs-button-primary class, but it really could be anything."
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2024-04-10 12:46:06",
+    "text": "nah man this is the form injection. The form is Xpx tall. Once the form gets injected via hs the page shifts Xpx"
+  },
+  {
+    "poster": {
+      "poster_name": "Tyler Sweeten",
+      "poster_handle": "tyler.sweeten"
+    },
+    "time_stamp": "2024-04-10 12:46:49",
+    "text": "Hello, I am trying to use node.js in a workflow custom code module to help with engagements. The issue that I am trying to fix is that I am nearing the association limit for a certain contact and emails. The code I have now works, but the problem I have is that there is a limit of 100 un-associations per execution. I have tried to expand on the code by adding for/ while loops, if/else commands, and while commands with a nested if statement but nothing is working. I wondering if anyone had any experience with node.js for a similar issue? I have added the base code in the comments below, before any attempts at looping through the results to get more than 100 results. Thanks",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-04-10 12:47:16"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Cruz",
+      "poster_handle": "matt.cruz"
+    },
+    "time_stamp": "2024-04-10 12:47:06",
+    "text": "I would use the embed code, then strip the css with css:'' and cssRequired:'' and see if that does it"
+  },
+  {
+    "poster": {
+      "poster_name": "Tyler Sweeten",
+      "poster_handle": "tyler.sweeten"
+    },
+    "time_stamp": "2024-04-10 12:47:16",
+    "edited": {
+      "time_stamp": "2024-04-10 12:47:42"
+    },
+    "text": "const HubSpot = require('@HubSpot/api-client');\nconst axios = require('axios');\n\nexports.main = async (event, callback) => {\n\n\n  const HubSpotClient = new HubSpot.Client({\n    accessToken: process.env.PrivateAppKey\n  });\n\n  const exclusions = ['<mailto:remove@email.com|remove@email.com>'];\n  const objectType = 'contacts';\n  const objectId = event.inputFields['hs_object_id'];\n  const toObjectType = 'emails';\n  const after = undefined;\n  const limit = 500;\n\n\n  try {\n    const allEmails = await HubSpotClient.crm.associations.v4.basicApi.getPage(objectType, objectId, toObjectType, after, limit);\n    const allEmailsArray = allEmails.results.map(e => {return {\"id\": e.toObjectId.toString()}});\n    //console.log(allEmailsArray);\n\n    const emailRead = {inputs: allEmailsArray, properties: [\"hs_email_from_email\"] };\n    const archived = false;\n\n    try {\n      const apiResponse = await HubSpotClient.crm.objects.emails.batchApi.read(emailRead, archived);\n     // console.log(JSON.stringify(apiResponse, null, 2));\n\n      const filteredEmails = apiResponse.results.filter(e => exclusions.includes(e.properties.hs_email_from_email));\n     // console.log(filteredEmails);\n\n      filteredEmails.forEach(async (e) => {\n        console.log(e.id);\n\n        try {\n           const deleteResponse = await HubSpotClient.crm.associations.v4.basicApi.archive(objectType, objectId, toObjectType, e.id);\n        }\n        catch (err) {\n          console.error(err);\n          throw err;\n        }\n      });\n\n\n    } catch (e) {\n      e.message === 'HTTP request failed'\n        ? console.error(JSON.stringify(e.response, null, 2))\n      : console.error(e)\n    }\n\n  } catch (err) {\n    console.error(err);\n    throw err;\n  }\n\n  callback({\n    outputFields: {\n    }\n  });\n};"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Cruz",
+      "poster_handle": "matt.cruz"
+    },
+    "time_stamp": "2024-04-10 12:47:46",
+    "text": "<https://legacydocs.HubSpot.com/docs/methods/forms/advanced_form_options>"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2024-04-10 12:48:50",
+    "text": "that just injects a unstyled form. but that form still has a height that is shifting the page"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Cruz",
+      "poster_handle": "matt.cruz"
+    },
+    "time_stamp": "2024-04-10 12:49:54",
+    "text": "I guess maybe I don't understand the question. The form is built of html elements that have heights, it will therefore have a height, are you trying to just float it over the page?"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2024-04-10 12:52:40",
+    "edited": {
+      "time_stamp": "2024-04-10 12:53:18"
+    },
+    "text": "The page renders, then the form js runs, then causes the page to re-paint and the content below the form shifts down causing a layout shift. Punished by our google overlords (and rightly so)"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Cruz",
+      "poster_handle": "matt.cruz"
+    },
+    "time_stamp": "2024-04-10 12:53:41",
+    "text": "have you tried the target method to target a specific div ID?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Cruz",
+      "poster_handle": "matt.cruz"
+    },
+    "time_stamp": "2024-04-10 12:54:26",
+    "text": "the js forms library is nutty large but it doesn't tend to cause my pages to reload and shift content"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2024-04-10 12:55:34",
+    "text": "I edited my message. it causes a _repaint_ and layout shift."
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2024-04-10 12:56:38",
+    "text": "just like annoying js google ads that are poorly loaded. a user goes to click on an element, then an add appears right as they’re clicking.\n\nthe same thing is happens with hs forms on slow connections"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Cruz",
+      "poster_handle": "matt.cruz"
+    },
+    "time_stamp": "2024-04-10 12:58:32",
+    "text": "hard to say without seeing the page and watching the waterfall, like I said, I don't have this issue with my LPs, but as the forms library is dummy big, I could see it being slow esp if there are maybe some additional scripts on the page"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Cruz",
+      "poster_handle": "matt.cruz"
+    },
+    "time_stamp": "2024-04-10 12:58:48",
+    "text": "got a live page I can take a gander at?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Cruz",
+      "poster_handle": "matt.cruz"
+    },
+    "time_stamp": "2024-04-10 13:00:38",
+    "text": "im not super familiar with <https://dev.to/gopal1996/understanding-reflow-and-repaint-in-the-browser-1jbg|reflow/repaint> but I know that the default forms render uses a lot of display none, and some of the other stuff referenced there, so I would focus on getting that to load in a more timely manner so that it doesn't trigger that, if possible"
+  }
+]

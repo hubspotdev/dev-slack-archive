@@ -1,0 +1,104 @@
+[
+  {
+    "text": "Does anyone know how to call group column entries in hubDB by a certain column and have items populate below it? I'm trying to achieve something like this:",
+    "time_stamp": "2021-12-20 15:13:45",
+    "reply_count": 9,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-12-20 16:17:41"
+      },
+      {
+        "time_stamp": "2021-12-20 16:37:39"
+      },
+      {
+        "time_stamp": "2021-12-20 17:24:37"
+      },
+      {
+        "time_stamp": "2021-12-20 17:42:35"
+      },
+      {
+        "time_stamp": "2021-12-20 17:42:58"
+      },
+      {
+        "time_stamp": "2021-12-20 17:48:11"
+      },
+      {
+        "time_stamp": "2021-12-20 17:48:33"
+      },
+      {
+        "time_stamp": "2021-12-20 17:49:00"
+      },
+      {
+        "time_stamp": "2021-12-21 07:21:47"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Swisher",
+      "poster_handle": "tswisher007"
+    },
+    "time_stamp": "2021-12-20 16:17:41",
+    "text": "Use a forloop on hubdb_table_rows(table ID here) then use dot.syntax to access the fields. &lt;h1&gt;{{ forloopname.fieldname&lt;h1&gt; <https://developers.HubSpot.com/docs/cms/data/hubdb>"
+  },
+  {
+    "poster": {
+      "poster_name": "Olivia Durr",
+      "poster_handle": "olivia.durr"
+    },
+    "time_stamp": "2021-12-20 16:37:39",
+    "text": "I'm confused.... This is the code block that I have right now:\n```{% set tableID = module.db_setting.table %}\n{% set column = hubdb_table_column(tableID, \"state\") %}\n{% set locations = hubdb_table_rows(tableID, \"orderBy=state\") %}\n{% set state_title = column.options %}\n&lt;div class=\"{{ module_name }}\"&gt;\n\t\t{% for item in column %}\n\t\t{{state_title|pprint}}\n\t\t{% endfor %}\n  {% for row in locations %}\n    &lt;h3&gt;{{ row[\"location_name\"] }}&lt;/h3&gt;\n    &lt;h4&gt;{{ row[\"address_name\"] }}&lt;/h4&gt;\n\t\t&lt;h4&gt;{{ row[\"address_1\"] }}&lt;/h4&gt;\n\t\t&lt;h4&gt;{{ row[\"address_2\"] }}&lt;/h4&gt;\n\t\t&lt;h4&gt;{{ row[\"office_number\"] }}&lt;/h4&gt;\n\t\t&lt;h4&gt;{{ row[\"office_email\"] }}&lt;/h4&gt;\n\t\t\n\t{% endfor %}\n&lt;/div&gt;```\nwhich then prints the string: `(SizeLimitingPyList: [{id=1, name='Colorado', order=null}, {id=2, name='Connecticut', order=null}, {id=3, name='Delaware', order=null}, {id=4, name='Florida', order=null}, {id=5, name='Maine', order=null}, {id=6, name='Maryland', order=null}, {id=7, name='Massachusetts', order=null}, {id=8, name='New Hampshire', order=null}, {id=9, name='New Jersey', order=null}, {id=10, name='Ohio', order=null}, {id=11, name='Oregon', order=null}, {id=12, name='Pennsylvania', order=null}, {id=13, name='Texas', order=null}])`."
+  },
+  {
+    "poster": {
+      "poster_name": "Olivia Durr",
+      "poster_handle": "olivia.durr"
+    },
+    "time_stamp": "2021-12-20 17:24:37",
+    "text": "<@UTQQ4TXCH> I think I followed what you said and ended up with this code block which renders everything almost perfectly:\n```{# Base Naming #}\n{% set module_name = 'db-cards' %}\n{% set modifier = ' module--' %}\n\n{% set tableID = module.db_setting.table %}\n{% set allHubDBRows = hubdb_table_rows(tableID) %}\n{% set table_select = hubdb_table_column(tableID, 'state') %}\n{% set location = table_select.optionsByName %}\n\n{% for item in location|sort(False, False, 'name') %}\n  {% set query = '&amp;state__eq='~item.name|replace(' ','%20')~'&amp;orderBy=location_name' %}\n  {% set locations = hubdb_table_rows(tableID, query) %}\n  {% set locations2 = allHubDBRows|selectattr('state', 'equalto', 'item.name' ) %}\n  &lt;h2&gt;{{item.name}}&lt;/h2&gt;\n  {% for row in locations %}\n    &lt;h3&gt;{{ row[\"location_name\"] }}&lt;/h3&gt;\n    &lt;h4&gt;{{ row[\"address_name\"] }}&lt;/h4&gt;\n\t\t&lt;h4&gt;{{ row[\"address_1\"] }}&lt;/h4&gt;\n\t\t&lt;h4&gt;{{ row[\"address_2\"] }}&lt;/h4&gt;\n\t\t&lt;h4&gt;{{ row[\"office_number\"] }}&lt;/h4&gt;\n\t\t&lt;h4&gt;{{ row[\"office_email\"] }}&lt;/h4&gt;\n\t{% endfor %}\n{% endfor %}```\nHowever, I run into the issue of the 10 row call limit. Do you have any tips on how to fix that?"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Swisher",
+      "poster_handle": "tswisher007"
+    },
+    "time_stamp": "2021-12-20 17:42:35",
+    "text": "I'm sorry I don't and can't find any documentation. I would repost the question for that in here and hubl channel."
+  },
+  {
+    "poster": {
+      "poster_name": "Olivia Durr",
+      "poster_handle": "olivia.durr"
+    },
+    "time_stamp": "2021-12-20 17:42:58",
+    "text": "Thank you!!"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Swisher",
+      "poster_handle": "tswisher007"
+    },
+    "time_stamp": "2021-12-20 17:48:11",
+    "text": "One crazy idea add 'limit'= someNumber {% for row in hubdb_table_rows(741094, 'limit=100') %}"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Swisher",
+      "poster_handle": "tswisher007"
+    },
+    "time_stamp": "2021-12-20 17:48:33",
+    "text": "Since the default is 10 lets up it."
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Swisher",
+      "poster_handle": "tswisher007"
+    },
+    "time_stamp": "2021-12-20 17:49:00",
+    "edited": {
+      "time_stamp": "2021-12-20 18:15:57"
+    },
+    "text": "Not the normal way to deal with pagination but HubSpot builds a lot in."
+  }
+]

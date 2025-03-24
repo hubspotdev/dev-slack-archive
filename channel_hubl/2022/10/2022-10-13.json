@@ -1,0 +1,63 @@
+[
+  {
+    "poster": {
+      "poster_name": "Salim Ghanem",
+      "poster_handle": "salim610"
+    },
+    "time_stamp": "2022-10-13 04:09:08",
+    "text": "Hey Guys I am trying to add a dynamic ID from a table, once It is entered as a string it works fine, but when saved in a variable the module doesn't read the value.\nCould it be a syntax error?\nPersonRow_field is a HubL variable that fetched a row from a table.\n``` {% dnd_module\n            path=\"../modules/personalDND\",\n            offset=0,\n            width=12,\n            PersonRow_field={\n              \"id\": \"{{person_id}}\"\n             \n            }\n          %}```\n",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-10-13 07:46:27"
+      },
+      {
+        "time_stamp": "2022-10-14 04:47:50"
+      },
+      {
+        "time_stamp": "2022-10-14 04:51:54"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-10-13 07:46:27",
+    "text": "Do you want to post your whole code, I think the problem is that your code has a for loop and the for loop is executing after you try and call this variable"
+  },
+  {
+    "poster": {
+      "poster_name": "Dominic Ostiguy",
+      "poster_handle": "d.ostiguy"
+    },
+    "time_stamp": "2022-10-13 15:32:22",
+    "edited": {
+      "time_stamp": "2022-10-13 15:34:15"
+    },
+    "text": "Hi there guys !\n\nI am trying to send an automated email via a workflow based on a deal.\n\nI created a custom module using Hubl that can then be used in the email editor UI.\n\nThe module is then inserted in the email being sent by the workflow\n\n`{% set deal = crm_object(\"deal\", deal.id, \"amount,createdate, ip__ecomm_bridge__abandoned_cart_url\", false) %}`\n`{% set lineitems = crm_associations(deal.id, \"HubSpot_DEFINED\", 19, \"limit=10\", \"name, quantity, hs_images, amount, hs_sku, hs_url\") %}`\n`&lt;link href='<https://fonts.googleapis.com/css?family=Montserrat>' rel='stylesheet'&gt;`\n\n`&lt;table class=\"panier-trevi\" style=\"width:585px;margin: 0 auto;border: 1px solid #c5c5c5; border-collapse:collapse;\"&gt;`\n\n  `&lt;tr style=\"background-color:#f2f2f2;\"&gt;`\n    `&lt;th style=\"text-align:left;\"&gt;{{ module.text_image }}&lt;/th&gt;`\n    `&lt;th style=\"text-align:left;\"&gt;{{ module.text_nom_produit }}&lt;/th&gt;`\n    `&lt;th style=\"text-align:center;\"&gt;{{ module.text_qte }}&lt;/th&gt;`\n    `&lt;th style=\"text-align:right; padding-right:10px;\"&gt;{{ module.text_price }}&lt;/th&gt;`\n  `&lt;tr&gt;`\n\n`{% for lineitem in lineitems.results %}`\n   \n    `&lt;tr&gt;`\n   \n      `&lt;td style=\"width:50px\"&gt;`\n                \n        `{% if (lineitem.hs_url) %}&lt;a href=\"{{lineitem.hs_url}}\"&gt;{% endif; %}`\n\n          `{% if (lineitem.hs_images == null) %}`\n              `&lt;img style=\"width:50px;height:50px;object-fit:none; background: #00aeef;\" src=\"<https://www.trevi.com/media/favicon/default/Favicon-Trevi.ico>\"&gt;`\n          `{% else %}`\n              `&lt;img style=\"width:50px;height:50px;object-fit:cover;\" src=\"{{lineitem.hs_images}}\"&gt;`\n          `{% endif; %}`\n\n        `{% if (lineitem.hs_url) %}&lt;/a&gt;{% endif; %}`\n\n      `&lt;/td&gt;`\n\n      `&lt;td style=\"width:15%;\"&gt;`\n        \n        `{% if (lineitem.hs_url) %}&lt;a href=\"{{lineitem.hs_url}}\"&gt;{% endif; %}`\n          `&lt;p style=\"margin:0;\"&gt;{{lineitem.name}}&lt;/p&gt;`\n        `{% if (lineitem.hs_url) %}&lt;/a&gt;{% endif; %}`\n\n        `{% if (lineitem.hs_sku) %}`\n        `&lt;p style=\"margin:5px 0 0 0;\"&gt;REF: {{lineitem.hs_sku}}&lt;/p&gt;`\n        `{% endif; %}`\n      `&lt;/td&gt;`\n      `&lt;td style=\"width:20%;text-align:center;\"&gt;{{lineitem.quantity}}&lt;/td&gt;`\n      `&lt;td style=\"width:20%;text-align:right;\"&gt;{{lineitem.amount}}&lt;/td&gt;`\n    `&lt;/tr&gt;`\n\n`{% endfor %}`\n\n  `&lt;tr style=\"background-color:#f2f2f2;\"&gt;`\n    `&lt;th&gt;&lt;/th&gt;`\n    `&lt;th&gt;&lt;/th&gt;`\n    `&lt;th style=\"font-weight:500\"&gt;{{ module.text_sous_total }}&lt;/th&gt;`\n    `&lt;th style=\"text-align:right; padding: 10px; font-weight:500;\"&gt;${{ deal.amount }}&lt;/th&gt;`\n  `&lt;tr&gt;`\n\n `&lt;/table&gt;`\n\n\n\nI am trying to fetch the line items of the deal being triggered by the workflow. The issue is that the first line always return the same deal as if its hard-coded to a specific deal no matter what the workflow trigger is.\n\nNo matter what deal is enrolled to that workflow, the email content is always the same. I also printed the deal.id in the email to make sure I was not crazy.\n\nAm I missing something ?\n\nHow can I make the Hubl module I made dynamically select the object id (a deal in this case) being triggered by the workflow so that everything in the email is associated to that deal?\n\nThanks a lot :slightly_smiling_face: !!",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-10-17 03:20:57"
+      },
+      {
+        "time_stamp": "2022-10-19 09:08:15"
+      }
+    ]
+  },
+  {
+    "text": "",
+    "time_stamp": "2022-10-13 15:33:04",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-10-16 22:33:40"
+      }
+    ]
+  }
+]

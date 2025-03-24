@@ -1,0 +1,151 @@
+[
+  {
+    "poster": {
+      "poster_name": "Julian Vidal",
+      "poster_handle": "julian.vidal123"
+    },
+    "time_stamp": "2023-03-23 07:28:57",
+    "text": "Hey Jordan,\n\nI'd suggest using a custom object for those calls, otherwise each time a new URL is saved, will overwrite the previous value. With custom objects, you could have multiple URLs without losing data."
+  },
+  {
+    "poster": {
+      "poster_name": "Julian Vidal",
+      "poster_handle": "julian.vidal123"
+    },
+    "time_stamp": "2023-03-23 07:35:23",
+    "edited": {
+      "time_stamp": "2023-03-23 07:41:50"
+    },
+    "text": "*If you want to use custom objects:*\n\n1. <https://knowledge.HubSpot.com/crm-setup/create-and-use-association-labels|Create an association between contacts and the custom object>\n2. <https://developers.HubSpot.com/docs/api/crm/crm-custom-objects|Create a custom object record> -&gt; This will return the ID of the custom object\n3. <https://developers.HubSpot.com/docs/api/crm/contacts|Search in your contact records by email to get the contact ID>. If there's no a match, then create a contact record.\n4. <https://developers.HubSpot.com/docs/api/crm/associations|When you have both IDs, you can associate them>\n*If you just want to log the last URL:*\n1. Create a custom property to save the URL\n2. <https://developers.HubSpot.com/docs/api/crm/contacts|Search in your contact records by email to get the contact ID>. If there's no a match, then create a contact record.\n3. <https://developers.HubSpot.com/docs/api/crm/contacts|Update your contact record to save the URL in the property that you created>"
+  },
+  {
+    "poster": {
+      "poster_name": "Amit Das",
+      "poster_handle": "adas"
+    },
+    "time_stamp": "2023-03-23 12:54:53",
+    "text": "Hi team, I have a question about the underlying flow of data when for example a Contact is enrolled in a Workflow. Assume the trigger is looking at a list of Contacts enrolled from an Active List (10k Contacts). The workflow has 1 Custom Coded Action (CCA). Question - can multiple Contacts be processed in the CCA at a given time? Are the workflow actions asynchronously running or synchronously one Contact at a time?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-03-24 10:41:13"
+      },
+      {
+        "time_stamp": "2023-03-24 11:08:53"
+      },
+      {
+        "time_stamp": "2023-03-24 11:10:51"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-03-23 13:09:33",
+    "edited": {
+      "time_stamp": "2023-03-23 13:10:20"
+    },
+    "text": "hey guys - advice on a modified version of the dedupe code? (in thread)",
+    "reply_count": 5,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-03-23 13:09:41"
+      },
+      {
+        "time_stamp": "2023-03-23 13:10:06"
+      },
+      {
+        "time_stamp": "2023-03-23 13:41:47"
+      },
+      {
+        "time_stamp": "2023-03-23 13:41:56"
+      },
+      {
+        "time_stamp": "2023-03-23 13:42:15"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-03-23 13:09:41",
+    "text": "```const HubSpot = require('@HubSpot/api-client');\n\nconst HubSpot_PRIVATE_APP_ACCESS_TOKEN = process.env.SecondKey;\nconst PROPERTY_USED_TO_DEDUPE_CONTACTS = 'phone';\n\nlet rateLimitCounter = 0;\nconst RATE_LIMIT_MAX_CALLS = 100;\nconst RATE_LIMIT_WINDOW = 10000; // 10 seconds\nlet rateLimitNextReset = Date.now() + RATE_LIMIT_WINDOW;\n\nasync function requestWithBackoff(requestFunc, retries = 1000, backoffTime = 3500) {\n  if (rateLimitCounter &gt;= RATE_LIMIT_MAX_CALLS) {\n    const timeUntilReset = Math.max(0, rateLimitNextReset - Date.now());\n    console.log(`Rate limit reached. Retrying in ${timeUntilReset}ms...`);\n    await new Promise(resolve =&gt; setTimeout(resolve, timeUntilReset));\n    rateLimitCounter = 0;\n    rateLimitNextReset = Date.now() + RATE_LIMIT_WINDOW;\n  }\n  \n  try {\n    rateLimitCounter++;\n    return await requestFunc();\n  } catch (error) {\n    if (error.code === 429 &amp;&amp; retries &gt; 0) {\n      console.log(`Rate limit reached. Retrying in ${backoffTime}ms...`);\n      await new Promise(resolve =&gt; setTimeout(resolve, backoffTime));\n      return await requestWithBackoff(requestFunc, retries - 1, backoffTime * 2);\n    } else {\n      throw error;\n    }\n  }\n}\n\nexports.main = async (event, callback) =&gt; {\n  const HubSpotClient = new HubSpot.Client({ accessToken: HubSpot_PRIVATE_APP_ACCESS_TOKEN });\n\n  try {\n    const contactResult = await requestWithBackoff(() =&gt; HubSpotClient.crm.contacts.basicApi.getById(event.object.objectId, [PROPERTY_USED_TO_DEDUPE_CONTACTS]));\n\n    if (!contactResult || !contactResult.body) {\n      console.log(`Failed to retrieve contact. Contact ID: ${event.object.objectId}`);\n      return;\n    }\n\n    if (!contactResult.body.properties) {\n      console.log(`Contact properties not found. Contact ID: ${event.object.objectId}`);\n      return;\n    }\n\n    let dedupePropValue = contactResult.body.properties[PROPERTY_USED_TO_DEDUPE_CONTACTS];\n\n    console.log(`Looking for duplicates based on ${PROPERTY_USED_TO_DEDUPE_CONTACTS} = ${dedupePropValue}`);\n    const searchResults = await requestWithBackoff(() =&gt; HubSpotClient.crm.contacts.searchApi.doSearch({\n      filterGroups: [{\n        filters: [{\n          propertyName: PROPERTY_USED_TO_DEDUPE_CONTACTS,\n          operator: 'EQ',\n          value: dedupePropValue\n        }]\n      }],\n      sorts: [\n        { propertyName: 'createdate', direction: 'ASCENDING' }\n      ],\n      limit: 10 // Limit the search to the two oldest records\n    }));\n\n    const idsToMerge = searchResults.body.results\n      .map(object =&gt; object.id)\n      .filter(vid =&gt; Number(vid) !== Number(event.object.objectId));\n\n    if (idsToMerge.length === 0) {\n      console.log('No matching contact, nothing to merge');\n      return;\n    } else {\n      console.log(`Found multiple potential contact IDs ${idsToMerge.join(', ')} to merge`);\n\n      // Find the ID of the oldest contact to merge into\n      const oldestContactId = searchResults.body.results[0].id;\n      console.log(`Merging enrolled contact id=${event.object.objectId} into contact id=${oldestContactId}`);\n\n      // Merge the enrolled contact into the oldest contact\n      await requestWithBackoff(() =&gt; HubSpotClient.apiRequest({\n        method: 'POST',\n        path: `/contacts/v1/contact/merge-vids/${oldestContactId}`,\n        body: {\n          vidToMerge: event.object.objectId\n        }\n      }));\n\n      console.log('Contacts merged!');\n    }\n  } catch (error) {\n    console.error('An error occurred during contact deduplication:', error);\n  }\n};```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-03-23 13:10:06",
+    "text": "returning error:\n```2023-03-23T18:57:39.251Z\tINFO\tFailed to retrieve contact. Contact ID: 2777542\n\nMemory: 74/128 MB\nRuntime: 1324.35 ms```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-03-23 13:41:47",
+    "text": "```2023-03-23T19:41:21.054Z\tINFO\tSuccessfully retrieved contact. Contact ID: 2777542\n2023-03-23T19:41:21.054Z\tINFO\tContact: {\n  \"id\": \"2777542\",\n  \"properties\": {\n    \"createdate\": \"2023-02-24T15:32:21.477Z\",\n    \"hs_object_id\": \"2777542\",\n    \"lastmodifieddate\": \"2023-03-23T18:58:52.991Z\",\n    \"phone\": \"07951164183\"\n  },\n  \"propertiesWithHistory\": {},\n  \"createdAt\": \"2023-02-24T15:32:21.477Z\",\n  \"updatedAt\": \"2023-03-23T18:58:52.991Z\",\n  \"archived\": false\n}\n2023-03-23T19:41:21.055Z\tINFO\tcontactResult: {\n  \"id\": \"2777542\",\n  \"properties\": {\n    \"createdate\": \"2023-02-24T15:32:21.477Z\",\n    \"hs_object_id\": \"2777542\",\n    \"lastmodifieddate\": \"2023-03-23T18:58:52.991Z\",\n    \"phone\": \"07951164183\"\n  },\n  \"propertiesWithHistory\": {},\n  \"createdAt\": \"2023-02-24T15:32:21.477Z\",\n  \"updatedAt\": \"2023-03-23T18:58:52.991Z\",\n  \"archived\": false\n}\n2023-03-23T19:41:21.055Z\tINFO\tLooking for duplicates based on phone = 07951164183\n2023-03-23T19:41:21.375Z\tINFO\tFailed to retrieve search results. Contact ID: 2777542\n2023-03-23T19:41:21.375Z\tINFO\tSearchResults: {\n  \"total\": 1,\n  \"results\": [\n    {\n      \"id\": \"2777542\",\n      \"properties\": {\n        \"createdate\": \"2023-02-24T15:32:21.477Z\",\n        \"email\": \"<mailto:jc@bark.com|jc@bark.com>\",\n        \"firstname\": \"Jamie\",\n        \"hs_object_id\": \"2777542\",\n        \"lastmodifieddate\": \"2023-03-23T18:58:52.991Z\",\n        \"lastname\": \"Combe\"\n      },\n      \"createdAt\": \"2023-02-24T15:32:21.477Z\",\n      \"updatedAt\": \"2023-03-23T18:58:52.991Z\",\n      \"archived\": false\n    }\n  ]\n}\n\nMemory: 74/128 MB\nRuntime: 1650.59 ms```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-03-23 13:41:56",
+    "text": "longer error with following code"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-03-23 13:42:15",
+    "text": "```const HubSpot = require('@HubSpot/api-client');\n\nconst HubSpot_PRIVATE_APP_ACCESS_TOKEN = process.env.SecondKey;\nconst PROPERTY_USED_TO_DEDUPE_CONTACTS = 'phone';\n\nlet rateLimitCounter = 0;\nconst RATE_LIMIT_MAX_CALLS = 100;\nconst RATE_LIMIT_WINDOW = 10000; // 10 seconds\nlet rateLimitNextReset = Date.now() + RATE_LIMIT_WINDOW;\n\nasync function requestWithBackoff(requestFunc, retries = 1000, backoffTime = 3500) {\n  if (rateLimitCounter &gt;= RATE_LIMIT_MAX_CALLS) {\n    const timeUntilReset = Math.max(0, rateLimitNextReset - Date.now());\n    console.log(`Rate limit reached. Retrying in ${timeUntilReset}ms...`);\n    await new Promise(resolve =&gt; setTimeout(resolve, timeUntilReset));\n    rateLimitCounter = 0;\n    rateLimitNextReset = Date.now() + RATE_LIMIT_WINDOW;\n  }\n  \n  try {\n    rateLimitCounter++;\n    return await requestFunc();\n  } catch (error) {\n    if (error.code === 429 &amp;&amp; retries &gt; 0) {\n      console.log(`Rate limit reached. Retrying in ${backoffTime}ms...`);\n      await new Promise(resolve =&gt; setTimeout(resolve, backoffTime));\n      return await requestWithBackoff(requestFunc, retries - 1, backoffTime * 2);\n    } else {\n      throw error;\n    }\n  }\n}\n\nexports.main = async (event, callback) =&gt; {\n  const HubSpotClient = new HubSpot.Client({ accessToken: HubSpot_PRIVATE_APP_ACCESS_TOKEN });\n\n  try {\n    const contactResult = await requestWithBackoff(() =&gt; HubSpotClient.crm.contacts.basicApi.getById(event.object.objectId, [PROPERTY_USED_TO_DEDUPE_CONTACTS], { archived: 'false' }));\n\n    if (!contactResult || !contactResult.properties) {\n  console.log(`Failed to retrieve contact. Contact ID: ${event.object.objectId}`);\n  console.log('Error:', JSON.stringify(contactResult, null, 2));\n  return;\n} else {\n  console.log(`Successfully retrieved contact. Contact ID: ${event.object.objectId}`);\n  console.log('Contact:', JSON.stringify(contactResult, null, 2));\n}\n\n\n\n\n\n    if (!contactResult.properties) {\n      console.log(`Contact properties not found. Contact ID: ${event.object.objectId}`);\n      return;\n    }\n\t\n    console.log('contactResult:', JSON.stringify(contactResult, null, 2));\n    let dedupePropValue = contactResult.properties[PROPERTY_USED_TO_DEDUPE_CONTACTS];\n\n    console.log(`Looking for duplicates based on ${PROPERTY_USED_TO_DEDUPE_CONTACTS} = ${dedupePropValue}`);\n    const searchResults = await requestWithBackoff(() =&gt; HubSpotClient.crm.contacts.searchApi.doSearch({\n      filterGroups: [{\n        filters: [{\n          propertyName: PROPERTY_USED_TO_DEDUPE_CONTACTS,\n          operator: 'EQ',\n          value: dedupePropValue\n        }]\n      }],\n      sorts: [\n        { propertyName: 'createdate', direction: 'ASCENDING' }\n      ],\n      limit: 10 // Limit the search to the two oldest records\n    }));\n\n    if (!searchResults || !searchResults.body) {\n  console.log(`Failed to retrieve search results. Contact ID: ${event.object.objectId}`);\n  console.log('SearchResults:', JSON.stringify(searchResults, null, 2)); // Add this line\n  return;\n}\n\n\nconst idsToMerge = searchResults.body.results\n  .map(object =&gt; object.id)\n  .filter(vid =&gt; Number(vid) !== Number(event.object.objectId));\n\n\n    if (idsToMerge.length === 0) {\n      console.log('No matching contact, nothing to merge');\n      return;\n    } else {\n      console.log(`Found multiple potential contact IDs ${idsToMerge.join(', ')} to merge`);\n\n      // Find the ID of the oldest contact to merge into\n      const oldestContactId = searchResults.body.results[0].id;\n      console.log(`Merging enrolled contact id=${event.object.objectId} into contact id=${oldestContactId}`);\n\n      // Merge the enrolled contact into the oldest contact\n      await requestWithBackoff(() =&gt; HubSpotClient.apiRequest({\n        method: 'POST',\n        path: `/contacts/v1/contact/merge-vids/${oldestContactId}`,\n        body: {\n          vidToMerge: event.object.objectId\n        }\n      }));\n\n      console.log('Contacts merged!');\n    }\n  } catch (error) {\n    console.error('An error occurred during contact deduplication:', error);\n  }\n};```"
+  },
+  {
+    "poster": {
+      "poster_name": "Zach King",
+      "poster_handle": "zach977"
+    },
+    "time_stamp": "2023-03-23 15:04:41",
+    "text": "<@U01B6251Q66> I'm not sure if this will work, but what happens if you move the  if(count == 4) code block to after the execution of the main() function?"
+  },
+  {
+    "poster": {
+      "poster_name": "Zach King",
+      "poster_handle": "zach977"
+    },
+    "time_stamp": "2023-03-23 15:05:04",
+    "text": "I'm not sure if code is still executed after the main function is completed but it may be worth a try"
+  },
+  {
+    "poster": {
+      "poster_name": "Michelle Chu",
+      "poster_handle": "contact845"
+    },
+    "time_stamp": "2023-03-23 16:16:10",
+    "text": "is there a way to create a new deal each year 30 days before a contact's birthday? e.g. contact books company for event space &gt; the following year, 30 days before their birthday, a new deal is created for the contact and an email is sent to the regional sales rep",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-03-23 17:29:34"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Michelle Chu",
+      "poster_handle": "contact845"
+    },
+    "time_stamp": "2023-03-23 17:29:34",
+    "text": "never mind, i figured it out! i just added a custom property of \"Birthday\" and created a workflow to create a deal 30 days before the contact's birthday (enrollment criteria is if they've had a deal won before) and notify the owner of that contact"
+  }
+]

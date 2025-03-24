@@ -1,0 +1,165 @@
+[
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-10-02 06:53:09",
+    "text": "Unfortunately no I don't think this functionality exists, this would be pretty nice though just like how airtable's api does it. Views are just lists of filters, so it would be pretty easy to figure out which properties you need to filter by and then you can build an api call for each view."
+  },
+  {
+    "poster": {
+      "poster_name": "Colin Goudie",
+      "poster_handle": "colin947"
+    },
+    "time_stamp": "2022-10-02 15:50:17",
+    "text": "Damn. Yeah this was for a SAAS integration so I can’t control how clients set up their views. I just want to avoid having to pull all contacts and companies etc . "
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-10-02 15:52:51",
+    "text": "So how would you know what view to pull anyway, if you don't have access to the portal\n?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-10-02 16:20:16",
+    "text": "Also lists are very similar to views, I don't know if you've checkout going down that route: <https://legacydocs.HubSpot.com/docs/methods/lists/get_list_contacts>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-10-02 16:20:31",
+    "text": "You can get all the contacts for a specific list using that endpoint"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-10-02 16:21:00",
+    "text": "Here's the complete lists of lists endpoints: <https://developers.HubSpot.com/docs/api/marketing/contact-lists>"
+  },
+  {
+    "poster": {
+      "poster_name": "Colin Goudie",
+      "poster_handle": "colin947"
+    },
+    "time_stamp": "2022-10-02 16:21:31",
+    "text": "yeah it looks like the old API can do it :slightly_smiling_face: I'm using the a ruby gem wrapper so not sure if that's supported but I'll definitely dig a bit deeper."
+  },
+  {
+    "poster": {
+      "poster_name": "Colin Goudie",
+      "poster_handle": "colin947"
+    },
+    "time_stamp": "2022-10-02 16:21:37",
+    "text": "thanks"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-10-02 18:17:13",
+    "text": "I know with the node sdk you can make arbitrary api calls with this:\n```.apiRequest({\n    path: \"/account-info/v3/details\",\n    method: \"GET\",\n  });```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-10-02 18:17:37",
+    "text": "but I don't really know if ruby supports that, are you using the community or the main edition?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-10-02 18:17:48",
+    "text": "Main: <https://github.com/HubSpot/HubSpot-api-ruby>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-10-02 18:17:56",
+    "text": "Community: <https://github.com/HubSpotCommunity/HubSpot-ruby>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-10-02 18:21:16",
+    "text": "I just was digging though the source for the main sdk and I believe that this will work for arbitrary calls: <https://github.com/HubSpot/HubSpot-api-ruby/blob/master/lib/HubSpot/discovery/base_api_client.rb>"
+  },
+  {
+    "poster": {
+      "poster_name": "Colin Goudie",
+      "poster_handle": "colin947"
+    },
+    "time_stamp": "2022-10-02 18:22:34",
+    "text": "Yep thanks. That works fine. I can't see a corresponding company list endpoint?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-10-02 18:25:19",
+    "text": "Yeah, I don't see one either. possibly try this:\n```<https://api.hubapi.com/companies/v1/lists/{listid}/companies/all?hapikey=demo>```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-10-02 18:26:05",
+    "text": "I really don't know if that will work though, it also might be that the lists api will work for companies just swag out the listid for a list of companies"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-10-02 20:08:07",
+    "text": "Just found this: <https://community.HubSpot.com/t5/APIs-Integrations/How-to-get-Company-Lists-from-API/td-p/364334>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-10-02 20:08:44",
+    "edited": {
+      "time_stamp": "2022-10-02 20:10:29"
+    },
+    "text": "Seems like it's unsupported, I ran every test I could think of using that above endpoint but just couldn't get it to return a company list. Sometime there's undocumented abilities"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-10-02 20:09:06",
+    "text": "Sorry I couldn't be more helpful"
+  },
+  {
+    "poster": {
+      "poster_name": "Dale Giles",
+      "poster_handle": "dale.giles"
+    },
+    "time_stamp": "2022-10-03 00:26:02",
+    "text": "Hello, I ended up creating my own cut down version. I made a class for each part of HubSpot I wanted to talk to and shared my AccessToken class among them."
+  }
+]

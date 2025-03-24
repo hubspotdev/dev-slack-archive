@@ -1,0 +1,39 @@
+[
+  {
+    "poster": {
+      "poster_name": "George Grigorita",
+      "poster_handle": "george571"
+    },
+    "time_stamp": "2024-07-11 09:42:05",
+    "text": "I'm using a UI Library (`Mantine UI`), and I've set the theme and its provider (MantineProvider) together with all required styles in a `Layout` component. I'm using this `Layout` component to wrap the `&lt;Island&gt;` in the module index, and then I'm using it again in the frontend component that the Island is pointing to.\nQuick code example:\n\nLayout component.\n`export default function Layout({ _children_ }) {`\n  `return (`\n    `&lt;React.StrictMode&gt;`\n      `&lt;MantineProvider _theme_={theme}&gt;`\n        `{_children_}`\n      `&lt;/MantineProvider&gt;`\n    `&lt;/React.StrictMode&gt;`\n  `);`\n`};`\n\nModule index:\n`export const Component = ({ _fieldValues_ }) =&gt; {`\n  `return (`\n    `&lt;Layout&gt;`\n      `&lt;Island`\n        `_module_={Leads}`\n        `_hydrateOn_=\"load\"`\n        `_companies_={companies}`\n        `{...fieldValues}`\n      `/&gt;`\n    `&lt;/Layout&gt;`\n  `);`\n`};`\n\nIsland component:\n`&lt;Layout&gt;`\n  `&lt;Box _pos_=\"relative\" _style_={{ maxWidth: 494 }}&gt;`\n    `&lt;DataTable`\n      `_records_={_companies_}`\n    `/&gt;`\n  `&lt;/Box&gt;`\n`&lt;/Layout&gt;`\n\nIf I remove any Layout component, I get an error about the provider not being imported. Is this the right/correct/efficient way to use a UI Library with CMS React?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-07-11 13:08:40"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Hominick",
+      "poster_handle": "never.go.hollow.trill"
+    },
+    "time_stamp": "2024-07-11 12:59:27",
+    "edited": {
+      "time_stamp": "2024-07-11 13:23:16"
+    },
+    "text": "Apologies if this is noted somewhere, I did try searching, but how can we manage a module which uses a `HubDbRowField`  across a sandbox and production? It's associated with a specific table id via `tableNameOrId`, which is unique to an env, which is causing errors when I try to deploy to the other env.\n> *HubDB Row selector field hubDbRow requires a valid HubDB table in published state. Provided HubDb table does not exist or not yet published.\nIs there a way to conditionally choose which id to use based on which account is active? I wasn't able to inspect the process during the build to see if I could read it off of that, but maybe there's something there?\n\n*SOLVED:* As long as your table name (not its label, that was my mistake) is identical across envs, you can use that in lieu of an ID."
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Hominick",
+      "poster_handle": "never.go.hollow.trill"
+    },
+    "time_stamp": "2024-07-11 13:08:40",
+    "edited": {
+      "time_stamp": "2024-07-11 14:07:19"
+    },
+    "text": "(I'm just a random dev, I don't work for HS.) Seems to me like the only way you could do it. Ideally you'd import a module in your base.html template and have it wrap everything so it's only needed once, but afaik that's not possible."
+  }
+]

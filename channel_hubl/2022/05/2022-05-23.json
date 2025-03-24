@@ -1,0 +1,96 @@
+[
+  {
+    "poster": {
+      "poster_name": "Alex Strand",
+      "poster_handle": "alex619"
+    },
+    "time_stamp": "2022-05-23 03:49:55",
+    "text": "Hi everyone :wave: I am having some trouble with the Hubl sort filter (on a blog listing template) and hope that someone here can offer some assistance!\n\nI have create a custom module containing a radio custom field that allows our content editor to either “Featured posts” or “Default”, which returns either true or false.\n\nThe blog posts are being sorted properly, using:\n`{% for content in contents|sort(false, false, 'widgets.module_16479422549884.body.featured_story') %}`\n\nThe error I am running into is: If a new blog post is created it seems that the `widgets.module_16479422549884.body.featured_story`  data (either true or false) is not available for that post automatically at the time that the post is created and the listing breaks - meaning that no content is displayed on the listing page.\n\nThe only solution I have is to manually go into the blog post -&gt; custom module for “Featured Story” and change the radio button selection, forcing the post to update. Once I have done this, I can see the expected data in the posts API and the listing page works again.\n\nI just wonder if there is any way to force new posts to contain the `widgets.module_16479422549884.body.featured_story`  data by default, without having to update the post a second time after publishing?\n\nThanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe O'Hara",
+      "poster_handle": "johara"
+    },
+    "time_stamp": "2022-05-23 03:56:21",
+    "text": "Hi. In order to use HubL on contact properties you will need to use the <https://knowledge.HubSpot.com/email/create-programmable-emails|Programmable Email Beta>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jörg Lehmann",
+      "poster_handle": "joerg.lehmann"
+    },
+    "time_stamp": "2022-05-23 06:19:24",
+    "text": "Thanks for the answers. Joe is right. Simply using the a custom module with utilizing the programmable email beta worked in the end."
+  },
+  {
+    "poster": {
+      "poster_name": "Christopher Chiha",
+      "poster_handle": "christopher051"
+    },
+    "time_stamp": "2022-05-23 10:56:01",
+    "edited": {
+      "time_stamp": "2022-05-23 13:02:11"
+    },
+    "text": "Hello,\n\nI am sending a daily digest to my partners that is being populated from mu hubdb table, and is being triggered by a workflow.\nCurrently if the partner email address is not found in the table, i am sending a different section in my email. (\"You're all caught up for today\")\n\nI would like to know if it is possible to only send the email to enrolled people in the workflow, if their email address is present in the hubdb table.\nSo i have a list of partners that are being enrolled in my workflow, ideally, i want if the enrolled partner is not found in the table, i don't want the email communication top be triggered to him. is this possible?\n\n\nAnother question i had in mind:\nI have rates stored on backend that are updated often. When they are updated, they are pushed to hubdb table.\nIs it possible to trigger a workflow when a new row is added to the hubdb table ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Adams",
+      "poster_handle": "jasonadams.sales"
+    },
+    "time_stamp": "2022-05-23 12:53:34",
+    "text": "I am attempting to use a multiselect column in a HubDB table to call upon for a query parameter for the main dynamic listing page. I have created the main IF/ELSE that first asks if it's a listing, and IF not, then show the content for the listings page and run a FOR loop for each row. All that is working great. I also created a form that cycles through the multiselect options housed in one of the columns of the HubDB table, and each HTML Option for that dropdown is rendering correctly as each option name in that column (hooray!). When you submit the form, it correctly updates the URL with the appended UTM/query parameter (hooray!). The only thing that doesn't work is when I then move to create a listing card of each row based on that parameter. For some reason, it only lists everything, it ignores whichever parameter was selected in the filter form :disappointed: I have been bashing this all day. I will provide code..."
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Adams",
+      "poster_handle": "jasonadams.sales"
+    },
+    "time_stamp": "2022-05-23 12:54:44",
+    "text": "```&lt;!--The Listing of Products starts here--&gt;     \n{% elif dynamic_page_hubdb_table_id %}\n      \n&lt;!--Filters for Products--&gt;\n&lt;div id=\"search-container\"&gt;\n&lt;form id=\"form_id\" method=\"get\"&gt;\n    &lt;div class=\"product-type-container\"&gt;\n        &lt;label for=\"product-type\"&gt;Product Types&lt;/label&gt;\n        &lt;select id=\"product-type\" name=\"product-type\" form=\"form_id\"&gt;\n            &lt;option value=\"show-all\"&gt;Show All&lt;/option&gt;\n            {% set product_type = hubdb_table_column('xxx', \"product_type\").options %}\n            {% for choice in product_type %}\n                {% set product_type_options = product_type_options~choice.name|list %}\n                {% if choice.name == request.query_dict.product_type.name %}\n                    &lt;option selected=\"selected\" value=\"{{ choice.name }}\"&gt;{{ choice.name }}&lt;/option&gt;\n                {% else %}\n                    &lt;option value=\"{{ choice.name }}\"&gt;{{ choice.name }}&lt;/option&gt;\n                {% endif %}\n            {% endfor %}\n        &lt;/select&gt;\n    &lt;/div&gt;\n    &lt;div class=\"submit-button-container\"&gt;\n      &lt;input id=\"submit-button\" type=\"submit\" value=\"search\"&gt;\n    &lt;/div&gt;\n&lt;/form&gt;\n&lt;/div&gt;\n&lt;!--END Filters for Products--&gt;\n&lt;!--Set the Query Parameters--&gt;\n{% set queryparam = \"\" %}\n    {% if request.query_dict.product_type in [\"1\", \"2\", \"3\", \"4\", \"5\", \"6\"] %}\n      {% set queryparam = queryparam ~ \"&amp;product-type=\"~request.query_dict.product_type|urlencode %}\n    {% endif %}\n      \n{% set primary_products = hubdb_table_rows(5343753, queryparam) %}\nSelected filter is: {{ queryparam }}.\n        &lt;ul&gt;\n          {% for row in primary_products %}\n          &lt;li&gt;&lt;a href=\"{{ request.path }}/{{ row[\"hs_path\"] }}\"&gt;{{ row[\"hs_name\"] }}&lt;/a&gt;&lt;/li&gt;                \n          {% endfor %}\n        &lt;/ul&gt;\n\n\n{% endif %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Adams",
+      "poster_handle": "jasonadams.sales"
+    },
+    "time_stamp": "2022-05-23 12:55:30",
+    "text": "All code above this is rendering the product pages from HubDB, which is why it starts with the elif and ends with the endif."
+  },
+  {
+    "text": "Here's what it looks like. The unordered list does not update to only show what was selected in the dropdown, even though the URL updated with the correct parameter.",
+    "time_stamp": "2022-05-23 12:58:58"
+  },
+  {
+    "text": "Does anyone know a way, when looping through a group of fields, to stop hubl from putting the child elements in alphabetical order?",
+    "time_stamp": "2022-05-23 16:40:38"
+  },
+  {
+    "text": "<@U03EG1Q4TB2> Sooo... Not sure what happened, I haven't changed this code since it started working, but I came back to this project after a couple days and the Unicode icons are having the same issue again. Only seems to happen on certain icons... The normal arrows seems two work (image 3) but variations don't (image 4). I added the code in and the error message I'm getting on the page when I try to select one of the icons that doesn't work. I am not getting any errors in the module itself.",
+    "time_stamp": "2022-05-23 17:51:27"
+  },
+  {
+    "text": "Also here is a print out of the icon_field when it works and again when it isn't.",
+    "time_stamp": "2022-05-23 17:52:56"
+  },
+  {
+    "text": "Does anyone know any other parameters other than MIDDLE_CENTER that work with backgroundPosition here? I'm trying to get the CSS equivalent of left center here but I can't figure out the proper wording or if anything else except MIDDLE_CENTER is accepted.",
+    "time_stamp": "2022-05-23 21:41:02",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-05-23 22:45:22"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nathaniel Koehler",
+      "poster_handle": "nathankoehle"
+    },
+    "time_stamp": "2022-05-23 22:45:22",
+    "text": "I figured out how to get what I wanted, all you need to do is put 0 for left align for backgroundPosition"
+  }
+]

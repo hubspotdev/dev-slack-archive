@@ -1,0 +1,28 @@
+[
+  {
+    "text": "Hi… does anyone know of HubSpot’s docs on this page have a typo? <https://developers.HubSpot.com/docs/api/events/cookie-banner#hs_cos_wrapper_widget_1634932632413_>\n\nAlmost all code examples uses a variable named\n```_hsp```\nbut there is one example that uses\n\n```_hsq```\nNote the ‘q’ vs ‘p’.",
+    "time_stamp": "2023-05-29 04:26:25",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-05-29 12:30:36"
+      },
+      {
+        "time_stamp": "2023-05-29 16:05:20"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Voorzanger",
+      "poster_handle": "birdman"
+    },
+    "time_stamp": "2023-05-29 12:30:36",
+    "text": "afaik it is correct."
+  },
+  {
+    "text": "Thanks Martin. Yeah I checked with HubSpot support and they said it was correct too.\n\nBut I had used the ‘do not track’ code straight from the example and ran into the error in the image below.\n\nIt seems the example code for the ‘do not track’ setting does not initialize the `_hsq` array, which leads to this error (unlike the ‘remove cookies’ example on line 6 above, which *does* initialise the `_hsp` array).\n\nSo I suspect the code example really should be:\n\n```/*\nExample code to place the __hs_do_not_track cookie for\nthe visitor when they click an element with the 'doNotTrack' id.\n*/\n\n/* ADDITION TO HubSpot'S CODE EXAMPLE ON NEXT LINE */\nvar _hsq = window._hsq = window._hsq || [];\n\ndocument.getElementById(\"doNotTrack\").onclick = function() {\n    _hsq.push(['doNotTrack']);\n};```\nSharing in case it’s useful to others. Not sure how to suggest a doc update for HubSpot.",
+    "time_stamp": "2023-05-29 16:05:20"
+  }
+]

@@ -1,0 +1,132 @@
+[
+  {
+    "poster": {
+      "poster_name": "Simon Lafis",
+      "poster_handle": "simon"
+    },
+    "time_stamp": "2022-08-30 02:53:15",
+    "text": "Hey!\n\nHas anyone managed to get the MP4 url from a HubDB video field?\nThe field only returns an ID and it is not the ID of the file in filemanager.",
+    "reply_count": 9,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2022-08-30 06:40:00"
+      },
+      {
+        "time_stamp": "2022-08-30 07:27:24"
+      },
+      {
+        "time_stamp": "2022-08-30 08:19:12"
+      },
+      {
+        "time_stamp": "2022-08-30 08:55:08"
+      },
+      {
+        "time_stamp": "2022-08-30 11:52:50"
+      },
+      {
+        "time_stamp": "2022-08-30 11:55:26"
+      },
+      {
+        "time_stamp": "2022-08-30 11:57:52"
+      },
+      {
+        "time_stamp": "2022-08-30 11:58:29"
+      },
+      {
+        "time_stamp": "2022-08-30 11:58:37"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2022-08-30 06:40:00",
+    "text": "You'll have to use the video hubl tag for that field type"
+  },
+  {
+    "poster": {
+      "poster_name": "Simon Lafis",
+      "poster_handle": "simon"
+    },
+    "time_stamp": "2022-08-30 07:27:24",
+    "text": "Was hoping I could avoid it. Messy markup and iframe. :smiling_face_with_tear:\nI may have found an API I can use to get the MP4 url."
+  },
+  {
+    "poster": {
+      "poster_name": "William Spiro",
+      "poster_handle": "wspiro"
+    },
+    "time_stamp": "2022-08-30 07:31:18",
+    "text": "That sounds like it might be a bug to me"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2022-08-30 08:19:12",
+    "text": "Maybe just use a url column type instead?"
+  },
+  {
+    "poster": {
+      "poster_name": "Simon Lafis",
+      "poster_handle": "simon"
+    },
+    "time_stamp": "2022-08-30 08:55:08",
+    "edited": {
+      "time_stamp": "2022-08-30 12:02:39"
+    },
+    "text": "Here is the solution I ended up with.\nThank you for your input though! :star:\n\n```////////////////\n// HubSpot Video\nconst hsVideoObserver = new IntersectionObserver(entries =&gt; {\n\tentries.forEach(entry =&gt; {\n\t\tif (entry.isIntersecting) {\n\t\t\thsVideoObserver.unobserve(entry.target);\n\n\t\t\tconst videoId = entry.target.dataset.hsVideo;\n\t\t\tconst portalId = sleekVars.portalId;\n\n\t\t\tif (portalId &amp;&amp; videoId) {\n\t\t\t\tfetch(`<https://app.HubSpot.com/api/video/v1/public/$%7BvideoId%7D/player?portalId%3D$%7BportalId%7D%60|https://app.HubSpot.com/api/video/v1/public/${videoId}/player?portalId=${portalId}`>)\n\t\t\t\t\t.then(res =&gt; res.json())\n\t\t\t\t\t.then(data =&gt; {\n\t\t\t\t\t\tif (typeof data.video.fileUrl !== 'undefined') {\n\t\t\t\t\t\t\tentry.target.src = data.video.fileUrl;\n\t\t\t\t\t\t}\n\t\t\t\t\t});\n\t\t\t}\n\t\t}\n\t});\n}, {threshold: .25});\n\ndocument.querySelectorAll('[data-hs-video]').forEach(el =&gt; {\n\thsVideoObserver.observe(el);\n});```\n`&lt;video data-hs-video=\"{{ VIDEO_ID }}\" controls preload=\"none\"&gt;&lt;/video&gt;`"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-30 11:52:50",
+    "text": "you can also parse the hubl tag"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-30 11:55:26",
+    "text": "I would feed the tag into some of this"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-30 11:57:52",
+    "text": "so like `&lt;div data-video=\"{{ videomodule-that-would-normally-display-video }}\"&gt;`"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-30 11:58:29",
+    "text": "and it looks like that is what you did LOL"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-30 11:58:37",
+    "text": "I didn’t see the bottom part smh"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrew Myles",
+      "poster_handle": "amyles"
+    },
+    "time_stamp": "2022-08-30 12:26:48",
+    "text": "Hi There,\n\nThe <https://developers.HubSpot.com/docs/cms/hubl/variables/quotes|documentation on Quote template variables> has an example of adding a customer's logo to a quote; however I can't verify that this hs_avatar_filemanager_key is actually doing/getting anything. Has anyone else used this successfully?\n\n`{% set company_avatar_url = template_data.quote.associated_objects.company.hs_avatar_filemanager_key %}`\n`{% if company_avatar_url %}`\n  `&lt;img src=\"{{ template_data.quote.associated_objects.company.hs_avatar_filemanager_key }}\" width=\"400\" alt=\"{{ template_data.quote.associated_objects.company.name }}\"&gt;`\n`{% else %}`\n  `&lt;!-- company does not have an assigned image--&gt;`\n`{% endif %}`"
+  }
+]

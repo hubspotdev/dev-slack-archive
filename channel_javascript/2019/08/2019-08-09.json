@@ -1,0 +1,168 @@
+[
+  {
+    "poster": {
+      "poster_name": "Doug Osborne",
+      "poster_handle": "doug.osborne"
+    },
+    "time_stamp": "2019-08-09 09:25:36",
+    "text": "Hey, wanted to reopen this discussion now that we have some local dev tools to work with! I've successfully implemented a Vue app in HS importing Vue from a CDN, which works beautifully. However, we're looking at potentially building out a design system, and entertaining the idea of doing that with Vue components. However, I think that would require using the Vue CLI build process. Does anyone have any thoughts on whether or not that would work non-SPA with the HS setup?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon K. Wheeler",
+      "poster_handle": "jon.k.wheeler"
+    },
+    "time_stamp": "2019-08-09 09:27:14",
+    "text": "In the same boat <@UJQNNKKHN>. I don't think coding react or vue unminified in the HS codebase is the real win here. Been brainstorming  a lot and trying to find a work around."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-08-09 09:29:02",
+    "text": "HS auto-minifies the JS if you actually include the JS file in your design manager so that's not a problem.\n\nThe way I approach it is, each custom module's js is separated. The vuejs file itself is a linked asset.\n\nThe minification and combination of the js I leave to HS"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-08-09 09:29:28",
+    "text": "I do think though the combination of js is temporarily disabled(think it had bugs)"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-08-09 09:30:27",
+    "text": "going this route prevents loading js multiple times on a page if say you had multiple instances of a component.\n\nIf you plan to have a bunch of components that you can re-use throughout several modules. I would make that be a linked JS file."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon K. Wheeler",
+      "poster_handle": "jon.k.wheeler"
+    },
+    "time_stamp": "2019-08-09 09:30:50",
+    "text": "I would doubt HS lets you write like Babel though, and transpile back to ES2015?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-08-09 09:32:06",
+    "text": "You are correct they don't.\n\nMy method of dealing with that prior to the local dev beta has been to code in a code pen and paste over the transpiled code. (skips the local setup and dealing with the fact the FTP doesn't play well with build processes like this)"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon K. Wheeler",
+      "poster_handle": "jon.k.wheeler"
+    },
+    "time_stamp": "2019-08-09 09:33:06",
+    "text": "That's a lot of effort. Not sure that is worth the ROI with that workflow for me."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-08-09 09:33:09",
+    "text": "I suggest joining <#CLJJXGTC0|local-development> and <#CKMLPEGTV|local-dev>  if you haven't yet and give feedback on it if you have any. :sprocket:  :eyes:  are watching"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon K. Wheeler",
+      "poster_handle": "jon.k.wheeler"
+    },
+    "time_stamp": "2019-08-09 09:33:36",
+    "text": "Already have to Luke Summerfield :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-08-09 09:34:14",
+    "text": "With the local-dev-beta you should be able to set up a local build process. Everyone however is still figuring out the best ways to work."
+  },
+  {
+    "poster": {
+      "poster_name": "Doug Osborne",
+      "poster_handle": "doug.osborne"
+    },
+    "time_stamp": "2019-08-09 09:38:52",
+    "text": "Ah, interesting... so would you use inline templates then?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-08-09 09:39:34",
+    "text": "Yes, that's how I do it. Makes it simpler, and the rendering benefit isn't too bad either."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon K. Wheeler",
+      "poster_handle": "jon.k.wheeler"
+    },
+    "time_stamp": "2019-08-09 09:41:45",
+    "text": "Pasted this to Luke and a few others... but I'll share with you too <@UJQNNKKHN>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon K. Wheeler",
+      "poster_handle": "jon.k.wheeler"
+    },
+    "time_stamp": "2019-08-09 09:42:03",
+    "edited": {
+      "time_stamp": "2019-08-09 09:45:44"
+    },
+    "text": "I've been exploring how we might setup a <https://micro-frontends.org/> between our design system JS and HubSpot CMS. The idea of an MFE (Mirco Front-End) registry hooked up to the HubSpot CMS sounds sick...\n\nThen we could utilize our Design System into HS without really marrying into HS's code base.\n\nThen you could output stuff like this straight into the CMS.\n\n```{% set languages = ['HTML', 'CSS', 'Javascript', 'Python', 'Ruby', 'PHP,', 'Java'] %}\n\n&lt;inv-text variant=\"heading-600\"&gt;Languages&lt;/inv-text&gt;;\n&lt;ul&gt;\n{% for language in languages %}\n&lt;li&gt;\n&lt;inv-text variant=\"copy-400\"&gt;{{ language }}&lt;/inv-text&gt;\n&lt;/li&gt;\n{% endfor %}\n&lt;/ul&gt;```\n`inv-text` would be a component registered somewhere (we have our own server), but you get my gist."
+  },
+  {
+    "poster": {
+      "poster_name": "Doug Osborne",
+      "poster_handle": "doug.osborne"
+    },
+    "time_stamp": "2019-08-09 09:43:05",
+    "text": "Oo, interesting!"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon K. Wheeler",
+      "poster_handle": "jon.k.wheeler"
+    },
+    "time_stamp": "2019-08-09 09:43:45",
+    "text": "It's framework independent. You can make all your stuff in vue or react or svelte or whatever."
+  },
+  {
+    "poster": {
+      "poster_name": "Doug Osborne",
+      "poster_handle": "doug.osborne"
+    },
+    "time_stamp": "2019-08-09 09:46:26",
+    "text": "Ok, that gives me a lot to play with over the weekend.  Excited to see what we can do with the local dev. Thank you gents for the insight!"
+  },
+  {
+    "poster": {
+      "poster_name": "Luke Summerfield",
+      "poster_handle": "lukesummerfield"
+    },
+    "time_stamp": "2019-08-09 12:54:20",
+    "text": "Excited to hear what you report back <@UJQNNKKHN>"
+  },
+  {
+    "poster": {
+      "poster_name": "Luke Summerfield",
+      "poster_handle": "lukesummerfield"
+    },
+    "time_stamp": "2019-08-09 12:59:38",
+    "edited": {
+      "time_stamp": "2019-08-09 13:00:09"
+    },
+    "text": "Just created a new, little channel for brainstorming, exploring, and collaborating around this topic - <#CM9UXHWKH|js-frameworks-in-HubSpot-cms> :point_left: <@UJQNNKKHN> <@U7SL518D6> <@UL1S6TULB>"
+  }
+]

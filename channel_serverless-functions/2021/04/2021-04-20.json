@@ -1,0 +1,195 @@
+[
+  {
+    "text": "hello all ,\nI am trying to create mysql connection inside serverless functions .unfortunately i am getting timeout error.can anybody tell me how can i resolve this issue?\nThanks!",
+    "time_stamp": "2021-04-20 06:14:18",
+    "reply_count": 18,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-04-20 07:15:20"
+      },
+      {
+        "time_stamp": "2021-04-20 07:22:52"
+      },
+      {
+        "time_stamp": "2021-04-20 07:23:29"
+      },
+      {
+        "time_stamp": "2021-04-20 07:24:38"
+      },
+      {
+        "time_stamp": "2021-04-20 07:24:46"
+      },
+      {
+        "time_stamp": "2021-04-20 07:25:41"
+      },
+      {
+        "time_stamp": "2021-04-20 07:34:56"
+      },
+      {
+        "time_stamp": "2021-04-20 07:35:53"
+      },
+      {
+        "time_stamp": "2021-04-20 07:36:28"
+      },
+      {
+        "time_stamp": "2021-04-20 07:36:47"
+      },
+      {
+        "time_stamp": "2021-04-20 07:38:56"
+      },
+      {
+        "time_stamp": "2021-04-20 08:09:52"
+      },
+      {
+        "time_stamp": "2021-04-23 03:41:49"
+      },
+      {
+        "time_stamp": "2021-04-23 04:12:28"
+      },
+      {
+        "time_stamp": "2021-04-23 07:00:21"
+      },
+      {
+        "time_stamp": "2021-05-02 22:08:48"
+      },
+      {
+        "time_stamp": "2021-05-04 15:06:46"
+      },
+      {
+        "time_stamp": "2021-05-07 02:20:54"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Krainer",
+      "poster_handle": "bkrainer"
+    },
+    "time_stamp": "2021-04-20 07:15:20",
+    "text": "serverless functions have a limit of 10s and it looks like this function exceeded that limit"
+  },
+  {
+    "poster": {
+      "poster_name": "guriqbal singh dhillon",
+      "poster_handle": "guriqbal.d"
+    },
+    "time_stamp": "2021-04-20 07:22:52",
+    "edited": {
+      "time_stamp": "2021-04-20 07:23:15"
+    },
+    "text": "<@UEKMY50SU> may be thats the reason .so is there any other way to make connection to my sql database without getting this error?"
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Krainer",
+      "poster_handle": "bkrainer"
+    },
+    "time_stamp": "2021-04-20 07:23:29",
+    "text": "is it taking &gt; 10s to connect to the DB?"
+  },
+  {
+    "poster": {
+      "poster_name": "guriqbal singh dhillon",
+      "poster_handle": "guriqbal.d"
+    },
+    "time_stamp": "2021-04-20 07:24:38",
+    "text": "yes it gives me this error after 10 sec load of my page."
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Krainer",
+      "poster_handle": "bkrainer"
+    },
+    "time_stamp": "2021-04-20 07:24:46",
+    "text": "how are you connecting to the DB?"
+  },
+  {
+    "poster": {
+      "poster_name": "guriqbal singh dhillon",
+      "poster_handle": "guriqbal.d"
+    },
+    "time_stamp": "2021-04-20 07:25:41",
+    "edited": {
+      "time_stamp": "2021-04-20 07:27:55"
+    },
+    "text": "exports.main = (context, sendResponse) =&gt; {\n\n  console.log('ss');\n  var mysql = require('mysql');\n\n\n    const con = mysql.createConnection({\n        host: '',\n        user: '',\n        password: '',\n        database:'',\n        connectionLimit: 15,\n        queueLimit: 30,\n        port: 3306,\n        acquireTimeout: 1000000\n    });\n\n\n con.connect(function(err) {\n  if (err) throw err;\n//   console.log(\"Connected!\");\n    sendResponse({body: 'Connection established.', statusCode: 200});\n});"
+  },
+  {
+    "poster": {
+      "poster_name": "guriqbal singh dhillon",
+      "poster_handle": "guriqbal.d"
+    },
+    "time_stamp": "2021-04-20 07:34:56",
+    "text": "<@UEKMY50SU> i Hope the above connection code is correct."
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Krainer",
+      "poster_handle": "bkrainer"
+    },
+    "time_stamp": "2021-04-20 07:35:53",
+    "text": "the problem is you're assuming there is a mysql DB within the serverless function, but that is not the case"
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Krainer",
+      "poster_handle": "bkrainer"
+    },
+    "time_stamp": "2021-04-20 07:36:28",
+    "text": "which is why it's timing out"
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Krainer",
+      "poster_handle": "bkrainer"
+    },
+    "time_stamp": "2021-04-20 07:36:47",
+    "text": "i'm not sure of your use case, but maybe it'd make more sense to use something like HubDB as your data store instead"
+  },
+  {
+    "poster": {
+      "poster_name": "guriqbal singh dhillon",
+      "poster_handle": "guriqbal.d"
+    },
+    "time_stamp": "2021-04-20 07:38:56",
+    "edited": {
+      "time_stamp": "2021-04-20 07:39:43"
+    },
+    "text": "<@UEKMY50SU> i can use hubdb but there are certain limitations which is why i am trying to access my own db.So is it possible if i can access db with mysql in serverless functions?"
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Krainer",
+      "poster_handle": "bkrainer"
+    },
+    "time_stamp": "2021-04-20 08:09:52",
+    "text": "it's not possible to connect to a mysql DB from a serverless function. you'd need to use a HubSpot datastore like HubDB or Custom Objects. what are the limitations of HubDB that won't work for you?"
+  },
+  {
+    "poster": {
+      "poster_name": "Randeep Singh",
+      "poster_handle": "randeep.s"
+    },
+    "time_stamp": "2021-04-20 08:35:28",
+    "text": "Hello\nCan we create redirect url in serverless function?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-04-20 09:31:33"
+      },
+      {
+        "time_stamp": "2021-05-01 08:31:12"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Krainer",
+      "poster_handle": "bkrainer"
+    },
+    "time_stamp": "2021-04-20 09:31:33",
+    "text": "you can return a redirect status code `3xx` and then set the `Location` header"
+  }
+]

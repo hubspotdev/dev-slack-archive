@@ -1,0 +1,308 @@
+[
+  {
+    "poster": {
+      "poster_name": "Masato Takeda",
+      "poster_handle": "masato"
+    },
+    "time_stamp": "2023-05-12 06:34:05",
+    "text": "Hi Jacob, thank you for your reply! I appreciate it, let me clarify it further. Let's say I create a Commission, and when I fetch it, I receive a value of 10000. However, in cases where multiple currencies are available in your Deal, it's not clear whether this value is in USD or EUR. I was wondering how I can obtain both the value and symbol for the currency :thinking_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Teigseth",
+      "poster_handle": "arno.teigseth"
+    },
+    "time_stamp": "2023-05-12 09:16:55",
+    "text": "Morning! Is there anywhere to report a small bug/quirk? Reliably reproducible by:\n• Create a Contact (successful response, with the new contact ID - _I know, I could use that, but the system selects/searches by email_)\n• Search for that Contact email ( =&gt; *returns no matches*)\n    ◦ wait 5-6 seconds\n• …and the search will succeed, returning 1 match\nin calls, that's\n```1) create\nHubSpotClient.crm.contacts.basicApi.create(xxx\n\n2) search\nconst filter = { propertyName: \"email\", operator: \"EQ\", value: email };\n\nconst filterGroup = { filters: [filter] };\n\nconst request = {\n filterGroups: [filterGroup],\n properties,\n};\nconst { results } = await HubSpotClient.crm.contacts.searchApi.doSearch(request    // FAILS if not waiting 5-6 secs\n\n&lt;skipping the waiting part&gt;```\nI've worked around this by looping checks after createContact, but it's not ideal :wink:",
+    "reply_count": 3,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-05-12 12:26:52"
+      },
+      {
+        "time_stamp": "2023-05-17 03:32:38"
+      },
+      {
+        "time_stamp": "2023-05-17 08:52:53"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Teigseth",
+      "poster_handle": "arno.teigseth"
+    },
+    "time_stamp": "2023-05-12 09:17:58",
+    "text": "Guess this has something to do with search-by-email relying on a temporary table that takes a moment to rebuild"
+  },
+  {
+    "poster": {
+      "poster_name": "Ai Kurashina",
+      "poster_handle": "akurashina"
+    },
+    "time_stamp": "2023-05-12 09:22:45",
+    "text": "Thank you very much @jacobjennings its working now!! Wow what a process it is."
+  },
+  {
+    "poster": {
+      "poster_name": "Janusz",
+      "poster_handle": "janusz"
+    },
+    "time_stamp": "2023-05-12 09:48:31",
+    "text": "got it, thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-05-12 10:22:04",
+    "text": "deal_currency_code should show you the currency of the deal such as `\"USD\"`"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-05-12 10:23:22",
+    "text": "Though I guess in some cases this value can be null"
+  },
+  {
+    "poster": {
+      "poster_name": "Masato Takeda",
+      "poster_handle": "masato"
+    },
+    "time_stamp": "2023-05-12 10:53:55",
+    "text": "Yeah, I understand that the deal_currency_code represents the currency code of the deal. However, considering that users can choose between a company currency or a deal currency for a custom currency property, the value I receive, such as 10000, could be either in USD (using the company symbol) or in EUR (using the deal symbol). My concern is whether there is a way to obtain the specific symbol associated with each property to determine the currency accurately. I appreciate any insights you can provide on this matter."
+  },
+  {
+    "poster": {
+      "poster_name": "Masato Takeda",
+      "poster_handle": "masato"
+    },
+    "time_stamp": "2023-05-12 10:56:20",
+    "text": "actually I even want to know if it is just impossible to obtain it via API so far. Then I can say so to my client haha"
+  },
+  {
+    "poster": {
+      "poster_name": "Masato Takeda",
+      "poster_handle": "masato"
+    },
+    "time_stamp": "2023-05-12 11:05:12",
+    "text": "What I guessed was that it is in Properties as a currencySymbol or something, but it was not.  <https://developers.HubSpot.com/docs/api/crm/properties>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-05-12 11:09:17",
+    "text": "If it is a custom property currency I would make a custom property currency type to go with it probably"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-05-12 11:09:50",
+    "text": "commission = `10000`\ncommission_currency = `\"USD\"` ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-05-12 11:10:14",
+    "text": "There is no currency associated with “commission”"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-05-12 11:10:26",
+    "text": "As it is a custom property"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-05-12 11:10:36",
+    "text": "As far as I am aware"
+  },
+  {
+    "poster": {
+      "poster_name": "Masato Takeda",
+      "poster_handle": "masato"
+    },
+    "time_stamp": "2023-05-12 11:16:27",
+    "text": "yeah right, as far as I know, you can only see the symbol on the platform"
+  },
+  {
+    "poster": {
+      "poster_name": "Masato Takeda",
+      "poster_handle": "masato"
+    },
+    "time_stamp": "2023-05-12 11:18:10",
+    "text": "looks like the option to select the currency for custom property is quite new, so maybe they do not provide it yet"
+  },
+  {
+    "poster": {
+      "poster_name": "Masato Takeda",
+      "poster_handle": "masato"
+    },
+    "time_stamp": "2023-05-12 11:19:03",
+    "edited": {
+      "time_stamp": "2023-05-12 11:20:23"
+    },
+    "text": "yeah as you suggested, maybe I should create another view in our app to let my clients clarify which currency they use for their custom currency property"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-05-12 11:20:16"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-05-12 11:20:38",
+    "text": "There is this checkbox under currency when creating a custom currency property"
+  },
+  {
+    "poster": {
+      "poster_name": "Masato Takeda",
+      "poster_handle": "masato"
+    },
+    "time_stamp": "2023-05-12 11:20:51",
+    "text": "yeah this is the cause of my headache"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-05-12 11:20:54",
+    "text": ":anguished:"
+  },
+  {
+    "poster": {
+      "poster_name": "Masato Takeda",
+      "poster_handle": "masato"
+    },
+    "time_stamp": "2023-05-12 11:20:59",
+    "text": "haha"
+  },
+  {
+    "poster": {
+      "poster_name": "Masato Takeda",
+      "poster_handle": "masato"
+    },
+    "time_stamp": "2023-05-12 11:21:05",
+    "text": "the situation is that I work on an app"
+  },
+  {
+    "poster": {
+      "poster_name": "Masato Takeda",
+      "poster_handle": "masato"
+    },
+    "time_stamp": "2023-05-12 11:21:10",
+    "text": "which integrates HubSpot data"
+  },
+  {
+    "poster": {
+      "poster_name": "Masato Takeda",
+      "poster_handle": "masato"
+    },
+    "time_stamp": "2023-05-12 11:21:20",
+    "text": "and my client want to convert it to their company currency"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-05-12 11:21:21",
+    "text": "I see, so you don’t know if that checkbox is checked"
+  },
+  {
+    "poster": {
+      "poster_name": "Masato Takeda",
+      "poster_handle": "masato"
+    },
+    "time_stamp": "2023-05-12 11:21:30",
+    "edited": {
+      "time_stamp": "2023-05-12 11:24:06"
+    },
+    "text": "yup your are right"
+  },
+  {
+    "poster": {
+      "poster_name": "Masato Takeda",
+      "poster_handle": "masato"
+    },
+    "time_stamp": "2023-05-12 11:22:23",
+    "edited": {
+      "time_stamp": "2023-05-12 11:24:28"
+    },
+    "text": "so for default currency properties, the official doc mentions which is used"
+  },
+  {
+    "poster": {
+      "poster_name": "Masato Takeda",
+      "poster_handle": "masato"
+    },
+    "time_stamp": "2023-05-12 11:22:31",
+    "text": "I can convert them if necessary"
+  },
+  {
+    "poster": {
+      "poster_name": "Masato Takeda",
+      "poster_handle": "masato"
+    },
+    "time_stamp": "2023-05-12 11:22:38",
+    "text": "but for custom currency properties"
+  },
+  {
+    "poster": {
+      "poster_name": "Masato Takeda",
+      "poster_handle": "masato"
+    },
+    "time_stamp": "2023-05-12 11:22:42",
+    "text": "bomb! I have no idea"
+  },
+  {
+    "poster": {
+      "poster_name": "Masato Takeda",
+      "poster_handle": "masato"
+    },
+    "time_stamp": "2023-05-12 11:23:17",
+    "text": "but thank you anyway, Jacob. at least I knew this is not a straightforward issue"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-05-12 11:45:20",
+    "text": "It looks like the HubSpot dashboard is using a v4 properties api which is not available for developers as far as I know…\n\nWhen saving that checkbox on a custom currency property the response is:\n\n```{\n    \"property\": {\n        \"portalId\": 1234,\n        \"name\": \"test\",\n        \"label\": \"Test\",\n        \"type\": \"number\",\n        \"fieldType\": \"number\",\n        \"description\": \"\",\n        \"groupName\": \"custom_properties\",\n        \"formField\": true,\n        \"options\": [],\n        \"externalOptions\": false,\n        \"showCurrencySymbol\": true,\n        \"numberDisplayHint\": \"formatted\",\n        \"searchableInGlobalSearch\": false,\n        \"currencyPropertyName\": \"deal_currency_code\",\n        \"hasUniqueValue\": false,\n        \"allowedObjectTypes\": []\n    },\n    \"objectTypeId\": \"0-3\"\n}```\nwhich shows `\"currencyPropertyName\": \"deal_currency_code\"`, if the checkbox is not checked that property does not exist, but it looks like v3 properties api has no knowledge of this property :disappointed: so perhaps in the future properties api v4 will be made available"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-05-12 12:05:47",
+    "text": "object id is required on /batch/update, so it’s not possible to update an object that does not exist"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-05-12 12:26:52",
+    "text": "I don’t think it is a bug, I believe the search API is just “eventually consistent”.\n\nIs there a reason to not retrieve the contact by contact id after the create? Also the response of the create is the contact object so you may not even need to search them depending on what you are trying to achieve."
+  }
+]

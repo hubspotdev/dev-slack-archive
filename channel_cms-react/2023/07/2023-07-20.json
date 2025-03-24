@@ -1,0 +1,208 @@
+[
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-07-20 06:28:02",
+    "text": "It could be overwritten CSS, it's a pretty complex nav so I'm going to have to troubleshoot"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-07-20 06:28:36",
+    "text": "it's this nav if you want to try in an isolated environment: <https://www.radix-ui.com/docs/primitives/components/navigation-menu>"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-07-20 06:29:15",
+    "text": "for imports, do I care about the size listed or the g-zipped size?"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-07-20 06:29:19",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-07-20 07:15:24"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-07-20 06:31:15",
+    "text": "Based on a previous thread I found—you should use `occurrence` on a `fieldGroup`<https://github.com/HubSpot/cms-js-building-block-examples/blob/main/docs/field-types/modules.md#basefield>"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-07-20 07:15:24",
+    "text": "For JavaScript that ends up being loaded by the browser generally it is better to look at uncompressed size. That mostly is better correlated with performance because the parsing and execution time it takes to run JavaScript is much more related to uncompressed size. Even though the compressed size does correlate well with the time to download, many people tend to overlook the parsing and execution cost of JS, which will even happen when JavaScript is cashed (and the recommendation to pay more attention to uncompressed)"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Brown",
+      "poster_handle": "brownstephen202"
+    },
+    "time_stamp": "2023-07-20 09:11:05",
+    "edited": {
+      "time_stamp": "2023-07-20 09:11:14"
+    },
+    "text": "I've added it in like the following, but I still am not seeing it function as a repeater. Is this not the right syntax?\n```&lt;FieldGroup name=\"pages\" label=\"Pages\" expanded={false} occurrence={\n      {\n        min: 1,\n        max: 3,\n        default: 3,\n        sorting_label_field: 'title'\n      }\n    }&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Brown",
+      "poster_handle": "brownstephen202"
+    },
+    "time_stamp": "2023-07-20 10:12:32",
+    "text": "It appears to be working fine on the TextField, but it doesn't work on a FieldGroup.\n\nDoesn't Work:\n```&lt;FieldGroup occurrence={\n      {\n        min: 1,\n        max: 3,\n        default: 3\n      }\n    } name=\"pages\" label=\"Pages\" expanded={true}&gt;```\nWorks:\n```&lt;TextField occurrence={\n      {\n        min: 1,\n        max: 3,\n        default: 3\n      }\n    }\n        label=\"Title\"\n        name=\"title\"\n        default=\"Page 1\"\n        required\n      /&gt;```\n<@UCY83QS6Q> Is that intended behavior or am I doing something wrong?"
+  },
+  {
+    "poster": {
+      "poster_name": "Tyler Kindy",
+      "poster_handle": "tkindy"
+    },
+    "time_stamp": "2023-07-20 11:10:12",
+    "text": "Hey Elena! :wave: I’m looking into this on our side. Can you share what you’re exporting as your module’s `meta`?"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-07-20 11:20:00",
+    "text": "Ah, `RepeatedFieldGroup` is missing from our docs…"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-07-20 11:21:54",
+    "text": "A quick example:\n\n```      &lt;RepeatedFieldGroup\n        name=\"nested\"\n        label=\"nested repeater group\"\n        sortable={false}\n        required={false}\n        locked={false}\n        occurrence={{\n          min: 1,\n          max: 500,\n          default: 1,\n        }}\n        default={[\n          {\n            src: '<http://fake-image.com>',\n          },\n        ]}\n      &gt;```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Elena Hearty",
+      "poster_handle": "elena.hearty"
+    },
+    "time_stamp": "2023-07-20 11:36:15",
+    "text": "Hi <@U011ERS0X8B>, thanks for getting back to me! Here’s what I’ve tried so far for the FontField setup:\n`&lt;ModuleFields&gt;`\n  `&lt;FontField`\n   `label=\"Font\"`\n   `name=\"font\"`\n   `load_external_fonts={true}`\n   `loadExternalFonts={true}`\n   `default={{`\n    `\"size\" : 12,`\n    `\"font\":\"Merriweather\",`\n    `\"font_set\":\"GOOGLE\",`\n    `\"size_unit\" : \"px\",`\n    `\"color\" : \"#000\",`\n    `\"styles\" : { }`\n   `}}`\n  `/&gt;`\n `&lt;/ModuleFields&gt;`"
+  },
+  {
+    "text": "I tried camel-case for the “load_external_fonts” as well, but here’s what renders in the design manager (Merriweather is set as the default, but doesn’t even show up on the list of options):",
+    "time_stamp": "2023-07-20 11:38:09"
+  },
+  {
+    "text": "I was messing with changing the hello world todo list example to have a RepeatedFieldGroup of the todos that show up on load… but I think we may have a bug with the defaults (when the default min size is &gt; 1)",
+    "time_stamp": "2023-07-20 11:48:14"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-07-20 11:52:22",
+    "text": "Here is a code sandbox with ^ example changes: <https://codesandbox.io/p/sandbox/cms-js-building-block-examples-forked-r7y296?file=%2Fcms-js-building-block-examples%2Fhello-world%2Fhello-world-project%2Fhello-world-app%2Fcomponents%2Fmodules%2FTodoList%2Findex.jsx%3A25%2C13|https://codesandbox.io/p/sandbox/cms-js-building-block-examples-forked-r7y296?file=%[…]d-app%2Fcomponents%2Fmodules%2FTodoList%2Findex.jsx%3A25%2C13>"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-07-20 11:57:13",
+    "text": "<@U05J658UJSD> I think Tyler is referring to the `export const meta = { … }` in your module. Because if you don’t set `host_template_types` there it defaults to “ANY”. And (new to me) it seems like if your module _could_ be used in an email the logic for `load_external_fonts` won’t work. So we think you might be able to fix things by having `host_template_types: [\"PAGE\"]` inside your JS module `meta` config."
+  },
+  {
+    "poster": {
+      "poster_name": "Elena Hearty",
+      "poster_handle": "elena.hearty"
+    },
+    "time_stamp": "2023-07-20 11:58:20",
+    "text": "awesome! lemme give that a try…"
+  },
+  {
+    "poster": {
+      "poster_name": "Elena Hearty",
+      "poster_handle": "elena.hearty"
+    },
+    "time_stamp": "2023-07-20 12:03:19",
+    "text": "working now, thanks so much!"
+  },
+  {
+    "poster": {
+      "poster_name": "Tyler Kindy",
+      "poster_handle": "tkindy"
+    },
+    "time_stamp": "2023-07-20 12:09:15",
+    "text": "Great to hear! And happy to help :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Britton",
+      "poster_handle": "jbritton"
+    },
+    "time_stamp": "2023-07-20 13:40:54",
+    "text": "When running storybook with `hs-cms-dev-server . --storybook` , is there a way to config storybook?  Typically this is done with files within the `.storybook` directory.  Thanks in advance.",
+    "reply_count": 12,
+    "reply_users_count": 5,
+    "replies": [
+      {
+        "time_stamp": "2023-07-20 13:42:30"
+      },
+      {
+        "time_stamp": "2023-07-21 06:21:29"
+      },
+      {
+        "time_stamp": "2023-07-21 08:19:16"
+      },
+      {
+        "time_stamp": "2023-07-21 08:20:47"
+      },
+      {
+        "time_stamp": "2023-07-26 08:50:46"
+      },
+      {
+        "time_stamp": "2024-04-10 09:19:51"
+      },
+      {
+        "time_stamp": "2024-04-10 09:21:35"
+      },
+      {
+        "time_stamp": "2024-04-10 09:25:08"
+      },
+      {
+        "time_stamp": "2024-04-10 09:43:51"
+      },
+      {
+        "time_stamp": "2024-04-12 07:12:36"
+      },
+      {
+        "time_stamp": "2024-04-24 10:03:00"
+      },
+      {
+        "time_stamp": "2024-04-24 10:04:19"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Britton",
+      "poster_handle": "jbritton"
+    },
+    "time_stamp": "2023-07-20 13:42:30",
+    "text": "I'm trying to load global styles (tailwindcss) in storybook."
+  }
+]

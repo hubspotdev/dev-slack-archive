@@ -1,0 +1,102 @@
+[
+  {
+    "poster": {
+      "poster_name": "Paul Cass",
+      "poster_handle": "webmaster737"
+    },
+    "time_stamp": "2021-08-19 03:48:06",
+    "text": "Last week when I was playing around with DND areas, I’m pretty sure I could add an image inside a rich text module and set the alignment for the image to be different for desktop than mobile. I have the responsive breakpoint set in my `theme.json` file.\n\nI don’t seem to be able to do that now, so I maybe wrong :thinking_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Lett",
+      "poster_handle": "jacoblett"
+    },
+    "time_stamp": "2021-08-19 04:33:24",
+    "text": "With the beta DND reusable sections, how would you change the section background color from the template? I tried this but it is not working.\n\n_`{# Section - image-text-right #}`_\n    `{% include_dnd_partial path='../sections/image-text-right.html'` \n    `background_color={`\n    `r: 248,`\n    `g: 250,`\n    `b: 252,`\n    `a: 1`\n    `},`\n    `context={ } %}`\n    _`{# End Section #}`_",
+    "reply_count": 4,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2021-08-19 08:17:57"
+      },
+      {
+        "time_stamp": "2021-08-19 08:34:49"
+      },
+      {
+        "time_stamp": "2021-08-19 08:52:07"
+      },
+      {
+        "time_stamp": "2021-08-19 09:16:05"
+      }
+    ]
+  },
+  {
+    "text": "<@UG7S8J18D> You still need to put that background_color attribute on the section itself. The only way to pass it from the include statement would be to pass it through as a context variable.\n\nAlso worth noting that the you can also specify hex and regular rgb/rgba values as you would in CSS as oppose to that object syntax youre using there. Makes it a bit easier to write.",
+    "time_stamp": "2021-08-19 08:17:57"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Lett",
+      "poster_handle": "jacoblett"
+    },
+    "time_stamp": "2021-08-19 08:34:49",
+    "edited": {
+      "time_stamp": "2021-08-19 08:35:08"
+    },
+    "text": "Thanks BJ. I tried this using the context variable and was able to get it to work. I had to output the variable like this in the section partial. Which seems odd having to put {{}} inside {%%}\n\n{% dnd_section\nclass='section__imgtxtright'\nbackground_color='{{context.backgroundColor}}',\nvertical_alignment='MIDDLE'\n%}"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2021-08-19 08:52:07",
+    "text": "Sweet deal — happy it’s working!"
+  },
+  {
+    "poster": {
+      "poster_name": "Katie Tade",
+      "poster_handle": "ktade"
+    },
+    "time_stamp": "2021-08-19 09:16:05",
+    "text": "Here too is an example from the boilerplate as well! <https://github.com/HubSpot/cms-theme-boilerplate/blob/main/src/sections/hero-banner.html#L9>"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2021-08-19 14:24:10",
+    "text": "Is there any js event to listen for when an element is changed on the page editor? I have an animated module and it shows as transparent when the user makes a change on the page",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-08-19 20:48:09"
+      },
+      {
+        "time_stamp": "2021-08-19 20:50:37"
+      },
+      {
+        "time_stamp": "2021-08-20 06:35:04"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Doherty",
+      "poster_handle": "bdoherty"
+    },
+    "time_stamp": "2021-08-19 20:48:09",
+    "text": "There is not. ATM module elements in the editor are:\n• kept in memory cache, and rearranged on the page for most layout changes\n• new module elements are generated as field values change in the sidebar\n• we’ll grab a module out of that memory cache on undo or redo\nWe’ve thought about setting up some sort of client side API devs could use for this kind of purpose, but that idea didn’t get past the “wouldn’t it be cool if?” stage."
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Doherty",
+      "poster_handle": "bdoherty"
+    },
+    "time_stamp": "2021-08-19 20:50:37",
+    "text": "If it’s causing a lot of pain you could maybe experiment with something like <https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver>\n\nYou’d see a boat load of mutations happening in the editor depending on what parent element is being observed, but you could probably filter out the mutated nodes by the module name you care about, and use that to trigger whatever you need to do."
+  }
+]

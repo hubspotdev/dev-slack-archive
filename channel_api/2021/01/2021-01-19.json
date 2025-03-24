@@ -1,0 +1,115 @@
+[
+  {
+    "poster": {
+      "poster_name": "Vitalii Saienko",
+      "poster_handle": "vsaienko"
+    },
+    "time_stamp": "2021-01-19 06:20:29",
+    "edited": {
+      "time_stamp": "2021-01-19 13:54:23"
+    },
+    "text": "Hey\nI’ve created a post on <https://community.HubSpot.com/t5/APIs-Integrations/bd-p/integrations> but it’s not available for some reason and only I can access it via direct URL <https://community.HubSpot.com/t5/APIs-Integrations/Support-the-access-token-via-a-header-in-quot-GET-oauth-v1/m-p/401181#M39687>\nAny idea why it’s not available?"
+  },
+  {
+    "poster": {
+      "poster_name": "Mauro Casula",
+      "poster_handle": "m.casula"
+    },
+    "time_stamp": "2021-01-19 09:19:35",
+    "text": "Hello guys, I'm searching on documentation but I can't find a way to createOrUpdate a contact via API. I see this can be done via the legacy (v1) API.\nI don't want to save on my local database if a contact has been already sent to HubSpot or not... I just want to send my custom properties and attach them to a new contact or update an existing one. Any help?",
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2021-01-19 09:59:30"
+      },
+      {
+        "time_stamp": "2021-01-19 10:00:46"
+      },
+      {
+        "time_stamp": "2021-01-19 10:01:18"
+      },
+      {
+        "time_stamp": "2021-01-19 10:01:53"
+      },
+      {
+        "time_stamp": "2021-01-19 11:40:29"
+      },
+      {
+        "time_stamp": "2021-01-21 10:37:05"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Lance Erickson",
+      "poster_handle": "lance.erickson"
+    },
+    "time_stamp": "2021-01-19 09:59:30",
+    "text": "Legacy was the only way I have found. Without adding state to local db, the alternative I have used is to attempt a fetch using contact email (or another unique field you have configured) for every update. If you can batch them, you can look up 100 contacts at a time this way. If not, it doubles the amount of calls."
+  },
+  {
+    "poster": {
+      "poster_name": "Lance Erickson",
+      "poster_handle": "lance.erickson"
+    },
+    "time_stamp": "2021-01-19 10:00:46",
+    "text": "Another option is to optimistically `update`, and if that returns an error due to contact not existing, then perform a `create`.  Reverse that if you expect to be creating more than you update."
+  },
+  {
+    "poster": {
+      "poster_name": "Lance Erickson",
+      "poster_handle": "lance.erickson"
+    },
+    "time_stamp": "2021-01-19 10:01:18",
+    "text": "Both solutions are unfortunate, but that is where I have found myself."
+  },
+  {
+    "poster": {
+      "poster_name": "Lance Erickson",
+      "poster_handle": "lance.erickson"
+    },
+    "time_stamp": "2021-01-19 10:01:53",
+    "text": "Or you can determine when `v1` is going to get shut off and just use it if will work for long enough."
+  },
+  {
+    "poster": {
+      "poster_name": "Neal Stansby",
+      "poster_handle": "neal"
+    },
+    "time_stamp": "2021-01-19 11:40:29",
+    "text": "TL;DR: I agree with <@U01CFE2DVFT>, even though the documentation says otherwise:\n\n<https://knowledge.HubSpot.com/crm-setup/deduplication-of-contacts-companies-deals-tickets|This page> suggests you should be able to just use `create` , and it will amount to an `update` if a contact with the same email already exists:\n\n&gt; Deduplicate contacts by email address\n&gt; \n&gt; When a new contact is added through import, form submission, or API, HubSpot will look for a matching value in the _Email_ property. If a contact already exists in your account with the same email address, the new contact information will be added to the existing contact record.\n&gt; \n&gt; For example, if you import a list of contacts that includes \"<mailto:admin@HubSpot.com|admin@HubSpot.com>\", and an existing contact in your HubSpot account already has the email address \"<mailto:admin@HubSpot.com|admin@HubSpot.com>\", the imported information will be added to that specific contact record.\nHowever, it doesn't work.  You get an error back if the email belongs to an existing contact:\n```{\n  \"status\": \"error\",\n  \"message\": \"Contact already exists. Existing ID: 6501\",\n  \"correlationId\": \"&lt;some GUID&gt;\",\n  \"category\": \"CONFLICT\"\n}```\n...so I assume the documentation is wrong, or refers to an earlier version of the API."
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Osborn",
+      "poster_handle": "rosborn"
+    },
+    "time_stamp": "2021-01-19 12:19:39",
+    "text": "if you’re having issues / can’t get what you need with zapier, I’m happy to help with a custom web app"
+  },
+  {
+    "poster": {
+      "poster_name": "Joey Zhao",
+      "poster_handle": "joey535"
+    },
+    "time_stamp": "2021-01-19 13:07:22",
+    "text": "Hello guys, does anyone know whether HubSpot support any kind of IaC (infrasturcture as code)? I’d like to use this to create an account / extension etc. instead of manually create them. But I can’t find anything yet."
+  },
+  {
+    "poster": {
+      "poster_name": "David Roma",
+      "poster_handle": "droma"
+    },
+    "time_stamp": "2021-01-19 16:20:47",
+    "text": "<@U01C87PNTDE> yeah man good call - I was originally building this (for a client) as a custom Zapier integration - which would in effect accomplish the same thing, but it was a bit overkill - in comparison to using webhooks which was the leaner solution; built everything out this morning, thanks for the suggestion!"
+  },
+  {
+    "poster": {
+      "poster_name": "Prasanna V",
+      "poster_handle": "prasanna"
+    },
+    "time_stamp": "2021-01-20 00:05:01",
+    "text": "Hello folks, have a quick question. I am looking at the get recently modified contacts API (GET /contacts/v1/lists/recently_updated/contacts/recent). Does this API also return a contact profile if the list membership of that contact is updated (both static and dynamic lists). We are trying to maintain latest list of members of any particular list. Trying to see if this API would be a good way to maintain that"
+  }
+]

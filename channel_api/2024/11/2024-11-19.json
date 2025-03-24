@@ -1,0 +1,308 @@
+[
+  {
+    "poster": {
+      "poster_name": "Arnas Bradauskas",
+      "poster_handle": "arnas.bradauskas"
+    },
+    "time_stamp": "2024-11-19 02:45:16",
+    "edited": {
+      "time_stamp": "2024-11-19 02:45:54"
+    },
+    "text": "Hey, I have a question about a difference I found between batch updating and batch upserting in the v3 crm contacts api.\n\nWhen using the Contacts CRM API, I am able to successfully use the `crm/v3/objects/contacts/batch/upsert` endpoint to create or update contacts (I'm using a custom `idProperty` param - email).\nHowever, if I want to just update using the `crm/v3/objects/contacts/batch/update` , I get the following error:\n```{\"status\":\"error\",\"message\":\"Unable to perform update/upsert by non-unique 0-1 property email in portal ID 39874041\",\"correlationId\":\"562ef628-d647-409d-be5f-5b074f827089\",\"category\":\"VALIDATION_ERROR\"}  ```\nExample request:\n```curl --request POST \\\n  --url <https://api.hubapi.com/crm/v3/objects/contacts/batch/update> \\\n  --header 'authorization: Bearer pat-xxx' \\\n  --header 'content-type: application/json' \\\n  --data '{\n  \"inputs\": [\n    {\n      \"idProperty\": \"email\",\n      \"id\": \"testmail@mail.com\",\n      \"properties\": {\n        \"some_value\": 3\n      }\n    }\n  ]\n}'```\nSupport seems to say that this is an API limitation, but maybe someone else has found a way to make this work? Ofc we can manually parse existing emails, and then only upsert those that already exist, but maybe there's a better solution"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Hirsh",
+      "poster_handle": "ehirsh"
+    },
+    "time_stamp": "2024-11-19 08:53:34",
+    "text": "Greetings! What is your use case for creating threads?\nIf \"bring your own chatbot over a HubSpot-built channel\" that's not something this API supports at this time.\nBut if you have your own channel that you want to integrate for full, two-way messaging into Help Desk or Inbox, there is a brand new API in beta for that: <#C07L2TGH8F7|custom-channels-api-beta>"
+  },
+  {
+    "poster": {
+      "poster_name": "Farid",
+      "poster_handle": "felyazidi"
+    },
+    "time_stamp": "2024-11-19 09:31:46",
+    "text": "Hi,\nI am developping an *App* for HubSpot and doing api calls to do some company properties updates in HubSpot.\nThe doc tells me to check the \"referrer\" of the calls to my App by reading/comparing a signature in the hearder :\nbut I have an issue with the signature of the requests in my APP -&gt; (*X-HubSpot-Signature*).\nRef -&gt; <https://developers.HubSpot.com/beta-docs/guides/apps/authentication/validating-requests>\nHubSpot doesn't seem to send this header in the requests.\n\nAny idea about this topic?\nThanks",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-11-20 06:19:39"
+      },
+      {
+        "time_stamp": "2024-11-20 06:38:04"
+      },
+      {
+        "time_stamp": "2024-11-20 06:48:09"
+      },
+      {
+        "time_stamp": "2024-11-20 06:49:11"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Erin",
+      "poster_handle": "erin653"
+    },
+    "time_stamp": "2024-11-19 09:52:46",
+    "text": "We have a couple forms built out in the new form editor. Part of this work requires that we listen for the submission event of the form to send a version of the intake form to the our custom application and redirect to a custom \"next steps\" page.\n\nIt looks like this is not yet supported in the new Form Editor currently in Beta. We are getting the following error message below when trying to initiate the form using the hbspt.forms.create() syntax, <https://knowledge.HubSpot.com/forms/how-can-i-share-a-HubSpot-form-if-im-using-an-external-site|outlined here>:\n\n\nWe are assuming that this means that the new Form Editor is not set up to be fetched programmatically, but wanted to check with you to see if you knew anything more around this. If we cannot send this information to the app and redirect the user, it's likely we'll need to build the intake forms using the Legacy Form Builder."
+  },
+  {
+    "text": "",
+    "time_stamp": "2024-11-19 09:52:58"
+  },
+  {
+    "poster": {
+      "poster_name": "Idan Ron",
+      "poster_handle": "idanron5"
+    },
+    "time_stamp": "2024-11-19 11:12:53",
+    "text": "Hi, I have a question:\nI am creating an email template via the API endpoint.\nI am pushing also variables such as unsubscribe link and other HS defualt properites.\nFor some reason, those variables are disappearing when the template is created in HS.\nAnyone know why?"
+  },
+  {
+    "poster": {
+      "poster_name": "Lexi Ryman",
+      "poster_handle": "lexi"
+    },
+    "time_stamp": "2024-11-19 13:24:48",
+    "text": "I am using a HubSpot api form on a subdomain for my website, and for some reason its not passing through any info other then the form fill info (emails, names) - <https://go.scoopanalytics.com/signup>  How should this form look? (ive been playing with the ip address, but HubSpot wont accept this)\n\n```const axios = require('axios');\n\nasync function formv3(firstname, lastname, email, ipAddress) {\n    const url = '<https://api.hsforms.com/submissions/v3/integration/submit/23852145/190f191c-ba38-476c-8b7d-834ed34686db>';\n\n    const data = {\n        \"submittedAt\": new Date().getTime(),\n        \"ipAddress\": ipAddress,\n        \"fields\": [\n            {\n                \"objectTypeId\": \"0-1\",\n                \"name\": \"email\",\n                \"value\": email\n            },\n            {\n                \"objectTypeId\": \"0-1\",\n                \"name\": \"firstname\",\n                \"value\": firstname\n            },\n            {\n                \"objectTypeId\": \"0-1\",\n                \"name\": \"lastname\",\n                \"value\": lastname\n            }\n        ],\n        \"legalConsentOptions\": { // Include this object when GDPR options are enabled\n            \"consent\": {\n                \"consentToProcess\": true,\n                \"text\": \"I agree to allow Example Company to store and process my personal data.\",\n                \"communications\": [\n                    {\n                        \"value\": true,\n                        \"subscriptionTypeId\": 999,\n                        \"text\": \"I agree to receive marketing communications from Example Company.\"\n                    }\n                ]\n            }\n        }\n    };\n\n    try {\n        const response = await <http://axios.post|axios.post>(url, data, {\n            headers: {\n                'Content-Type': 'application/json'\n            }\n        });\n        return response.data;\n    } catch (error) {\n        if (error.response) {\n            // The request was made and the server responded with a status code\n            // that falls out of the range of 2xx\n            console.error('Error response data:', error.response.data);\n            console.error('Error response status:', error.response.status);\n            console.error('Error response headers:', error.response.headers);\n        } else if (error.request) {\n            // The request was made but no response was received\n            console.error('Error request:', error.request);\n        } else {\n            // Something happened in setting up the request that triggered an Error\n            console.error('Error message:', error.message);\n        }\n        return null;\n    }\n}\n\nmodule.exports = formv3;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Neil Proctor",
+      "poster_handle": "neil.proctor"
+    },
+    "time_stamp": "2024-11-19 14:06:16",
+    "text": "We have a marketplace orders app that when customers or vendors place orders in our app, we want them to be able to message us directly, but in the context of the orders.  Think of when you are on amazon and you are looking at a prior order/deal, if you want to ask amazon 'where is this'? it is helpful to attached that message to the deal in HubSpot.  In other words we want all in-app messages that a client sends to us to be in the context of a deal when they are view that deals details.  And in HubSpot we want to associate that message to their deal, by creating the conversation and then associating it to the deal."
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Hirsh",
+      "poster_handle": "ehirsh"
+    },
+    "time_stamp": "2024-11-19 14:19:01",
+    "text": "What sort of persona do you imagine fielding these incoming messages asking for help with orders? And where do you imagine them doing it (in HubSpot?)"
+  },
+  {
+    "poster": {
+      "poster_name": "Neil Proctor",
+      "poster_handle": "neil.proctor"
+    },
+    "time_stamp": "2024-11-19 14:30:50",
+    "text": "One of our support reps"
+  },
+  {
+    "poster": {
+      "poster_name": "Neil Proctor",
+      "poster_handle": "neil.proctor"
+    },
+    "time_stamp": "2024-11-19 14:31:28",
+    "text": "yes, they would response in HubSpot, but ideally we would also like to surface that conversation in our UI as well"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Hirsh",
+      "poster_handle": "ehirsh"
+    },
+    "time_stamp": "2024-11-19 14:35:29",
+    "text": "Ok. And it makes sense that the inquiry is related to a deal. Does it make sense that support reps working out of HubSpot would want to track each of these conversations as tickets through a ticket pipeline?"
+  },
+  {
+    "poster": {
+      "poster_name": "Neil Proctor",
+      "poster_handle": "neil.proctor"
+    },
+    "time_stamp": "2024-11-19 14:36:07",
+    "text": "Maybe, but right now they are just tracking deals through the normal deal pipeline"
+  },
+  {
+    "poster": {
+      "poster_name": "Neil Proctor",
+      "poster_handle": "neil.proctor"
+    },
+    "time_stamp": "2024-11-19 14:37:40",
+    "text": "Is 'tickets' a more available api to process messages that are deal based?"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Hirsh",
+      "poster_handle": "ehirsh"
+    },
+    "time_stamp": "2024-11-19 14:40:35",
+    "text": "^ that's what I've been thinking about. I'm setting aside my product manager hat and putting on my solution architect hat in an effort to encourage API adoption and customer value :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Hirsh",
+      "poster_handle": "ehirsh"
+    },
+    "time_stamp": "2024-11-19 14:41:57",
+    "text": "Generally, I think the Custom Channels API is a good fit. I'd characterize the messaging aspect of your order management platform as a 'channel' to HubSpot, and a channel that only you own, only you deal in the sending and receiving of messages across that channel.\nThat's what this API does - you create a channel, and then there are 2 ways that admins, having installed your app, can 'connect a channel account (their particular instance of your channel) to an Inbox or Help Desk."
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Hirsh",
+      "poster_handle": "ehirsh"
+    },
+    "time_stamp": "2024-11-19 14:42:27",
+    "text": "Inbox is what peopel are very familiar with, it's been around a long time. But it's sort of a general workspace, not closely tied to any particular HubSpot CRM object (although in-UI manual association to contacts and deals is possible)"
+  },
+  {
+    "poster": {
+      "poster_name": "Neil Proctor",
+      "poster_handle": "neil.proctor"
+    },
+    "time_stamp": "2024-11-19 14:42:39",
+    "text": "but the issue we think we see with channels API is that the user still has to do an oAuth sign-in flow"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Hirsh",
+      "poster_handle": "ehirsh"
+    },
+    "time_stamp": "2024-11-19 14:44:55",
+    "text": "Do you have something in place already where they log into your user interface and configure some settings? We imagine similar here, w throw up a window to a webpage you own where admins give whatever kind of permission for messages to come from your software to HubSpot. There is an alternative, more 'direct' way to create a channel account that doesnt require that front end admin auth experience."
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Hirsh",
+      "poster_handle": "ehirsh"
+    },
+    "time_stamp": "2024-11-19 14:46:00",
+    "text": "Anyway, the other thing I wanted to say is that HubSpot is really starting to encourage support teams to run support out of Help Desk, which looks a lot like the conversation parts of the Inbox (and in fact is the same messaging backend system) but is built around how support teams manage tickets (and thus, the ticket object).\nYou're not locked into developing against one or the other workspace with this API - channel accounts and inboxes are the same. Features of what each can do are what are different."
+  },
+  {
+    "poster": {
+      "poster_name": "Neil Proctor",
+      "poster_handle": "neil.proctor"
+    },
+    "time_stamp": "2024-11-19 14:46:08",
+    "text": "Yes, we have an existing app where users login to place and see their orders."
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Hirsh",
+      "poster_handle": "ehirsh"
+    },
+    "time_stamp": "2024-11-19 14:46:24",
+    "text": "anytime I hear 'support' I encourage people to learn more about Help Desk, and 'develop for it', even if not exclusively"
+  },
+  {
+    "poster": {
+      "poster_name": "Neil Proctor",
+      "poster_handle": "neil.proctor"
+    },
+    "time_stamp": "2024-11-19 14:46:42",
+    "text": "\"There is an alternative, more 'direct' way to create a channel account that doesnt require that front end admin auth experience.\"\n\nCan you tell me about this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Hirsh",
+      "poster_handle": "ehirsh"
+    },
+    "time_stamp": "2024-11-19 14:47:03",
+    "text": "another thing I'll mention is a consious omission right now is there is no sending outgoing messages on this API from object records (like a deal object). This is us really focusing in on nailing the reactive support use case beofre broadening out to other messaging use cases."
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Hirsh",
+      "poster_handle": "ehirsh"
+    },
+    "time_stamp": "2024-11-19 14:47:37",
+    "text": "&gt; \"There is an alternative, more 'direct' way to create a channel account that doesnt require that front end admin auth experience.\"\nOh it's just the first of two methods detailed here <https://developers.HubSpot.com/beta-docs/guides/api/conversations/create-custom-channels#connect-channel-accounts-to-HubSpot>"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Hirsh",
+      "poster_handle": "ehirsh"
+    },
+    "time_stamp": "2024-11-19 14:48:13",
+    "text": "in proof of concept/hacking mode I recommend starting with that method, saves you some front end development overhead"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Hirsh",
+      "poster_handle": "ehirsh"
+    },
+    "time_stamp": "2024-11-19 14:51:49",
+    "edited": {
+      "time_stamp": "2024-11-19 14:52:17"
+    },
+    "text": "I never posted my quick demo video of what this all looks like in <#C07L2TGH8F7|custom-channels-api-beta>. Here :slightly_smiling_face:  <https://www.loom.com/share/65885645b6504e47b22a48f06492a6a5?sid=21f400fd-7dbd-4423-a437-1dddae1597b1>"
+  },
+  {
+    "poster": {
+      "poster_name": "Neil Proctor",
+      "poster_handle": "neil.proctor"
+    },
+    "time_stamp": "2024-11-19 14:52:46",
+    "text": "So let me get this straight, this HubSpot Channel App will be installed in our application using our inbox Admin as the oAuth user? then when our customers are in our App, the messages they create go straight to a conversation to our inbox, and we can associate that convo with their deal?"
+  },
+  {
+    "poster": {
+      "poster_name": "Neil Proctor",
+      "poster_handle": "neil.proctor"
+    },
+    "time_stamp": "2024-11-19 14:53:26",
+    "text": "Let me look at the video and I'll be back with more questions"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Hirsh",
+      "poster_handle": "ehirsh"
+    },
+    "time_stamp": "2024-11-19 14:58:18",
+    "text": "^ more or less, though I know that for *reasons * convo&lt;&gt;deal association via API is not well supported, but ticket&lt;&gt;deal association is"
+  },
+  {
+    "poster": {
+      "poster_name": "Neil Proctor",
+      "poster_handle": "neil.proctor"
+    },
+    "time_stamp": "2024-11-19 14:58:50",
+    "text": "okay, how can we join the beta?"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Hirsh",
+      "poster_handle": "ehirsh"
+    },
+    "time_stamp": "2024-11-19 14:59:01",
+    "text": "I'm about to go get the kiddo from school but happy to continue lightly consulting here. Helping app partners map their solution onto ours, and getting feedback where things are and are not a good fit is very useful!"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Hirsh",
+      "poster_handle": "ehirsh"
+    },
+    "time_stamp": "2024-11-19 14:59:17",
+    "text": "It's in public beta, no special process required save to get started via the tech docs"
+  },
+  {
+    "poster": {
+      "poster_name": "Neil Proctor",
+      "poster_handle": "neil.proctor"
+    },
+    "time_stamp": "2024-11-19 14:59:33",
+    "text": "cool, thanks"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Hirsh",
+      "poster_handle": "ehirsh"
+    },
+    "time_stamp": "2024-11-19 14:59:41",
+    "text": "<https://developers.HubSpot.com/custom-channels-api> has a few other resources"
+  },
+  {
+    "poster": {
+      "poster_name": "Gustavo Henry Perez",
+      "poster_handle": "g.henry"
+    },
+    "time_stamp": "2024-11-19 15:21:14",
+    "text": "Hi, can someone help me with this? I haven’t receive a response.\n<https://community.HubSpot.com/t5/APIs-Integrations/Blog-Post-API-Response/m-p/1058537#M77574>"
+  }
+]

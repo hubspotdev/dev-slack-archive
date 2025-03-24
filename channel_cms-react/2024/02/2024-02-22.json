@@ -1,0 +1,136 @@
+[
+  {
+    "poster": {
+      "poster_name": "Stefano Chiala",
+      "poster_handle": "stefano599"
+    },
+    "time_stamp": "2024-02-22 01:28:49",
+    "text": "Thank you Byron :slightly_smiling_face: I got it working!"
+  },
+  {
+    "text": "See screenshot, in the Tailwind extension settings you have a config file settings, click on edit in settings.json.\nCreate a custom config file (you can name it whatever you want) and place it in a directory you wish.\n\nMine is:\n\n```// tailwind-intellisense.js\nexport default {\n    content: [\n      \"./project/src/components/**/*.{jsx,tsx}\"\n    ],\n    theme: {\n      extend: {\n        colors: {\n          \n        },\n        fontFamily: {\n  \n        },\n        backgroundImage: {\n  \n        }\n      }\n    },\n    plugins: [],\n  }```\nThen add the path of your intellisense config in the VS code settings.json:\n```{\n    \"tailwindCSS.experimental.configFile\": \"./tailwind-intellisense.js\"\n}```\nThe . in the path is the root of your VScode folder.\n\nInclude all the typical configurations of Tailwind in the intellisense file, that's it.\nThis will override the standard config file and intellisense will always work.\n\nYou still need to keep the original config for Vite, just add an additional file that is just for intellisense.\nYou can remove it from git in .gitignore so it doesn't clutter your codebase.",
+    "time_stamp": "2024-02-22 03:07:19"
+  },
+  {
+    "text": "The reason why the Intellisense fails is that the plugin doesn't recognize the import.meta.url logic.\n\nYou can check for bugs with extensions in the Output tab next to your VScode terminal, selecting Tailwind in the dropdown on the right.\nIn the screenshot below you can see it's loading the custom config file instead of the Vite one, skipping the problematic line :slightly_smiling_face:",
+    "time_stamp": "2024-02-22 03:10:52"
+  },
+  {
+    "poster": {
+      "poster_name": "Arrigo Lupori",
+      "poster_handle": "arrigo.lupori270"
+    },
+    "time_stamp": "2024-02-22 03:11:13",
+    "text": "There's probably a more elegant way to do this, but this is the way I found to avoid having to comment and uncomment the meta.url line every time."
+  },
+  {
+    "poster": {
+      "poster_name": "Arrigo Lupori",
+      "poster_handle": "arrigo.lupori270"
+    },
+    "time_stamp": "2024-02-22 03:35:28",
+    "text": "This is huge!\n\nI had reverted back to 95%+ HubL development after trying the early version of React rendering because I was missing the rich, direct data access that HubL provided but this might just be what tips me back to more React development :slightly_smiling_face:\n\nThanks guys, will try it out this weekend.",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-02-23 11:26:56"
+      },
+      {
+        "time_stamp": "2024-02-23 11:28:18"
+      },
+      {
+        "time_stamp": "2024-02-23 11:35:21"
+      },
+      {
+        "time_stamp": "2024-02-23 14:16:16"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-02-22 07:00:31",
+    "text": "Does the new hublDataTemplate have any useful implications for forms? For example getting the fields? Related question, is “form” being planned as a new default module? ",
+    "reply_count": 6,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2024-02-22 08:19:13"
+      },
+      {
+        "time_stamp": "2024-02-22 08:19:52"
+      },
+      {
+        "time_stamp": "2024-02-22 08:23:18"
+      },
+      {
+        "time_stamp": "2024-02-22 10:06:50"
+      },
+      {
+        "time_stamp": "2024-02-22 10:07:36"
+      },
+      {
+        "time_stamp": "2024-02-23 03:49:59"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-02-22 08:19:13",
+    "text": "&gt; For example getting the fields"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-02-22 08:19:52",
+    "text": "Can you describe your use case with some more details? Im interested in knowing more, then can help see if hublDataTemplate can help out here"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-02-22 08:23:18",
+    "text": "I haven't really tried interacting with forms on the react side of things yet but from what I understand there's no great way to create and submit a regular HubSpot form. I think you can use a serverless function with predefined fields but dynamically creating a form is impossible? I'll have a better answer/question when I try using what exists so far..."
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-02-22 10:06:50",
+    "text": "Also I think the current data available as form fields is not enough to fully reproduce what the current form module outputs…\n```&lt;script data-hs-allowed=\"true\" data-HubSpot-rendered=\"true\"&gt;\n     var options = {\n            portalId: '...',\n            formId: '...',\n            formInstanceId: '...',\n            pageId: '...',\n            region: 'na1',\n            pageName: \"...\",\n            inlineMessage: \"...\",\n            rawInlineMessage: \"...\",\n            hsFormKey: \"...\",\n            css: '',\n            target: '#hs_form_target_widget_1557155714951',\n            env: \"...\",\n            contentType: \"standard-page\",\n            formsBaseUrl: '/_hcms/forms/',\n            formData: {\n                cssClass: 'hs-form stacked hs-custom-form'\n            }\n        };\n\n        hbspt.forms.create(options);\n    &lt;/script&gt;```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-02-22 10:07:36",
+    "text": "… much less having some &lt;HSForm&gt; react component that would simply do ^ for you (or even more ideally, server rending the HS form without needing some separate client-only rendering form embed)"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-02-22 10:20:08",
+    "text": "Another release update, we’ve started adding “build health checks” to our build process. Learn more at the <https://github.HubSpot.com/cms-react/reference/build-healthchecks.html|new doc page>, but a quick excerpt:\n\n&gt; To validate and prevent unexpected production behavior, CMS React will automatically run a series of “health checks” at the end of your build. For now, those health checks are enabled but will not fail your build by default.\n```// cms-assets.json\n{\n  \"label\": \"My CMS project\",\n  \"buildConfig\": {\n    \"healthchecks\": {\n      \"enabled\": true,  // default is true\n      \"strict\": true    // default is false (for now)\n    }\n  }\n};```"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-02-22 10:21:18",
+    "text": "Also, in `cms-components@0.14.6` , `&lt;Island&gt;` now accepts a `wrapperClassName` prop that sets the className for the island wrapper element"
+  }
+]

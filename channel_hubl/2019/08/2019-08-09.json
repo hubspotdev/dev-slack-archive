@@ -1,0 +1,282 @@
+[
+  {
+    "poster": {
+      "poster_name": "Chris Asuncion",
+      "poster_handle": "chris759"
+    },
+    "time_stamp": "2019-08-09 02:44:14",
+    "text": "thank you"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2019-08-09 07:19:39",
+    "text": "{{ blog_tags('default', 250) }}"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2019-08-09 07:19:53",
+    "text": "<https://designers.HubSpot.com/en/docs/hubl/hubl-supported-functions#blog-tags>"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-08-09 07:29:21",
+    "text": "..... I overlooked that one apparently :joy:"
+  },
+  {
+    "poster": {
+      "poster_name": "Grant Bunyan",
+      "poster_handle": "grantbunyan"
+    },
+    "time_stamp": "2019-08-09 08:22:49",
+    "text": "Related to the above question, is it possible to manipulate the tag list to exclude certain items?\nI was hoping something like this would work, but it doesn’t.\n```\n{% set tags_to_remove = [\n  'Blog Article',\n  'Video Tutorial',\n  'Webinar',\n  'eBook'\n] %}\n{% set sanitized_tags = content.topic_list|difference(tags_to_remove) %}\n\nTopics: \n{% for topic in sanitized_tags %}\n  {{ topic.name }}\n{% endfor %}\n```",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-08-09 08:34:53"
+      },
+      {
+        "time_stamp": "2019-08-09 09:36:26"
+      },
+      {
+        "time_stamp": "2019-08-09 10:15:48"
+      },
+      {
+        "time_stamp": "2019-08-09 10:16:13"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-08-09 08:34:53",
+    "text": "There is a |rejectattr('&lt;tag&gt;') to use, further markup is in the <https://designers.HubSpot.com/docs/hubl/hubl-supported-filters>"
+  },
+  {
+    "poster": {
+      "poster_name": "Grant Bunyan",
+      "poster_handle": "grantbunyan"
+    },
+    "time_stamp": "2019-08-09 09:36:26",
+    "text": "Thanks Dana. I’ve ended up with this for now which seems to be giving me the result I want. I think I’d still need to use `|rejectattr` inside a loop that iterates over the `content.tag_list` object anyway, wouldn’t I?\n\n```\n{% set tags_to_remove = [\n  'Blog Article',\n  'Video Tutorial',\n  'Webinar',\n  'eBook'\n] %}\n\n{% set sanitized_topics = [] %}\n{% for topic in content.topic_list %}\n  {% unless topic.name in tags_to_remove %}\n    {% do sanitized_topics.append(topic) %}\n  {% endunless %}\n{% endfor %}\n\nTopics: \n{% for topic in sanitized_tags %}\n  {{ topic.name }}\n{% endfor %}\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-08-09 10:15:48",
+    "text": "It would probably be a faster way of achieving what you need.\n\n```{% for topic in content.topic_list|rejectattr(\"topic.name\", \"equalto\", \"Blog Article\")|rejectattr(\"topic.name\", \"equalto\", \"...\") %} ```"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-08-09 10:16:13",
+    "text": "But the `unless` works as well"
+  },
+  {
+    "poster": {
+      "poster_name": "Nikan Shahidi",
+      "poster_handle": "nikan"
+    },
+    "time_stamp": "2019-08-09 10:42:49",
+    "text": "is there a condition to check if a module exists on the page?"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-08-09 11:05:58",
+    "edited": {
+      "time_stamp": "2019-08-09 11:06:17"
+    },
+    "text": "you could try using the developer info <https://designers.HubSpot.com/docs/hubl/how-to-use-developer-info-on-cos-pages>  so it would be something like `{% if content.widgets.module_(module id number) %}`",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-08-09 11:20:41"
+      },
+      {
+        "time_stamp": "2019-08-09 11:32:43"
+      },
+      {
+        "time_stamp": "2019-08-09 11:39:06"
+      },
+      {
+        "time_stamp": "2019-08-09 11:39:16"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2019-08-09 11:20:41",
+    "text": "if you have the module on the page multiple times, does it retain the same id?"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-08-09 11:32:43",
+    "text": "it should unless its in a flex column i believe lol"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2019-08-09 11:39:06",
+    "text": "maybe could look for the `widget_name` in the developer info"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2019-08-09 11:39:16",
+    "text": "that should always be the same"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Sciolla",
+      "poster_handle": "csciolla"
+    },
+    "time_stamp": "2019-08-09 13:57:13",
+    "text": "I'm currently building out a website page and using a HTML/HUBL template because it's using HubDB. I have a custom module for our nav, which allows me to set menu items, urls, and a logo image with href. is it possible to use this module in a HTML/HUBL template and use parameters to set field values? or is this just not possible? I'm trying to avoid rebuilding the nav from scratch for this page :man-shrugging:"
+  },
+  {
+    "text": "in the custom module, you should be able to see a \"Template Usage\" snippet in the bottom right of the DM view:",
+    "time_stamp": "2019-08-09 14:03:56",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-08-09 15:16:24"
+      },
+      {
+        "time_stamp": "2019-08-09 20:26:33"
+      },
+      {
+        "time_stamp": "2019-08-10 14:32:52"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-08-09 14:42:42",
+    "edited": {
+      "time_stamp": "2019-08-09 14:43:22"
+    },
+    "text": "hey folks -- has anybody successfully implemented the triggering of a workflow enrollment using `form_follow_ups_workflow_id` within the `{% form %}` tag? I'm having issues with getting the enrollment to trigger successfully using the provided parameters.",
+    "reply_count": 7,
+    "reply_users_count": 6,
+    "replies": [
+      {
+        "time_stamp": "2019-08-09 14:45:31"
+      },
+      {
+        "time_stamp": "2019-08-09 14:46:05"
+      },
+      {
+        "time_stamp": "2019-08-09 14:47:35"
+      },
+      {
+        "time_stamp": "2019-08-09 20:30:32"
+      },
+      {
+        "time_stamp": "2019-08-09 20:33:19"
+      },
+      {
+        "time_stamp": "2019-08-10 12:29:50"
+      },
+      {
+        "time_stamp": "2019-08-12 10:42:06"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2019-08-09 14:44:47",
+    "text": ":disappointed:"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2019-08-09 14:45:31",
+    "text": "<@U2H3TT8F2> <@U7SL518D6> <@U7V9DQ31P> <@U26BLKGE4> <@U38EZFVFE>"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-08-09 14:46:05",
+    "text": ":joy: thanks for the tag support <@UD53A9UUR>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-08-09 14:47:35",
+    "text": "I have not :thumbsdown::skin-tone-2:"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Sciolla",
+      "poster_handle": "csciolla"
+    },
+    "time_stamp": "2019-08-09 15:16:24",
+    "text": "thanks AJ. got that part, but there are default fields in this custom module that I'd like to override. E.g., an image and a link with a URL field. assuming that label is a parameter, am I able to access fields in that way? in the custom module the field value is something like {{logo_url.href}}. but I can't seem to override that from the HTML/HUBL template I'm working on"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-08-09 20:26:33",
+    "text": "Hey Chris, if you mean that you want to use that snippet from above and then also try to add parameters so you can set field values inside of it like:\n```\n{% module \"module_213456\" path=\"/Test\", label=\"Test\" logo_url.href=\"//xyz.com\" param2=\"value\" %}\n```\nI dont believe that is something you can currently do. At least not that I have found. Though, this is a cool idea."
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-08-09 20:30:32",
+    "text": "I haven't either"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-08-09 20:33:19",
+    "text": "the only thing i can think of is if the ID is wrong or that the workflow has a goal set that may be bouncing the contact out of the workflow"
+  }
+]

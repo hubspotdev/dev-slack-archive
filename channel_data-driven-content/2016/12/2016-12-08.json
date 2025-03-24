@@ -1,0 +1,131 @@
+[
+  {
+    "poster": {
+      "poster_name": "normschurdell",
+      "poster_handle": "normschurdell"
+    },
+    "time_stamp": "2016-12-08 12:57:40",
+    "edited": {
+      "time_stamp": "2016-12-08 12:59:52"
+    },
+    "text": "Why won't either of these options work to pull data from the DB but it returns the right value of {{ request.query_dict.p }} correctly?\n\n{% set params = \"\" %}\n{% set params = params ~ \"&amp;permalink=\" ~ request.query_dict.p|lower|urlencode %}\n{% set row = hubdb_table_row(2111132, params) %}\n\nor \n{% set row = hubdb_table_row(2111132, request.query_dict.p|lower|urlencode) %}\n\nPreviously the fix pushed out allow numbers as the query parameter, now strings aren't working?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2016-12-08 12:59:51",
+    "text": "is your data in the db all lowercase?"
+  },
+  {
+    "poster": {
+      "poster_name": "normschurdell",
+      "poster_handle": "normschurdell"
+    },
+    "time_stamp": "2016-12-08 13:00:03",
+    "text": "yes"
+  },
+  {
+    "poster": {
+      "poster_name": "Gregory Cornelius",
+      "poster_handle": "gcornelius"
+    },
+    "time_stamp": "2016-12-08 13:03:40",
+    "text": "are you calling `hubdb_table_row()` or `hubdb_table_rows()`?"
+  },
+  {
+    "poster": {
+      "poster_name": "normschurdell",
+      "poster_handle": "normschurdell"
+    },
+    "time_stamp": "2016-12-08 13:04:02",
+    "text": "row"
+  },
+  {
+    "poster": {
+      "poster_name": "Gregory Cornelius",
+      "poster_handle": "gcornelius"
+    },
+    "time_stamp": "2016-12-08 13:04:20",
+    "text": "the second param for row is a row id"
+  },
+  {
+    "poster": {
+      "poster_name": "normschurdell",
+      "poster_handle": "normschurdell"
+    },
+    "time_stamp": "2016-12-08 13:05:03",
+    "text": "originally it was working using strings, we needed a number, that was fixed, now we need it for string, is that no longer an option?"
+  },
+  {
+    "poster": {
+      "poster_name": "normschurdell",
+      "poster_handle": "normschurdell"
+    },
+    "time_stamp": "2016-12-08 13:06:11",
+    "text": "we only want to return one row as all permalinks are unique, we do not want to show the ID in the url string, just the permalink text"
+  },
+  {
+    "poster": {
+      "poster_name": "normschurdell",
+      "poster_handle": "normschurdell"
+    },
+    "time_stamp": "2016-12-08 13:07:14",
+    "text": "we had both in the url string initially, now we only want to pass the permalink to the page, not the permalink and id together..."
+  },
+  {
+    "poster": {
+      "poster_name": "Gregory Cornelius",
+      "poster_handle": "gcornelius"
+    },
+    "time_stamp": "2016-12-08 13:08:31",
+    "text": "you will want to use rows to query the table and since the url string is unique only one result should return"
+  },
+  {
+    "poster": {
+      "poster_name": "Gregory Cornelius",
+      "poster_handle": "gcornelius"
+    },
+    "time_stamp": "2016-12-08 13:08:50",
+    "edited": {
+      "time_stamp": "2016-12-08 13:09:34"
+    },
+    "text": "```\n{% set params = params ~ \"&amp;permalink=\" ~ request.query_dict.p|lower|urlencode %}\n{% set rows = hubdb_table_rows(2111132, params) %}\n{{ rows[0].field_name }}\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "normschurdell",
+      "poster_handle": "normschurdell"
+    },
+    "time_stamp": "2016-12-08 13:20:53",
+    "text": "thank you"
+  },
+  {
+    "poster": {
+      "poster_name": "Gregory Cornelius",
+      "poster_handle": "gcornelius"
+    },
+    "time_stamp": "2016-12-08 13:21:38",
+    "text": "np"
+  },
+  {
+    "poster": {
+      "poster_name": "Gregory Cornelius",
+      "poster_handle": "gcornelius"
+    },
+    "time_stamp": "2016-12-08 13:21:49",
+    "text": "i'd also add an `if` for safety"
+  },
+  {
+    "poster": {
+      "poster_name": "Gregory Cornelius",
+      "poster_handle": "gcornelius"
+    },
+    "time_stamp": "2016-12-08 13:22:06",
+    "edited": {
+      "time_stamp": "2016-12-08 13:22:31"
+    },
+    "text": "```\n{% if rows.size &gt; 0 %}\n{{ rows[0].field_name }}\n{% endif %}\n```"
+  }
+]

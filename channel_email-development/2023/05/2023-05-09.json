@@ -1,0 +1,22 @@
+[
+  {
+    "poster": {
+      "poster_name": "Emil",
+      "poster_handle": "emil.smith"
+    },
+    "time_stamp": "2023-05-09 08:53:17",
+    "text": "Hi all. Having some issues with the new programmable email templates. According to this info (<https://developers.HubSpot.com/docs/cms/guides/email/hubdb-crm-objects>) I should be able to query HubDB using contact properties. What I’m trying to do is render some HTML that is stored in HubDB. The tutorial I linked to says that I should be able to pull data from HubDB into a drag and drop template, _or_ a coded email template. However, while the former works, it does not render the HTML, and instead treats it as a string. Using the latter, I am unable to get any data at all from HubDB.\n\nCan anyone help with this please?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-05-09 10:17:47"
+      }
+    ]
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2023-05-09 10:17:47",
+    "text": "This issue is becoming really weird.\n\nIf I use this code, the HTML tags are escaped when the email renders, resulting in the code being displayed as plain text:\n```{% set template = hubdb_table_rows(1234567, \"email_name=welcome&amp;site_domain=\"~contact.site_domain) %}\n\n{{ template[0].html }} ```\n\nHowever, when I specify the full query without using any contact properties, the HTML is not escaped and is rendered directly within the email template as expected:\n```{% set template = hubdb_table_rows(1234567, \"email_name=welcome&amp;site_domain=<https://www.sitename.com>\") %}\n\n{{ template[0].html }} ```\nI see no reason why we should expect this to render the output differently depending on how the query is structured.\n\nThis has to be a bug, right?"
+  }
+]

@@ -1,0 +1,1162 @@
+[
+  {
+    "poster": {
+      "poster_name": "Michele Cristiano",
+      "poster_handle": "mct"
+    },
+    "time_stamp": "2023-05-17 03:15:47",
+    "text": "<@U0585GR1B0C> first, you should use “v3” API, which is the most recent version.\nYou should then create a private app in order to get your authentication token, in the case of ticket requests you should set “ticket” as scope while setting up your private app."
+  },
+  {
+    "text": "In the HubSpot API documentation you’ll find the list all requests available for each CRM object, along with the “standard scope(s)” field that tells you what you should enable in your private app, in order for the authentication token to work. Below an example for a Ticket API request",
+    "time_stamp": "2023-05-17 03:28:45"
+  },
+  {
+    "poster": {
+      "poster_name": "Michele Cristiano",
+      "poster_handle": "mct"
+    },
+    "time_stamp": "2023-05-17 03:32:38",
+    "text": "HI <@U03TBP4ECP5>, we experienced the same issue recently. In our case we set up an “if” condition that sleeps for 10 secs and perform the search request again, in case the first one returns a null contact id."
+  },
+  {
+    "poster": {
+      "poster_name": "Michele Cristiano",
+      "poster_handle": "mct"
+    },
+    "time_stamp": "2023-05-17 03:39:26",
+    "text": "Hi <@U057KTTF1LG>, from my experience I suggest to perform a get request on a single blog post at first, just to check in which JSON fields the data you need are located.\nYou can try to parse the result for that specific blog post and then extend the process to all the other posts."
+  },
+  {
+    "poster": {
+      "poster_name": "Tony Valkama",
+      "poster_handle": "tony.valkama"
+    },
+    "time_stamp": "2023-05-17 04:13:43",
+    "text": "Hi, we did notice this old update regarding redirect URLs: <https://developers.HubSpot.com/changelog/upcoming-public-apps-will-require-a-redirect-url-in-the-auth-settings>\n*Upcoming: Public apps will require a Redirect URL in the auth settings*\n\nThe documentation / guide regarding adding redirect URLs seems to have different menu/options structure than our HubSpot (I am at <http://app.HubSpot.com|app.HubSpot.com>) and I cannot find the redirect URLs page. How can I add redirect URL to *an existing HubSpot app?*",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-05-17 05:01:28"
+      },
+      {
+        "time_stamp": "2023-05-17 07:51:30"
+      },
+      {
+        "time_stamp": "2023-05-17 07:51:47"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2023-05-17 04:19:15",
+    "text": "Is it possible to attribute contacts to a specific Ad Campaign via the API? We're running Google LSAs and  the cost and campaign is pulled through into HubSpot, but as they're phone calls there is no attribution happening."
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2023-05-17 05:01:28",
+    "text": "Anyone? Missing redirect URL is breaking the integration currently."
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Grothe",
+      "poster_handle": "christian947"
+    },
+    "time_stamp": "2023-05-17 06:33:04",
+    "text": "Hey! I am trying to add a deal creation in my HubSpot integration that I am building. But I have an issue with the association to the customer. I retrieved the Association Types like so\n```const retrieveAssociationTypes = async () =&gt; {\n  const fromObjectType = \"contact\";\n  const toObjectType = \"deal\";\n  try {\n    const response = await axios.get(\n      `<https://api.hubapi.com/crm/v4/associations/${fromObjectType}/${toObjectType}/labels>`,\n      {\n        headers: {\n          Authorization: `Bearer ${process.env.HubSpot_TOKEN}`,\n          \"Content-Type\": \"application/json\",\n        },\n      }\n    );\n    console.log(response.data);\n  } catch (error) {\n    console.log(error);\n  }\n};```\nwhich gave me this response\n```{\n  results: [ { category: 'HubSpot_DEFINED', typeId: 4, label: null } ]\n}```\nso then I make the request to reate the deal like so:\n```const createDeal = async (response) =&gt; {\n  console.log(response.id);\n\n  const dealData = {\n    properties: {\n      amount: \"1500.00\",\n      closedate: \"2019-12-07T16:50:06.678Z\",\n      dealname: \"New deal\",\n      pipeline: \"default\",\n      dealstage: \"contractsent\",\n      // HubSpot_owner_id: \"910901\",\n    },\n    associations: [\n      {\n        to: {\n          id: response.id,\n        },\n        types: [\n          {\n            associationCategory: \"HubSpot_DEFINED\",\n            associationTypeId: 4,\n          },\n        ],\n      },\n    ],\n  };\n\n  try {\n    const response = await <http://axios.post|axios.post>(\n      `<https://api.hubapi.com/crm/v3/objects/deals>`,\n      dealData,\n      {\n        headers: {\n          Authorization: `Bearer ${process.env.HubSpot_TOKEN}`,\n          \"Content-Type\": \"application/json\",\n        },\n      }\n    );\n\n    console.log(\"deal response\");\n    console.log(response.data);\n    return response.data;\n  } catch (error) {\n    console.log(\"deal error response\");\n    console.log(error);\n    return error.message;\n  }\n};```\nbut i get\n```    data: {\n      status: 'error',\n      message: 'invalid from object type 0-3 for associations to be created. expected: 0-1',\n      correlationId: '507fdf52-c86f-487e-a6c8-505a98f20e39',\n      category: 'VALIDATION_ERROR'\n    }```\nany Idea what I am doing wrong here? Do I get it right tat the associationCategory and the associationTypeId will always be the same for an association between a customer and a deal?",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-05-17 06:40:09"
+      },
+      {
+        "time_stamp": "2023-05-17 06:41:49"
+      },
+      {
+        "time_stamp": "2023-05-17 06:43:28"
+      },
+      {
+        "time_stamp": "2023-05-17 06:44:14"
+      },
+      {
+        "time_stamp": "2023-05-17 06:44:22"
+      },
+      {
+        "time_stamp": "2023-05-17 06:44:43"
+      }
+    ]
+  },
+  {
+    "text": "Hi <@U04JVUS0DPE>, if you wish to create a deal and associate it with a specific contact you should use the Deal API and the association type ID is 3.\n\nHere’s an example of a function that creates a deal and associates it to a contact (python code).",
+    "time_stamp": "2023-05-17 06:40:09"
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Grothe",
+      "poster_handle": "christian947"
+    },
+    "time_stamp": "2023-05-17 06:41:49",
+    "text": "thats what I am doing basically and before i retreived the Category and TypeId for the assiciation between deal and customer"
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Grothe",
+      "poster_handle": "christian947"
+    },
+    "time_stamp": "2023-05-17 06:43:28",
+    "text": "hmm okay with an associationTypeId of 3 it works. but as I retrieved it I got a 4"
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Grothe",
+      "poster_handle": "christian947"
+    },
+    "time_stamp": "2023-05-17 06:44:14",
+    "text": "ahhh got it. i reversed the fromObjectType and the toObjectType"
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Grothe",
+      "poster_handle": "christian947"
+    },
+    "time_stamp": "2023-05-17 06:44:22",
+    "text": "thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Michele Cristiano",
+      "poster_handle": "mct"
+    },
+    "time_stamp": "2023-05-17 06:44:43",
+    "text": "You’re welcome!"
+  },
+  {
+    "poster": {
+      "poster_name": "Nimrod Sadot",
+      "poster_handle": "nimrod"
+    },
+    "time_stamp": "2023-05-17 06:53:36",
+    "text": "Hey, trying to get webhooks to work with out production account. I created an app on my developer account w/ tickets scope and creates (and activated) a webhook to a specific ticket property. I tested the webhook and saw I do get a call. I then copied the install url to another browser, selected the production account and clicked on connect. It returned successfully to redirect page (completed the oauth). But when changing a property in the production account (I verified the name of the property match exactly the one in the account under &lt;&gt;), the webhook is not working. I feel like I’m missing something simple here.tried looking for this in the community posts but they all mention oauth in general and I followed the exact steps from tutorial but I don’t understand why it’s not working (I assume it didn’t complete the install?). Thanks for helping!",
+    "reply_count": 28,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-05-17 07:53:14"
+      },
+      {
+        "time_stamp": "2023-05-17 07:53:45"
+      },
+      {
+        "time_stamp": "2023-05-17 07:55:02"
+      },
+      {
+        "time_stamp": "2023-05-17 07:55:12"
+      },
+      {
+        "time_stamp": "2023-05-17 07:56:15"
+      },
+      {
+        "time_stamp": "2023-05-17 07:56:19"
+      },
+      {
+        "time_stamp": "2023-05-17 07:56:34"
+      },
+      {
+        "time_stamp": "2023-05-17 07:56:35"
+      },
+      {
+        "time_stamp": "2023-05-17 07:56:35"
+      },
+      {
+        "time_stamp": "2023-05-17 07:57:09"
+      },
+      {
+        "time_stamp": "2023-05-17 07:57:16"
+      },
+      {
+        "time_stamp": "2023-05-17 07:57:52"
+      },
+      {
+        "time_stamp": "2023-05-17 07:57:53"
+      },
+      {
+        "time_stamp": "2023-05-17 07:58:57"
+      },
+      {
+        "time_stamp": "2023-05-17 07:59:39"
+      },
+      {
+        "time_stamp": "2023-05-17 08:22:15"
+      },
+      {
+        "time_stamp": "2023-05-17 08:22:46"
+      },
+      {
+        "time_stamp": "2023-05-17 08:23:08"
+      },
+      {
+        "time_stamp": "2023-05-17 08:23:18"
+      },
+      {
+        "time_stamp": "2023-05-17 08:23:24"
+      },
+      {
+        "time_stamp": "2023-05-17 08:24:11"
+      },
+      {
+        "time_stamp": "2023-05-17 08:25:15"
+      },
+      {
+        "time_stamp": "2023-05-17 08:25:30"
+      },
+      {
+        "time_stamp": "2023-05-17 08:26:08"
+      },
+      {
+        "time_stamp": "2023-05-17 08:26:17"
+      },
+      {
+        "time_stamp": "2023-05-17 08:43:58"
+      },
+      {
+        "time_stamp": "2023-05-17 08:44:11"
+      },
+      {
+        "time_stamp": "2023-05-17 09:00:49"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 07:48:57",
+    "text": "Currently no, but HubSpot definitely should have a meetings api (not the old deprecated calendar one)"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 07:50:57",
+    "text": "You'll definitely want to use the v4 endpoint for this request here's the endpoint:\n```<https://api.hubapi.com/crm/v4/objects/tickets/1618257335>```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 07:51:30",
+    "text": "<https://HubSpotdev.slack.com/archives/C22PU4LV8/p1684318439943289>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 07:51:47",
+    "text": "<@U04LPUJLVL4>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 07:53:14",
+    "text": "Are you sure you requested an oauth token?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 07:53:45",
+    "text": "Can you see the app in the connect apps section of your main portal"
+  },
+  {
+    "text": "i don’t see in the connected app that’s why I think something is missing here. I copied the url from here:",
+    "time_stamp": "2023-05-17 07:55:02"
+  },
+  {
+    "text": "I then followed this:",
+    "time_stamp": "2023-05-17 07:55:12"
+  },
+  {
+    "text": "Got to this page",
+    "time_stamp": "2023-05-17 07:56:15"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 07:56:19",
+    "text": "So the issue is you're not converting the token HubSpot send back into an access token and then using it on one call"
+  },
+  {
+    "poster": {
+      "poster_name": "Nimrod Sadot",
+      "poster_handle": "nimrod"
+    },
+    "time_stamp": "2023-05-17 07:56:34",
+    "text": "I’m not"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 07:56:35",
+    "text": "Here's a great guide me and <@UD53A9UUR> put together for this type of situation"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 07:56:35",
+    "text": "<https://www.youtube.com/watch?v=j64kqwCvXWI&amp;t=12s>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nimrod Sadot",
+      "poster_handle": "nimrod"
+    },
+    "time_stamp": "2023-05-17 07:57:09",
+    "text": "Do I need to actually use the token at least once for this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 07:57:16",
+    "text": "yep"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-05-17 07:57:52"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 07:57:53",
+    "text": "<https://developers.HubSpot.com/docs/api/working-with-oauth>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nimrod Sadot",
+      "poster_handle": "nimrod"
+    },
+    "time_stamp": "2023-05-17 07:58:57",
+    "text": "I assumed that I needed a token if I actually need to use it for using the api but here it’s only using the webhook. Thanks a lot will try this soon!"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 07:59:39",
+    "text": "Of course, that's really why we built out the tutorial because most people don't need the full thing they just need to have the app installed"
+  },
+  {
+    "poster": {
+      "poster_name": "Vlad Erculescu",
+      "poster_handle": "vlad855"
+    },
+    "time_stamp": "2023-05-17 07:59:47",
+    "text": "Hi everyone,\n\nI am developing an integration with HubSpot system using the API through a public App. The App itself is not yet validated as we're still in development.\n\nPart of this integration we have the following workflow:\n• When a deal is marked as qualified we get a web-hook from HubSpot which creates some data in our system and triggers some processing\n• Once the processing finishes, we send a PDF and some data back to HubSpot for it to be added to the deal\nI have tested this on the test account I have created from the developer portal and all works as it should. File uploads correctly, note gets created with all the data and then I can see the note on the deal and the attachment is showing as well.\nOn a new free HubSpot account I have created, everything seems to work except the note does not show up on the deal, nor does the file. I can still see the file being uploaded if I go to the deal and try to manually attach it but the note seems to be missing. Checking the logs I can see the HubSpot returns a 200 and the full Note entity, not an error.\n\nI've spent the past two days trying to figure out what's going on to no avail. If anyone can provide any insight that would be much appreciated. I am using the V4 of the Associations API.\n\nThank you :slightly_smiling_face:",
+    "reply_count": 30,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-05-17 08:00:58"
+      },
+      {
+        "time_stamp": "2023-05-17 08:01:07"
+      },
+      {
+        "time_stamp": "2023-05-17 08:02:02"
+      },
+      {
+        "time_stamp": "2023-05-17 08:04:13"
+      },
+      {
+        "time_stamp": "2023-05-17 08:05:01"
+      },
+      {
+        "time_stamp": "2023-05-17 08:05:55"
+      },
+      {
+        "time_stamp": "2023-05-17 08:08:45"
+      },
+      {
+        "time_stamp": "2023-05-17 08:08:52"
+      },
+      {
+        "time_stamp": "2023-05-17 08:09:17"
+      },
+      {
+        "time_stamp": "2023-05-17 08:10:29"
+      },
+      {
+        "time_stamp": "2023-05-17 08:12:10"
+      },
+      {
+        "time_stamp": "2023-05-17 08:18:38"
+      },
+      {
+        "time_stamp": "2023-05-17 15:35:00"
+      },
+      {
+        "time_stamp": "2023-05-18 03:48:03"
+      },
+      {
+        "time_stamp": "2023-05-18 06:40:30"
+      },
+      {
+        "time_stamp": "2023-05-18 08:00:52"
+      },
+      {
+        "time_stamp": "2023-05-18 09:27:50"
+      },
+      {
+        "time_stamp": "2023-05-18 09:28:29"
+      },
+      {
+        "time_stamp": "2023-05-18 09:30:40"
+      },
+      {
+        "time_stamp": "2023-05-18 09:31:11"
+      },
+      {
+        "time_stamp": "2023-05-18 09:32:26"
+      },
+      {
+        "time_stamp": "2023-05-18 10:05:29"
+      },
+      {
+        "time_stamp": "2023-05-19 08:20:09"
+      },
+      {
+        "time_stamp": "2023-05-19 08:20:40"
+      },
+      {
+        "time_stamp": "2023-05-25 04:43:14"
+      },
+      {
+        "time_stamp": "2023-05-25 04:43:31"
+      },
+      {
+        "time_stamp": "2023-05-25 04:47:44"
+      },
+      {
+        "time_stamp": "2023-05-25 12:23:00"
+      },
+      {
+        "time_stamp": "2023-05-25 14:12:03"
+      },
+      {
+        "time_stamp": "2023-05-25 14:59:15"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 08:00:58",
+    "text": "Is it possible that you're hardcoding the deal id from the test account?"
+  },
+  {
+    "poster": {
+      "poster_name": "Vlad Erculescu",
+      "poster_handle": "vlad855"
+    },
+    "time_stamp": "2023-05-17 08:01:07",
+    "text": "No, checked already."
+  },
+  {
+    "poster": {
+      "poster_name": "Vlad Erculescu",
+      "poster_handle": "vlad855"
+    },
+    "time_stamp": "2023-05-17 08:02:02",
+    "text": "The file also contains the same deal ID that's being used to associate the note and I can also see that that matches as it should."
+  },
+  {
+    "poster": {
+      "poster_name": "Vlad Erculescu",
+      "poster_handle": "vlad855"
+    },
+    "time_stamp": "2023-05-17 08:04:13",
+    "text": "My guess is that this is some sort of account limitation as my free account doesn't seem to be able to view all files as my test one does. On the test account I can go to Marketing &gt; Files and Templates and see all my files. On the free on that section seems to be missing."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 08:05:01",
+    "text": "Ah yeah you might be right about that, and just to double check this is a free account not a starter account"
+  },
+  {
+    "poster": {
+      "poster_name": "Vlad Erculescu",
+      "poster_handle": "vlad855"
+    },
+    "time_stamp": "2023-05-17 08:05:55",
+    "text": "I wouldn't know the difference between them"
+  },
+  {
+    "poster": {
+      "poster_name": "Vlad Erculescu",
+      "poster_handle": "vlad855"
+    },
+    "time_stamp": "2023-05-17 08:08:45",
+    "text": "This is a free account, not a starter as starter is paid for."
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-05-17 08:08:52"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 08:09:17",
+    "text": "interesting HubSpot is saying all plans, but I don't have a free account where I can double check this"
+  },
+  {
+    "poster": {
+      "poster_name": "Vlad Erculescu",
+      "poster_handle": "vlad855"
+    },
+    "time_stamp": "2023-05-17 08:10:29",
+    "text": "also, none of the calls are returning any errors. I can see everything except the note getting created but I am getting the same response from that API call regardless which account I use."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 08:12:10",
+    "text": "let me spin up a free account a run a couple of tests"
+  },
+  {
+    "poster": {
+      "poster_name": "Vlad Erculescu",
+      "poster_handle": "vlad855"
+    },
+    "time_stamp": "2023-05-17 08:18:38",
+    "text": "I'm using the PHP SDK to do all of this so it is possible there's an issue within that part of it but that still leaves the fact that it works for one account and not the other. Thank you for your time and I'll wait on an update from you :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Nimrod Sadot",
+      "poster_handle": "nimrod"
+    },
+    "time_stamp": "2023-05-17 08:22:15",
+    "text": "Trying to hit the <https://api.hubapi.com/oauth/v1/token> w/ the code I keep getting Error 415 Unsupported Media Type.\n\nI filled the grant_type w/ authorization_code , client_id, client_secret, code I got from theredirect and redirect, Anything else I’m missing?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 08:22:46",
+    "text": "Why not just do the Get contacts api call instead?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 08:23:08",
+    "text": "But the reason you're getting that error is because you didn't set up the body as raw JSON"
+  },
+  {
+    "poster": {
+      "poster_name": "Nimrod Sadot",
+      "poster_handle": "nimrod"
+    },
+    "time_stamp": "2023-05-17 08:23:18",
+    "text": "Was just following the tutorial"
+  },
+  {
+    "poster": {
+      "poster_name": "Nimrod Sadot",
+      "poster_handle": "nimrod"
+    },
+    "time_stamp": "2023-05-17 08:23:24",
+    "text": "I did set it as raw json"
+  },
+  {
+    "text": "I removed the other fields but it’s the same error",
+    "time_stamp": "2023-05-17 08:24:11"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 08:25:15",
+    "text": "Nope so the body should have nothing in it, set the type to none as well and the url should be.\n```<https://api.hubapi.com/crm/v3/objects/contacts>```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 08:25:30",
+    "text": "In the authorization tab set it to OAuth 2.0"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 08:26:08",
+    "text": "And then populate the fields just like I populated them, in the video"
+  },
+  {
+    "text": "Here's a screenshot though:",
+    "time_stamp": "2023-05-17 08:26:17"
+  },
+  {
+    "poster": {
+      "poster_name": "Nimrod Sadot",
+      "poster_handle": "nimrod"
+    },
+    "time_stamp": "2023-05-17 08:43:58",
+    "text": "Success! Thanks a lot"
+  },
+  {
+    "poster": {
+      "poster_name": "Nimrod Sadot",
+      "poster_handle": "nimrod"
+    },
+    "time_stamp": "2023-05-17 08:44:11",
+    "text": "Wish I had seen this earlier"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Teigseth",
+      "poster_handle": "arno.teigseth"
+    },
+    "time_stamp": "2023-05-17 08:52:53",
+    "edited": {
+      "time_stamp": "2023-05-17 08:53:18"
+    },
+    "text": "yeah, <@U038DUUV3GE> I know best practice would be to just get the contact by ID. However, I have a data driven thing (redux query) where the contact is fetched in background whenever the email is set, in a separate part of the application. Therefore, the create contact action wouldn't know about who elsewhere might be listening for \"set email\" events.\n\nFor me, the simplest solution is, like <@U045RQPS16E>’s way, to just 1) create 2) wait X seconds 3) set_email, which triggers the fetching. The unknown here is \"how many are X seconds\"? So to keep it as tight as possible, currently after creation I loop in 1 second intervals, up to a MAX_RETRIES of 10 and then I give up.\n\nPersonally, I think it would be best if the CREATE call wouldn't return until it is actually available for search. At the same time, I do understand the need for calls to return quickly :grin: . *Stripe* is a lot worse, just for comparison. There, it takes around a whole minute :eyes: before you can actually search up the customer by email (after creation)."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 09:00:49",
+    "text": "of course, let me know if you run into any other issues"
+  },
+  {
+    "poster": {
+      "poster_name": "Maryna Longnickel",
+      "poster_handle": "maryna.longnickel"
+    },
+    "time_stamp": "2023-05-17 09:05:08",
+    "text": "Thanks, everyone!"
+  },
+  {
+    "poster": {
+      "poster_name": "Leonardo dos Santos Canario",
+      "poster_handle": "leonardo.canario"
+    },
+    "time_stamp": "2023-05-17 09:20:43",
+    "text": "Hi guys, someone can help me?\nI like to know if is possible i put one array inside the one property, there is a property who works same a array?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-05-17 12:37:07"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Tri Truong",
+      "poster_handle": "tri"
+    },
+    "time_stamp": "2023-05-17 10:23:57",
+    "text": "Hi, I’m integrating “<https://developers.HubSpot.com/docs/api/conversation/visitor-identification|Visitor identification>”. Because my application is SPA and users tend to keep opening the tab for a long period. My question is: how long does identified user session last in the live chat?\n\nEx:\n- The token was generated at 00:00 &amp; a user is identified as known contact successfully (via `hsConversationsSettings.identificationToken`)\n- The user keeps using the web app and opening the tab until the next 2 days. There is no widget.refresh / widget.load call.\n- Then, the user starts chatting, so still the user be logged in as known contact, or will be logged out as unknown contact?"
+  },
+  {
+    "poster": {
+      "poster_name": "Aviv Kasuto",
+      "poster_handle": "aviv211"
+    },
+    "time_stamp": "2023-05-17 11:56:52",
+    "text": "i need that as well, did you find out how to do that?"
+  },
+  {
+    "poster": {
+      "poster_name": "Aviv Kasuto",
+      "poster_handle": "aviv211"
+    },
+    "time_stamp": "2023-05-17 12:04:55",
+    "text": "okay, found it\njust add `hs_queue_membership_ids` with the queue id to the request"
+  },
+  {
+    "poster": {
+      "poster_name": "Zach Ruben",
+      "poster_handle": "zach796"
+    },
+    "time_stamp": "2023-05-17 12:05:23",
+    "text": "And can it associate to custom objects a well ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Zach Ruben",
+      "poster_handle": "zach796"
+    },
+    "time_stamp": "2023-05-17 12:05:44",
+    "text": "I had trouble with that using the engagements endpoint"
+  },
+  {
+    "poster": {
+      "poster_name": "Aviv Kasuto",
+      "poster_handle": "aviv211"
+    },
+    "time_stamp": "2023-05-17 12:06:10",
+    "edited": {
+      "time_stamp": "2023-05-17 12:06:12"
+    },
+    "text": "yes"
+  },
+  {
+    "poster": {
+      "poster_name": "Aviv Kasuto",
+      "poster_handle": "aviv211"
+    },
+    "time_stamp": "2023-05-17 12:06:23",
+    "text": "```curl --request POST \\\n  --url '<https://api.hubapi.com/crm/v3/objects/tasks?hapikey=YOUR_HubSpot_API_KEY>' \\\n  --header 'content-type: application/json' \\\n  --data '{\n  \"properties\": {\n    \"hs_timestamp\": \"2019-10-30T03:30:17.883Z\",\n    \"hs_task_body\": \"Send Proposal\",\n    \"HubSpot_owner_id\": \"64492917\",\n    \"hs_task_subject\": \"Follow-up for Brian Buyer\",\n    \"hs_task_status\": \"WAITING\",\n    \"hs_task_priority\": \"HIGH\"\n  },\n  \"associations\": [\n    {\n      \"to\": {\n        \"id\": \"101\"\n      },\n      \"types\": [\n        {\n          \"associationCategory\": \"HubSpot_DEFINED\",\n          \"associationTypeId\": 2\n        }\n      ]\n    }\n  ]\n}'```"
+  },
+  {
+    "poster": {
+      "poster_name": "Aviv Kasuto",
+      "poster_handle": "aviv211"
+    },
+    "time_stamp": "2023-05-17 12:06:30",
+    "text": "you can see in this example"
+  },
+  {
+    "poster": {
+      "poster_name": "Zach Ruben",
+      "poster_handle": "zach796"
+    },
+    "time_stamp": "2023-05-17 12:06:41",
+    "text": "awesome, you're the man. thanks aviv"
+  },
+  {
+    "poster": {
+      "poster_name": "Aviv Kasuto",
+      "poster_handle": "aviv211"
+    },
+    "time_stamp": "2023-05-17 12:06:55",
+    "text": "no problem :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Zach Ruben",
+      "poster_handle": "zach796"
+    },
+    "time_stamp": "2023-05-17 12:07:47",
+    "text": "id is the record id, and the association type id is the task to custom object association type"
+  },
+  {
+    "poster": {
+      "poster_name": "Zach Ruben",
+      "poster_handle": "zach796"
+    },
+    "time_stamp": "2023-05-17 12:07:52",
+    "text": "is that right?"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2023-05-17 12:37:07",
+    "text": "You can’t store a type of array.\n\nYou could create a Array in Custom code, then use JSON.stringify and save that to a property as a string value..\n\nThen when you need to retrieve that property, use a custom code to parse the string back into JSON (aka Array)."
+  },
+  {
+    "poster": {
+      "poster_name": "Miles Pines",
+      "poster_handle": "milespines"
+    },
+    "time_stamp": "2023-05-17 12:38:12",
+    "text": "Hi. We’re trying to perform an upsert on our contacts using the v3 API. Is this currently possible? We saw that there is no possible way to update a contact based on email in a bulk/batch request. Our current solution is to use the <https://legacydocs.HubSpot.com/docs/methods/contacts/batch_create_or_update> legacy endpoint, because there does not seem to be this feature in the latest API.",
+    "reply_count": 29,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2023-05-17 12:42:31"
+      },
+      {
+        "time_stamp": "2023-05-17 12:43:00"
+      },
+      {
+        "time_stamp": "2023-05-17 13:00:53"
+      },
+      {
+        "time_stamp": "2023-05-17 13:01:53"
+      },
+      {
+        "time_stamp": "2023-05-17 13:02:44"
+      },
+      {
+        "time_stamp": "2023-05-17 13:03:29"
+      },
+      {
+        "time_stamp": "2023-05-17 13:03:53"
+      },
+      {
+        "time_stamp": "2023-05-17 13:07:22"
+      },
+      {
+        "time_stamp": "2023-05-17 13:07:23"
+      },
+      {
+        "time_stamp": "2023-05-17 13:07:23"
+      },
+      {
+        "time_stamp": "2023-05-17 13:08:46"
+      },
+      {
+        "time_stamp": "2023-05-17 13:45:43"
+      },
+      {
+        "time_stamp": "2023-05-17 13:46:42"
+      },
+      {
+        "time_stamp": "2023-05-17 13:46:44"
+      },
+      {
+        "time_stamp": "2023-05-17 13:47:16"
+      },
+      {
+        "time_stamp": "2023-05-17 13:47:36"
+      },
+      {
+        "time_stamp": "2023-05-17 13:51:03"
+      },
+      {
+        "time_stamp": "2023-05-17 13:51:23"
+      },
+      {
+        "time_stamp": "2023-05-17 13:51:35"
+      },
+      {
+        "time_stamp": "2023-05-17 13:51:37"
+      },
+      {
+        "time_stamp": "2023-05-17 13:51:41"
+      },
+      {
+        "time_stamp": "2023-07-15 00:21:22"
+      },
+      {
+        "time_stamp": "2024-06-19 15:42:01"
+      },
+      {
+        "time_stamp": "2024-06-19 15:42:37"
+      },
+      {
+        "time_stamp": "2024-06-19 15:55:44"
+      },
+      {
+        "time_stamp": "2024-06-19 15:55:52"
+      },
+      {
+        "time_stamp": "2024-06-19 15:57:28"
+      },
+      {
+        "time_stamp": "2024-06-19 16:01:21"
+      },
+      {
+        "time_stamp": "2024-06-19 16:01:57"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Miles Pines",
+      "poster_handle": "milespines"
+    },
+    "time_stamp": "2023-05-17 12:42:31",
+    "text": "For reference, <https://community.HubSpot.com/t5/CRM/Unable-to-Update-Contacts-Via-Email/td-p/710045> here it states that the solution is “I don’t think [it] works”. Another person was able to solve it by heavily using reads/imports which we want to avoid: <https://community.HubSpot.com/t5/APIs-Integrations/Update-or-create-contacts-v3/td-p/470867>"
+  },
+  {
+    "poster": {
+      "poster_name": "Miles Pines",
+      "poster_handle": "milespines"
+    },
+    "time_stamp": "2023-05-17 12:43:00",
+    "text": "<@U01QVR44MEY> Any ideas? You have been helpful in the past."
+  },
+  {
+    "poster": {
+      "poster_name": "Aviv Kasuto",
+      "poster_handle": "aviv211"
+    },
+    "time_stamp": "2023-05-17 12:55:08",
+    "text": "yes"
+  },
+  {
+    "poster": {
+      "poster_name": "Aviv Kasuto",
+      "poster_handle": "aviv211"
+    },
+    "time_stamp": "2023-05-17 12:55:44",
+    "text": "if you are not sure what is the type id, you can create it manually in the ui then get the associations of that record and see all the relations"
+  },
+  {
+    "poster": {
+      "poster_name": "Aviv Kasuto",
+      "poster_handle": "aviv211"
+    },
+    "time_stamp": "2023-05-17 12:55:51",
+    "text": "maybe theres a better way doing that"
+  },
+  {
+    "poster": {
+      "poster_name": "Zach Ruben",
+      "poster_handle": "zach796"
+    },
+    "time_stamp": "2023-05-17 12:58:37",
+    "text": "i usually make a get request to here <https://api.HubSpot.com/crm-object-schemas/v3/schemas> to get the custom object association labels. the rest are usually in the documentation I have found"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 13:00:53",
+    "text": "Hey <@U04RBVBG5CZ>, Thanks for reaching out. So yeah basically only the bulk read api allows for using the id property (for the bulk endpoints). So you have a couple of options and it really depends on how many contacts you're trying to update at one time. For less than 100 or so contacts the best approach is to individually lookup the contact id using the email with the GET contact endpoints (idProperty=email) and then bulk update using those retrieved ids. Another option (it's a pretty good option for 100+ objects) is using the import api and setting the email as a `HubSpot_ALTERNATE_ID` field."
+  },
+  {
+    "poster": {
+      "poster_name": "Miles Pines",
+      "poster_handle": "milespines"
+    },
+    "time_stamp": "2023-05-17 13:01:53",
+    "text": "Thanks so much for the quick reply. The update could be on 100,000+ contacts so I guess I will try the second option. Do you have any other details?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 13:02:44",
+    "text": "Yeah so you need to send the import api a excel file so you'll need to first get that data in that format"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 13:03:29",
+    "text": "next you need to map over your header (make sure it's in order left to right) here's an example mapping from the docs:\n```\"columnMappings\": [\n          {\n            \"columnObjectTypeId\": \"0-1\",\n            \"columnName\": \"First Name\",\n            \"propertyName\": \"firstname\",\n            \"idColumnType\": null\n          },\n          {\n            \"columnObjectTypeId\": \"0-1\",\n            \"columnName\": \"Last Name\",\n            \"propertyName\": \"lastname\",\n            \"idColumnType\": null\n          },\n          {\n            \"columnObjectTypeId\": \"0-1\",\n            \"columnName\": \"Email\",\n            \"propertyName\": \"email\",\n            \"idColumnType\": \"HubSpot_ALTERNATE_ID\"\n          }\n        ]```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Miles Pines",
+      "poster_handle": "milespines"
+    },
+    "time_stamp": "2023-05-17 13:03:53",
+    "text": "Thats pretty rough. I think we are going to try the legacy api because having to store a single csv file of that size would be unfortuneate."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 13:07:22",
+    "text": "yeah most of the time people (including myself) create the file programmatically on the fly"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 13:07:23",
+    "text": "what other system are you trying to sync?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 13:07:23",
+    "text": "and is this sync something that will happen all the time?"
+  },
+  {
+    "poster": {
+      "poster_name": "Miles Pines",
+      "poster_handle": "milespines"
+    },
+    "time_stamp": "2023-05-17 13:08:46",
+    "text": "We are trying to sync a massive amount of contacts to and from HubSpot. The sync could happen at any time so we would have to make that file every time it happens. Is there something wrong with using the legacy API? This seem like a fairly basic feature too. Do you know if it will get added?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 13:45:43",
+    "text": "nope nothing wrong with using that legacy endpoint, I really don't know why they haven't make that same endpoint available in the v3/v4 endpoints aside from the facts that it's wouldn't really work for all object (the update/create a contact, but the update with idProperty should be). Keep in mind that there's a 10 request/second rate limit so you would spend several hours trying to sync with HubSpot using the create and update endpoint and not the import api"
+  },
+  {
+    "poster": {
+      "poster_name": "Miles Pines",
+      "poster_handle": "milespines"
+    },
+    "time_stamp": "2023-05-17 13:46:42",
+    "text": "so far with the limit and 160k contacts it takes about 20 minutes when creating. We’ll explore the legacy api and if it won’t work I guess we can try import."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 13:46:44",
+    "text": "Again it's super easy to programmatically create an import file and the import would only take a couple of minutes vs 3 hours non stop to the max requests"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 13:47:16",
+    "text": "Yeah that's for bulk creating right? the create/update v1 endpoint is for one contact at a time so it would take 3 hours"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 13:47:36",
+    "text": "not to mention you couldn't do any other requests until it finished"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 13:51:03",
+    "text": "actually just double checked the docs and it looks like there is a bulk create and update endpoint"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 13:51:23",
+    "text": "with a 1000 contact per batch limit, so that might be a great option"
+  },
+  {
+    "poster": {
+      "poster_name": "Miles Pines",
+      "poster_handle": "milespines"
+    },
+    "time_stamp": "2023-05-17 13:51:35",
+    "text": "Great! Thanks."
+  },
+  {
+    "poster": {
+      "poster_name": "Miles Pines",
+      "poster_handle": "milespines"
+    },
+    "time_stamp": "2023-05-17 13:51:37",
+    "text": "We’ll try it"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-17 13:51:41",
+    "text": "<https://legacydocs.HubSpot.com/docs/methods/contacts/batch_create_or_update>"
+  },
+  {
+    "poster": {
+      "poster_name": "Paul Fagarasan",
+      "poster_handle": "paul.fagarasan"
+    },
+    "time_stamp": "2023-05-17 14:34:56",
+    "text": "yes please"
+  },
+  {
+    "poster": {
+      "poster_name": "Paul Fagarasan",
+      "poster_handle": "paul.fagarasan"
+    },
+    "time_stamp": "2023-05-17 14:40:34",
+    "text": "<@U04EA5Z4WJD> let me know when you have some time to sync on this"
+  },
+  {
+    "poster": {
+      "poster_name": "Vlad Erculescu",
+      "poster_handle": "vlad855"
+    },
+    "time_stamp": "2023-05-17 15:35:00",
+    "text": "any updates?"
+  },
+  {
+    "poster": {
+      "poster_name": "prince gupta",
+      "poster_handle": "k.prince"
+    },
+    "time_stamp": "2023-05-17 23:34:48",
+    "edited": {
+      "time_stamp": "2023-05-18 00:54:14"
+    },
+    "text": "Hi All, I am trying to get form submission data with API  /form-integrations/v1/submissions/forms/:form_guid but get 403 status and the response is\nSorry, you have been blocked\nYou are unable to access <http://hubapi.com|hubapi.com>\n\nWhy have I been blocked?\nThis website is using a security service to protect itself from online attacks. The action you just performed triggered the security solution. There are several actions that could trigger this block including submitting a certain word or phrase, a SQL command or malformed data.\nWhat can I do to resolve this?\nYou can email the site owner to let them know you were blocked. Please include what you were doing when this page came up and the Cloudflare Ray ID found at the bottom of this page.\n<@U01QVR44MEY> can you please help me why this is happening."
+  },
+  {
+    "poster": {
+      "poster_name": "Marvin Estacio",
+      "poster_handle": "maverick_mle"
+    },
+    "time_stamp": "2023-05-18 00:59:39",
+    "text": "Hi everyone,\n\nI'm reading thru the API docs and I came to the page about custom objects (<https://developers.HubSpot.com/docs/api/crm/crm-custom-objects|https://developers.HubSpot.com/docs/api/crm/crm-custom-objects>). Thru trial and error I was able to retrieve an archived record. Can't find in the docs, but is there a way to unarchive/reactivate a custom object record? Thanks!",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-05-18 16:12:39"
+      },
+      {
+        "time_stamp": "2023-05-18 20:30:36"
+      },
+      {
+        "time_stamp": "2023-05-18 20:32:08"
+      },
+      {
+        "time_stamp": "2023-05-18 20:33:32"
+      },
+      {
+        "time_stamp": "2023-05-19 08:52:17"
+      }
+    ]
+  }
+]

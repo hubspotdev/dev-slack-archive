@@ -1,0 +1,516 @@
+[
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-04-03 01:02:18",
+    "text": "<@U01B6251Q66> yes! Let me find the code!"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-04-03 01:03:27",
+    "edited": {
+      "time_stamp": "2023-04-03 01:03:35"
+    },
+    "text": "Does this help?\n`const apiResponse = await HubSpotClient.crm.objects.basicApi.update(objectType, hsId, SimplePublicObjectInput);`"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-04-03 01:04:42",
+    "edited": {
+      "time_stamp": "2023-04-03 01:04:44"
+    },
+    "text": "Ah no, it's the search, let me check on"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-04-03 01:05:52",
+    "text": "Got it"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-04-03 01:06:28",
+    "text": "Make sure you are using the request library\n`const request = require('request');`"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-04-03 01:07:14",
+    "edited": {
+      "time_stamp": "2023-04-03 01:08:09"
+    },
+    "text": "Set up your call variables, this is leaving out the body info and closing brackets\n```    var optionsHubSpot = {\n      'method': 'POST',\n      'url': '<https://api.hubapi.com/crm/v3/objects/'+objectType+'/search>',\n      'headers': {\n        'Authorization': \"Bearer \" + process.env.ACCESS_TOKEN,\n        'Content-Type': 'application/json'\n      },\n      body: JSON.stringify({```"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-04-03 01:07:59",
+    "text": "Do a try catch calling the endpoint\n```    try {\n      // We need to wait for the response or the variable will be empty.\n      const HubSpotApiResponse = await doRequest(optionsHubSpot);\n\n      try {\n        var HubSpotBody = JSON.parse(HubSpotApiResponse)\n        // Check if there is actually data available.\n        if(HubSpotBody[\"total\"] &gt; 0){\n          // Let's go!\n          HubSpotAddresses = HubSpotBody[\"results\"]\n        }\n      } catch (e) {\n        callback({\n          outputFields: {\n            customCodeSuccess: false,\n            customCodeOutput: \"No data available\"\n          }\n        });\n        return;\n      }\n    } catch (e) {\n      e.message === 'HTTP request failed'\n        ? console.error(JSON.stringify(e.response, null, 2))\n      : console.error(e)\n      callback({\n        outputFields: {\n          customCodeSuccess: false,\n          customCodeOutput: e\n        }\n      });\n    }```"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-04-03 01:08:38",
+    "text": "And this is the helper function I use to do external calls\n```// Function so we can do async calls.\nfunction doRequest(options) {\n  return new Promise(function (resolve, reject) {\n    request(options, function (error, res, body) {\n      if (!error &amp;&amp; res.statusCode == 200) {\n        resolve(body);\n      } else {\n        reject(error);\n      }\n    });\n  });\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-04-03 01:08:44",
+    "text": "Hope this helps!"
+  },
+  {
+    "poster": {
+      "poster_name": "Hollyce Brammer",
+      "poster_handle": "hollyce"
+    },
+    "time_stamp": "2023-04-03 08:04:53",
+    "text": "Thank you. I actually figured out a solution Friday. Your comment helped me!"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-04-03 08:09:01",
+    "text": "Nice to hear! Good job!"
+  },
+  {
+    "poster": {
+      "poster_name": "Charlie Stokes",
+      "poster_handle": "charlie.stokes"
+    },
+    "time_stamp": "2023-04-03 10:13:08",
+    "text": "Anyone having a problem with Serverless Functions not publishing changes made these past few days? I have published changes and the changes don’t happen. Logs that are commented out are continuing to log.",
+    "reply_count": 25,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-04-03 10:20:31"
+      },
+      {
+        "time_stamp": "2023-04-03 10:20:43"
+      },
+      {
+        "time_stamp": "2023-04-03 10:21:39"
+      },
+      {
+        "time_stamp": "2023-04-03 10:22:31"
+      },
+      {
+        "time_stamp": "2023-04-03 10:22:39"
+      },
+      {
+        "time_stamp": "2023-04-03 10:23:15"
+      },
+      {
+        "time_stamp": "2023-04-03 10:23:37"
+      },
+      {
+        "time_stamp": "2023-04-03 10:24:14"
+      },
+      {
+        "time_stamp": "2023-04-03 10:24:27"
+      },
+      {
+        "time_stamp": "2023-04-03 10:24:42"
+      },
+      {
+        "time_stamp": "2023-04-03 10:24:53"
+      },
+      {
+        "time_stamp": "2023-04-03 10:25:13"
+      },
+      {
+        "time_stamp": "2023-04-03 10:25:52"
+      },
+      {
+        "time_stamp": "2023-04-03 10:27:39"
+      },
+      {
+        "time_stamp": "2023-04-03 10:27:48"
+      },
+      {
+        "time_stamp": "2023-04-03 10:27:50"
+      },
+      {
+        "time_stamp": "2023-04-03 10:27:56"
+      },
+      {
+        "time_stamp": "2023-04-03 10:28:08"
+      },
+      {
+        "time_stamp": "2023-04-03 10:28:42"
+      },
+      {
+        "time_stamp": "2023-04-03 10:28:51"
+      },
+      {
+        "time_stamp": "2023-04-03 10:29:27"
+      },
+      {
+        "time_stamp": "2023-04-03 10:30:12"
+      },
+      {
+        "time_stamp": "2023-04-03 10:30:32"
+      },
+      {
+        "time_stamp": "2023-04-03 10:30:38"
+      },
+      {
+        "time_stamp": "2023-04-03 14:07:17"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-03 10:20:31",
+    "text": "You need to right click on the function folder and click deploy all"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-03 10:20:43",
+    "text": "if you're in the dependencies beta"
+  },
+  {
+    "poster": {
+      "poster_name": "Charlie Stokes",
+      "poster_handle": "charlie.stokes"
+    },
+    "time_stamp": "2023-04-03 10:21:39",
+    "text": "This portal is not in the dependencies beta"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-03 10:22:31",
+    "text": "does it have a deploy all functions option when you right click the .functions folder?"
+  },
+  {
+    "poster": {
+      "poster_name": "Charlie Stokes",
+      "poster_handle": "charlie.stokes"
+    },
+    "time_stamp": "2023-04-03 10:22:39",
+    "text": "It does not."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-03 10:23:15",
+    "text": "I ran into this the other month: <https://HubSpotdev.slack.com/archives/C04A3FUK8HK/p1673461560193459>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-03 10:23:37",
+    "text": "But it was the dependencies beta that was the problem"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-03 10:24:14",
+    "text": "Usually it takes about 10-20 seconds for the changes to deploy after clicking publish but it's been past the time amount right?"
+  },
+  {
+    "poster": {
+      "poster_name": "Charlie Stokes",
+      "poster_handle": "charlie.stokes"
+    },
+    "time_stamp": "2023-04-03 10:24:27",
+    "text": "Published changes on friday.I tried creating a new .functions file and that file is working so I think i’ll just duplicate and delete"
+  },
+  {
+    "poster": {
+      "poster_name": "Charlie Stokes",
+      "poster_handle": "charlie.stokes"
+    },
+    "time_stamp": "2023-04-03 10:24:42",
+    "text": "Thank you for taking a look though!"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-03 10:24:53",
+    "text": "Well I would love to get to the bottom of the issue"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-03 10:25:13",
+    "text": "Are changes made to the duplicate .functions deploying?"
+  },
+  {
+    "poster": {
+      "poster_name": "Charlie Stokes",
+      "poster_handle": "charlie.stokes"
+    },
+    "time_stamp": "2023-04-03 10:25:52",
+    "text": "Checking that"
+  },
+  {
+    "poster": {
+      "poster_name": "Charlie Stokes",
+      "poster_handle": "charlie.stokes"
+    },
+    "time_stamp": "2023-04-03 10:27:39",
+    "text": "Yes changes are sticking in the new functions file"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-03 10:27:48",
+    "text": "hella strange"
+  },
+  {
+    "poster": {
+      "poster_name": "Charlie Stokes",
+      "poster_handle": "charlie.stokes"
+    },
+    "time_stamp": "2023-04-03 10:27:50",
+    "text": "Possible the old file is corrupted?"
+  },
+  {
+    "poster": {
+      "poster_name": "Charlie Stokes",
+      "poster_handle": "charlie.stokes"
+    },
+    "time_stamp": "2023-04-03 10:27:56",
+    "text": "Somehow?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-03 10:28:08",
+    "text": "it's possible, was it uploaded from the CLI or created in the design manager?"
+  },
+  {
+    "poster": {
+      "poster_name": "Charlie Stokes",
+      "poster_handle": "charlie.stokes"
+    },
+    "time_stamp": "2023-04-03 10:28:42",
+    "text": "I can’t remember how it was first created"
+  },
+  {
+    "poster": {
+      "poster_name": "Charlie Stokes",
+      "poster_handle": "charlie.stokes"
+    },
+    "time_stamp": "2023-04-03 10:28:51",
+    "text": "But has been updated via cli and the design manager"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-03 10:29:27",
+    "text": "that `might be why but I've never seen that happen before, sorry I couldn't be more help"
+  },
+  {
+    "poster": {
+      "poster_name": "Charlie Stokes",
+      "poster_handle": "charlie.stokes"
+    },
+    "time_stamp": "2023-04-03 10:30:12",
+    "text": "Not a problem! I don’t think HubSpot gives us access to what we would need in order to completely understand what is going wrong."
+  },
+  {
+    "poster": {
+      "poster_name": "Charlie Stokes",
+      "poster_handle": "charlie.stokes"
+    },
+    "time_stamp": "2023-04-03 10:30:32",
+    "text": "So don’t worry about it! Thanks for reading!"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-03 10:30:38",
+    "text": "of course"
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Dow",
+      "poster_handle": "christianrdow"
+    },
+    "time_stamp": "2023-04-03 13:29:30",
+    "text": "<@U051JTSD80K> I am also still experiencing this issue today (was also last week and have a HubSpot ticket from multiple other portals in process). Something recent has been causing a ton of issues with serverless functions. One example today is serving a version from last week (dozens of revisions ago). This portal also does not have the 'deploy' feature as mentioned in your thread. Just posting so you know you are not crazy lol",
+    "reply_count": 11,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-04-03 13:30:49"
+      },
+      {
+        "time_stamp": "2023-04-03 13:35:31"
+      },
+      {
+        "time_stamp": "2023-04-03 13:37:25"
+      },
+      {
+        "time_stamp": "2023-04-03 13:58:30"
+      },
+      {
+        "time_stamp": "2023-04-03 14:50:08"
+      },
+      {
+        "time_stamp": "2023-04-03 15:19:40"
+      },
+      {
+        "time_stamp": "2023-04-03 15:21:18"
+      },
+      {
+        "time_stamp": "2023-04-03 15:22:10"
+      },
+      {
+        "time_stamp": "2023-04-03 15:23:04"
+      },
+      {
+        "time_stamp": "2023-04-03 15:29:07"
+      },
+      {
+        "time_stamp": "2023-04-03 15:32:06"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-03 13:30:49",
+    "text": "And just to double check this is a CMS serverless function not a dev project one"
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Dow",
+      "poster_handle": "christianrdow"
+    },
+    "time_stamp": "2023-04-03 13:35:31",
+    "text": "<@U01QVR44MEY> yes, we have also reported to support a separate issue with portals which do feature the 'deploy' function where you must publish the file and then deploy the whole .functions folder - there is also an error occurring causing issues during the build process there as well. All issues started sometime last week - but were working at the beginning. One folder examples we provided - all files have not been updated since early 2022. That ticket is #12197676.\nI just came here before submitting a new ticket to see if anyone else like Charlie was reporting the other issue on portals which do not have the deploy functionality where old versions are currently 'stuck'"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-03 13:37:25",
+    "text": "<@U03U053QC72> what do you think is causing this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Charles Boamah",
+      "poster_handle": "cboamah"
+    },
+    "time_stamp": "2023-04-03 13:58:30",
+    "text": "<@U01AHCQ7EJC> - Thanks for checking here first. Would you mind submitting a ticket so we have the portal details?"
+  },
+  {
+    "poster": {
+      "poster_name": "Tyler Kindy",
+      "poster_handle": "tkindy"
+    },
+    "time_stamp": "2023-04-03 14:07:17",
+    "text": "Hey <@U051JTSD80K>, thanks for reporting! I’m taking a look at this. Can you share your portal ID and the path to the function you’re trying to update?"
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Dow",
+      "poster_handle": "christianrdow"
+    },
+    "time_stamp": "2023-04-03 14:50:08",
+    "text": "<@U03U053QC72> sorry for the delay - just submitted Ticket #12229543 from this portal :pray::skin-tone-2:"
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2023-04-03 15:19:40",
+    "text": "The issue appears to be related to the deprecation of Node 12. Updating Node should resolve the issue. Here is the <https://developers.HubSpot.com/changelog/deprecation-of-node-v12-in-all-serverless-functions|communication and instructions for updating Node.>"
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Dow",
+      "poster_handle": "christianrdow"
+    },
+    "time_stamp": "2023-04-03 15:21:18",
+    "text": "<@U03U053QC72> is this what is causing the portals that do have the deploy function to fail during building as well? So even if old functions are not being changed they will cause new ones to be blocked unless all are updated essentially?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-03 15:22:10",
+    "text": "Yeah completely forgot those were being deprecated, I wish there would have been an announcement in this channel on the 24th"
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Dow",
+      "poster_handle": "christianrdow"
+    },
+    "time_stamp": "2023-04-03 15:23:04",
+    "text": "That makes sense and is easy to update quickly. Thanks for the fast answer that is much appreciated  :raised_hands::skin-tone-2:"
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Dow",
+      "poster_handle": "christianrdow"
+    },
+    "time_stamp": "2023-04-03 15:29:07",
+    "text": "Looks like that resolved the issues for ticket #12229543 however still seeing issues with the ones which do have the deploy feature so will leave the other open for now :pray::skin-tone-2:"
+  },
+  {
+    "poster": {
+      "poster_name": "Charles Boamah",
+      "poster_handle": "cboamah"
+    },
+    "time_stamp": "2023-04-03 15:32:06",
+    "text": "Thanks for letting us know. We’re looking into it."
+  }
+]

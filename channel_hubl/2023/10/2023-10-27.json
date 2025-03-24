@@ -1,0 +1,92 @@
+[
+  {
+    "poster": {
+      "poster_name": "Julian Vidal",
+      "poster_handle": "julian.vidal123"
+    },
+    "time_stamp": "2023-10-27 09:18:01",
+    "text": "Hello! I'm using the <https://developers.HubSpot.com/docs/cms/hubl/functions#crm-associations|crm_associations> function just curious: is there a way to get all associations no matter the association label? Per the documnetatation, seems like I'll need to do a query per each association label but not sure if there's a way to avoid that. Also, what about associations without an association label? How do I grab those? thanks in advance"
+  },
+  {
+    "text": "Can someone help me figure out what the right way is to call an advanced menu within hubl? This is what I tried `{% menu \"Victori Medical - Main Menu\" %}`  it works but it's pulling in a generic menu vs. the name of my advanced menu which is.",
+    "time_stamp": "2023-10-27 12:23:37",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-10-27 19:04:52"
+      },
+      {
+        "time_stamp": "2023-10-29 11:43:10"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Axel",
+      "poster_handle": "aobscura"
+    },
+    "time_stamp": "2023-10-27 14:34:09",
+    "text": "Hello everyone!! can anybody help me please. i want to capitalize all words in string, is it possible?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-10-27 19:07:51"
+      },
+      {
+        "time_stamp": "2023-10-27 19:10:42"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Tad Fox",
+      "poster_handle": "tad.fox"
+    },
+    "time_stamp": "2023-10-27 16:04:16",
+    "text": "Hi. Support actually sent me here. I kinda feel like I'm getting a runaround judging from the description of the channel.\n\nWe post code snippets in our blog. Some recent is very similar to HUBL. For instance, *`{{#=}}`* and *`{{/}}`*. Every time we post, it breaks the page at that point. We tried HTML entity codes like `&amp;#123;` and it breaks. We tried using the `{% raw %}` and `{% endraw %},` and it still breaks.\n\nI can't determine, off the top of my head, if we've posted similar code samples before, but it makes sense that we would have. Is there possibly anything in the update that could be causing this?\n\nPlease help because the Marketing team is screenshotting whole paragraphs and including images in posts.",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-10-27 18:50:02"
+      },
+      {
+        "time_stamp": "2023-11-04 05:14:39"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-10-27 18:50:02",
+    "text": "Hmm, interesting — I _do_ see the same behavior when I try to use HTML entities to escape curly brackets. However, in my tests, wrapping a block `{% raw %}` tags *does* properly prevent a HubL or HubL-like statement from being evaluated. In my testing, it also seems like <https://developers.HubSpot.com/docs/cms/hubl/filters#escape-jinjava|the >`escape_jinjava`<https://developers.HubSpot.com/docs/cms/hubl/filters#escape-jinjava| filter> works as intended.\n\nIt seems to me that the core of the issue is that the rich text field evaluates and replaces HTML entities once the content is saved. Effectively, rich text fields un-escape your snippets.\n\nIf these code snippets are contained within blocks, I might recommend creating a “Code Block” module, whose output is put through `escape_jinjava`."
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-10-27 19:04:52",
+    "text": "The quoted string directly following `menu` in your tag isn’t an attribute, it’s an ID — you can effectively think of it as being like a variable name for that menu object.\n\nYou won’t be able to programmatically reference your menu by its human-readable name, you’ll have to reference its ID, which can be found at the end of the URL when editing a menu.\n\nInvoking it via <https://developers.HubSpot.com/docs/cms/hubl/tags#menu|the >`menu`<https://developers.HubSpot.com/docs/cms/hubl/tags#menu| tag> will look something like this:\n```{% menu \"victori_medical_main_menu\"\n  id=123456789000,\n  root_type=\"site_root\",\n  max_levels=\"1\",\n  flow=\"horizontal\",\n  label=\"Main Menu\"\n%}```\nIf you’re not using this within another module, I recommend trying to use the menu module rather than the tag — menu configuration in HubL can be difficult to understand at times, and the module gets you near _(or entirely)_ identical results through the GUI. That’d look like:\n```{% module \"victori_medial_main_menu\"\n  path=\"@HubSpot/menu\"\n%}```\nYou can still define all of the options that the menu tag has if you still need to have those things set properly in the HubL, but you gain some ease-of-use and additional options by using the module instead."
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-10-27 19:07:51",
+    "text": "Yup, just apply <https://developers.HubSpot.com/docs/cms/hubl/filters#title|the >`title`<https://developers.HubSpot.com/docs/cms/hubl/filters#title| filter> to it!\n\n```{% set my_content = \"this is my string\" %}\n\n{{ my_content | title }}\n{# Outputs: \"This Is My String\" #}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Axel",
+      "poster_handle": "aobscura"
+    },
+    "time_stamp": "2023-10-27 19:10:42",
+    "text": "Awesome!!!, thank you <@U04AQA0QM8E>!!! :slightly_smiling_face:"
+  }
+]

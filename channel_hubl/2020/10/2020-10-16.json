@@ -1,0 +1,97 @@
+[
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2020-10-16 03:12:15",
+    "text": "Found an issue (I think?, maybe its in propourse).\nWhen you have something like this:\n```{% set my_var = {\"text\": \"Hello world\" %}\n\n{% macro myMacro() %}\n   {% set inherit_var = my_var %}\n   {% set _dummy = inherit_var.update({ \"text\": \"yo!\"}) %}\n   {{ my_var }}\n{% endmacro %}```\nThe result is that my_var is updated, looks like inherit_var is acting as a pointer?\n(if this case is not working to test the issue, ask me I can provide my portal and real case where is happening, but for simplicity I created this one here)\n\nExtra Q:\nis `{% do %}`  tag in the pipe to be added to HubL?",
+    "reply_count": 4,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2020-10-16 04:46:31"
+      },
+      {
+        "time_stamp": "2020-10-16 04:50:18"
+      },
+      {
+        "time_stamp": "2020-10-16 07:03:29"
+      },
+      {
+        "time_stamp": "2020-10-16 07:17:38"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Vesa Poikajärvi",
+      "poster_handle": "vesa.poikajarvi"
+    },
+    "time_stamp": "2020-10-16 04:46:31",
+    "text": "I believe the reference is by design as HubL is extension of Jinjava, and in Java non-primitive variables are references.\n\nAnd I'm pretty sure `do` is supported as we are using it in our modules :)"
+  },
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2020-10-16 04:50:18",
+    "text": "Oh! Then I missed when they added it!\nAlright, thanks. \nIf anyone has the same issue I solved it just creating an empty dict in the inherited var and updated with the content of the first. This way you can modify the inherited leaving the first one untouched."
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2020-10-16 07:03:29",
+    "text": "As an FYI, back in September we had released some functions for manipulating lists. You can view this changelog for more information: <https://developers.HubSpot.com/changelog/new-feature-new-list-operations>"
+  },
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2020-10-16 07:17:38",
+    "text": "Nice! \nThank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Brooking",
+      "poster_handle": "matt.brooking"
+    },
+    "time_stamp": "2020-10-16 08:18:54",
+    "text": "Hi I come from a PHP background, and if I wanted to have inline svgs in my pages I would setup this function\n\n```\tfunction get_svg($svg) {\n\t\techo file_get_contents( get_theme_file_uri('dist/img/svg/'.$svg.'.svg'));\n\t}```\nit made easier to do any updates to SVGs that need to be inline, but are used across multiple modules, but also be able manipulate the SVGs with css and JS\n\nDoes HUBL have any kind of similar functionality to the file_get_contents function?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2020-10-16 11:26:49"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2020-10-16 11:02:18",
+    "text": "Answered the same question here <https://HubSpotdev.slack.com/archives/CFPRTEGTX/p1602829966092400>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2020-10-16 11:26:49",
+    "text": "We don’t currently have identical functionality. Something that can be done however is to use a template partial, basically a .html file with a partial annotation, and place your SVG code there. Then where you want your SVG use `{% include %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Abplanalp",
+      "poster_handle": "cabplanalp"
+    },
+    "time_stamp": "2020-10-16 14:05:27",
+    "text": "I was wondering if anyone had any hubl code examples to return if a visitor has the HubSpot UTK cookie: HubSpotutk, what would be the syntax for returning that"
+  }
+]

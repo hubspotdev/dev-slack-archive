@@ -1,0 +1,62 @@
+[
+  {
+    "poster": {
+      "poster_name": "Ahmed Jamal Tariq",
+      "poster_handle": "ahmed.jamal.tariq"
+    },
+    "time_stamp": "2024-05-02 06:45:01",
+    "text": "I have this template and a pre-defiend module inside it,\n```&lt;!--\n  label: Content - Full Width\n  description: Content page full width with no container\n  templateType: page\n  isAvailableForNewContent: true\n  enableDomainStylesheets: false\n--&gt;\n\n\n{% extends \"../layouts/base.html\" %}\n\n{% block body %}\n\n      {% dnd_area \"body_dnd_area\" %}\n        \n        {% dnd_section %}\n\n            {% dnd_module \n                path=\"../modules/content-row\",\n                no_wrapper=true,\n                disable_block=false,\n                offset=0\n                width=12,\n                column_direction=\"flex-column\",\n                style={\n                    \"layout\" : {\n                        \"column_horizontal_alignment\" : \"start\"\n                    }, \n                    \"background\" : { \n                        \"type\" : \"color\",\n                        \"color\" : \"white\",\n                    },\n                    \"padding\" : {\n                        \"top\" : \"10\",\n                        \"bottom\" : \"10\"\n                    }\n                }\n            %}\n            {% end_dnd_module %}\n\n        {% end_dnd_section %}\n\n      {% end_dnd_area %}\n\n{% endblock body %}```\nThe problem I don't see any *\"Save Section\"* option on the page editor, what's going wrong? :thinking:",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-05-02 11:57:11"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Justin",
+      "poster_handle": "justin145"
+    },
+    "time_stamp": "2024-05-02 07:41:09",
+    "text": "Hey everyone, hopefully a quick question. I'm building a custom module. Added the Spacing style field. So the following renders the css for the field:\n`{{ module.style.tile.spacing.css }}`\nThat works fine and renders the following:\n`padding: 60px; margin-top: 1%; margin-bottom: 1%;`\nHowever, I'd like to render only the css for the margin (and NOT the padding). Tried the following (and a bunch of other things) and it doesn't work:\n`{{ module.style.tile.spacing.margin.css }}`\nIs there a way to render only the margin?\nThanks!!",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-02 12:11:02"
+      },
+      {
+        "time_stamp": "2024-05-02 12:52:23"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Elijah Gastin",
+      "poster_handle": "elijah.gastin"
+    },
+    "time_stamp": "2024-05-02 11:57:11",
+    "text": "What i would double check is the the very bottom left of your screen the show error button should help clue you in what is wrong i don't think its the code itself it might be on the base or the module"
+  },
+  {
+    "poster": {
+      "poster_name": "Elijah Gastin",
+      "poster_handle": "elijah.gastin"
+    },
+    "time_stamp": "2024-05-02 12:11:02",
+    "text": "try\n```{{ module.style.tile.spacing.margin.margin.top.value }}{{ module.style.tile.spacing.margin.margin.top.unit }}```\nThis would render 1% of top\n\nOr you could just regex_replace padding: 60px; with nothing\n\nHere is helpful filter I find myself using a lot is\n```|pprint\n|tojson|pprint {# adding json before it makes it a bit more readable when it outputs sometimes#}```\nwould recommend trying\n```{{module.style.tile.spacing.margin|tojson|pprint}}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin",
+      "poster_handle": "justin145"
+    },
+    "time_stamp": "2024-05-02 12:52:23",
+    "edited": {
+      "time_stamp": "2024-05-02 12:52:44"
+    },
+    "text": "Thank you so much. Got it working... from your first example, removed the extra .margin and used units instead of unit. Thanks for the help!"
+  }
+]

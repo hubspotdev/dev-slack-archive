@@ -1,0 +1,252 @@
+[
+  {
+    "poster": {
+      "poster_name": "Sakari Lapinsuo",
+      "poster_handle": "lapinsuo"
+    },
+    "time_stamp": "2019-07-16 05:13:35",
+    "text": "Simple question: what is the proper syntax to include css files stored in the HubSpot Design Tools in the sitewide header field under Settings --&gt; Website --&gt; Pages"
+  },
+  {
+    "poster": {
+      "poster_name": "Sakari Lapinsuo",
+      "poster_handle": "lapinsuo"
+    },
+    "time_stamp": "2019-07-16 05:13:42",
+    "text": "I have: &lt;link rel=\"stylesheet\" type=\"text/css\" href=\"{get_public_template_url('CSS/qpr-global.css')}\"&gt;"
+  },
+  {
+    "poster": {
+      "poster_name": "Sakari Lapinsuo",
+      "poster_handle": "lapinsuo"
+    },
+    "time_stamp": "2019-07-16 05:14:29",
+    "text": "but styling in this file is not applied"
+  },
+  {
+    "poster": {
+      "poster_name": "Sakari Lapinsuo",
+      "poster_handle": "lapinsuo"
+    },
+    "time_stamp": "2019-07-16 05:15:36",
+    "text": "would appreciate some help on this."
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-07-16 07:32:56",
+    "text": "You can try using the `require_css` function as shown here: <https://designers.HubSpot.com/en/docs/hubl/hubl-supported-functions#require-css>\n\nInstead of having to write put the `&lt;link ...` stuff. This should help.\nExample:\n```\n{{ require_css(get_public_template_url(\"/relative/path/to/file.css\")) }}\n\noutput would be:\n&lt;link type=\"text/css\" rel=\"stylesheet\" href=\"<http://example.com/relative/path/to/file.css>\"&gt;\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Sakari Lapinsuo",
+      "poster_handle": "lapinsuo"
+    },
+    "time_stamp": "2019-07-16 08:05:07",
+    "text": "Thanks. I was able to confirm that this works for page styling, but for some reason styles defined in the linked document are not being used by CTAs that -- under advanced options -- have the appropriate class included in the \"custom CSS class\" field"
+  },
+  {
+    "poster": {
+      "poster_name": "Sakari Lapinsuo",
+      "poster_handle": "lapinsuo"
+    },
+    "time_stamp": "2019-07-16 08:06:12",
+    "text": "So, in all headers sitewide I have \"{{ require_css(get_public_template_url(\"/GlobalCSS/qpr-global.css\")) }}\", and I have confirmed that styles are being read from qpr-global.css"
+  },
+  {
+    "poster": {
+      "poster_name": "Sakari Lapinsuo",
+      "poster_handle": "lapinsuo"
+    },
+    "time_stamp": "2019-07-16 08:06:47",
+    "text": "In one CTA I have \"ctablue\" written in the \"custom CSS class\" field"
+  },
+  {
+    "poster": {
+      "poster_name": "Sakari Lapinsuo",
+      "poster_handle": "lapinsuo"
+    },
+    "time_stamp": "2019-07-16 08:07:29",
+    "text": "I then have \".ctablue\" with various styling instructions listed in qpr-global.css"
+  },
+  {
+    "text": "As such:",
+    "time_stamp": "2019-07-16 08:08:44"
+  },
+  {
+    "poster": {
+      "poster_name": "Sakari Lapinsuo",
+      "poster_handle": "lapinsuo"
+    },
+    "time_stamp": "2019-07-16 08:09:26",
+    "text": "In the CTA settings I have:"
+  },
+  {
+    "text": "",
+    "time_stamp": "2019-07-16 08:09:30"
+  },
+  {
+    "poster": {
+      "poster_name": "Sakari Lapinsuo",
+      "poster_handle": "lapinsuo"
+    },
+    "time_stamp": "2019-07-16 08:10:34",
+    "text": "the .ctablue instructions are the last ones in the file so they are not being overridden by anything else below in the file"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-07-16 08:25:16",
+    "text": "it may be due to some of the HS styles using `!important` (possibly), I would try changing the button style from \"Simple\" to link (no style) and then applying your class",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2019-07-16 08:31:46"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-07-16 08:25:27",
+    "text": "thats how we've handled this with custom CSS'd buttons"
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Rosa",
+      "poster_handle": "jasonrosa"
+    },
+    "time_stamp": "2019-07-16 08:31:46",
+    "edited": {
+      "time_stamp": "2019-07-16 08:45:39"
+    },
+    "text": "+1 on this. HubSpot CTA styles typically use a very specific CSS selector (which includes an ID) so it would take precedence over a class selector from the style-sheet. Switching the button to \"Link No Style\" would be the best way to go."
+  },
+  {
+    "poster": {
+      "poster_name": "Sakari Lapinsuo",
+      "poster_handle": "lapinsuo"
+    },
+    "time_stamp": "2019-07-16 08:43:55",
+    "text": "aaah! you saved me. Thank you! Switching from \"simple\" to \"link (no style)\" worked!"
+  },
+  {
+    "poster": {
+      "poster_name": "Vladimir Hernández",
+      "poster_handle": "vladimir"
+    },
+    "time_stamp": "2019-07-16 14:53:59",
+    "text": "Hey, I just got curious, can you use or call another module inside a custom module? Like theres module A that only places and image and I'm developing a custom module B that will have some image integration, can I call and use Module A inside Module B?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-07-16 14:56:56",
+    "text": "You cannot nest custom modules.\n\nThis is likely to prevent infinite server igniting recursion of doom. Think Mac OS beach ball of doom but with more fire."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-07-16 14:57:29",
+    "text": "<https://media.giphy.com/media/ruVpXCBTkd4vS/giphy.gif>"
+  },
+  {
+    "poster": {
+      "poster_name": "Vladimir Hernández",
+      "poster_handle": "vladimir"
+    },
+    "time_stamp": "2019-07-16 14:57:37",
+    "text": "ok thank you"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-07-16 14:58:35",
+    "edited": {
+      "time_stamp": "2019-07-16 14:59:34"
+    },
+    "text": "<@UK4FUHGG3> what is the situation you’re in that you’re considering that? odds are there’s a workaround to solve your problem"
+  },
+  {
+    "text": "it's for a menu with the parallax image overlapping it. The client wants the image overlapping the menu but as a separate module the image and the menu do not overlap, they do once I manage to put the nav code inside the parallax div",
+    "time_stamp": "2019-07-16 15:02:28",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-07-16 15:05:15"
+      },
+      {
+        "time_stamp": "2019-07-16 15:07:26"
+      },
+      {
+        "time_stamp": "2019-07-16 15:13:13"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-07-16 15:05:15",
+    "text": "I’ve got 2 solutions for ya"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-07-16 15:07:26",
+    "edited": {
+      "time_stamp": "2019-07-16 15:09:58"
+    },
+    "text": "Place your menu module above the parallax module. Make the menu module `position: absolute`. that will kill the whitespace it’s occupying and  pop it over your  parallax module.\n\n\nOption 2: clone your parallax module, add a menu field to the module the menu field lets you use a menu tag inside your other module to display a menu."
+  },
+  {
+    "poster": {
+      "poster_name": "Vladimir Hernández",
+      "poster_handle": "vladimir"
+    },
+    "time_stamp": "2019-07-16 15:13:13",
+    "text": "I'll try that, thank you."
+  },
+  {
+    "text": "What’s this popup for, showing up on <http://community.HubSpot.com|community.HubSpot.com>?",
+    "time_stamp": "2019-07-17 00:43:49",
+    "reply_count": 3,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2019-07-17 07:58:15"
+      },
+      {
+        "time_stamp": "2019-07-24 06:21:10"
+      },
+      {
+        "time_stamp": "2019-07-30 18:54:36"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Michael J",
+      "poster_handle": "michael"
+    },
+    "time_stamp": "2019-07-17 00:44:24",
+    "text": "(am already logged into the forum :p)"
+  }
+]

@@ -1,0 +1,34 @@
+[
+  {
+    "poster": {
+      "poster_name": "Steve Frenzel",
+      "poster_handle": "stevefrenzel"
+    },
+    "time_stamp": "2023-06-21 02:00:20",
+    "text": "Hey <@U7SL518D6>,\n\nI wanted to ask if there's any update on this workflow? Or is there anything on the horizon you have planned (in the near future) to make this easier?\n\nThe company I work with is still considering to give it a shot to work with version control, but the hassle of syncing between accounts is still a huge potential problem. The goal would be to make things easier, not more complicated.\n\nThanks again for your feedback, I appreciate it! :raised_hands:"
+  },
+  {
+    "poster": {
+      "poster_name": "Afron Orana",
+      "poster_handle": "afron.orana"
+    },
+    "time_stamp": "2023-06-21 05:14:11",
+    "text": "It really depends on what you are trying to achieve.\nDo you want to keep the original styling of the boilerplate and add Tailwind on top, or are you getting rid of all the existing styles?"
+  },
+  {
+    "poster": {
+      "poster_name": "Afron Orana",
+      "poster_handle": "afron.orana"
+    },
+    "time_stamp": "2023-06-21 05:25:51",
+    "text": "If you want to add it on top, it might get a little tricky but maybe these points will help:\n\n1. <https://tailwindcss.com/docs/preflight#disabling-preflight|Disabling preflight>: if preflight is enabled, it might mess with your existing styles.\n2. <https://tailwindcss.com/docs/configuration#prefix|Adding a prefix>: to avoid overwriting any of the existing classes, add a custom prefix\nAnd for the compiling, depends on what bundler you are using. In my setup I use `vite.js` and this is what the config looks like:\n\nvite.config.js:\n```import { defineConfig } from 'vite'\n\nexport default defineConfig({\n  build: {\n    outDir: 'dist',\n    sourcemap: false,\n    emptyOutDir: true,\n    minify: false, // HubSpot handles minification. So this must be set to false.\n    rollupOptions: {\n      input: 'src/js/main.js',\n      output: {\n        entryFileNames: `js/[name].js`,\n        chunkFileNames: `js/[name].js`\n      }\n    },\n  }\n})```\nAnd the tailwind.config.js:\n```module.exports = {\n    content: [\n        './modules/**/*.{html,js}',\n        './macros/*.{html,js}',\n        './templates/**/*.{html,js}',\n        './sections/**/*.{html,js}'\n    ],\n};```\nThe config files are highly redacted and used just as an illustration.\nThe compiled assets are then imported into the `header`."
+  },
+  {
+    "poster": {
+      "poster_name": "Angelic Sanoy",
+      "poster_handle": "info.samthing"
+    },
+    "time_stamp": "2023-06-21 06:47:14",
+    "text": "I'm using webpack but will incorporate this! Thank you so much!"
+  }
+]

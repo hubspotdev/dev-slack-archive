@@ -1,0 +1,57 @@
+[
+  {
+    "poster": {
+      "poster_name": "Stacey Thomas",
+      "poster_handle": "stacey.thomas"
+    },
+    "time_stamp": "2024-06-24 09:24:07",
+    "text": "Hi! I'm using UI extensions to display a custom card on contacts which, on loading, makes an API call to a 3rd party software based on info on the contact, then pulls back a value to display as a message.\nSimple stuff, but I cannot for the life of me get it to display the message... am I missing something?\n\nMy React file - it is calling the serverless function with the correct parameters passed.\nMy function is working well in app logs, and can see the API call being made in third party software.\nI can see the response (including the data i want to retrieve) in the app logs using logger function.\nMy custom card only displays my set error (which is if it cannot retrieve the message) or a secondary set error (if the contact ID property I use to make the API call is blank)\n\nI believe the issue is in my react file but I'm at the end of my knowledge with it. I will post my code below if someone wouldn't mind casting an eye over for anything obvious?\n\nP.s hope this is the right channel for this!",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-06-24 09:27:46"
+      },
+      {
+        "time_stamp": "2024-06-25 02:19:20"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Stacey Thomas",
+      "poster_handle": "stacey.thomas"
+    },
+    "time_stamp": "2024-06-24 09:27:46",
+    "edited": {
+      "time_stamp": "2024-06-24 09:28:06"
+    },
+    "text": "```import React, { useState, useEffect } from \"react\";\nimport { Text, Flex, LoadingSpinner, Alert, HubSpot } from '@HubSpot/ui-extensions';\n\nHubSpot.extend(({ context, runServerlessFunction, actions }) => (\n  <CustomCard context={context} runServerless={runServerlessFunction} fetchProperties={actions.fetchCrmObjectProperties} />\n));\n\nconst CustomCard = ({ context, runServerless, fetchProperties }) => {\n  const [loading, setLoading] = useState(true);\n  const [message, setMessage] = useState(null);\n  const [error, setError] = useState(null);\n\n  useEffect(() => {\n    const fetchData = async () => {\n      try {\n        const properties = await fetchProperties(['peopleid']);\n        const peopleId = properties.peopleid;\n\n        if (!peopleId) {\n          setError('Cannot retrieve message, as peopleId is unknown');\n          setLoading(false);\n          return;\n        }\n\n        const serverlessResponse = await runServerless({\n          name: \"api-call\",\n          parameters: { peopleId },\n        });\n\n        const message = serverlessResponse.body;\n\n        if (message) {\n          setMessage(message);\n        } else {\n          setError('Failed to retrieve message');\n        }\n\n        setLoading(false);\n      } catch (error) {\n        setError('An error occurred');\n        setLoading(false);\n      }\n    };\n\n    fetchData();\n  }, [fetchProperties, runServerless]);\n\n  if (loading) {\n    return <LoadingSpinner />;\n  }\n\n  if (error) {\n    return <Alert variant=\"danger\">{error}</Alert>;\n  }\n\n  return <Alert variant=\"success\">{message}</Alert>;\n};\n\nexport default CustomCard;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Rolando Carias",
+      "poster_handle": "rolando"
+    },
+    "time_stamp": "2024-06-24 12:59:35",
+    "edited": {
+      "time_stamp": "2024-06-24 12:59:56"
+    },
+    "text": "Hi all! Is there way to treat this as HTML response\n```        sendResponse( `\n         <p class='inner-page-content'> \n          Serverless HS meta: ${context.accountId}\n         \n         </p>\n        \n        `);```",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-06-24 23:51:15"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Harun Kumar Siva",
+      "poster_handle": "harun"
+    },
+    "time_stamp": "2024-06-24 23:51:15",
+    "text": "It looks like <https://developers.HubSpot.com/docs/cms/data/serverless-functions#:~:text=the%20contentType%20application/json%20when%20calling%20a%20function|only application/json> is the allowed contentType."
+  }
+]

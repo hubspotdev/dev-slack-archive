@@ -1,0 +1,172 @@
+[
+  {
+    "text": "Hello <@U02U398CDFG>, thank you very much for the help.\n\n• This got the API running and the success message sent in the step\n• However even though I included the user ID property in the test, the API call is retrieving the information of all of my users instead of just the one I need.\n    ◦ Each number in the result dropdown in the image is one different user\n• Would you happen to know why?\nThank you so much for everything so far!",
+    "time_stamp": "2024-06-28 01:50:12"
+  },
+  {
+    "text": "Are you using this endpoint?",
+    "time_stamp": "2024-06-28 02:47:37"
+  },
+  {
+    "poster": {
+      "poster_name": "Alejandro Vieira",
+      "poster_handle": "avieirabaa"
+    },
+    "time_stamp": "2024-06-28 03:06:45",
+    "text": "Oh yes, i See the issue, I cannot add the owner ID into the webhook url in the workflow depending on the contact that entered the workflow.\n\nIt has to be a fixed value, right?"
+  },
+  {
+    "text": "",
+    "time_stamp": "2024-06-28 03:07:04"
+  },
+  {
+    "poster": {
+      "poster_name": "Harun Kumar Siva",
+      "poster_handle": "harun"
+    },
+    "time_stamp": "2024-06-28 03:18:25",
+    "text": "you could use a _email query param_ instead of the id path param and thereby use a fixed url in the Webhook URL input field\n`<https://api.hubapi.com/crm/v3/owners>`\nQuery parameters\n```email: owner's email```"
+  },
+  {
+    "poster": {
+      "poster_name": "Alejandro Vieira",
+      "poster_handle": "avieirabaa"
+    },
+    "time_stamp": "2024-06-28 03:25:41",
+    "edited": {
+      "time_stamp": "2024-06-28 03:26:01"
+    },
+    "text": "Tried this and it works, however we do not have the Created By user's Email available at contact level to retrieve in the workflow\n\nDon't know why it works with the email but not with the userId param"
+  },
+  {
+    "text": "Essentially, the setup in the first photo works at only looking for the user i need.\n\nHowever the second one does not, when it should be the same thing, right?",
+    "time_stamp": "2024-06-28 03:30:30",
+    "edited": {
+      "time_stamp": "2024-06-28 03:30:54"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Harun Kumar Siva",
+      "poster_handle": "harun"
+    },
+    "time_stamp": "2024-06-28 04:32:46",
+    "text": "No. because the user_id isn't a supported query param today. Perhaps an <https://community.HubSpot.com/t5/HubSpot-Ideas/idb-p/HubSpot_Ideas/label-name/APIs|idea worth submitting>?"
+  },
+  {
+    "poster": {
+      "poster_name": "Alejandro Vieira",
+      "poster_handle": "avieirabaa"
+    },
+    "time_stamp": "2024-06-28 04:36:48",
+    "text": "Makes sense, so this specific scenario is not possible to be fulfilled through the Webhook step in the workflow as we do not have the email of the user we want at the contact level."
+  },
+  {
+    "poster": {
+      "poster_name": "Amanda Althaus",
+      "poster_handle": "aalthaus"
+    },
+    "time_stamp": "2024-06-28 11:28:00",
+    "text": "Hey <@U01QVR44MEY>, any chance you've solved this before? <@U03REFNRMB3> maybe you have?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-06-28 11:28:31",
+    "text": "What do your output fields look like?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-06-28 11:28:47",
+    "text": "Where are you trying to use them? Do you have some more details?"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2024-06-28 11:41:09",
+    "text": "<@U05055DFCLU> make sure you add the output fields to the custom action: <https://developers.HubSpot.com/docs/api/automation/custom-workflow-actions#output-fields>"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2024-06-28 11:42:06",
+    "text": "Then, you can use them in the steps after that action. If you can, share your custom workflow action output section."
+  },
+  {
+    "poster": {
+      "poster_name": "Amanda Althaus",
+      "poster_handle": "aalthaus"
+    },
+    "time_stamp": "2024-06-28 11:44:12",
+    "text": "We have a workflow action that will read values from a selected HubDB table; we want to make those values available for later steps in other actions"
+  },
+  {
+    "poster": {
+      "poster_name": "Julian Ceballos",
+      "poster_handle": "jceballos564"
+    },
+    "time_stamp": "2024-06-28 11:46:14",
+    "text": "Hey Justin, this is my definition without inputFields, I returned on my response a json object with { rowId: \"1234\"}\n\n```const Config = require('../lib/config');\n\nconst objectRequestOptions = {\n\t\"properties\": []\n}\n\nconst labels = {\n    \"en\": {\n\t\t\"actionName\": \"\",\n\t\t\"actionDescription\": \"\",\n\t\t\"actionCardContent\": \"\",\n\t\t\"inputFieldLabels\": {\n\t\t\t\n\t\t}\n\t}\n}\n\nmodule.exports = {\n\tactionUrl: `<https://9fc7-2806-2f0-8041-fa91-183c-4039-93f5-a4d9.ngrok-free.app/actions/hubdb/insert>`,\n\tpublished: true,\n\tinputFields: [{}, {}, {}],\n\tinputFieldDependencies: [],\n\toutputFields: [\n\t\t{\n\t\t\t\"typeDefinition\": {\n\t\t\t\t\"name\": \"rowId\",\n\t\t\t\t\"type\": \"string\",\n\t\t\t\t\"fieldType\": \"text\"\n\t\t\t},\n\t\t\t\"supportedValueTypes\":[\n\t\t\t\t\"STATIC_VALUE\"\n\t\t\t]\n\t\t}\n\t],\n\tlabels,\n\tobjectRequestOptions,\n\tobjectTypes: []\n};```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2024-06-28 11:46:31",
+    "text": "making sure we can best help you.. This is a Custom Workflow Action (from a Public APP) and NOT a Custom Coded Action."
+  },
+  {
+    "text": "And this is what I get when I try to use the outputFields on next action",
+    "time_stamp": "2024-06-28 11:46:54"
+  },
+  {
+    "poster": {
+      "poster_name": "Julian Ceballos",
+      "poster_handle": "jceballos564"
+    },
+    "time_stamp": "2024-06-28 11:47:11",
+    "text": "Just the success or failure state"
+  },
+  {
+    "poster": {
+      "poster_name": "Julian Ceballos",
+      "poster_handle": "jceballos564"
+    },
+    "time_stamp": "2024-06-28 11:47:17",
+    "text": "not rowId listed :disappointed:"
+  },
+  {
+    "poster": {
+      "poster_name": "Julian Ceballos",
+      "poster_handle": "jceballos564"
+    },
+    "time_stamp": "2024-06-28 11:47:36",
+    "text": "Is a custom workflow action"
+  },
+  {
+    "poster": {
+      "poster_name": "Amanda Althaus",
+      "poster_handle": "aalthaus"
+    },
+    "time_stamp": "2024-06-28 13:50:51",
+    "text": "Did we stump you or scare you off? :thinking_face:\n\nThanks in advance!!"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2024-06-28 14:21:36",
+    "text": "Had to eat lunch and will be online shortly."
+  }
+]

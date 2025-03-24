@@ -1,0 +1,77 @@
+[
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2022-02-23 05:41:07",
+    "edited": {
+      "time_stamp": "2022-02-23 05:42:47"
+    },
+    "text": "It sounds like you have a couple of issues going on here, one being the JS not being scoped for each module instance and the other being a bug for dealing with a loop within the module itself. Again, I can’t be sure without looking at your code, but it sounds like you need to refactor your JS to leverage needed forEach loops, like:\n\n```const modules = document.querySelectorAll(\".module__wrapper-class\");\nmodules.forEach(module =&gt; {\n  const moduleItems = module.querySelectorAll(\".module__loop-item\");\n  moduleItems.forEach(moduleItem =&gt; {\n    // doStuff();\n  });\n});```"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Neely",
+      "poster_handle": "michael892"
+    },
+    "time_stamp": "2022-02-23 08:17:52",
+    "text": "I have looked all through the communities and elsewhere and can find nothing on this. The desired data-id=\"{{loop.index}} - {{previous.loop.index}}\" is baffling to me. Maybe a join statement somewhere. I also admit that JS is not my strongest suit. I probably need to change that. If I add the second \"-1\" to the loop.index function in the dev tools on the browser, it works."
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Neely",
+      "poster_handle": "michael892"
+    },
+    "time_stamp": "2022-02-23 08:17:57",
+    "text": "Here is the code:"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Neely",
+      "poster_handle": "michael892"
+    },
+    "time_stamp": "2022-02-23 08:18:44",
+    "text": "```{% require_js %}\n&lt;script&gt;\nvar tbBody = document.querySelectorAll('.product-wrapper');\n\nArray.prototype.slice.call(tbBody).forEach(function (element, index) {\n  var tabLinks = element.querySelectorAll(\".tablinks\");\n  var tabContent = element.querySelectorAll(\".tabcontent\");\n  \n  Array.prototype.slice.call(tabLinks).forEach(function (el) {\n    el.onclick = function() {\n      openTabs(el);\n    }\n  });\n  \n  function openTabs(ele) {\n    var tabId = ele.getAttribute('data-id');\n    Array.prototype.slice.call(tabContent).forEach(function (el) {\n      el.classList.remove(\"active\");\n      el.classList.remove(\"fade\");\n    });\n    Array.prototype.slice.call(tabLinks).forEach(function (el) {\n      el.classList.remove(\"active\");\n    });\n    var tab = document.getElementById(tabId);\n    tab.classList.add(\"active\");\n    tab.classList.add(\"fade\");\n    ele.classList.add(\"active\");\n  }\n});\n\n\n\n&lt;/script&gt;\n{% end_require_js %}\n\n&lt;div class=\"products\"&gt;\n  {% for item in module.product %}\n  &lt;div class=\"product-wrapper\"&gt;\n  &lt;div class=\"product-overview\"&gt;\n    &lt;div class=\"product-description\"&gt;\n      {{ item.product_description }}\n    &lt;/div&gt;\n    &lt;div class=\"product-image\"&gt;\n      {% if item.product_image.src %}\n        &lt;img src=\"{{ item.product_image.src }}\" alt=\"{{ item.product_image.alt }}\" &gt;\n      {% endif %}\n    &lt;/div&gt;\n  &lt;/div&gt;\n  &lt;div class=\"product-features\"&gt;\n     &lt;div class=\"tabber-body\"&gt;\n       &lt;!-- Tab Items --&gt;\n       &lt;div class=\"tabs tab-link\"&gt;\n         {% for item2 in item.product_tab_groups %}\n\n         &lt;a href=\"javascript:;\" data-id=\"innertab-{{loop.index}}\" class=\"tablinks{% if loop.first %} active fade{% endif %} \" &gt;\n           &lt;span&gt;{{ item2.tab_title }}&lt;/span&gt;\n         &lt;/a&gt;\n         {% endfor %}\n       &lt;/div&gt;\n       &lt;!-- Tab Content --&gt;\n       \n       &lt;div class=\"tab-content-wrap\"&gt;\n         &lt;!-- Tab insides --&gt;\n\n         &lt;div class=\"tab-content-inner\"&gt;\n           {% for item2 in item.product_tab_groups %}\n\n           &lt;div id=\"innertab-{{loop.index}}\" class=\"tabcontent {% if loop.first %}active fade{% endif %}\"&gt;\n                                           \n             &lt;div class=\"cm-row-fluid-wrap\"&gt;\n               &lt;div class=\"tab-content-text {{ item2.tab_title|lower }}\"&gt;\n                  {{ item2.tab_content }}\n                &lt;/div&gt;\n             &lt;/div&gt;\n           &lt;/div&gt;\n           {% endfor %}\n         &lt;/div&gt;\n         &lt;!-- End tab insides --&gt;\n       &lt;/div&gt;\n    &lt;/div&gt;\n  &lt;/div&gt;\n&lt;/div&gt;\n  {% endfor %}\n&lt;/div&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Neely",
+      "poster_handle": "michael892"
+    },
+    "time_stamp": "2022-02-23 08:21:49",
+    "text": "It seems like I am so close. I don't understand why the {{loop.index}} is working correctly (data-id=\"innertab-1-0\") in the other module and differently in this module (data-id=\"innertab-1\")."
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Neely",
+      "poster_handle": "michael892"
+    },
+    "time_stamp": "2022-02-23 08:22:44",
+    "text": "Thank you for your help, Mark. I really appreciate it."
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Neely",
+      "poster_handle": "michael892"
+    },
+    "time_stamp": "2022-02-23 08:28:07",
+    "text": "I'm going to continue to rack my brain until I figure this out in the meantime."
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Neely",
+      "poster_handle": "michael892"
+    },
+    "time_stamp": "2022-02-23 08:37:46",
+    "text": "I'm also going to work with refactoring in your last message. Thank you again."
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Neely",
+      "poster_handle": "michael892"
+    },
+    "time_stamp": "2022-02-23 10:57:20",
+    "text": "Found the answer. Whoever built the previous module I was working from added the necessary JS to the main.min.js file. I just had to copy the part of the JS into the module's JS field and change a class name. Done and done!"
+  }
+]

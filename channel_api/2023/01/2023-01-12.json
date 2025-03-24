@@ -1,0 +1,328 @@
+[
+  {
+    "poster": {
+      "poster_name": "Prakash Palaniappan",
+      "poster_handle": "prak"
+    },
+    "time_stamp": "2023-01-12 01:14:45",
+    "text": "Anyone worked on receiving webhooks? I’m using the nodejs client and can’t get it to validate signature\n\n`//<https://github.com/HubSpot/sample-apps-webhooks/blob/main/node/src/js/webhooks-controller.js>`\n`import type { NextApiRequest, NextApiResponse } from 'next';`\n`import _ from 'lodash';`\n\n`const SIGNATURE_HEADER = 'X-HubSpot-Signature';`\n`const SIGNATURE_VERSION_HEADER = 'X-HubSpot-Signature-Version';`\n\n`import { Signature } from '@HubSpot/api-client';`\n\n`const webhookVerification = async (`\n  `req: NextApiRequest,`\n  `res: NextApiResponse`\n`) =&gt; {`\n  `console.log('###WHV: The req.query is: ', req.query);`\n  `console.log('###WHV: The req.headers is: ', req.headers);`\n\n  `const method = req.method || '';`\n  `console.log('###WHV: The method is: ', method);`\n\n  `const request_timestamp = _.get(`\n    `req,`\n    `'headers.x-HubSpot-request-timestamp'`\n  `) as unknown as number;`\n  `console.log('###WHV: The request_timestamp is: ', request_timestamp);`\n\n  `const signature = _.get(req, 'headers.x-HubSpot-signature-v3') as string;`\n  `console.log('###WHV: The signature is: ', signature);`\n\n  `const clientSecret = process.env.HubSpot_CLIENT_SECRET || '';`\n  `console.log('###WHV: The clientSecret is: ', clientSecret);`\n\n  `const requestBody = JSON.stringify(req.body);`\n  `console.log('###WHV: The requestBody is: ', requestBody);`\n\n  `if (request_timestamp) {`\n    `const options = {`\n      `method: method,`\n      `timestamp: request_timestamp,`\n      `signatureVersion: 'v3',`\n      `signature: signature,`\n      `requestBody: requestBody,`\n      `clientSecret: clientSecret`\n    `};`\n    `const isValid = Signature.isValid(options);`\n\n    `console.log('###WHV: The new HubSpotSignature is: ', isValid);`\n  `}`\n  `const response = { result: true };`\n  `return response;`\n`};`\n\n`export default webhookVerification;`",
+    "reply_count": 3,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-01-13 03:35:22"
+      },
+      {
+        "time_stamp": "2023-01-13 03:38:04"
+      },
+      {
+        "time_stamp": "2023-01-13 03:40:59"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Tom-Erik Paulsen",
+      "poster_handle": "tom-erik"
+    },
+    "time_stamp": "2023-01-12 02:10:54",
+    "edited": {
+      "time_stamp": "2023-01-12 02:11:41"
+    },
+    "text": "Thanks John!\nI got an answer earlier that might be more usable as for the dynamic part where I use\n```window.brandcolors = {{ brand_settings.colors|tojson }};```"
+  },
+  {
+    "text": "Anyone knows the private app is creating or not in developer test account? I can not able to create private app",
+    "time_stamp": "2023-01-12 02:31:18",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-01-12 07:51:04"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2023-01-12 03:28:40",
+    "edited": {
+      "time_stamp": "2023-01-12 03:28:59"
+    },
+    "text": "Yep! If you need it to be dynamic then that’s definitely the way to go. I find that the extra colors in an array give it little context for dynamic purposes. I wish there was a way to label them similar to crm property names/labels"
+  },
+  {
+    "poster": {
+      "poster_name": "Cristian Garib",
+      "poster_handle": "cristian006"
+    },
+    "time_stamp": "2023-01-12 03:50:12",
+    "text": "Hi all!"
+  },
+  {
+    "subtype": "tombstone",
+    "text": "This message was deleted.",
+    "time_stamp": "2023-01-12 03:56:02",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-01-12 09:21:46"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Cristian Garib",
+      "poster_handle": "cristian006"
+    },
+    "time_stamp": "2023-01-12 03:57:23",
+    "edited": {
+      "time_stamp": "2023-01-12 03:59:04"
+    },
+    "text": "I appreciate your generous help"
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin Vanantwerpen",
+      "poster_handle": "kevin.vanantwerpen"
+    },
+    "time_stamp": "2023-01-12 05:47:29",
+    "edited": {
+      "time_stamp": "2023-01-12 05:47:44"
+    },
+    "text": "I'm pretty new to HS. Now I'm discovering custom objects but it's hard to find all possible queries for `crm_objects('', '', '')`\nDoes anyone know where I can find the docs?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-01-12 06:27:52"
+      },
+      {
+        "time_stamp": "2023-01-12 06:28:00"
+      },
+      {
+        "time_stamp": "2023-01-12 06:54:25"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Cristian Garib",
+      "poster_handle": "cristian006"
+    },
+    "time_stamp": "2023-01-12 06:27:52",
+    "text": "<https://developers.HubSpot.com/docs/api/overview>"
+  },
+  {
+    "poster": {
+      "poster_name": "Cristian Garib",
+      "poster_handle": "cristian006"
+    },
+    "time_stamp": "2023-01-12 06:28:00",
+    "text": "All docs are here"
+  },
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2023-01-12 06:54:25",
+    "text": "Specifically, you want this: <https://developers.HubSpot.com/docs/api/crm/crm-custom-objects>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-12 07:51:04",
+    "text": "<https://HubSpotdev.slack.com/archives/C22PU4LV8/p1673515830713419>"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-01-12 08:49:46",
+    "text": "if I want to POST to HubDB, can I authenticate via a private app? I don't see a HubDB scope other than \"request\"",
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-01-12 09:17:35"
+      },
+      {
+        "time_stamp": "2023-01-12 12:48:35"
+      },
+      {
+        "time_stamp": "2023-01-12 12:49:07"
+      },
+      {
+        "time_stamp": "2023-01-12 12:49:49"
+      },
+      {
+        "time_stamp": "2023-01-12 12:50:27"
+      },
+      {
+        "time_stamp": "2023-01-12 12:50:51"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2023-01-12 09:17:35",
+    "text": "you should be able to.  there is a hubdb standard scope that you should use"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2023-01-12 09:21:46",
+    "text": "be careful with exposing bearer tokens and other secrets :no_mouth:"
+  },
+  {
+    "poster": {
+      "poster_name": "Y M R V Prasad",
+      "poster_handle": "ymrvprasad"
+    },
+    "time_stamp": "2023-01-12 09:25:33",
+    "edited": {
+      "time_stamp": "2023-01-12 09:28:59"
+    },
+    "text": "Hi All,\n\nI am trying to call the API (/crm/v3/objects/contacts/search) with below JSON.\n```{\n  \"filterGroups\": [\n    {\n      \"filters\": [\n        {\n          \"value\": \"Hyderabad\",\n          \"propertyName\": \"City\",\n          \"operator\": \"EQ\"\n        }\n      ]\n    }\n  ],\n  \"sorts\": [\n    \"City\"\n  ],\n  \"query\": \"string\",\n  \"properties\": [\n    \"firstname\",\n    \"lastname\",\n    \"email\",\n    \"phone\"\n  ],\n  \"limit\": 100,\n  \"after\": 0\n}```\nI got below response\n\n```{\n    \"status\": \"error\",\n    \"message\": \"There was a problem with the request.\",\n    \"correlationId\": \"7bcdf84c-80ff-4a9a-836f-8d1dac5b5098\"\n}```\nCould you please tell me what exactly wrong in above JSON",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-01-12 10:08:19"
+      },
+      {
+        "time_stamp": "2023-01-12 10:08:56"
+      },
+      {
+        "time_stamp": "2023-01-12 10:09:13"
+      },
+      {
+        "time_stamp": "2023-01-12 10:22:37"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2023-01-12 10:08:19",
+    "text": "for the propertyName and the sorts, try using lowercase for `city`\nremove\n`\"query\": \"string\"`"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2023-01-12 10:08:56",
+    "text": "```{\n  \"filterGroups\": [\n    {\n      \"filters\": [\n        {\n          \"value\": \"Hyderabad\",\n          \"propertyName\": \"city\",\n          \"operator\": \"EQ\"\n        }\n      ]\n    }\n  ],\n  \"sorts\": [\n    \"city\"\n  ],\n  \"properties\": [\n    \"firstname\",\n    \"lastname\",\n    \"email\",\n    \"phone\"\n  ],\n  \"limit\": 100,\n  \"after\": 0\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2023-01-12 10:09:13",
+    "text": "also, cute kiddo :wink:"
+  },
+  {
+    "poster": {
+      "poster_name": "Y M R V Prasad",
+      "poster_handle": "ymrvprasad"
+    },
+    "time_stamp": "2023-01-12 10:22:37",
+    "text": "Thank you so much <@UD53A9UUR>. It solved my issue."
+  },
+  {
+    "poster": {
+      "poster_name": "David Passman",
+      "poster_handle": "dpassman"
+    },
+    "time_stamp": "2023-01-12 11:42:31",
+    "text": "Anyone know if the Conversations API for getting threads is limited to 50? I'm trying to download all email activity from the conversations inbox"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan O'Leary",
+      "poster_handle": "roleary"
+    },
+    "time_stamp": "2023-01-12 12:45:32",
+    "text": "hey all - new to HubSpot dev. i'm interested in having webhooks reach out to my platform when a new contact is added. looks like i'll have one webhook endpoint for *all* customers that use my integration. leads to the question - when i get a message from HubSpot with a new contact, how do i know which of my customers it belongs to? there is a `portalId` in the message, so i can use that i suppose. but how do i find someone's portalId after doing the oauth dance? there is the `account-info` call i can make, all good.\n\nhere's my question: does the python client libraries implement the `account-info` call in the library? or do i need to just do an http call to that endpoint?\n\nthanks!",
+    "reply_count": 3,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-01-13 03:27:11"
+      },
+      {
+        "time_stamp": "2023-01-13 03:28:04"
+      },
+      {
+        "time_stamp": "2023-01-13 03:45:53"
+      }
+    ]
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-01-12 12:48:35"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-01-12 12:49:07",
+    "text": "cool, thanks. I wasn't sure if \"request\" was enough access but it sounds like it is"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2023-01-12 12:49:49",
+    "text": "if it was a granular scope it would be different, but this is just a standard scope"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-01-12 12:50:27",
+    "text": "I demand the premium scope! :laughing:"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-12 12:50:51",
+    "text": "haha"
+  },
+  {
+    "poster": {
+      "poster_name": "V",
+      "poster_handle": "vivianli"
+    },
+    "time_stamp": "2023-01-12 16:32:52",
+    "text": "does anyone know if i'm able to authenticate and login users to my app with HubSpot oauth2 sso? (ie allow them to authenticate themselves using their HubSpot account, passing along their email, id &amp; name)",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-01-13 03:51:35"
+      }
+    ]
+  }
+]

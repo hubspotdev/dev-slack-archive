@@ -1,0 +1,171 @@
+[
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 01:34:02",
+    "text": "<@UJLMJNX6G> you’ll need a third party js lib"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 01:36:40",
+    "text": "add this to your footer includes ``` &lt;script src=\"<https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/hmac-md5.min.js>\" integrity=\"sha256-bTwTli1jbtbDBEdYtQeLRtsIaF7KcBce/vfjDfmgzWE=\" crossorigin=\"anonymous\"&gt;&lt;/script&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 01:37:26",
+    "text": "``` var md5str = CryptoJS.MD5(\"xx\").toString(); ```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 01:39:49",
+    "text": "depends on your use case though - are you generating a url in the email with an md5 of a string appended ie. <https://mysite.com/landing-page?id={{> email | md5 }}"
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2019-11-14 02:57:57",
+    "text": "I just found out that `{{ contact.email|md5 }}` gives me the same result with every contact the message was sent.  So `|md5` filter is not working with emails still :joy:"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 03:14:30",
+    "text": "ah yeah <https://designers.HubSpot.com/docs/hubl/hubl-supported-filters>"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 03:15:03",
+    "text": "“Please note that usingfilters on any personalization variables (such as but not limited to contacts, company, and deal variables) is not currently supported for email in HubSpot. Filters can be applied to these properties on HubSpot CMS page and blog templates.\n”"
+  },
+  {
+    "poster": {
+      "poster_name": "Sami Sundberg",
+      "poster_handle": "sami.sundberg"
+    },
+    "time_stamp": "2019-11-14 03:26:21",
+    "text": "Yeah… Have to wait or find out some work around"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 03:47:04",
+    "text": "<@UJLMJNX6G> if you put {{  content.email_body }} - does this render the parsed body of the email, i wonder"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 03:47:20",
+    "text": "i dont have access to HubSpot email templates on my developer account for some reason"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 03:48:36",
+    "edited": {
+      "time_stamp": "2019-11-14 03:48:41"
+    },
+    "text": "so by that i mean, if you put an email hubl tag in the email_body and then dump {{ content.email_body}} are all the variables in the body already rendered?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 03:50:06",
+    "text": "because if that is the case, you could do something fairly hacky, like adding a div to the body text with the email inside and with css hide it.\n\n``` &lt;div style=\"display:none\" id='email-hidden'&gt;test@email.com&lt;/div&gt; ```"
+  },
+  {
+    "poster": {
+      "poster_name": "Sami Sundberg",
+      "poster_handle": "sami.sundberg"
+    },
+    "time_stamp": "2019-11-14 03:50:16",
+    "text": "yes {{ contact.email }} is working and I would like to hash it. User should not be able to edit it in url"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 03:50:41",
+    "text": "Then you could, in your template do something like this:"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 03:50:44",
+    "edited": {
+      "time_stamp": "2019-11-14 03:51:16"
+    },
+    "text": "```       \n{% set bodystr = content.email_body|regex_replace(\"&lt;div id='email-hidden'&gt;([^&lt;]+)&lt;/div&gt;\", \"$1\") %} \n{% set md5body = bodystr | md5 %}\n{{ md5body }} ```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 03:55:11",
+    "edited": {
+      "time_stamp": "2019-11-14 03:55:25"
+    },
+    "text": "that does depend on how everything is rendered though (in HubSpot backend) :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2019-11-14 08:31:45",
+    "text": "My understanding of how email templates work is that they do two passes for rendering:\n1. They run it through the engine once, doing all template logic (ifs and modules and such) but replacing all contact properties with themselves (eg, `{{ contact.firstname }}` just gets reprinted as `{{ contact.firstname }}` as though that was the value of that variable).\n2. Then that file is evaluated for each individual contact.\nPresumably this is faster since the email engine doesn't need to rerun most of the template over and over, but the downside is that you can't run filters on contact properties (since those would get evaluated in the first pass and you'd actually be printing the result of `{{ \"{{ contact.email }}\"|md5 }}`), and you can't use contact properties in any control structures.\nSo yeah, I don't think there would be any way to md5 a contact property in an email, aside from doing something external to save the hashed email address as a different contact property and using that."
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 08:45:08",
+    "edited": {
+      "time_stamp": "2019-11-14 08:45:33"
+    },
+    "text": "Unfortunately i can’t test emails. I wonder if the content from {{  content.email_body }} supports hubl (i’d guess so?) and if so, if when it’s available to the template the hubl has already been resolved (for that variable)?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 08:46:38",
+    "text": "as on the docs it says “The main body of the email. This variable renders a rich text module.”"
+  },
+  {
+    "poster": {
+      "poster_name": "Gregory Cornelius",
+      "poster_handle": "gcornelius"
+    },
+    "time_stamp": "2019-11-14 10:44:53",
+    "text": "when it comes to the browser, <https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API> might be useful. i believe that there is a polyfill around."
+  }
+]

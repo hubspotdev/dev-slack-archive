@@ -1,0 +1,284 @@
+[
+  {
+    "text": "IS it possible to assign super admin role to HubSpot user using api ?",
+    "time_stamp": "2024-04-04 01:00:59",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-04-05 05:15:47"
+      },
+      {
+        "time_stamp": "2024-04-05 07:18:25"
+      },
+      {
+        "time_stamp": "2024-04-05 07:19:07"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nikkie Scahad",
+      "poster_handle": "nik620"
+    },
+    "time_stamp": "2024-04-04 02:00:31",
+    "text": "Hey, I'm requesting 3 requests total for a contact lookup feature with an association to companies. I utilize the batch API for this. Over a span of 10 requests, I get an average of 1100ms response times, not counting the \"cold start\" of 5s.\n\nI'm curious if graphQL could speed this up in any way",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-04-05 05:13:10"
+      }
+    ]
+  },
+  {
+    "text": "Perhaps we should reach for <https://developers.HubSpot.com/blog/reducing-HubSpot-requests-utilizing-batch-api-and-graphql-for-better-optimization#:~:text=Utilizing%20GraphQL%20to%20query%20the%20data|graphql> to grab the latest hs_timestamp values for the various engagements in one go. I haven't used it myself but the linked blog post's author is very active here.\n\nSee if you have access to the graphiql explorer: <https://app.HubSpot.com/portal-recommend/l?slug=graphiql>",
+    "time_stamp": "2024-04-04 04:36:10"
+  },
+  {
+    "poster": {
+      "poster_name": "Harun Kumar Siva",
+      "poster_handle": "harun"
+    },
+    "time_stamp": "2024-04-04 04:40:00",
+    "text": "But it looks to me that it is meant only to be used in <https://developers.HubSpot.com/docs/cms/data/query-HubSpot-data-using-graphql|Website pages and UI extensions>."
+  },
+  {
+    "poster": {
+      "poster_name": "Casper Kraken (HubDo)",
+      "poster_handle": "casper928"
+    },
+    "time_stamp": "2024-04-04 04:44:19",
+    "text": "Hey Jeramai,\n\nLooking in the code, it seems you need to construct a couple of objects and not only have arrays, here is example association for quote on line items create that work for me:\n\n// Association to new quote\n        let associations = [\n            {\n                “to”: {\n                    “id”: quoteId\n                },\n                “types”: [\n                    {\n                        “associationCategory”: “HubSpot_DEFINED”,\n                        “associationTypeId”: 68\n                    }\n                ]\n            }\n        ];"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeramai Faber",
+      "poster_handle": "j.faber"
+    },
+    "time_stamp": "2024-04-04 04:48:49",
+    "text": "Hey thank you for trying to help, but this is how objects are made in PHP  :sweat_smile:\nI know it works like this because I used the same logic for creating a Quote connected to a deal.\n\nI think the problem is in the batch creation? It gives no feedback back so I'm totally clueless"
+  },
+  {
+    "poster": {
+      "poster_name": "Casper Kraken (HubDo)",
+      "poster_handle": "casper928"
+    },
+    "time_stamp": "2024-04-04 04:52:23",
+    "text": "Oh sorry then :confused:\n\ncould you try and log the full object before you api request, just to see if everything looks as intended before hitting the batch create endpoint ? sometimes works for me :smile: maybe there is a couple of the required properties that you are not feeding in to the actual line item creation, i think its on the creation not the association that something is going wrong for you :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeramai Faber",
+      "poster_handle": "j.faber"
+    },
+    "time_stamp": "2024-04-04 04:54:13",
+    "text": "Yeah sure, here it is:\n```{\n\t\"properties\": [\n\t{\n\t\t\"price\": 2000,\n\t\t\"name\": \"Duck\",\n\t\t\"quantity\": 1\n\t},\n\t{\n\t\t\"hs_product_id\": \"AAA,BBB,CCC\",\n\t\t\"price\": 70,\n\t\t\"name\": \"Engraving\",\n\t\t\"quantity\": 1\n\t},\n\t{\n\t\t\"hs_product_id\": null,\n\t\t\"price\": 200,\n\t\t\"name\": \"Price based on value\",\n\t\t\"quantity\": 1\n\t},\n\t{\n\t\t\"hs_product_id\": null,\n\t\t\"price\": 478,\n\t\t\"name\": \"150\",\n\t\t\"quantity\": 1\n\t},\n\t{\n\t\t\"hs_product_id\": null,\n\t\t\"price\": 100,\n\t\t\"name\": \"Right\",\n\t\t\"quantity\": 1\n\t},\n\t{\n\t\t\"hs_product_id\": null,\n\t\t\"price\": 91620.64,\n\t\t\"name\": \"D\",\n\t\t\"quantity\": 1\n\t}],\n\t\"associations\": [\n\t{\n\t\t\"to\":\n\t\t{\n\t\t\t\"id\": \"10345529043\"\n\t\t},\n\t\t\"types\": [\n\t\t{\n\t\t\t\"associationCategory\": \"HubSpot_DEFINED\",\n\t\t\t\"associationTypeId\": 68\n\t\t}]\n\t}]\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeramai Faber",
+      "poster_handle": "j.faber"
+    },
+    "time_stamp": "2024-04-04 04:55:42",
+    "text": "Oh yeah, it could be! The docs for the line items and products are not that great :sweat_smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Casper Kraken (HubDo)",
+      "poster_handle": "casper928"
+    },
+    "time_stamp": "2024-04-04 04:59:47",
+    "text": "‘{\n  “inputs”: [\n    {\n      “associations”: [\n        {\n          “types”: [\n            {\n              “associationCategory”: “HubSpot_DEFINED”,\n              “associationTypeId”: 0\n            }\n          ],\n          “to”: {\n            “id”: “string”\n          }\n        }\n      ],\n      “properties”: {\n        “additionalProp1”: “string”,\n        “additionalProp2”: “string”,\n        “additionalProp3”: “string”\n      }\n    },\n    {\n      “properties”: {}\n    }\n  ]\n}’\n\nMaybe the top level inputs array is missing? This has triped me over a couple of times"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeramai Faber",
+      "poster_handle": "j.faber"
+    },
+    "time_stamp": "2024-04-04 05:11:25",
+    "text": "This might've been it! But now I have a\n```Invalid input JSON on line 1, column 11: Cannot deserialize value of type `java.util.ArrayList&lt;com.HubSpot.inbounddb.publicobject.core.v2.SimplePublicObjectInputForCreate&gt;` from Object value (token `JsonToken.START_OBJECT`)` ```\nerror which is also not helping at all &gt;_&gt;"
+  },
+  {
+    "poster": {
+      "poster_name": "Casper Kraken (HubDo)",
+      "poster_handle": "casper928"
+    },
+    "time_stamp": "2024-04-04 05:13:22",
+    "text": "Well so far so good, i think you need to do a `JSON.stringify()`  on the object, i dont know how to do this in PHP but, hope you get an idea where to go from now :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Casper Kraken (HubDo)",
+      "poster_handle": "casper928"
+    },
+    "time_stamp": "2024-04-04 05:13:42",
+    "text": "Or the other way around"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeramai Faber",
+      "poster_handle": "j.faber"
+    },
+    "time_stamp": "2024-04-04 05:14:04",
+    "text": "Hmm, the client I use for it should do that automatically, but I will play around with it! Thanks for the help :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Casper Kraken (HubDo)",
+      "poster_handle": "casper928"
+    },
+    "time_stamp": "2024-04-04 05:14:32",
+    "text": "You welcome, yeah well then i think you might need to de-stringify it :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Olga Savenko",
+      "poster_handle": "olha.savenko"
+    },
+    "time_stamp": "2024-04-04 05:19:47",
+    "text": "Hi everyone, does anyone deal with HubSpot and MS Fabric Lakehouse/Warehouse integration? I am trying to implement real-time and incremental data streaming from CRM to Warehouse. I am struggling to find a solution to apply a condition for lastmodifieddate while retrieving contacts data."
+  },
+  {
+    "poster": {
+      "poster_name": "Jeramai Faber",
+      "poster_handle": "j.faber"
+    },
+    "time_stamp": "2024-04-04 06:18:29",
+    "text": "Hey I got it working! I was indeed missing the \"inputs\" part and had to put one item per association.\n\nThe last thing, you might've had this problem too:\nWhen I check the data, it gets angry that I did not fill in a USD price.. What do I need to use to also give it a USD price?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeramai Faber",
+      "poster_handle": "j.faber"
+    },
+    "time_stamp": "2024-04-04 06:38:35",
+    "edited": {
+      "time_stamp": "2024-04-04 06:39:04"
+    },
+    "text": "The Line Items in my quote are angry because I haven't given them a \"USD price\". What key do I need to use to have the API also give the line items an \"USD price\"?"
+  },
+  {
+    "poster": {
+      "poster_name": "Marts Priežčiekurs",
+      "poster_handle": "marts.priezciekurs"
+    },
+    "time_stamp": "2024-04-04 06:49:14",
+    "text": "Hi! Where can i find correct naming of additional properties for deals api i can use with <https://api.hubapi.com/crm/v3/objects/deals/search> ?\nproperties listed in <https://api.hubapi.com/properties/v2/deals/properties>  match only partly.",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-04-04 06:54:47"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Marts Priežčiekurs",
+      "poster_handle": "marts.priezciekurs"
+    },
+    "time_stamp": "2024-04-04 06:54:47",
+    "text": "nevermind. Found it\n<https://api.hubapi.com/crm/v3/schemas/deals>"
+  },
+  {
+    "poster": {
+      "poster_name": "Casper Kraken (HubDo)",
+      "poster_handle": "casper928"
+    },
+    "time_stamp": "2024-04-04 06:58:47",
+    "text": "hs_price_usd i think :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Ovi Anca",
+      "poster_handle": "ovidiu"
+    },
+    "time_stamp": "2024-04-04 08:06:26",
+    "text": "Hello!\n\nWe are having an issue with our HubSpot integration.\n\nWe have a customer of ours connect their HubSpot account to us via OAuth (has access token + refresh token).\n\nWhenever they receive a book a call event, they push to us the HubSpot UTK (through the HubSpot tracking script + a small snippet our customers have on the site).\n\nWe use that to get the customer_id and the HubSpot UTK into our server.\n\nAfter that we try to get the contact created by the \"Book a demo\" form submission.\n\n\"<https://api.hubapi.com/contacts/v1/contact/utk/#{HubSpot_utk}/profile>\", with the HubSpot access token as the Bearer token.\n\nThe response from HubSpot is the following:\n\n```...\nis-contact\": false,\n  \"properties\": {\n    \"hs_is_contact\": {\n      \"value\": \"false\",\n      \"versions\": [\n        {\n          \"value\": \"false\",\n          \"source-type\": \"CALCULATED\",\n          \"source-id\": null,\n          \"source-label\": null,\n          \"updated-by-user-id\": null,\n          \"timestamp\": 0,\n          \"selected\": false\n        }\n      ]\n    }\n  },\n...```\nIt looks like the contact is missing from HubSpot (we are trying to get firstname, lastname, email). I checked our customer's HubSpot account, and the HubSpot contact is created properly.\n\nThis is only happening with this particular client, our integration works fine for all our other customers.\n\nI checked the form settings of the book a demo with a customer that has it working, but couldn't identify a difference.\n\nCan you help us indentify the issue?\n\nThanks\n\nTLDR:\nHubSpot Contacts API response indicates there is no such Contact, or: _`\"hs_is_contact\": { \"value\":  } \"false\"`_."
+  },
+  {
+    "poster": {
+      "poster_name": "Anya Tijerina",
+      "poster_handle": "anya"
+    },
+    "time_stamp": "2024-04-04 09:03:00",
+    "text": "hello, a utility was created to compare objects in the sandbox and production site. During the run we are seeing that there are duplicate associations and there are duplicate payloads returned, is this an error or by design?\n\n• During the run of this I am seeing that there are duplicate associations which may cause issues.\n    ◦ Duplicates exists in standard objects, not custom objects\n    ◦ Duplicates exist in both the Sandbox and Production site\n    ◦ Duplicates\n        ▪︎ Company Object\n            • fromObjectType: Companies toObjectType: Companies, name: CHILD_TO_PARENT_COMPANY cardinality: ONE_TO_ONE, inverseCardinality: ONE_TO_MANY \n            • fromObjectType: Companies toObjectType: Companies, name: PARENT_TO_CHILD_COMPANY cardinality: ONE_TO_MANY, inverseCardinality: ONE_TO_ONE \n            • fromObjectType: Companies toObjectType: Companies, name: COMPANY_TO_COMPANY cardinality: ONE_TO_MANY, inverseCardinality: ONE_TO_MANY\n        ▪︎ Contact Object\n            • fromObjectType: Contacts toObjectTypee: Contacts, name: CONTACT_TO_CONTACT cardinality: ONE_TO_MANY, inverseCardinality: ONE_TO_MANY\n        ▪︎ Deal Object\n            • fromObjectType: Deal toObjectTypee: Deal, name: DEAL_TO_DEAL cardinality: ONE_TO_MANY, inverseCardinality: ONE_TO_MANY\nHere is an example:\n   {\n     \"fromObjectTypeId\":\"0-2\",\n     \"toObjectTypeId\":\"0-2\",\n     \"name\":\"COMPANY_TO_COMPANY\",\n     \"cardinality\":\"ONE_TO_MANY\",\n     \"inverseCardinality\":\"ONE_TO_MANY\",\n     \"id\":\"450\",\n     \"createdAt\":null,\n     \"updatedAt\":null\n   },\n   {\n     \"fromObjectTypeId\":\"0-2\",\n     \"toObjectTypeId\":\"0-2\",\n     \"name\":\"COMPANY_TO_COMPANY\",\n     \"cardinality\":\"ONE_TO_MANY\",\n     \"inverseCardinality\":\"ONE_TO_MANY\",\n     \"id\":\"450\",\n     \"createdAt\":null,\n     \"updatedAt\":null\n   }"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Hanson",
+      "poster_handle": "ehanson"
+    },
+    "time_stamp": "2024-04-04 09:03:10",
+    "text": "Hello, everyone. I was wondering if there was an API endpoint for campaign details (like campaign owner, campaign start date, campaign budget total, etc.)? The only things I've found so far in the documentation are around emails specifically"
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin Brunette",
+      "poster_handle": "kevin.brunette"
+    },
+    "time_stamp": "2024-04-04 09:17:38",
+    "text": "Hey everyone. I am attempting to delete an engagement/notes for a specific contact via the HubSpot API in Python. I can get the engagements successfully for a contact, but the delete request call returns a 204. However, the notes are NOT deleted and persist inside of HubSpot when I check the CRM for the contact.\n\n```def delete_all_contact_notes(self, contact_id):\n    url = f'<https://api.hubapi.com/engagements/v1/engagements/associated/CONTACT/{contact_id}/paged>'\n    response = requests.get(url, headers=self.get_headers())\n    if response.status_code == 200:\n        notes = response.json()['results']\n        for note in notes:\n            self.delete_note(note['engagement']['id'])\n    else:\n        print(\"Failed to retrieve contact notes.\")\n        return None\n\ndef delete_note(self, note_id):\n\n    url = f\"<https://api.hubapi.com/engagements/v1/engagements/{note_id}>\"\n\n    response = requests.delete(url, headers=self.get_headers())\n    if response.status_code == 204:\n        print(response.text)\n        print(f\"Note with ID {note_id} deleted successfully.\")\n    else:\n        print(f\"Failed to delete note with ID {note_id}. Error: {response.text}\")```\nReturns: `Note with ID xxxxxxx deleted successfully`\n\nI've also tried just a simple curl call outside of Python,\n```curl -X DELETE -H \"Authorization: Bearer &lt;token&gt;\" '<https://api.hubapi.com/engagements/v1/engagements/xxxxxxxxx>'```\nStill doesn't work.  Any ideas?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-04-05 05:08:50"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Val Kotlarov",
+      "poster_handle": "val.kotlarov"
+    },
+    "time_stamp": "2024-04-04 09:24:28",
+    "text": "Hi guys!\nI'm trying to get some data with this API request:\n```      path = \"#{HubSpot_API_URL}/crm/v3/objects/line_items/#{id}\"\n      query = '?properties=name,price,billing_frequency,quantity,price,discount,hs_cost_of_goods_sold,' \\\n              'is_prorated_,prorated_start_date,prorated_end_date'\n      response = RestClient.get(path + query, headers)```\nbut these have `nil`'s in the response:\n``` \"discount\"=&gt;nil, \"hs_cost_of_goods_sold\"=&gt;nil```\nand with these I need a help how to request:\n```unit price, unit discount (percentage + amount and value)```\nPlease advise :pray:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeremy Prestidge",
+      "poster_handle": "jeremy.prestidge"
+    },
+    "time_stamp": "2024-04-04 13:14:24",
+    "text": "Hey guys, finding we're getting this error quite a lot just on this one specific endpoint, any other endpoints are fine, but this one seems to repeatedly timeout - you can generally resubmit the message and it will go through after one or two more attempts. Has anyone else experienced this - any way to get around it?\n\n`Error calling PatchCrmV3ObjectsContactsContactIdUpdate: The underlying connection was closed: A connection that was expected to be kept alive was closed by the server.`"
+  },
+  {
+    "poster": {
+      "poster_name": "Shaun McCoy",
+      "poster_handle": "shaun.mccoy"
+    },
+    "time_stamp": "2024-04-04 13:47:15",
+    "edited": {
+      "time_stamp": "2024-04-04 13:49:51"
+    },
+    "text": "I'm trying to submit form data through the api, however I am receiving the following error: \"Invalid input JSON on line 1, column 1: Cannot construct instance of `com.HubSpot.formsubmission.core.models.PublicApiFormSubmissionRequest$Json` (although at least one Creator exists): no String-argument constructor/factory method to deserialize from String value\"",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-04-04 18:57:27"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jeramai Faber",
+      "poster_handle": "j.faber"
+    },
+    "time_stamp": "2024-04-04 18:57:27",
+    "text": "This means the way your object is build is incorrect. Make sure you follow the example input 1-to-1.\n\nOr you can share your request body, maybe we can help you find what is wrong"
+  },
+  {
+    "poster": {
+      "poster_name": "Sandeep Dhakarwal",
+      "poster_handle": "sandeepdhakarwal01"
+    },
+    "time_stamp": "2024-04-04 22:31:28",
+    "edited": {
+      "time_stamp": "2024-04-05 04:42:45"
+    },
+    "text": "Hi Everyone ,How can we use third party API in HubSpot web app.?"
+  }
+]

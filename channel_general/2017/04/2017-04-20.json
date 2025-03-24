@@ -1,0 +1,168 @@
+[
+  {
+    "text": "<@U2N1PGW92|austinbh> uploaded a file: <https://HubSpotdev.slack.com/files/austinbh/F526HJS2H/-.txt|Untitled> and commented: Hey guys I am trying to switch out links based on a contact property. \nHow can I set the widget data to pull in the contact property for the value.",
+    "time_stamp": "2017-04-20 10:09:06"
+  },
+  {
+    "subtype": "file_comment",
+    "text": "<@U2N1PGW92> commented on <@U2N1PGW92>’s file <https://HubSpotdev.slack.com/files/U2N1PGW92/F526HJS2H/-.txt|https://HubSpotdev.slack.com/files/U2N1PGW92/F526HJS2H/-.txt>: I also tried\n\n{% set token = '{{contact.token_data}}' %}",
+    "comment": {
+      "created": 1492705003,
+      "timestamp": 1492705003,
+      "comment": "I also tried\n\n{% set token = '{{contact.token_data}}' %}"
+    },
+    "time_stamp": "2017-04-20 10:16:43"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2017-04-20 10:19:01",
+    "text": "you try export_to_template_context=true ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2017-04-20 10:19:23",
+    "text": "Are you getting errors?"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2017-04-20 10:19:38",
+    "text": "Have you tried |pprint on your result to see what you're actually getting in the widget?"
+  },
+  {
+    "poster": {
+      "poster_name": "Austin Heimerman",
+      "poster_handle": "austinbh"
+    },
+    "time_stamp": "2017-04-20 15:51:57",
+    "text": "<@U4RP6AGV9> Thanks appreciate your help. I got this to work. Change a miss spelling and “export_to_template_context=true ” \nI got it to work on a landing page but no dice on the email. Do you know if the email application allows creating a text widget?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2017-04-20 16:08:47",
+    "text": "I actually don't think you can use contact properties in that way in email"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2017-04-20 16:09:23",
+    "text": "Can't do it on email :disappointed:"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2017-04-20 16:09:29",
+    "text": "That's something I investigated a long time ago, though perhaps it's changed since then"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2017-04-20 16:09:43",
+    "text": "Probably one of the most frustrating things ever"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2017-04-20 16:10:57",
+    "text": "It depends what you're trying to do I suppose, but filters on contact properties don't work"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2017-04-20 16:11:25",
+    "text": "You should be able to do dynamic content based on {% if contact.preoperty == 'something' %}"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2017-04-20 16:11:55",
+    "text": "What I found was something like, it does the rendering in two passes"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2017-04-20 16:12:08",
+    "text": "One to make a general layout for everybody, and there it executes all the logic and stuff"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2017-04-20 16:12:31",
+    "text": "In that pass all the contact properties are replaced with the string `{{ contact.propery_name }}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2017-04-20 16:12:56",
+    "text": "And then it just does a pass where it replaces the contact properties in the email for each user"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2017-04-20 16:13:10",
+    "text": "Something like that, it was a while ago"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2017-04-20 16:13:51",
+    "text": "But basically because of that, `{% if contact.property_name == 'property value' %}` is never going to be true"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2017-04-20 16:14:01",
+    "text": "During the first pass"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2017-04-20 16:15:29",
+    "text": "You could probably make different emails and send them to people based on whatever contact property you want to check"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2017-04-20 16:16:10",
+    "text": "Doesn't really work if you need to check against multiple properties though :confused:"
+  }
+]

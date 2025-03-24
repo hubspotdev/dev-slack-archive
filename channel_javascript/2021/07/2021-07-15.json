@@ -1,0 +1,28 @@
+[
+  {
+    "poster": {
+      "poster_name": "Chris Robock",
+      "poster_handle": "crobock"
+    },
+    "time_stamp": "2021-07-15 15:24:51",
+    "edited": {
+      "time_stamp": "2021-07-15 15:50:04"
+    },
+    "text": "Hey there.  Working my way through figuring out how to return data from an API call.  I’m attempting to use a fetch function, and don’t seem to be getting results, though the built URL is a valid one and running this function in the address bar with valid coordinates does return a proper response.  In the console, when I run this function with coordinates, I get a line in the console that says “Promise {&lt;pending&gt;}.  Any suggestions?\n```function countryCode(lat, long)\n      {\n        \n        let buildURL = '<https://nominatim.openstreetmap.org/reverse?lat=>' + lat + '&amp;lon=' + long + '&amp;format=json&amp;zoom=3';\n        let mapData = fetch(buildURL)\n          .then(response =&gt; {\n            return response.json\n        })\n          \n        console.log(\"buildURL = \") + buildURL;\n        return mapData\n\n      }\n    function getLocation(){\n       navigator.geolocation.getCurrentPosition(function(position) {\n        let mapJson = countryCode(position.coords.latitude, position.coords.longitude);\n         window.location = window.location.href.split('?')[0] + \"?lat=\" + position.coords.latitude + \"&amp;lon=\" + position.coords.longitude + \"&amp;loc=\" + mapJson;\n       });\n     \n    }```",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2021-07-15 20:35:52"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Ainslie",
+      "poster_handle": "rainslie"
+    },
+    "time_stamp": "2021-07-15 20:35:52",
+    "text": "You likely need a second .then() after you extract the response. \nThe reason is that the response.json() method also returns a Promise, so you need to handle that promise. \n```fetch('<http://example.com/movies.json|http://example.com/movies.json>')\n```\n  .then(response =&gt; response.json())\n```\n```\n  .then(data =&gt; console.log(data));\n```\n```\nCheck out : <https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch|https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch>\n\nAnd also <https://stackoverflow.com/questions/50618052/why-there-are-2-then-blocks-in-fetch-call-in-react|https://stackoverflow.com/questions/50618052/why-there-are-2-then-blocks-in-fetch-call-in-react>"
+  }
+]

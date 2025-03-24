@@ -1,0 +1,78 @@
+[
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2021-10-04 07:31:04",
+    "text": "This took me forever to figure out yesterday, so posting in case it helps anyone in the future. A basic serverless function to convert a base64 file payload into a file for upload to the File Manager API Endpoint:\n\n```const axios = require(\"axios\");\nconst FormData = require('form-data');\n\nexports.main = (context, sendResponse) =&gt; {\n    const form = new FormData();\n\n    var fileOptions = {\n        access: 'PUBLIC_INDEXABLE',\n        overwrite: false,\n        duplicateValidationStrategy: 'NONE',\n        duplicateValidationScope: 'ENTIRE_PORTAL'\n    };\n\n    const buffer = Buffer.from(context.body.file.split(\",\")[1], 'base64');\n\n    form.append('file', buffer, context.body.file_name);\n    form.append('options', JSON.stringify(fileOptions));\n    form.append('folderId', 'XXXXXXXXXXX');\n\n    <http://axios.post|axios.post>(`<https://api.hubapi.com/filemanager/api/v3/files/upload?hapikey=${process.env.API_KEY}>`, form, {\n        headers: {\n            ...form.getHeaders(),\n        },\n    }).then(response =&gt; {\n        sendResponse({\n            body: response.data.objects[0],\n            statusCode: response.status\n        });\n    }).catch(err =&gt; {\n        console.log(err.response.data)\n    });\n};```\nExpects a POST body with a \"file\" property (containing the base64 string) and \"file_name\" string property.",
+    "reply_count": 16,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2021-10-04 07:36:34"
+      },
+      {
+        "time_stamp": "2021-10-04 07:39:04"
+      },
+      {
+        "time_stamp": "2022-05-24 04:59:42"
+      },
+      {
+        "time_stamp": "2022-05-24 04:59:46"
+      },
+      {
+        "time_stamp": "2022-05-24 05:14:10"
+      },
+      {
+        "time_stamp": "2022-05-24 05:15:12"
+      },
+      {
+        "time_stamp": "2022-05-24 05:15:21"
+      },
+      {
+        "time_stamp": "2022-05-24 05:15:33"
+      },
+      {
+        "time_stamp": "2022-05-24 05:24:28"
+      },
+      {
+        "time_stamp": "2022-05-24 05:24:35"
+      },
+      {
+        "time_stamp": "2022-05-24 05:30:00"
+      },
+      {
+        "time_stamp": "2022-05-24 05:31:31"
+      },
+      {
+        "time_stamp": "2022-05-24 05:31:39"
+      },
+      {
+        "time_stamp": "2022-05-24 05:31:40"
+      },
+      {
+        "time_stamp": "2022-05-24 05:31:42"
+      },
+      {
+        "time_stamp": "2022-05-24 05:31:58"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Russell Benzing",
+      "poster_handle": "rbenzing"
+    },
+    "time_stamp": "2021-10-04 07:36:34",
+    "text": "Ha! I just wrote this exact type of function last week for a client ….very similar in code too. It was not easy to figure out for sure thanks for sharing."
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2021-10-04 07:39:04",
+    "text": "<@U504BHZ6K> I was about to pull my hair out last night; had it working in my test portal but had to do some minimal refactoring to make it work in production. I move it over, and it won't work. Spent like an hour and a half debugging..... turns out I forgot to update the folderID between the two version lmao"
+  }
+]

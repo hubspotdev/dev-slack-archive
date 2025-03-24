@@ -1,0 +1,82 @@
+[
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-01-19 05:48:21",
+    "text": "<@U06EL8MH24B> how are you sending emails to multiple recipients? If you are referring to a marketing email, you send this email to a list of people. Each individual email is rendered with the email address that you insert. So if you are sending to 1000 different people in your list, each one would have a different email address show up by using the `{{ contact.email }}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Uday Muppana",
+      "poster_handle": "uday"
+    },
+    "time_stamp": "2024-01-19 06:59:22",
+    "text": "Using single send api API. I see what you are saying. The `to` field accepts one email address while there is `cc` which accepts multiple. I understand HubSpot creates contacts for emails listed in both to and cc fields. \n\nThe `{{ contact.email }}` refers to the matched contact in the `to` field of the request? "
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-01-19 07:03:39",
+    "text": "The email would render to that contact you are emailing to. CC just gets a carbon copy of that email"
+  },
+  {
+    "poster": {
+      "poster_name": "Uday Muppana",
+      "poster_handle": "uday"
+    },
+    "time_stamp": "2024-01-19 07:05:07",
+    "text": "I understand.  I am hearing the CC list is not accessible to HubL. Is that right?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-01-19 07:08:40",
+    "text": "My understanding is that HubSpot is creating one email. The target of all the hubl would be the contact that the email is sent to.\n\nIf you are using the api to send data to this email, you could associate contacts to this contact or you can use api calls to bring in data as custom properties to the email and bring in data from the people that you are ccing  - this would require api work to make this work\n\nIf you are using hubl based upon `{{ contact }}` that contact is going to be the contact that the email is sent to.\n\nSo if you want to include data on the CC contacts, you will need to pass that data to your email via custom properties\n\n<https://legacydocs.HubSpot.com/docs/methods/email/transactional_email/single-send-overview>"
+  },
+  {
+    "poster": {
+      "poster_name": "Uday Muppana",
+      "poster_handle": "uday"
+    },
+    "time_stamp": "2024-01-19 07:12:45",
+    "text": "Excellent. Thank you so much. "
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2024-01-19 09:28:55",
+    "text": "did you get this figured out? sharing the portion of the code responsible would give us a bit more to work with."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Zmudzinski",
+      "poster_handle": "nzmudzinski"
+    },
+    "time_stamp": "2024-01-19 14:38:04",
+    "text": "Still haven't figured it out. Here's the code. The HTML is not the issue, but the HubL that's giving me a problem - just not querying in all of the properties.\n\nI haven't tried this yet but I was thinking I could specify those properties like this: {% set project = crm_objects(\"project\",\"summary,random_order_number,project_page_url,image_url,primary_theme,country_name,organization_name,name,project_status__checkbox_,project_campaign_ids\") %}\n\n```{% set project_id_array = [contact.recommended_project_id_1,contact.recommended_project_id_2,contact.recommended_project_id_3,contact.recommended_project_id_4,contact.recommended_project_id_5,contact.recommended_project_id_6] %}\n\n{% set excluded_statuses = [\"Funded\", \"Hidden\", \"Retired\", \"Skeleton\", \"Unlisted\", \"Unsearchable\"] %}\n\n{% for project_id in project_id_array %}\n    {% set project = crm_object(\"project\",'project_id='~project_id) %}\n\n        {# Extra validation to ensure there's a valid project result #}\n        {% if project.name != null %}\n\n        {# Debug #}\n        {{project.project_status__checkbox_}}\n\n        {{ project.project_status__checkbox_|pprint }}\n\n        {{ project|pprint }}\n\n        {% set include_project = true %}\n\n        {% for status in excluded_statuses %}\n            {% if status in project.project_status__checkbox_ %}\n                {% set include_project = false %}\n            {% endif %}\n        {% endfor %}\n\n        {% if include_project %}\n\n            #### a bunch of HTML here ####\n\n{% endif %}\n{% endif %}\n{% endfor %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2024-01-19 14:59:54",
+    "text": "I think you’ll definitely want to include the properties parameter to retrieve the ones you want. I’m not sure exactly how HubSpot decides which properties to give you when no value is passed for the properties (maybe just those that were created at the time the schema was instantiated?), but more often than not, I’ve had to list the properties I want returned in the results to ensure I get them.\n\n``` {% set project = crm_object(\"project\",'project_id='~project_id,\"summary,random_order_number,project_page_url,image_url,primary_theme,country_name,organization_name,name,project_status__checkbox_,project_campaign_ids\") %}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Zmudzinski",
+      "poster_handle": "nzmudzinski"
+    },
+    "time_stamp": "2024-01-19 15:00:13",
+    "text": "I'll give it a try, thank you"
+  }
+]

@@ -1,0 +1,438 @@
+[
+  {
+    "poster": {
+      "poster_name": "Daniel Mahadi",
+      "poster_handle": "daniel.mahadi"
+    },
+    "time_stamp": "2024-03-06 01:02:01",
+    "text": "btw, we are setting up in `developer sandbox`"
+  },
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2024-03-06 01:52:03",
+    "text": "Also anyone else getting this type error in fields.tsx?\n\nCannot find module '@HubSpot/cms-components/fields' or its corresponding type declarations.ts(2307)\nView Problem (⌥F8)\nQuick Fix... (⌘.)"
+  },
+  {
+    "poster": {
+      "poster_name": "Stefano Chiala",
+      "poster_handle": "stefano599"
+    },
+    "time_stamp": "2024-03-06 02:54:49",
+    "text": "Hi, sorry if this topic was brought already.\nHas anyone come to a good way or workaround to access cookies before hydration is done and still preserve ssr of an island? :slightly_smiling_face:\nI am trying to read a cookie that tells wether for the current user the island needs to render component A or component B",
+    "reply_count": 9,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-03-06 03:52:37"
+      },
+      {
+        "time_stamp": "2024-03-06 03:53:27"
+      },
+      {
+        "time_stamp": "2024-03-06 04:10:20"
+      },
+      {
+        "time_stamp": "2024-03-06 05:31:12"
+      },
+      {
+        "time_stamp": "2024-03-06 05:32:35"
+      },
+      {
+        "time_stamp": "2024-03-06 05:32:39"
+      },
+      {
+        "time_stamp": "2024-03-07 05:12:02"
+      },
+      {
+        "time_stamp": "2024-03-07 06:26:10"
+      },
+      {
+        "time_stamp": "2024-03-07 08:16:44"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2024-03-06 03:52:37",
+    "text": "Last I checked we can't recieve request details from HubSpot so the only way to do this is via cookies on the client, maybe someone from the hs team will correct me on this"
+  },
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2024-03-06 03:53:27",
+    "text": "Maybe there is a HubL function for this and you can then pass that as the prop to the react module"
+  },
+  {
+    "poster": {
+      "poster_name": "Stefano Chiala",
+      "poster_handle": "stefano599"
+    },
+    "time_stamp": "2024-03-06 04:10:20",
+    "text": "That's what I hopefully thought..\n\nOtherwise I am seeing something enough decent to accept if I wait for the island's hydration which contains component A, then read the cookie and eventually render component B (meantime the app is in loading state).\nThe heavier component A is SSR, the component B is not.\n\n```const afterHydration = useAfterIslandHydration();\nconst [isLoading, setIsLoading] = useState(true);\nconst [showComponentA, setShowComponentA] = useState(true);\n\nuseEffect(() =&gt; {\n    if (afterHydration) {\n      setIsLoading(false);\n      setShowComponentA(Cookies.get('shouldShowComponentA'));\n    }\n}, [afterHydration]);\n\nif (afterHydration &amp;&amp; !showComponentA) {\n    return (\n      &lt;ComponentB/&gt;\n    );\n}\n\nreturn (\n   &lt;ComponentA/&gt;\n);```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2024-03-06 05:31:12",
+    "text": "Idk if you need to use afterHydration, if you're using state and wrapped this in an island component then this will be client rendered regardless"
+  },
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2024-03-06 05:32:35",
+    "text": "If you're looking to do an AB test you can just use HubSpot out of the box ab testing with CMS fields"
+  },
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2024-03-06 05:32:39",
+    "text": "Whats the purpose of this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-06 05:53:29",
+    "text": "I'm starting to transfer all of my tailwind code to the react side so that everything works in a unified way. Has anyone tackled that yet and created a way to add the HubSpot grid css (without the Hubl)? (code in thread)",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-03-06 05:53:44"
+      },
+      {
+        "time_stamp": "2024-03-06 05:54:21"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-06 05:53:44",
+    "text": "need to recreate this:\n```\n{% set total_columns_count = 12 %}\n\n/* CSS variables */\n\n:root {\n  --column-gap: 3.5rem; /* 56px */\n  --column-width-multiplier: 8.333;\n}\n\n/* Mobile layout */\n\n.row-fluid {\n  display: flex;\n  flex-wrap: wrap;\n  width: 100%;\n}\n\n{% for span_num in range(1, total_columns_count + 1) %}\n  {{ \".row-fluid .span\" ~ span_num }}{{ loop.last ? null : \",\" }}\n{%- endfor -%} {\n  min-height: 1px;\n  width: 100%;\n}\n\n/* Desktop layout */\n\n@media (min-width: 768px) {\n  .row-fluid {\n    flex-wrap: nowrap;\n    justify-content: space-between;\n  }\n\n  {% for span_num in range(1, total_columns_count) %}\n    {{ \".row-fluid .span\" ~ span_num }} {\n      width: calc(var(--column-width-multiplier) * 1% * {{ span_num  }} - var(--column-gap) * ({{ total_columns_count - span_num }} * var(--column-width-multiplier) / 100));\n    }\n  {% endfor %}\n}\n\n/* these styles are necessary to support the \"background stripe\" module */\n.dnd-section {\n  position: relative;\n  z-index: 10;\n  overflow: hidden;\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-06 05:54:21",
+    "text": "one option is to keep a little css on the \"theme\" side but still remove tailwind...I'd rather move all of it but open to ideas"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-06 07:12:42",
+    "text": "I'm getting some errors that look like this:\n```GET <https://xxx.com/hubfs/build_assets/theme-assets-project/647/js_client_assets/assets/createLucideIcon-d89fe69b.js> net::ERR_ABORTED 503 (Service Unavailable)```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-06 07:18:00",
+    "text": "^ this is crashing parts of my published site <@UCY83QS6Q> <@UAYBXDG4U> any chance you can please help with this?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-03-06 07:19:18"
+      },
+      {
+        "time_stamp": "2024-03-06 08:46:06"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-03-06 07:19:18",
+    "text": "Could you share link to page to us in DM?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-06 08:46:06",
+    "text": "<@U04DLJH3W94> <@UAYBXDG4U> <@UCY83QS6Q> quickly came together to help resolve my issue here—still figuring out some details but no longer in panic mode. Thank you all so much for your help and fast response"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-06 09:04:57",
+    "text": "if the majority of my CSS code is on the react tailwind side of things, should I load my custom font there too? (using @font-face)\n\nI'm tempted to load it in one of my HubL layout html files in the head but curious to know if there's a best practice here or recommendation from the cms-react team. What do you think?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-03-06 10:39:53"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-03-06 09:07:46",
+    "text": "You can create <https://developers.HubSpot.com/docs/api/account-types#cms-sandbox-accounts|CMS sandbox accounts> for free that will have the necessary access to build cms react projects"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-06 10:03:37",
+    "text": "<@U04DLJH3W94> do you have any tips on dealing with a blog post on the react side via `hublData`? When I do this:\n```{% set hublData = {\n  \"publishDate\": publishDate,\n  \"authors\": authors,\n  \"postBody\": content.post_body\n} %}```\npostBody exists but has strange formatting",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-03-06 10:04:03"
+      },
+      {
+        "time_stamp": "2024-03-06 10:05:09"
+      },
+      {
+        "time_stamp": "2024-03-06 10:05:32"
+      },
+      {
+        "time_stamp": "2024-03-06 10:05:41"
+      },
+      {
+        "time_stamp": "2024-03-06 10:06:54"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-03-06 10:04:03",
+    "text": "Can you explain what you mean by strange formatting?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-06 10:05:09",
+    "text": "yea, it's so strange I'm trying to recreate an example with deployed code. it comes through with a breaking character that will load data on a page through a console.log (really weird)"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-06 10:05:32",
+    "text": "it probably still contains HubL maybe or something...I know I've previously had to use tojson or escape filters on it in other contexts"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-06 10:05:41",
+    "text": "example in a sec"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-06 10:06:54",
+    "text": "sending link in DM"
+  },
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2024-03-06 10:39:53",
+    "text": "Doesnt make sense if you have more than 1 module as then your loading it for each instance. By far the best solution is still the base theme + react tailwind modules "
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-06 10:44:31",
+    "text": "here's an overview of the hublData/blog post issue:\n• when trying to load a blog post through hublData, it returns a format that has to be processed in some way before being rendered via `dangerouslySetInnerHtml`\n• the proxy render and the live render show different content. The live version includes some Hubl on top \n```{%- set hs_blog_post_body -%} {%- set in_blog_post_body = true -%}```\nand bottom:\n```{%- endset -%} {%- blog_post_data_wall_wrapper body={{hs_blog_post_body}}, summary={{hs_blog_post_summary}} %}```\nbut otherwise renders properly.\n• the proxy version shows a mix of `\\n` (new lines) and some HubL. it essentially looks like a \"comment\" is showing through and rendering. the page starts with `\\n` and ends with `end proxy local render --&gt;`",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-03-06 10:47:01"
+      },
+      {
+        "time_stamp": "2024-03-06 11:07:54"
+      },
+      {
+        "time_stamp": "2024-03-06 11:11:53"
+      },
+      {
+        "time_stamp": "2024-03-06 11:12:46"
+      },
+      {
+        "time_stamp": "2024-03-06 11:14:44"
+      },
+      {
+        "time_stamp": "2024-03-06 11:18:58"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-06 10:47:01",
+    "text": "I've had similar issues with passing an array of posts through HubL into a react module. When it's an array of posts, this works:\n```posts={{ posts|tojson|escape }}```\nand in react:\n```  const decodedPosts = posts.replace(/&amp;quot;/g, '\"'); //because passing in from HubSpot\n  const allPosts = JSON.parse(decodedPosts); // convert from string to object```\ntrying to figure out how to filter/format for just a single post pulled from `hublData`"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2024-03-06 11:07:54",
+    "text": "Here is an example of how HS is gathering this data for the default blogPosts module <https://github.com/HubSpot/cms-react/tree/main/default-react-modules/src/components/modules/BlogPosts-V0>"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-06 11:11:53",
+    "text": "hmmm...is there a way to loop through `content.post_body`?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-06 11:12:46",
+    "text": "if I can pull out its parts while still in HubL that would work probably. But not sure it can be accessed like that"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-06 11:14:44",
+    "text": "trying to set it altogether on the page:\n```{% set blog_post_body = content.post_body %}```\nmaybe that will \"process\" it more"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-06 11:18:58",
+    "text": "^ that does kind of help a bit, the only issue is that it leaves:\n```AT THE TOP OF POST\n{%- set hs_blog_post_body -%} {%- set in_blog_post_body = true -%}\n\n---MAIN POST BODY WORKS---\n\n{%- endset -%} {%- set hs_blog_post_summary -%}\n----SHOW SUMMARY----\n\nEND OF POST\n{%- endset -%} {%- blog_post_data_wall_wrapper body={{hs_blog_post_body}}, summary={{hs_blog_post_summary}} %}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-06 13:08:47",
+    "edited": {
+      "time_stamp": "2024-03-06 13:18:13"
+    },
+    "text": "did tailwind intellisense (the vscode extension) stop working at some point for everyone? I could have sworn I had it working at some point",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-03-06 13:30:23"
+      },
+      {
+        "time_stamp": "2024-03-06 13:33:27"
+      },
+      {
+        "time_stamp": "2024-03-06 13:37:43"
+      },
+      {
+        "time_stamp": "2024-03-06 14:18:39"
+      },
+      {
+        "time_stamp": "2024-03-06 14:22:21"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-06 13:30:23",
+    "text": "looks like intellisense does not like import.meta in that config file:\n```[src-react/theme-assets-project/app/tailwind.config.js] Building...\n[Error - 3:28:20 PM] Tailwind CSS: Cannot use 'import.meta' outside a module\n/Users/xxxxx/code/xxxxx/src-react/theme-assets-project/app/tailwind.config.js:1\n(function (exports, require, module, __filename, __dirname) { \"use strict\";Object.defineProperty(exports, \"__esModule\", {value: true}); function _interopRequireDefault(obj) { return obj &amp;&amp; obj.__esModule ? obj : { default: obj }; }const componentsDir = new URL(\"./components\", import.meta.url).pathname;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-06 13:33:27",
+    "text": "is this something that HubSpot can modify in Vite or somewhere...?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-06 13:37:43",
+    "text": "it looks like the github example uses a slightly updated setup but that still does not work. It's the `import.meta` that is apparently breaking:\n```import { fileURLToPath } from 'url';\nconst componentsDir = fileURLToPath(new URL('./components', import.meta.url));```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Stone",
+      "poster_handle": "chris.stone603"
+    },
+    "time_stamp": "2024-03-06 14:18:39",
+    "text": "We discussed it a bit here, I still haven't worked out a better solution: <https://HubSpotdev.slack.com/archives/C04AY1H2204/p1708162731208979?thread_ts=1708162731.208979&amp;cid=C04AY1H2204|https://HubSpotdev.slack.com/archives/C04AY1H2204/p1708162731208979?thread_ts=1708162731.208979&amp;cid=C04AY1H2204>"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-06 14:22:21",
+    "text": "also, thanks for sharing, looks like we don't have a full solution yet but it at least seems possible. Trying to work through the separate intellisense file example as well"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-06 14:52:38",
+    "edited": {
+      "time_stamp": "2024-03-06 14:52:58"
+    },
+    "text": "<@UAYBXDG4U> <@UCY83QS6Q> do you recommend using this extra intellisense file approach or is there something else in the works for this?"
+  }
+]

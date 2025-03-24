@@ -1,0 +1,54 @@
+[
+  {
+    "text": "Does anybody know if it’s possible or how to add multiple values for display conditions, I tried comma separated but doesn’t seem to work and cant find any docs on it.",
+    "time_stamp": "2023-09-25 04:04:29",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-09-25 06:23:50"
+      },
+      {
+        "time_stamp": "2023-09-25 08:01:27"
+      }
+    ]
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-09-25 06:23:50"
+  },
+  {
+    "poster": {
+      "poster_name": "Mike Newbon",
+      "poster_handle": "mike324"
+    },
+    "time_stamp": "2023-09-25 08:01:27",
+    "text": "Ya, this is what I ended up doing, chatgpt came in clutch writing the regex lol"
+  },
+  {
+    "poster": {
+      "poster_name": "Darla Maestas",
+      "poster_handle": "darla"
+    },
+    "time_stamp": "2023-09-25 10:52:21",
+    "edited": {
+      "time_stamp": "2023-09-25 10:53:29"
+    },
+    "text": "Hey all. I have this code here for a slider module that displays blog posts based on their tag. I am trying to involve all blogs here.\n\nMy issue is that it is only displaying 10 of the most recent posts. I need to  posts to have a limit of 50 instead of the default 10. Any ideas on how?\n```&lt;style&gt;\n{% scope_css %}\n  \n  .dot  {\n    {% if module.style.dot_color %}\n      background:{{ module.style.dot_color.color }};\n    {% endif %}\n  }\n  \n  .blog-slider-header {\n    position: relative;\n    top:11px;\n  }\n  \n  .card-container {\n    display: flex;\n    flex-direction: column;\n    justify-content: space-between;\n    min-height: inherit;\n  }\n  \n  .carousel {\n    margin-top: 40px;\n    z-index:1;\n  }\n  \n  .flickity-page-dots {\n    position: absolute;\n    width: auto;\n    bottom: auto;\n    top: -3rem;\n    left: auto;\n    right: 114px;\n  }\n\n  .flickity-viewport {\n    overflow: visible;\n  }\n  \n  .overlay {\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%;\n    background: rgba(0, 0, 0, 0.7); /* Adjust the opacity as needed */\n    z-index: 1;\n    border-radius: 12px; /* To match the carousel-cell's border radius */\n  }\n\n  .carousel-container {\n    position: relative; /* Ensure relative positioning for the text container */\n    z-index: 2; /* Place the text container above the overlay */\n  }\n\n  .rich-text-color {\n    {% if module.style.rich_text_color %}\n      color: {{ module.style.rich_text_color.color }};\n    {% endif %}\n  }\n\n  .carousel-container {\n    min-height: 400px;\n    height:auto;\n  }\n  \n  button.flickity-button.flickity-prev-next-button.previous {\n    left: auto;\n    right: 44px;\n  }\n\n  svg.flickity-button-icon {\n    color: {{ module.style.arrow_color }};\n  }\n  \n  .flickity-button:disabled {\n    opacity: 1;\n  }\n  \n  .flickity-prev-next-button {\n    top: -40px;\n  }\n\n  .carousel-cell {\n    width: 33%;\n    margin-right: 10px;\n    background-repeat: no-repeat;\n    background-size: cover;\n    padding: 2rem;\n    border-radius: 12px;\n  }\n\n  .flickity-button:hover {\n    border: 0px;\n  }\n\n  .flickity-button {\n    color: {{ module.style.arrow_color.color }};\n    background: hsla(0, 0%, 100%, 0.0);\n  }\n\n  .flickity-button:hover {\n    color: {{ color_variant(module.style.arrow_color.color , -100) }};\n  }\n  \n  .flickity-button:focus {\n    outline: 0;\n    box-shadow: 0 0 0 0px #19f;\n  }\n\n  .flickity-button:active {\n    color: {{ color_variant(module.style.arrow_color.color , -40) }};\n    outline-color: none;\n  }\n\n  .card-container {\n    color: white;\n  }\n\n  @media only screen and (max-width: 767px) {\n    .carousel-cell{\n      width: 50%;\n    }\n    .blog-slider-header {\n      position: relative;\n      top: -40px;\n      text-align: center;\n    }\n    .flickity-page-dots {\n      right: auto;\n    }\n  }\n\n  @media only screen and (max-width: 576px) {\n    .carousel-cell{\n      width: 100%;\n    }\n  }\n  \n{% end_scope_css %}\n&lt;/style&gt;\n\n&lt;link rel=\"stylesheet\" href=\"<https://unpkg.com/flickity@2/dist/flickity.min.css>\"&gt;\n&lt;!-- JavaScript --&gt;\n&lt;script src=\"<https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js>\"&gt;&lt;/script&gt;\n\n&lt;h4 class=\"blog-slider-header rich-text-color\"&gt;\n {{ module.header_text }}\n&lt;/h4&gt;\n\n&lt;div class=\"carousel\" id=\"my-carousel\" data-flickity='{ \"groupCells\": true ,\"contain\": true, \"cellAlign\": \"left\" }'&gt;\n  &lt;!-- Grab the 10 latest posts --&gt;\n\n  \n{% set blog_one_posts = blog_recent_posts('132250956174') %}\n{% set blog_two_posts = blog_recent_posts('135809537588') %}\n{% set blog_three_posts = blog_recent_posts('135969128094') %}\n{% set blog_four_posts = blog_recent_posts('136114542119') %}\n\n{% set all_posts = blog_one_posts + blog_two_posts + blog_three_posts + blog_four_posts %}\n{% set posts = all_posts %} {# Limit the number of posts to 50 #}\n  \n  \n&lt;!-- loop through posts in custom all posts variable --&gt;\n\n  {% set selected_choice_id = module.choice_field %}\n\n  {% if selected_choice_id == 'Manufacturing' %}\n    {% set tag_name = 'Manufacturing' %}\n  {% elif selected_choice_id == 'GovTech' %}\n    {% set tag_name = 'GovTech' %}\n  {% elif selected_choice_id == 'Financial' %}\n    {% set tag_name = 'Financial' %}\n  {% elif selected_choice_id == 'Mendix' %}\n    {% set tag_name = 'Mendix' %}  \n  {% else %}\n    {% set tag_name = 'Default Blog Name' %} {# Set a default value if none of the choices match #}\n  {% endif %}\n  \n  {% for post in posts %}\n    {% for tag in post.tag_list %}\n      {% if tag.name == tag_name%}\n        &lt;!-- Loop through and print out below for each post --&gt;\n        &lt;div class=\"carousel-cell\" style=\"background-image: url('{{ post.featured_image }}');\"&gt;\n          &lt;div class=\"overlay\"&gt;&lt;/div&gt; &lt;!-- Add the overlay --&gt;\n          &lt;div class=\"carousel-container\"&gt;\n            &lt;a href=\"{{ post.absolute_url }}\"&gt;\n              &lt;div class=\"card-container\"&gt;\n                &lt;h3 class=\"card-heading rich-text-color\"&gt;{{ post.name }}&lt;/h3&gt;\n                &lt;hr class=\"rich-text-color\"&gt;\n                &lt;p class=\"rich-text-color\"&gt;&lt;em&gt;By {{ post.blog_post_author.display_name }} - {{ post.publish_date|datetimeformat('%B %d, %Y') }}&lt;/em&gt;&lt;/p&gt;\n                &lt;div class=\"card-bottom\"&gt;\n                  &lt;a class=\"rich-text-color\" href=\"#\"&gt;Case Study |&lt;/a&gt;\n                  {% for tag in post.tag_list %}\n                    {% if tag.name == tag_name %}\n                      &lt;a class=\"category rich-text-color\" href=\"/case-studies/tag/{{ tag.name | replace(' ', '-') }}\"&gt;{{ tag.name }}&lt;/a&gt;\n                    {% endif %}\n                  {% endfor %}\n                &lt;/div&gt;\n              &lt;/div&gt;\n            &lt;/a&gt;\n          &lt;/div&gt;\n        &lt;/div&gt;\n      {% endif %}\n    {% endfor %}\n  {% endfor %}\n&lt;/div&gt;```",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-09-25 15:58:53"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-09-25 15:58:53",
+    "text": "There’s a few things I’ve spotted that could possibly be giving you trouble.\n\nThe first is likely the easiest, when you’re setting the `blog_NUM_posts` variables, you’re calling the `blog_recent_posts` function without the `limit` parameter. The <https://developers.HubSpot.com/docs/cms/hubl/functions#blog-recent-posts|documentation doesn’t have the >`limit`<https://developers.HubSpot.com/docs/cms/hubl/functions#blog-recent-posts| parameter marked as optional>, so you’ll probably want to adjust those lines to include it:\n```{% set blog_one_posts = blog_recent_posts('132250956174', 15) %}```\nThe other thing that looks like it could be causing issues is the loop for displaying your posts. The way you currently have it written, you’re retrieving an undefined number of posts indiscriminately, then using a loop to filter them by tag. That means you’re going to display an inconsistent number of results — if only 2 of the last 20 posts match your selected tag, you’d only show 2 posts, even if there are other matching posts further back.\n\nInstead of indiscriminately grabbing recent posts, you should use <https://developers.HubSpot.com/docs/cms/hubl/functions#blog-recent-tag-posts|the >`blog_recent_tag_posts`<https://developers.HubSpot.com/docs/cms/hubl/functions#blog-recent-tag-posts| function>, and remove the filtering logic from your markup loop:\n```{# Retrieving posts #}\n{# You can get rid of all of the \"set tag_name\" logic if you only provide valid tag name options in your choice field and don't mark it as required. #}\n{% set filter_tag = module.choice_field %}\n{% set use_filter_posts_by_tag = filter_tag is truthy %}\n\n{% if use_filter_posts_by_tag %}\n  {% set blog_one_posts = blog_recent_tag_posts('132250956174', filter_tag, 15) %}\n  {# Continue for two, three, four, etc. #}\n{% else %}\n  {% set blog_one_posts = blog_recent_posts('132250956174', 15) %}\n  {# Continue for two, three, four, etc. #}\n{% endif %}\n\n{# Concatenate arrays here, etc. #}\n\n{# Render slide markup #}\n{% for post in all_posts %}\n  &lt;div class=\"carousel-cell\"&gt;\n     {# ... #}\n  &lt;/div&gt;\n{% endfor %}```\nThis will make your code much more concise, and will ensure that you’re actually retrieving the intended number of posts when filtering by a tag.\n\nUnrelatedly to your issues with the number of posts displayed, I strongly recommend you familiarize yourself with the `require_css`<https://developers.HubSpot.com/docs/cms/hubl/tags#require-css| tag> and `require_js`<https://developers.HubSpot.com/docs/cms/hubl/tags#require-js| tag>. As currently written, your module’s scripts and styles are going to be contained within the body alongside your markup, and you’ll be adding an extra copy of the Flickity script for every instance of the module included on the page. Making sure your scripts and styles are in the right place in your markup will help to save you a lot of headache and heartache when it comes to troubleshooting down the line."
+  }
+]

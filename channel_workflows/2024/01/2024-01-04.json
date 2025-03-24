@@ -1,0 +1,92 @@
+[
+  {
+    "poster": {
+      "poster_name": "Ofek Assael",
+      "poster_handle": "ofek"
+    },
+    "time_stamp": "2024-01-04 03:03:41",
+    "text": "Hey all :smile:\nI’m trying to create a custom code to rotate lead assignment without them having a sales pro seat.. Do you know if there’s a way to get the team members’ IDs of a certain team through code?",
+    "reply_count": 7,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-01-04 06:51:06"
+      },
+      {
+        "time_stamp": "2024-01-04 18:29:50"
+      },
+      {
+        "time_stamp": "2024-01-07 03:15:34"
+      },
+      {
+        "time_stamp": "2024-01-08 10:09:08"
+      },
+      {
+        "time_stamp": "2024-01-09 00:17:37"
+      },
+      {
+        "time_stamp": "2024-01-14 01:29:17"
+      },
+      {
+        "time_stamp": "2024-01-14 01:29:31"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Maximilian Holzer",
+      "poster_handle": "maximilian.holzer"
+    },
+    "time_stamp": "2024-01-04 04:58:56",
+    "edited": {
+      "time_stamp": "2024-01-04 05:11:34"
+    },
+    "text": "Thanks! <@U01QVR44MEY> Do you maybe know if it is still possible to resubscribe a contact over this method after they have unsubbed from the specific sub type or was this bug fixed?"
+  },
+  {
+    "poster": {
+      "poster_name": "Maximilian Holzer",
+      "poster_handle": "maximilian.holzer"
+    },
+    "time_stamp": "2024-01-04 05:06:11",
+    "edited": {
+      "time_stamp": "2024-01-04 05:06:59"
+    },
+    "text": "So About the points you mentioned:\n1. the access token so i gave it all scopes so that i wouldnt have to worry about anything haha ^^'\n2. sub-id is 100% correct checked it and checked it also with a HS Support\n3. i recently changed it to the v3 , but the logs always tell me the put request / post request now is not a function :confused: soo yea\nAnd yea thanks for the compliments haha its mostly chatgpt's work i am just here for the road.\ni also tried encoding the email so that maybe it is bc of that but no success here :disappointed:"
+  },
+  {
+    "poster": {
+      "poster_name": "Maximilian Holzer",
+      "poster_handle": "maximilian.holzer"
+    },
+    "time_stamp": "2024-01-04 05:11:05",
+    "text": "i reworked it a bit, but still no success, the code:\n```const axios = require('axios');\nconst HubSpot = require('@HubSpot/api-client');\nconst emailPropertyName = 'email';\nconst subscriptionTypeId = '*RealID*';\nconst HubSpot_PRIVATE_APP_ACCESS_TOKEN = process.env.TestApp2;\n\n\nexports.main = async (event, callback) =&gt; {\n  console.log('Start of the function');\n  const HubSpotClient = new HubSpot.Client({ accessToken: HubSpot_PRIVATE_APP_ACCESS_TOKEN });\n\n  try {\n    console.log('Fetching contact information');\n    const contactResult = await HubSpotClient.crm.contacts.basicApi.getById(event.object.objectId, [emailPropertyName]);\n    console.log('Contact information:', JSON.stringify(contactResult.properties));\n    const contactEmail = contactResult.properties[emailPropertyName];\n    console.log('Contact Email:', contactEmail);\n    const encodedEmail = encodeURIComponent(contactEmail);\n    console.log('Encoded Email:',encodedEmail)\n\tconst apiUrl = `<https://api.hubapi.com/email/public/v3/subscriptions/${encodedEmail}>`;\n    console.log('API URL:', apiUrl);\n    const requestData = {\n      emailAddress: encodedEmail,\n      subscriptionId: subscriptionTypeId,\n      legalBasis: \"LEGITIMATE_INTEREST_PQL\",\n      legalBasisExplanation: \"1\",\n    };\n    console.log('Request Data:', JSON.stringify(requestData));\n    const apiResponse = await HubSpotClient.communicationPreferences.statusApi.postCommunicationPreferencesv3subscribe(requestData);\n    console.log('Contact subscribed successfully:', JSON.stringify(apiResponse, null, 2));\n    } catch (error) {\n    console.error('Error subscribing contact:', error.response ? JSON.stringify(error.response.data) : error.message);\n  }\n  console.log('End of the function');\n};```\ni tried it with put, and tried it with post nothing works it always tells me that\n```ERROR\tError subscribing contact: HubSpotClient.communicationPreferences.statusApi.postCommunicationPreferencesv3subscribe is not a function```\nand i dont know where to go from here since i copy and pasted the request literally from the dev hub endpoints &gt;.&lt;\nIf you could help me out that would be amazing! :star-struck:"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-01-04 06:47:08",
+    "edited": {
+      "time_stamp": "2024-01-04 06:47:38"
+    },
+    "text": "So you're trying to resubscribe someone who has previously opted out? If so can't do that through the api (maybe you can through the dashboard but I don't remember):\n```The subscribe contact endpoint allows you to subscribe an email address to any given subscription type in an account, but will not allow you to resubscribe contacts who have opted out.```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-01-04 06:51:06",
+    "text": "<@U032JBY6BAR> has a pretty cool tool for this use case"
+  },
+  {
+    "poster": {
+      "poster_name": "Colin Johnson",
+      "poster_handle": "colin776"
+    },
+    "time_stamp": "2024-01-04 18:29:50",
+    "text": "Thanks for shout out <@U01QVR44MEY> "
+  }
+]

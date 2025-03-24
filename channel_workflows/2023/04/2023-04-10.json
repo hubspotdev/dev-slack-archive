@@ -1,0 +1,412 @@
+[
+  {
+    "poster": {
+      "poster_name": "Zachary Lukasiewicz",
+      "poster_handle": "zlukasiewicz"
+    },
+    "time_stamp": "2023-04-10 12:03:57",
+    "text": "Hi all, I am trying to create conditional approvals based on total quote discount.\n\nI used ChatGPT to write this out, but I'm curious if anyone has tried to do this before or if the code below would work?\n\nIf effect, I need to set the Quote Approver based on TCV, ACV, and Discount levels.\n\n--\n\n--\n\nconst HubSpot = require('@HubSpot/api-client');\n\nexports.main = (event, callback) =&gt; {\n\n  const HubSpotClient = new HubSpot.Client({\n    apiKey: process.env.HAPIKEY\n  });\n\n  //First, make a call to get deal associations\n  HubSpotClient.crm.deals.associationsApi.getAll(event.object.objectId, 'line_item').then((results) =&gt; {\n   //Because a separate api call is needed for each associated line item, and each one returns a promise\n   //where the promise is not dependent on any other call, each can be run using the Promise.all() method\n   //The map() method takes 2 arguments - an initial array and a function to apply to every item in the initial array\n   // then, returns an array of the results. in this case, it's an array of promises that each get line item details\n    let lineItemPromises = results.body.results.map(item =&gt; {\n      return HubSpotClient.crm.lineItems.basicApi.getById(<http://item.id/|item.id>, ['quantity', 'discount_amount', 'hs_product_id']).then(results =&gt; {\n        return results.body\n      })\n    })\n\n    //pass the array of promises into Promise.All, which then returns an array of all results, in this case the details\n    // of every line item api call request.\n    Promise.all(lineItemPromises).then(resultsArray =&gt; {\n      console.log(resultsArray)\n     //use the .filter() method to filter the array of results for just the line items that contribute to ARR\n      let arrLineItems = resultsArray.filter(item =&gt; {\n        return item.properties.hs_product_id &amp;&amp; item.properties.hs_product_id.includes('ARR')\n      })\n      console.log(`Number of ARR line items: ${arrLineItems.length}`)\n     //use the .reduce() method to sum the discount amount of all ARR line items\n      let discountAmount = arrLineItems.reduce((sum, item) =&gt; {\n       return sum + parseFloat(item.properties.discount_amount) * parseFloat(item.properties.quantity)\n      }, 0)\n      console.log(`Total discount amount for ARR line items: ${discountAmount}`)\n     //calculate the ARR based on the total price of all ARR line items\n      let arr = arrLineItems.reduce((sum, item) =&gt; {\n       return sum + parseFloat(item.properties.price) * parseFloat(item.properties.quantity)\n      }, 0)\n      console.log(`Total ARR: ${arr}`)\n     //calculate the discount / ARR ratio\n      let discountRatio = discountAmount / arr\n      console.log(`Discount / ARR ratio: ${discountRatio}`)\n     //update the original deal with the newly calculated property value\n      HubSpotClient.crm.deals.basicApi.update(event.object.objectId, {\n        'properties': {\n          'discount_to_arr_ratio': discountRatio.toString()\n        }\n      }).then(response =&gt; {\n        console.log(response.body);\n        callback({})\n      })\n    })\n  }).catch((err) =&gt; {\n    console.error(err)\n  })\n\n}"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-04-10 13:25:23",
+    "text": "Can't find how to trigger workflows based on viewing specific landing pages in HubSpot. Have sales hub enterprise, operations hub pro, marketing hub starter.\n\nAlternative solution could be a standalone form that submits itself - but can't figure out how to do this either.\n\nOr even to trigger actions when a link in the email (sales email) is clicked.\n\nAnyone done either of these?",
+    "reply_count": 46,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-04-10 13:43:52"
+      },
+      {
+        "time_stamp": "2023-04-10 13:44:15"
+      },
+      {
+        "time_stamp": "2023-04-10 13:57:07"
+      },
+      {
+        "time_stamp": "2023-04-10 13:57:58"
+      },
+      {
+        "time_stamp": "2023-04-10 14:01:08"
+      },
+      {
+        "time_stamp": "2023-04-10 14:01:13"
+      },
+      {
+        "time_stamp": "2023-04-10 14:08:05"
+      },
+      {
+        "time_stamp": "2023-04-10 14:08:10"
+      },
+      {
+        "time_stamp": "2023-04-10 14:08:29"
+      },
+      {
+        "time_stamp": "2023-04-10 14:08:35"
+      },
+      {
+        "time_stamp": "2023-04-10 14:09:44"
+      },
+      {
+        "time_stamp": "2023-04-10 14:10:16"
+      },
+      {
+        "time_stamp": "2023-04-10 14:10:29"
+      },
+      {
+        "time_stamp": "2023-04-10 14:10:34"
+      },
+      {
+        "time_stamp": "2023-04-10 14:10:40"
+      },
+      {
+        "time_stamp": "2023-04-10 14:10:50"
+      },
+      {
+        "time_stamp": "2023-04-10 14:15:29"
+      },
+      {
+        "time_stamp": "2023-04-10 14:15:36"
+      },
+      {
+        "time_stamp": "2023-04-10 14:15:41"
+      },
+      {
+        "time_stamp": "2023-04-10 14:15:41"
+      },
+      {
+        "time_stamp": "2023-04-10 14:15:44"
+      },
+      {
+        "time_stamp": "2023-04-10 14:15:48"
+      },
+      {
+        "time_stamp": "2023-04-10 14:15:54"
+      },
+      {
+        "time_stamp": "2023-04-10 14:16:16"
+      },
+      {
+        "time_stamp": "2023-04-10 14:16:21"
+      },
+      {
+        "time_stamp": "2023-04-10 14:16:31"
+      },
+      {
+        "time_stamp": "2023-04-10 14:16:32"
+      },
+      {
+        "time_stamp": "2023-04-10 14:16:36"
+      },
+      {
+        "time_stamp": "2023-04-10 15:22:54"
+      },
+      {
+        "time_stamp": "2023-04-10 15:46:37"
+      },
+      {
+        "time_stamp": "2023-04-10 15:57:59"
+      },
+      {
+        "time_stamp": "2023-04-10 15:59:10"
+      },
+      {
+        "time_stamp": "2023-04-11 05:38:02"
+      },
+      {
+        "time_stamp": "2023-04-11 06:08:20"
+      },
+      {
+        "time_stamp": "2023-04-11 06:57:29"
+      },
+      {
+        "time_stamp": "2023-04-11 08:35:57"
+      },
+      {
+        "time_stamp": "2023-04-11 08:36:04"
+      },
+      {
+        "time_stamp": "2023-04-11 08:36:21"
+      },
+      {
+        "time_stamp": "2023-04-11 08:58:55"
+      },
+      {
+        "time_stamp": "2023-04-11 09:00:42"
+      },
+      {
+        "time_stamp": "2023-04-11 09:01:13"
+      },
+      {
+        "time_stamp": "2023-04-11 09:01:21"
+      },
+      {
+        "time_stamp": "2023-04-11 09:06:31"
+      },
+      {
+        "time_stamp": "2023-04-11 09:06:36"
+      },
+      {
+        "time_stamp": "2023-04-11 09:53:14"
+      },
+      {
+        "time_stamp": "2023-04-11 09:53:28"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-10 13:43:52",
+    "text": "I would personally use a behavioral event"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-10 13:44:15",
+    "text": "<https://knowledge.HubSpot.com/analytics-tools/create-codeless-custom-behavioral-events>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-04-10 13:57:07",
+    "text": "Does this work just through an extension?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-10 13:57:58",
+    "text": "Yeah super simple no code way to track url visits"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-10 14:01:08",
+    "text": "it is a marketing hub enterprise product though..."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-10 14:01:13",
+    "text": "Which I'm now just realizing"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-04-10 14:08:05",
+    "text": "Aargh ahaha"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-04-10 14:08:10",
+    "text": "Yeah I'm trying to work around that"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-04-10 14:08:29",
+    "text": "Because we simply don't need that for pretty much any of our marketing"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-04-10 14:08:35",
+    "text": "We use Iterable"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-10 14:09:44",
+    "text": "What CMS hub do you have?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-04-10 14:10:16",
+    "text": "CMS Hub nothing edition :joy:"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-10 14:10:29",
+    "text": "lol"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-04-10 14:10:34",
+    "text": "Our website isn't built on HubSpot at all"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-10 14:10:40",
+    "text": "I was going to say serverless functions is an option"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-10 14:10:50",
+    "text": "do you have the HubSpot tracking code installed?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-04-10 14:15:29",
+    "text": "Sorry what do you mean? In our website?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-10 14:15:36",
+    "text": "correct"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-04-10 14:15:41",
+    "text": "I'm trying to track HubSpot created landing pages"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-10 14:15:41",
+    "text": "for analytics"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-04-10 14:15:44",
+    "text": "And forms"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-10 14:15:48",
+    "text": "ah perfect"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-04-10 14:15:54",
+    "text": "That are actually independent of our actual website"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-04-10 14:16:16",
+    "text": "But are sent in \"sales\" emails"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-10 14:16:21",
+    "text": "I thought when you say you don't use the HubSpot website that also meant the landing pages"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-04-10 14:16:31",
+    "text": "Ah I email those out"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-10 14:16:32",
+    "text": "sending a DM"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-04-10 14:16:36",
+    "text": "Cool"
+  },
+  {
+    "text": "Hey Jordan! You should be able to leverage the page visited event in the event triggers. I approved your portal for the event triggers beta :slightly_smiling_face:",
+    "time_stamp": "2023-04-10 15:22:54"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-10 15:46:37",
+    "text": ":fire: we were just talking about the beta over DM, didn't know if it was publicly announced yet"
+  },
+  {
+    "poster": {
+      "poster_name": "Sierra Howard",
+      "poster_handle": "showard"
+    },
+    "time_stamp": "2023-04-10 15:57:59",
+    "text": "Thanks Carter! It’s technically still in private beta but we are adding people to it as needed :smile: <@U01QVR44MEY> "
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-10 15:59:10",
+    "text": "of course just didn't want to put you guys in an awkward spot if it's not public yet, thanks for getting <@U04T2CUCP8T> in so quickly"
+  }
+]

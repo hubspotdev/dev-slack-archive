@@ -1,0 +1,95 @@
+[
+  {
+    "poster": {
+      "poster_name": "Anders Jürisoo",
+      "poster_handle": "anders.jurisoo"
+    },
+    "time_stamp": "2022-10-14 01:56:58",
+    "edited": {
+      "time_stamp": "2022-10-14 01:57:39"
+    },
+    "text": "*Mocking HubSpot API with jest?*\nI would like to do something like this:\n\n\n```import { PromiseBasicApi } from \"@HubSpot/api-client/lib/codegen/crm/products/types/PromiseAPI\";\nimport { Client } from \"@HubSpot/api-client\";\njest.mock(\"@HubSpot/api-client/lib/codegen/crm/products/types/PromiseAPI\", () =&gt; jest.fn());\n\ntest('api calls can be mocked', async () =&gt; {\n    const create = jest.fn();\n    const update = jest.fn();\n    (PromiseBasicApi as any).mockImplementation(() =&gt; ({create, update}));\n\n    const product = {properties: {name: 'non-existing-product-name'}}\n    const client = new Client({accessToken: 'dummy'})\n    await client.crm.products.basicApi.create(product)\n\n    expect(update).not.toHaveBeenCalled()\n    expect(create).toHaveBeenCalledWith(product)\n})```\nThough this gives `TypeError: Cannot read properties of undefined (reading 'mockImplementation')`\nWhat am I missing here? Or is there a better way to do this? In my real code I wont have exposed access to the client, it will be nested deep below in other files.",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-10-14 02:43:45"
+      },
+      {
+        "time_stamp": "2022-10-14 02:52:38"
+      },
+      {
+        "time_stamp": "2022-10-14 04:00:33"
+      },
+      {
+        "time_stamp": "2022-10-16 22:33:07"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Anders Jürisoo",
+      "poster_handle": "anders.jurisoo"
+    },
+    "time_stamp": "2022-10-14 02:43:45",
+    "text": "Got _something_ to work:\n\n```import { Client } from \"@HubSpot/api-client\";\nconst mockCreate = jest.fn()\nconst mockUpdate = jest.fn()\njest.mock(\"@HubSpot/api-client/lib/codegen/crm/products/types/PromiseAPI\", () =&gt; {\n    return {\n        ...jest.requireActual(\"@HubSpot/api-client/lib/codegen/crm/products/types/PromiseAPI\"),\n        PromiseBasicApi: jest.fn().mockImplementation(() =&gt; {\n            return {\n                create: mockCreate,\n                update: mockUpdate,\n            }\n        })\n    }\n})\n\ntest('api calls can be mocked', async () =&gt; {\n    const client = new Client({accessToken: 'dummy'});\n    const product = {properties: {name: 'non-existing-product-name'}};\n\n    await client.crm.products.basicApi.create(product);\n\n    expect(mockUpdate).not.toHaveBeenCalled();\n    expect(mockCreate).toHaveBeenCalledWith(product);\n})```"
+  },
+  {
+    "poster": {
+      "poster_name": "Anders Jürisoo",
+      "poster_handle": "anders.jurisoo"
+    },
+    "time_stamp": "2022-10-14 02:52:38",
+    "text": "However, adding another mock of ProductsDiscovery (I also need to mock getAll() so there will be two mocks), somehow interferes with the PromiseBasicApi mock: `TypeError: Cannot read properties of undefined (reading 'create')`\n\nFull code:\n```import { Client } from \"@HubSpot/api-client\";\nconst mockCreate = jest.fn()\nconst mockUpdate = jest.fn()\n\njest.mock(\"@HubSpot/api-client/lib/src/discovery/crm/products/ProductsDiscovery\", () =&gt; {\n    return {\n        ProductsDiscovery: jest.fn().mockImplementation(() =&gt; {\n            return {\n                getAll: jest.fn().mockImplementation(() =&gt; {\n                    return [\n                        {\n                            id: 1,\n                            properties: {\n                                name: 'existing-product-name'\n                            }\n                        }\n                    ]\n                })\n            }\n        })\n    }\n});\n\njest.mock(\"@HubSpot/api-client/lib/codegen/crm/products/types/PromiseAPI\", () =&gt; {\n    return {\n        ...jest.requireActual(\"@HubSpot/api-client/lib/codegen/crm/products/types/PromiseAPI\"),\n        PromiseBasicApi: jest.fn().mockImplementation(() =&gt; {\n            return {\n                create: mockCreate,\n                update: mockUpdate,\n            }\n        })\n    }\n})\n\nit('works with multiple mocks', async () =&gt; {\n    const client = new Client({accessToken: 'dummy'});\n    const product = {properties: {name: 'non-existing-product-name'}};\n\n    await client.crm.products.basicApi.create(product);\n\n    expect(mockUpdate).not.toHaveBeenCalled();\n    expect(mockCreate).toHaveBeenCalledWith(product);\n})```"
+  },
+  {
+    "poster": {
+      "poster_name": "Anders Jürisoo",
+      "poster_handle": "anders.jurisoo"
+    },
+    "time_stamp": "2022-10-14 04:00:33",
+    "text": "Putting the code here: <https://github.com/Invise/mocking-HubSpot-examples>"
+  },
+  {
+    "poster": {
+      "poster_name": "Samuel Alonso",
+      "poster_handle": "samuel.alonso"
+    },
+    "time_stamp": "2022-10-14 11:43:08",
+    "edited": {
+      "time_stamp": "2022-10-14 11:51:12"
+    },
+    "text": "Hello folks! I've got an issue related to HubSpot forms and Webflow. The embedded forms work well on Webflow and the customization via CSS, but I try to get some values with an event listener in Javascript (I've tried JS vanilla and jQuery) but when I add the script into Webflow the code doesn't work. I tried into the header, body, and inline as an embed code,... but nothing. And the script works well because I tested it in other environments.\n\nDo we load JS in a particular way to work with success with HubSpot forms?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-10-16 22:28:50"
+      },
+      {
+        "time_stamp": "2022-10-17 04:27:50"
+      },
+      {
+        "time_stamp": "2022-10-17 07:50:11"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Franken",
+      "poster_handle": "mfranken"
+    },
+    "time_stamp": "2022-10-14 12:00:58",
+    "edited": {
+      "time_stamp": "2022-10-14 12:04:09"
+    },
+    "text": "I have a landing page with an iframe that contains a video stream (our product demo). I would like the landing page to pull the HubSpot record ID and send it to the iframe so we can capture the demo session and connect it to the prospect. Anyone able to help with something like this? I assume this is fairly easy to do.",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-10-16 22:30:11"
+      }
+    ]
+  }
+]

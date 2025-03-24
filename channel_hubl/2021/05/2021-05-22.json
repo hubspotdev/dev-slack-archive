@@ -1,0 +1,293 @@
+[
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-05-22 12:07:40",
+    "edited": {
+      "time_stamp": "2021-05-22 12:09:00"
+    },
+    "text": "If anyone else knows another way please let me know! Wanted to do something like this:\n\n```{% set person = {\"first_name\": \"kieran\"} %}\n{% set key = \"first_name\" %}\n\n{% set test = person.update({key: \"someoneelse }) %}```\nbut doesn’t seem to be possible. So created a hacky macro:\n\n```{# \n  Allow updating a key dynamically. This function has side effects.\n  @param object_to_change object The object to update.\n  @param key Key in the object to update.\n  @param value Set it to this value.\n#}\n{%- macro update_dict_by_key(object_to_change, key, value) -%}\n  {% set new_value = value|tojson %}\n  {% set new_key = key|tojson %}\n  {% set jsonstr = '{' ~ new_key ~ ': ' ~ new_value ~ '}' %}\n\n  {% set update_str = jsonstr|fromjson %}\n  {% set new_row = object_to_change.update(update_str) %}\n{%- endmacro -%}```\nInvoke it by\n```{{ set test = update_dict_by_key(person, key, \"someoneelse\" }}```",
+    "reply_count": 25,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2021-05-22 13:06:25"
+      },
+      {
+        "time_stamp": "2021-05-22 13:13:27"
+      },
+      {
+        "time_stamp": "2021-05-22 13:18:30"
+      },
+      {
+        "time_stamp": "2021-05-22 13:20:08"
+      },
+      {
+        "time_stamp": "2021-05-22 13:20:43"
+      },
+      {
+        "time_stamp": "2021-05-22 13:21:46"
+      },
+      {
+        "time_stamp": "2021-05-22 13:21:50"
+      },
+      {
+        "time_stamp": "2021-05-22 13:21:55"
+      },
+      {
+        "time_stamp": "2021-05-22 13:22:05"
+      },
+      {
+        "time_stamp": "2021-05-22 13:22:24"
+      },
+      {
+        "time_stamp": "2021-05-22 13:22:25"
+      },
+      {
+        "time_stamp": "2021-05-22 13:23:55"
+      },
+      {
+        "time_stamp": "2021-05-22 13:24:21"
+      },
+      {
+        "time_stamp": "2021-05-22 13:24:39"
+      },
+      {
+        "time_stamp": "2021-05-22 13:25:08"
+      },
+      {
+        "time_stamp": "2021-05-22 13:25:31"
+      },
+      {
+        "time_stamp": "2021-05-22 13:27:11"
+      },
+      {
+        "time_stamp": "2021-05-22 13:27:41"
+      },
+      {
+        "time_stamp": "2021-05-22 13:28:06"
+      },
+      {
+        "time_stamp": "2021-05-22 13:29:57"
+      },
+      {
+        "time_stamp": "2021-05-22 13:35:26"
+      },
+      {
+        "time_stamp": "2021-05-22 13:36:36"
+      },
+      {
+        "time_stamp": "2021-05-22 13:36:47"
+      },
+      {
+        "time_stamp": "2021-05-22 13:37:10"
+      },
+      {
+        "time_stamp": "2021-05-24 14:04:56"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Yager",
+      "poster_handle": "stephen.yager"
+    },
+    "time_stamp": "2021-05-22 13:06:25",
+    "text": "I believe you can just do `{% set person[ key ] = NEW_VALUE %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-05-22 13:13:27",
+    "edited": {
+      "time_stamp": "2021-05-22 13:13:46"
+    },
+    "text": "gave that a try -\n```\n{% set map = {\"name\": \"kieran\"} %}\n{% set key = \"name\"%}\n{% set map[key] = \"newname\" %}\n\n{{ map | pprint}}```\noutput:\n```(SizeLimitingPyMap: {name=kieran})```"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Yager",
+      "poster_handle": "stephen.yager"
+    },
+    "time_stamp": "2021-05-22 13:18:30",
+    "text": "are you trying to update this within a loop?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-05-22 13:20:08",
+    "text": "nope :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-05-22 13:20:43",
+    "edited": {
+      "time_stamp": "2021-05-22 13:21:47"
+    },
+    "text": "So, eventually yes, I will need to."
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Yager",
+      "poster_handle": "stephen.yager"
+    },
+    "time_stamp": "2021-05-22 13:21:46",
+    "edited": {
+      "time_stamp": "2021-05-22 13:21:55"
+    },
+    "text": "well, this works in a vaccum"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Yager",
+      "poster_handle": "stephen.yager"
+    },
+    "time_stamp": "2021-05-22 13:21:50",
+    "text": "```{% set map = {\"name\": \"kieran\", \"otherProp\": \"otherval\"} %}\n{% set test = map.update({name: \"newname\"}) %}\n{{ map | pprint}}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-05-22 13:21:55",
+    "text": "indeed"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-05-22 13:22:05",
+    "text": "however, the problem is I am trying to set the key dynamically"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Yager",
+      "poster_handle": "stephen.yager"
+    },
+    "time_stamp": "2021-05-22 13:22:24",
+    "text": "so, i have just been working on this, and got it mostly working"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-05-22 13:22:25",
+    "text": "which i don’t think is possible with the existing functions"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-05-22 13:23:55",
+    "text": "so really it would be nice to do:\n```{% set map = {\"name\": \"kieran\", \"otherProp\": \"otherval\"} %}\n{% set dynamic_key = \"name\" %}\n{% set test = map.update({dynamic_key: \"newname\"}) %}\n{{ map | pprint}}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Yager",
+      "poster_handle": "stephen.yager"
+    },
+    "time_stamp": "2021-05-22 13:24:21",
+    "text": "```{% set results = namespace() %}\n{% for row in hubdb_table_rows( 123456) %}\n\n\t{% set grouping = row[ module.grouping ] %}\n\t{% set results.rows[ grouping ] = [] %}\n\t\n{% endfor %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Yager",
+      "poster_handle": "stephen.yager"
+    },
+    "time_stamp": "2021-05-22 13:24:39",
+    "text": "set map to a `namespace`"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Yager",
+      "poster_handle": "stephen.yager"
+    },
+    "time_stamp": "2021-05-22 13:25:08",
+    "text": "so you have `map = namespace({\"name\": \"kieran\"})`"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Yager",
+      "poster_handle": "stephen.yager"
+    },
+    "time_stamp": "2021-05-22 13:25:31",
+    "text": "that should allow you to have scope for it inside the loop"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-05-22 13:27:11",
+    "text": "oo namespace!"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Yager",
+      "poster_handle": "stephen.yager"
+    },
+    "time_stamp": "2021-05-22 13:27:41",
+    "text": "when in doubt google whatever you are trying to do + jinjava"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Yager",
+      "poster_handle": "stephen.yager"
+    },
+    "time_stamp": "2021-05-22 13:28:06",
+    "text": "hubl is built off of it, and you might find something that works because its better documented"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-05-22 13:29:57",
+    "text": "yeah, gave jinja2 docs a good peruse but didn’t find anything which i thought would help, will give this a try thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-05-22 13:35:26",
+    "text": "So I’m not sure set can be used that way"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-05-22 13:36:36",
+    "text": "```{% set obj = {\"test\": \"hello\"} %}\n{% set obj[\"test\"] = \"wohoo\" %}\n\n{{ obj | pprint}}```\n^ this doesnt work"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-05-22 13:36:47",
+    "text": "I believe you have to use .update"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Yager",
+      "poster_handle": "stephen.yager"
+    },
+    "time_stamp": "2021-05-22 13:37:10",
+    "text": "yes, i putthat up in this thread"
+  }
+]

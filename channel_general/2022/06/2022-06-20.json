@@ -1,0 +1,232 @@
+[
+  {
+    "poster": {
+      "poster_name": "Anthony Perez",
+      "poster_handle": "anthony249"
+    },
+    "time_stamp": "2022-06-20 06:19:07",
+    "text": "Hi guys, really quick and simple question, is IOS 15 and up still blocking tracking, therefore, not showing opens on our sales emails?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-06-20 09:06:33"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Krystle Doucette-Dempsey",
+      "poster_handle": "krystle"
+    },
+    "time_stamp": "2022-06-20 07:29:04",
+    "text": "Howdy, I was wondering if anyone has ever made something like a simple forum? I have a client that wants just an area that people have topics on the left side area and when they click onto a topic, they can make a post and people can comment on them?"
+  },
+  {
+    "poster": {
+      "poster_name": "Mike Thomas",
+      "poster_handle": "mike542"
+    },
+    "time_stamp": "2022-06-20 08:07:55",
+    "edited": {
+      "time_stamp": "2022-06-20 08:09:14"
+    },
+    "text": "Hello,\nI’ve got a particularly tricky issue that’s cropped up towards the end of a big project.\n\nWe need to find a solution to the following;\n\n• Upon content being published in a HubDB table, we need to send an instant (or daily digest) email to a Contact List\n• There are multiple categories of HubDB content, and multiple corresponding lists.\nOptions we’ve explored;\n\n• RSS emails would only work for the digest - no instant option in HS.\n• Other options explored are Google Cloud triggers firing at a HS serverless function (say every 15 minutes for instant, and daily for digest) but we run into race conditions where we can’t be 100% sure a user wont get an email twice, without maintaining some complex database logging.\n• Campaign Monitor Integration - almost perfect except the HS App doesn’t sync custom contact properties\n• MailChimp/Campaign Monitor RSS emails = no instant option (we have the HubDB data exposed as an RSS feed via a Serverless Function)\nWe have access to Serverless Functions (CMS Ent) but not Coded Workflows (but that could be considered).\n\nI :pray:  someone has been here before has a neat idea...",
+    "reply_count": 15,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2022-06-20 08:13:51"
+      },
+      {
+        "time_stamp": "2022-06-20 08:22:07"
+      },
+      {
+        "time_stamp": "2022-06-20 08:23:43"
+      },
+      {
+        "time_stamp": "2022-06-20 08:24:07"
+      },
+      {
+        "time_stamp": "2022-06-20 08:25:41"
+      },
+      {
+        "time_stamp": "2022-06-20 08:25:56"
+      },
+      {
+        "time_stamp": "2022-06-20 08:28:30"
+      },
+      {
+        "time_stamp": "2022-06-20 08:29:22"
+      },
+      {
+        "time_stamp": "2022-06-20 08:40:00"
+      },
+      {
+        "time_stamp": "2022-06-20 08:40:06"
+      },
+      {
+        "time_stamp": "2022-06-20 09:42:17"
+      },
+      {
+        "time_stamp": "2022-06-21 11:30:41"
+      },
+      {
+        "time_stamp": "2022-06-21 11:35:11"
+      },
+      {
+        "time_stamp": "2022-06-22 04:17:19"
+      },
+      {
+        "time_stamp": "2022-06-22 04:19:16"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2022-06-20 08:13:51",
+    "text": "My first thought was a serverless function as well, so pinging a HubDB table endpoint for the “last updated” field, and if it’s within 24 hours of the time of execution, clone an email (which I’m assuming has some kind of HubDB-fed section corresponding to the table) and schedule it to send at your desired time. I would suggest doing daily or twice daily over instant, however, just in case a table is published with an error in it so that 1) It can be quickly fixed without sending bad content and 2) there is a window between the email being created and being sent, so that a HS portal user can manually delete or unschedule the email before the send, just in case."
+  },
+  {
+    "poster": {
+      "poster_name": "Mike Thomas",
+      "poster_handle": "mike542"
+    },
+    "time_stamp": "2022-06-20 08:22:07",
+    "text": "The other issue with this approach Mark, is that if we need to send emails to ~200 people, using (for example) a MailGun SMTP or API email send request, the function will time out during that loop."
+  },
+  {
+    "poster": {
+      "poster_name": "Mike Thomas",
+      "poster_handle": "mike542"
+    },
+    "time_stamp": "2022-06-20 08:23:43",
+    "text": "```foreach (100 contacts as contact)```\nThen do it twice. :grimacing:"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2022-06-20 08:24:07",
+    "text": "I’m suggesting using a HS marketing email: <https://legacydocs.HubSpot.com/docs/methods/cms_email/clone-a-marketing-email>"
+  },
+  {
+    "poster": {
+      "poster_name": "Mike Thomas",
+      "poster_handle": "mike542"
+    },
+    "time_stamp": "2022-06-20 08:25:41",
+    "text": "Can you send that email via the API though?"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2022-06-20 08:25:56",
+    "text": "So configure one manually with a list of contacts who should receive the email with the HubDB content (could be a static or dynamic list), and then clone and schedule that new version of the email"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2022-06-20 08:28:30",
+    "text": "yes, so you would clone the email and then update it to change the “pubishDate” value to whenever you want HS to send the email: <https://legacydocs.HubSpot.com/docs/methods/lists/marketing-email-overview>"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2022-06-20 08:29:22",
+    "text": "At least that’s my understanding from the docs. Worth testing IMO"
+  },
+  {
+    "poster": {
+      "poster_name": "Mike Thomas",
+      "poster_handle": "mike542"
+    },
+    "time_stamp": "2022-06-20 08:40:00",
+    "text": "Yes, that's an interesting approach. I'm gonna go look at that - thank you."
+  },
+  {
+    "poster": {
+      "poster_name": "Umakant - MakeWebBetter",
+      "poster_handle": "umakantsharma"
+    },
+    "time_stamp": "2022-06-20 08:40:06",
+    "text": "Last time i worked with marketing emails api, the issue was you can not publish the email using api, you have to do that manually, not sure in case of close as i tried create and update."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2022-06-20 09:06:33",
+    "text": "basically yes\n<https://blog.HubSpot.com/marketing/how-apples-ios-15-could-impact-email-marketers>"
+  },
+  {
+    "poster": {
+      "poster_name": "Mike Thomas",
+      "poster_handle": "mike542"
+    },
+    "time_stamp": "2022-06-20 09:42:17",
+    "text": "Yes I can't seem to schedule the email :disappointed:"
+  },
+  {
+    "poster": {
+      "poster_name": "Kris Gösser",
+      "poster_handle": "kris443"
+    },
+    "time_stamp": "2022-06-20 14:12:12",
+    "text": "I know this is probably a rookie question but how often is production CMS cache to blame for inconsistency issues between dev and production accounts?\n\ntl;dr is everything works fine on my dev account, but when I deploy to production, none of the CSS via a `main.css` include (using HUBL like `{% include './components/_header.css' %}` is updated. I can edit `main.css` and `hs watch` will upload, but editing any of the included files will not refresh. I reverted to the prior deployment until I figure out what's going on.\n\nI searched and found sporadic past situations where there are some cache busting issues (e.g. <https://HubSpotdev.slack.com/archives/C22PU4LV8/p1572288785183400|2019 thread>). Wondering if I have the same thing going on.\n\nDidn't know where to post, maybe <#CCQ7H31D5|developer-tools>",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-06-20 14:18:20"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kris Gösser",
+      "poster_handle": "kris443"
+    },
+    "time_stamp": "2022-06-20 14:18:20",
+    "text": "Couple things I've done when trying to debug:\n\nWhen using my sandbox portal, I will reduce one of the included CSS files like `{% include './components/_header.css' %}` down to simply\n\n```.testing { display: none; }```\nand check the publicly available `main.css` file for the  code, and it's there. (no <https://cdn2.HubSpot.net/hub/8144866/hub_generated/template_assets/32989082508/1655755279262/shipium-theme/css/main.min.css> \"testing\" in there)\n\nI'll then try the same scheme with production, and there is no change to the included file, whether via --initial-upload or after making an edit and hs watch picks it up. (e.g. <https://www.shipium.com/hs-fs/hub/6642885/hub_generated/template_assets/32999040646/1655753399190/shipium-theme/css/main.min.css> no \"testing\" in there)"
+  },
+  {
+    "poster": {
+      "poster_name": "Maia Torell",
+      "poster_handle": "maiatorell123"
+    },
+    "time_stamp": "2022-06-20 15:46:10",
+    "text": "Does anyone know, is there a good way to translate the quotes templates from a custom quotes theme? I've tried cloning them and changing settings to the chosen language but that only translates part of it. Know I could go in and add field translations to the modules in the quotes theme as well.. but seems like so much work? Anyone done? Should I clone the whole theme or templates in the design manager or is it enough to clone the templates in the settings&gt;object&gt;custom quotes library?"
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2022-06-21 00:36:52",
+    "text": "HubSpot down. :c"
+  },
+  {
+    "text": "",
+    "time_stamp": "2022-06-21 00:37:09"
+  },
+  {
+    "poster": {
+      "poster_name": "Shunyao Yu",
+      "poster_handle": "s.yu"
+    },
+    "time_stamp": "2022-06-21 00:37:29",
+    "text": "this is what i get when open the site .."
+  }
+]

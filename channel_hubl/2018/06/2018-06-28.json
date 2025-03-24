@@ -1,0 +1,41 @@
+[
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  {
+    "poster": {
+      "poster_name": "eileenk",
+      "poster_handle": "eileenk"
+    },
+    "time_stamp": "2018-06-28 12:35:24",
+    "text": "Hey all, I have a HUBL and Javascript question. If I wanted to assign a class, or classes, to a blog post in a listing page depending on which category or categories were chosen in the post, how might I go about that?\n\nFor context, I’m trying to replicate this filtering functionality: <https://leaderstat.com/search-jobs/> in a HubSpot blog using Isotopes JS. To complicate matters we’d like the posts to be automatically populated based from an API call, so I can’t do anything like a field asking the post author to choose a category or location to add the class on the back-end.\n\nAny thoughts? If it makes more sense to do something besides a blog that’s okay too."
+  },
+  null,
+  null,
+  {
+    "poster": {
+      "poster_name": "Tony Strack",
+      "poster_handle": "tstrack"
+    },
+    "time_stamp": "2018-06-28 13:49:51",
+    "text": "<@U24PLTUJD> i just did something similar to this using Isotope for the grid and filtering.\nthis was my filtering:\n```{% set topicFilters = [] %}\n{% for content in contents %}\n\t{% for topic in content.topic_list %}\n\t\t{% set update = topicFilters.append(topic.name) %}\n\t{% endfor %}\n{% endfor %}\n{% set topicFilters = topicFilters|unique|sort %}\n&lt;select class=\"select-filter\" data-filter-group=\"services\"&gt;\n  &lt;option value=\"*\"&gt;All Services&lt;/option&gt;\n  {% for topic in topicFilters %}\n  &lt;option value=\".filter-{{ topic|lower|cut(' &amp;')|replace(' ','-')|replace('/','-') }}\"&gt;{{ topic }}&lt;/option&gt;         \n  {% endfor %}\n&lt;/select&gt;```\nand then this was my grid:\n```{% for content in contents|sort(False, False, 'name') %}\n&lt;a href=\"{{ content.absolute_url}}\" title=\"{{ content.name }}\" class=\"grid-item filter-{{ content.widgets.work_industry.body.value|lower|cut(' &amp;')|replace(' ','-') }} {% for topic in content.topic_list %}filter-{{ topic.name|lower|cut(' &amp;')|replace(' ','-')|replace('/','-') }} {% endfor %}\"&gt;\n  {{ content.name }}\n&lt;/a&gt;\n{% endfor %}```\nalthough the scenario may not be exact, maybe that will help you get started"
+  },
+  {
+    "poster": {
+      "poster_name": "Tony Strack",
+      "poster_handle": "tstrack"
+    },
+    "time_stamp": "2018-06-28 13:54:03",
+    "edited": {
+      "time_stamp": "2018-06-28 13:54:26"
+    },
+    "text": "hey all, with the hubl menu tag, is there a way to display the parent page and all of it's children? currently i'm using the top_parent root type and it displays all of the children, but not the parent.\n```{% menu \"sidebar_menu\" site_map_name=\"default\", overrideable=False, root_type=\"top_parent\", flyouts=\"true\", max_levels=\"5\", flow=\"vertical\", label=\"Sidebar Menu\", extra_classes=\"sidebar-nav\" %}```"
+  },
+  {
+    "text": "i also need 'Parent Page' to display like shown in this screenshot.",
+    "time_stamp": "2018-06-28 13:55:06"
+  }
+]

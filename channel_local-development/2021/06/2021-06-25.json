@@ -1,0 +1,122 @@
+[
+  {
+    "poster": {
+      "poster_name": "Adam Wright",
+      "poster_handle": "adam377"
+    },
+    "time_stamp": "2021-06-25 09:35:52",
+    "text": "X-posting from <#CCQ7H31D5|developer-tools>:\nStarted work on a theme yesterday and decided to try Tailwind’s new JIT compilation (+ Tailwind CLI) with HubSpot’s local dev workflow… So far, it’s been preeeetty nice :star-struck:. Getting a full webpack/rollup/snowpack/vite/parcel/whatever setup seems like it’ll be a much heavier lift, though.\n\nAnyone got a preferred workflow that they’ve been happy with?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2021-06-25 14:28:59",
+    "text": "has anyone tried modifying their github actions workflow to not require pushing the /dist folder to github?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2021-06-25 14:29:58",
+    "text": "I've been using branches more and I'm getting ready to add more people to the team—changes in dist have been making that a lot more difficult"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-06-25 14:40:07",
+    "text": "I believe you can chain GitHub Actions, so if you have a build step you need to perform you can run that before the GitHub Action"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2021-06-25 14:41:04",
+    "text": "ok, I'll look into that. Thanks"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2021-06-25 14:46:38",
+    "text": "definitely not that straightforward—if anyone has tried this and can provide an example I would really appreciate it"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2021-06-25 14:46:58",
+    "text": "It looks like I can add it as a \"step\" in the deploy workflow"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2021-06-25 14:48:17",
+    "edited": {
+      "time_stamp": "2021-06-25 14:48:27"
+    },
+    "text": "but I'm not sure where the build ends up when it runs in node (presumably?) and how to connect it to the `src_dir: x` that the HubSpot portion of deploy is looking for"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2021-06-25 15:13:49",
+    "edited": {
+      "time_stamp": "2021-06-25 15:23:04"
+    },
+    "text": "I think it would be something like this:\n```on:\n  push:\n    branches:\n    - main\njobs:\n  deploy:\n    runs-on: ubuntu-latest\n    strategy:\n      matrix:\n        node-version: [12.x]\n    steps:\n      - run: echo \"🎉 The job was automatically triggered by a ${{ github.event_name }} event.\"\n      - name: Checkout\n        uses: actions/checkout@v2.3.3\n      - name: Use Node.js ${{ matrix.node-version }}\n        uses: actions/setup-node@v1\n        with:\n          node-version: ${{ matrix.node-version }}\n      - run: npm install\n      - run: npm run build\n      - name: List files in the repository\n        run: |\n          ls ${{ github.workspace }}\n      - name: HubSpot Deploy Action\n        uses: HubSpot/HubSpot-cms-deploy-action@v1.3\n        with:\n          src_dir: dist\n          dest_dir: the-brand-theme\n          portal_id: ${{ secrets.HubSpot_portal_id }}\n          personal_access_key: ${{ secrets.HubSpot_personal_access_key }}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2021-06-25 15:15:24",
+    "text": "but...I'm getting an error saying during the build step saying that HubSpot.config.yml cannot be found\n```Error:  A HubSpot.config.yml file could not be found```\n",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-03-04 02:54:11"
+      },
+      {
+        "time_stamp": "2022-03-04 02:59:11"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2021-06-25 15:15:28",
+    "text": "but it shouldn't need it..."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2021-06-25 15:23:47",
+    "text": "cool, that worked, about 45 minutes to go from total confusion to working solution"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2021-06-25 15:23:49",
+    "text": "not bad :slightly_smiling_face:"
+  }
+]

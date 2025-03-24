@@ -1,0 +1,185 @@
+[
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2020-07-16 06:35:47",
+    "text": "I updated the <https://community.HubSpot.com/t5/CMS-Development/A-place-to-gather-resources-issues-and-solutions-to-optimize/td-p/354462|post> with its first code example for loading forms. <@U7SL518D6> What do you think of the “load after  scroll” code snippet? Any feedback would be much appreciated!"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2020-07-16 06:36:56",
+    "text": "I guess in the future the code examples should live on Github so they can be fully explained to newer developers + people could improve it."
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Brown",
+      "poster_handle": "scott.brown"
+    },
+    "time_stamp": "2020-07-16 06:49:27",
+    "text": "This might be a silly thing to ask but is there a way to preview a blog post template page without putting it onto a live blog??"
+  },
+  {
+    "text": "<@UGMGP7A72> If you preview the template in Design Manager there are toggles in the upper right to choose the blog (if you have more than one) and whether you want to view the post or listing view. Post view will render whatever the most recent post is into the preview.",
+    "time_stamp": "2020-07-16 07:02:13",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-07-16 07:10:12"
+      },
+      {
+        "time_stamp": "2020-07-16 07:37:39"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Josh A",
+      "poster_handle": "josh307"
+    },
+    "time_stamp": "2020-07-16 07:02:46",
+    "text": "That’s the only way to do it without doing it to a live blog or creating a temporary blog."
+  },
+  {
+    "poster": {
+      "poster_name": "Josh A",
+      "poster_handle": "josh307"
+    },
+    "time_stamp": "2020-07-16 07:03:01",
+    "text": "Not ideal as you can’t preview author pages or topic listing pages."
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Brown",
+      "poster_handle": "scott.brown"
+    },
+    "time_stamp": "2020-07-16 07:10:12",
+    "text": ":heart_eyes: Thanks for this, been driving me crazy."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2020-07-16 07:12:57",
+    "text": "I would caution against using scroll as the trigger, probably less performant that way. In looking at a performance dump of a page with a HubSpot form the HubSpot form script doesn’t show as a bad offender for downloading for me, it’s just the execution time.  So loading it later doesn’t seem to have a significant impact.\n\nUnfortunately the execution time being slow makes some sense. The forms are fully rendered by javascript and that initial DOM insertion takes a bit. total cpu time I’m seeing is 233 ms in the grand scheme of things that’s probably not awful for what it’s doing. Every little improvement helps though."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2020-07-16 07:13:34",
+    "text": "Good thinking on a GitHub. Probably would be a good idea. lets others contribute their information easily."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2020-07-16 07:33:54",
+    "text": "What do you mean by less performant in this case?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2020-07-16 07:34:41",
+    "edited": {
+      "time_stamp": "2020-07-16 07:34:50"
+    },
+    "text": "The scroll event is removed after it triggers once so it’s not always tracking it."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2020-07-16 07:35:55",
+    "text": "A secondary goal to true performance is a high Google PageSpeed score—our clients are aware of and judge us on that number"
+  },
+  {
+    "poster": {
+      "poster_name": "Josh A",
+      "poster_handle": "josh307"
+    },
+    "time_stamp": "2020-07-16 07:37:39",
+    "text": "No problem!"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2020-07-16 07:44:11",
+    "text": "also if you're like me and hate the live preview, you can add the blog ID to the content_group_id URL param in the normal preview window, and toggle the blog_listing=True param to blog_listing=False to see individual posts. Not sure if there's an argument for authors or things of that nature",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2020-07-16 11:15:38"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2020-07-16 07:46:13",
+    "text": "well you’re watching for a scroll event, which is notorious for performance issues. The other part is because it doesn’t take  into account the location of the form on the page, so it could be jarring if the form is in the viewport, and waits till someone tries to scroll. You’re basically hoping that the rest of the page’s loading and script execution is done before a user begins to scroll. Which is a game of chance. If timed poorly you’re causing script execution at a point where there’s already a lot happening."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2020-07-16 08:00:06",
+    "text": "Good points. My form is in the footer so I didn’t think of other scenarios. I’ll add a note to the snippet."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2020-07-16 08:00:30",
+    "text": "and research to see if I can find a non-scroll trigger that still works. Let me know if you had one in mind"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2020-07-16 11:15:38",
+    "text": "this should be a feature in the chrome extension <@U7SL518D6>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-07-16 19:04:15",
+    "text": "Is there a official document, an example, a user, or a coder, who has put a Service Ticket Form on a website, out into the world? Either hosted / styled by HubSpot with zero work (strongly preferred because I just need it ASAP and do not care even a bit how it looks or is branded really right now), or self hosted and pointing back to HubSpot?\n\nI found some unofficial docs which explain it, but/and this process seems rather huge and complicated. I am hoping for something less fancy, faster, and simpler to start out and then land-and-expand.\n\n<https://www.wphubsite.com/help/HubSpot-support-form-wphubsite-wordpress/>\n\nThe stock documentation does not really seem to cover anything about Service Tickets, the documentation of Service Hub's features is much less good and detailed than the other hubs, and I am not sure if I should take this issue up in this Slack somewhere, in a support call or ticket, a form post, etc. (there are so many HS related comms channels with so many specified uses that I often suffer from channel confusion)."
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Abplanalp",
+      "poster_handle": "cabplanalp"
+    },
+    "time_stamp": "2020-07-16 19:33:44",
+    "text": "I have a page I just helped Marketing launch from the Content Staging, and we never setup the language slug to appear on our pages and now we cannot get rid of it now that it is live, so the URL has “<http://www.domain.com/en/slug|www.domain.com/en/slug>”, I cannot remove the “/en” in the Settings of the page and my Settings of Language Settings does not have the “Use Prefix Slug” turned on, so shouldnt the page just not have any permanent language slug in there in there, the page language is set to English but there is no option to turn that off",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2020-07-17 01:56:09"
+      }
+    ]
+  }
+]

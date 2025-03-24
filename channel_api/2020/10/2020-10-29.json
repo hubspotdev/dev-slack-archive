@@ -1,0 +1,232 @@
+[
+  {
+    "poster": {
+      "poster_name": "marcuscodez",
+      "poster_handle": "msawardekar"
+    },
+    "time_stamp": "2020-10-29 06:57:59",
+    "text": "Is there a HubSpot Forms API endpoint to get details for a form submitted by *a specific contact ?*",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-10-29 15:10:24"
+      },
+      {
+        "time_stamp": "2020-10-29 21:16:08"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "akshay mahajan",
+      "poster_handle": "akshay.remedo"
+    },
+    "time_stamp": "2020-10-29 09:34:08",
+    "text": "```<https://api.hubapi.com/automation/v2/workflows/10900/enrollments/contacts/testingapis@HubSpot.com?hapikey=demo>```\nnot able to call this api",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2020-10-29 15:11:08"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Eli Reiner",
+      "poster_handle": "goelyukim"
+    },
+    "time_stamp": "2020-10-29 10:32:35",
+    "text": "is there a way of getting a contact owner’s email directly or indirectly by make a request with a contact’s phone number?",
+    "reply_count": 9,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2020-10-29 11:28:58"
+      },
+      {
+        "time_stamp": "2020-10-29 15:11:41"
+      },
+      {
+        "time_stamp": "2020-10-29 15:12:27"
+      },
+      {
+        "time_stamp": "2020-10-29 15:12:37"
+      },
+      {
+        "time_stamp": "2020-10-29 16:55:03"
+      },
+      {
+        "time_stamp": "2020-10-29 18:16:26"
+      },
+      {
+        "time_stamp": "2020-10-29 18:56:42"
+      },
+      {
+        "time_stamp": "2020-10-29 18:57:55"
+      },
+      {
+        "time_stamp": "2020-10-30 11:30:14"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Neal Stansby",
+      "poster_handle": "neal"
+    },
+    "time_stamp": "2020-10-29 11:28:58",
+    "edited": {
+      "time_stamp": "2020-10-29 11:29:07"
+    },
+    "text": "You'd probably want to use the search API (<https://developers.HubSpot.com/docs/api/crm/search>) to retrieve the contact based on their phone number, and get the owner ID in the response:\n```POST {{HubSpotApiUrl}}/crm/v3/objects/contact/search\n?hapikey={{HubSpotApiKey}}\nContent-Type: application/json\n\n{\n  \"filterGroups\": [\n    {\n      \"filters\": [\n        {\n          \"propertyName\": \"phone\",\n          \"operator\": \"EQ\",\n          \"value\": \"555-1212\"\n        }\n      ]\n    }\n  ],\n  \"properties\": [\n    \"HubSpot_owner_id\"\n  ]\n}```\nThen you can take the `HubSpot_owner_id` in the response (let's say it's 123456) and pass it to the Owners API (documentation page <https://developers.HubSpot.com/docs/api/crm/owners> is currently broken for the single owner query but this does work):\n```GET {{HubSpotApiUrl}}/crm/v3/owners/123456\n?hapikey={{HubSpotApiKey}}```\nThere's an email field in the response to that which should give you what you want."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-10-29 14:57:52",
+    "text": "<@UFBNA9K9A>?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-10-29 14:59:00",
+    "text": "No dice, need server side logic\n\n<https://legacydocs.HubSpot.com/docs/faq/do-HubSpot-apis-support-ajax-request>\n\nNode JS + Express or similar?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-10-29 15:00:13",
+    "text": "Official spec\n\n<https://legacydocs.HubSpot.com/docs/methods/crm-extensions/crm-extensions-overview?_ga=2.42929197.946871932.1603987548-1278122576.1595997873#request-signatures>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-10-29 15:01:47",
+    "text": "Yeah, if you don't JSONify the body in most HTTP libs it defaults to formatting in multipart/form-data or similar, even regardless of programming language."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-10-29 15:02:53",
+    "text": "Maybe this. But we need more detail to properly reply.\n\n<https://developers.HubSpot.com/docs/api/crm/extensions/calling-sdk>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-10-29 15:03:55",
+    "text": "You do have to pass some stuff along for the ride if you want attribution of the pre-form-submit user activity to happen. If you can comment further we could be more helpful potentially."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-10-29 15:04:27",
+    "text": "What sense of \"how do you use\"? There are scope names in the API docs one could go about requesting."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-10-29 15:10:24",
+    "text": "<https://legacydocs.HubSpot.com/docs/methods/forms/get-submissions-for-a-form>\n\nFor specific contact, the form just attaches data to the contact usually, so you could just look up the contact in that case\n\n<https://legacydocs.HubSpot.com/docs/methods/contacts/get_contact_by_email>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-10-29 15:11:08",
+    "text": "What kind of not able, which HTTP method, what happened, etc. etc. etc."
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2020-10-29 15:11:31",
+    "text": "I’m not sure to be honest, let me check with the team that maintains that and see if there is a timeline they feel comfortable communicating"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-10-29 15:11:41",
+    "text": "Sadly, the phone number is not very well supported"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-10-29 15:12:27",
+    "text": "You will have to make sure they are normalized for them to play nice in the search"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-10-29 15:12:37",
+    "text": "But this approach will work if the search can find the phone number"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Bushe",
+      "poster_handle": "michael125"
+    },
+    "time_stamp": "2020-10-29 16:55:03",
+    "edited": {
+      "time_stamp": "2020-10-29 16:56:01"
+    },
+    "text": "According to the doc, search is very, very limited, it’s crazy. There are only 27 properties in the entire system that supports search - and phone number is not one of them (per doc, maybe it works anyway).  I’d expect a solid API to have all properties searchable or all but a few.\n\n“Supported object types and properties…”\ncompanies - name, domain\n\ncontacts - firstname, lastname, email\n\ndeals - dealname, amount, closedate, pipeline, dealstage\n\nproducts - name, description, price\n\ntickets - content, hs_pipeline, hs_pipeline_stage, hs_ticket_category, hs_ticket_priority, subject\n\nline_items - Quantity, created, price\n\nquotes - hs_expiration_date, hs_public_url_key, hs_status, hs_title\n\n\n\n<https://developers.HubSpot.com/docs/api/crm/search>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-10-29 18:16:26",
+    "text": "I don't think it means what you think it means, in my experience it has meant that those are the properties RETURNED by default on the search, NOT the ones you can use as input to the search.\n\nEven despite all of that, searching an un-normalized messy phone number with random stuff inside is very difficult for any search algo. They really should be using some phone number libraries to validate and store in the format for each country so that you know the format inside when doing searches or using them for VOIP, etc."
+  },
+  {
+    "poster": {
+      "poster_name": "Neal Stansby",
+      "poster_handle": "neal"
+    },
+    "time_stamp": "2020-10-29 18:56:42",
+    "text": "<@U01BJAF94KT> I think the limited fields you're referring to are for the `search` option on that API endpoint, which searches for text in a (limited) number of properties.  The `filters` and `filtergroups` options I suggested can be used on any properties, including custom ones.\n\nThat said, I agree with <@U012W4YEUTX> that phone numbers aren't well normalized; and extra or missing dash or parenthesis will prevent a match.  I guess you could normalize all your phone numbers yourself as soon as the records get created, if searching by phone is really critical to you.  It's a shame that HubSpot doesn't do this for you under the hood, although I see a lot of bogus numbers entered <tel:(123-456-7890|(123-456-7890> for example) so I can see why it wouldn't be a priority."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-10-29 18:57:55",
+    "text": "I don't want to imagine how painful it would be if you are a telecom company using HubSpot"
+  },
+  {
+    "poster": {
+      "poster_name": "marcuscodez",
+      "poster_handle": "msawardekar"
+    },
+    "time_stamp": "2020-10-29 21:16:08",
+    "text": "Thank you <@U012W4YEUTX>"
+  }
+]

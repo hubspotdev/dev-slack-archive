@@ -1,0 +1,29 @@
+[
+  {
+    "poster": {
+      "poster_name": "Mitja Lewin",
+      "poster_handle": "m.lewin"
+    },
+    "time_stamp": "2022-06-17 01:59:17",
+    "text": "<@UARR63DSB> You can click on the options hover, on the image field in the design manager and select \"copy snippet\". Use that code to provide all editor configuration options. Or if you prefer to disable the configuration options for the image field, you can go with a little beautified syntax like this:\n\n```&lt;img {{ { \n\t'loading': 'lazy',\n\t'class': 'image',\n\t'src': module.image.src,\n\t'alt': module.image.alt ? module.image.alt : 'Image',\n\t'width': module.image.width,\n\t'height': module.image.height\n\t}|xmlattr\n}} /&gt;```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Karman Li",
+      "poster_handle": "karman.li"
+    },
+    "time_stamp": "2022-06-17 02:02:48",
+    "text": "Thanks <@UK9BKNBD5>, it has been solved :slightly_smiling_face: !"
+  },
+  {
+    "poster": {
+      "poster_name": "Mitja Lewin",
+      "poster_handle": "m.lewin"
+    },
+    "time_stamp": "2022-06-17 02:28:57",
+    "edited": {
+      "time_stamp": "2022-06-17 02:30:50"
+    },
+    "text": "<@U03J4N7062K> Why not setting the default to `null`? But in case of different environments, think about an environment file with your global variables and include that everywhere where it's needed. Make sure only Hubl is used in your environments file. Best way to put them into the root of your theme. Loading can be done inside your modules, templates and partials with import like this:\n\n```{% if !require_once %}{% import '../../../environments.css' %}{% endif %}```\nIn your `enviroment.css` file you need the `require_once` or any other variable to prevent multiple imports. Both file look something like this:\n\n*Sandbox File*\n```{%- set require_once = true -%}\n{%- set environment = 'sandbox'-%}\n{%- set environment_hubdb_table_id: 123456 -%}```\n*Production File*\n```{%- set require_once = true -%}\n{%- set environment = 'production'-%}\n{%- set environment_hubdb_table_id: 654321  -%}```\nAnd then check in your module for the environment `hubdb_table_id` or if the user change the field, use the `table_field_id` that the user has chosen for the module field:\n\n*Module*\n```{% if !require_once %}{% import '../../../environments.css' %}{% endif %}\n{% set id_to_use = module.table_field_id ? module.table_field_id : environment_hubdb_table_id %}\n{% set rows = hubdb_table_rows( id_to_use ) %}```"
+  }
+]

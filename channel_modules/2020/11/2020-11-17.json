@@ -1,0 +1,60 @@
+[
+  {
+    "poster": {
+      "poster_name": "T-ray",
+      "poster_handle": "tracyreuther"
+    },
+    "time_stamp": "2020-11-17 14:23:37",
+    "edited": {
+      "time_stamp": "2020-11-17 14:24:06"
+    },
+    "text": "Ok, I don't know if I'm coding this correctly <@U01DQL7AMFH>.\nHere is the update, but I'm still thinking I didn't set this up right. Still the same outscome.\n```&lt;h3&gt;\n  Choose a product\n&lt;/h3&gt;\n&lt;div class=\"filter-group\"&gt;\n  &lt;form id=\"form_id\" method=\"get\"&gt;\n    &lt;select name=\"name\" form=\"form_id\" onChange=\"this.form.submit()\"&gt;\n      {% set types = hubdb_table_column(module.hubdb_table, \"name\") %}\n      {% for choice in types %}\n      {% set type_list = type_list~choice.id|list %}\n      {% if choice.id == request.query_dict.name %}\n      &lt;option selected=\"selected\" value=\"{{ choice.id }}\"&gt;{{ choice.name }}&lt;/option&gt;\n      {% else %}\n      &lt;option value=\"{{ choice.id }}\"&gt;{{ choice.name }}&lt;/option&gt;\n      {% endif %}\n      {% endfor %}\n        {% set type_list = [] %}\n        {% for choice in types %}\n        {% set tmp =  type_list.append(choice.id)  %}\n        {% endfor %}\n      {{ types }}\n    &lt;/select&gt;\n  &lt;/form&gt;\n&lt;/div&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Reggie Ubaldo",
+      "poster_handle": "rubaldo"
+    },
+    "time_stamp": "2020-11-17 16:33:36",
+    "text": "I'm having an extremely difficult time getting the breadcrumb menu to properly work. It is providing a \"hs-menu-flow-horizontal\" and \"default_horizontal_menu_\" rather than the \"hs-breadcrumb-menu\" and \"hs-breadcrumb-menu-wrapper\". I have a working page with the appropriate breadcrumb functionality but I can't recreate it. Can anyone provide a solution to help?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2020-11-17 20:52:48"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Daniel Wong",
+      "poster_handle": "dan.wong"
+    },
+    "time_stamp": "2020-11-17 17:55:50",
+    "text": "oh I think I see your problem now, you're using `hubdb_table_column`  instead of `hubdb_table_rows` . if you check here:\n<https://developers.HubSpot.com/docs/cms/hubl/functions>\n\nyou'll see that `hubdb_table_column`  only get the info about the column itself, and not the data within the table rows."
+  },
+  {
+    "poster": {
+      "poster_name": "Daniel Wong",
+      "poster_handle": "dan.wong"
+    },
+    "time_stamp": "2020-11-17 19:28:03",
+    "text": "Also, since you're already looping the `types`  once, you should make the `type_list` assignment in the first loop to avoid having to loop round the list twice to make it more efficient."
+  },
+  {
+    "poster": {
+      "poster_name": "Fang Zhang",
+      "poster_handle": "rzhang401"
+    },
+    "time_stamp": "2020-11-17 20:19:25",
+    "text": "Hello everyone, can i ask a silly question?\ni built a custom module with multiple fields and added it to the drag and drop template, but there is no default content appear in the template. it says \"this component has no editable file\", but i do have like text or menu in the custom module. Why is that?\nI can see the default value for the reusable fields in the preview of the custom module, but I cannot change the field value in a template level. There isn't a menu under the default content."
+  },
+  {
+    "poster": {
+      "poster_name": "Daniel Wong",
+      "poster_handle": "dan.wong"
+    },
+    "time_stamp": "2020-11-17 20:52:48",
+    "text": "specify the `root_type`  to be `breadcrumb`  to get the breadcrumb syntax"
+  }
+]

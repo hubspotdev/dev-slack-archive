@@ -1,0 +1,86 @@
+[
+  {
+    "poster": {
+      "poster_name": "Martin Angeletti",
+      "poster_handle": "martin041"
+    },
+    "time_stamp": "2020-07-13 11:52:34",
+    "edited": {
+      "time_stamp": "2020-07-13 11:56:54"
+    },
+    "text": "I'm trying to properly serve images to save load time. I tried using resize_image_url but it is not really doing anything regarding to the file size. So, I'm a little confused about how automatic image resizing works and how to make it work for us. See anything wrong here:\n```&lt;picture&gt;\n  &lt;source media=\"(max-width:300px)\" srcset=\"{{ resize_image_url(content.post_list_summary_featured_image, 0, 0, 300) }}\"&gt;\n  &lt;source media=\"(max-width:380px)\" srcset=\"{{ resize_image_url(content.post_list_summary_featured_image, 0, 0, 380) }}\"&gt;\n  &lt;source media=\"(max-width:480px)\" srcset=\"{{ resize_image_url(content.post_list_summary_featured_image, 0, 0, 480) }}\"&gt;\n  &lt;img src=\"{{ content.post_list_summary_featured_image }}\" alt=\"{{ content.name }}\"/&gt;\n&lt;/picture&gt;```",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-07-13 13:40:14"
+      },
+      {
+        "time_stamp": "2020-07-13 13:42:36"
+      },
+      {
+        "time_stamp": "2020-07-13 14:58:01"
+      },
+      {
+        "time_stamp": "2020-07-13 14:58:46"
+      },
+      {
+        "time_stamp": "2020-07-13 15:18:36"
+      },
+      {
+        "time_stamp": "2020-07-13 15:20:04"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2020-07-13 13:40:14",
+    "text": "couple things to unpack.\n\nFirst aside from the image’s resolution are you changing anything about the image in the picture element?\n\nThe picture element should only get used if you’re actually changing the image itself.\n\nSo for example say you have a landscape image but on mobile you want the image to be portrait style. That’s when picture is best.\n\nOtherwise srcset is best.\n\nHubSpot will automatically add a srcset with a bunch of reasonable values as long as you provide the height and width attribute (Which is just plain smart for page loading anyway)"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2020-07-13 13:42:36",
+    "text": "The other part is there is an upper file size limit for the resize function. Secondly, you should make sure to still be optimizing your images prior to uploading.\n\nThe image optimization occurs when the image is loaded with the parameters. If say you upload a gigantic image, and you have those parameters there.\n\nOdds are the processing time to compress the image will take longer than serving the original image. At that point to avoid a broken image the user will be served the original image. That gets cached at the CDN level and may take a little while before the resized version replaces it."
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Angeletti",
+      "poster_handle": "martin041"
+    },
+    "time_stamp": "2020-07-13 14:58:01",
+    "text": "So i did this, but again nothing happens. The full image file is downloaded."
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Angeletti",
+      "poster_handle": "martin041"
+    },
+    "time_stamp": "2020-07-13 14:58:46",
+    "edited": {
+      "time_stamp": "2020-07-13 14:59:32"
+    },
+    "text": "```&lt;img width=\"640\" height=\"360\"\n  srcset=\"{{ resize_image_url(content.post_list_summary_featured_image, 0, 0, 300) }} 300w, \n  {{ resize_image_url(content.post_list_summary_featured_image, 0, 0, 380) }} 380w,\n  {{ resize_image_url(content.post_list_summary_featured_image, 0, 0, 480) }} 480w\n  \" \nsrc=\"{{ content.post_list_summary_featured_image }}\" alt=\"{{ content.name }}\" /&gt;         ```"
+  },
+  {
+    "text": "It's like no matter how i load the img it never gets smaller in size...",
+    "time_stamp": "2020-07-13 15:18:36"
+  },
+  {
+    "text": "<https://f.HubSpotusercontent20.net/hubfs/123456789/img.jpg?width=300&name=image.jpg>",
+    "time_stamp": "2020-07-13 15:20:04"
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Angeletti",
+      "poster_handle": "martin041"
+    },
+    "time_stamp": "2020-07-13 20:53:22",
+    "text": "In my experience nothing is happening. "
+  }
+]

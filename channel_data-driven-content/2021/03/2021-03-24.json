@@ -1,0 +1,208 @@
+[
+  {
+    "poster": {
+      "poster_name": "William Ward",
+      "poster_handle": "will711"
+    },
+    "time_stamp": "2021-03-24 04:14:24",
+    "edited": {
+      "time_stamp": "2021-03-24 04:16:08"
+    },
+    "text": "Using Hubl - how do I query multiple rows (example: I want to get the “customer” by “name” “John” or “Joe”)"
+  },
+  {
+    "poster": {
+      "poster_name": "Umakant - MakeWebBetter",
+      "poster_handle": "umakantsharma"
+    },
+    "time_stamp": "2021-03-24 04:26:32",
+    "text": "<@U018FJJB2PL> you need to use `in` filter in this case, so it will be like `customer_column_name__in=John,Joe`\n\nhere you can read more about filters - <https://legacydocs.HubSpot.com/docs/methods/hubdb/v2/get_table_rows>",
+    "reply_count": 9,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2021-03-24 04:52:15"
+      },
+      {
+        "time_stamp": "2021-03-24 04:53:29"
+      },
+      {
+        "time_stamp": "2021-03-24 04:55:10"
+      },
+      {
+        "time_stamp": "2021-03-24 04:55:46"
+      },
+      {
+        "time_stamp": "2021-03-24 04:57:29"
+      },
+      {
+        "time_stamp": "2021-03-24 04:57:30"
+      },
+      {
+        "time_stamp": "2021-03-24 04:59:37"
+      },
+      {
+        "time_stamp": "2021-03-24 05:01:29"
+      },
+      {
+        "time_stamp": "2021-05-31 02:07:45"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Umakant - MakeWebBetter",
+      "poster_handle": "umakantsharma"
+    },
+    "time_stamp": "2021-03-24 04:27:31",
+    "text": "```{% for row in hubdb_table_rows(&lt;tableId or name&gt;, &lt;filterQuery&gt;) %}\n  the value for row {{ row.hs_id }} is {{ row.&lt;column name&gt; }}\n{% endfor %}```\n`&lt;filterQuery&gt;` uses the same syntax as the HTTP API."
+  },
+  {
+    "poster": {
+      "poster_name": "William Ward",
+      "poster_handle": "will711"
+    },
+    "time_stamp": "2021-03-24 04:52:15",
+    "text": "`BadRequestException: error when listing rows for table 3758749 for portal 8244455: Filter 'in' is not supported for the column type 'TEXT'`"
+  },
+  {
+    "text": "Ok a real example would be I want to select `Carrots` and `Dates` . I used `name__in=Carrots,Dates`  however no joy",
+    "time_stamp": "2021-03-24 04:53:29"
+  },
+  {
+    "poster": {
+      "poster_name": "Umakant - MakeWebBetter",
+      "poster_handle": "umakantsharma"
+    },
+    "time_stamp": "2021-03-24 04:55:10",
+    "text": "so i missed this `in only works for NUMBER, SELECT, MULTISELECT`"
+  },
+  {
+    "poster": {
+      "poster_name": "Umakant - MakeWebBetter",
+      "poster_handle": "umakantsharma"
+    },
+    "time_stamp": "2021-03-24 04:55:46",
+    "text": "can you please try `name__Contains=Carrots,Dates`  <@U018FJJB2PL>"
+  },
+  {
+    "poster": {
+      "poster_name": "William Ward",
+      "poster_handle": "will711"
+    },
+    "time_stamp": "2021-03-24 04:57:29",
+    "edited": {
+      "time_stamp": "2021-03-24 04:57:41"
+    },
+    "text": "That worked with a lowercase `contains` however returns empty results"
+  },
+  {
+    "poster": {
+      "poster_name": "William Ward",
+      "poster_handle": "will711"
+    },
+    "time_stamp": "2021-03-24 04:57:30",
+    "text": "`(HubDbTableRowResults: [])`"
+  },
+  {
+    "poster": {
+      "poster_name": "Umakant - MakeWebBetter",
+      "poster_handle": "umakantsharma"
+    },
+    "time_stamp": "2021-03-24 04:59:37",
+    "text": "not sure if this is the right suggestion, but now you might go with 2 queries, 1 for each name"
+  },
+  {
+    "poster": {
+      "poster_name": "William Ward",
+      "poster_handle": "will711"
+    },
+    "time_stamp": "2021-03-24 05:01:29",
+    "text": "I was thinking the same - then perhaps merge in to one array"
+  },
+  {
+    "poster": {
+      "poster_name": "Sami Sundberg",
+      "poster_handle": "sami.sundberg"
+    },
+    "time_stamp": "2021-03-24 06:11:22",
+    "edited": {
+      "time_stamp": "2021-03-24 06:11:27"
+    },
+    "text": "Can you group items and use multiple hubdb’s? You can’t add more than 10k rows.\n\n&gt; _Additional Limits in CMS Hub: 10,000 rows per HubDB table_\n<https://legal.HubSpot.com/HubSpot-product-and-services-catalog>"
+  },
+  {
+    "poster": {
+      "poster_name": "Sami Sundberg",
+      "poster_handle": "sami.sundberg"
+    },
+    "time_stamp": "2021-03-24 06:12:51",
+    "text": "In code you can make multiple db calls and join result to a single list that you can loop as normal."
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2021-03-24 06:29:07",
+    "text": "What CMS tier are you on right now?"
+  },
+  {
+    "poster": {
+      "poster_name": "Sol",
+      "poster_handle": "sol"
+    },
+    "time_stamp": "2021-03-24 07:36:19",
+    "text": "pro"
+  },
+  {
+    "poster": {
+      "poster_name": "Sol",
+      "poster_handle": "sol"
+    },
+    "time_stamp": "2021-03-24 07:37:18",
+    "text": "I dont have a problem to split in multiple tables but then i wont be able to sort"
+  },
+  {
+    "poster": {
+      "poster_name": "Sami Sundberg",
+      "poster_handle": "sami.sundberg"
+    },
+    "time_stamp": "2021-03-24 07:47:44",
+    "edited": {
+      "time_stamp": "2021-03-24 07:49:36"
+    },
+    "text": "So you can’t use <https://developers.HubSpot.com/docs/cms/hubl/filters#dictsort|dictsort> or <https://developers.HubSpot.com/docs/cms/hubl/filters#sort|sort> filters? Am I missing something here :sweat_smile: :\n```    {% set carsA = hubdb_table_rows(3758967) %}\n    {% set carsB = hubdb_table_rows(3759016) %}\n    {% set allCars = carsA + carsB %}\n    \n    &lt;p&gt;Combined list without sorting:&lt;/p&gt;\n    {% for car in allCars %}\n      {{ car.name }}\n    {% endfor %}\n    \n    &lt;p&gt;Sorted objects:&lt;/p&gt;\n    {% for car in allCars|sort(False, False, 'name') %}\n      {{ car.name }}\n    {% endfor %}```\nTables are simple and they are not in order `[Nissan, Audi , Tesla]` `[Mini, BMW, Volvo, Opel]`"
+  },
+  {
+    "poster": {
+      "poster_name": "Sol",
+      "poster_handle": "sol"
+    },
+    "time_stamp": "2021-03-24 07:57:36",
+    "text": "The reason i need multiple tables is because i have over 50k records, so sorting in the template level wont work"
+  },
+  {
+    "poster": {
+      "poster_name": "Sami Sundberg",
+      "poster_handle": "sami.sundberg"
+    },
+    "time_stamp": "2021-03-24 09:17:55",
+    "text": "Yeah that would be too slow I see"
+  },
+  {
+    "text": "I’m building an overview with multiple filters. For each filter item I want to display the amount of items that is in it including an pagination. For it i’m trying to use the `|selectattr()` to get the amount. I can’t get it to work with a ‘Multi-select’ field within a HubDB. Anyone that can help me out?\nI tried the following options:\n`{% set cur = all_rows|selectattr('cat',value='1') %}`\n`{% set cur = all_rows|selectattr('cat',id='1') %}`\n`{% set cur = all_rows|selectattr('cat','string_containing','1') %}`\n`{% set cur = all_rows|selectattr('cat','string_startingwith','1') %}`\n`{% set cur = all_rows|selectattr('cat','within','1') %}`\n\n1 is the ID that should match the value ‘Design’. I also tried it with the value ‘Design’.\n\nOh and I can’t use hubdb_table_rows with params because of the Limit of 10 scans per page so I need to do this with `selectattr`",
+    "time_stamp": "2021-03-24 09:51:51",
+    "edited": {
+      "time_stamp": "2021-03-25 01:08:42"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Sol",
+      "poster_handle": "sol"
+    },
+    "time_stamp": "2021-03-24 10:34:32",
+    "text": "So what can i do if i have more then 10k records?"
+  }
+]

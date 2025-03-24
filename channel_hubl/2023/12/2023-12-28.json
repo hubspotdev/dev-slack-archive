@@ -1,0 +1,34 @@
+[
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-12-28 20:52:48",
+    "edited": {
+      "time_stamp": "2023-12-28 20:57:23"
+    },
+    "text": "Running into a weird behavior with macro imports that I’m _certain_ must be a bug. I’m able to import one macro from a file, but not another — but only if I’m using relative filepaths for both imports:\n```{% from '../../macros/generate-button.html' import generate_button_from_dict %}\n{% from '../../macros/generate-button.html' import generate_icon_link_from_dict %}\n\n{# This macro works #}\n{{ generate_button_from_dict({ ...dict stuff }) }}\n\n{# This macro returns a fatal error #}\n{{ generate_icon_link_from_dict({ ...dict stuff }) }}```\nHowever, both macros work if I use absolute paths in my second import:\n```{% from '../../macros/generate-button.html' import generate_button_from_dict %}\n{% from '/theme-base-directory/macros/generate-button.html' import generate_icon_link_from_dict %}\n\n{# This macro works #}\n{{ generate_button_from_dict({ ...dict stuff }) }}\n\n{# This macro also works #}\n{{ generate_icon_link_from_dict({ ...dict stuff }) }}```\nBoth macros also work if I import all of the macros from the file:\n```{% import '../../macros/generate-button.html' as generate_button %}\n\n{# These both work #}\n{{ generate_button.generate_button_from_dict({ ...dict stuff }) }}\n{{ generate_button.generate_icon_link_from_dict({ ...dict stuff }) }}```\nIn the `hsDebug` logs, an error is returned for the second macro stating that the second macro doesn’t exist; not totally surprising. More curiously, though — directly before that, there’s also a warning stating that `generate-button.html` can’t be found. I’ll drop (lightly sanitized versions of) those logs in a response!",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-12-28 20:55:52"
+      },
+      {
+        "time_stamp": "2023-12-29 09:00:42"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-12-28 20:55:52",
+    "edited": {
+      "time_stamp": "2023-12-28 21:00:40"
+    },
+    "text": "Here’s the relevant output from the `hsDebug` logs:\n```Template Errors:\nTemplateError{severity=WARNING, reason=MISSING, item=TEMPLATE, message='Warning in `THEME_BASE_PATH/macros/generate-button.html` on line 2: Resolving path ../macros/icon-sprite.html from parent template, use relative path from module instead', fieldName='path', lineno=6, startPosition=1, scopeDepth=2, category=MODULE_PATH_FALLBACK, categoryErrors={path=../macros/icon-sprite.html}}\nTemplateError{severity=WARNING, reason=MISSING, item=TEMPLATE, message='Warning in `THEME_BASE_PATH/macros/icon-sprite.html` on line 2: Resolving path ../macros/get-relative.html from parent template, use relative path from module instead', fieldName='path', lineno=6, startPosition=1, scopeDepth=2, category=MODULE_PATH_FALLBACK, categoryErrors={path=../macros/get-relative.html}}\nTemplateError{severity=WARNING, reason=MISSING, item=TEMPLATE, message='Missing template: macros/generate-button.html', fieldName='null', lineno=6, startPosition=3, scopeDepth=2, category=MISSING_TEMPLATE, categoryErrors={fullName=macros/generate-button.html}}\nTemplateError{severity=FATAL, reason=SYNTAX_ERROR, item=OTHER, message='Could not resolve function 'generate_icon_link_from_dict'', fieldName='generate_icon_link_from_dict({\n        &quot;label_text&quot;: button_label,\n        &quot;link&quot;: button_link,\n        &quot;color&quot;: button_color,\n        &quot;alignment&quot;: alignment,\n        &quot;use_arrow&quot;: true,\n        &quot;button_id&quot;: button_id,\n        &quot;classes&quot;: classes,\n        &quot;styles&quot;: styles\n    })', lineno=6, startPosition=3, scopeDepth=2, category=UNKNOWN, categoryErrors=null}```\nI’ve anonymized the theme’s base path and replaced it with `THEME_BASE_PATH` for privacy reasons. The real base path of the theme is displayed there in the original version."
+  }
+]

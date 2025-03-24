@@ -1,0 +1,155 @@
+[
+  {
+    "poster": {
+      "poster_name": "Léo Recouvreux",
+      "poster_handle": "leo785"
+    },
+    "time_stamp": "2024-02-09 07:58:09",
+    "edited": {
+      "time_stamp": "2024-02-09 08:00:37"
+    },
+    "text": "Hi there, I try to use the HubSpot project to build a crm card with the ui extension, I followed this <https://developers.HubSpot.com/docs/platform/create-ui-extensions|tuto>. The deployment works nicely but when I try to make some modifications et test it with hs project dev  I have an error that saying this :\n```[WARNING] Unable to determine if your extension entry point is calling HubSpot.extend, this may prevent it from rendering as expected\n[INFO] Serving app functions locally\n[INFO] Running extension 'Example Card' from app 'Get started App'\n[INFO] Browser connected and listening for bundle updates\n[ERROR] App function failed to callback within 15.00 seconds.\n[WARNING] [ERROR] testFunction```\nSo I understand that the front (in react) can't communicate with the serverless-functions (used as backend) when I click on a button that use the serverless function\n\nIf someone could help me with this, I would be very nice !\n\nThanks by advance",
+    "reply_count": 13,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-02-09 10:19:31"
+      },
+      {
+        "time_stamp": "2024-02-09 10:20:35"
+      },
+      {
+        "time_stamp": "2024-02-09 10:39:15"
+      },
+      {
+        "time_stamp": "2024-02-09 10:45:43"
+      },
+      {
+        "time_stamp": "2024-02-09 11:57:35"
+      },
+      {
+        "time_stamp": "2024-02-09 12:44:41"
+      },
+      {
+        "time_stamp": "2024-02-09 12:46:00"
+      },
+      {
+        "time_stamp": "2024-02-09 12:47:36"
+      },
+      {
+        "time_stamp": "2024-02-09 13:52:13"
+      },
+      {
+        "time_stamp": "2024-02-09 14:16:00"
+      },
+      {
+        "time_stamp": "2024-02-09 14:25:28"
+      },
+      {
+        "time_stamp": "2024-02-09 14:25:33"
+      },
+      {
+        "time_stamp": "2024-02-09 16:04:56"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Joe Yeager",
+      "poster_handle": "jyeager"
+    },
+    "time_stamp": "2024-02-09 10:19:31",
+    "text": "Hi <@U04JZNBCK5M> :wave:, could you share the serverless function code to help with debugging?  Based on the error message it looks like your serverless function is timing out (they have a limit of 15 seconds), but it's hard to determine why without seeing the code."
+  },
+  {
+    "poster": {
+      "poster_name": "Léo Recouvreux",
+      "poster_handle": "leo785"
+    },
+    "time_stamp": "2024-02-09 10:20:35",
+    "text": "Hi thanks to responding, It's the same code as the starting template when you make `hs create project`and select the template option"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe Yeager",
+      "poster_handle": "jyeager"
+    },
+    "time_stamp": "2024-02-09 10:39:15",
+    "text": "<@U04JZNBCK5M>, if you don't mind could you copy/paste it into chat so I can be sure we are looking at the same thing?"
+  },
+  {
+    "poster": {
+      "poster_name": "Léo Recouvreux",
+      "poster_handle": "leo785"
+    },
+    "time_stamp": "2024-02-09 10:45:43",
+    "text": "Yes of course\n\n```exports.main = async (context = {}) =&gt; {\n  console.log('Example function was called with context:', context);\n  const response = \"Hello from the example function!\"\n  return response;\n};```\nAnd here is the serverless.json\n```{\n  \"appFunctions\": {\n    \"myFunc\": {\n      \"file\": \"example-function.js\",\n      \"secrets\": []\n    }\n  }\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe Yeager",
+      "poster_handle": "jyeager"
+    },
+    "time_stamp": "2024-02-09 11:57:35",
+    "text": "Could you also let me know the output of `hs --version` when you get a chance?  That code looks correct"
+  },
+  {
+    "text": "Yes",
+    "time_stamp": "2024-02-09 12:44:41"
+  },
+  {
+    "poster": {
+      "poster_name": "Léo Recouvreux",
+      "poster_handle": "leo785"
+    },
+    "time_stamp": "2024-02-09 12:46:00",
+    "text": "I don't get what is taking so long to have a time out by the serverless function, when I console.log the context in it, I have the right context"
+  },
+  {
+    "poster": {
+      "poster_name": "Léo Recouvreux",
+      "poster_handle": "leo785"
+    },
+    "time_stamp": "2024-02-09 12:47:36",
+    "text": "So react send the all infos nicely, even the input value"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe Yeager",
+      "poster_handle": "jyeager"
+    },
+    "time_stamp": "2024-02-09 13:52:13",
+    "edited": {
+      "time_stamp": "2024-02-09 13:52:44"
+    },
+    "text": "You might need to update the version of your cli, you are using a beta version and we introduced changes to the way serverless functions work recently.  The reason it is timing out is probably related to those changes.  The serverless functions used to take a callback, so it is probably waiting for that callback to be invoked, which doesn't happen.\n\nIf you run `npm install -g @HubSpot/cli@latest` to install the latest version of the cli and then run the project locally using `hs project dev` does that seem to resolve the issue?"
+  },
+  {
+    "text": "Thanks, I tried to remove and reinstall HubSpot cli, same shit....... Same problems",
+    "time_stamp": "2024-02-09 14:16:00"
+  },
+  {
+    "poster": {
+      "poster_name": "Léo Recouvreux",
+      "poster_handle": "leo785"
+    },
+    "time_stamp": "2024-02-09 14:25:28",
+    "text": "My mistake, I installed the CLI with pnpm, that's the reason it stills beta, after removing it, and reinstall the 5.1.3 version, so it's workin"
+  },
+  {
+    "poster": {
+      "poster_name": "Léo Recouvreux",
+      "poster_handle": "leo785"
+    },
+    "time_stamp": "2024-02-09 14:25:33",
+    "text": "thanks a lot!"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe Yeager",
+      "poster_handle": "jyeager"
+    },
+    "time_stamp": "2024-02-09 16:04:56",
+    "text": "Awesome!  Glad that fixed it"
+  }
+]

@@ -1,0 +1,34 @@
+[
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-08-29 03:07:21",
+    "text": "<@U04NQ0Z32GK> Give me some more input and I'll try to help out where I can!"
+  },
+  {
+    "poster": {
+      "poster_name": "Shawn O'Brien",
+      "poster_handle": "shawn.obrien"
+    },
+    "time_stamp": "2023-08-29 14:53:16",
+    "text": "Hey everyone! I could use some help with an issue I'm having with Custom Code in a Workflow.\n\nIn a nutshell, we're trying to create what we're calling a \"dynamic date step\" to update Tasks with a custom date based on another custom property.\n\nHere's the details I can provide:\n\nLanguage is *Node.js 16.x*\n\nProperty to include in code is *job_delivery*\n\nCode is as follows:\n\nconst HubSpot = require('@HubSpot/api-client');\n\nexports.main = (event, callback) =&gt; {\n  callback(processEvent(event));\n}\n\nfunction processEvent(event) {\n  const HubSpotClient = new HubSpot.Client({\n    accessToken: process.env.SalesOps\n  });\n\n  let dealId = event.object.objectId;\n  console.log(\"dealId: \", dealId);\n\n  HubSpotClient.crm.deals.basicApi.getById(dealId, [\"job_delivery\"])\n    .then(results =&gt; {\n      let jobDelivery = results.properties[\"job_delivery\"];\n\n      let dueDate;\n      switch (jobDelivery) {\n        case \"Same Day\":\n          dueDate = getCurrentDate();\n          break;\n        case \"2-Day\":\n          dueDate = getNextBusinessDate(2);\n          break;\n        case \"3-Day\":\n          dueDate = getNextBusinessDate(3);\n          break;\n        case \"5-Day\":\n          dueDate = getNextBusinessDate(5);\n          break;\n        case \"7-Day\":\n          dueDate = getNextBusinessDate(7);\n          break;\n        case \"9-Day\":\n          dueDate = getNextBusinessDate(9);\n          break;\n        case \"11-Day\":\n          dueDate = getNextBusinessDate(11);\n          break;\n        default:\n          console.log(\"Invalid job_delivery value.\");\n          return;\n      }\n\n      HubSpotClient.crm.deals.basicApi.update(\n        dealId,\n        { properties: { \"pvod_project_due_date\": dueDate } }\n      );\n    })\n    .catch(err =&gt; {\n      console.log(\"Error: \", err.message);\n    });\n}\n\nfunction getCurrentDate() {\n  const currentDate = new Date();\n  return formatDate(currentDate);\n}\n\nfunction getNextBusinessDate(days) {\n  const currentDate = new Date();\n  let count = 0;\n  while (count &lt; days) {\n    currentDate.setDate(currentDate.getDate() + 1);\n    if (currentDate.getDay() !== 0 &amp;&amp; currentDate.getDay() !== 6) {\n      count++;\n    }\n  }\n  return formatDate(currentDate);\n}\n\nfunction formatDate(date) {\n  const year = date.getFullYear();\n  const month = String(date.getMonth() + 1).padStart(2, '0');\n  const day = String(date.getDate()).padStart(2, '0');\n  return `${year}-${month}-${day}`;\n}\n\nData outputs are:\n\nEnumeration | hs_execution_state\n• Succeeded\n• Failed, object removed from workflow\n• Failed, object continued to next action\n• Skipped, action deleted or outside execution dates\n• Partially succeeded, some objects failed\nFor some reason it's still not working and we cant figure out what the problem is. Please haaaalp :melting_face: haha",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-08-30 09:31:29"
+      },
+      {
+        "time_stamp": "2023-08-30 09:33:29"
+      },
+      {
+        "time_stamp": "2023-08-30 10:01:19"
+      },
+      {
+        "time_stamp": "2023-08-30 11:15:07"
+      }
+    ]
+  }
+]

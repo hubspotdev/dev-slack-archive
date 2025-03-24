@@ -1,0 +1,169 @@
+[
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-23 01:04:55",
+    "text": "I’ll move the package issue to here",
+    "reply_count": 14,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-02-23 01:09:28"
+      },
+      {
+        "time_stamp": "2023-02-23 01:11:26"
+      },
+      {
+        "time_stamp": "2023-02-23 01:34:53"
+      },
+      {
+        "time_stamp": "2023-02-23 03:06:30"
+      },
+      {
+        "time_stamp": "2023-02-23 03:08:23"
+      },
+      {
+        "time_stamp": "2023-02-23 03:10:47"
+      },
+      {
+        "time_stamp": "2023-02-23 09:03:03"
+      },
+      {
+        "time_stamp": "2023-02-23 09:03:25"
+      },
+      {
+        "time_stamp": "2023-02-23 09:31:52"
+      },
+      {
+        "time_stamp": "2023-02-23 23:32:03"
+      },
+      {
+        "time_stamp": "2023-02-24 00:45:39"
+      },
+      {
+        "time_stamp": "2023-02-24 00:46:24"
+      },
+      {
+        "time_stamp": "2023-02-24 06:56:04"
+      },
+      {
+        "time_stamp": "2023-02-24 06:57:09"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-23 01:09:28",
+    "edited": {
+      "time_stamp": "2023-02-23 03:05:52"
+    },
+    "text": "<@UCY83QS6Q> <@UAYBXDG4U> Something strange is happening on dev and deploy build, I changed all of the package.json’s to this, according to <https://www.typescriptlang.org/docs/handbook/esm-node.html>\n```\"type\": \"module\",\n  \"exports\": {\n    \".\": {\n      \"types\": \"./dist/index.d.ts\",\n      \"import\": \"./dist/index.js\"\n    }\n  },\n  \"module\": \"./dist/index.js\",\n  \"types\": \"./dist/index.d.ts\",\n  \"files\": [\n    \"./dist\"\n  ],```\nStill it can’t find component package on dev `TypeError: Cannot read properties of undefined (reading 'Button')`\n\nand in deploy `Error: [vite]: Rollup failed to resolve import \"@avidly/themes\"`\n\nAll of the packages are now *public*"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-23 01:11:26",
+    "text": "is the problem that I don’t use `.esm`  file names? Or do I have to add the commonjs builds as well?"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-23 01:34:53",
+    "text": "ok, added cjs with this config, but no help. Same errors\n```\"type\": \"module\",\n  \"exports\": {\n    \".\": {\n      \"types\": \"./dist/index.d.ts\",\n      \"import\": \"./dist/index.js\",\n      \"require\": \"./dist/index.cjs\"\n    }\n  },\n  \"main\": \"./dist/index.cjs\",\n  \"module\": \"./dist/index.js\",\n  \"types\": \"./dist/index.d.ts\",\n  \"files\": [\n    \"./dist\"\n  ],```"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-23 03:06:30",
+    "text": "You can try the packages <https://www.npmjs.com/search?q=%40avidly>"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-23 03:08:23",
+    "text": "this works in dev, but fails on deploy <https://www.npmjs.com/package/@avidly/themes>"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-23 03:10:47",
+    "text": "```// Layout.jsx\nimport React from \"react\";\n\nimport { Theme, DefaultTheme } from \"@avidly/themes\";\n\nexport const Layout = ({ children, styles }) =&gt; {\n  return (\n    &lt;Theme theme={DefaultTheme} renderVariables&gt;\n      {styles &amp;&amp; &lt;style type=\"text/css\"&gt;{styles}&lt;/style&gt;}\n      {children}\n    &lt;/Theme&gt;\n  );\n};```\n```// modules/layoutTest.jsx\nimport React from 'react';\n\nimport { extractCss } from 'goober';\n\nimport { Container } from '@avidly/themes';\nimport { Layout } from '../../Layout.jsx';\n\nexport const Component = (props) =&gt; {\n  return (\n    &lt;Layout styles={extractCss()}&gt;\n      {['lighter', 'light', 'dark', 'darker', 'darkest'].map((item, i) =&gt; (\n        &lt;Container key={i} styles={{ bg: `bg-${item}` }} padding=\"2xl\"&gt;\n          Layout test\n        &lt;/Container&gt;\n      ))}\n    &lt;/Layout&gt;\n  );\n};\n\nexport { fields } from './fields.jsx';\n\nexport const meta = {\n  label: `Test Module`,\n}; ```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-02-23 09:03:03",
+    "text": "<@U02LG4AU9JS> i think the issue is your `@avidly/` packages being `devDependencies` and not `dependencies`, the build pipeline installs for production only so it won’t include dev dependencies"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-02-23 09:03:25",
+    "text": "i was able to copy your example code above and build the `layoutTest` module successfully with the packages there"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-02-23 09:31:52",
+    "text": "Can confirm - though <@U02LG4AU9JS> the components package I was running into import issues for the `Button` module for example."
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-02-23 11:59:43",
+    "text": "Follow up here:\n\nre \"Private Packages\": This is something we are going to need to work on a solution for in the short/near term. We don't have anything concrete in mind, however, I do think it there should be a way to safely understand a developers permissions relative to a private npm registry.\n\nre \"CSS in JS\": This is more complex and ambiguous on how we would integrate with solutions that produce CSS server side which would want to live in the head. Whether `goober` ,`styled-components` , or some other solution. We are adding to our roadmap, but I can't provide any kind of guarantee on timing for a solution outside of workarounds we have spoken to here."
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-23 23:32:03",
+    "edited": {
+      "time_stamp": "2023-02-23 23:38:22"
+    },
+    "text": "<@UAYBXDG4U> Yep, the funny thing thought is that `components` works elsewhere and the `theme` has exact configurations (and works). I tried with `tsc` and `vite` builds. It might be the problem in the tsconfig, currently it looks like this:\n\n```\"compilerOptions\": {\n    \"declaration\": true,\n    \"noImplicitAny\": false,\n    \"removeComments\": true,\n    \"noLib\": false,\n    \"emitDecoratorMetadata\": true,\n    \"experimentalDecorators\": true,\n    \"target\": \"esnext\",\n    \"sourceMap\": true,\n    \"module\": \"esnext\",\n    \"jsx\": \"react-jsx\",\n    \"strict\": true,\n    \"moduleResolution\": \"NodeNext\",\n    \"resolveJsonModule\": true,\n    \"allowSyntheticDefaultImports\": true,\n    \"esModuleInterop\": true,\n    \"lib\": [\"dom\", \"esnext\"],\n    \"skipLibCheck\": true,\n    \"forceConsistentCasingInFileNames\": true,\n    \"isolatedModules\": true\n  },```\nand packages.json:\n```\"type\": \"module\",\n  \"exports\": {\n    \".\": {\n      \"types\": \"./dist/index.d.ts\",\n      \"import\": \"./dist/index.js\",\n      \"require\": \"./dist/index.cjs\"\n    }\n  },\n  \"main\": \"./dist/index.cjs\",\n  \"module\": \"./dist/index.js\",\n  \"types\": \"./dist/index.d.ts\",\n  \"files\": [\n    \"./dist\"\n  ],```"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-24 00:45:39",
+    "edited": {
+      "time_stamp": "2023-02-24 01:14:07"
+    },
+    "text": "I changed to include the react-icons-all package in the components, now the components works also in dev. Deploy still have issues.\n```[ERROR] Building JS Project with error message `/tmp/cms_N343qp/cms-js-build/customer-package/components/modules/LayoutTest/fields.jsx defines some of the named exports for a module, but doesn't have all of them (needs fields, meta, and Component)\n/tmp/cms_N343qp/cms-js-build/customer-package/components/modules/TodoList/fields.jsx defines some of the named exports for a module, but doesn't have all of them (needs fields, meta, and Component)\n/tmp/cms_N343qp/cms-js-build/customer-package/components/modules/IslandTest/fields.jsx defines some of the named exports for a module, but doesn't have all of them (needs fields, meta, and Component)\n(node:76) ExperimentalWarning: VM Modules is an experimental feature. This feature could change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n[resolve-modules] Dynamic require of \"react\" is not supported```\nBtw, Do I have to always deploy the project after any changes? I guess the idea is to use dev until it’s finished and then run `deploy`"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-24 00:46:24",
+    "text": "My node version is `v18.9.0` could this cause some problems?"
+  }
+]

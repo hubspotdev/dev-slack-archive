@@ -1,0 +1,238 @@
+[
+  {
+    "poster": {
+      "poster_name": "Minsu Jung",
+      "poster_handle": "mjung"
+    },
+    "time_stamp": "2024-07-31 07:50:35",
+    "text": "Hi James, I apologize for the late reply - we were heads down in another project, we'll try to push a fix EOW"
+  },
+  {
+    "poster": {
+      "poster_name": "James Elmer",
+      "poster_handle": "jameselmer"
+    },
+    "time_stamp": "2024-07-31 12:46:16",
+    "text": "thank you very much. this one is turning out to be quite disruptive sadly."
+  },
+  {
+    "poster": {
+      "poster_name": "Minsu Jung",
+      "poster_handle": "mjung"
+    },
+    "time_stamp": "2024-07-31 13:36:26",
+    "edited": {
+      "time_stamp": "2024-07-31 13:36:47"
+    },
+    "text": "The create endpoint should now be throwing validation errors (400s) if the request secrets are not in the portal, please let us know if you're still seeing these issues pop up and I can take a look!"
+  },
+  {
+    "poster": {
+      "poster_name": "James Elmer",
+      "poster_handle": "jameselmer"
+    },
+    "time_stamp": "2024-07-31 13:36:59",
+    "text": "Will it steal create the workflow and require an update in that step?"
+  },
+  {
+    "poster": {
+      "poster_name": "James Elmer",
+      "poster_handle": "jameselmer"
+    },
+    "time_stamp": "2024-07-31 13:38:30",
+    "text": "That is the ideal behavior and is in line with how everything else works."
+  },
+  {
+    "poster": {
+      "poster_name": "Minsu Jung",
+      "poster_handle": "mjung"
+    },
+    "time_stamp": "2024-07-31 13:39:20",
+    "text": "Hm, I'll probably have to discuss with the rest of the team about this functionality cc: <@U060JS28BNJ>, do you have any thoughts on this?"
+  },
+  {
+    "poster": {
+      "poster_name": "James Elmer",
+      "poster_handle": "jameselmer"
+    },
+    "time_stamp": "2024-07-31 13:40:33",
+    "text": "The issue here is I'm not sure how you could ever retrieve and replace the secrets in a programmatic way. And so if there is ever an intent to allow for sandboxes to replicate workflows to prod, this very likely has to be solved for."
+  },
+  {
+    "poster": {
+      "poster_name": "James Elmer",
+      "poster_handle": "jameselmer"
+    },
+    "time_stamp": "2024-07-31 13:40:59",
+    "text": "As custom coded workflow actions and workflows with them are a feature that are most often tested in a sandbox for enterprise clients."
+  },
+  {
+    "poster": {
+      "poster_name": "James Elmer",
+      "poster_handle": "jameselmer"
+    },
+    "time_stamp": "2024-07-31 13:41:52",
+    "text": "For our user case we have customers who want to push these from sandbox to prod or elsewhere. And right now the entire flow fails to create. If we cant replace the secrets then fine and users can do that. But the entire flow failing is not in line with how the rest of the API works."
+  },
+  {
+    "poster": {
+      "poster_name": "James Elmer",
+      "poster_handle": "jameselmer"
+    },
+    "time_stamp": "2024-07-31 13:42:18",
+    "text": "So I think its better for users of this API to allow the flow to create, and just require an update on that step."
+  },
+  {
+    "poster": {
+      "poster_name": "James Elmer",
+      "poster_handle": "jameselmer"
+    },
+    "time_stamp": "2024-07-31 13:42:24",
+    "text": "Thats my opinion on the subject."
+  },
+  {
+    "poster": {
+      "poster_name": "Minsu Jung",
+      "poster_handle": "mjung"
+    },
+    "time_stamp": "2024-07-31 13:46:02",
+    "text": "I see, a temporary workaround I might suggest while we're discussing this (this might be quite a big change for us) is to sanitize the custom code actions in the create requests to not specify secrets (the request will not fail if no secrets are specified), then if the customer wants to push to prod, then secrets can be injected back into the create requests"
+  },
+  {
+    "poster": {
+      "poster_name": "James Elmer",
+      "poster_handle": "jameselmer"
+    },
+    "time_stamp": "2024-07-31 13:46:58",
+    "text": "Could they update the secrets in the UI after we created them with sanitized secrets? Or would they have to via API?"
+  },
+  {
+    "poster": {
+      "poster_name": "Minsu Jung",
+      "poster_handle": "mjung"
+    },
+    "time_stamp": "2024-07-31 13:48:10",
+    "text": "I believe they can add secrets after its created in the UI"
+  },
+  {
+    "poster": {
+      "poster_name": "James Elmer",
+      "poster_handle": "jameselmer"
+    },
+    "time_stamp": "2024-07-31 13:51:50",
+    "edited": {
+      "time_stamp": "2024-07-31 13:52:50"
+    },
+    "text": "And do you have a suggestion for what identifier/s we would use to programmatically sanitize a secrets? Transparently we have not had much experience with custom coded workflow actions ourselves. So what exact part of the code should we be cleaning just as an example. i.e if we see `\"secret\": \"xxxxxxxxxxxx\"` we should be clearing out the values between the quotations. We could look at some data we have and guess but if you can tell us what to sanitize just as an example that would be very helpful."
+  },
+  {
+    "poster": {
+      "poster_name": "James Elmer",
+      "poster_handle": "jameselmer"
+    },
+    "time_stamp": "2024-07-31 13:52:06",
+    "text": "I would also reccomend adding the steps outlined above, to the documentation as a workaround."
+  },
+  {
+    "poster": {
+      "poster_name": "James Elmer",
+      "poster_handle": "jameselmer"
+    },
+    "time_stamp": "2024-07-31 13:52:17",
+    "text": "As it is the most common point of feedback we get and see."
+  },
+  {
+    "poster": {
+      "poster_name": "James Elmer",
+      "poster_handle": "jameselmer"
+    },
+    "time_stamp": "2024-07-31 13:54:40",
+    "edited": {
+      "time_stamp": "2024-07-31 13:55:37"
+    },
+    "text": "In a perfect world, the API itself would still create and return an API code to state the secrets were cleared because they did not match anything in the portal. So the API itself would sanitize when there was no match and prompt users to update in the UI. We have seen this behavior elsewhere and its ideal."
+  },
+  {
+    "poster": {
+      "poster_name": "James Elmer",
+      "poster_handle": "jameselmer"
+    },
+    "time_stamp": "2024-07-31 13:55:07",
+    "text": "TBH I can see the above as the best case for sandboxing. But we can do it ourselves if needed."
+  },
+  {
+    "poster": {
+      "poster_name": "Paul Schwarz",
+      "poster_handle": "pschwarz"
+    },
+    "time_stamp": "2024-07-31 13:55:53",
+    "text": "The more consistent behavior would be to keep the invalid secret names in place, just allow saving with invalid secrets. I think auto-clearing stuff (auto-sanitizing) opens up more issues than it helps."
+  },
+  {
+    "poster": {
+      "poster_name": "James Elmer",
+      "poster_handle": "jameselmer"
+    },
+    "time_stamp": "2024-07-31 13:56:09",
+    "text": "Thats fair"
+  },
+  {
+    "poster": {
+      "poster_name": "James Elmer",
+      "poster_handle": "jameselmer"
+    },
+    "time_stamp": "2024-07-31 13:56:25",
+    "text": "And just require an update before the flow can be turned on."
+  },
+  {
+    "poster": {
+      "poster_name": "Paul Schwarz",
+      "poster_handle": "pschwarz"
+    },
+    "time_stamp": "2024-07-31 13:57:24",
+    "edited": {
+      "time_stamp": "2024-07-31 13:57:44"
+    },
+    "text": "I’ll ask the sandboxes team how/if they handle secrets today. My guess is that the secrets aren’t really something that can be safely copied from portal to portal — I’d expect some manual work here. As these are secret tokens that likely should be different between different HubSpot portals."
+  },
+  {
+    "poster": {
+      "poster_name": "James Elmer",
+      "poster_handle": "jameselmer"
+    },
+    "time_stamp": "2024-07-31 13:58:51",
+    "text": "Exactly my point as well. So in that case IMO the ideal scenario is to let the API create with the invalid secrets and require users to update in the workflows UI before the workflow can be enabled"
+  },
+  {
+    "poster": {
+      "poster_name": "James Elmer",
+      "poster_handle": "jameselmer"
+    },
+    "time_stamp": "2024-07-31 13:59:27",
+    "text": "If that is the route you all are going to go let me know. If not we will sanitize the secrets as a workaround for our use case."
+  },
+  {
+    "poster": {
+      "poster_name": "Paul Schwarz",
+      "poster_handle": "pschwarz"
+    },
+    "time_stamp": "2024-07-31 14:02:27",
+    "text": "I think definitely sanitize for the short-term. It’s going to take some cross-team coordination (read, time) to be able create custom code actions with invalid secrets."
+  },
+  {
+    "poster": {
+      "poster_name": "Minsu Jung",
+      "poster_handle": "mjung"
+    },
+    "time_stamp": "2024-07-31 14:04:14",
+    "text": "<@U6URG5205> to remove secrets from the request, the `secretNames` field of the action can be just an empty list:\n```\"actions\": [\n    {\n      \"actionId\": \"X\",\n      \"type\": \"CUSTOM_CODE\",\n      \"secretNames\": [],```"
+  },
+  {
+    "poster": {
+      "poster_name": "James Elmer",
+      "poster_handle": "jameselmer"
+    },
+    "time_stamp": "2024-07-31 15:11:31",
+    "text": "Perfect ty"
+  }
+]

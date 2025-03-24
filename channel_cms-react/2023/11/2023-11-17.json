@@ -1,0 +1,115 @@
+[
+  {
+    "poster": {
+      "poster_name": "Marcelo Candil",
+      "poster_handle": "marcelo.candil"
+    },
+    "time_stamp": "2023-11-17 04:59:38",
+    "text": "I tried to apply the example but for some reason it didn’t work, I’m probably doing something wrong. The case that I want to apply is, I have Select components in react and through what those components return to me I want to pass them directly to the query to generate the filtering. The query points to HUBDB, I mention this because I read that there are some differences between making a call to the CRM and to HUBDB, for example the use of OR and AND. Do we have any example of the case I present?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-11-17 08:04:21",
+    "edited": {
+      "time_stamp": "2023-11-17 08:04:44"
+    },
+    "text": "are you taking the selection from the select components and putting it into query params in the URL? that would be the core mechanism making the values available to the query"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcelo Candil",
+      "poster_handle": "marcelo.candil"
+    },
+    "time_stamp": "2023-11-17 08:17:56",
+    "text": "Actually, my idea was more to pass them directly to the query, something like how gql works. So the way for the query to obtain these parameters is to add them to the url? How would the reference work in the query? That is, how can I obtain the route parameter from the query?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-11-17 08:18:53",
+    "text": "since the comment in the query is hubl you can use `request.query_dict.myParam` to get a param"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-11-17 08:19:51",
+    "edited": {
+      "time_stamp": "2023-11-17 08:20:10"
+    },
+    "text": "something like this would pick up a `?name=testname` query param on the URL and add it as a `$name` parameter in the query:\n```export const query = `\n# $name: \"{{ request.query_dict.name }}\"\nquery ContactQuery($name: String! = \"Default name\") {```"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcelo Candil",
+      "poster_handle": "marcelo.candil"
+    },
+    "time_stamp": "2023-11-17 08:20:51",
+    "text": "Thanks Ben, I will try it, although this raises another question for me, does this mean that every time I select an element of a select component and it updates the route, will I have a general refresh of the page?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-11-17 08:21:03",
+    "text": "some docs here: <https://developers.HubSpot.com/docs/cms/data/use-graphql-data-in-your-website-pages#pass-dynamic-context-into-a-query>"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-11-17 08:21:29",
+    "text": "yes, since the graphQL query is part of the page render it’ll require a full refresh"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-11-17 08:22:06",
+    "edited": {
+      "time_stamp": "2023-11-17 08:22:26"
+    },
+    "text": "i dont think our serverless / client side API client support graphql today unfortunately, those would be the two best ways to have it be a client-side fetch from react if it were supported"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcelo Candil",
+      "poster_handle": "marcelo.candil"
+    },
+    "time_stamp": "2023-11-17 08:26:05",
+    "text": "One more alternative could be to make the call, bring all the elements, and manipulate them from react internally, the problem with this is that there are limitations, right? if the call brings a lot of data.\nI would like to avoid refreshing the page since it is a module that will be found in the middle of a template, and if for each search it refreshes the page I see it as bad UX"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-11-17 08:30:50",
+    "text": "yeah i wouldn’t recommend that and i believe youre right there are limits on how much HubSpot graphql queries can return. unfortunately with what we support today i think graphql is limited to use in the server-side page load rather than client-side fetches, with or without react modules"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-11-17 08:33:23",
+    "text": "ok i think i was wrong about one part - if you have HubSpot serverless you can use that to make a graphql call, then if you expose your function as an endpoint you can then make that request from the client via react"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-11-17 08:38:17",
+    "text": "you can use the `/collector/v3/graphql` endpoint via the `@HubSpot/cli-http` lib in a serverless function and pass your graphql query, then return that from your serverless function. then that serverless function can be requested from your page"
+  }
+]

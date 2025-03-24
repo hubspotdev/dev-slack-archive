@@ -1,0 +1,128 @@
+[
+  {
+    "poster": {
+      "poster_name": "Rushik vaghasia",
+      "poster_handle": "rushikvaghasiya21"
+    },
+    "time_stamp": "2024-07-03 01:14:11",
+    "text": "Facing the same issue"
+  },
+  {
+    "poster": {
+      "poster_name": "Artur Leinweber",
+      "poster_handle": "artur.leinweber"
+    },
+    "time_stamp": "2024-07-03 07:01:29",
+    "edited": {
+      "time_stamp": "2024-07-03 07:01:43"
+    },
+    "text": "Great snippet, put it in a makro and it would be nicely reusable"
+  },
+  {
+    "poster": {
+      "poster_name": "Chandler Ives",
+      "poster_handle": "cives727"
+    },
+    "time_stamp": "2024-07-03 07:45:04",
+    "text": "```&lt;h6 style=\"margin-bottom: 8px; font-size: 14px;\"&gt;MAJOR EVENTS&lt;/h6&gt;\n{% set td = unixtimestamp(today(\"America/New_York\").plusDays(0)) %} {{ td||pprint }} {% for row in hubdb_table_rows('14621261', \"&amp;orderBy=start_date&amp;type=Major Event\") %}\n&lt;ul style=\"list-style-type: none; margin: 0; padding: 0;\"&gt;\n&lt;li style=\"padding-bottom: 3px;\"&gt;&lt;a style=\"color: #171b25; margin: 0 15px; font-weight: 500; font-size: var(--fs-amm-menu-sub);\" href=\"{{ row.event_url }}\"&gt; {{ row.name }}{{ unixtimestamp(row.start_date) }} {{ td }} {% if unixtimestamp(row.start_date)__gte=\"td\" %}&lt;strong&gt;{{ row.start_date|datetimeformat('%b %d, %Y') }}&lt;/strong&gt;{% endif %}&lt;/a&gt;&lt;/li&gt;\n&lt;/ul&gt;\n{% endfor %}```\nI'm close! This does not seem to be working `{{% if unixtimestamp(row.start_date)__gte=\"td\" %}` Though when I print the variable and start date, they print properly."
+  },
+  {
+    "poster": {
+      "poster_name": "phlp",
+      "poster_handle": "philip.braeunlich"
+    },
+    "time_stamp": "2024-07-03 08:14:34",
+    "text": "your `if`  statement doesn’t support `__gte`\nso it would be\n```{% if unixtimestamp(row.start_date) &gt;= td %}```\nsorry, I got that one wrong. `__gte` is only supported in a query  for a crm-object or a hubdb."
+  },
+  {
+    "poster": {
+      "poster_name": "Chandler Ives",
+      "poster_handle": "cives727"
+    },
+    "time_stamp": "2024-07-03 08:18:11",
+    "text": "Because I'm forced to build this in a rich text editor it escape it to\n\n`{% if unixtimestamp(row.start_date) &gt;= td %}` and doesn't seem to work :confused:"
+  },
+  {
+    "poster": {
+      "poster_name": "phlp",
+      "poster_handle": "philip.braeunlich"
+    },
+    "time_stamp": "2024-07-03 08:18:43",
+    "text": "in a richtext-editor? please don’t :disappointed:"
+  },
+  {
+    "poster": {
+      "poster_name": "Chandler Ives",
+      "poster_handle": "cives727"
+    },
+    "time_stamp": "2024-07-03 08:20:24",
+    "text": "It's a back door way for me to load in dynamic content to the website theme's mega menu"
+  },
+  {
+    "poster": {
+      "poster_name": "phlp",
+      "poster_handle": "philip.braeunlich"
+    },
+    "time_stamp": "2024-07-03 08:20:26",
+    "text": "```{% if unixtimestamp(row.start_date) gte td %}```\ntry this and please don’t do this in a richtext. that will break every second"
+  },
+  {
+    "text": "",
+    "time_stamp": "2024-07-03 08:22:48"
+  },
+  {
+    "poster": {
+      "poster_name": "Chandler Ives",
+      "poster_handle": "cives727"
+    },
+    "time_stamp": "2024-07-03 09:00:56",
+    "text": "Ya — gte td does not work; nor does &gt;= likely a result of using a workaround/the text editor."
+  },
+  {
+    "poster": {
+      "poster_name": "Chandler Ives",
+      "poster_handle": "cives727"
+    },
+    "time_stamp": "2024-07-03 09:01:11",
+    "text": "Thanks for helping me on this"
+  },
+  {
+    "poster": {
+      "poster_name": "Rolando Carias",
+      "poster_handle": "rolando"
+    },
+    "time_stamp": "2024-07-03 14:06:28",
+    "text": "I guess this syntax doesn’t work with variables - it’s always empty string even if you set `module.variable_text= ‘just some selector’\n```{% set test = \"data\"%}\n{% set _raw =  test | raw %}\n{{ _raw }} // always empty```"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Lewis",
+      "poster_handle": "chris045"
+    },
+    "time_stamp": "2024-07-03 14:54:48",
+    "text": "Could anyone help me with a quick sanity check of this idea? :pray:\n\nObjective: output an HTML table in a marketing email, based on data from a custom property on the contact object.\n\nProposed solution:\n\n1. Store a JSON array of objects as a custom property on the contact object\n2. Create a new marketing email template, output the JSON saved in the custom property\n3. Use Hubl to iterate over the array, and build an HTML template\nAre there any technical limitations that wouldn’t make this possible? Are there any solutions I’ve overlooked? I’ve created a proof of concept, and the issue I’m having is that the JSON is being returned as a string, and needs to be parsed to JSON - but I’ve not been able to convert it from a string to JSON.\n\nThank you very much!!",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-07-03 15:17:40"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-07-03 15:17:40",
+    "text": "you have some filters available to you using hubl…\n\n`|escapejson`\n\n`|fromjson`\n\n`|tojson`"
+  },
+  {
+    "poster": {
+      "poster_name": "Daniel Wong",
+      "poster_handle": "dan.wong"
+    },
+    "time_stamp": "2024-07-03 21:35:56",
+    "text": "Can anyone tell me how to use conditionals in a global partial? It seems whenever I put a module in a conditional, the module are no longer selectable in the editor. I checked the values I'm comparing against and they all get outputted fine. I even tried the {% if is_in_editor %} to see if it works, and it just outputs the content but not available for edit"
+  }
+]

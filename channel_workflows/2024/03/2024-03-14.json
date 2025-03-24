@@ -1,0 +1,219 @@
+[
+  {
+    "poster": {
+      "poster_name": "Aruljothi Kuppusamy",
+      "poster_handle": "aj974"
+    },
+    "time_stamp": "2024-03-14 04:57:23",
+    "text": "Hi all, I have workflow which will run daily 9 AM to 5 PM business hours, Any new lead comes during the business hours this workflow will trigger. Post work hours all the leads should be executed in the workflow next day 9 AM, is it possible in HubSpot?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-03-14 05:05:27"
+      },
+      {
+        "time_stamp": "2024-03-14 05:18:29"
+      }
+    ]
+  },
+  {
+    "text": "Yes. Check out the first portion of <https://knowledge.HubSpot.com/workflows/manage-your-workflow-settings|this article>.",
+    "time_stamp": "2024-03-14 05:05:27"
+  },
+  {
+    "poster": {
+      "poster_name": "Aruljothi Kuppusamy",
+      "poster_handle": "aj974"
+    },
+    "time_stamp": "2024-03-14 05:18:29",
+    "text": "<@U064QG589CY> Thank you :slightly_smiling_face:"
+  },
+  {
+    "text": "Hi <@U01QVR44MEY> the custom code seems to be working, but I seem to get error in the api call, Any input on this? thanks in advance.\n\n```2024-03-14T15:44:58.210Z\tINFO\ttrying to associate contacts of id 10939058411 with deals of id 006RR000006g7zJYAQ...\n2024-03-14T15:44:58.876Z\tERROR\tError: Request failed with status code 400\n    at associate (/var/task/file.js:30:13)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)```\n",
+    "time_stamp": "2024-03-14 09:48:17"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-03-14 09:48:58",
+    "text": "yeah you need to use the deal hs_object_id"
+  },
+  {
+    "poster": {
+      "poster_name": "Parameshwaran Palanisamy",
+      "poster_handle": "parameshwaran.palanis"
+    },
+    "time_stamp": "2024-03-14 09:55:56",
+    "text": "If use  deal hs_object_id ,I get same 400 error. (both contact Id and deal Id has same internal name= hs_object_id, Is that an issue?\n\nI am actually using different axios code rathar than node js client which kept ran into errors.\n\n*const axios = require('axios');*\n\n*exports.main = async (event) =&gt; {*\n \n  *const dealId = event.inputFields['hs_object_id'];*\n  *const token = process.env.Oauth*\n  *const ContactID =*\n  *event.inputFields['hs_object_id'];*\n\n  *// define associate() function*\n\n  *async function associate(fromObjectType,fromObjectId,toObjectType,toObjectId) {*\n\n    *console.log(`trying to associate ${fromObjectType} of id ${fromObjectId} with ${toObjectType} of id ${toObjectId}...`)*\n\n    *const options = {*\n      *method: 'PUT',*\n      *url: `<https://api.hubapi.com/crm/v4/objects/${fromObjectType}/${fromObjectId}/associations/default/${toObjectType}/${toObjectId}/>`,*\n      *headers: {*\n        *'content-type': 'application/json',*\n        *'accept': 'application/json',*\n        *'authorization': `Bearer ${token}`*\n      *}*\n    *};*\n\n    *try {*\n      *const response = await axios(options);*\n      *return response.data;*\n    *} catch (error) {*\n      *throw new Error(error.message);*\n    *}*\n  *}*\n\n  *//exexute associate() function*\n      *var fromObjectType = \"contacts\"*\n      *var fromObjectId = ContactID*\n      *var toObjectType = \"deals\"*\n           *var toObjectId = dealId*\n      *associate(fromObjectType,fromObjectId,toObjectType,toObjectId)*\n        *.then(association =&gt; {*\n        *console.log(association.status);*\n        *console.log(association.results[0]);*\n      *})*\n        *.catch(error =&gt; {*\n        *console.error(error);*\n      *});*\n*}*"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-03-14 09:56:56",
+    "text": "looks like in this code you ditched the searching and just went straight the associating"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-03-14 09:57:00",
+    "text": "was that intentional?"
+  },
+  {
+    "poster": {
+      "poster_name": "Parameshwaran Palanisamy",
+      "poster_handle": "parameshwaran.palanis"
+    },
+    "time_stamp": "2024-03-14 09:59:17",
+    "text": "Yes, I want to test the association first and make sure it's working"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-03-14 09:59:46",
+    "text": "well how can you test if you don't know the ids that you're using to associate?"
+  },
+  {
+    "poster": {
+      "poster_name": "Parameshwaran Palanisamy",
+      "poster_handle": "parameshwaran.palanis"
+    },
+    "time_stamp": "2024-03-14 10:02:35",
+    "text": "I see your point, to be honest with you I am not yet full-fledged in coding, So the searching function has to be added and association?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-03-14 10:05:31",
+    "text": "basically I would revert to the original code, but just change the association logic so you are using the deal id instead of the deal salesforce id"
+  },
+  {
+    "text": "Is it true that a workflow can only access data from 1 custom object? I am trying to create a branch to create a new record in a custom object via properties from other objects (both custom and non), however workflows is only allowing me to access only the custom object referenced in the original trigger. The goal is to copy the information used in the task created step and have them in a custom object as well.",
+    "time_stamp": "2024-03-14 11:46:48",
+    "reply_count": 9,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-03-14 13:01:23"
+      },
+      {
+        "time_stamp": "2024-03-14 13:37:24"
+      },
+      {
+        "time_stamp": "2024-03-14 13:41:28"
+      },
+      {
+        "time_stamp": "2024-03-14 13:42:06"
+      },
+      {
+        "time_stamp": "2024-03-14 13:46:21"
+      },
+      {
+        "time_stamp": "2024-03-14 13:51:05"
+      },
+      {
+        "time_stamp": "2024-03-14 15:04:03"
+      },
+      {
+        "time_stamp": "2024-03-14 15:12:59"
+      },
+      {
+        "time_stamp": "2024-03-14 18:06:26"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Parameshwaran Palanisamy",
+      "poster_handle": "parameshwaran.palanis"
+    },
+    "time_stamp": "2024-03-14 12:55:27",
+    "text": "did the same,\n\nnow Api call is working but getting this error\n```ERROR\tTypeError: Cannot read properties of undefined (reading 'properties')\n    at /var/task/file.js:12:39\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)```\nconst HubSpot = require('@HubSpot/api-client');\nexports.main = (event, callback) =&gt; {\n\n  const HubSpotClient = new HubSpot.Client({\n    accessToken: process.env.Oauth\n  });\n\n  // Retrive the currently enrolled contacts \"Record ID\" property\n  HubSpotClient.crm.deals.basicApi.getById(event.object.objectId,[\"hs_object_id\"])\n    .then(results =&gt; {\n\t// Get data from the results and store in variables\n\tlet hs_object_idValue = results.body.properties.hs_object_id;\n        //console.log(\"SEARCH TERM: \" + hs_object_idValue); // - FOR DEBUG\n\t// Create search criteria\n\tconst filter = { propertyName: 'hs_object_id', operator: 'EQ', value: hs_object_idValue }\n\tconst filterGroup = { filters:\t[filter] \t}\n        const sort = JSON.stringify({ propertyName: 'hs_object_id', direction: 'DESCENDING'})\n        const properties = ['hs_object_id']\n        const limit = 1\n        const after = 0\n\n        const searchCriteria = {\n          filterGroups: [filterGroup],\n          sorts: [sort],\n          properties,\n          limit,\n          after\n        }\n\n      // Search the CRM for Deals matching \"hs_object_idValue\" variable defined earlier\n      HubSpotClient.crm.contacts.searchApi.doSearch(searchCriteria).then(searchDealResponse =&gt; {\n\n         //console.log(\"RESULTS: \" + searchDealResponse.body.total); // - FOR DEBUG\n\n         // If total equals 0 no results found\n         if(searchDealResponse.body.total == 0){ console.log(\"DEAL WITH Record ID \" + hs_object_idValue  + \"NOT FOUND.\") // - FOR DEBUG\n\n         }else{ // MATCH FOUND - ASSOCIATE DEAL TO CONTACT\n           // console.log(\"DEAL \" + Record ID + \" FOUND: ASSOCIATE RECORDS\"); // - FOR DEBUG\n          //Associate Deal with Contact\n           HubSpotClient.crm.deals.associationsApi.create(searchDealResponse.body.results[0].id,'contacts', event.object.objectId,'hs_object_id');\n         }\n      });\n\n      callback({outputFields: {}});\n\n    })\n    .catch(err =&gt; {\n      console.error(err);\n    });\n}"
+  },
+  {
+    "text": "This is an example, but you should be able to edit the data source to add associated record data.. is this what you’re talking about?",
+    "time_stamp": "2024-03-14 13:01:23"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Carey",
+      "poster_handle": "sam031"
+    },
+    "time_stamp": "2024-03-14 13:37:24",
+    "text": "That's it, just only one if our custom objects populate, not all"
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-03-14 13:41:28",
+    "text": "Weird"
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-03-14 13:42:06",
+    "text": "Lemme check something"
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-03-14 13:46:21",
+    "text": "in <https://knowledge.HubSpot.com/workflows/create-workflows#:~:text=To%20use%20the%20data%20panel%20functionality%3A%C2%A0|this> I think it might be your subscription type? Not sure why you can’t see the other objects :disappointed:"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Carey",
+      "poster_handle": "sam031"
+    },
+    "time_stamp": "2024-03-14 13:51:05",
+    "text": "Nah, all good there. I submitted a support ticket as well."
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Johnson",
+      "poster_handle": "ryan569"
+    },
+    "time_stamp": "2024-03-14 14:11:07",
+    "text": "This sounds like a great idea. When I first started learning HS workflows (previously used other platforms), it was a bit challenging and I still have more to learn. A tutorial walking users through different branch and trigger types would be great."
+  },
+  {
+    "poster": {
+      "poster_name": "Goran Ilievski",
+      "poster_handle": "goran308"
+    },
+    "time_stamp": "2024-03-14 15:04:03",
+    "text": "Is your enrolment object associated with the objects not showing up <@U044R3LNL0L>? Not sure if this makes a difference :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Carey",
+      "poster_handle": "sam031"
+    },
+    "time_stamp": "2024-03-14 15:12:59",
+    "text": "<@U04CC57CMBP> <@U04FNHJ0U2J> Thanks for the help fam. It turned out it's because all custom objects have to be associated with the main object being referenced in the workflow. Once I did that, this thing works as expected."
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-03-14 18:06:26",
+    "text": "Good to know, I was able to see it even if there was no direct association to the object so I didn’t know it was required."
+  }
+]

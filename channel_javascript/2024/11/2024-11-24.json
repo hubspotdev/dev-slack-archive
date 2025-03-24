@@ -1,0 +1,20 @@
+[
+  {
+    "poster": {
+      "poster_name": "Pulok",
+      "poster_handle": "pulok"
+    },
+    "time_stamp": "2024-11-24 10:12:03",
+    "text": "Hi Guys, I have to provide user data(email and phone number) to google ads for Enhance conversion in `meeting scheduling page`. I used GTM for the purpose. I sent an event of form submission to the GTM. I was able to get the email from website using `post message event` using Javascipt. But I didn't get the `phone number` from the object  `event.data.meetingsPayload.bookingResponse.postResponse.contact` . I contacted the HubSpot support to get help regarding this. They suggested me using post message API from HubSpot to receive data upon form submission. Please help me with this. Here is the code I used to the data from scheduling page as the page is using iframe. Page link is: <https://lp.buglelab.io/meeting/demo?submissionGuid=a8de8eb4-f629-44fa-a282-4cd20a37e133>\n&lt;script type=\"text/javascript\"&gt;\n  window.addEventListener(\"message\", function(event) {\n    // Ensure that the event data is coming from the HubSpot iframe\n    if (event.origin === \"<https://meetings.HubSpot.com>\") {\n      console.log(\"Received message from HubSpot iframe:\", event.data);\n\n      // Check if the booking was successful\n      if (event.data.meetingBookSucceeded) {\n        const formGuid = event.data.meetingsPayload.formGuid;  // Extract form GUID from the payload\n\n        var validFormGuids = [\"188bdb7c-2d92-4c97-8513-615a1c8518f0\"];  // Replace with your actual form GUIDs\n        if (validFormGuids.includes(formGuid)) {\n          console.log(\"Form submission detected:\", event.data);\n\n          // Extract relevant data from the payload\n          const userSlug = event.data.meetingsPayload.userSlug;\n          const userEmail = event.data.meetingsPayload.bookingResponse.postResponse.contact.email;\n\n          // Extracting phone number from the booking response, if available\n          const phoneNumber = event.data.meetingsPayload.bookingResponse.postResponse.contact.phone || 'Phone number not available';\n\n          // Push form submission data to the GTM dataLayer\n          window.dataLayer.push({\n            'event': 'HubSpot-meeting-form-submission',\n            'hs-form-guid': formGuid,\n            'userSlug': userSlug,  // Optional: userSlug might be useful for tracking\n            'userEmail': userEmail,  // Email from the contact details\n            'phoneNumber': phoneNumber,  // Phone number from the booking\n          });\n        }\n      }\n    }\n  });\n&lt;/script&gt;\n\nIs there any way of getting `phone number` for Enhance conversion for google ads ??? If I get the phone number from scheduling form submission through webhook, How can I differentiate the data to pass on correct browser when multiple user uses same form simultaneously. So, It would be great if I get the phone number in the event.data.meetingsPayload.bookingResponse.postResponse.contact object like email I get. Please suggest me if any alternative way already exist? (edited)",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-11-29 12:45:19"
+      },
+      {
+        "time_stamp": "2024-12-03 17:48:57"
+      }
+    ]
+  }
+]

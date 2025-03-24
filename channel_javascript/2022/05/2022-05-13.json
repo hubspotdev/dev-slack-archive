@@ -1,0 +1,194 @@
+[
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2022-05-13 09:05:35",
+    "text": "So we are starting to get the edge of my JS knowledge here. So far the only difference I can see between the working pages and non-working pages is that the modules js loads last on the working pages. As far as I know there is no way to control the order of module js loading on a page. So the theory I'm curently investigating is that there is _something_ about the JS that needs it to be loaded last in order to work. Feels like we have some naming collisions but it's not clear where."
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-05-13 09:08:35",
+    "text": "thanks. that is helpful. I can look into delaying the code in good (event based) or hacky (settimeout) ways to see if I can get it to run later. If, in fact, it will work once all of the page code has loaded, then maybe that's a direction I can head."
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2022-05-13 09:10:31",
+    "text": "Might be worth playing with some of the `js_render_options` <https://developers.HubSpot.com/docs/cms/building-blocks/modules/configuration|here>, the default position is already footer, but maybe `defer` and/or `async` will give you better results"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-05-13 09:15:19",
+    "text": "I'll see. I just tried a quick test to run the code after 5 seconds after `DOMContentLoaded`. Same result. The homepage code will run, but its methods are just not finding the translation files. No errors or anything. It's just as if they are looking to a different file location for the messages.json files. I can't prove that, but that's what it seems."
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2022-05-13 09:19:02",
+    "text": "So the messages are there, they can put into the generated min.js file, here's the one that gets loaded from the home page <https://www.babelbot.app/hs-fs/hub/21696936/hub_generated/module_assets/72005081154/1652222843074/module_72005081154_BabelBot_Calculator.min.js> you can see the at the top of the file there is a populated `__hs__messages` so it is loading in during the page rendering correctly which is why I think there is something on the front end side of things"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-05-13 09:23:54",
+    "text": "yeah, i see it too. and that;s from the page that isn't working properly"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-05-13 09:31:48",
+    "text": "do you think it's possible that there is another module with a `i18n_getmessage` function in it and that my code is calling the method from a different module and seeing no messages? Do you know if there's a way to make sure that I am calling the function in my module's generated JS?"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2022-05-13 09:35:07",
+    "text": "In the console it shows the the `i18n_getmessage` is getting defined from the FAQ module which is the last module loaded on that page so it's certainly possible. Now each module should be scoped within itself since it's all inside a closure but something is leaking out"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-05-13 09:36:28",
+    "text": "yeah. hmmm... can you think of a syntax to hep ensure I am calling the local function? like a `this.` or something like that (we are getting beyond my JS knowledge here)"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2022-05-13 09:40:41",
+    "text": "I have a theory, I think the onLoad wrapper is causing the issue here. When module loads, the `i18n_getmessage` is the referring to the `i18n_getmessage` defined in the module itself. Waiting for the page to load means the FAQ module has redefiend `i18n_getmessage` which was curried with the value `__hs_messages` already defined (in this case as `{}`)"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-05-13 09:41:36",
+    "text": "that makes sense to me"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-05-13 09:42:06",
+    "text": "when you say onload wrapper, are you referring to `document.addEventListener('DOMContentLoaded', () =&gt; {`?"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2022-05-13 09:42:14",
+    "text": "so if you let it execute immediately it should execute in the correct order. I think the onLoad is uncnessary already since it's garunteed to load in the footer based on how HubSpot places the module scripts so all the HTML elements you want modify should already be in the DOM"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-05-13 09:42:39",
+    "text": "the other onload function is just a function I created that could be called anything"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2022-05-13 09:42:54",
+    "text": "yeah the event listener one, exactly"
+  },
+  {
+    "time_stamp": "2022-05-13 09:44:55",
+    "text": "face palm"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-05-13 09:45:07",
+    "text": "its working without the event listener"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-05-13 09:45:30",
+    "text": "where can I send you a beer or coffee? :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2022-05-13 09:45:55",
+    "text": "and my love/hate relationship with JS continues..."
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2022-05-13 09:46:03",
+    "text": "I'm just glad it's working"
+  },
+  {
+    "text": "",
+    "time_stamp": "2022-05-13 09:46:33"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-05-13 09:47:17",
+    "text": "my event listener made it load later and it caused timing issues. there's probably a good reason they don't load async such as for the exact reason I had this issue"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-05-13 09:48:28",
+    "text": "in a way, i was overriding the intended sequence of events on how they loaded. thanks so much <@UFBNA9K9A>. I'll find you at Inbound and get you that coffee or beer (your choice). Thanks."
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2022-05-13 09:49:20",
+    "text": "No beer or coffee needed, best way you can help me is by helping other developers in this community"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-05-13 09:50:00",
+    "text": "roger that. will do"
+  }
+]

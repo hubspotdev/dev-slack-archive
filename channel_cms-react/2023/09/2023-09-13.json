@@ -1,0 +1,316 @@
+[
+  {
+    "poster": {
+      "poster_name": "Ahmed Jamal Tariq",
+      "poster_handle": "ahmed.jamal.tariq"
+    },
+    "time_stamp": "2023-09-13 01:52:02",
+    "text": "I'm also having the same issue since morning."
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-09-13 05:46:35",
+    "text": "Oh my, so sorry about this. We’ll try to get someone online to help as soon as we can"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-09-13 05:52:02",
+    "text": "Have you tried reverting to a previous build in the projects UI yet? ",
+    "reply_count": 9,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-09-13 08:10:12"
+      },
+      {
+        "time_stamp": "2023-09-13 08:12:49"
+      },
+      {
+        "time_stamp": "2023-09-13 08:16:33"
+      },
+      {
+        "time_stamp": "2023-09-13 08:26:21"
+      },
+      {
+        "time_stamp": "2023-09-13 08:46:41"
+      },
+      {
+        "time_stamp": "2023-09-13 08:54:24"
+      },
+      {
+        "time_stamp": "2023-09-13 08:56:25"
+      },
+      {
+        "time_stamp": "2023-09-13 09:21:45"
+      },
+      {
+        "time_stamp": "2023-09-13 09:22:41"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Roger Brown",
+      "poster_handle": "robrown"
+    },
+    "time_stamp": "2023-09-13 07:43:26",
+    "text": "Hi Arrigo, right now we only have further information about version on the <https://developers.HubSpot.com/docs/platform/create-a-project|\"Create a project (BETA)\"> page, which it sounds like you found already. The intent going forward is to introduce new platform features using new versions and to document these via release schedules and changelogs but those are not publicly available yet."
+  },
+  {
+    "poster": {
+      "poster_name": "Arrigo Lupori",
+      "poster_handle": "arrigo.lupori270"
+    },
+    "time_stamp": "2023-09-13 08:10:12",
+    "text": "I didn't know we could revert to a previous build :slightly_smiling_face: I will try that later today, I'm a bit busy in the afternoon due to my day job. Will keep you updated."
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-09-13 08:12:49",
+    "text": "We definitely need to point out reverting in the docs (and other stuff like turning off auto-deploy on build).\n\nAlso I believe Byron DMed you with more specifics on your problem. But sounds like we don’t have any live production breakage to hastily help rush fixes in (though we do have your excellent feedback to take and improve from :pray:, thanks!)"
+  },
+  {
+    "poster": {
+      "poster_name": "Arrigo Lupori",
+      "poster_handle": "arrigo.lupori270"
+    },
+    "time_stamp": "2023-09-13 08:16:33",
+    "text": "It's ok for this time, I wasn't too far into production.\nBut I think there needs to be a way for us to have a staging environment.\n\nThat's the highest priority for me."
+  },
+  {
+    "poster": {
+      "poster_name": "Arrigo Lupori",
+      "poster_handle": "arrigo.lupori270"
+    },
+    "time_stamp": "2023-09-13 08:24:22",
+    "text": "Ok all good thanks. Just wanted to make sure that it wasn't because I was on an older version perhaps."
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-09-13 08:26:21",
+    "edited": {
+      "time_stamp": "2023-09-13 08:26:39"
+    },
+    "text": "Understood, as we exit the beta (and the opt-in) you will be able to at least at another portal that can build and deploy the same project code (lets you test the actual project code in another environment, but it is on different pages).\n\nThough we realize that still as good as staging/verifying could be. And specifically, how useful do you think it would be to be able to preview a new project build in an existing page. I.e. have your production project have auto-deploy turned off, trigger a new project build, have a way to preview that new build in the context of an existing page (maybe something like a  `?hsPreviewProject=&lt;new build #&gt;` query param?) before deploying that build live?"
+  },
+  {
+    "poster": {
+      "poster_name": "Arrigo Lupori",
+      "poster_handle": "arrigo.lupori270"
+    },
+    "time_stamp": "2023-09-13 08:46:41",
+    "text": "<@UCY83QS6Q> that would be amazing! \n\nIndeed I've let the platform auto deploy all this time, but the core issue has been that there's no real way for me to see in the production portal what the modules look like, if they break, etc. \n\nIt's actually easier to see with the dev server :)\nBut that won't load the hublParameters. \n\nSo yes! \n\nA new build preview in the context of a new page is definitely relevant to solve this. Another solution is to allow to preview the production modules in isolation, just like the dev server. \n\nSo debugging becomes more localized and once you feel \"ready\", you deploy them.\n\nDo you have any thoughts on why I get the \"module path must end with module name\" error in the builds? I was getting that even before when things were working fine.\n\nThank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-09-13 08:54:24",
+    "edited": {
+      "time_stamp": "2023-09-13 08:54:46"
+    },
+    "text": "&gt;  Do you have any thoughts on why I get the “module path must end with module name” error in the builds? I was getting that even before when things were working fine.\nI haven’t fully followed up with some other folx working frantically to fix things, but I’m pretty sure ^ is our bad with a backend change in the past few days that broke subsequent builds in a way our tests didn’t catch (something with a the newly built module getting disassociated with the module of a previous deploy causing many different problems).\n\nI hope we’ll have more of an update on that soon."
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-09-13 08:56:25",
+    "edited": {
+      "time_stamp": "2023-09-13 08:57:06"
+    },
+    "text": "Another question to help us prioritize future work. Have you explored our storybook integration yet? How valuable would you find it if in the future each build also generated a public/deployed storybook that you could preview before deploying (so you could preview those modules in specific stories)?\n\nAnd if that is valuable would that be more or less useful to use than the build preview query param suggested above?"
+  },
+  {
+    "poster": {
+      "poster_name": "Arrigo Lupori",
+      "poster_handle": "arrigo.lupori270"
+    },
+    "time_stamp": "2023-09-13 09:21:45",
+    "text": "That would be even more amazing :slightly_smiling_face:\n\nI haven't explored the Storybook integration yet because I didn't want to add complexity to a project where I already had to learn a lot of new stuff. The dev server was sufficient for isolated component testing at first.\n\nHowever, I love Storybook, and my co-founder (<@U05SSVAUMUY>) would benefit immensely from it as he's the designer who's eventually going to write this frontend code himself.\n\nTo answer your other 2 questions:\n\n1. I would find it amazing if there was an automated Storybook deploy, the less I have to configure stuff the better.\n    a. It would be tremendously valuable IF the auto generated SB would provide props fields to test the components in isolation (something neither the dev server nor the projects UI can do at the moment without modifying the code), and if it also allowed to be configured (or auto-configured somehow) for multiple states of the components. Basically, if its qualities as a UI documentation tool are all retained, then yes I would 100% use it almost every day.\n2. I find that they would be complimentary rather than conflicting. Storybook would allow me to test built components in isolation after the build, the other would show me how those components will look in a complete package. The more ways to build confidence that deploying will go smoothly the better, so in my opinion both are relevant. But if I had to choose one I'd choose a full Storybook integration in production :slightly_smiling_face:\nHopefully this helps!"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-09-13 09:22:41",
+    "text": "Excellent feedback, thanks so much!"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-09-13 09:31:07",
+    "text": "Coming back, looks like this nearly slipped through the cracks.\n\nSeems like we need more work and support here, similar to other questions around “how do I get CTAs working inside JS modules” mentioned by others.\n\nCompared to the CTA case, I do think there is more of the necessary IDs and data available inside the video field module data and I’d _hope_ that you could hackily recreate the video embed HTML &amp; iframe URL (:grimacing:), but I/we have yet to prove that yet."
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-09-13 10:08:16",
+    "text": "The same thing happened to me randomly yesterday. Pushed a build/deploy and all of my js modules disappeared from CMS a composed page."
+  },
+  {
+    "poster": {
+      "poster_name": "Arrigo Lupori",
+      "poster_handle": "arrigo.lupori270"
+    },
+    "time_stamp": "2023-09-13 10:17:12",
+    "text": "The website is working again :slightly_smiling_face:\n\nI didn't revert back to an old build but fixed some minor bugs on my end and a re-build worked fine.\nNow I have de-activated auto-deploys and I will always go through all logs before deploying.\n\nThank you all for the quick replies.\n\nCan't wait to share the link of the final result with you guys :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-09-13 10:18:02",
+    "text": "Awesome, thanks so much for you patience and willingness to work with and help us out :the_horns:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-09-13 10:18:23",
+    "text": "It's not critical yet as we're still building POCs on fields, but will definitely be interested in leveraging this (and CTA) fields in future.\n\nI guess as progress is made on those, please share in the channel!"
+  },
+  {
+    "poster": {
+      "poster_name": "Arrigo Lupori",
+      "poster_handle": "arrigo.lupori270"
+    },
+    "time_stamp": "2023-09-13 10:18:44",
+    "text": "The team fixed it pretty quickly :slightly_smiling_face:\nBut yeah it was a big bug, it broke everything for me."
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-09-13 10:19:02",
+    "text": "Will do (have some internal issue to track both and will add a note about updating you specifically)"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-09-13 10:29:24",
+    "text": "<@U056ZR8LVJQ> will there be a changelog for platform versions eventually?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-09-13 10:32:19",
+    "text": "<@U05D5QEBWS3> as it stands today most features relevant to CMS react components are controlled more by the NPM package versions your project depends on (i.e. controlled by you directly) than by the platform version here"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-09-13 10:32:51",
+    "text": "we’re working on streamlining the relationship as time goes on"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-09-13 12:58:25",
+    "text": "Just noticing that in the docs for <https://github.HubSpot.com/cms-js-building-block-examples/reference/data-fetching.html#HubSpot-content-server-side|Server Side HubSpot Content> passed hubl args should be in `hublParameters`  whereas in practice, doesn't seem to be the case. E.g.\n\n```{% js_partial\n  path=\"@projects/vena-project/vena-app/components/partials/SkipToContent.jsx\" \n  target=\"#main\"\n  no_wrapper=true\n%}\n\nExpected:\n\nconst {\n  hublParamaters: {\n    target,\n  }\n} = props;\n\nActual:\n\nconst {\n  target,\n} = props;```",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-09-13 13:00:06"
+      },
+      {
+        "time_stamp": "2023-09-13 13:01:18"
+      },
+      {
+        "time_stamp": "2023-09-13 13:01:21"
+      },
+      {
+        "time_stamp": "2023-09-13 13:01:31"
+      },
+      {
+        "time_stamp": "2023-09-13 13:02:08"
+      },
+      {
+        "time_stamp": "2023-09-13 13:12:58"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-09-13 13:00:06",
+    "text": "The docs are in the context of a `module` tag and not a `js_partial`"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-09-13 13:01:18",
+    "text": "ok, so expected for this use case... Interesting that they're not at parity."
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-09-13 13:01:21",
+    "text": "thanks"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-09-13 13:01:31",
+    "text": "with `js_partial` what you pass is directly on `props`"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-09-13 13:02:08",
+    "text": "&gt; Interesting that they're not at parity.\nHas to do with modules having more top level namespaces i.e. `fieldValues` and `dataQueryResult`"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-09-13 13:12:58",
+    "text": "ahhh, ya fair :slightly_smiling_face:"
+  },
+  {
+    "text": "Hi team,\n\nOn top of the \"Module path must end with module name\" error in the builds, I am also getting a warning on re-occurring repeated field groups.\n\nSee attached.\n\nI am setting those occurrences in default values indeed so I'm not sure why I get this message. The defaults show correctly on the website.",
+    "time_stamp": "2023-09-14 00:49:12"
+  }
+]

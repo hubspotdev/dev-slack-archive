@@ -1,0 +1,110 @@
+[
+  {
+    "poster": {
+      "poster_name": "Anton Zhdanov",
+      "poster_handle": "anton.zhdanov"
+    },
+    "time_stamp": "2024-12-13 02:28:40",
+    "text": "hello, I'm trying to pass JSON through the module field value to my js script using the hidden input\nbasically I do something like:\n\n```&lt;input type=\"hidden\" value='{{ module.my_json }}' /&gt;```\nwhere `my_json` is the module text field with value `[\"string1\", \"string2\"]`\nWhat I get in HTML is\n```&lt;input type=\"hidden\" value=\"[string1, string2]\" /&gt;```\nnotice that single quotes are replaced with double ones and the absence of quote marks in `value` .\nI tried various filters like `|safe` , `|escapejson`, `unescape_html` etc with no luck.\nHow do I render the text field value as it is after all?",
+    "reply_count": 5,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-12-13 08:10:18"
+      },
+      {
+        "time_stamp": "2024-12-13 08:49:06"
+      },
+      {
+        "time_stamp": "2024-12-13 09:12:46"
+      },
+      {
+        "time_stamp": "2024-12-13 09:42:05"
+      },
+      {
+        "time_stamp": "2024-12-13 10:26:22"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Josh Braner",
+      "poster_handle": "braner.josh"
+    },
+    "time_stamp": "2024-12-13 07:56:24",
+    "edited": {
+      "time_stamp": "2024-12-13 07:59:39"
+    },
+    "text": "Hey, so what it looks like to me is you are only pulling 300 contacts and then checking them. Even though you have set limit to 500, this function is limited to pulling 100 objects at a time at most, which is why we set that offset to 100 as well. Rather than pulling a bunch of contacts and THEN checking, you can instead add that as a query param.\n\nIn your call to crm_objects here...\n`{% set add_contacts = crm_objects(\"contact\", \"limit=500&offset=\" ~ list_offset, \"firstname,lastname,territory_name,territory_postcodes\") %}`\n\nyou can add a query param to actually search through _all_ of your contacts first and return only the ones where territory_name is known right from the function call, like this...\n`{% set add_contacts = crm_objects(\"contact\", \"territory_name__not_null&limit=100&offset=\" ~ list_offset, \"firstname,lastname,territory_name,territory_postcodes\") %}`\n\nBy adding `__not_null` we are telling this to grab any contact where `territory_name` is *known*.\n\nYou can then simplify the following...\n`{% for contact in add_contacts.results %}`\n  `{% if contact.territory_name %}`\n    `{% do contacts_list.append(contact) %}`\n  `{% endif %}`\n`{% endfor %}`\n\nto this...\n`{% for contact in add_contacts.results %}`\n  `{% do contacts_list.append(contact) %}`\n`{% endfor %}`\n\nbecause you've already set that check at the top level, ensuring the results you get will only return if `territory_name` is true.\n\nHope this helps and works!"
+  },
+  {
+    "poster": {
+      "poster_name": "Atul Singh",
+      "poster_handle": "atul564"
+    },
+    "time_stamp": "2024-12-13 08:02:49",
+    "text": "<@U05AG9W9FN1> thank you so much :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Josh Braner",
+      "poster_handle": "braner.josh"
+    },
+    "time_stamp": "2024-12-13 08:10:18",
+    "edited": {
+      "time_stamp": "2024-12-13 08:10:40"
+    },
+    "text": "I did something similar recently where I needed to create a dict in hubl and then pass that dict through a function to turn it into a JS object. What I've gathered is it seems to maintain its structure as a dict and since that's the case, it isn't a valid json string you can just parse on the other end.\n\nI absolutely hope someone has a better solution than this, but this is mine. I ended up having to use regex on the other side to restructure it into a proper JS object so it could be used.\n\nFor context, I passed my object into my JS via a function on an onclick\n`<sl-button variant=\"primary\" pill onclick=\"addToCart('{{product}}')\">Add To Cart</sl-button>`\n\nmy function then receives it and formats it like so...\n\n`const formattedObject = JSON.parse(`\n      `product`\n        `.replace(/=/g, \":\") // Replace `=` with `:``\n        `.replace(/(\\w+):/g, '\"$1\":') // Wrap keys in double quotes`\n        `.replace(/:(?!null|true|false)([^,\\}]+)/g, ':\"$1\"') // Wrap all values (including numbers) in quotes`\n        `.replace(/,\\s*}/g, \"}\") // Remove trailing commas (if any)`\n    `);`\n\nand from there I was able to use it in my code as normal.\n\nRegex is hard, so this whole little mess was absolutely chatGPT'd. It worked for me though, hopefully it helps you too!"
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Zhdanov",
+      "poster_handle": "anton.zhdanov"
+    },
+    "time_stamp": "2024-12-13 08:49:06",
+    "text": "I found the filter that makes it possible (`tojson` )- somehow I missed it previously. From what I see, it just encodes double quotes so that it turns into valid JSON when read\n```JSON.parse(document.querySelector('#json_input').value)```\nSo, in CMS I have a regular JSON value in the field, render it\n```&lt;input id=\"json_input\" type=\"hidden\" value='{{ module.working_hours|tojson }}' /&gt;```\nNotice single quotes in value."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-12-13 09:12:46",
+    "edited": {
+      "time_stamp": "2024-12-13 09:13:01"
+    },
+    "text": "Yeah the tojson and fromjson filters are quite useful (fomjson converts a json string into a HubSpot dict/object)\n\nso your `[\"string1\", \"string2\"]` would become a hubl dictionary (though not what you need here)"
+  },
+  {
+    "poster": {
+      "poster_name": "Josh Braner",
+      "poster_handle": "braner.josh"
+    },
+    "time_stamp": "2024-12-13 09:42:05",
+    "text": "fantastic, absolutely fantastic, y'all just made my life so much easier and I wasn't even the one asking. Thank you. :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-12-13 10:26:22",
+    "text": "I do ocassionally find the tojson doesn’t work when I run it on a dynamic hubdb page with loads of content, I guess there’s some combination of characters that trip it up\n(I often use it for debuging reasons when |pprint doesn’t do the job)"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-12-13 13:00:05",
+    "text": "Is this is a membership portal / private access?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-12-13 13:01:15",
+    "text": "Yeah man. Another option is cognito forms and zapier. "
+  }
+]

@@ -1,0 +1,120 @@
+[
+  {
+    "poster": {
+      "poster_name": "Thomas Bennedbæk",
+      "poster_handle": "thomas_katalysator"
+    },
+    "time_stamp": "2020-08-27 06:33:56",
+    "text": "Question:\nIn templates, you can pass an array through a variable as the possible choices in a `{% choice %}` tag, like shown below. And it's incredibly useful for dynamically generating dropdown options for the content creator in the page editor. But I wonder if this is officially supported or just a quirk?\n\n```{% set choices_list = [[\"foo\", \"Foo\"], [\"bar\", \"Bar\"]] %}\n{% choice \"my_choices\" choices=\"{{ choices_list }}\"  %}```\n",
+    "reply_count": 11,
+    "reply_users_count": 5,
+    "replies": [
+      {
+        "time_stamp": "2020-08-27 11:58:08"
+      },
+      {
+        "time_stamp": "2020-08-27 13:53:14"
+      },
+      {
+        "time_stamp": "2020-08-27 15:57:02"
+      },
+      {
+        "time_stamp": "2020-08-27 15:58:00"
+      },
+      {
+        "time_stamp": "2020-08-27 15:58:35"
+      },
+      {
+        "time_stamp": "2020-08-27 16:08:24"
+      },
+      {
+        "time_stamp": "2020-08-27 16:09:35"
+      },
+      {
+        "time_stamp": "2020-08-28 05:40:41"
+      },
+      {
+        "time_stamp": "2020-08-28 06:32:29"
+      },
+      {
+        "time_stamp": "2023-06-19 18:21:49"
+      },
+      {
+        "time_stamp": "2023-06-19 18:23:45"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2020-08-27 11:58:08",
+    "text": "how would these items change “dynamically”"
+  },
+  {
+    "poster": {
+      "poster_name": "walter lentfert",
+      "poster_handle": "walter"
+    },
+    "time_stamp": "2020-08-27 13:44:45",
+    "text": "Suggest to use {{loop.length}} and a macro to push the value outside the loop. so you can create conditions against it"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Bennedbæk",
+      "poster_handle": "thomas_katalysator"
+    },
+    "time_stamp": "2020-08-27 13:53:14",
+    "edited": {
+      "time_stamp": "2020-08-27 14:01:08"
+    },
+    "text": "<@U25PYL3Q8> \"Dynamically\" may not be the most fitting term here, since everything will of course still happen before page load. But as an example you could loop over a HubDB table to create an array of table row data that can then be used as options in a `{% choice %}` field.\n\nSo the list of choices in that `{% choice %}` field will then automatically adapt to the data inputted in that HubDB table. If you add a new table row, it adds a new option. If you remove a row, it removes that option.\n\nI've used this in the past to make it easy for a content editor to fetch data from a specific HubDB table row and render it on the page without knowing the ID of that row. But I'm a bit hesitant to use this technique in client projects since I don't know if passing variables to the `choices` parameter of a `{% choice %}` field is officially supported in the language. I've seen other quirks over the years that turned out to be \"unintended features\" and were \"discouraged\" by the product team :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2020-08-27 15:57:02",
+    "edited": {
+      "time_stamp": "2020-08-27 15:57:10"
+    },
+    "text": "Using hubdb for this is probably frowned upon/discouraged…..  If I were setting this up in a clients site I would use an import (<https://developers.HubSpot.com/docs/cms/hubl/variables-macros-syntax#import>) I would create another file and import it with the dict setup in that file like\n```{% set dict_var = {'name': 'Item Name', 'price': '$20', 'size':'XL'} %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2020-08-27 15:58:00",
+    "text": "import that. and then update the that individual file when needed.  If you wanted it to run from your hubdb, I’d make some kind of script that loads your hubdb table on a daily basis, reads the data, then updates the imported file"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2020-08-27 15:58:35",
+    "text": "That is probably the ideal/proper way to do it — <@U7SL518D6> -- do you have any feelings on this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2020-08-27 16:08:24",
+    "edited": {
+      "time_stamp": "2020-08-27 16:08:55"
+    },
+    "text": "Regarding the initial question yes. There is a quirk though - you shouldnt need the brackets. Its actually documented somewhere(the documentation just isnt setting it as a variable first)\n\nRegarding using HubDb to populate that array, that's where things get into iffy territory. It may wok, but I cant recommend dynamically changing it like that.\n\nThere may be some oddities doing that."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2020-08-27 16:09:35",
+    "text": "Yeah, I can’t imagine it would be that horrible, but I also think that it probably isn’t smart to rely on that hubdb to work like that"
+  }
+]

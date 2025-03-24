@@ -1,0 +1,44 @@
+[
+  {
+    "poster": {
+      "poster_name": "Zachary Myr",
+      "poster_handle": "zachary.myr"
+    },
+    "time_stamp": "2024-12-20 06:03:55",
+    "text": "Perfect! Thanks :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Mason Hahne",
+      "poster_handle": "mason009"
+    },
+    "time_stamp": "2024-12-20 08:25:59",
+    "text": "Hi everyone, I have a workflow that I'm trying to custom code to update date properties. The calculations work, but the dates do not populate. All the names and mapping seems to be correct, but it's not working. I'm on a time crunch to get this figured out. I am not a developer, but I've been using ChatGPT to help me right the code.\n\nfrom datetime import datetime, timedelta\n\ndef main(event):\n    # Retrieve the input from the HubSpot workflow (Unix timestamp in milliseconds)\n    cohort_assignment_date_timestamp = int(event[\"inputFields\"][\"project_cohort_assignment_date\"])\n\n    # Convert the Unix timestamp (milliseconds) to a datetime object\n    cohort_assignment_date = datetime.utcfromtimestamp(cohort_assignment_date_timestamp / 1000)\n\n    # Calculate the required dates (days before and after the cohort assignment date)\n    questionnaire_due_date = cohort_assignment_date - timedelta(days=51)\n    questionnaire_recycle_date = cohort_assignment_date - timedelta(days=44)\n    onboarding_prep_due_date = cohort_assignment_date - timedelta(days=23)\n    onboarding_recycle_date = cohort_assignment_date - timedelta(days=16)\n    migration_due_date = cohort_assignment_date - timedelta(days=7)\n    migration_recycle_date = cohort_assignment_date - timedelta(days=5)\n\n    configuration_meetings_due_date = cohort_assignment_date + timedelta(days=9)\n    configuration_meetings_recycle_date = cohort_assignment_date + timedelta(days=11)\n    verification___training_due_date = cohort_assignment_date + timedelta(days=18)\n    verification___training_recycle_date = cohort_assignment_date + timedelta(days=22)\n    re_migration_due_date = cohort_assignment_date + timedelta(days=23)\n    re_migration_recycle_date = cohort_assignment_date + timedelta(days=24)\n\n    # Ensure output fields are returned as strings formatted as MM/DD/YYYY\n    return {\n        \"outputFields\": {\n            \"questionnaire_due_date\": questionnaire_due_date.strftime('%m/%d/%Y'),\n            \"questionnaire_recycle_date\": questionnaire_recycle_date.strftime('%m/%d/%Y'),\n            \"onboarding_prep_due_date\": onboarding_prep_due_date.strftime('%m/%d/%Y'),\n            \"onboarding_recycle_date\": onboarding_recycle_date.strftime('%m/%d/%Y'),\n            \"migration_due_date\": migration_due_date.strftime('%m/%d/%Y'),\n            \"migration_recycle_date\": migration_recycle_date.strftime('%m/%d/%Y'),\n            \"configuration_meetings_due_date\": configuration_meetings_due_date.strftime('%m/%d/%Y'),\n            \"configuration_meetings_recycle_date\": configuration_meetings_recycle_date.strftime('%m/%d/%Y'),\n            \"verification___training_due_date\": verification___training_due_date.strftime('%m/%d/%Y'),\n            \"verification___training_recycle_date\": verification___training_recycle_date.strftime('%m/%d/%Y'),\n            \"re_migration_due_date\": re_migration_due_date.strftime('%m/%d/%Y'),\n            \"re_migration_recycle_date\": re_migration_recycle_date.strftime('%m/%d/%Y')\n        }\n    }",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-12-20 13:46:39"
+      },
+      {
+        "time_stamp": "2024-12-20 14:31:43"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Kohl",
+      "poster_handle": "jake421"
+    },
+    "time_stamp": "2024-12-20 13:46:39",
+    "text": "What's the use case of returning the values as 'MM/DD/YYYY' here? Is the data being written back to the CRM Object, or is it being exported elsewhere?"
+  },
+  {
+    "poster": {
+      "poster_name": "Mason Hahne",
+      "poster_handle": "mason009"
+    },
+    "time_stamp": "2024-12-20 14:31:43",
+    "text": "I got it figured out now. Thank you!"
+  }
+]

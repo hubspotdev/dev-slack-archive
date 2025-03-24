@@ -1,0 +1,21 @@
+[
+  {
+    "poster": {
+      "poster_name": "Stuart Grant",
+      "poster_handle": "stuart-g"
+    },
+    "time_stamp": "2021-05-20 06:35:36",
+    "edited": {
+      "time_stamp": "2021-05-20 06:36:10"
+    },
+    "text": "Btw, for anyone interested in the follow-up above, this is my Gulp task (slightly modified from one provided in branch) to watch for style changes and HTML file changes to tree-shake TW classes into a `build` directory. This directory also houses my TS &gt; JS compiled code that I plan on using throughout, allowing for modular scripting that works in all browsers.\n\n```const postcss = require('gulp-postcss');\nconst {\n  dest, src, task, watch,\n} = require('gulp');\nconst buffer = require('vinyl-buffer');\nconst source = require('vinyl-source-stream');\nconst browserify = require('browserify');\nconst tsify = require('tsify');\n\nfunction buildTypescript() {\n  return browserify()\n    .add('./src/ts/main.ts')\n    .plugin(tsify)\n    .bundle()\n    .on('error', (error) =&gt; console.error(error.toString()))\n    .pipe(source('bundle.js'))\n    .pipe(buffer())\n    .pipe(dest('./src/build/js'));\n}\n\nfunction compileStyles(cb) {\n  src('src/css/**/*.css')\n    .pipe(postcss())\n    .pipe(dest('./src/build/css'));\n  cb();\n}\n\nfunction watchStylesAndHtml() {\n  watch('tailwind.config.js', compileStyles);\n  watch('src/**/*.html', compileStyles);\n  watch('src/css/main.css', compileStyles);\n}\n\nfunction watchTypeScript() {\n  watch('src/ts/**/*.ts', buildTypescript);\n}\n\nfunction run(development) {\n  if (development) {\n    watchStylesAndHtml();\n    watchTypeScript();\n  }\n}\n\n// Tasks //\ntask('build:ts', buildTypescript);\ntask('dev', () =&gt; run(true));```"
+  },
+  {
+    "poster": {
+      "poster_name": "Stuart Grant",
+      "poster_handle": "stuart-g"
+    },
+    "time_stamp": "2021-05-20 06:36:39",
+    "text": "Very basic, but very powerful."
+  }
+]

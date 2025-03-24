@@ -1,0 +1,137 @@
+[
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2022-12-13 04:35:25",
+    "text": "<@UCY83QS6Q> Another issue, getting problems with choice type, `[any, string][]`  (have to cast arrays when coming from a function to get this work) could it just be `string[][]`  It’s not so precise thought. How about converting those to jsx well, so like:\n```&lt;ChoiceField\n  name=\"name\"\n  label=\"label\"\n&gt;\n  &lt;Choice name=\"option\" label=\"option\"&gt;&lt;/Choice&gt;\n&lt;/ChoiceField&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2022-12-13 07:41:01",
+    "text": "Hey Janne,\n\nCould you post an example of where you are seeing this problem:\n&gt; (have to cast arrays when coming from a function to get this work) \nHaving choices be JSX as well seems like a good idea, we'll have to explore that"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2022-12-13 08:02:01",
+    "text": "<@U01L6S710JD> I believe we have a fix for this—having a space in parent directory—in the latest version of cms-dev-server (`1.1.0-prerelease.8`). Please let us know if updating to that fixes your issue"
+  },
+  {
+    "poster": {
+      "poster_name": "Michelle Tabor",
+      "poster_handle": "michelle376"
+    },
+    "time_stamp": "2022-12-13 08:03:51",
+    "text": "Thanks for looking into so quickly. I will check later today."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Pickle",
+      "poster_handle": "matt502"
+    },
+    "time_stamp": "2022-12-13 10:30:12",
+    "text": "On step 4, when trying to use the local dev server, I was getting this error:\n```[Error: ENOENT: no such file or directory, open '/Users/mattpickle/Documents/Matt/js-building-blocks-beta/cms-js-building-blocks-hello-world/node_modules/@HubSpot/cms-dev-server/html/baseTemplate.html'] {\n  errno: -2,\n  code: 'ENOENT',\n  syscall: 'open',\n  path: '/Users/mattpickle/Documents/Matt/js-building-blocks-beta/cms-js-building-blocks-hello-world/node_modules/@HubSpot/cms-dev-server/html/baseTemplate.html'\n}```\nThe baseTemplate.html file exists, but it was at `@HubSpot/cms-dev-sever/dist/html/baseTemplate.html` . It's skipping over the \"dist\" folder in the path. When I move the \"html\" folder outside of the \"dist\" folder, it works correctly.",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-12-13 10:45:38"
+      },
+      {
+        "time_stamp": "2022-12-13 11:24:03"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2022-12-13 10:45:38",
+    "text": "In my haste to fix a bug this morning I bet I just introduced this problem. Should be an easy fix that we can get out soon. Sorry about that!\n"
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2022-12-13 11:24:03",
+    "text": "We just published a fix for this,\nPlease re-install your deps to pick up latest changes\n\nAnd let us know if you still see the problem\nThanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2022-12-13 14:21:21",
+    "text": "Hi Janne - for the `/fields` resolution issue, we’ll continue to look into potential better support for older module resolution strategies, but given you’re using ES modules and TS 4.9, I’d encourage taking another look at moving to `.js` extensions in your imports - I agree it does feel odd in a TS file but is the recommended pattern in the <https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#type-in-package-json-and-new-extensions|TypeScript 4.7> release where they added support for ES modules"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2022-12-13 14:49:08",
+    "text": "looking into it a bit further it looks like <https://github.com/microsoft/TypeScript/pull/51669|this> just got merged which would solve this in the next typescript release via the `compilerOptions.resolvePackageJsonExports`  flag"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2022-12-13 14:50:20",
+    "text": "i would still generally encourage keeping your `moduleResolution` in sync with the actual version of node you end up using (in the case of HubSpot JS building blocks, JS is executed in node 16)"
+  },
+  {
+    "poster": {
+      "poster_name": "Dewayne Higgs",
+      "poster_handle": "dewayne"
+    },
+    "time_stamp": "2022-12-13 18:18:37",
+    "text": "Hey everyone, I decided to run 'yarn up' in order to get any changes to the dependencies for the hello-world project, but I noticed the update process failed.  I then deleted the yarn.lock and ran 'yarn install', but it also failed.  Here's the contents of the build.log generated on that failed 'yarn install' attempt.\n```# This file contains the result of Yarn building a package (js-building-blocks-hello-world@workspace:.)\n# Script name: postinstall\n\n[31m[1mUsage Error[22m[39m: The nearest package directory (C:\\Users\\Dewayne\\Desktop\\impulsecreative\\repos\\cms-js-building-blocks-hello-world\\hello-world-project\\cms-assets) doesn't seem to be part of the project declared in C:\\Users\\Dewayne\\Desktop\\impulsecreative\\repos\\cms-js-building-blocks-hello-world.\n\n- If C:\\Users\\Dewayne\\Desktop\\impulsecreative\\repos\\cms-js-building-blocks-hello-world isn't intended to be a project, remove any yarn.lock and/or package.json file there.\n- If C:\\Users\\Dewayne\\Desktop\\impulsecreative\\repos\\cms-js-building-blocks-hello-world is intended to be a project, it might be that you forgot to list hello-world-project/cms-assets in its workspace configuration.\n- Finally, if C:\\Users\\Dewayne\\Desktop\\impulsecreative\\repos\\cms-js-building-blocks-hello-world is fine and you intend hello-world-project/cms-assets to be treated as a completely separate project (not even a workspace), create an empty yarn.lock file in it.\n\n[1m$ [22myarn install [--json] [--immutable] [--immutable-cache] [--check-cache] [--inline-builds] [--mode #0]```",
+    "reply_count": 4,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2022-12-13 18:21:52"
+      },
+      {
+        "time_stamp": "2022-12-13 21:31:17"
+      },
+      {
+        "time_stamp": "2022-12-14 07:23:22"
+      },
+      {
+        "time_stamp": "2022-12-16 07:30:12"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Dewayne Higgs",
+      "poster_handle": "dewayne"
+    },
+    "time_stamp": "2022-12-13 18:21:52",
+    "text": "I even deleted the old hello-world repo, re-cloned it, and ran 'yarn install' from within the repo root, and I got the same error."
+  },
+  {
+    "poster": {
+      "poster_name": "Michelle Tabor",
+      "poster_handle": "michelle376"
+    },
+    "time_stamp": "2022-12-13 21:31:17",
+    "text": "this is the error that made me switch back to npm."
+  },
+  {
+    "poster": {
+      "poster_name": "Michelle Tabor",
+      "poster_handle": "michelle376"
+    },
+    "time_stamp": "2022-12-13 21:32:14",
+    "text": "I am still experiencing the same error after updating.\n\nI did fix the /undefined for myself by splitting a line and adding `const webRootProjectComponentFolder = absoluteWebRoot.split('\\\\');`to @cms-dev-server/dist/createDevServer.js and changed line 19 to `expressServer.locals.projectComponentPath = webRootProjectComponentFolder.pop();.`\nI don't know if that was a window's error or a me thing though."
+  }
+]

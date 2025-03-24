@@ -1,0 +1,106 @@
+[
+  {
+    "poster": {
+      "poster_name": "joe conery",
+      "poster_handle": "joe277"
+    },
+    "time_stamp": "2024-12-08 08:31:04",
+    "text": "If I'm using the api, how do I set the `hs_updated_by_user_id` or a similar type field to know that myapp did the modification to an object?",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-12-08 15:40:46"
+      },
+      {
+        "time_stamp": "2024-12-08 16:17:49"
+      },
+      {
+        "time_stamp": "2024-12-08 17:08:08"
+      },
+      {
+        "time_stamp": "2024-12-08 17:48:08"
+      },
+      {
+        "time_stamp": "2024-12-08 18:19:29"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "joe conery",
+      "poster_handle": "joe277"
+    },
+    "time_stamp": "2024-12-08 08:31:47",
+    "text": "the update request fails because that field is read only"
+  },
+  {
+    "poster": {
+      "poster_name": "joe conery",
+      "poster_handle": "joe277"
+    },
+    "time_stamp": "2024-12-08 11:11:31",
+    "text": "I basically want to know if my app did an update through the api or if a user did the update."
+  },
+  {
+    "poster": {
+      "poster_name": "joe conery",
+      "poster_handle": "joe277"
+    },
+    "time_stamp": "2024-12-08 12:14:21",
+    "text": "fyi - I have a way of accomplishing what I want as a workaround.\nCreated a separate field to store the time that api_modified.\nThen I can compare that datetime to the lastmodified field that HubSpot sets and determine if my app was the one that did it."
+  },
+  {
+    "poster": {
+      "poster_name": "Zach Klein",
+      "poster_handle": "zach282"
+    },
+    "time_stamp": "2024-12-08 15:40:46",
+    "text": "Hi <@U07SKR0FZNW> :wave:\nYou can retrieve this information at the property level by using the \"propertiesWithHistory\" query parameter. For example, consider this GET Contact request where I'm inspecting the history of the \"firstname\" property:\n\n```GET <https://api.hubapi.com/crm/v3/objects/contact/:RECORD_ID?propertiesWithHistory=firstname>\n\n{\n    \"id\": \"123456789\",\n    \"properties\": {\n        \"createdate\": \"2022-01-24T09:46:44.277Z\",\n        \"email\": \"<mailto:test@test.com.au|test@test.com.au>\",\n        \"firstname\": \"Example\",\n        \"hs_object_id\": \"123456789\",\n        \"lastmodifieddate\": \"2024-08-16T05:53:37.292Z\",\n        \"lastname\": \"Contact\"\n    },\n    \"propertiesWithHistory\": {\n        \"firstname\": [\n            {\n                \"value\": \"Example\",\n                \"timestamp\": \"2023-09-12T22:12:30.308Z\",\n                \"sourceType\": \"INTEGRATION\",\n                \"sourceId\": \"987654321\"\n            },\n            {\n                \"value\": \"\",\n                \"timestamp\": \"2023-09-06T02:35:19.515Z\",\n                \"sourceType\": \"INTEGRATION\",\n                \"sourceId\": \"123456789\"\n            },\n            {\n                \"value\": \"Test\",\n                \"timestamp\": \"2022-01-24T09:46:44.264Z\",\n                \"sourceType\": \"CRM_UI\",\n                \"sourceId\": \"userId:123\",\n                \"updatedByUserId\": 123\n            }\n        ]\n    },\n    \"createdAt\": \"2022-01-24T09:46:44.277Z\",\n    \"updatedAt\": \"2024-08-16T05:53:37.292Z\",\n    \"archived\": false\n}```\nYou'll just need to know your app's \"sourceId\" value in order to identify updates made by your app. Shout with any follow-up questions :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "joe conery",
+      "poster_handle": "joe277"
+    },
+    "time_stamp": "2024-12-08 16:17:49",
+    "text": "interesting thanks..\nMight find some value for that at some point, but that def wouldn't be a scalable solution when Im getting all records updated/created since a certain time (or possible just all)\nI don't think that would actually work in this case though.. because I don't know what field I would've updated. I'm updating the record.\nAnd I don't know what field a user might modified... All I want to know is who made that last modification, but you can't tell that because HubSpot doesn't update the `hs_updated_by_user_id` field after my api does an update. It just gets left at the previous value."
+  },
+  {
+    "poster": {
+      "poster_name": "Zach Klein",
+      "poster_handle": "zach282"
+    },
+    "time_stamp": "2024-12-08 17:08:08",
+    "text": "<@U07SKR0FZNW> No problem. Yes, that makes sense. My only other thought would be to use webhook subscriptions, rather than a \"get all records updated/created since\" type approach. You could configure the webhook subscriptions just for property value changes relevant to the properties managed by your app. Might not suit your use case, but just a thought :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "joe conery",
+      "poster_handle": "joe277"
+    },
+    "time_stamp": "2024-12-08 17:48:08",
+    "text": "yeah... kind of tough.\nI'm running the app in a location where it would be unreachable from outside requests on a client's server.\nIt's basically doing a lot of what Microsoft Dynamics sync app is doing, but better :stuck_out_tongue_winking_eye:\nDef appreciate the ideas.\nJust to know that there's anyone out there responding."
+  },
+  {
+    "poster": {
+      "poster_name": "Zach Klein",
+      "poster_handle": "zach282"
+    },
+    "time_stamp": "2024-12-08 18:19:29",
+    "text": "No problem, good luck <@U07SKR0FZNW>"
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2024-12-08 23:26:02",
+    "text": "Does anyone have any comments?"
+  },
+  {
+    "poster": {
+      "poster_name": "Sourav Kundu",
+      "poster_handle": "sourav.kundu"
+    },
+    "time_stamp": "2024-12-08 23:57:40",
+    "text": "Hey everyone,\n\nJust following up on my previous post regarding the issue with tracking Google and Facebook leads after the recent API shift. We haven't received any feedback yet and would really appreciate your insights or suggestions on how to resolve this. Has anyone else faced similar issues or found a workaround?\n\nThanks in advance for your help!"
+  }
+]

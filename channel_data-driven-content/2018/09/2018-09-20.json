@@ -1,0 +1,554 @@
+[
+  null,
+  {
+    "text": "Problem : today’s events aren’t get just the next",
+    "time_stamp": "2018-09-20 03:13:09"
+  },
+  {
+    "poster": {
+      "poster_name": "LOIC BURDET",
+      "poster_handle": "loic_burdet"
+    },
+    "time_stamp": "2018-09-20 03:15:16",
+    "text": "Hey community I have a little script to get some event from a HubDB\nI want to use a filter query with date but events from the actual day don’t appear on my list\nIt sounds like the “gte” doesn’t work :disappointed:"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-09-20 07:41:36",
+    "text": "If your events are just set to the day, I think the issue is that the timestamp for them is at midnight"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-09-20 07:42:04",
+    "text": "So as soon as you're a second past midnight, local_dt (which is the current time) is after the event."
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-09-20 07:42:25",
+    "text": "Try just subtracting 24 hours from the currentDate timestamp"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-09-20 07:43:18",
+    "text": "`{% set currentDate = unixtimestamp(local_dt) - 86400 %}` or something"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-09-20 08:37:24",
+    "text": "would be nice if the hubDB column type for select, could do what contact properties can where you can load a list of predefined options. for example I need to list all of the states.",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2020-08-08 10:50:32"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-09-20 08:37:32",
+    "edited": {
+      "time_stamp": "2018-09-20 08:41:31"
+    },
+    "text": "I’m a fast typer but I’m lazy - that’s 50 names + outerlying territories I’ve gotta remember and type out or copy and paste from a list 1 at a time."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-09-20 08:40:49",
+    "text": "because of my lazyness I’m leaning toward telling the client to just type in the state’s abbreviation.\n\nIn addition it’d be great to have help text for columns just like custom modules"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-09-20 11:17:08",
+    "edited": {
+      "time_stamp": "2018-09-20 11:18:36"
+    },
+    "text": "Question on Dynamic Pages:\nI’m building an event listing.\nWhen you go to the page “/events”\nYou will see a module that lists all of the events stored in a hubDB.\n\nNow I need to have the dynamic pages have the slug “/events/event-name”.\n\n*Do I set the page “/events” as the dynamic page, then set it so the “listing” module hides if it’s URL is not just”/events”?*"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-09-20 11:21:15",
+    "text": "let me grab code real quick for an example"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-09-20 11:23:10",
+    "text": "```\n{% if dynamic_page_hubdb_row %}\n  Content for the dynamic page goes here\n{% elif dynamic_page_hubdb_table_id %}\n  Content for the loop goes here\n{% endif %}\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-09-20 11:24:03",
+    "text": "okay interesting. makes it more interesting that I built what I built as a custom module lol"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-09-20 11:24:14",
+    "edited": {
+      "time_stamp": "2018-09-20 11:25:29"
+    },
+    "text": "then when the page is linked to i usually just link to something like:\n```\n&lt;a href=\"{{ absolute_url }}/{{ row.hs_path }}\"&gt;Text&lt;/a&gt;\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-09-20 11:27:01",
+    "text": "Thank for this AJ.\n\nMakes things interesting because I didn’t build it with the loop in the template, i built a module that pulls the hubDB and loops through it.\n\nSo lol now I’m thinking I need to use if `dynamic_page_hubdb_row` to dynamically hide/show a flex column lol"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-09-20 11:36:12",
+    "text": "I've only ever used that when doing dynamic pages, makes it easier. At least for what I needed for it all."
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-09-20 11:37:50",
+    "text": "I'm still trying to find a good 3rd party solution for calendaring as right now, I only know of Trumba but thats a pain and customization of the feeds aren't exactly the best. The UI really ugly and then admin area is a cluster to work with. All the vendors at Inbound were all for being a replacement but they were more \"conference\" based events not just a simple event listing"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-09-20 11:50:13",
+    "edited": {
+      "time_stamp": "2018-09-20 11:50:31"
+    },
+    "text": "I’ve used Google Calendar with <http://calendar.io|calendar.io> before.\n\nThis specific project that wasn’t going to give enough info."
+  },
+  {
+    "text": "I have fields in a table that i need to search by a range of Zipcodes. Using number fields removes the zero for zipcodes like 06706...so using Less than or Greater than will not work on text fields. What would you recommend?",
+    "time_stamp": "2018-09-20 13:31:57",
+    "reply_count": 32,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2018-09-20 13:34:39"
+      },
+      {
+        "time_stamp": "2018-09-20 13:34:46"
+      },
+      {
+        "time_stamp": "2018-09-20 13:37:22"
+      },
+      {
+        "time_stamp": "2018-09-20 13:40:58"
+      },
+      {
+        "time_stamp": "2018-09-20 13:43:35"
+      },
+      {
+        "time_stamp": "2018-09-20 13:57:10"
+      },
+      {
+        "time_stamp": "2018-09-20 14:13:36"
+      },
+      {
+        "time_stamp": "2018-09-20 14:13:57"
+      },
+      {
+        "time_stamp": "2018-09-20 14:14:25"
+      },
+      {
+        "time_stamp": "2018-09-20 14:15:39"
+      },
+      {
+        "time_stamp": "2018-09-20 14:15:41"
+      },
+      {
+        "time_stamp": "2018-09-20 14:16:25"
+      },
+      {
+        "time_stamp": "2018-09-20 14:17:08"
+      },
+      {
+        "time_stamp": "2018-09-20 14:17:45"
+      },
+      {
+        "time_stamp": "2018-09-20 14:18:45"
+      },
+      {
+        "time_stamp": "2018-09-20 14:23:27"
+      },
+      {
+        "time_stamp": "2018-09-20 14:25:09"
+      },
+      {
+        "time_stamp": "2018-09-20 14:25:15"
+      },
+      {
+        "time_stamp": "2018-09-20 14:25:18"
+      },
+      {
+        "time_stamp": "2018-09-20 14:25:30"
+      },
+      {
+        "time_stamp": "2018-09-20 14:25:44"
+      },
+      {
+        "time_stamp": "2018-09-20 14:26:00"
+      },
+      {
+        "time_stamp": "2018-09-20 14:28:21"
+      },
+      {
+        "time_stamp": "2018-09-20 14:28:47"
+      },
+      {
+        "time_stamp": "2018-09-20 14:31:53"
+      },
+      {
+        "time_stamp": "2018-09-20 14:32:57"
+      },
+      {
+        "time_stamp": "2018-09-20 14:33:28"
+      },
+      {
+        "time_stamp": "2018-09-20 14:33:34"
+      },
+      {
+        "time_stamp": "2018-09-20 14:34:41"
+      },
+      {
+        "time_stamp": "2018-09-20 14:35:45"
+      },
+      {
+        "time_stamp": "2018-09-20 14:37:24"
+      },
+      {
+        "time_stamp": "2018-09-20 15:21:58"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-09-20 13:34:39",
+    "text": "Strings (Text) fields then convert them to |int for comparison perhaps? I’m also pretty sure that TEXT fields , when compared as numbers, will attempt to convert for the purposes of the operation"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-09-20 13:34:46",
+    "text": "Returning 0 if they fail to convert"
+  },
+  {
+    "poster": {
+      "poster_name": "Russell Benzing",
+      "poster_handle": "rbenzing"
+    },
+    "time_stamp": "2018-09-20 13:37:22",
+    "text": "yeah it does strip the 0 too"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-09-20 13:40:58",
+    "text": "well of course, when comparing numbers you don’t deal with leading zeros :wink:"
+  },
+  {
+    "poster": {
+      "poster_name": "Russell Benzing",
+      "poster_handle": "rbenzing"
+    },
+    "time_stamp": "2018-09-20 13:43:35",
+    "text": "i know... was hoping there would be smarter logic comparisons :alien:"
+  },
+  {
+    "poster": {
+      "poster_name": "Russell Benzing",
+      "poster_handle": "rbenzing"
+    },
+    "time_stamp": "2018-09-20 13:57:10",
+    "text": "<@U6GNQ7JBU> any thoughts?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2018-09-20 14:13:36",
+    "text": "He’s on vacation :slightly_smiling_face: You could just add another 1 to the the front of the values and subtract it later."
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2018-09-20 14:13:57",
+    "text": "Storing them as text will be much slower to search."
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2018-09-20 14:14:25",
+    "text": "So instead of storing 99500, store 199500"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2018-09-20 14:15:39",
+    "text": "But perhaps all you need is a number formatter to make sure it has 5 digits when you display it"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-09-20 14:15:41",
+    "text": "Nothing like ruining the data in favor of efficiency! :wink:"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-09-20 14:16:25",
+    "text": "^^^ that’s what I’ve done historically, but I think the question is revolving more around the ability to query in a range from the DB"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-09-20 14:17:08",
+    "text": "Which, 0XXXX vs 1XXXX (as a range) is going to work fine… so yeah, it’s really just formatting for display after the fact"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2018-09-20 14:17:45",
+    "text": "why do you need a range? should just be `lte=ZIPMAX&amp;gte=ZIPMIN`"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-09-20 14:18:45",
+    "text": "<@U504BHZ6K> ^^^"
+  },
+  {
+    "poster": {
+      "poster_name": "Russell Benzing",
+      "poster_handle": "rbenzing"
+    },
+    "time_stamp": "2018-09-20 14:23:27",
+    "text": "<@U22PJPGK0> Not sure that will work for my case. A frontend search where a customer is searching using their zipcode and pulling results from  this table to pull out the State in this case from the range of zipcodes"
+  },
+  {
+    "poster": {
+      "poster_name": "Russell Benzing",
+      "poster_handle": "rbenzing"
+    },
+    "time_stamp": "2018-09-20 14:25:09",
+    "text": "i am going to do something similar to what <@U4RP6AGV9> suggested checking the length of the int and only comparing those length values to each other"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2018-09-20 14:25:15",
+    "text": "Also can use `2141|filter(\"%05d\", zipcode)` to pad with zeros"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-09-20 14:25:18",
+    "text": "note for you: there are zipcodes that fall within ranges that SHOULD be in one state but are actually in another. No specific examples to give right now, but I built a zip code search setup earlier this year in HubDB"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2018-09-20 14:25:30",
+    "text": "we also have geocoding functions"
+  },
+  {
+    "poster": {
+      "poster_name": "Russell Benzing",
+      "poster_handle": "rbenzing"
+    },
+    "time_stamp": "2018-09-20 14:25:44",
+    "text": "its not good for zipcode ranges"
+  },
+  {
+    "poster": {
+      "poster_name": "Russell Benzing",
+      "poster_handle": "rbenzing"
+    },
+    "time_stamp": "2018-09-20 14:26:00",
+    "text": "its great for radius searching using City or one zipcode"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2018-09-20 14:28:21",
+    "text": "there’s a `postal_location` function that returns the lat,lon of a zipcode, but I guess that’s not what you want"
+  },
+  {
+    "poster": {
+      "poster_name": "Russell Benzing",
+      "poster_handle": "rbenzing"
+    },
+    "time_stamp": "2018-09-20 14:28:47",
+    "text": "thats interesting to know"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2018-09-20 14:31:53",
+    "edited": {
+      "time_stamp": "2018-09-20 14:32:01"
+    },
+    "text": "actually, correcting my params above, `ZIPMAX__lte=12345&amp;ZIPMIN__gte=12345`"
+  },
+  {
+    "poster": {
+      "poster_name": "Russell Benzing",
+      "poster_handle": "rbenzing"
+    },
+    "time_stamp": "2018-09-20 14:32:57",
+    "text": "that is what i had originally but number fields strip the leading 0 causing that logic to fail"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2018-09-20 14:33:28",
+    "edited": {
+      "time_stamp": "2018-09-20 14:33:39"
+    },
+    "text": "the zipcode columns are number types?"
+  },
+  {
+    "poster": {
+      "poster_name": "Russell Benzing",
+      "poster_handle": "rbenzing"
+    },
+    "time_stamp": "2018-09-20 14:33:34",
+    "text": "yeah"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2018-09-20 14:34:41",
+    "text": "Can you share your portal/template?"
+  },
+  {
+    "poster": {
+      "poster_name": "Russell Benzing",
+      "poster_handle": "rbenzing"
+    },
+    "time_stamp": "2018-09-20 14:35:45",
+    "text": "you are in DND mode did you get my DM <@U22PJPGK0>?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2018-09-20 14:37:24",
+    "text": "ha, slack thought I was in Europe"
+  },
+  null,
+  null,
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2018-09-20 15:21:58",
+    "text": "resolution -&gt; double check that all your columns are indeed number types :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonathan Pavoni - Level 9",
+      "poster_handle": "jonathanpavoni"
+    },
+    "time_stamp": "2018-09-20 15:48:42",
+    "text": "I’m just trying to loop through a dropdown select list to get the values - what is the best way to do that?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonathan Pavoni - Level 9",
+      "poster_handle": "jonathanpavoni"
+    },
+    "time_stamp": "2018-09-20 15:49:03",
+    "text": "What is the for loop structure to get the values in the select list?"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2018-09-20 22:00:51",
+    "text": "a couple ways.. hubdb_table_column(‘TABLE ID’, ‘COLUMN NAME’).options"
+  }
+]

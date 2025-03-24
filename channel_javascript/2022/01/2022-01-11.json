@@ -1,0 +1,89 @@
+[
+  {
+    "poster": {
+      "poster_name": "Christopher Chiha",
+      "poster_handle": "christopher051"
+    },
+    "time_stamp": "2022-01-11 08:22:30",
+    "text": "Hello,\nI want to do an API call from a custom code using js.\nCalling the search API to look for contacts in a deal that have contact type = customer.\nUsing this get api :\n```<https://api.hubapi.com/contacts/v1/search/query?q=testingapis&amp;hapikey=demo>```\nHow can i call this api from my custom code action using js ?",
+    "reply_count": 8,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2022-01-11 09:48:57"
+      },
+      {
+        "time_stamp": "2022-01-11 10:03:44"
+      },
+      {
+        "time_stamp": "2022-01-11 10:27:01"
+      },
+      {
+        "time_stamp": "2022-01-11 10:36:01"
+      },
+      {
+        "time_stamp": "2022-01-11 15:33:36"
+      },
+      {
+        "time_stamp": "2022-01-11 21:11:38"
+      },
+      {
+        "time_stamp": "2022-01-12 07:25:28"
+      },
+      {
+        "time_stamp": "2022-01-13 13:12:24"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Alessio Michelini",
+      "poster_handle": "amichelini"
+    },
+    "time_stamp": "2022-01-11 09:48:57",
+    "text": "Well, you will need to pass the Hapikey to it, and in that case I recommend you to protect it somehow, as you should never expose it, then having the filter with the property you want to search.\nI would also recommend to use the newer version of the APIs <https://developers.HubSpot.com/docs/api/crm/contacts>"
+  },
+  {
+    "poster": {
+      "poster_name": "Christopher Chiha",
+      "poster_handle": "christopher051"
+    },
+    "time_stamp": "2022-01-11 10:03:44",
+    "text": "<@U022H746532>\nThe API along with the required parameters are set, but when i try calling from a custom code action it is returning errors, probably as i am not so familiar with javascript syntax, but need to make this work.\n\nDo you have any sample/example on similar api calls used in custom code actions in workflow so i can take as reference ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Alessio Michelini",
+      "poster_handle": "amichelini"
+    },
+    "time_stamp": "2022-01-11 10:27:01",
+    "text": "Do you mean in HubSpot app workflow? Unfortunately not"
+  },
+  {
+    "poster": {
+      "poster_name": "Christopher Chiha",
+      "poster_handle": "christopher051"
+    },
+    "time_stamp": "2022-01-11 10:36:01",
+    "text": "Yes, i am not able to trigger the GET request from the custom code.\nOkay, Thank you loads !"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Ainslie",
+      "poster_handle": "rainslie"
+    },
+    "time_stamp": "2022-01-11 15:33:36",
+    "text": "Hey Christopher, I'd recommend a few things here:\n1. Use the <https://www.npmjs.com/package/@HubSpot/api-client|HubSpot node.js client library> in your coded action, it makes the syntax a little bit easier (though, it's easiest to explore this library in a local code editor like VScode. This library then uses the most up to date version of the HubSpot APIs  -<https://developers.HubSpot.com/docs/api/crm/search| view the v3 Search endpoint docs>\n2. The use case you're presenting is slightly strange - looking up any potential contact that's a customer in a deal based workflow is an atypical pattern - usually you'd want to do something like find an association of a contact that's associated to the deal that triggered the workflow (Remember that when a Deal workflow fires, it's enrolling that single deal record)\n3. You might also want to look at the <https://www.HubSpot.com/programmable-automation-use-cases|Programmable Automation use case library> for some inspiration on how folks are building other usage patterns with coded actions. \nIn any case, the code you'd want to run. Note that you'll swap out the 'firstname' field and the value 'Robert' that I'm using in this sample:\n```const HubSpot = require('@HubSpot/api-client');\n\nexports.main = async (event, callback) =&gt; {\n  /*****\n    How to use secrets\n    Secrets are a way for you to save API keys and set them as a variable to use anywhere in your code\n    Each secret needs to be defined like the example below\n  *****/\n\n  const HubSpotClient = new HubSpot.Client({\n    apiKey: process.env.HAPIKEY\n  });\n\n  let results;\n  try {\n    const ApiResponse = await HubSpotClient.crm.contacts.searchApi.doSearch({\n    \"properties\":[\"email\",\"firstname\",\"lastname\"],\n      \"filterGroups\":[\n        {\n          \"filters\":[\n            {\n              \"propertyName\": \"firstname\",\n              \"operator\": \"CONTAINS_TOKEN\",\n              \"value\": \"Robert\"\n            }\n          ]\n        }\n      ]\n    });\n    results = ApiResponse.body;\n    console.log(results)\n  } catch (err) {\n    console.error(err);\n    // We will automatically retry when the code fails because of a rate limiting error from the HubSpot API.\n    throw err;\n  }\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Christopher Chiha",
+      "poster_handle": "christopher051"
+    },
+    "time_stamp": "2022-01-11 21:11:38",
+    "edited": {
+      "time_stamp": "2022-01-11 22:25:05"
+    },
+    "text": "<@UJJ239SC9>\nThanks a lot Robert for your effort on this.\nI tried this code, it returned some errors.\n\nMy main objective is to fetch a certain contact from the deal when the deal reaches a certain stage of the workflow, while association labels are not yet feasible in our current process.\n\nIn deal based workflow, the workflow will target all contacts in a deal, that's why i require to fetch a certain contact from it.\n\nAre you aware of any other idea to do so ?"
+  }
+]

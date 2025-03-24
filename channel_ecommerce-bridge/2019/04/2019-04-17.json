@@ -1,0 +1,130 @@
+[
+  {
+    "poster": {
+      "poster_name": "Scott Burton",
+      "poster_handle": "scott.burton"
+    },
+    "time_stamp": "2019-04-17 13:16:51",
+    "edited": {
+      "time_stamp": "2019-04-17 13:17:30"
+    },
+    "text": "Hi all :wave:\n\nTrying to make sense of this error from ecom bridge:\n`Error performing[CREATE] DEAL[mxt-store-burton-dev__c2f783dd-9a5a-46ef-8a19-9baa1a981ae8] for portal MYPORTALID, error was [MYPORTALID] create failed - java.util.concurrent.CompletionException: com.HubSpot.apicaller.exceptions.ApiErrorResponseException: Api[name=deals, subPath=/deals/v2/deals/] Failed to process your request. Error code was '400'. Error message was:\\nProperty values were not valid`\n\n\"Property values were not valid\" isn't a lot to go on. I'm sending an object like this:\n\n```{\n    \"storeId\": \"mxt-store-burton-dev\",\n    \"objectType\": \"DEAL\",\n    \"messages\": [\n        {\n            \"action\": \"UPSERT\",\n            \"changedAt\": \"1555462331000\",\n            \"externalObjectId\": \"c2f783dd-9a5a-46ef-8a19-9baa1a981ae8\",\n            \"properties\": {\n                \"created_at\": \"1555525221000\",\n                \"name\": \"TEST NAME\",\n                \"status\": \"checkout_pending\"\n            },\n            \"associations\": {\n                \"CONTACT\": [\n                    \"4c819f0a-4cd6-4e16-b271-be3ab26f3567\"\n                ]\n            }\n        }\n    ]\n}```\n\nand my field mappings for `DEAL` is this:\n\n```{\"properties\"=&gt;\n      [{\"externalPropertyName\"=&gt;\"created_at\", \"HubSpotPropertyName\"=&gt;\"closedate\", \"dataType\"=&gt;\"STRING\"},\n       {\"externalPropertyName\"=&gt;\"name\", \"HubSpotPropertyName\"=&gt;\"dealname\", \"dataType\"=&gt;\"STRING\"},\n       {\"externalPropertyName\"=&gt;\"status\", \"HubSpotPropertyName\"=&gt;\"dealstage\", \"dataType\"=&gt;\"STRING\"}]},\n```\n\nI've tried the `created_at` value as a string and number. Also, `checkout_pending` is a valid value for `dealname` in my property setup.\n\nI'm missing something. Can anyone spot the issue?",
+    "reply_count": 11,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2019-04-17 13:19:31"
+      },
+      {
+        "time_stamp": "2019-04-17 13:19:57"
+      },
+      {
+        "time_stamp": "2019-04-17 13:20:15"
+      },
+      {
+        "time_stamp": "2019-04-17 13:21:22"
+      },
+      {
+        "time_stamp": "2019-04-17 13:22:22"
+      },
+      {
+        "time_stamp": "2019-04-17 13:23:26"
+      },
+      {
+        "time_stamp": "2019-04-17 13:23:58"
+      },
+      {
+        "time_stamp": "2019-04-17 13:26:31"
+      },
+      {
+        "time_stamp": "2019-04-17 13:27:02"
+      },
+      {
+        "time_stamp": "2019-04-17 13:27:26"
+      },
+      {
+        "time_stamp": "2019-04-22 10:07:14"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-04-17 13:19:31",
+    "text": "Hey <@U7QHZR9DZ> usually it’s because of dropdown option mismatch. In this case the most likely culprit is status which maps to dealstage since that’s an enum"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-04-17 13:19:57",
+    "text": "Can you confirm their is a deal stage who’s internal name is `checkout_pending` in your portal?"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Burton",
+      "poster_handle": "scott.burton"
+    },
+    "time_stamp": "2019-04-17 13:20:15",
+    "text": "Yeah I figured as much, but I'm certain `checkout_pending` is right, although I am not specifying which pipeline here"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Burton",
+      "poster_handle": "scott.burton"
+    },
+    "time_stamp": "2019-04-17 13:21:22",
+    "text": "```{\"stageId\"=&gt;\"checkout_pending\",\n  \"createdAt\"=&gt;1555486745691,\n  \"updatedAt\"=&gt;1555488014713,\n  \"label\"=&gt;\"Checkout Pending\",\n  \"displayOrder\"=&gt;1,\n  \"metadata\"=&gt;{\"isClosed\"=&gt;\"false\", \"probability\"=&gt;\"0.5\"},\n  \"active\"=&gt;true}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Burton",
+      "poster_handle": "scott.burton"
+    },
+    "time_stamp": "2019-04-17 13:22:22",
+    "text": "do I need to specify which pipeline? it seemed like ecom bridge automatically chooses the ecom pipeline but I could be wrong"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-04-17 13:23:26",
+    "text": "No, I’ve used it in the past without specifying a pipeline"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-04-17 13:23:58",
+    "text": "given that I see a storeId, can I assume this is ecomm bridge v2 ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Burton",
+      "poster_handle": "scott.burton"
+    },
+    "time_stamp": "2019-04-17 13:26:31",
+    "text": "Yes"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-04-17 13:27:02",
+    "text": "Ok well, everything looks correct from what you’ve sent me. Mind DMing me your portal ID so I can look further?"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Burton",
+      "poster_handle": "scott.burton"
+    },
+    "time_stamp": "2019-04-17 13:27:26",
+    "text": "many thanks Zack"
+  }
+]

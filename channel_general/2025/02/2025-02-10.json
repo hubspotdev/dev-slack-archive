@@ -1,0 +1,113 @@
+[
+  {
+    "poster": {
+      "poster_name": "Bianca",
+      "poster_handle": "bianca"
+    },
+    "time_stamp": "2025-02-10 01:40:38",
+    "text": "Our company has revised our HubSpot workflow after discontinuing development in Umbraco and realizing that HubSpot lacks a robust beta → staging → live safe environment for updating modules. Our new approach involves maintaining duplicate themes—one for live use (\"Theme Live\") and one for staging (\"Theme Staging\"). We actively develop on the staging theme, using its templates and modules to create content staging pages. Once we’re satisfied with the result, we open a pull request from the staging branch to the main branch on GitHub. This triggers a GitHub action that removes all instances of \" Staging\" from the files using hs deploy, and then uploads the files to Theme Live with hs upload.\nWhile this process works well overall, there remains a significant challenge: simply switching the theme template from Staging to Live and publishing the staging pages results in a live template that still references staging modules.\n\nWe explored several approaches to resolve this:\n• Bulk Updating via API:\n• We attempted to use the API to update pages in bulk by identifying those with template paths starting with \"Theme Live\" and swapping their module IDs using data from a JSON file. Unfortunately, this method failed because the module_id property is read-only.\n• Cloning Pages via API:\n• Next, we tried fetching the JSON for a content staging page and cloning it while omitting any read-only properties. The idea was that specifying the module name (e.g., \"Hero\") would allow the CMS to initialize the correct module with the provided inputs. However, this approach produced unexpected results: the edit page failed to load (this is not a one-time thing, all creations through this proccess cannot be edited in the page editor), and when published, the module selected wasn’t from Theme Live or Theme Staging but rather from a third in the protal —even though the content was correct.\n• \nGiven these challenges, we’re looking for suggestions on how to:\n• Specifically target a desired theme for the modules, or\n• Implement an alternative method to switch a page from one theme to another, ensuring that the modules (assuming the new theme has an identical variant in terms of fields) are sourced from the new theme.\nAny insights or solutions would be greatly appreciated.",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-02-21 08:31:36"
+      },
+      {
+        "time_stamp": "2025-02-21 12:46:11"
+      },
+      {
+        "time_stamp": "2025-02-21 12:51:58"
+      },
+      {
+        "time_stamp": "2025-02-21 12:54:33"
+      },
+      {
+        "time_stamp": "2025-02-21 13:04:29"
+      },
+      {
+        "time_stamp": "2025-02-21 13:06:55"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Sabrina Fowler",
+      "poster_handle": "sfowler"
+    },
+    "time_stamp": "2025-02-10 04:20:33",
+    "edited": {
+      "time_stamp": "2025-02-10 04:21:19"
+    },
+    "text": "<#C22PU4LV8|general> Has anyone had any luck calculating total invoices on deal to make sure they match the overall deal amount and line items? - Basically a lot of manually updating - want to make sure that all invoices = total deal amount = total of all line items?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-02-10 05:54:25"
+      },
+      {
+        "time_stamp": "2025-02-10 06:02:03"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Stacey Thomas",
+      "poster_handle": "stacey.thomas"
+    },
+    "time_stamp": "2025-02-10 04:50:41",
+    "text": "You may be able to find property history with this endpoint and a query parameter:\n<https://developers.HubSpot.com/docs/reference/api/crm/objects/companies#basic>\n\nIt is possible as i've done the same with contacts previously (allbeit a bit of a pain in my case as i didn't just need the previous value, I needed one about 3 changes back).\n\nPotentially doing this one by one as part of a custom coded workflow to grab the previous property value in the response and then set it back on the object... Or using the companies endpoint via postman or similar, getting the response and then re-importing the values? Just a few ideas :)"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2025-02-10 05:54:25",
+    "text": "I have not personally done what you're asking - but I do have a bit of advice.  The deal property \"amount\" is only updated if the user, when updating line items where the amount would be changed, click the button asking them whether to update the deal amount or not.  If they don't click it, then the deal amount won't match the line items amount.  Fortunately, there is another deal property that is updated regardless whether they click the button or not and I would use that property for the comparison to the line items.  The property is Total Contract Value (total_contract_value)."
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2025-02-10 06:02:03",
+    "edited": {
+      "time_stamp": "2025-02-10 06:08:37"
+    },
+    "text": "Thanks <@U01GW2U4WMA> - That one I actually did get the line items to the deal amount (but always appreciate the reminder!!) It's those dang invoices (when there are more than one per deal) that we need to make sure is calculating properly."
+  },
+  {
+    "poster": {
+      "poster_name": "Teddy TH Digital",
+      "poster_handle": "hello249"
+    },
+    "time_stamp": "2025-02-10 16:21:34",
+    "text": "On multi-step forms, has anyone been able to pre-populate form fields that are not on step 1? It looks like the pre-population is only available for fields on the first step."
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Lockwood",
+      "poster_handle": "christopher.lockwood8"
+    },
+    "time_stamp": "2025-02-10 20:31:50",
+    "text": "Hey Everyone!\nI am trying to find infomation on how to track Meeting booking links (Not embeded on a webpage) in Google Ads. I have created a trigger using the HubSpot meeting listener but I cant find any information on how to pass the data back to GTM (Potentially via a webhook) after the Meeting is booked. Any help would be great"
+  },
+  {
+    "text": "Anyone know why font size from Rich text in CRM isn't available front end?\n using {{campaign.campaign_cars___introduction_text}}, the italic of the bottom part is OK but the font size is completely ignored.",
+    "time_stamp": "2025-02-11 00:51:15",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-02-11 05:48:45"
+      },
+      {
+        "time_stamp": "2025-02-11 07:24:15"
+      },
+      {
+        "time_stamp": "2025-02-11 08:18:54"
+      },
+      {
+        "time_stamp": "2025-02-13 00:31:19"
+      }
+    ]
+  }
+]

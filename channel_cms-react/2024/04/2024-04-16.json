@@ -1,0 +1,578 @@
+[
+  {
+    "poster": {
+      "poster_name": "Daniel Mahadi",
+      "poster_handle": "daniel.mahadi"
+    },
+    "time_stamp": "2024-04-16 03:19:42",
+    "text": "Hi <@UAYBXDG4U>\n(let me help my colleague <@U06NTPTUT9R>)\n\nThe background:\nWe have a sitepage as a insurance coverage page. We use this page to present `100+` products to our customer (certainly not all 100 at one go), we select the product to show based on the queryparam `productuid`\n\nThis page is reading the product data from hubdb. We have consider to use `dynamic page` but it is not allow us to customize what information to show for each product .\n\nSo we thought, perhaps having it all in one page and just switch it up based on a `productuid` is something ok to go forward,\n\nSo in the editor mode, the content team will configure 100+ products in that site page, like:\n• what attribute to show\n• how to compare the product for `upsell` purpose\nSo as our content team adds product to the page.. the editor crashed and the rendered page still works.\n\ncurrently this page is in `limited` audience mode. Please let me know if you need access.. we can direct message the info to you guys."
+  },
+  {
+    "poster": {
+      "poster_name": "Benjamin Cai",
+      "poster_handle": "benjamin.cai"
+    },
+    "time_stamp": "2024-04-16 04:14:41",
+    "text": "Hi, is there any flag in react-cms to indicate when we are on editor mode (like on hubl)?"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-04-16 06:13:32",
+    "text": "<@U06NTPTUT9R> you can pass that hubl flag into a CMS React module using the `hublData`  mechanic <https://github.HubSpot.com/cms-react/reference/js-modules.html#hubldatatemplate>"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-04-16 06:15:38",
+    "text": "As far as the best way to set up this page - when you say dynamic pages don't allow you customize what information to show for each product ... can you be more specific? Are you not able to pull the specific hub db row information for that page slug?"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-04-16 06:17:00",
+    "text": "I see - cc <@U04DLJH3W94>"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-04-16 07:17:56",
+    "text": "Can you give me an example of what piece of data youre looking for on widget_data?\n\nFrom what I can tell widget_data is only populated when `export_to_template_context` is used?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2024-04-16 07:51:32",
+    "edited": {
+      "time_stamp": "2024-04-16 08:00:27"
+    },
+    "text": "Thanks for helping with this!\n\nAs mentioned, we have a module where we define settings, global translations and such.\nThis is part of our base.html layout, used across all templates.\n```{% module 'website_settings', label='Website settings', path='../../custom-modules/website-settings', export_to_template_context=True %}\n{% set settings = widget_data.website_settings %}```\nWe’re exporting to template context and setting a HubL variable, for easy use on templates.\n\nIn the React module:\n```export const hublDataTemplate = `\n  {% set settings = widget_data.website_settings %}\n  {% set noResults = settings.cases.cases_filters.cases_no_results_label %}\n  {% set module = module %} // just a test of actually returning HubL data\n  {% set hublData = {\n    \"widget_data\": widget_data,\n    \"settings\": settings,\n    \"noResults\": noResults,\n    \"module\": module,\n  }\n  %}\n````\nReturns the following console log:\n```hublData {\n  widget_data: {},\n  settings: null,\n  noResults: null,\n  module: {\n    general: { enabled: true, class: '' },\n    cases_display_settings: { data_connection: 'dk_td', show_filters: true, cases_to_show: 50 },\n    type: 'module'\n  }\n}```\nSo it returns an empty widget_data object, but grabs module fields with no issue.\n\nThe URL I’m using: `http:_//portalId.hs-sites-eu1.com.hslocal.net:3000/preview/module/CasesList_`"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-16 08:01:11",
+    "text": "maybe something using <https://github.HubSpot.com/cms-react/field-types/type-aliases/type-alias.AdvancedVisibility.html>"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-16 08:01:49",
+    "text": "and I think all fields have some level of visibility control: <https://github.HubSpot.com/cms-react/field-types/type-aliases/type-alias.BaseField.html>"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-04-16 08:34:00",
+    "text": "Have you tried to see if this populates on a deployed page?"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-04-16 08:34:20",
+    "text": "I wouldn't expect it to work on a preview/module route, since that wouldn't be using your base.html layout"
+  },
+  {
+    "poster": {
+      "poster_name": "Rich McNeary",
+      "poster_handle": "rich960"
+    },
+    "time_stamp": "2024-04-16 10:38:13",
+    "edited": {
+      "time_stamp": "2024-04-16 10:38:58"
+    },
+    "text": "I’d like to request a change to the `ModuleProps` type. It would be great if it was generic so that the `fieldValues` could be specific and be properly typed (for example right now there is an error in Storybook with `moduleStory` because we actually type the fieldValues but `moduleStory` expects it to be a `Record<string, any>`.\n\nSo the change I’m requesting is:\n\n```export declare type ModuleProps<T = Record<string, any>> = {\n  fieldValues: T;\n  // ...other existing properties\n};```\nwhich should not break existing code and would allow the the following:\n```export interface MyFieldValues {\n  title: string;\n}\nexport const Component: React.FC<ModuleProps<MyFieldValues>> = ({ fieldValues }) => {}```\nWhere `fieldValues` would actually have the proper types, i.e. `fieldTypes` has a property named `title` and its type is `string`.\n\nShould request like this be made through the cms-react repo or here?",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-04-16 10:39:44"
+      },
+      {
+        "time_stamp": "2024-04-16 10:59:06"
+      },
+      {
+        "time_stamp": "2024-04-16 10:59:54"
+      },
+      {
+        "time_stamp": "2024-04-16 11:00:58"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Rich McNeary",
+      "poster_handle": "rich960"
+    },
+    "time_stamp": "2024-04-16 10:39:44",
+    "text": "I would open a PR with this change but the actual code for cms-react doesn’t seem to be in the cms-react repo…"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-04-16 10:59:06",
+    "text": "Hello <@U06RG08JFU4> - correct the underlying code for the cms-components library is not open source. That said we are actively working on this exact feature currently. I can't give you a specific timeline, however, it is on the shorter side."
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-04-16 10:59:54",
+    "text": "Your timing is honestly a bit spooky :jack_o_lantern: ."
+  },
+  {
+    "poster": {
+      "poster_name": "Rich McNeary",
+      "poster_handle": "rich960"
+    },
+    "time_stamp": "2024-04-16 11:00:58",
+    "text": ":ghost: boo"
+  },
+  {
+    "poster": {
+      "poster_name": "Taylor O'Reilly",
+      "poster_handle": "taylor699"
+    },
+    "time_stamp": "2024-04-16 12:31:04",
+    "text": "Hey everyone! Is there an example repo I can look at that uses serverless functions within the app? my function keeps throwing a 404 and i can’t figure out why",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-04-16 12:50:08"
+      },
+      {
+        "time_stamp": "2024-04-16 12:50:17"
+      },
+      {
+        "time_stamp": "2024-04-16 12:51:02"
+      },
+      {
+        "time_stamp": "2024-04-16 12:52:49"
+      },
+      {
+        "time_stamp": "2024-04-16 12:52:59"
+      },
+      {
+        "time_stamp": "2024-04-16 12:54:44"
+      },
+      {
+        "time_stamp": "2024-04-16 13:03:54"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-04-16 12:50:08",
+    "text": "<https://github.com/HubSpot/cms-react/tree/main/examples/serverless> - merged only moments ago."
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-04-16 12:50:17",
+    "text": "The timing today is uncannny!"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-04-16 12:51:02",
+    "text": "Also please see <https://github.com/HubSpot/cms-react/blob/main/docs/reference/serverless.md>"
+  },
+  {
+    "poster": {
+      "poster_name": "Taylor O'Reilly",
+      "poster_handle": "taylor699"
+    },
+    "time_stamp": "2024-04-16 12:52:49",
+    "text": "OH! my app folder needs to be outside my main project folder."
+  },
+  {
+    "poster": {
+      "poster_name": "Taylor O'Reilly",
+      "poster_handle": "taylor699"
+    },
+    "time_stamp": "2024-04-16 12:52:59",
+    "text": "wow. Thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Taylor O'Reilly",
+      "poster_handle": "taylor699"
+    },
+    "time_stamp": "2024-04-16 12:54:44",
+    "text": "just a heads up theres a typo in the readme link to the example\n\nits showing\n<https://github.com/HubSpot/cms-react/examples/serverless>\n\nshould be\n<https://github.com/HubSpot/cms-react/tree/main/examples/serverless>"
+  },
+  {
+    "poster": {
+      "poster_name": "Taylor O'Reilly",
+      "poster_handle": "taylor699"
+    },
+    "time_stamp": "2024-04-16 13:03:54",
+    "edited": {
+      "time_stamp": "2024-04-16 13:04:13"
+    },
+    "text": "now i seem to be getting this error\n\nYour HubSpot plan doesn’t include endpoint for app functions, so you can’t use them to create app functions with endpoint. Remove the `endpoint` property from /app/app.functions/serverless.json. If you need access, talk to your admin about upgrading your plan.\n\nbut the account im working in is enterprise"
+  },
+  {
+    "poster": {
+      "poster_name": "Taylor O'Reilly",
+      "poster_handle": "taylor699"
+    },
+    "time_stamp": "2024-04-16 13:23:50",
+    "text": "I made the updates based on the repo provided but now I am seeing an error\n\n“Your HubSpot plan doesn’t include endpoint for app functions, so you can’t use them to create app functions with endpoint. Remove the `endpoint` property from /app/app.functions/serverless.json. If you need access, talk to your admin about upgrading your plan.”\n\nWhat does this actually require? The account im working on has enterprise ops hub shouldn’t that cover it?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-04-17 06:07:54"
+      },
+      {
+        "time_stamp": "2024-04-17 10:35:19"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Fábio Englert Moutinho",
+      "poster_handle": "fabio379"
+    },
+    "time_stamp": "2024-04-16 13:42:23",
+    "text": "is there a staging environment for HubSpot modules? We'd like the ability to test modules in HubSpot before publishing the modules (npm run update)",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-04-17 11:33:30"
+      },
+      {
+        "time_stamp": "2024-04-17 11:35:00"
+      },
+      {
+        "time_stamp": "2024-04-17 11:36:39"
+      },
+      {
+        "time_stamp": "2024-04-17 11:39:37"
+      },
+      {
+        "time_stamp": "2024-04-17 12:25:33"
+      },
+      {
+        "time_stamp": "2024-04-17 12:25:52"
+      },
+      {
+        "time_stamp": "2024-04-17 13:37:21"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-16 13:49:59",
+    "text": "is it possible that an error that is now \"cached\" is still causing issues? this is somewhat of an emergency if someone from HubSpot can please help",
+    "reply_count": 17,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-04-16 13:54:00"
+      },
+      {
+        "time_stamp": "2024-04-16 13:54:22"
+      },
+      {
+        "time_stamp": "2024-04-16 13:54:39"
+      },
+      {
+        "time_stamp": "2024-04-16 13:54:43"
+      },
+      {
+        "time_stamp": "2024-04-16 13:54:59"
+      },
+      {
+        "time_stamp": "2024-04-16 13:55:06"
+      },
+      {
+        "time_stamp": "2024-04-16 13:55:15"
+      },
+      {
+        "time_stamp": "2024-04-16 13:55:19"
+      },
+      {
+        "time_stamp": "2024-04-16 13:58:32"
+      },
+      {
+        "time_stamp": "2024-04-16 13:58:39"
+      },
+      {
+        "time_stamp": "2024-04-16 13:58:45"
+      },
+      {
+        "time_stamp": "2024-04-16 13:58:47"
+      },
+      {
+        "time_stamp": "2024-04-16 13:59:20"
+      },
+      {
+        "time_stamp": "2024-04-16 13:59:40"
+      },
+      {
+        "time_stamp": "2024-04-16 14:01:31"
+      },
+      {
+        "time_stamp": "2024-04-16 14:02:13"
+      },
+      {
+        "time_stamp": "2024-04-16 14:53:25"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-04-16 13:54:00",
+    "text": "Can you explain your error here"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-16 13:54:22",
+    "text": "I deployed without importing a module"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-16 13:54:39",
+    "text": "`(index):109 Error in island components/modules/HomeLevelSiteNavigation/island.jsx?client-entry ReferenceError ReferenceError: BlogTagsList is not defined`"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-16 13:54:43",
+    "text": "and then I fixed it and pushed again"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-16 13:54:59",
+    "text": "if I add ?123 or hsDebug=true it fixes it"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-16 13:55:06",
+    "text": "but other people are seeing the page broken"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-16 13:55:15",
+    "text": "so I think it somehow cached the broken version"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-16 13:55:19",
+    "text": "something similar has happened before"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-04-16 13:58:32",
+    "text": "Good now?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-16 13:58:39",
+    "text": "yea"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-16 13:58:45",
+    "text": "thank you"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-16 13:58:47",
+    "text": "what happened?"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-04-16 13:59:20",
+    "text": "Yes error output was cached, I purged the cache manually on that page"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-16 13:59:40",
+    "text": "is that something I can do if it happens again?"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-04-16 14:01:31",
+    "text": "I don't believe so, unfortunately"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-16 14:02:13",
+    "text": "k, that was so stressful you wouldn't believe"
+  },
+  {
+    "poster": {
+      "poster_name": "Tricia Leach",
+      "poster_handle": "tleach"
+    },
+    "time_stamp": "2024-04-16 14:34:27",
+    "edited": {
+      "time_stamp": "2024-04-16 14:35:12"
+    },
+    "text": "I have some questions on CTAs. I think there are two versions available?\n\n`<Cta fieldPath=\"<http://group_field.my|group_field.my>_cta_field\" />` — Is this meant to inject the HTML/CSS of the custom CTA into React components? Where do you get the `fieldPath`?\n\n`<CtaField label=\"Cta\" name=\"cta\" />` — This returns an id for the CTA. Is there anything you can do with this ID to get the link or tracking details? Ideally what I'd like to do is ignore the HTML/CSS of the buttons (we don't want our content editors to be able to adjust styles), to build a button in our React modules, and only use what is needed for analytics. Is that possible?",
+    "reply_count": 15,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-04-17 07:17:05"
+      },
+      {
+        "time_stamp": "2024-04-17 07:18:48"
+      },
+      {
+        "time_stamp": "2024-04-17 10:29:58"
+      },
+      {
+        "time_stamp": "2024-04-17 10:30:42"
+      },
+      {
+        "time_stamp": "2024-04-17 10:31:33"
+      },
+      {
+        "time_stamp": "2024-04-17 10:33:31"
+      },
+      {
+        "time_stamp": "2024-04-17 10:35:08"
+      },
+      {
+        "time_stamp": "2024-04-17 10:35:58"
+      },
+      {
+        "time_stamp": "2024-04-17 10:36:47"
+      },
+      {
+        "time_stamp": "2024-04-17 10:37:00"
+      },
+      {
+        "time_stamp": "2024-04-17 15:48:45"
+      },
+      {
+        "time_stamp": "2024-04-17 15:50:34"
+      },
+      {
+        "time_stamp": "2024-04-17 15:54:53"
+      },
+      {
+        "time_stamp": "2024-04-18 14:24:48"
+      },
+      {
+        "time_stamp": "2024-04-22 14:04:47"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-16 14:53:25",
+    "text": "<@U04DLJH3W94> does that cache naturally expire after some point? I think one of my other templates is cached but I’m checking into it now. It’s a post template"
+  },
+  {
+    "poster": {
+      "poster_name": "Josh GH",
+      "poster_handle": "joshgh"
+    },
+    "time_stamp": "2024-04-16 16:18:02",
+    "text": "It is possible to upload only a specific module instead of the entire project?",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-04-17 06:10:20"
+      },
+      {
+        "time_stamp": "2024-04-17 06:10:56"
+      },
+      {
+        "time_stamp": "2024-04-17 10:51:59"
+      },
+      {
+        "time_stamp": "2024-04-25 11:39:26"
+      }
+    ]
+  }
+]

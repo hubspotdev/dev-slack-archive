@@ -1,0 +1,21 @@
+[
+  {
+    "poster": {
+      "poster_name": "Josh Braner",
+      "poster_handle": "braner.josh"
+    },
+    "time_stamp": "2024-12-21 11:12:29",
+    "edited": {
+      "time_stamp": "2024-12-21 11:14:00"
+    },
+    "text": "Glad to hear it worked!\n\nFor the dynamic page, what you've got right now with that code is the code for a detail page, not the actual listings page.\n\nGive this code a try for your module. Make sure to replace variables and object references appropriately, as I used a object in my test account to test this out. In my case \"hs_object_id\" is what I selected for page slugs, so make sure you also change that to the property you are using for yours.\n\n```{# Check if page is a LISTING page #}\n{% if dynamic_page_crm_object_type_fqn %}\n\n  {# Get CRM object information based off dynamic page object selection #}\n  {% set families = crm_objects(dynamic_page_crm_object_type_fqn, \"limit=200\",\"family_name, hs_object_id\") %}\n\n  {# Loop through the results to create listing entries #}\n  {% for family in families.results %}\n\n    {# Item to be displayed for each listing, wrapped in an anchor to make it clickable into a details page #}\n    <a href=\"{{request.path}}/{{family.hs_object_id}}\">\n      <p>{{family.hs_object_id}}</p>\n    </a>\n\n  {% endfor %}\n\n{# Check if page is a DETAIL page #}\n{% elif dynamic_page_crm_object %}\n\n  {# Set easier variable for object properties #}\n  {% set family = dynamic_page_crm_object %}\n\n  <h1>{{family.family_name}}</h1>\n  <p>{{family.hs_object_id}}</p>\n\n{# Page is not a dynamic page #}\n{% else %}\n  \n  <h1>Not a dynamic listings page or dynamic object page!</h1>\n\n{% endif %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "T. Roberts",
+      "poster_handle": "direstardb"
+    },
+    "time_stamp": "2024-12-21 13:36:33",
+    "text": "Wow thanks so much. I’ll try it Monday. "
+  }
+]

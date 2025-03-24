@@ -1,0 +1,29 @@
+[
+  {
+    "poster": {
+      "poster_name": "Stacey Thomas",
+      "poster_handle": "stacey.thomas"
+    },
+    "time_stamp": "2024-04-16 09:55:24",
+    "text": "Has anyone successfully passed a HubSpot userId via serverless functions to then update a 'HubSpot user' based contact property with that value...? (not sure i've explained that correctly...)\n\nI've got a react file with a button, onclick it is passing various properties including HubSpot userId (onclick works ok)\nI've added those properties (including userId) to my crm card.json file in properties to send\nMy function file calls all those properties as parameters and uses them successfully to enrol the contact into a workflow... but the HubSpot userID is just not updating on the contact.\n\nAny thoughts on what might be causing it...? not sure if its because it's called in react as context.user.userId and the other properties are properties.field. Should I be passing them differently...?\n\n```const axios = require('axios');\n\nexports.main = async (context = {}) =&gt; {\n  const { email, userId } = context.parameters;\n\n  const response = `XXX`;\n\n  const key = process.env.secret;\n  const workflowId = \"XXX\";\n  const HubSpotApiEndpoint = `<https://api.hubapi.com/automation/v2/workflows/${workflowId}/enrollments/contacts/${email}>`;\n  \n  const headers = {\n    'Authorization': `Bearer ${key}`,\n    'Content-Type': 'application/json'\n  };\n\n  try {\n    // Update contact property\n    if (userId) { \n      const updatePropertiesEndpoint = `<https://api.hubapi.com/crm/v3/objects/contacts/${email}>`;\n      await axios.patch(updatePropertiesEndpoint, {\n        properties: {\n          xyzproperty: userId\n        }\n      }, {\n        headers: headers\n      });\n    }\n    // Trigger the workflow\n    const workflowResponse = await <http://axios.post|axios.post>(HubSpotApiEndpoint, {}, { headers: headers });\n    console.log('Workflow triggered successfully:', workflowResponse.data);\n  } catch (error) {\n    console.error('Error triggering workflow:', error.response.data);\n  }\n\n  return response;\n};```",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-04-26 09:40:33"
+      },
+      {
+        "time_stamp": "2024-04-29 03:15:41"
+      },
+      {
+        "time_stamp": "2024-04-29 03:30:52"
+      },
+      {
+        "time_stamp": "2024-04-29 05:11:33"
+      },
+      {
+        "time_stamp": "2024-04-29 06:12:07"
+      }
+    ]
+  }
+]

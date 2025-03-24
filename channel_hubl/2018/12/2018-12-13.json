@@ -1,0 +1,174 @@
+[
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2018-12-13 06:14:45",
+    "text": "Hey Furqan, the contacts API isn't intended for use on the front-end. As far as I am aware, there is no way to get OAuth to work on HubSpot-hosted sites, and using the HAPI key would expose it to public traffic, allowing anyone access to any of your portal's endpoints. The best way to work around this is to either use an app like Zapier to create a public endpoint with just the data you want, or to create your own server and authentication system that would act like a middleware application; something like: the webpage sends an POST request to the server at a certain endpoint with an argument, the server receives this request and polls the HubSpot API, then responds to the first call with the output data. Does that make sense?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2018-12-13 06:55:58",
+    "text": "There’s a date field in the custom modules but there doesn’t seem to be a date tag? i’m just making an edit to a template so don’t want to rebuild as a module, does anyone have any suggestions?",
+    "reply_count": 13,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2018-12-13 06:58:31"
+      },
+      {
+        "time_stamp": "2018-12-13 06:59:13"
+      },
+      {
+        "time_stamp": "2018-12-13 06:59:37"
+      },
+      {
+        "time_stamp": "2018-12-13 07:02:09"
+      },
+      {
+        "time_stamp": "2018-12-13 07:02:36"
+      },
+      {
+        "time_stamp": "2018-12-13 07:14:09"
+      },
+      {
+        "time_stamp": "2018-12-13 07:14:21"
+      },
+      {
+        "time_stamp": "2018-12-13 07:18:03"
+      },
+      {
+        "time_stamp": "2018-12-13 07:27:01"
+      },
+      {
+        "time_stamp": "2018-12-13 07:34:40"
+      },
+      {
+        "time_stamp": "2018-12-13 07:35:12"
+      },
+      {
+        "time_stamp": "2018-12-13 07:52:56"
+      },
+      {
+        "time_stamp": "2018-12-13 08:10:46"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2018-12-13 06:58:31",
+    "text": "Hey Matthew, it wouldn't happen to be outputting a number, would it? You may just need to throw a datetime filter on the output tag to format the date"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2018-12-13 06:59:13",
+    "text": "Sorry my problem is i want a tag that does it, instead of using modules"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2018-12-13 06:59:37",
+    "text": "In terms of a page-level date selector, I don't think one of those exist as of right now."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2018-12-13 07:02:09",
+    "text": "that’s what i thought, i guess i could create a module that literally just has one field in it and just outputs the value but that seems a bit long, i guess i’ll just add a text field and just put a placeholder format in"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2018-12-13 07:02:36",
+    "edited": {
+      "time_stamp": "2018-12-13 07:02:54"
+    },
+    "text": "Depending on your use case, you'll likely want to just do a text field with the date preformatted. If you need filtering or sorting or anything like that, you're probably best off just doing a module."
+  },
+  null,
+  null,
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2018-12-13 07:14:09",
+    "text": "can i filter the returned date from a module?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2018-12-13 07:14:21",
+    "text": "if i just return the timestamp"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2018-12-13 07:18:03",
+    "text": "I haven't worked with dates in a while, but from what I remember yes, all the date filters would work on a timestamp object. Also, in looking at these filters, this one may be helpful:\n<https://designers.HubSpot.com/docs/hubl/hubl-supported-filters#strtotime>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2018-12-13 07:27:01",
+    "text": "This is how i did it in the end\n{% module “module_1544710362759214” module_id=“4456061\" label=“Event Date” export_to_template_context=“True” %}\n{{ widget_data.module_1544710362759214.date_and_time|datetimeformat(‘%A, %e %B  %Y -  %H:%M’) }}"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2018-12-13 07:34:40",
+    "text": "next issue i want to get that date on a different page where i list multiple posts\n{% set topic_posts = blog_recent_topic_posts(‘5704862064’, ‘events’, 5) %}\ncan i get the module from that"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2018-12-13 07:35:12",
+    "text": "i’ve pprint ed the topic_posts and can’t see anything"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2018-12-13 07:52:56",
+    "text": "got it .widgets.module_1544710362759214.body.date_and_time"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2018-12-13 08:10:46",
+    "text": "nice, sorry, didn't see those posts until just now"
+  },
+  null,
+  null,
+  null,
+  null
+]

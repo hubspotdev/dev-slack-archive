@@ -1,0 +1,82 @@
+[
+  {
+    "poster": {
+      "poster_name": "Dennis K",
+      "poster_handle": "dennis579"
+    },
+    "time_stamp": "2025-01-23 05:06:47",
+    "text": "yup!"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Miller",
+      "poster_handle": "jon894"
+    },
+    "time_stamp": "2025-01-23 07:10:29",
+    "edited": {
+      "time_stamp": "2025-01-23 07:10:45"
+    },
+    "text": "I don't believe our hs project commands allows you to pass through arbitrary args. What are you running into where you need the deps flag?"
+  },
+  {
+    "poster": {
+      "poster_name": "Mattis Rosenkranz",
+      "poster_handle": "m.rosenkranz"
+    },
+    "time_stamp": "2025-01-23 07:40:45",
+    "edited": {
+      "time_stamp": "2025-01-23 07:41:06"
+    },
+    "text": "Yep, we had that too, I would also appreciate, if that was possible:+1:"
+  },
+  {
+    "poster": {
+      "poster_name": "Mattis Rosenkranz",
+      "poster_handle": "m.rosenkranz"
+    },
+    "time_stamp": "2025-01-23 09:52:49",
+    "text": "Hey, we’ve been having recurring problems with what seems like a cashing issue in GraphQL for some weeks now. I’m gonna post the issue as a comment here. Or is there a better place like the <https://github.com/HubSpot/cms-react|cms-react GitHub-repo>?\nHelp is appreciated:pray:",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2025-01-23 09:55:42"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Mattis Rosenkranz",
+      "poster_handle": "m.rosenkranz"
+    },
+    "time_stamp": "2025-01-23 09:55:42",
+    "edited": {
+      "time_stamp": "2025-01-23 09:56:05"
+    },
+    "text": "*GraphQL-Queries with new or updated HUBDB rows fail*\n\n*Description*\nGraphQL-queries in cms-react modules that query new or renamed HUBDB rows fail. The identical query runs through in the GraphiQL test environment.\nWe are not entirely sure if rows have to be updated for this issue to arise.\nThe issue disappears in a module when the module is duplicated, renamed and the project is reuploaded.\nIt feels like a cashing issue.\nFor info: We use the HubSpot API to apply our changes to the HUBDB schema.\n\n*Steps to reproduce*\n• Update the HUBDB schema, e.g. add or rename a row\n• Query the updated row with GraphQL in a cms-react module\n*Logs*\n`TypeError: Cannot read properties of undefined (reading 'HUBDB')`"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2025-01-23 12:54:48",
+    "text": "I remember <https://HubSpotdev.slack.com/archives/C04AY1H2204/p1731079279518879?thread_ts=1731015777.854559&amp;cid=C04AY1H2204|this thread> a few months back. Never tested but hope it helps"
+  },
+  {
+    "poster": {
+      "poster_name": "Kostiantyn",
+      "poster_handle": "konstantin597"
+    },
+    "time_stamp": "2025-01-23 13:18:31",
+    "text": "<@U3T21PDBK>\nI've seen this, thx. It's only half the solution because you still need to add additional slugs to the link and move it in some cases.\nBased on this, I made this function\n```export function resizeImageUrl(url: string, width?: number, height?: number): string {\n  const urlParts = url.split(\"?\");\n  const baseUrl = urlParts[0];\n\n  let splitedBaseUrl = baseUrl.split(\"/\");\n\n  if (splitedBaseUrl[2].includes(\"HubSpotusercontent\")) {\n    const hubfs = splitedBaseUrl.splice(3, 1, \"hub\");\n    splitedBaseUrl.splice(5, 0, hubfs[0]);\n  } else {\n    if (!splitedBaseUrl.includes(\"hs-fs\")) {\n      splitedBaseUrl.splice(3, 0, \"hs-fs\");\n    }\n  }\n\n  const newBaseUrl = splitedBaseUrl.join(\"/\");\n\n  const queryParams = urlParts[1] ? urlParts[1].split(\"&amp;\") : [];\n\n  const newQueryParams: string[] = [];\n  if (width) {\n    newQueryParams.push(`width=${width}`);\n  }\n\n  if (height) {\n    newQueryParams.push(`height=${height}`);\n  }\n\n  newQueryParams.push(...queryParams);\n\n  const newUrl = `${newBaseUrl}?${newQueryParams.join(\"&amp;\")}`;\n\n  return newUrl;\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2025-01-23 13:19:11",
+    "text": "Sweet! I’ll hopefully try it out soon"
+  }
+]

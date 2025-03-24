@@ -1,0 +1,13 @@
+[
+  {
+    "poster": {
+      "poster_name": "Joe",
+      "poster_handle": "yoseph.alemu"
+    },
+    "time_stamp": "2022-08-18 08:11:55",
+    "edited": {
+      "time_stamp": "2022-08-18 08:12:22"
+    },
+    "text": "Didn't had time to go through your code, but this code is what I used to create note associated with deal, hope it helps\n\n```const axios = require('axios');\n\n\nexports.main = async (event, callback) =&gt; {\n  const HubSpot_owner_id = event.inputFields['HubSpot_owner_id']\n  let body = 'note to deal';\n  \n  \n  console.log(\"HubSpot_owner_id----&gt;\"+HubSpot_owner_id)\n  \n    <http://axios.post|axios.post>('<https://api.hubapi.com/crm/v3/objects/notes?hapikey=>' + process.env.HAPI_Key, {\n            \"properties\": {\n                \"hs_timestamp\": Date.now(), // Current time/date\n                \"hs_note_body\": body,// Body of the note\n            \"HubSpot_owner_id\": HubSpot_owner_id,// Creator of the note will show up in the deal page as \"Note by\"\n            }\n        })\n        .then(function(response) {\n            //2. Associate Engagement to the currently enrolled object.\n            var engagementID = response.data.id;\n            axios({\n                    method: 'put',\n                    url: '<https://api.hubapi.com/crm/v3/objects/notes/>' + engagementID + '/associations/deal/' + event.object.objectId + '/note_to_deal?hapikey=' + process.env.HAPI_Key,\n                    headers: {\n                        'Content-Type': 'application/json'\n                    }\n                })\n                .then(function(res) {\n          \n                    console.log(\"Note created\")\n                })\n                .catch(err =&gt; {\n                    console.log('Error: ' + err.message);\n                })\n        })\n        .catch(err =&gt; {\n            console.log('Error: ' + err.message);\n        });\n}```"
+  }
+]

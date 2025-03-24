@@ -1,0 +1,265 @@
+[
+  {
+    "poster": {
+      "poster_name": "Lars-Erik Aabech",
+      "poster_handle": "lea184"
+    },
+    "time_stamp": "2019-11-19 04:07:19",
+    "edited": {
+      "time_stamp": "2019-11-19 06:18:49"
+    },
+    "text": "Hi all. I'm having trouble using the hsq.push([\"revokeCookieConsent\"]) method in my dev and staging environments. Calling it from non-HS sites. It works in production vs. a \"real\" HS account, while it does absolutely nothing on localhost and an <http://azurewebsites.net|azurewebsites.net> domain against a dev HS-portal. I've added the azure domain to analytics-and-tracing/domains, but it didn't help. I can see a call being done to __ptq.gif?k=30 when pushed to hsq, but it doesn't seem to do anything. (Same goes for the identify call come to think of it...)\n\nAnyone got any good ideas to troubleshoot this?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2019-11-20 06:15:39"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-11-19 07:32:56",
+    "text": "Hey Zack, hope you are doing well. Just want to clarify something. This new customer have these to script on their site ```&lt;script src=\"//js.hs-analytics.net/analytics/1571763300000/2544051.js\" type=\"text/javascript\" id=\"hs-analytics\"&gt;&lt;/script&gt;``` and ```&lt;script src=\"<https://js.hs-scripts.com/2544051.js>\" type=\"text/javascript\" id=\"hs-script-loader\"&gt;&lt;/script&gt;``` this is not a good installation right?"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-11-19 07:33:13",
+    "text": "the first one is deprecated right?"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-11-19 07:41:27",
+    "text": "they also have this one that I dont think is necessary ```&lt;script src=\"<https://js.hsleadflows.net/leadflows.js>\" type=\"text/javascript\" id=\"LeadFlows-2544051\" crossorigin=\"anonymous\" data-leadin-portal-id=\"2544051\" data-leadin-env=\"prod\" data-loader=\"hs-scriptloader\" data-hsjs-portal=\"2544051\" data-hsjs-env=\"prod\"&gt;&lt;/script&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-11-19 07:43:49",
+    "text": "Actually none of those is the latest embed script"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-11-19 07:44:00",
+    "text": "the middle one is closest but it’s missing `async defer` in it"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-11-19 07:44:19",
+    "text": "yes that was my next question"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-11-19 07:44:21",
+    "text": "It should looks like this\n```&lt;!-- Start of HubSpot Embed Code --&gt;\n&lt;script type=\"text/javascript\" id=\"hs-script-loader\" async defer src=\"//js.hs-scripts.com/589323.js\"&gt;&lt;/script&gt;\n&lt;!-- End of HubSpot Embed Code --&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-11-19 07:44:41",
+    "text": "yes this is what I was thinking"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-11-19 07:44:54",
+    "edited": {
+      "time_stamp": "2019-11-19 07:44:59"
+    },
+    "text": "where `589323` is my portal id, you can replace it with `2544051`"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-11-19 07:45:50",
+    "text": "but the first and the third I pasted... Is it wrong or is it just generated automatically when the page uses leadflows for instance"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-11-19 07:46:34",
+    "text": "I guess it’s not really wrong per se, it’s just out of date.   They all should work, just not optimally"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-11-19 07:47:21",
+    "text": "Leadflows use to operate on a seperate embed script, but we’ve changed that to make things easier, so no action is needed by an IT person once the tracking code is embedded everywhere"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-11-19 07:49:42",
+    "text": "yes but since I'm looking for this in the Google Developers tools is it normal that I see the leadflows script?"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-11-19 07:50:12",
+    "text": "It is if they’ve been using HubSpot for a while"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-11-19 07:50:29",
+    "text": "ok I understand"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-11-19 07:50:46",
+    "text": "We will replace all the codes by the newest"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-11-19 07:51:00",
+    "text": "That should make things easier for you in the long run"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-11-19 07:51:18",
+    "text": "yes their account is a mess"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-11-19 07:52:01",
+    "text": "5 subdomains, none of these is tracked the same way"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-11-19 07:52:20",
+    "text": "wow, sounds fun"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-11-19 07:54:20",
+    "text": "some of them has GTM installed but the tracking code isn't in any countainer"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-11-19 07:54:47",
+    "text": "they have more GTM countainer than the number of sites, but they dont use it for every site lol"
+  },
+  {
+    "time_stamp": "2019-11-19 07:55:09",
+    "text": ""
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-11-19 07:55:38",
+    "text": "making my way through all of this"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-11-19 08:11:06",
+    "edited": {
+      "time_stamp": "2019-11-19 08:11:17"
+    },
+    "text": "hey... just realized something... HS recommends to paste the tracking code before the &lt;/body&gt;. I think async and defer only make sense if a script is in the &lt;head&gt;.. no?"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-11-19 08:12:34",
+    "edited": {
+      "time_stamp": "2019-11-19 08:12:44"
+    },
+    "text": "Keep in mind the tracking code is written to help account for edge cases where people can’t follow our best practices"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-11-19 08:13:15",
+    "text": "so if the only place you can put it is the head, that’s OK but it’s still better to keep it at the end of the document just before the body close tag"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-11-19 08:14:44",
+    "text": "gotcha"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-11-19 08:15:17",
+    "text": "so this ```&lt;script src=\"<https://js.hs-scripts.com/2544051.js>\" type=\"text/javascript\" id=\"hs-script-loader\"&gt;&lt;/script&gt;``` would be ok if it's in the body"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-11-19 08:16:08",
+    "text": "it’s OK, but I would still encourage you to add at least the `async` attribute so ti doesn’t interfere with page load speed as much as possible"
+  }
+]

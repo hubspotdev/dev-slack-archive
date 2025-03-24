@@ -1,0 +1,112 @@
+[
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-04-28 06:42:16",
+    "edited": {
+      "time_stamp": "2021-04-28 06:43:20"
+    },
+    "text": "Was wondering if someone could clarify… on the docs:\n```require_js is a HubL function that tells HubSpot that a particular module or template requires a particular JavaScript file to load properly. The function takes two parameters: the path to the file and the location the file is to be added to (\"head\" or \"footer\"). ```\nSo in this case, if i invoke require_js from within a module.html I should expect the javascript which I’ve included to be rendered before the module.js &lt;script? I dont seem to be seeing this, the script is always included after the generated module.js in the footer.",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-04-28 07:33:11"
+      },
+      {
+        "time_stamp": "2021-04-28 07:58:44"
+      },
+      {
+        "time_stamp": "2021-04-28 12:52:22"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2021-04-28 07:33:11",
+    "text": "It either gets added to the header or footer depending on the second parameter you pass into the function <https://developers.HubSpot.com/docs/cms/hubl/functions#require-js>"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-04-28 07:58:44",
+    "edited": {
+      "time_stamp": "2021-04-28 07:59:57"
+    },
+    "text": "Indeed - so I set that to footer. I’m more enquiring about the placement within the footer. The documentation says “particular module or template requires a particular JavaScript file to load properly”, the way i interpret that is that the javascript file i’ve required will be loaded before the modules Javascript is included. However, this does not seem to be the case"
+  },
+  {
+    "text": "hi, I am trying to create a module that will allow me to create a resources section like this, it’s just responsive linked images and text",
+    "time_stamp": "2021-04-28 09:22:10"
+  },
+  {
+    "poster": {
+      "poster_name": "musaa",
+      "poster_handle": "musaa"
+    },
+    "time_stamp": "2021-04-28 09:23:07",
+    "text": "this is my first time making a module so i am very new to this but I know i would need a repeater function so that the creator of the blog post can add as many resources as needed"
+  },
+  {
+    "poster": {
+      "poster_name": "musaa",
+      "poster_handle": "musaa"
+    },
+    "time_stamp": "2021-04-28 09:23:28",
+    "text": "this is my code right now"
+  },
+  {
+    "poster": {
+      "poster_name": "musaa",
+      "poster_handle": "musaa"
+    },
+    "time_stamp": "2021-04-28 09:23:53",
+    "text": "```\t\t&lt;div class=\"resource-tiles-container\" style=\"display:flex;flex-direction:row;flex-wrap:wrap;justify-content:space-between;\"&gt;\n\t\t\t{% for item in module.linked_tile_repeater %}\n\t\t\t\t&lt;a class=\"resource-tile\" style=\"width:30%;\"&gt;{% set href = item.link_field.url.href %}\n      {% if item.link_field.url.type is equalto \"EMAIL_ADDRESS\" %}\n      {% set href = \"mailto:\" + href %}\n      {% endif %}\n      {% set rel = [] %}\n      {% if item.link_field.no_follow %}\n      {% do rel.append(\"nofollow\") %}\n      {% endif %}\n      {% if item.link_field.open_in_new_tab %}\n      {% do rel.append(\"noopener\") %}\n      {% endif %}\n      &lt;a href=\"{{ href }}\"\n         {% if item.link_field.open_in_new_tab %}target=\"_blank\"{% endif %}\n         {% if rel %}rel=\"{{ rel|join(\" \") }}\"{% endif %}\n         &gt;\n            &lt;div class=\"resource-tile-img\" &gt;\n                {% if item.image_field.src %}\n            {% set sizeAttrs = 'width=\"{{ item.image_field.width }}\" height=\"{{ item.image_field.height }}\"' %}\n            {% if item.image_field.size_type == 'auto' %}\n              {% set sizeAttrs = 'style=\"max-width: 100%; height: auto;\"' %}\n            {% elif item.image_field.size_type == 'auto_custom_max' %}\n              {% set sizeAttrs = 'width=\"{{ item.image_field.max_width }}\" height=\"{{ item.image_field.max_height }}\" style=\"max-width: 100%; height: auto;\"' %}\n            {% endif %}\n             {% set loadingAttr = item.image_field.loading != 'disabled' ? 'loading=\"{{ item.image_field.loading }}\"' : '' %}\n            &lt;img src=\"{{ item.image_field.src }}\" alt=\"{{ item.image_field.alt }}\" {{ loadingAttr }} {{ sizeAttrs }}&gt;\n          {% endif %}\n          &lt;/div&gt;\n          &lt;h2 class=\"resources-tile-text\"&gt;{% inline_text field=\"text_field\" value=\"{{ item.text_field }}\" %}&lt;/h2&gt;\n        \n          &lt;/a&gt;\n         &lt;/a&gt;\n      &lt;/div&gt;```"
+  },
+  {
+    "text": "maybe this image is easier to read",
+    "time_stamp": "2021-04-28 09:24:44",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2021-05-04 01:48:03"
+      }
+    ]
+  },
+  {
+    "text": "when I preview though, it only shows me the first group in the repeater",
+    "time_stamp": "2021-04-28 09:25:47"
+  },
+  {
+    "poster": {
+      "poster_name": "musaa",
+      "poster_handle": "musaa"
+    },
+    "time_stamp": "2021-04-28 09:25:58",
+    "text": "can anyone show me where i’m going wrong?"
+  },
+  {
+    "poster": {
+      "poster_name": "musaa",
+      "poster_handle": "musaa"
+    },
+    "time_stamp": "2021-04-28 09:26:05",
+    "text": "or show me a better way of doing this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2021-04-28 12:52:22",
+    "text": "It should happen in the order that the template is render. So if you have a `require_js` occurring before the `module` tag that one should be placed first before the module requires"
+  }
+]

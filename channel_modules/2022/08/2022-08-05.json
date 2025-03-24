@@ -1,0 +1,89 @@
+[
+  {
+    "poster": {
+      "poster_name": "Mitja Lewin",
+      "poster_handle": "m.lewin"
+    },
+    "time_stamp": "2022-08-05 04:22:11",
+    "edited": {
+      "time_stamp": "2022-08-05 06:43:03"
+    },
+    "text": "I don't know a *marketplace* module! But I written once a small tutorial that can help you with the *code*, so you can create your own card iteration module. I know this doesn't answer your question. But maybe someone else search this topic and is willing to do the steps below.\n\n*Step1:*\nCreate a new module in the Design-Manager. Add a field of type \"Blog\". Call it \"_blog_\".\n<https://developers.HubSpot.com/docs/cms/building-blocks/module-theme-fields#blog>\n\n*Step2:*\nCreate a new variable, call \"_selected_blog_\". It reference the blog field with a fallback to \"_default_\" if no specific blog is selected. Copy the line below to the top of your module html section. For your information _x ? x : y_ is shorthand for _if/else_.\n```{% set selected_blog = <http://module.blog|module.blog> ? <http://module.blog|module.blog> : 'default' %}```\n*Step3:*\nAdd a second field of type \"Tag\". Call it \"_tag_slug_\" and choose \"Slug\" as response. Scroll down in the field options, and activate the repeater option. Now our tag field is changed from string to array, and we can have multiple tags that can be selected.\n<https://developers.HubSpot.com/docs/cms/building-blocks/module-theme-fields#tag>\n\n*Step5:*\nNow combine the field \"Blog\" and \"Tag\" array to start a request for the related posts. We do this by using the HubL `blog_popular_posts` function.\n<https://developers.HubSpot.com/docs/cms/hubl/functions#blog-popular-posts>\n\n*Step6:*\nReference the function with our field parameter in a new variable called \"_pop_posts\"_. Add it below the line from step2 in the module html code. It should look like this.\n```{% set pop_posts = blog_popular_posts(selected_blog, 3, module.tag, 'popular_all_time') %}```\n*Step7:* (optional)\nAs you can see in the documentation we can pass two more parameter to the `blog_popular_posts`  you can create editor fields for that as well. It would be one of the type \"Number\" for the \"_limit\"_.\n<https://developers.HubSpot.com/docs/cms/building-blocks/module-theme-fields#number>\n\n*Step8:* (optional)\nAnd for the \"_time_frame_\" a type \"Choice\" field with the strings `\"popular_all_time\"`, `\"popular_past_year\"`, `\"popular_past_six_months\"`, `\"popular_past_month\"` from the documentation.\n<https://developers.HubSpot.com/docs/cms/building-blocks/module-theme-fields#choice>\n\n*Step9:*\nFor now we can loop the response from the `blog_popular_posts`  function. An example looks like this. While (...) is a placeholder for you card html markup. Add the loop at the end of your module html.\n```{% for pop_post in pop_posts %}\n    (...)\n{% endfor %}```\n*Step10:*\nNow it could be, that the posts from the `blog_popular_posts`  function contain the current page the user is visiting. To avoid this, we nee an extra condition that test if the current page is under the results. As well we need to increase the request limit to always get one more post, to make sure we have always enough posts to display, if we remove the current page from the results. So we change the _pop_posts_ variable to this:\n```{% set pop_posts = blog_popular_posts(selected_blog, 3 + 1, module.tag_slug, 'popular_all_time') %} ```\nOr if you did the optional steps 7 and 8, then this:\n```{% set pop_posts = blog_popular_posts(selected_blog, module.limit + 1, module.tag_slug, module.time_frame) %}```\n*Step11:*\nTo check if the current page is in the result, we need an _if/else_ condition to the loop. And to keep the loop in the limit we need another variable called \"_counter_\". The variable is an object, that we can update and check simultaneously. It looks like this:\n``` {% set counter = { 'length': 0 } %}```\nIn the _if/else_ condition we test if the post id (_post.id_) is different the current page id (_content_id_). As well as we check if our counter is under the limit. If so we increase the counter and step to the next iteration. The loop should now look like below. If you did the optional step 7 then replace the limit of 3 in the condition with the field variable called _module.limit_.\n```{% for post in pop_posts %}\n   {% if post.id != content_id and counter.length &lt; 3 %}\n       (...)\n       {%- do counter.update({ 'length': counter.length + 1 }) -%}\n   {% endif %}\n{% endfor %}```\n*Step12:*\nIf you now want to know what variables you have in the \"_post\"_ object, add a little debug script and place it in the content area of the loop. Inspect the logged object by opening the module preview and check the console in the developer tools. Popular used variables from post are: `post.absoluteUrl`, `post.htmlTitle`, `post.metaDescription`, `post.featuredImage`.\n```&lt;script&gt;console.log({{ post|tojson }})&lt;/script&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Hernandez",
+      "poster_handle": "ehernandez"
+    },
+    "time_stamp": "2022-08-05 08:11:55",
+    "text": "Can I inject my custom module into a richtext field? For example, I edit my richtext source code and maybe put something like\n```&lt;div style=\"background-color: blue\"&gt;\n  { my-custom-module param1=hello }\n&lt;/div&gt;```\nAre richtext fields this flexible? Or is my only option to create custom wrapper modules each time?",
+    "reply_count": 8,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2022-08-05 08:12:25"
+      },
+      {
+        "time_stamp": "2022-08-05 08:13:24"
+      },
+      {
+        "time_stamp": "2022-08-05 08:14:44"
+      },
+      {
+        "time_stamp": "2022-08-05 08:16:15"
+      },
+      {
+        "time_stamp": "2022-08-18 06:31:38"
+      },
+      {
+        "time_stamp": "2022-08-18 06:35:02"
+      },
+      {
+        "time_stamp": "2022-08-18 06:36:13"
+      },
+      {
+        "time_stamp": "2022-08-19 08:08:03"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Wessolly",
+      "poster_handle": "webdesign"
+    },
+    "time_stamp": "2022-08-05 08:12:25",
+    "text": "Nesting modules is not possible"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Hernandez",
+      "poster_handle": "ehernandez"
+    },
+    "time_stamp": "2022-08-05 08:13:24",
+    "text": "oh no :face_with_head_bandage:\nthanks for the quick reply tho."
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Wessolly",
+      "poster_handle": "webdesign"
+    },
+    "time_stamp": "2022-08-05 08:14:44",
+    "text": "you can check out makros though, maybe you can accomplish what you want with them?"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Hernandez",
+      "poster_handle": "ehernandez"
+    },
+    "time_stamp": "2022-08-05 08:16:15",
+    "text": "I wasn't aware of them. I'll look into it. thanks for the tip :thumbsup:"
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2022-08-05 11:06:11",
+    "text": "I've got a free member card with optional social icons this week for #freebieFriday. :tada:\n<https://www.linkedin.com/posts/anton-bujanowski_github-avorbfreebie-friday-ill-be-uploading-activity-6961349905873264640-ly6-?utm_source=linkedin_share&amp;utm_medium=ios_app>"
+  }
+]

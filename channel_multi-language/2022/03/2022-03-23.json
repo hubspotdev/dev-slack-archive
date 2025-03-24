@@ -1,0 +1,45 @@
+[
+  {
+    "poster": {
+      "poster_name": "Michele Herzog",
+      "poster_handle": "michele.herzog24"
+    },
+    "time_stamp": "2022-03-23 08:41:53",
+    "text": "If you like, you could use `request.path_and_query`. It prevents the page from being prerendered (not sure if that’s a concern with a system page), but it does give you a string of all the query params. I tend to use it as:\n```{% if request.path_and_query is string_containing 'test' %}\n&lt;!---code--&gt;\n{% endif %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2022-03-23 14:00:13",
+    "text": "instead of query params I’d use `html_lang`\n```{% if html_lang == 'en' %}{% endif %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-03-23 14:48:44",
+    "edited": {
+      "time_stamp": "2022-03-23 14:50:09"
+    },
+    "text": "Appreciate all of the input — I def have a few ways of grabbing what language the page is set to. But the issue here was that you cant set the page lang on system pages.\n\nI have some global modules that already have language variants and I was mainly wondering if there was a sneaky way to grab a specific language variant of a module. This way I wouldnt have to make a module specific to a language and hard code whether or not to use it.\n\nIn order to grab the language im checking to see if the page is coming from a german page `{{request.referrer is string_containing \"/de/\" or request.path is string_containing '/de/' }}` Then I figured I can detect whether or not im on a system page because, after a bit of trial and error the system pages return an empty string for the `{{content.template_path}}` variable.  A non system page returns a string of the actual file path in the theme.\n\nThis seems  to cover 404/500 pages plus the default search page."
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2022-03-23 15:13:26",
+    "text": "eesh never tried to grab a lang variant of a module. Have you dug in developer info for it?"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-03-23 15:57:05",
+    "text": "Yea — I hit up some Hs folk too, to try to figure out how lang variants are handled on the backend but it seems like it’s all based off of the page language. Not stored in the individual module. So it’s kind of inaccessible from hubl. But I ended up coming up with a minimal coding needed process to get this working. Just took a while to work out :stuck_out_tongue:"
+  }
+]

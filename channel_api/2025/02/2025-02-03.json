@@ -1,0 +1,86 @@
+[
+  {
+    "poster": {
+      "poster_name": "Brice Fernandez",
+      "poster_handle": "bfernandez"
+    },
+    "time_stamp": "2025-02-03 01:36:13",
+    "text": "Hi <@U25PYL3Q8>, thank you for your time and your answer, I'll try to be more precise, maybe I'm not understanding well the flow.\n\nMy first need and first usecase is to push files into a Form. there is nothing in the documentation about file type fields here :\n<https://developers.HubSpot.com/docs/reference/api/marketing/forms/v3-legacy>\n\nFollowing the API \"generic\" conventions, my first intention was to post file as base64 encode content, but when I do this I've got an error on the form submission because my body is too large....\n\nSo I started to search on the internet, and many people found a workaround posting files urls instead of file contents. And it works when I use external image links (lilke random google image)\n\nBut in my case, my files are sensitive data (ID cards, etc), so I can't upload it into a public and world wide accessible folder.\n\nSo my idea was to upload files first into a private HubSpot folder, accessible only by people logged in and with access granted.\nTo do this, I post file into a HubSpot folder using this endpoint : `<https://api.hubapi.com/files/v3/files>`  with this PHP code :\n\n```try {\n    $response = $HubSpot-&gt;files()-&gt;filesApi()-&gt;upload(\n        $file-&gt;getPathname(),\n        config('HubSpot.form.choruspro.folderId'),\n        options: json_encode(['access' =&gt; 'PRIVATE'])\n    );\n\n    return $response-&gt;getUrl();\n} catch (ApiException $e) {\n    return null;\n}```\n($file-&gt;getPathname() is the the local UploadedFIle path)\n\nWhen I do this, it uploads the file into the private HubSpot folder and I get a link.\n\nAfter, I try to post the form (my initial need), with the link I got, but here is the \"bug\"\n\nI think I don't really understand your idea to put the file id in the form submission file field, I'll try anyway\n\nI don't know if you understand well my problem and my flow here, I can do a demo if you want and if you have time."
+  },
+  {
+    "poster": {
+      "poster_name": "arati",
+      "poster_handle": "desai"
+    },
+    "time_stamp": "2025-02-03 03:05:41",
+    "text": "how to prevent sql injection",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2025-02-03 09:21:23"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2025-02-03 09:21:23",
+    "text": "<https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html>"
+  },
+  {
+    "text": "Yall see this email this morning?",
+    "time_stamp": "2025-02-03 11:14:22"
+  },
+  {
+    "poster": {
+      "poster_name": "Volodymyr Shandak",
+      "poster_handle": "volodymyr"
+    },
+    "time_stamp": "2025-02-03 12:21:01",
+    "text": "Hi guys.\nWhy this statement\n```When searching for phone numbers, HubSpot uses special calculated properties to standardize the format. These properties all start with hs_searchable_calculated_*. As a part of this standardization, HubSpot only uses the area code and local number. You should refrain from including the country code in your search or filter criteria.```\nfrom here <https://developers.HubSpot.com/docs/guides/api/crm/search>\ndoes not work for standard `fax` property? This is the phone number property but computed property `hs_searchable_calculated_fax` does not exist.",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2025-02-05 18:21:52"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Casey Grimes",
+      "poster_handle": "casey856"
+    },
+    "time_stamp": "2025-02-03 13:03:03",
+    "text": "When pulling data from the Campaigns API, what does `properties.hs_object_id` reference? For example, I'm seeing values like `378389158732`. These don't seem related to the actual Campaign IDs in UUIDv4 format. They also don't seem tied to assets like forms, emails, LPs, etc.\n\nWhen I pull Object Field information, the Object is returned without an ID. Do I need to pull `/crm/v3/objects/{objectType}`\nto resolve the IDs?"
+  },
+  {
+    "poster": {
+      "poster_name": "Casey Grimes",
+      "poster_handle": "casey856"
+    },
+    "time_stamp": "2025-02-03 13:17:25",
+    "text": "Unrelated API question: is there a way to resolve `office_location_id`  back to a value? I thought maybe Business Unit would have this but am coming up empty."
+  },
+  {
+    "poster": {
+      "poster_name": "Lauren Long",
+      "poster_handle": "lauren459"
+    },
+    "time_stamp": "2025-02-03 16:36:59",
+    "text": ":question: Is there a way to retrieve a Contact's identity profiles in the new CRM v3 API? I see that in the <https://developers.HubSpot.com/docs/reference/api/crm/objects/contacts/v1#get-all-contacts|legacy Contacts v1 API>, the result includes an `identity-profiles` list. However, it is not available in the <https://developers.HubSpot.com/docs/reference/api/crm/objects/contacts#post-%2Fcrm%2Fv3%2Fobjects%2Fcontacts%2Fbatch%2Fread|new CRM v3 API>. Is there another way to retrieve identity profiles with the new API? Has it been renamed to something else? Thank you! :pray:",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-02-04 11:37:55"
+      },
+      {
+        "time_stamp": "2025-02-04 14:11:48"
+      }
+    ]
+  }
+]

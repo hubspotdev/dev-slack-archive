@@ -1,0 +1,94 @@
+[
+  {
+    "poster": {
+      "poster_name": "Marcelo Candil",
+      "poster_handle": "marcelo.candil"
+    },
+    "time_stamp": "2023-10-02 06:03:41",
+    "text": "For some reason this seems to work but not in storybook, it doesn’t recognize the array it just recognizes an object element."
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-10-02 07:07:24",
+    "text": "Hm, sounds like a module field -&gt; `argTypes` issue. And the specific problem is that you need to type in an array `[{ … }, { … }]` but the storybook input only allows an object `{ … }`?"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-10-02 08:54:32",
+    "text": "Thanks for the thoughts here.\n\nWalking through where GraphQL/React would play a part here... Once you define a page as being dynamic to a CRM object, in the HubL context you have some variables which will provide with with whether the page is being rendered as a \"listing\" page or object instance page.\n\nAt this point you could take a couple of different approaches. You could pass that information to a module via `hublParameters` and then in the React tree branch and render listing vs instance. OR you could branch in the HubL code and render different modules for listing vs instance. In either of these cases the HubL context is already hydrated with the data you would want for the render, so it feels like bringing in GraphQL might be redundant/superfluous. But then again for the instance maybe you want to query across related objects. In that case the \"Instance Module\" could export a query making use of the hydrated HubL context variables as a GraphQL variable.\n\nThe other trick here is going to be testing the dynamic page instances. I was playing with this over the weekend and currently the dev server doesn't handle local dev for instance dynamic pages. That is it will always render the \"listing\" variant of the page. There is a pathway to support instance page testing in the dev server but we will need to make changes to support it."
+  },
+  {
+    "poster": {
+      "poster_name": "Marcelo Candil",
+      "poster_handle": "marcelo.candil"
+    },
+    "time_stamp": "2023-10-02 09:55:29",
+    "text": "Hi guys! Is it possible to import svg files as react components? I’ve been struggling with this for a while, I tried to manage them with the `vite-plugin-svgr` library but when it comes to importing it it returns an error. I was looking at examples in the repository but I only saw that they add the direct svg code inside a react component.",
+    "reply_count": 8,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2023-10-02 10:09:55"
+      },
+      {
+        "time_stamp": "2023-10-02 10:10:04"
+      },
+      {
+        "time_stamp": "2023-10-02 10:10:41"
+      },
+      {
+        "time_stamp": "2023-10-02 10:11:22"
+      },
+      {
+        "time_stamp": "2023-10-03 07:14:31"
+      },
+      {
+        "time_stamp": "2023-10-03 11:27:59"
+      },
+      {
+        "time_stamp": "2023-10-03 12:24:55"
+      },
+      {
+        "time_stamp": "2024-11-12 14:14:38"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-10-02 10:09:55",
+    "text": "the `hello-world` example shows one option which is defining the svg within a react component: <https://github.com/HubSpot/cms-js-building-block-examples/blob/main/hello-world/hello-world-project/hello-world-app/components/partials/Home.jsx>"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-10-02 10:10:04",
+    "text": "<https://github.com/HubSpot/cms-js-building-block-examples/blob/main/hello-world/hello-world-project/hello-world-app/components/HubSpotSprocket.jsx>"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-10-02 10:10:41",
+    "text": "another option that works is importing the `.svg` directly and then using the result in an `img` tag:\n\n```import svg from '../../assets/HubSpot-Sprocket.svg'\n\n... in your component\n\n&lt;img src={svg} /&gt;```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-10-02 10:11:22",
+    "text": "ah just reread and saw you mentioned the existing example, so then the other working option would be the second one i mentioned"
+  }
+]

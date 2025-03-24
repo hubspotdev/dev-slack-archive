@@ -1,0 +1,124 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jeff Main",
+      "poster_handle": "jmain"
+    },
+    "time_stamp": "2021-05-24 09:04:58",
+    "text": "thanks for the reply, kieran! i'm not sure that this will work for my specific use case..."
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Main",
+      "poster_handle": "jmain"
+    },
+    "time_stamp": "2021-05-24 09:06:17",
+    "edited": {
+      "time_stamp": "2021-05-24 09:06:28"
+    },
+    "text": "here's the live page (<https://www.sunair.com/process-pumps>) and at the top, you'll see 8 products. these are pulled randomly (with a limit of 8 )"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Main",
+      "poster_handle": "jmain"
+    },
+    "time_stamp": "2021-05-24 09:08:22",
+    "edited": {
+      "time_stamp": "2021-05-24 09:10:16"
+    },
+    "text": "if the row with the name \"Thomas Pump\" happens to be one of the rows pulled in, we need to make sure the row with the name \"Sunflo\" is *not* pulled in. (there are only 2 other instances where the client needs this, due to specific vendor relationships.)"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Main",
+      "poster_handle": "jmain"
+    },
+    "time_stamp": "2021-05-24 09:08:35",
+    "text": "maybe I'm misunderstanding how an array might be used here..? thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-05-24 09:58:29",
+    "text": "apologies - so what i recommend is using a for loop"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-05-24 09:59:38",
+    "text": "to iterate through ALL hubdb rows in that table (and shuffle it) (assuming it’s hubdb) and then conditionally checking to see (maybe using selectattr) if the condition is met for the current row - if not, you can continue through the rows, otherwise .append it onto a new array."
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Main",
+      "poster_handle": "jmain"
+    },
+    "time_stamp": "2021-05-24 10:10:50",
+    "text": "thanks for talking through this with me, really appreciate it"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Main",
+      "poster_handle": "jmain"
+    },
+    "time_stamp": "2021-05-24 10:12:02",
+    "edited": {
+      "time_stamp": "2021-05-24 10:13:01"
+    },
+    "text": "so i'm with you on iterating through all the rows, shuffling, and if/then statements... i guess the issue is, from my above example, i don't want to completely skip \"Thomas Pump\" or \"Sunflo.\" ideally they'd get equal opportunity to be randomly inserted into the page. it's just that if one of them does get inserted, the other can't."
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Main",
+      "poster_handle": "jmain"
+    },
+    "time_stamp": "2021-05-24 10:13:21",
+    "edited": {
+      "time_stamp": "2021-05-24 10:26:49"
+    },
+    "text": "is there a way to build the array and run these condition checks as it iterates through?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-05-24 10:34:50",
+    "edited": {
+      "time_stamp": "2021-05-24 10:35:07"
+    },
+    "text": "Yeah, so i imagine:\n\n```{% set filtered_items = [] %}\n\n{% rows = hubdb_table_rows(\"x\")|shuffle %}\n\n{% for row in rows %}\n   {% if conditionmet %}\n      {% do filtered_items.append(row) %}\n   {% endif %}\n{% endfor %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-05-24 10:34:59",
+    "edited": {
+      "time_stamp": "2021-05-24 10:35:39"
+    },
+    "text": "not ideal performance wise, but it’ll be cached."
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Main",
+      "poster_handle": "jmain"
+    },
+    "time_stamp": "2021-05-24 13:02:20",
+    "text": "ah awesome, thanks for providing this visualization."
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Main",
+      "poster_handle": "jmain"
+    },
+    "time_stamp": "2021-05-24 13:02:22",
+    "text": "appreciate it!"
+  }
+]

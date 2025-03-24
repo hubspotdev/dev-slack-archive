@@ -1,0 +1,54 @@
+[
+  {
+    "poster": {
+      "poster_name": "Kevin Fremon",
+      "poster_handle": "kevin"
+    },
+    "time_stamp": "2021-10-01 07:25:38",
+    "edited": {
+      "time_stamp": "2021-10-01 07:26:02"
+    },
+    "text": "For some reason that feature has been removed. I think HubSpot is sorting out how to handle the attached file (CSS, JS) dependencies as that was an issue before.\n\nWhat I've done is simply make a clone of the theme and then right-click to move the module into the Child theme.  Then delete the clone."
+  },
+  {
+    "text": "Ah gotcha, thanks Kevin. I have done that before too, but now the option to clone a theme is also gone. :shrug::skin-tone-2:",
+    "time_stamp": "2021-10-01 08:09:59"
+  },
+  {
+    "poster": {
+      "poster_name": "Darin Ronne",
+      "poster_handle": "darin.ronne"
+    },
+    "time_stamp": "2021-10-01 10:02:56",
+    "edited": {
+      "time_stamp": "2021-10-09 09:37:54"
+    },
+    "text": "I thought I'd share this because I haven't found one that someone else has created.\n\nThis is a Media Query macro made with hubl that works with a dictionary of defined breakpoints.\n\nThe first parameter is required. Either a named breakpoint or a px number.\nThe second parameter is optional: 'down' and 'only'. 'up' is implied because it is mobile-first.\n\n```{% set breakpoints = {\n  'small': '0',\n  'medium': '640px',\n  'large': '1024px',\n  'xlarge': '1200px',\n  'xxlarge': '1440px'\n} %}```\n```{#\n  Breakpoint Macro.\n  Examples:\n  {{ breakpoint('large', 'down') }} {}\n  {{ breakpoint('medium', 'only') }} {}\n  {{ breakpoint('xlarge') }} {}\n  {{ breakpoint('1000px', 'down') }} {}\n  {{ breakpoint('1200') }} {}\n#}\n{%- macro breakpoint(value, direction) -%}\n\n  {# If value is in breakpoints dictionary. #}\n  {%- if breakpoints is containing value -%}\n\n    {# Set bp_name and bp_value variable. #}\n    {%- set bp_name = value -%}\n    {%- set bp_value = breakpoints[bp_name]|cut('px') -%}\n\n    {# Use the get_bp_ceiling() macro to find the top end of the named breakpoint. #}\n    {%- set bp_value_max = get_bp_ceiling(bp_name) -%}\n\n  {%- else -%}\n\n    {%- set bp_value = value|cut('px') -%}\n\n  {%- endif -%}\n\n  {# If direction is not set, then use min-width only. #}\n  {%- if direction is none or direction == 'up' -%}\n\n@media screen and (min-width: {{ bp_value ~ 'px' }})\n\n  {# If direction is 'down'... #}\n  {%- elif direction == 'down' -%}\n\n    {# and bp_name exists, then use the top end of the named breakpoint. #}\n    {%- if bp_name -%}\n\n@media screen and (max-width: {{ bp_value_max ~ 'px' }})\n\n    {# Else use the value #}\n    {%- else -%}\n\n@media screen and (max-width: {{ bp_value ~ 'px' }})\n\n    {%- endif -%}\n\n  {# If direction is 'only'... #}\n  {%- elif direction == 'only' -%}\n\n    {# and value is 'small', then only use max-width. #}\n    {%- if bp_name == 'small' -%}\n\n@media screen and (max-width: {{ bp_value_max ~ 'px' }})\n\n    {# Else use min-with and max-width. #}\n    {%- else -%}\n\n@media screen and (min-width: {{ bp_value ~ 'px' }}) and (max-width: {{ bp_value_max ~ 'px' }})\n\n    {%- endif -%}\n\n  {%- endif -%}\n\n{%- endmacro -%}\n\n\n{# Determine the ceiling value of the named breakpoint. #}\n{%- macro get_bp_ceiling(bp_name) -%}\n  {%- for key, val in breakpoints.items() -%}\n\n    {%- if key_found -%}\n      {{ val|cut('px') - 1 }}\n    {%- endif -%}\n\n    {#\n      If the key matches bp_name, set key_found to true.\n      In the next loop iteration, the value minus 1 will be returned.\n      After the value is returned, the key will no longer match bp_name,\n      and key_found will be set to false here and in future iterations.\n    #}\n    {%- if key == bp_name -%}\n      {%- set key_found = true -%}\n    {%- else -%}\n      {%- set key_found = false -%}\n    {%- endif -%}\n\n  {%- endfor -%}\n{%- endmacro -%}```\n```{% include '../relative-path/to-file/_macros.css' %}\n\n.site-footer {\n  background-color: red;\n}\n\n{{ breakpoint('large') }} {\n  .site-footer {\n    background-color: green;\n  }\n}```",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2021-10-01 11:23:47"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2021-10-01 11:16:49",
+    "edited": {
+      "time_stamp": "2021-10-01 11:18:14"
+    },
+    "text": "Is there a way to modify global theme settings values with JavaScript or HubL? (i.e. write values either directly or indirectly to the fields.json)"
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2021-10-01 11:23:47",
+    "text": "yo this is cool"
+  }
+]

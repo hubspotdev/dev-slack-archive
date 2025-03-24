@@ -1,0 +1,245 @@
+[
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2017-08-02 08:25:24",
+    "text": "So maybe <@U22PJPGK0>  or <@U22PU4G4A> could shine some light on this. I saw that recently HS updated their blogging look and added a read time to it. I was trying to do this for awhile and was able to get it all figured out using JS, the only issue is I wasnt able to get the twitter data 1 attribute in the meta tag as I wasnt able to do all the calculations (including counting of images) through HubL and instead had to do it through JS. How did HS go about getting this populated without JS?"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2017-08-02 08:26:10",
+    "text": "I should mention that I am more asking how they handled getting the `meta` information in there"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2017-08-02 08:26:56",
+    "text": "The only way I could think was just using a custom field and then relying on the bloggers to input an appropriate time but that was too complicated"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeffrey Vocell",
+      "poster_handle": "jvocell"
+    },
+    "time_stamp": "2017-08-02 08:41:36",
+    "text": "Hey <@U2H3TT8F2>. We have a dev team within Marketing that built the redesigned blog, so I'll check with them and let you know when I hear back."
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2017-08-02 08:43:37",
+    "text": "Thanks <@U22PU4G4A>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeffrey Vocell",
+      "poster_handle": "jvocell"
+    },
+    "time_stamp": "2017-08-02 08:59:18",
+    "text": "Here's the calculation macro we use to determine reading time (which is based on Medium's formula of 275 WPM and 12 seconds per image)."
+  },
+  {
+    "poster": {
+      "poster_name": "Jeffrey Vocell",
+      "poster_handle": "jvocell"
+    },
+    "time_stamp": "2017-08-02 08:59:23",
+    "edited": {
+      "time_stamp": "2017-08-02 08:59:38"
+    },
+    "text": "```# RENDER READ TIME #}\n{% macro render_read_time(body) %}\n    {% set str = body|lower %}\n    {% set img_count = str|split('&lt;img')|length %}\n    {% set img_minutes = ((img_count * 12) / 60)|round(0, 'common') %}\n    {% set read_time = (str|striptags|wordcount / 275)|round(0, 'common') + img_minutes %}\n    {{ read_time|string|trim ~ ' ' ~ render_read_time_suffix()|trim }}\n{% endmacro %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeffrey Vocell",
+      "poster_handle": "jvocell"
+    },
+    "time_stamp": "2017-08-02 09:00:09",
+    "text": "And here's the meta info for the &lt;head&gt; of the custom template..."
+  },
+  {
+    "poster": {
+      "poster_name": "Jeffrey Vocell",
+      "poster_handle": "jvocell"
+    },
+    "time_stamp": "2017-08-02 09:00:16",
+    "text": "```{% if !topic and !is_listing_view %}\n    \n    {# BLOG POST #}\n    &lt;meta name=\"twitter:label1\" value=\"Reading time\" /&gt;\n    &lt;meta name=\"twitter:data1\" value=\"{{ blogMacros.render_read_time(content.post_body)|replace('\\n', '')|trim }}\" /&gt;\n{% endif %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeffrey Vocell",
+      "poster_handle": "jvocell"
+    },
+    "time_stamp": "2017-08-02 09:02:15",
+    "text": "We made our own template for the topic/author/listing/post pages, and on the listing pages we’re looping through each post object and using that `render_read_time(body)` macro to pass in `post.body`"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2017-08-02 09:19:10",
+    "text": "thank you for this <@U22PU4G4A>! I was using the same formula but never thought of running it through a macro or using those functions."
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2017-08-02 10:31:59",
+    "text": "So has anyone dealt with forms and turning off the form tracking before? I turned it off on a form so that all submissions would be created as a new contact and for some reason, it is still updating the contact record for an existing record. ive been testing this in incognito just to make sure and it still updates the record and doesnt create a new one. Anyone else have this issue?"
+  },
+  {
+    "poster": {
+      "poster_name": "Remington Begg",
+      "poster_handle": "remingtonbegg"
+    },
+    "time_stamp": "2017-08-02 12:22:08",
+    "text": "are you using a new email address"
+  },
+  {
+    "poster": {
+      "poster_name": "Remington Begg",
+      "poster_handle": "remingtonbegg"
+    },
+    "time_stamp": "2017-08-02 12:22:10",
+    "text": "?"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2017-08-02 13:47:13",
+    "text": "sorry was in a meeting. Nope. I am using the same email address."
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2017-08-02 13:47:32",
+    "text": "Would turning off the tracking not create a new contact record?"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2017-08-02 13:48:32",
+    "text": "at least that is what it seems the documentation says it should be doing"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2017-08-02 13:48:50",
+    "text": "<https://knowledge.HubSpot.com/articles/kcs_article/forms/how-can-i-disable-cookie-tracking-on-forms-so-each-submission-from-the-same-browser-creates-a-new-contact>"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2017-08-02 13:49:31",
+    "text": "my contact record keeps updating and not creating a new one"
+  },
+  {
+    "poster": {
+      "poster_name": "Remington Begg",
+      "poster_handle": "remingtonbegg"
+    },
+    "time_stamp": "2017-08-02 13:58:54",
+    "text": "not if the email address matches"
+  },
+  {
+    "poster": {
+      "poster_name": "Remington Begg",
+      "poster_handle": "remingtonbegg"
+    },
+    "time_stamp": "2017-08-02 13:59:05",
+    "text": "to my knowledge"
+  },
+  {
+    "poster": {
+      "poster_name": "Danielle Peters",
+      "poster_handle": "dpeters"
+    },
+    "time_stamp": "2017-08-02 13:59:18",
+    "text": "HubSpot dedupes on email address"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2017-08-02 14:08:49",
+    "text": "Correct but according to the article above, if the cookie tracking is disabled, it should create a new contact on each form submission."
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2017-08-02 14:13:21",
+    "text": "I always assumed that the \"disabled cookie tracking\" just meant that if you were filling it from the same device / session (but with a different email) it wouldn't attempt to re-associate the form submit with the original email that was sent through"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2017-08-02 14:13:37",
+    "text": "not that you could create multiple contacts with the same email"
+  },
+  {
+    "poster": {
+      "poster_name": "Danielle Peters",
+      "poster_handle": "dpeters"
+    },
+    "time_stamp": "2017-08-02 14:14:43",
+    "text": "Exactly. It allows multiple email addresses from the same browser to create new contacts when the cookie otherwise would have caused those submissions to be associated with the same contact"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2017-08-02 14:17:19",
+    "text": "ta-dam!"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2017-08-02 14:19:13",
+    "text": "ah so it still wont create a new contact when the email is the same, I get it now"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2017-08-02 14:19:42",
+    "text": "that should def be expanded on or mentioned in the article as this reads like it will allow for multiple email submissions and duplicate contacts"
+  },
+  {
+    "poster": {
+      "poster_name": "Danielle Peters",
+      "poster_handle": "dpeters"
+    },
+    "time_stamp": "2017-08-02 14:23:18",
+    "text": "It’s more explicit in this article <https://knowledge.HubSpot.com/forms-user-guide-v2/how-to-use-forms-to-capture-contact-information-at-trade-shows-and-other-offline-events>"
+  }
+]

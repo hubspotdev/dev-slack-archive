@@ -1,0 +1,393 @@
+[
+  {
+    "poster": {
+      "poster_name": "James Cutler",
+      "poster_handle": "jcutler"
+    },
+    "time_stamp": "2019-01-02 07:06:16",
+    "text": "Hey <@U795QFHDE>, if you need JSON formatting, you'll need to retrieve HS posts via the COS Blog Post API - <https://developers.HubSpot.com/docs/methods/blogv2/get_blog_posts>\nIf you're retrieving posts from within a HubSpot template (and aren't strict on the JSON formatting), you can use HubL functions to render HS posts - <https://designers.HubSpot.com/en/docs/hubl/hubl-supported-functions#blog-post-by-id>"
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2019-01-02 08:19:23",
+    "edited": {
+      "time_stamp": "2019-01-02 08:20:13"
+    },
+    "text": "Anyone have a tried and true way to handle form checkbox submissions to build a queryparam?\n`request.query_dict` keeps throwing out duplicates in the query string (ex: `request.query_dict` outputs the requested url query `checkboxes=1&amp;checkboxes=3&amp;checkboxes=4` as `checkboxes=1`."
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2019-01-02 08:24:49",
+    "text": "I wonder if it should be a js solution instead of strictly hubl?"
+  },
+  {
+    "poster": {
+      "poster_name": "James Cutler",
+      "poster_handle": "jcutler"
+    },
+    "time_stamp": "2019-01-02 10:46:43",
+    "text": "<@U3T21PDBK>, based on the requested URL query `checkboxes=1&amp;checkboxes=3&amp;checkboxes=4`, it looks like the form submitting to that URL has multiple checkbox fields, each with the same `name` attribute (i.e. `name=checkboxes`.) Is it feasible to have different names on your checkbox fields?"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2019-01-02 10:48:03",
+    "text": "it would filter one column in hubdb (i.e. `color` so i’d want the name for all of the checkboxes to be *color*)"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2019-01-02 10:48:32",
+    "text": "does that make sense?"
+  },
+  {
+    "poster": {
+      "poster_name": "James Cutler",
+      "poster_handle": "jcutler"
+    },
+    "time_stamp": "2019-01-02 10:50:16",
+    "text": "Ahh, and you want the end user to be able to select multiple values? (ie \"show me items that are red, blue or yellow\")"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2019-01-02 10:50:52",
+    "text": "yes, in hubL I’d query the db with the *contains* operator"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2019-01-02 10:52:07",
+    "text": "One solution I found in js is to have a hidden input and update it’s values with the appropriate checkbox fields. I’m still working out the js though… wondering if there was a way in hubL"
+  },
+  {
+    "poster": {
+      "poster_name": "James Cutler",
+      "poster_handle": "jcutler"
+    },
+    "time_stamp": "2019-01-02 10:56:12",
+    "edited": {
+      "time_stamp": "2019-01-02 10:56:28"
+    },
+    "text": "Yeah, that makes sense. One thing you could do is parse the query in a more custom fashion. Given `checkboxes=1&amp;checkboxes=3&amp;checkboxes=4`:\n```{% set query = request.query|split('&amp;') %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2019-01-02 10:59:07",
+    "text": "hmmm, how would you parse it?"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2019-01-02 11:00:34",
+    "edited": {
+      "time_stamp": "2019-01-02 11:00:56"
+    },
+    "text": "not sure how to build a query url where `checkboxes__contains=1,3,4` from a for loop",
+    "reply_count": 9,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2019-01-02 11:07:01"
+      },
+      {
+        "time_stamp": "2019-01-02 11:10:48"
+      },
+      {
+        "time_stamp": "2019-01-02 11:16:23"
+      },
+      {
+        "time_stamp": "2019-01-02 11:17:45"
+      },
+      {
+        "time_stamp": "2019-01-02 11:29:05"
+      },
+      {
+        "time_stamp": "2019-01-02 11:34:29"
+      },
+      {
+        "time_stamp": "2019-01-02 11:46:01"
+      },
+      {
+        "time_stamp": "2019-01-02 11:46:37"
+      },
+      {
+        "time_stamp": "2019-01-02 11:48:25"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "James Cutler",
+      "poster_handle": "jcutler"
+    },
+    "time_stamp": "2019-01-02 11:07:01",
+    "edited": {
+      "time_stamp": "2019-01-02 11:09:53"
+    },
+    "text": "Yeah, building variables from within a for loop is generally not doable, but you can use `.append` for list variables:\n```{% set filter = [] %}\n{% set query = request.query|split('&amp;') %}\n{% for q in query %}\n{% set val = q|split('=') %}\n{{ filter.append(val[1])}}\n{% endfor %}\nfilter: {{ filter }}\n{% set checkboxParam = filter|join(',') %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "James Cutler",
+      "poster_handle": "jcutler"
+    },
+    "time_stamp": "2019-01-02 11:10:48",
+    "text": "Then your URL would include `...&amp;checkboxes__contains={{checkboxParam}}...`"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2019-01-02 11:16:23",
+    "text": "Nice! that would definitely work!"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2019-01-02 11:17:45",
+    "text": "I am using about 5 filters and have been trying to make it more dynamic / functional rather that having to custom code and check for each column name. So in the future, when I use this for other clients I might still have to use the js technique"
+  },
+  {
+    "poster": {
+      "poster_name": "James Cutler",
+      "poster_handle": "jcutler"
+    },
+    "time_stamp": "2019-01-02 11:29:05",
+    "text": "Yeah, there might be a way to parse the query string and build out the HubDB queryParam from that - might allow for a more dynamic approach, but tbh I haven't fully tested that out."
+  },
+  {
+    "poster": {
+      "poster_name": "Chandler Ives",
+      "poster_handle": "cives"
+    },
+    "time_stamp": "2019-01-02 11:32:26",
+    "text": "can one of these \"Parameters\" point to a specific blog\n\n <https://developers.HubSpot.com/docs/methods/blogv2/get_blog_posts>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-01-02 11:34:29",
+    "text": "It’s hard to say since `checkboxes=1&amp;checkboxes=3&amp;checkboxes=4` usually indicates ANDing those values together rathing than OR’ing"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2019-01-02 11:46:01",
+    "text": "when the form submits with checkbox values, that is what the query param looks like… idk"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2019-01-02 11:46:37",
+    "text": "i did solve it with js in case anyone wants to use this code\n```$('input[type=\"checkbox\"]').change(function() {\n    loadCheck(this.name);\n  });\n\n  function loadCheck( checkbox ) {\n    var selector = checkbox;\n    $('input[data-for-each=\"' + selector + '\"').val('');\n    var checkboxes = $('input[type=\"checkbox\"][name=\"' + selector + '\"]:checked');\n    var data = [];\n    var len = checkboxes.length;\n    for (var i=0; i&lt;len; i++) {\n      data[i] = checkboxes[i].value;\n    }\n    $('input[data-for-each=\"' + selector + '\"').val(data);\n  }```"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2019-01-02 11:48:25",
+    "text": "I had hidden fields with `data-for-each=checkboxName` attributes. (one hidden field per checkbox set)"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-01-02 12:51:03",
+    "text": "Where was the documentation on using JS to get HubDB content?",
+    "reply_count": 12,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2019-01-02 12:54:06"
+      },
+      {
+        "time_stamp": "2019-01-02 12:56:04"
+      },
+      {
+        "time_stamp": "2019-01-02 12:56:52"
+      },
+      {
+        "time_stamp": "2019-01-02 12:57:44"
+      },
+      {
+        "time_stamp": "2019-01-02 12:58:41"
+      },
+      {
+        "time_stamp": "2019-01-02 12:59:23"
+      },
+      {
+        "time_stamp": "2019-01-02 12:59:40"
+      },
+      {
+        "time_stamp": "2019-01-02 13:02:12"
+      },
+      {
+        "time_stamp": "2019-01-02 13:02:22"
+      },
+      {
+        "time_stamp": "2019-01-02 13:02:45"
+      },
+      {
+        "time_stamp": "2019-01-02 13:02:48"
+      },
+      {
+        "time_stamp": "2019-01-02 13:06:44"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-01-02 12:54:06",
+    "text": "if you go to the hubdb docs, there’s a section that talks about filtering, click the link there, it will take you to the js docs"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-01-02 12:56:04",
+    "text": "that takes me to the get_rows api but I thought there was a way to do this via JS?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-01-02 12:56:52",
+    "text": "maybe I’m misunderstanding. I was thinking you wanted the javascript equivalent of hubdb_rows"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-01-02 12:57:44",
+    "text": "<https://developers.HubSpot.com/docs/methods/hubdb/v2/get_table_rows>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-01-02 12:58:41",
+    "text": "that’s to get the rows using javascript\nFor the table info(number of rows, column names etc) <https://developers.HubSpot.com/docs/methods/hubdb/v2/get_table>"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-01-02 12:59:23",
+    "text": "i thought there was a google doc with examples the <@U6GNQ7JBU> had?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-01-02 12:59:40",
+    "text": "ohhh, possibly, I’m not sure"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-01-02 13:02:12",
+    "text": "I have it pinned over in <#CBA9UA4EN|javascript>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-01-02 13:02:22",
+    "text": "Until I write up some official documentation"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-01-02 13:02:45",
+    "text": "ah ok, I forgot we had a channel for JS stuff lol"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-01-02 13:02:48",
+    "text": "thanks Matt"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-01-02 13:06:44",
+    "text": "ahh oh yeah forgot about that"
+  },
+  {
+    "poster": {
+      "poster_name": "Remington Begg",
+      "poster_handle": "remingtonbegg"
+    },
+    "time_stamp": "2019-01-02 13:58:56",
+    "edited": {
+      "time_stamp": "2019-01-02 13:59:26"
+    },
+    "text": "Anyone done any localization on hubdb queries? I have a client that has content in 14 different languages and trying to determine best course of action"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-01-02 15:22:41",
+    "text": "have not, but I would think it’d depend completely on the type of data."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-01-02 15:24:04",
+    "text": "for example if you’re listing out specs for a product and the spec names are the only thing that’s actually in other languages ( the values being like numbers or something) then I’d have a HubDB that is used for the multi-lingual side of it and would just be the langauge translations for all of the specifications. the values would be output the same(since numbers are universal)"
+  }
+]

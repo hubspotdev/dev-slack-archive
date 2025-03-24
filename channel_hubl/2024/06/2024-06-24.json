@@ -1,0 +1,102 @@
+[
+  {
+    "poster": {
+      "poster_name": "Yawer Ali",
+      "poster_handle": "yawer.ali"
+    },
+    "time_stamp": "2024-06-24 04:54:23",
+    "text": "Hello folks, While making a query using the HUBL functions, my query is as follows:\n```{% set objects = crm_objects(\"Product\", \"make__not_null&amp;limit=100\", \"make,hs_images,hs_sku,model,city,condition,dealer,exterior_color,zip,year,state,name,hs_updated_by_user_id,additional_image_url,createdate,price,id\") %}```\nI am able to fetch the data successfully,however, the data retrieved is from April month. I need assistance in modifying the query to fetch the latest data.",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-06-24 07:46:06"
+      },
+      {
+        "time_stamp": "2024-06-24 07:46:31"
+      },
+      {
+        "time_stamp": "2024-06-24 07:46:39"
+      },
+      {
+        "time_stamp": "2024-06-24 07:46:50"
+      },
+      {
+        "time_stamp": "2024-06-24 08:17:07"
+      },
+      {
+        "time_stamp": "2024-06-24 08:51:45"
+      },
+      {
+        "time_stamp": "2024-06-24 08:53:15"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-06-24 07:46:06",
+    "text": "```order=-createdate```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-06-24 07:46:31",
+    "text": "you would add that to your query with an &amp; and whatever property you want to sort on"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-06-24 07:46:39",
+    "text": "<https://developers.HubSpot.com/docs/cms/hubl/functions#crm-objects>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-06-24 07:46:50",
+    "text": "there is all sorts of documentation around on query items as well"
+  },
+  {
+    "poster": {
+      "poster_name": "Yawer Ali",
+      "poster_handle": "yawer.ali"
+    },
+    "time_stamp": "2024-06-24 08:17:07",
+    "text": "I just tried adding the `order=-createdate` to my query as you mentioned, but I am still not getting any data. Here is the updated query I used:\n```{% set selectMake = \"Ferrari\" %}\n{% set query = \"make=\" ~ selectMake ~ \"&amp;limit=100&amp;order=-createdate\" %}\n{% set objects = crm_objects(\"Product\", query, \"make,hs_images,hs_sku,model,city,condition,dealer,exterior_color,zip,year,state,name,hs_updated_by_user_id,additional_image_url,createdate,price,id\") %}```\nCould you please advise on what might be going wrong ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-06-24 08:51:45",
+    "text": "you need to replace createdate with the internal property name of what you are trying to sort your records on"
+  },
+  {
+    "poster": {
+      "poster_name": "Yawer Ali",
+      "poster_handle": "yawer.ali"
+    },
+    "time_stamp": "2024-06-24 08:53:15",
+    "edited": {
+      "time_stamp": "2024-06-24 08:53:29"
+    },
+    "text": "Used This and it worked now\n```{% set objects = crm_objects(\"Product\", \"make=\" ~ selectedMake ~ \"&limit=100&order=-createdate\", \"make,hs_images,hs_sku,model,city,condition,dealer,exterior_color,zip,year,state,name,hs_updated_by_user_id,additional_image_url,createdate,price,id\") %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Hominick",
+      "poster_handle": "never.go.hollow.trill"
+    },
+    "time_stamp": "2024-06-24 14:31:20",
+    "text": "The hubl variable `content` on a blog post contains both `post_body` and `rss_body` . It looks like `rss_body` is the one I need because it doesn't have anything extra included like some hubl expressions. Is it safe to use `rss_body` ? I don't see that field in the <https://developers.HubSpot.com/docs/cms/hubl/variables|documentation> so I'm worried it may not be stable."
+  }
+]

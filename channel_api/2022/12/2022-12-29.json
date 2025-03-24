@@ -1,0 +1,611 @@
+[
+  {
+    "poster": {
+      "poster_name": "Rens Nitert",
+      "poster_handle": "rens"
+    },
+    "time_stamp": "2022-12-29 06:13:30",
+    "text": "Hi all! I'm trying to test creating custom object schema's (`/crm/v3/schema`) on a developer test account using the access token of a private app with all possible scopes enabled, but I'm getting an 'INVALID_AUTHENTICATION' error. All other API calls work fine using the same access token. Any ideas what I'm doing wrong here?",
+    "reply_count": 37,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-12-29 07:34:50"
+      },
+      {
+        "time_stamp": "2022-12-29 07:38:29"
+      },
+      {
+        "time_stamp": "2022-12-29 07:39:04"
+      },
+      {
+        "time_stamp": "2022-12-29 07:44:05"
+      },
+      {
+        "time_stamp": "2022-12-29 07:45:44"
+      },
+      {
+        "time_stamp": "2022-12-29 07:52:57"
+      },
+      {
+        "time_stamp": "2022-12-29 07:54:29"
+      },
+      {
+        "time_stamp": "2022-12-29 08:00:20"
+      },
+      {
+        "time_stamp": "2022-12-29 08:02:14"
+      },
+      {
+        "time_stamp": "2022-12-29 08:03:30"
+      },
+      {
+        "time_stamp": "2022-12-29 08:04:03"
+      },
+      {
+        "time_stamp": "2022-12-29 08:04:04"
+      },
+      {
+        "time_stamp": "2022-12-29 08:06:11"
+      },
+      {
+        "time_stamp": "2022-12-29 08:08:37"
+      },
+      {
+        "time_stamp": "2022-12-29 08:10:48"
+      },
+      {
+        "time_stamp": "2022-12-29 08:11:58"
+      },
+      {
+        "time_stamp": "2022-12-29 08:13:52"
+      },
+      {
+        "time_stamp": "2022-12-29 08:16:50"
+      },
+      {
+        "time_stamp": "2022-12-29 08:17:38"
+      },
+      {
+        "time_stamp": "2022-12-29 08:17:57"
+      },
+      {
+        "time_stamp": "2022-12-29 08:18:35"
+      },
+      {
+        "time_stamp": "2022-12-29 08:19:07"
+      },
+      {
+        "time_stamp": "2022-12-29 08:20:45"
+      },
+      {
+        "time_stamp": "2022-12-29 08:21:06"
+      },
+      {
+        "time_stamp": "2022-12-29 08:21:14"
+      },
+      {
+        "time_stamp": "2022-12-29 08:21:40"
+      },
+      {
+        "time_stamp": "2022-12-29 08:21:51"
+      },
+      {
+        "time_stamp": "2022-12-29 08:26:32"
+      },
+      {
+        "time_stamp": "2022-12-29 08:36:23"
+      },
+      {
+        "time_stamp": "2022-12-29 08:40:42"
+      },
+      {
+        "time_stamp": "2022-12-29 08:51:25"
+      },
+      {
+        "time_stamp": "2022-12-29 08:51:40"
+      },
+      {
+        "time_stamp": "2022-12-29 08:51:40"
+      },
+      {
+        "time_stamp": "2022-12-29 08:52:13"
+      },
+      {
+        "time_stamp": "2022-12-29 08:52:40"
+      },
+      {
+        "time_stamp": "2022-12-29 08:53:01"
+      },
+      {
+        "time_stamp": "2022-12-29 08:53:14"
+      }
+    ]
+  },
+  {
+    "text": "Hi Jaydeep!\n\nI think you'd want to use this endpoint:\n\n<https://api.hubapi.com/crm/v3/objects/quotes?limit=100&amp;properties=hs_quote_amount&amp;archived=false>\n\nThis is pulling the hs_quote_amount; the limit of returned quotes for a single call is 100. For a full list of quote properties that you could grab, you can hit <https://api.hubapi.com/crm/v3/properties/quotes?archived=false> .\n\nDocumentation: <https://developers.HubSpot.com/docs/api/crm/quotes> .\n\nAlternatively, since it looks like you're pushing information to Excel from your screenshot, you could EITHER use the free Google Sheets connector with a quote-based workflow to send quote information to a Google Sheet (I say this because this connector is free and works with a spreadsheet, albeit not Excel), like the screenshot below. Or, if you must use Excel, there is an app on the marketplace from <http://datawarehouse.io|datawarehouse.io> that can push information to Excel, but it is requires a subscription: <https://ecosystem.HubSpot.com/marketplace/apps/marketing/analytics-data/excel-integration-216220> .",
+    "time_stamp": "2022-12-29 07:33:20"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan De Long",
+      "poster_handle": "ndelong"
+    },
+    "time_stamp": "2022-12-29 07:34:50",
+    "text": "Hi Rens! What does you API request look like?"
+  },
+  {
+    "poster": {
+      "poster_name": "Rens Nitert",
+      "poster_handle": "rens"
+    },
+    "time_stamp": "2022-12-29 07:38:29",
+    "text": "Hi Nathan! I'm using the PHP client library (<https://github.com/HubSpot/HubSpot-api-php>) to create with access token, to do:\n```$apiClient()-&gt;crm()-&gt;schemas()-&gt;coreApi()-&gt;create($accountObject);```\nof course a lot of stuff is done to build the `$accountObject`  first"
+  },
+  {
+    "poster": {
+      "poster_name": "Rens Nitert",
+      "poster_handle": "rens"
+    },
+    "time_stamp": "2022-12-29 07:39:04",
+    "text": "I immediately get this error:\n```{\"status\":\"error\",\"message\":\"Authentication credentials not found. This API supports both API Key and OAuth 2.0 authentication and you can find more details at <https://developers.HubSpot.com/docs/methods/auth/oauth-overview>\",\"correlationId\":\"14edd7b9-20ae-4cff-b927-41e94d2395ee\",\"category\":\"INVALID_AUTHENTICATION\"}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Rens Nitert",
+      "poster_handle": "rens"
+    },
+    "time_stamp": "2022-12-29 07:44:05",
+    "text": "While I don't get the same error if I do the API call to the 'Get all' endpoint:\n```$apiClient()-&gt;crm()-&gt;schemas()-&gt;coreApi()-&gt;getAll();```"
+  },
+  {
+    "poster": {
+      "poster_name": "Rens Nitert",
+      "poster_handle": "rens"
+    },
+    "time_stamp": "2022-12-29 07:45:44",
+    "text": "I get the same error in my production account (where we have an Enterprise plan, so creating custom objects _should_ be available)"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan De Long",
+      "poster_handle": "ndelong"
+    },
+    "time_stamp": "2022-12-29 07:52:57",
+    "text": "Hey Rens! I've gotten this same error before, albeit not with PHP. One thing I have seen is that some APIs are really sensitive about how you call them. Are you doing something like\n\n```&lt;?php\n\nuse HubSpot\\Factory;\nuse HubSpot\\Client\\Crm\\Schemas\\ApiException;\nuse HubSpot\\Client\\Crm\\Schemas\\Model\\ObjectSchemaEgg;\nuse HubSpot\\Client\\Crm\\Schemas\\Model\\ObjectTypePropertyCreate;\n\n$client = Factory::createWithAccessToken('YOUR_ACCESS_TOKEN');\n\n$labels1 = [\n    'singular' =&gt; 'My object',\n    'plural' =&gt; 'My objects'\n];\n$objectTypePropertyCreate1 = new ObjectTypePropertyCreate([\n    'name' =&gt; 'my_object_property',\n    'label' =&gt; 'My object property'\n]);\n$objectSchemaEgg = new ObjectSchemaEgg([\n    'labels' =&gt; $labels1,\n    'required_properties' =&gt; ['my_object_property'],\n    'primary_display_property' =&gt; 'my_object_property',\n    'properties' =&gt; [$objectTypePropertyCreate1],\n    'associated_objects' =&gt; ['CONTACT'],\n    'name' =&gt; 'my_object',\n]);\ntry {\n    $apiResponse = $client-&gt;crm()-&gt;schemas()-&gt;coreApi()-&gt;create($objectSchemaEgg);\n    var_dump($apiResponse);\n} catch (ApiException $e) {\n    echo \"Exception when calling core_api-&gt;create: \", $e-&gt;getMessage();\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Rens Nitert",
+      "poster_handle": "rens"
+    },
+    "time_stamp": "2022-12-29 07:54:29",
+    "text": "Yes along those lines"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan De Long",
+      "poster_handle": "ndelong"
+    },
+    "time_stamp": "2022-12-29 08:00:20",
+    "text": "Hmm. I just submitted the below in my environment and got a successful result; I wonder if maybe, the way your token is refreshing (if you're doing that) is causing the problem? I bet if you post your code someone on here can fix it! :slightly_smiling_face:\n\n\n\n```&lt;?php\nuse HubSpot\\Factory;\nuse HubSpot\\Client\\Crm\\Schemas\\ApiException;\nuse HubSpot\\Client\\Crm\\Schemas\\Model\\ObjectSchemaEgg;\nuse HubSpot\\Client\\Crm\\Schemas\\Model\\ObjectTypePropertyCreate;\n\n$client = Factory::createWithAccessToken('YOUR_ACCESS_TOKEN');\n\n$labels1 = [\n    'singular' =&gt; 'My object',\n    'plural' =&gt; 'My objects'\n];\n$objectTypePropertyCreate1 = new ObjectTypePropertyCreate([\n    'name' =&gt; 'my_object_property',\n    'label' =&gt; 'My object property',\n    'type' =&gt; 'string',\n    'field_type' =&gt; 'text'\n]);\n$objectSchemaEgg = new ObjectSchemaEgg([\n    'labels' =&gt; $labels1,\n    'required_properties' =&gt; ['my_object_property'],\n    'primary_display_property' =&gt; 'my_object_property',\n    'properties' =&gt; [$objectTypePropertyCreate1],\n    'associated_objects' =&gt; ['CONTACT'],\n    'name' =&gt; 'my_object',\n]);\ntry {\n    $apiResponse = $client-&gt;crm()-&gt;schemas()-&gt;coreApi()-&gt;create($objectSchemaEgg);\n    var_dump($apiResponse);\n} catch (ApiException $e) {\n    echo \"Exception when calling core_api-&gt;create: \", $e-&gt;getMessage();\n}```\nResponse:\n```HTTP 201\n\n{\n  \"labels\": {\n    \"singular\": \"My object\",\n    \"plural\": \"My objects\"\n  },\n  \"requiredProperties\": [\n    \"my_object_property\"\n  ],\n  \"searchableProperties\": [\n    \"my_object_property\"\n  ],\n  \"primaryDisplayProperty\": \"my_object_property\",\n  \"secondaryDisplayProperties\": [],\n  \"archived\": false,\n  \"restorable\": true,\n  \"metaType\": \"PORTAL_SPECIFIC\",\n  \"id\": \"10973084\",\n  \"fullyQualifiedName\": \"p21891999_my_object\",\n  \"createdAt\": \"2022-12-29T14:56:15.990Z\",\n  \"updatedAt\": \"2022-12-29T14:56:15.990Z\",\n  \"objectTypeId\": \"2-10973084\",\n  \"properties\": [\n    {\n      \"updatedAt\": \"2022-12-29T14:56:16.702Z\",\n      \"createdAt\": \"2022-12-29T14:56:16.702Z\",\n      \"name\": \"my_object_property\",\n      \"label\": \"My object property\",\n      \"type\": \"string\",\n      \"fieldType\": \"text\",\n      \"description\": \"\",\n      \"groupName\": \"my_object_information\",\n      \"options\": [],\n      \"createdUserId\": \"44442124\",\n      \"updatedUserId\": \"44442124\",\n      \"displayOrder\": -1,\n      \"calculated\": false,\n      \"externalOptions\": false,\n      \"archived\": false,\n      \"hasUniqueValue\": false,\n      \"hidden\": false,\n      \"modificationMetadata\": {\n        \"archivable\": true,\n        \"readOnlyDefinition\": false,\n        \"readOnlyValue\": false\n      },\n      \"formField\": true\n    }\n  ],\n  \"associations\": [\n    {\n      \"fromObjectTypeId\": \"2-10973084\",\n      \"toObjectTypeId\": \"0-1\",\n      \"name\": \"my_object_to_contact\",\n      \"cardinality\": \"ONE_TO_MANY\",\n      \"inverseCardinality\": \"ONE_TO_MANY\",\n      \"id\": \"131\",\n      \"createdAt\": null,\n      \"updatedAt\": null\n    },\n    {\n      \"fromObjectTypeId\": \"0-1\",\n      \"toObjectTypeId\": \"2-10973084\",\n      \"name\": \"my_object_to_contact\",\n      \"cardinality\": \"ONE_TO_MANY\",\n      \"inverseCardinality\": \"ONE_TO_MANY\",\n      \"id\": \"132\",\n      \"createdAt\": null,\n      \"updatedAt\": null\n    },\n    {\n      \"fromObjectTypeId\": \"2-10973084\",\n      \"toObjectTypeId\": \"0-116\",\n      \"name\": \"my_object_to_postal_mail\",\n      \"cardinality\": \"ONE_TO_MANY\",\n      \"inverseCardinality\": \"ONE_TO_MANY\",\n      \"id\": \"115\",\n      \"createdAt\": null,\n      \"updatedAt\": null\n    },\n    {\n      \"fromObjectTypeId\": \"0-116\",\n      \"toObjectTypeId\": \"2-10973084\",\n      \"name\": \"my_object_to_postal_mail\",\n      \"cardinality\": \"ONE_TO_MANY\",\n      \"inverseCardinality\": \"ONE_TO_MANY\",\n      \"id\": \"116\",\n      \"createdAt\": null,\n      \"updatedAt\": null\n    },\n    {\n      \"fromObjectTypeId\": \"2-10973084\",\n      \"toObjectTypeId\": \"0-18\",\n      \"name\": \"my_object_to_communication\",\n      \"cardinality\": \"ONE_TO_MANY\",\n      \"inverseCardinality\": \"ONE_TO_MANY\",\n      \"id\": \"117\",\n      \"createdAt\": null,\n      \"updatedAt\": null\n    },\n    {\n      \"fromObjectTypeId\": \"0-18\",\n      \"toObjectTypeId\": \"2-10973084\",\n      \"name\": \"my_object_to_communication\",\n      \"cardinality\": \"ONE_TO_MANY\",\n      \"inverseCardinality\": \"ONE_TO_MANY\",\n      \"id\": \"118\",\n      \"createdAt\": null,\n      \"updatedAt\": null\n    },\n    {\n      \"fromObjectTypeId\": \"2-10973084\",\n      \"toObjectTypeId\": \"0-27\",\n      \"name\": \"my_object_to_task\",\n      \"cardinality\": \"ONE_TO_MANY\",\n      \"inverseCardinality\": \"ONE_TO_MANY\",\n      \"id\": \"119\",\n      \"createdAt\": null,\n      \"updatedAt\": null\n    },\n    {\n      \"fromObjectTypeId\": \"0-27\",\n      \"toObjectTypeId\": \"2-10973084\",\n      \"name\": \"my_object_to_task\",\n      \"cardinality\": \"ONE_TO_MANY\",\n      \"inverseCardinality\": \"ONE_TO_MANY\",\n      \"id\": \"120\",\n      \"createdAt\": null,\n      \"updatedAt\": null\n    },\n    {\n      \"fromObjectTypeId\": \"2-10973084\",\n      \"toObjectTypeId\": \"0-51\",\n      \"name\": \"my_object_to_conversation_session\",\n      \"cardinality\": \"ONE_TO_MANY\",\n      \"inverseCardinality\": \"ONE_TO_MANY\",\n      \"id\": \"121\",\n      \"createdAt\": null,\n      \"updatedAt\": null\n    },\n    {\n      \"fromObjectTypeId\": \"0-51\",\n      \"toObjectTypeId\": \"2-10973084\",\n      \"name\": \"my_object_to_conversation_session\",\n      \"cardinality\": \"ONE_TO_MANY\",\n      \"inverseCardinality\": \"ONE_TO_MANY\",\n      \"id\": \"122\",\n      \"createdAt\": null,\n      \"updatedAt\": null\n    },\n    {\n      \"fromObjectTypeId\": \"0-49\",\n      \"toObjectTypeId\": \"2-10973084\",\n      \"name\": \"my_object_to_email\",\n      \"cardinality\": \"ONE_TO_MANY\",\n      \"inverseCardinality\": \"ONE_TO_MANY\",\n      \"id\": \"124\",\n      \"createdAt\": null,\n      \"updatedAt\": null\n    },\n    {\n      \"fromObjectTypeId\": \"2-10973084\",\n      \"toObjectTypeId\": \"0-49\",\n      \"name\": \"my_object_to_email\",\n      \"cardinality\": \"ONE_TO_MANY\",\n      \"inverseCardinality\": \"ONE_TO_MANY\",\n      \"id\": \"123\",\n      \"createdAt\": null,\n      \"updatedAt\": null\n    },\n    {\n      \"fromObjectTypeId\": \"2-10973084\",\n      \"toObjectTypeId\": \"0-48\",\n      \"name\": \"my_object_to_call\",\n      \"cardinality\": \"ONE_TO_MANY\",\n      \"inverseCardinality\": \"ONE_TO_MANY\",\n      \"id\": \"125\",\n      \"createdAt\": null,\n      \"updatedAt\": null\n    },\n    {\n      \"fromObjectTypeId\": \"0-48\",\n      \"toObjectTypeId\": \"2-10973084\",\n      \"name\": \"my_object_to_call\",\n      \"cardinality\": \"ONE_TO_MANY\",\n      \"inverseCardinality\": \"ONE_TO_MANY\",\n      \"id\": \"126\",\n      \"createdAt\": null,\n      \"updatedAt\": null\n    },\n    {\n      \"fromObjectTypeId\": \"2-10973084\",\n      \"toObjectTypeId\": \"0-47\",\n      \"name\": \"my_object_to_meeting\",\n      \"cardinality\": \"ONE_TO_MANY\",\n      \"inverseCardinality\": \"ONE_TO_MANY\",\n      \"id\": \"127\",\n      \"createdAt\": null,\n      \"updatedAt\": null\n    },\n    {\n      \"fromObjectTypeId\": \"0-47\",\n      \"toObjectTypeId\": \"2-10973084\",\n      \"name\": \"my_object_to_meeting\",\n      \"cardinality\": \"ONE_TO_MANY\",\n      \"inverseCardinality\": \"ONE_TO_MANY\",\n      \"id\": \"128\",\n      \"createdAt\": null,\n      \"updatedAt\": null\n    },\n    {\n      \"fromObjectTypeId\": \"2-10973084\",\n      \"toObjectTypeId\": \"0-46\",\n      \"name\": \"my_object_to_note\",\n      \"cardinality\": \"ONE_TO_MANY\",\n      \"inverseCardinality\": \"ONE_TO_MANY\",\n      \"id\": \"129\",\n      \"createdAt\": null,\n      \"updatedAt\": null\n    },\n    {\n      \"fromObjectTypeId\": \"0-46\",\n      \"toObjectTypeId\": \"2-10973084\",\n      \"name\": \"my_object_to_note\",\n      \"cardinality\": \"ONE_TO_MANY\",\n      \"inverseCardinality\": \"ONE_TO_MANY\",\n      \"id\": \"130\",\n      \"createdAt\": null,\n      \"updatedAt\": null\n    }\n  ],\n  \"name\": \"my_object\"\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan De Long",
+      "poster_handle": "ndelong"
+    },
+    "time_stamp": "2022-12-29 08:02:14",
+    "text": "Also, while I'm not sure, maybe try by replacing:\n```$apiClient()-&gt;crm()-&gt;schemas()-&gt;coreApi()-&gt;create($accountObject);```\nwith (edited as needed for your scenario):\n```$apiResponse = $client-&gt;crm()-&gt;schemas()-&gt;coreApi()-&gt;create($objectSchemaEgg);```"
+  },
+  {
+    "poster": {
+      "poster_name": "Rens Nitert",
+      "poster_handle": "rens"
+    },
+    "time_stamp": "2022-12-29 08:03:30",
+    "text": "I'm guessing it has something to do with the access token from my private app. I'm getting the same error even with the exact same code you just posted (replacing the access token of course)"
+  },
+  {
+    "poster": {
+      "poster_name": "Pascal Kremp",
+      "poster_handle": "pascal558"
+    },
+    "time_stamp": "2022-12-29 08:03:50",
+    "text": "Hey all,\n\nI need to get tasks exported via <https://developers.HubSpot.com/docs/api/crm/tasks|API> (<https://developers.HubSpot.com/docs/api/crm/tasks>), but I am trying to figure out how to filter with this endpoint *`/crm/v3/objects/tasks`* . So how can I filter/query for example only tasks of a specific user or status?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-12-29 12:01:39"
+      },
+      {
+        "time_stamp": "2022-12-29 12:03:05"
+      },
+      {
+        "time_stamp": "2023-01-17 03:49:12"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan De Long",
+      "poster_handle": "ndelong"
+    },
+    "time_stamp": "2022-12-29 08:04:03",
+    "text": "Oh, odd. Let me try this against a developer test environment to make sure it's not something with that."
+  },
+  {
+    "poster": {
+      "poster_name": "Rens Nitert",
+      "poster_handle": "rens"
+    },
+    "time_stamp": "2022-12-29 08:04:04",
+    "text": "But then, when I enter the same access token in the HubSpot test call, it works perfectly fine"
+  },
+  {
+    "poster": {
+      "poster_name": "Rens Nitert",
+      "poster_handle": "rens"
+    },
+    "time_stamp": "2022-12-29 08:06:11",
+    "text": "I can make little sense of it haha"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan De Long",
+      "poster_handle": "ndelong"
+    },
+    "time_stamp": "2022-12-29 08:08:37",
+    "edited": {
+      "time_stamp": "2022-12-29 08:08:51"
+    },
+    "text": "Hmm, OK, so it also seems happy when I send it to a test portal under my developer test account. Random thought, maybe make a new private app in the HubSpot portal you are trying to create your object in? It should only need the following permissions:\n\ncrm.objects.custom\ncrm.schemas.custom"
+  },
+  {
+    "poster": {
+      "poster_name": "Rens Nitert",
+      "poster_handle": "rens"
+    },
+    "time_stamp": "2022-12-29 08:10:48",
+    "text": "No luck"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan De Long",
+      "poster_handle": "ndelong"
+    },
+    "time_stamp": "2022-12-29 08:11:58",
+    "text": "Good heavens. May I see your code and can you tell me where you are sending this request from? Even if I can't sort it, I bet someone else here can!"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan De Long",
+      "poster_handle": "ndelong"
+    },
+    "time_stamp": "2022-12-29 08:13:52",
+    "text": "Also, 1000% understand if you cannot do that because it is proprietary / private. If you cannot send it, one thing maybe worth trying is to test your code in postman just to see if it works there. Sending you good vibes!"
+  },
+  {
+    "poster": {
+      "poster_name": "Rens Nitert",
+      "poster_handle": "rens"
+    },
+    "time_stamp": "2022-12-29 08:16:50",
+    "text": "Well I've pretty much copied your code for now, just to make sure it wasn't anything in any part of my specific implementation"
+  },
+  {
+    "poster": {
+      "poster_name": "Rens Nitert",
+      "poster_handle": "rens"
+    },
+    "time_stamp": "2022-12-29 08:17:38",
+    "text": "```&lt;?php\n\nnamespace App\\Console\\Commands;\n\nuse HubSpot\\Client\\Crm\\Schemas\\ApiException;\nuse HubSpot\\Client\\Crm\\Schemas\\Model\\ObjectSchemaEgg;\nuse HubSpot\\Client\\Crm\\Schemas\\Model\\ObjectTypePropertyCreate;\nuse HubSpot\\Factory;\nuse Illuminate\\Console\\Command;\n\nclass Inspire extends Command\n{\n    public function handle()\n    {\n\n        $client = Factory::createWithAccessToken('xxx');\n\n        $labels1 = [\n            'singular' =&gt; 'Train',\n            'plural' =&gt; 'Trains'\n        ];\n        $objectTypePropertyCreate1 = new ObjectTypePropertyCreate([\n            'name' =&gt; 'my_object_property',\n            'label' =&gt; 'My object property',\n            'type' =&gt; 'string',\n            'field_type' =&gt; 'text'\n        ]);\n        $objectSchemaEgg = new ObjectSchemaEgg([\n            'labels' =&gt; $labels1,\n            'required_properties' =&gt; ['my_object_property'],\n            'primary_display_property' =&gt; 'my_object_property',\n            'properties' =&gt; [$objectTypePropertyCreate1],\n            'associated_objects' =&gt; ['CONTACT'],\n            'name' =&gt; 'train',\n        ]);\n        try {\n            $apiResponse = $client-&gt;crm()-&gt;schemas()-&gt;coreApi()-&gt;create($objectSchemaEgg);\n            var_dump($apiResponse);\n        } catch (ApiException $e) {\n            echo \"Exception when calling core_api-&gt;create: \", $e-&gt;getMessage();\n        }\n        \n    }\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Rens Nitert",
+      "poster_handle": "rens"
+    },
+    "time_stamp": "2022-12-29 08:17:57",
+    "text": "And then the access token is the one given by the private app"
+  },
+  {
+    "poster": {
+      "poster_name": "Rens Nitert",
+      "poster_handle": "rens"
+    },
+    "time_stamp": "2022-12-29 08:18:35",
+    "text": "Thanks for all your time and effort by the way :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan De Long",
+      "poster_handle": "ndelong"
+    },
+    "time_stamp": "2022-12-29 08:19:07",
+    "text": "Hmmmmmm. OK, I like this \"trains\" thing very much, checkalook at this video and let me ponder!\n\n<https://www.youtube.com/watch?v=5DjOL2we8ko>"
+  },
+  {
+    "poster": {
+      "poster_name": "Fabian Müller",
+      "poster_handle": "fabian.mueller"
+    },
+    "time_stamp": "2022-12-29 08:20:16",
+    "text": "I am getting an 404 when using the `HubSpot_api.auth.oauth.tokens_api.create_token`  with `grant_type=\"authorization_code\"` :\n`HubSpot.auth.oauth.exceptions.ApiException: (404)`\nAny ideas why this is happening. Seems like a few hours before it was running?!"
+  },
+  {
+    "poster": {
+      "poster_name": "Rens Nitert",
+      "poster_handle": "rens"
+    },
+    "time_stamp": "2022-12-29 08:20:45",
+    "text": "It seems to me that my account – and thus my private app –doesn't have the permissions to create custom object schema's, though that doesn't explain why it was possible using the 'test API call' functionality in HubSpot's API docs. Or does that bypass such permissions? Which would seem like quite a big issue to me :sweat_smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan De Long",
+      "poster_handle": "ndelong"
+    },
+    "time_stamp": "2022-12-29 08:21:06",
+    "text": "Are you a super admin?"
+  },
+  {
+    "poster": {
+      "poster_name": "Rens Nitert",
+      "poster_handle": "rens"
+    },
+    "time_stamp": "2022-12-29 08:21:14",
+    "text": "Yes"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan De Long",
+      "poster_handle": "ndelong"
+    },
+    "time_stamp": "2022-12-29 08:21:40",
+    "text": "KK"
+  },
+  {
+    "poster": {
+      "poster_name": "Rens Nitert",
+      "poster_handle": "rens"
+    },
+    "time_stamp": "2022-12-29 08:21:51",
+    "text": "And we've got both Sales Enterprise &amp; Service Enterprise on our account"
+  },
+  {
+    "text": "OK dokey, maybe (maybe) there is something happening because of how we are building out our calls just a bit differently. I wonder if putting that in public function is causing some kind of problem (this is 100% a guess / hail mary thing). I ran diffchecker on our code, mine is on the left and yours is on the right. Can you by any chance make yours a touch more like mine and see what happens?",
+    "time_stamp": "2022-12-29 08:26:32"
+  },
+  {
+    "poster": {
+      "poster_name": "Rens Nitert",
+      "poster_handle": "rens"
+    },
+    "time_stamp": "2022-12-29 08:36:23",
+    "text": "I'll give it a shot"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan De Long",
+      "poster_handle": "ndelong"
+    },
+    "time_stamp": "2022-12-29 08:40:42",
+    "edited": {
+      "time_stamp": "2022-12-29 08:42:47"
+    },
+    "text": "Or, what about the below? I think our problem here is that something is going on with the access token and how it is being fed to the API -- I think it is getting misinterpreted, because when I submit MY code via postman, I also get the exact error you were (\"Authentication credentials not found...\") if I include the access token in the code. On the other hand, if I put the access token into postman, then it seems to work."
+  },
+  {
+    "poster": {
+      "poster_name": "Rens Nitert",
+      "poster_handle": "rens"
+    },
+    "time_stamp": "2022-12-29 08:51:25",
+    "text": "Okay, well I've made it work"
+  },
+  {
+    "poster": {
+      "poster_name": "Rens Nitert",
+      "poster_handle": "rens"
+    },
+    "time_stamp": "2022-12-29 08:51:40",
+    "text": "I suspect is has to do with my Guzzle client or something"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan De Long",
+      "poster_handle": "ndelong"
+    },
+    "time_stamp": "2022-12-29 08:51:40",
+    "text": "Hooray! What did you wind up doing?"
+  },
+  {
+    "poster": {
+      "poster_name": "Rens Nitert",
+      "poster_handle": "rens"
+    },
+    "time_stamp": "2022-12-29 08:52:13",
+    "text": "Both in Postman and if I use Laravel's HTTP framework, it works perfectly fine"
+  },
+  {
+    "poster": {
+      "poster_name": "Rens Nitert",
+      "poster_handle": "rens"
+    },
+    "time_stamp": "2022-12-29 08:52:40",
+    "edited": {
+      "time_stamp": "2022-12-29 08:52:45"
+    },
+    "text": "Or it might be something in HubSpot php client library"
+  },
+  {
+    "poster": {
+      "poster_name": "Rens Nitert",
+      "poster_handle": "rens"
+    },
+    "time_stamp": "2022-12-29 08:53:01",
+    "text": "In any case, many thanks for all the time and effort Nathan!"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan De Long",
+      "poster_handle": "ndelong"
+    },
+    "time_stamp": "2022-12-29 08:53:14",
+    "text": "You are 100% welcome, glad you are back on the road!"
+  },
+  {
+    "poster": {
+      "poster_name": "Marco Thulio Alves Maciel",
+      "poster_handle": "marco.maciel"
+    },
+    "time_stamp": "2022-12-29 10:04:39",
+    "text": "Hello everybody"
+  },
+  {
+    "poster": {
+      "poster_name": "Marco Thulio Alves Maciel",
+      "poster_handle": "marco.maciel"
+    },
+    "time_stamp": "2022-12-29 10:05:32",
+    "edited": {
+      "time_stamp": "2022-12-29 10:05:45"
+    },
+    "text": "I need to get an api response in a Node.js app"
+  },
+  {
+    "text": "",
+    "time_stamp": "2022-12-29 10:06:47"
+  },
+  {
+    "text": "",
+    "time_stamp": "2022-12-29 10:07:25"
+  },
+  {
+    "poster": {
+      "poster_name": "Marco Thulio Alves Maciel",
+      "poster_handle": "marco.maciel"
+    },
+    "time_stamp": "2022-12-29 10:08:08",
+    "text": "My VSCode is saying that there isn't a .json() method to call"
+  },
+  {
+    "poster": {
+      "poster_name": "Marco Thulio Alves Maciel",
+      "poster_handle": "marco.maciel"
+    },
+    "time_stamp": "2022-12-29 10:08:18",
+    "text": "can anyone help me?"
+  },
+  {
+    "poster": {
+      "poster_name": "Marco Thulio Alves Maciel",
+      "poster_handle": "marco.maciel"
+    },
+    "time_stamp": "2022-12-29 10:09:07",
+    "text": "I actually need to get an HubSpot contact ID when calling this function as save in a variable",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-12-29 12:59:50"
+      },
+      {
+        "time_stamp": "2022-12-29 18:19:26"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Marco Thulio Alves Maciel",
+      "poster_handle": "marco.maciel"
+    },
+    "time_stamp": "2022-12-29 10:09:29",
+    "text": "and I have the contact e-mail as parameter",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-12-29 11:08:57"
+      },
+      {
+        "time_stamp": "2022-12-29 11:09:26"
+      },
+      {
+        "time_stamp": "2022-12-29 11:11:15"
+      },
+      {
+        "time_stamp": "2022-12-29 18:19:49"
+      },
+      {
+        "time_stamp": "2022-12-30 07:50:14"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan De Long",
+      "poster_handle": "ndelong"
+    },
+    "time_stamp": "2022-12-29 11:08:57",
+    "text": "Hi Marco!"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan De Long",
+      "poster_handle": "ndelong"
+    },
+    "time_stamp": "2022-12-29 11:09:26",
+    "text": "If \"email\" is a variable with the contact's email address stored in it, you probably want something more like this to return the associated contact's ID:\n\n```var email = \"<mailto:ndelong@HubSpot.com|ndelong@HubSpot.com>\";\nconst BatchReadInputSimplePublicObjectId = { properties: [\"email\"], propertiesWithHistory: [\"email\"], idProperty: \"email\", inputs: [{\"id\":email}] };\nconst archived = false;\n\ntry {\n  const apiResponse = await HubSpotClient.crm.contacts.batchApi.read(BatchReadInputSimplePublicObjectId, archived);\n  console.log(JSON.stringify(apiResponse.body, null, 2));\n  var contactID = apiResponse.body.results.map ( resultItem =&gt; resultItem.id);\n  console.log(contactID);```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan De Long",
+      "poster_handle": "ndelong"
+    },
+    "time_stamp": "2022-12-29 11:11:15",
+    "text": "...at least I _think_ so; here are the results I get from the API with that:\n\n```2022-12-29T18:08:28.241Z\tINFO\t{\n  \"status\": \"COMPLETE\",\n  \"results\": [\n    {\n      \"id\": \"113601\",\n      \"properties\": {\n        \"createdate\": \"2022-10-03T19:23:04.375Z\",\n        \"email\": \"<mailto:ndelong@HubSpot.com|ndelong@HubSpot.com>\",\n        \"hs_object_id\": \"113601\",\n        \"lastmodifieddate\": \"2022-12-20T19:40:48.768Z\"\n      },\n      \"createdAt\": \"2022-10-03T19:23:04.375Z\",\n      \"updatedAt\": \"2022-12-20T19:40:48.768Z\",\n      \"archived\": false\n    }\n  ],\n  \"startedAt\": \"2022-12-29T18:08:28.116Z\",\n  \"completedAt\": \"2022-12-29T18:08:28.152Z\"\n}\n2022-12-29T18:08:28.243Z\tINFO\t[ '113601' ]```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan De Long",
+      "poster_handle": "ndelong"
+    },
+    "time_stamp": "2022-12-29 12:01:39",
+    "text": "Hi Pascal! I think you might be heading for the wrong endpoint if you would like to filter / query. Have you tried /crm/v3/objects/tasks/search? That might work better. As an example, the below pulls the first 5 tasks for the user with ID 176076815, giving the task ID (hs_object_id), the owner ID, the task type, and the task priority:\n\n```try{\nconst apiResponse = await HubSpotClient\n              .apiRequest({\n              method: 'POST',\n              path: `/crm/v3/objects/tasks/search`,\n              body: {\n                    \"filterGroups\": [\n                      {\n                        \"filters\": [\n                          {\n                            \"value\": \"176076815\",\n                            \"propertyName\": \"HubSpot_owner_id\",\n                            \"operator\": \"EQ\"\n                          }\n                        ]\n                      }\n                    ],\n                    \"properties\": [\n                      \"hs_object_id\",\n                      \"HubSpot_owner_id\",\n                      \"hs_task_type\",\n                      \"hs_task_priority\"\n                  ],\n                  \"limit\": 5,\n                  \"after\": 0}});\n  console.log(JSON.stringify(apiResponse.body, null, 2));```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan De Long",
+      "poster_handle": "ndelong"
+    },
+    "time_stamp": "2022-12-29 12:03:05",
+    "text": "Oh! Sorry, I forgot -- here it is with status, too:\n\n```try{\nconst apiResponse = await HubSpotClient\n              .apiRequest({\n              method: 'POST',\n              path: `/crm/v3/objects/tasks/search`,\n              body: {\n                    \"filterGroups\": [\n                      {\n                        \"filters\": [\n                          {\n                            \"value\": \"176076815\",\n                            \"propertyName\": \"HubSpot_owner_id\",\n                            \"operator\": \"EQ\"\n                          }\n                        ]\n                      }\n                    ],\n                    \"properties\": [\n                      \"hs_object_id\",\n                      \"HubSpot_owner_id\",\n                      \"hs_task_type\",\n                      \"hs_task_priority\",\n                      \"hs_task_status\"\n                  ],\n                  \"limit\": 5,\n                  \"after\": 0}});\n  console.log(JSON.stringify(apiResponse.body, null, 2));```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan De Long",
+      "poster_handle": "ndelong"
+    },
+    "time_stamp": "2022-12-29 12:59:50",
+    "text": "Hi Marco! I think the API response may already be in JSON -- did you try something like JSON.parse?"
+  },
+  {
+    "poster": {
+      "poster_name": "Marco Thulio Alves Maciel",
+      "poster_handle": "marco.maciel"
+    },
+    "time_stamp": "2022-12-29 18:19:26",
+    "text": "yes, and it worked. Thank You!"
+  },
+  {
+    "poster": {
+      "poster_name": "Marco Thulio Alves Maciel",
+      "poster_handle": "marco.maciel"
+    },
+    "time_stamp": "2022-12-29 18:19:49",
+    "text": "TY very much, guys!"
+  }
+]

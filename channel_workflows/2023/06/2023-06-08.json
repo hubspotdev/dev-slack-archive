@@ -1,0 +1,49 @@
+[
+  {
+    "text": "Hi everyone,\nI have a question, trying to use workflow to send out emails.\nI can’t create a template. is it linked to a specific offer / add’on as it’s not clear to me from there  ?\n\nThanks in advance",
+    "time_stamp": "2023-06-08 03:01:37",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-06-08 03:03:23"
+      },
+      {
+        "time_stamp": "2023-06-13 00:16:59"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jeremie Poutrin",
+      "poster_handle": "jeremie.poutrin"
+    },
+    "time_stamp": "2023-06-08 03:03:23",
+    "text": "FYI i am in a sandbox account."
+  },
+  {
+    "text": "Hello Everyone, I am trying to create a trigger in a deal workflow using re-enrollment criteria, which will be activated when a line item is modified without any change in the line item amount.\n\nI have noticed that the Last Modified date of a line item cannot be reenrolled. Is there any possibility to resolve this issue?",
+    "time_stamp": "2023-06-08 04:22:05",
+    "edited": {
+      "time_stamp": "2023-06-08 04:22:30"
+    },
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-06-12 18:20:54"
+      },
+      {
+        "time_stamp": "2023-06-13 00:26:31"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Erick Salvatierra",
+      "poster_handle": "e.salvatierra"
+    },
+    "time_stamp": "2023-06-08 12:53:20",
+    "text": "Hi everyone - I'm searching for a work around associating new records to existing companies. Our team uses a lead gen form to collect leads from shows and we tend to get personal emails in addition to work emails and it often creates duplicates for contact and associated companies. My team wants to keep both personal and work emails because they have seen better response rates with personal emails. I have a work around for duplicated contacts, but not for companies.\n\nIdeally this code would be included as part of a workflow fielding form fills that include company name as a property. Here is a code that I was able to generate and clean up, but curious if anyone else has experienced this and have a solid solution.\n\nAny insight would be amazing.\n\n```import requests\n\ndef get_contact_and_search_company(input_data):\n    output = {}\n\n    # Define the API endpoint and parameters\n    contact_endpoint = \"<https://api.hubapi.com/contacts/v1/contact/email/{}/profile>\".format(input_data['email'])\n    headers = {\n        \"Authorization\": \"Bearer YOUR_HubSpot_API_KEY\"\n    }\n\n    # Send the GET request to retrieve the contact record\n    response = requests.get(contact_endpoint, headers=headers)\n\n    # Check if the request was successful\n    if response.status_code == 200:\n        contact_record = response.json()\n        company_name = contact_record['properties']['company']['value']\n\n        # Search for the company with the given name\n        company_search_endpoint = \"<https://api.hubapi.com/crm/v3/objects/companies/search>\"\n        params = {\n            \"q\": company_name,\n            \"limit\": 1\n        }\n        response = requests.get(company_search_endpoint, headers=headers, params=params)\n\n        # Check if the company was found\n        if response.status_code == 200:\n            company_search_result = response.json()\n            if company_search_result['total'] &gt; 0:\n                company_id = company_search_result['results'][0]['id']\n                # Add the company ID to the output dictionary\n                output['company_id'] = company_id\n            else:\n                # Company not found\n                output['error'] = \"Company not found\"\n        else:\n            output['error'] = \"Failed to search for company\"\n    else:\n        output['error'] = \"Failed to retrieve contact record\"\n\n    return output\n\n\ndef associate_contact_with_company(input_data):\n    output = {}\n\n    # Define the API endpoint and parameters\n    association_endpoint = \"<https://api.hubapi.com/crm/v3/objects/companies/{companyId}/associations/{toObjectType}/{toObjectId}/{associationTypeId}>\"\n    headers = {\n        \"Authorization\": \"Bearer YOUR_HubSpot_API_KEY\",\n        \"Content-Type\": \"application/json\"\n    }\n\n    # Replace placeholders with actual values\n    association_endpoint = association_endpoint.format(\n        companyId=input_data['company_id'],\n        toObjectType='contacts',\n        toObjectId=input_data['contact_id'],\n        associationTypeId=YOUR_ASSOCIATION_TYPE_ID\n    )\n\n    # Send the PUT request to associate the contact with the company\n    response = requests.put(association_endpoint, headers=headers)\n\n    # Check if the request was successful\n    if response.status_code == 200:\n        output['success'] = True\n    else:\n        output['error'] = \"Failed to associate contact with company\"\n\n    return output\n\n\ndef create_new_company(input_data):\n    output = {}\n\n    # Define the API endpoint and parameters\n    create_company_endpoint = \"<https://api.hubapi.com/crm/v3/objects/companies>\"\n    headers = {\n        \"Authorization\": \"Bearer YOUR_HubSpot_API_KEY\",\n        \"Content-Type\": \"application/json\"\n    }\n\n    # Define the request payload for creating a new company\n    company_data = {\n        \"properties\": [\n            {\n                \"name\": \"name\",\n                \"value\": input_data['company_name']\n            }\n        ]\n    }\n\n    # Send the POST request to create a new company\n    response = <http://requests.post|requests.post>(create_company_endpoint, headers=headers, json=company_data)\n\n    # Check if the request was successful\n    if response.status_code == 200:\n        company_record = response.json()\n        company_id = company_record['id']\n        # Add the company ID to the output dictionary\n        output['company_id'] = company_id\n\t\t\telse:\n    \toutput['error'] = \"Failed to create new company\"\n\nreturn output```"
+  }
+]

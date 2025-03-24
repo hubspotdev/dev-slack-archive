@@ -1,0 +1,195 @@
+[
+  {
+    "poster": {
+      "poster_name": "Erik Rorstrom",
+      "poster_handle": "erik.rorstrom"
+    },
+    "time_stamp": "2025-01-27 02:24:23",
+    "text": "Hey,\n\nThere is currently a Beta out named \"Analyze meetings in the custom report builder!\". Im looking to get in contact the PM on this feature. Could anyone point me in the right direction? Thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Norman Khine",
+      "poster_handle": "nkhine"
+    },
+    "time_stamp": "2025-01-27 03:41:28",
+    "text": "Hello,\nIs it possible to associate a deal with a form?\nWhat will be the API call to make this association and how do you find if a deal has a form association?"
+  },
+  {
+    "poster": {
+      "poster_name": "Bianca",
+      "poster_handle": "bianca"
+    },
+    "time_stamp": "2025-01-27 05:53:59",
+    "text": "I have two separate themes, one for staging content and one for live content. Once i finish working on staging, i use the hs deploy action through github to transfer my staging files to my live web. When doing so now, one of the modules i worked on has somehow replaced all my live content instances of \"Summary\" with the default text in the module, despite not having changed it in this sprint. HubSpot support has been entirely unhelpful, so I'm now stuck having to guess what my customers 100+ articles' summaries were, an impossible situation. Anyone know what happened and how i can prevent it from happening again? I didn't touch the summary default text so it's identical to how it was, and the hs deploy action is just  a glorified hs upload, no?",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-01-27 06:14:48"
+      },
+      {
+        "time_stamp": "2025-01-27 06:27:55"
+      },
+      {
+        "time_stamp": "2025-01-27 06:28:07"
+      },
+      {
+        "time_stamp": "2025-01-27 06:29:54"
+      },
+      {
+        "time_stamp": "2025-01-27 06:52:11"
+      },
+      {
+        "time_stamp": "2025-01-27 07:13:39"
+      },
+      {
+        "time_stamp": "2025-01-27 07:18:29"
+      }
+    ]
+  },
+  {
+    "text": "Hey Bianca, doesn't sound good.\nHad something similar a few years ago when a dev from my team changed something in a module and all informations from this module disappeared. Definitely not a great situation.\nEven if you haven't changed anything in the module - Can you check the revisions of the \"Summary\" in the live theme?\nIf it's a custom module, you can access the revision by right-click on the module in the Design-manager. If something changed there, you can roll-back to the previous version and the old information should be restored.\n\nIt depends on what the \"Summary\" does. If it's some sort of calculation, you can create variable files like\n\n```{% set variable_a = contact.number_propertyXYZ * \"2\" %}\n{% set variable_b = company.text_propertyYZX %}\n...```\nAnd in your template/module\n```{% import \"path/to/vars/file\" %}\n...\n{{ variable_a }}```\nIf it's something different, I'll be happy to chat about this",
+    "time_stamp": "2025-01-27 06:14:48"
+  },
+  {
+    "poster": {
+      "poster_name": "Bianca",
+      "poster_handle": "bianca"
+    },
+    "time_stamp": "2025-01-27 06:27:55",
+    "text": "Thanks for your reply!\n\nThis is my module html\n\n\n```{% if module.style.choice == 'headline-summary' %}\n\n&lt;div class=\"headline-summary margin-top-true margin-bottom-true container-fluid\"&gt;\n  &lt;div class=\"text-wrapper d-flex flex-column gap-3\"&gt;\n  &lt;div class=\"tag\"&gt;\n    &lt;span class=\"badge rounded-pill bg-light-orange text-orange py-2 px-4\"&gt;{{ module.tag }}&lt;/span&gt;\n  &lt;/div&gt;\n    &lt;h1 style=\"text-wrap: balance;\"&gt;{{ module.heading }}&lt;/h1&gt;\n    &lt;p class=\"mb-0\"&gt;{{ module.ingress }}&lt;/p&gt;\n  &lt;/div&gt;\n&lt;/div&gt;\n\n{% elif module.style.choice == 'hero-image' %}\n\n&lt;div class=\"hero-with-image {% if module.style.background_overlay %}overlay-{{ module.style.background_overlay }}{% endif %} margin-bottom-true\"&gt;\n&lt;div class=\"content d-flex flex-column gap-md-3 gap-1\"&gt;\n  &lt;p class=\"subheading mb-0\"&gt;{{ module.tag }}&lt;/p&gt;\n  &lt;h1 class=\"headline mb-0\"&gt;{{ module.heading }}&lt;/h1&gt;\n  &lt;p class=\"summary mb-3\"&gt;{{ module.ingress }}&lt;/p&gt;\n  &lt;div class=\"buttons d-flex gap-3 flex-column flex-sm-row\"&gt;\n  {% for item in module.button %}\n    {% set href = item.button_link.url.href %}\n    &lt;a href=\"{{ href|escape_url }}\"\n       {% if item.button_link.open_in_new_tab %}target=\"_blank\"{% endif %}\n       {% if item.button_link.rel %}rel=\"{{ item.button_link.rel|escape_attr }}\"{% endif %}\n       class=\"btn\"&gt;\n      {{ item.button_text }}\n    &lt;/a&gt;\n  {% endfor %}\n  &lt;/div&gt;  \n&lt;/div&gt;\n\n&lt;div class=\"image-container\"&gt;\n  {% if module.background_image.src %}\n    {% set loadingAttr = module.background_image.loading != 'disabled' ? 'loading=\"{{ module.background_image.loading|escape_attr }}\"' : '' %}\n    &lt;img src=\"{{ module.background_image.src|escape_url }}\" alt=\"{{ module.background_image.alt|escape_attr }}\" class=\"hero-image\" {{ loadingAttr }} {{ sizeAttrs }}&gt;\n  {% endif %}\n&lt;/div&gt;\n&lt;/div&gt;\n\n\n{% elif module.style.choice == 'default' %}\n\n{% if not simple_list_page %} {% if not tag %} {% if not blog_author %} \n&lt;div class=\"hero text-center container-smaller d-flex justify-content-center padding-section margin-top-true margin-bottom-true\"&gt;\n  &lt;div class=\" d-flex justify-content-center align-items-center flex-column\"&gt;\n    &lt;h1&gt;{{ module.heading }}&lt;/h1&gt; \n    &lt;span class=\"ingress mb-4\"&gt;{{ module.ingress }}&lt;/span&gt; \n  &lt;/div&gt;\n&lt;/div&gt;\n{% endif %}{% endif %}{% endif %}\n\n{% endif %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Bianca",
+      "poster_handle": "bianca"
+    },
+    "time_stamp": "2025-01-27 06:28:07",
+    "text": "And this is the module json\n\n```[\n {\n  \"allow_new_line\": false,\n  \"display_width\": null,\n  \"id\": \"7cb789f7-d3a4-ee67-98e0-7832e20c12bb\",\n  \"label\": \"Tag\",\n  \"locked\": false,\n  \"name\": \"tag\",\n  \"required\": false,\n  \"show_emoji_picker\": false,\n  \"type\": \"text\",\n  \"validation_regex\": \"\",\n  \"visibility\": {\n   \"controlling_field_path\": \"style.choice\",\n   \"controlling_value_regex\": \"default\",\n   \"operator\": \"NOT_EQUAL\"\n  }\n },\n {\n  \"allow_new_line\": false,\n  \"default\": \"Fagartikler fra Simployer\",\n  \"display_width\": null,\n  \"id\": \"1f08a5f3-e605-6706-1b4b-f3a9b082d406\",\n  \"label\": \"heading\",\n  \"locked\": false,\n  \"name\": \"heading\",\n  \"required\": false,\n  \"show_emoji_picker\": false,\n  \"type\": \"text\",\n  \"validation_regex\": \"\"\n },\n {\n  \"allow_new_line\": false,\n  \"default\": \"Her finner du fagartikler hvor vi belyser temaer innen markedsføring og design. Vi håper du vil abonnere på bloggen, og laste ned våre gratis e-bøker og sjekklister! Filtrer artikler ved å velge et tema du ønsker å lese mer om.\",\n  \"display_width\": null,\n  \"id\": \"517f5adb-6869-75ad-d6a0-41c50548713d\",\n  \"label\": \"Ingress\",\n  \"locked\": false,\n  \"name\": \"ingress\",\n  \"required\": false,\n  \"show_emoji_picker\": false,\n  \"type\": \"text\",\n  \"validation_regex\": \"\"\n },\n {\n  \"default\": {\n   \"size_type\": \"auto\",\n   \"src\": \"<https://2749261.fs1.HubSpotusercontent-na1.net/hubfs/2749261/placeholder-image.jpg>\",\n   \"alt\": \"placeholder-image\",\n   \"loading\": \"lazy\",\n   \"width\": 580,\n   \"height\": 435,\n   \"max_width\": 580,\n   \"max_height\": 435\n  },\n  \"display_width\": null,\n  \"id\": \"590714d9-2ba9-a925-cd24-e2e0b19dbff7\",\n  \"label\": \"Background image\",\n  \"locked\": false,\n  \"name\": \"background_image\",\n  \"required\": false,\n  \"resizable\": false,\n  \"responsive\": true,\n  \"show_loading\": false,\n  \"type\": \"image\",\n  \"visibility\": {\n   \"controlling_field_path\": \"style.choice\",\n   \"controlling_value_regex\": \"hero-image\",\n   \"operator\": \"EQUAL\"\n  }\n },\n {\n  \"children\": [\n   {\n    \"allow_new_line\": false,\n    \"display_width\": null,\n    \"id\": \"ac3827f5-7ed1-0e80-d762-66149065adb7\",\n    \"label\": \"Button text\",\n    \"locked\": false,\n    \"name\": \"button_text\",\n    \"required\": false,\n    \"show_emoji_picker\": false,\n    \"type\": \"text\",\n    \"validation_regex\": \"\"\n   },\n   {\n    \"default\": {\n     \"url\": {\n      \"content_id\": null,\n      \"type\": \"EXTERNAL\",\n      \"href\": \"\"\n     },\n     \"open_in_new_tab\": false,\n     \"no_follow\": false\n    },\n    \"display_width\": null,\n    \"id\": \"b423e9ca-4c88-434b-2cb4-526a099bf70a\",\n    \"label\": \"Button link\",\n    \"locked\": false,\n    \"name\": \"button_link\",\n    \"required\": false,\n    \"show_advanced_rel_options\": false,\n    \"supported_types\": [\n     \"EXTERNAL\",\n     \"CONTENT\",\n     \"BLOG\"\n    ],\n    \"type\": \"link\"\n   }\n  ],\n  \"default\": [],\n  \"display_width\": null,\n  \"expanded\": false,\n  \"group_occurrence_meta\": null,\n  \"id\": \"584cbd68-3e40-1911-85ae-124b004cfe9c\",\n  \"label\": \"Button\",\n  \"locked\": false,\n  \"name\": \"button\",\n  \"occurrence\": {\n   \"max\": 2,\n   \"min\": 0,\n   \"sorting_label_field\": \"ac3827f5-7ed1-0e80-d762-66149065adb7\"\n  },\n  \"required\": false,\n  \"tab\": \"CONTENT\",\n  \"type\": \"group\",\n  \"visibility\": {\n   \"controlling_field_path\": \"style.choice\",\n   \"controlling_value_regex\": \"hero-image\",\n   \"operator\": \"EQUAL\"\n  }\n }\n]```"
+  },
+  {
+    "poster": {
+      "poster_name": "Bianca",
+      "poster_handle": "bianca"
+    },
+    "time_stamp": "2025-01-27 06:29:54",
+    "text": "Note that \"Summary\" is here \"ingress\", but the revision history shows no difference to this module field.. It's created a massive issue for us where we have to re-enter hundreds of instances of this module (its a blog module of course) and no one knows what's supposed to be written where. We managed to use \"View details\" on the blog to see a snapshot of what it was earlier today but over half of them have a cookie banner over this section anyway and the info on that blogpost is dead to us."
+  },
+  {
+    "text": "hey <@UTRKEGMKQ>, thanks for providing the code.\nHave you changed the template(s) where you're using this module in the last sprint? If so, it could be the source of error.\nAre you using themes(frontend drag&amp;drop) or templates(you're creating templates/layouts in Design-Manager). If themes, then HubSpot usually creates a dedicated, non-accessible version of the used dnd_template if a page get's created and changed(for instance text/image changes of a module). But you never now.\n\nDo you have checked the revisions in the posts(1st screenshot)?\n\nAlso if you're implementing the cookie banner via the Settings(2nd screenshot), you can use the <https://developers.HubSpot.com/docs/reference/cms/hubl/variables#in-app-editor-and-preview-variables|is_in_editor variable >\n```{% if is_in_editor %}\n&lt;script&gt;\n your external cookie code\n&lt;/script&gt;\n{% endif %}```\nto prevent the cookie banner loading in any editor page or post editor. Might be helpful in the future",
+    "time_stamp": "2025-01-27 06:52:11"
+  },
+  {
+    "text": "Thanks! We've not changed the template in any way.\nI checked the revisions of the posts (thanks, i didnt find this!!) but it shows as if the default text has been there all along (it has not). I ve attached a screenshot that shows that it had this error two weeks back, another blog posts shows it from november, but these posts didnt have that default text back then. To clarify, the revision history makes it seem as if the default text has been present all along but the preview in \"view details\" obviously disagrees. I checked my file history in github and this field in fields.json remains untouched since I created the module back in November of last year. None of these pages have had the default text until we uploaded today and suddenly all of them have it\n\nIts good old html + hubl modules and html templates",
+    "time_stamp": "2025-01-27 07:13:39"
+  },
+  {
+    "text": "hmm... do you have the posts in the \"dev\" environment? If so, try deleting the default text from the module. But please do this in the dev environment first :slightly_smiling_face:",
+    "time_stamp": "2025-01-27 07:18:29"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2025-01-27 07:38:39",
+    "text": "Does anyone know if HubSpot is FedRAMP compliant?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ivan Rivas",
+      "poster_handle": "ivan795"
+    },
+    "time_stamp": "2025-01-27 09:28:02",
+    "text": ""
+  },
+  {
+    "poster": {
+      "poster_name": "SJ Morris (she/her)",
+      "poster_handle": "sjmorris"
+    },
+    "time_stamp": "2025-01-27 11:34:58",
+    "edited": {
+      "time_stamp": "2025-01-27 11:35:51"
+    },
+    "text": "And we're so grateful to folks like you who are such active contributors to our dev community! We are planning to archive all messages from this Slack, but whether or not that will be accessible to the community is still TBD. One minor benefit of the 90-day message history is at least any answers you surface are more likely to be correct, and not outdated!\n\nSome more context - Slack is owned by Salesforce, and they have shown us repeatedly that they have no interest in making Slack a more community-friendly tool. It's designed for workspace collaboration, and is becoming more deeply embedded in the overall Salesforce experience every day.\n\nUltimately, we'd like to offer a space that has all the benefits of a Slack, with more ability to surface the right answers at the right time, and is designed with to make the community experience the best it can be. We're working hard behind the scenes to make that happen. We're hopeful you'll feel that where we land has all the perks you're used to and more!"
+  },
+  {
+    "poster": {
+      "poster_name": "Emilee Crocker",
+      "poster_handle": "ecrocker"
+    },
+    "time_stamp": "2025-01-27 14:15:17",
+    "text": "Hi,\nI work with Webflow as our website manager. I am using a HS form which comes over as an iframe. I selected the option to use HS branding. I noticed a background color which is a bit of a blue hue and I am trying to update that. I have contacted both HS + Webflow support and got nowhere. This was the last resource they gave. Any help would be greatly appreciated!",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-01-27 14:36:44"
+      },
+      {
+        "time_stamp": "2025-01-27 14:56:43"
+      },
+      {
+        "time_stamp": "2025-01-27 16:06:17"
+      },
+      {
+        "time_stamp": "2025-01-27 16:36:17"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2025-01-27 14:36:44",
+    "text": "Hey <@U08AHNAU7HQ> - modifying content inside an iframe from an external source(in this case HubSpot) is extremly difficult due to how browsers handling the iframe.\nAre you using the new form editor or the \"old\" one?\n\nIf it's the old one, you can modify the embed code like\n```&lt;script charset=\"utf-8\" type=\"text/javascript\" src=\"//js-eu1.hsforms.net/forms/embed/v2.js\"&gt;&lt;/script&gt;\n&lt;script&gt;\n  hbspt.forms.create({\n    portalId: \"123456789\",\n    formId: \"some-random-form-id\",\n    css: '' // this is the important part\n  });\n&lt;/script&gt;```\nOnce you add the `css: ''` no HS form styling will be loaded, so the form will try to look as webflow forms. You can then add custom css styling like\n```form input[type=\"text\"], \nform .hs-input:not([type=file]){\n   background-color:#ffffff; \n}```\nin Webflow"
+  },
+  {
+    "poster": {
+      "poster_name": "Emilee Crocker",
+      "poster_handle": "ecrocker"
+    },
+    "time_stamp": "2025-01-27 14:56:43",
+    "text": "It looks like i'm on the legacy editor. From what i've read, I can only edit code in webflow if its within a code block so I cannot make that edit. hmm, would you suggest trying out the new form editor so see if that handles the background?"
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2025-01-27 16:06:17",
+    "text": "Hey <@U08AHNAU7HQ>, I've never worked with Webflow, but according to <https://help.webflow.com/hc/en-us/articles/33961256808467-Rich-text-element-overview|this article>, you should be able to enable the \"Code\" view inside the rich-text field. If you'll paste the HS embed code into it, you should be able to modify it(similar to the source code view of HubSpots rich-text).\n\nI don't recommend this, but you can add something like\n```&lt;style&gt;\nform input[type=\"text\"], \nform .hs-input:not([type=file]){\n   background-color:#ffffff; \n}\n&lt;/style&gt;```\nabove the embed code. This should load the CSS styling right before the embed code and therefore overwrite every other form related CSS rules coming from Webflow.\nPlease note that this code will be applied only to this specific form/page. If you want to have it globally, please add the code at a more global level like described in <https://help.webflow.com/hc/en-us/articles/33961265610259-Custom-CSS-properties-and-values#how-to-add-custom-properties-and-values|this article>"
+  },
+  {
+    "poster": {
+      "poster_name": "Emilee Crocker",
+      "poster_handle": "ecrocker"
+    },
+    "time_stamp": "2025-01-27 16:36:17",
+    "text": "Thank you for the help!"
+  },
+  {
+    "poster": {
+      "poster_name": "Josh Mings",
+      "poster_handle": "josh565"
+    },
+    "time_stamp": "2025-01-27 18:04:50",
+    "text": "Hi, how could I go about checking the value of a Contact property against values in a Company property? I'm basically trying to see if what the contacts enter match _any_ of the values in the Company property (eg. if contact property 'code' equals _any_ company property 'code', then true).",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-01-28 06:13:31"
+      },
+      {
+        "time_stamp": "2025-01-28 11:14:36"
+      },
+      {
+        "time_stamp": "2025-01-28 23:17:10"
+      }
+    ]
+  }
+]

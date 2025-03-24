@@ -1,0 +1,285 @@
+[
+  {
+    "poster": {
+      "poster_name": "David F Jones",
+      "poster_handle": "david568"
+    },
+    "time_stamp": "2020-06-25 12:52:37",
+    "text": "Hey all,\n\nI'm trying to check if a value/property exists using a personalization token. I need to use the token as the value I am checking needs to be dynamic and change per each page.\n\nCurrently this is what my code looks like\n```{% set lessonID = \"1234\" %}\n{% set testvalu = personalization_token(\"contact.\"~lessonID,\"null\") %}\n{% if testvalu == 'null' %}\n  This checked worked\n{% endif %}```\nThe problem is that if the contact property \"contact.1234\" is not set, then this if statement is not firing.\n\nI have also tried setting a third value in between the testvalu and if statement\n```{% set lessonID = \"firstname\" %}\n{% set testvalu = personalization_token(\"contact.\"~lessonID,\"null\") %}\n{% set thirdTest = testvalu %}\n{% if thirdTest == 'null' %}\n  This checked worked\n{% endif %}```\nbut this still does not work. I can also confirm that \"null\" is being set, if I check either {{testvalu}} or {{thirdTest}}, null will be printed on the screen in this instance.\n\nThe only other thing to add is I have tried using both single and double quotes when checking my null string value == \"null\" or == 'null' .\n\nThank you",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-06-25 12:53:41"
+      },
+      {
+        "time_stamp": "2020-06-25 13:02:34"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2020-06-25 12:53:41",
+    "edited": {
+      "time_stamp": "2020-06-25 12:56:19"
+    },
+    "text": "try\n\n```{% if not testvalue %}```\nit *could* be that null is a reserved word"
+  },
+  {
+    "poster": {
+      "poster_name": "David F Jones",
+      "poster_handle": "david568"
+    },
+    "time_stamp": "2020-06-25 13:02:34",
+    "text": "So I've tried swapping out not with a few things but still nothing. I also changed my default string from \"null\" to \"empty\" just to be safe\n\n`{% if not personalization_token(\"contact.\"~lessonID) %}`\n  `This check worked`\n`{% endif %}`\n\nThis one didn't work either"
+  },
+  {
+    "poster": {
+      "poster_name": "David F Jones",
+      "poster_handle": "david568"
+    },
+    "time_stamp": "2020-06-25 15:55:58",
+    "edited": {
+      "time_stamp": "2020-06-25 15:56:07"
+    },
+    "text": "Hey all,\n\nI'm having an issue with using the float filter. When I use the following code, line 2 returns the string 77, but line 3 returns 0.0\n`{% set progressCheck = personalization_token(\"contact.n\"~lessonID~\"_progress\", \"0\")%}`\n`{{progressCheck}}`\n`{{progressCheck|float}}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2020-06-25 16:30:04",
+    "text": "0.0 means the conversion failed - are you sure it has no special characters?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2020-06-25 16:31:09",
+    "text": "```\n    {% set num = \"77 \" %}&lt;br /&gt;\n    {{ num | float }} - should be null&lt;br /&gt;\n    {{ num | trim | float }}  - should be 77.0```",
+    "reply_count": 20,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-06-25 16:38:24"
+      },
+      {
+        "time_stamp": "2020-06-25 16:40:28"
+      },
+      {
+        "time_stamp": "2020-06-25 16:40:31"
+      },
+      {
+        "time_stamp": "2020-06-25 16:42:54"
+      },
+      {
+        "time_stamp": "2020-06-25 16:43:45"
+      },
+      {
+        "time_stamp": "2020-06-25 16:43:56"
+      },
+      {
+        "time_stamp": "2020-06-25 16:44:04"
+      },
+      {
+        "time_stamp": "2020-06-25 16:46:19"
+      },
+      {
+        "time_stamp": "2020-06-25 16:51:03"
+      },
+      {
+        "time_stamp": "2020-06-25 16:51:23"
+      },
+      {
+        "time_stamp": "2020-06-25 16:51:26"
+      },
+      {
+        "time_stamp": "2020-06-25 16:53:49"
+      },
+      {
+        "time_stamp": "2020-06-25 16:53:52"
+      },
+      {
+        "time_stamp": "2020-06-25 16:54:09"
+      },
+      {
+        "time_stamp": "2020-06-25 16:54:21"
+      },
+      {
+        "time_stamp": "2020-06-25 16:54:28"
+      },
+      {
+        "time_stamp": "2020-06-25 16:54:54"
+      },
+      {
+        "time_stamp": "2020-06-25 16:55:33"
+      },
+      {
+        "time_stamp": "2020-06-25 16:55:53"
+      },
+      {
+        "time_stamp": "2020-06-29 09:15:16"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "David F Jones",
+      "poster_handle": "david568"
+    },
+    "time_stamp": "2020-06-25 16:38:24",
+    "text": "I'm sure that the string just contains numbers, but is there a good way to check this? I have also tried placing the hubl tag inside of an html p tag and can see that it is just the number \"77\" inside of this tag.\n\nI also tried to use the \"|trim |float\" method you have shown, but even after that I am still getting 0.0 when I can just print the string as \"77\""
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2020-06-25 16:40:28",
+    "text": "try putting it in the int filter"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2020-06-25 16:40:31",
+    "text": "and see what happens"
+  },
+  {
+    "poster": {
+      "poster_name": "David F Jones",
+      "poster_handle": "david568"
+    },
+    "time_stamp": "2020-06-25 16:42:54",
+    "text": "I just tried that and same deal. Is it maybe possible that the float/int filters do not work on contact properties?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2020-06-25 16:43:45",
+    "text": "can you try"
+  },
+  {
+    "poster": {
+      "poster_name": "David F Jones",
+      "poster_handle": "david568"
+    },
+    "time_stamp": "2020-06-25 16:43:56",
+    "text": "Actually I don't think that would be it. I just tried setting another variable to equal the result of the contact property, and I got the same result"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2020-06-25 16:44:04",
+    "text": "```{{ progressCheck | pprint }}```"
+  },
+  {
+    "poster": {
+      "poster_name": "David F Jones",
+      "poster_handle": "david568"
+    },
+    "time_stamp": "2020-06-25 16:46:19",
+    "text": "So, this is what came back\n`(String: {% if contact_without_defaults.n30552840157_progress %}{{contact_without_defaults.n30552840157_progress}}{% else %}0{% endif %})`"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2020-06-25 16:51:03",
+    "text": "are you using this in an email?"
+  },
+  {
+    "poster": {
+      "poster_name": "David F Jones",
+      "poster_handle": "david568"
+    },
+    "time_stamp": "2020-06-25 16:51:23",
+    "text": "Nope, this is currently on a cms theme"
+  },
+  {
+    "poster": {
+      "poster_name": "David F Jones",
+      "poster_handle": "david568"
+    },
+    "time_stamp": "2020-06-25 16:51:26",
+    "text": "cms template"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2020-06-25 16:53:49",
+    "text": "Ok so i dont think you need to use that function"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2020-06-25 16:53:52",
+    "text": "that might be the issue."
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2020-06-25 16:54:09",
+    "text": "if you use the\n```{{ account | pprint }```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2020-06-25 16:54:21",
+    "text": "variable - that should contain the personalisation variables available to that user/page"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2020-06-25 16:54:28",
+    "edited": {
+      "time_stamp": "2020-06-25 16:54:33"
+    },
+    "text": "see: <https://developers.HubSpot.com/docs/cms/hubl/variables>"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2020-06-25 16:54:54",
+    "text": "or contact."
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2020-06-25 16:55:33",
+    "text": "so in your scenario, on that page you’ll likely want to just put:\n\n```{{ contact[lessonID] }}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2020-06-25 16:55:53",
+    "text": "or\n```{{ contact | pprint }} ```\n to see available variables."
+  }
+]

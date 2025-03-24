@@ -1,0 +1,464 @@
+[
+  {
+    "text": "Hello there, need a small advice\n\nWhen I was reading the HubSpot official documentation, I found the statement \"Products themselves can't be associated with other CRM objects. However, to associate a product's information with a deal or a quote, you can create a line item based on that product. \". Looks quite clear!\n\nBut on the other hand, I found out that currently it is possible to create direct association between \"Product\" and \"Deal\" objects through the Associations API. For that purpose user can use next route: <https://api.hubapi.com/crm/v3/associations/Deals/Products/batch/create>. Moreover, I also found out that specific Association Type id exists in the list of HubSpot defined associations for connection between Deal and Products: type id - 630, association type - \"Deal to product\".\n\nIt is also possible to add fields \"Product -&gt; Deals\" (Products table) and \"Deal -&gt; Products\" (Deals table) on the HubSpot CRM web version.\n\nIs it some new functionality that just was added or some old legacy? Is it safe to use this association type?",
+    "time_stamp": "2024-05-16 05:05:34",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-16 06:06:30"
+      },
+      {
+        "time_stamp": "2024-05-16 07:03:40"
+      },
+      {
+        "time_stamp": "2024-05-16 07:08:37"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-05-16 06:06:30",
+    "text": "That's a great question. My understanding is that direct object-to-product associations, like the one you pointed out, are more for reporting things (for example, the most recently purchased products at the contact level). However, directly associating a product to a deal won't work with quotes or the other e-commerce APIs. <@U039ZD1F71P> you might be able to correct me if I'm wrong."
+  },
+  {
+    "text": "So you could do it with the list memberships api but the only unfortunately part with this api is it's just going to return the object id and the timestamp the object was added to the list.\n<https://developers.HubSpot.com/docs/api/crm/lists>\n\nSo if you wanted to also get all the properties in the same api call, I would probably just use the search api.",
+    "time_stamp": "2024-05-16 06:08:55"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-05-16 06:09:24",
+    "text": "Deleted objects stay in the recycle bin for 90 days.  I am not sure what the work-around is (if any).  This issue has been asked about regarding various object records before going back a few years"
+  },
+  {
+    "text": "So a little bit of a strange thing but I know that the V3 api does with the type parameter. I'm actually not seeing the v4 api equivalent but I know for sure I've done this in the past",
+    "time_stamp": "2024-05-16 06:12:16"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-05-16 06:16:34",
+    "text": "Oh that's a really fun use case, you can do this using the search api or graphql api. The only thing is you'll have to provide the current date in the API call as an epoc millisecond timestamp, you can't just say past \"currentDate\""
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-05-16 06:22:02",
+    "text": "The field you want to filter on is the `hs_timestamp` field"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-05-16 06:23:48",
+    "text": "Hey Victor, this is more of a community lead space with HubSpotter hanging around so it might make sense to shoot this over to HubSpot support directly."
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-05-16 06:24:52",
+    "text": "Hmmm,  I would try making the API call directly without using the HubSpot client and see if the problem goes away.  For example, I use nodejs along with axios for example to make direct calls without using the client."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-05-16 06:27:07",
+    "text": "Hey Edward, were you successful in updating subscriptions yet? If so the delete call is actually the exact same as the update call but with the delete header"
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Gaertner",
+      "poster_handle": "lukas.gaertner"
+    },
+    "time_stamp": "2024-05-16 06:27:30",
+    "edited": {
+      "time_stamp": "2024-05-16 06:33:52"
+    },
+    "text": "Hello,\nI use the contact upsert method (<https://api.hubapi.com/contacts/v1/contact/createOrUpdate/email/>)\n\nIs it right, that I cant set the hs_marketable_status with it?\n\nHow can I make associations to companies with it?\nI try it like this (which works for the create contact method):\n\n```\"associations\": [\n    {\n      \"to\": {\n        \"id\": \"123456789\"\n      },\n      \"types\": [\n        {\n          \"associationCategory\": \"HubSpot_DEFINED\",\n          \"associationTypeId\": 1\n        }\n      ]\n    }\n  ]```",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-16 06:35:29"
+      },
+      {
+        "time_stamp": "2024-05-16 06:59:46"
+      },
+      {
+        "time_stamp": "2024-05-16 07:00:38"
+      },
+      {
+        "time_stamp": "2024-05-16 07:01:11"
+      },
+      {
+        "time_stamp": "2024-05-16 07:01:39"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-05-16 06:27:53",
+    "text": "Lol, actually it's also the exact same as the GET one but with the DELETE header as well"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-05-16 06:30:18",
+    "text": "<@U073GD3CCG2> did you follow this section in the docs?\n\n<https://developers.HubSpot.com/docs/api/crm/crm-custom-objects#delete-a-custom-object>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-05-16 06:30:35",
+    "text": "&gt; if you need to create a new custom object with the same name as the deleted object, you must hard delete the schema by making a `DELETE` request to `/crm/v3/schemas/{objectType}?archived=true`. You can only delete a custom object type after all object instances of that type, associations, and custom object properties are deleted."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-05-16 06:35:29",
+    "text": "That legacy api only allows you to pass through properties and not associations unfortunately (if you want to pass through associations you'll have to use the newer v3 apis), unfortunately that field is also a read only property: <https://community.HubSpot.com/t5/APIs-Integrations/Cannot-set-a-contact-s-marketing-status-via-API/m-p/401139/highlight/true#M39680>"
+  },
+  {
+    "poster": {
+      "poster_name": "Edward Wong",
+      "poster_handle": "edward322"
+    },
+    "time_stamp": "2024-05-16 06:54:13",
+    "edited": {
+      "time_stamp": "2024-05-16 06:54:26"
+    },
+    "text": "lol thanks. It didn't occur to me to scroll down further to see the subscriptions documentation!\n\ngot it now!"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-05-16 06:55:11",
+    "text": "you're good bro! Let me know if you run into any other issues!"
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Gaertner",
+      "poster_handle": "lukas.gaertner"
+    },
+    "time_stamp": "2024-05-16 06:59:46",
+    "text": "Thank you! But does something like the createOrUpdate method exist in v3? I found only the /crm/v3/imports method. But I dont want to work with files."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-05-16 07:00:38",
+    "text": "unfortunately no, but if you try to create a contact that already exists the API will tell you the contact ID of the already existing one and you can use that to quickly update"
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Gaertner",
+      "poster_handle": "lukas.gaertner"
+    },
+    "time_stamp": "2024-05-16 07:01:11",
+    "text": "Great thank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-05-16 07:01:39",
+    "text": "100%, let me know if you run into any other issues!"
+  },
+  {
+    "poster": {
+      "poster_name": "Danil Dvorchuk",
+      "poster_handle": "dvorchyk.d.dev"
+    },
+    "time_stamp": "2024-05-16 07:03:40",
+    "text": "<@U01QVR44MEY> Thank you very much for your answer! In my case we are trying to integrate HubSpot into the system with really specific data structure and this association type (Deal -&gt; Product) is very helpful. So, if it is not some old legacy that would be depricated in soon releases I'd like to use it)"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-05-16 07:08:37",
+    "text": "Yeah definitely glad I could help! Let me know if you run into any other issues"
+  },
+  {
+    "poster": {
+      "poster_name": "Parul Sen",
+      "poster_handle": "devteam403"
+    },
+    "time_stamp": "2024-05-16 07:49:25",
+    "text": "I have 2 dropdown properties in HubSpot, now want to make second dropdown dependent on first dropdown's value i.e. conditional property in HubSpot. I want to update conditions in second drop-down through REST API\nFor example 1st drop down showing list of State and second drop down showing Cities on the base of selection of State.\n\nNote: I already have both drop-downs now want to update city dropdown through rest API.",
+    "reply_count": 10,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-05-16 07:58:23"
+      },
+      {
+        "time_stamp": "2024-05-16 22:35:16"
+      },
+      {
+        "time_stamp": "2024-10-10 05:13:02"
+      },
+      {
+        "time_stamp": "2024-10-10 06:56:47"
+      },
+      {
+        "time_stamp": "2024-10-10 06:57:12"
+      },
+      {
+        "time_stamp": "2024-10-10 08:27:49"
+      },
+      {
+        "time_stamp": "2024-10-10 08:29:25"
+      },
+      {
+        "time_stamp": "2024-10-14 00:29:56"
+      },
+      {
+        "time_stamp": "2024-10-14 00:55:12"
+      },
+      {
+        "time_stamp": "2024-10-14 00:56:09"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-05-16 07:58:23",
+    "text": "Would it possibly make more sense to use the conditional properties? <https://knowledge.HubSpot.com/properties/set-up-conditional-logic-for-enumeration-properties>\n\nSeems like it would fit your use case perfectly"
+  },
+  {
+    "text": "Hey <@U01GW2U4WMA>\nIf you see this screenshot, it's a call direct from the postman.\nSame happens if using curl, see:",
+    "time_stamp": "2024-05-16 10:20:18"
+  },
+  {
+    "poster": {
+      "poster_name": "Victor Barros",
+      "poster_handle": "victor387"
+    },
+    "time_stamp": "2024-05-16 10:21:53",
+    "text": "<@U01QVR44MEY>\nWhen I tried reach out customer support, then told me to connect with a <https://ecosystem.HubSpot.com/marketplace/solutions|assistance partner>."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-05-16 10:22:49",
+    "text": "lol, classic support. Not sure what a partner would do here"
+  },
+  {
+    "poster": {
+      "poster_name": "Victor Barros",
+      "poster_handle": "victor387"
+    },
+    "time_stamp": "2024-05-16 10:30:41",
+    "text": "They will likely have a direct channel to the engineering team.\nThe problem is that I don't think it's fair to shell out a few thousand dollars for aware of a bug."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-05-16 10:32:30",
+    "text": "yeah definitely not worth it at all. Dumb thought but maybe just reverse the order so it's in order?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-05-16 10:32:37",
+    "text": "for sure an annoying bug"
+  },
+  {
+    "poster": {
+      "poster_name": "Wayne Hamadi",
+      "poster_handle": "wayne583"
+    },
+    "time_stamp": "2024-05-16 11:42:12",
+    "edited": {
+      "time_stamp": "2024-05-16 11:42:23"
+    },
+    "text": "Folks what's the quickest way for you to push a spreadsheet into HubSpot and put it in a static list.\nI use the import api but there is no way to add in a list WHEN importing as far as I know.\nso i end up doing shinanigans to add to the list by batches of 100. very ugly",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-16 13:50:53"
+      },
+      {
+        "time_stamp": "2024-05-17 02:39:15"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Mike Hanrahan",
+      "poster_handle": "mike.hanrahan"
+    },
+    "time_stamp": "2024-05-16 13:50:53",
+    "text": "Last I knew if you're importing contacts, the last screen of the import wizard asks if you wish to add the imported contacts to a list.  Maybe that's no longer an option?"
+  },
+  {
+    "poster": {
+      "poster_name": "Rod Waynick",
+      "poster_handle": "rodwaynick"
+    },
+    "time_stamp": "2024-05-16 15:07:46",
+    "edited": {
+      "time_stamp": "2024-05-16 15:09:06"
+    },
+    "text": "Hi everyone. I’m trying to request the API to get info on the user that created a ticket (hs_created_by_user_id). I’m trying the user api, but the value that is returned from the property can’t be found (I’m getting a 404 error). Am I using the wrong API or is there another way to get the first, last, and email of that user?\nThe code is in the first comment.",
+    "reply_count": 8,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-16 15:08:36"
+      },
+      {
+        "time_stamp": "2024-05-16 15:17:26"
+      },
+      {
+        "time_stamp": "2024-05-16 15:34:24"
+      },
+      {
+        "time_stamp": "2024-05-16 15:39:34"
+      },
+      {
+        "time_stamp": "2024-05-16 15:39:51"
+      },
+      {
+        "time_stamp": "2024-05-16 15:43:42"
+      },
+      {
+        "time_stamp": "2024-05-16 15:44:16"
+      },
+      {
+        "time_stamp": "2024-05-16 15:45:29"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Rod Waynick",
+      "poster_handle": "rodwaynick"
+    },
+    "time_stamp": "2024-05-16 15:08:36",
+    "edited": {
+      "time_stamp": "2024-05-16 15:11:24"
+    },
+    "text": "```const internalRequesterInput = event.inputFields['hs_created_by_user_id'];\n// This is what gets passed as the userId in the code below    \n\n      const options = {\n      method: 'GET',\n      hostname: 'api.hubapi.com',\n      port: null,\n      path: `/crm/v3/objects/users/${userId}?properties=hs_email,hs_family_name,hs_given_name&archived=false`,\n      headers: {\n        'accept': 'application/json',\n        'authorization': `Bearer ${process.env.HAPIkey}`\n      }\n    };\n\n    const req = https.request(options, (res) => {\n      let chunks = [];\n\n      res.on('data', (chunk) => {\n        chunks.push(chunk);\n      });\n\n      res.on('end', () => {\n        const body = Buffer.concat(chunks);\n        if (res.statusCode === 200) {\n          resolve(JSON.parse(body.toString()));\n        } else {\n          reject(new Error(`Failed to fetch user data: ${body.toString()}`));\n        }\n      });\n    });\n\n    req.on('error', (e) => {\n      reject(e);\n    });\n\n    req.end();\n  });\n};```"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2024-05-16 15:17:26",
+    "text": "the id returned is actually an owner id"
+  },
+  {
+    "poster": {
+      "poster_name": "Rod Waynick",
+      "poster_handle": "rodwaynick"
+    },
+    "time_stamp": "2024-05-16 15:34:24",
+    "text": "I just passed the same id to the owners API and got the same result."
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2024-05-16 15:39:34",
+    "text": "`<https://api.hubapi.com/crm/v3/owners/11176268?idProperty=userId>`"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2024-05-16 15:39:51",
+    "text": "replace that ID with your user ID"
+  },
+  {
+    "time_stamp": "2024-05-16 15:43:42",
+    "text": "brooklyn 99 captain holt hot damn"
+  },
+  {
+    "poster": {
+      "poster_name": "Rod Waynick",
+      "poster_handle": "rodwaynick"
+    },
+    "time_stamp": "2024-05-16 15:44:16",
+    "text": "tried to find him saying hot damn, but this works too.\n\nThat was it! Thank you so much for the help"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2024-05-16 15:45:29",
+    "text": "ha!"
+  },
+  {
+    "poster": {
+      "poster_name": "Kelley Hoefle",
+      "poster_handle": "kelley136"
+    },
+    "time_stamp": "2024-05-16 15:52:25",
+    "text": "<@U01QVR44MEY> I've been filtering on that property with no luck. I've converted the timestamp date to milliseconds and used the BETWEEN operator with no luck. :confused:"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-05-16 16:09:37",
+    "edited": {
+      "time_stamp": "2024-05-16 16:28:16"
+    },
+    "text": "I’ll shoot some examples over to you tonight"
+  },
+  {
+    "poster": {
+      "poster_name": "Parul Sen",
+      "poster_handle": "devteam403"
+    },
+    "time_stamp": "2024-05-16 22:35:16",
+    "text": "I know how to implement conditional property logic using UI, but I want to implement this by using API code."
+  }
+]

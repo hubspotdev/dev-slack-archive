@@ -1,0 +1,109 @@
+[
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin-tekpartners"
+    },
+    "time_stamp": "2022-08-26 10:06:33",
+    "edited": {
+      "time_stamp": "2022-08-26 10:07:35"
+    },
+    "text": "I’m still trying to figure this out… If it’s not a `type='module'` script, it will load in the order of the DOM, it seems, but no matter what I do, I can’t get the global `type='module'` file script to run before the HubSpot module scripts. <@UQWGKUEN7> Have any idea about this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin-tekpartners"
+    },
+    "time_stamp": "2022-08-26 10:25:43",
+    "edited": {
+      "time_stamp": "2022-08-26 10:26:31"
+    },
+    "text": "It’s the very first possible script we can add in the head of the DOM. I dunno what else I can try. I’ve tried literally everything, from {% import %}’ing the JS file into an inline script, {% include %}’ing it into an inline script, trying to manually create a script element and populate it with a type and src and then insert into the head, set position to footer and defer for all module require_js scripts, async… I can’t think of anything else. :disappointed:"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-08-26 10:29:18",
+    "edited": {
+      "time_stamp": "2022-08-26 10:29:37"
+    },
+    "text": "Well — if youre loading it from the base layout you can just add a `script`  tag and use `getAssetUrl()` as you are. Then just make sure it’s above the `{{standard_header_includes}}` and you should be able to force it to load in whatever place you have it then."
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-08-26 10:31:37",
+    "text": "In other words — if it’s a global script and you are adding it at the base layout level — no need to use `require_js` as that will make it part of the `standard_header_includes`  var. I believe at least."
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin-tekpartners"
+    },
+    "time_stamp": "2022-08-26 10:41:45",
+    "edited": {
+      "time_stamp": "2022-08-26 10:45:58"
+    },
+    "text": "Yeah, no, doesn’t work sadly. Works with normal script files, but not with `type='module'`"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-08-26 10:46:08",
+    "text": "do you have a page you can share?"
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin-tekpartners"
+    },
+    "time_stamp": "2022-08-26 10:49:04",
+    "edited": {
+      "time_stamp": "2022-08-26 10:50:46"
+    },
+    "text": "No, I don’t right now. It would be easy to replicate though. Just take the HS boilerplate, add a JS file with a console.log in it, add it to the top of `head` in `base.html`as `type='module'` and it will always log after everything else. I can set it up later tonight for you."
+  },
+  {
+    "poster": {
+      "poster_name": "Mariana Forteza",
+      "poster_handle": "mariana"
+    },
+    "time_stamp": "2022-08-26 10:51:31",
+    "text": "Hello community!\n\nI’m trying to make several rows of two columns that have no gap between them, touching each other. I see that HubSpot ads to the column the *margin-left* and we are not allowed to edit that… Is the only way of reaching what I want building a custom module? This seems so basic that I’m afraid I might not be seeing an easier option using the default blocks.",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-08-26 12:10:36"
+      },
+      {
+        "time_stamp": "2022-09-01 06:59:38"
+      },
+      {
+        "time_stamp": "2022-09-05 14:05:29"
+      },
+      {
+        "time_stamp": "2022-09-06 03:00:50"
+      }
+    ]
+  },
+  {
+    "text": "I’ve confirmed in the DOM, it’s before any other scripts, besides tracking scripts.",
+    "time_stamp": "2022-08-26 10:52:55"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephanie O'Gay Garcia",
+      "poster_handle": "stephanie"
+    },
+    "time_stamp": "2022-08-26 12:10:36",
+    "text": "Yeah, it's something so basic but surprisingly tricky,\n\nI think you can either use a custom module or add a background colour to the section for the colour you want on the left hand side, and add a background colour to the right hand side column (or the other way around). That's assuming two colours, a background image on a column would work too.\n\nFor that solution you'll want no padding on the section and to add padding to the columns instead, with the problem then being that your content won't be centered on the page.\n\nIf centering the content with two columns is what you're looking for, I've usually just built the custom module."
+  }
+]

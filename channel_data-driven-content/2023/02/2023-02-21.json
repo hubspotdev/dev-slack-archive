@@ -1,0 +1,143 @@
+[
+  {
+    "poster": {
+      "poster_name": "Lukas Kahwe Smith",
+      "poster_handle": "lukas.smith"
+    },
+    "time_stamp": "2023-02-21 06:55:57",
+    "text": "I am building a multi-lingual structure of \"category\" and \"subcategory\" (which can also be related to \"resources\"). now it seems like HubDB does not have an internal concept of \"translations\". so I have a \"language\" column in each of these tables. but now I am struggeling especially with the \"subcategory\" relationship to \"resources\" (\"resources\" are a Foreign ID column on the \"subcategory\" table). I guess there is no way to filter the selectable \"resources\" based on the \"language\" column. Is there an established pattern for this case?",
+    "reply_count": 12,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-02-21 07:15:11"
+      },
+      {
+        "time_stamp": "2023-02-21 08:17:39"
+      },
+      {
+        "time_stamp": "2023-02-21 08:23:55"
+      },
+      {
+        "time_stamp": "2023-02-21 08:24:56"
+      },
+      {
+        "time_stamp": "2023-02-21 08:31:42"
+      },
+      {
+        "time_stamp": "2023-02-21 08:32:48"
+      },
+      {
+        "time_stamp": "2023-02-21 09:39:47"
+      },
+      {
+        "time_stamp": "2023-02-21 09:40:00"
+      },
+      {
+        "time_stamp": "2023-02-22 02:20:56"
+      },
+      {
+        "time_stamp": "2023-02-22 02:31:05"
+      },
+      {
+        "time_stamp": "2023-02-22 08:20:07"
+      },
+      {
+        "time_stamp": "2023-02-22 10:17:26"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2023-02-21 07:15:11",
+    "text": "Usually I create a table for each language, if those tables will generate dynamic pages that's the only way to handle this scenario (if you put all languages in a single table and bind the same table to each multilanguage listing page, you'll end up with unwanted duplicate pages)"
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Kahwe Smith",
+      "poster_handle": "lukas.smith"
+    },
+    "time_stamp": "2023-02-21 08:17:39",
+    "text": "k"
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Kahwe Smith",
+      "poster_handle": "lukas.smith"
+    },
+    "time_stamp": "2023-02-21 08:23:55",
+    "text": "I guess that approach then means one has to pay a lot of attention when making structure changes .. and it is also tedious to add another language"
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Kahwe Smith",
+      "poster_handle": "lukas.smith"
+    },
+    "time_stamp": "2023-02-21 08:24:56",
+    "text": "hmm .. maybe I will just use multi-select fields in place of Foreign ID and then do a manual lookup to find the right row using the values in the multi-select list and the language"
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Kahwe Smith",
+      "poster_handle": "lukas.smith"
+    },
+    "time_stamp": "2023-02-21 08:31:42",
+    "edited": {
+      "time_stamp": "2023-02-21 08:31:54"
+    },
+    "text": "hmm .. how can I best construct an `IN` type filter (is this even supported?) from a multi-select column?"
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Kahwe Smith",
+      "poster_handle": "lukas.smith"
+    },
+    "time_stamp": "2023-02-21 08:32:48",
+    "text": "`IN` seems to be supported <https://legacydocs.HubSpot.com/docs/methods/hubdb/v2/get_table_rows>"
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Kahwe Smith",
+      "poster_handle": "lukas.smith"
+    },
+    "time_stamp": "2023-02-21 09:39:47",
+    "text": "<https://community.HubSpot.com/t5/CMS-Development/How-to-construct-and-IN-query-with-hubdb-table-rows/m-p/759061#M32935>"
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Kahwe Smith",
+      "poster_handle": "lukas.smith"
+    },
+    "time_stamp": "2023-02-21 09:40:00",
+    "text": "sigh .. I guess there is also no way to do an \"OR\" query?"
+  },
+  {
+    "poster": {
+      "poster_name": "Davide Bragagnolo",
+      "poster_handle": "davide.bragagnolo"
+    },
+    "time_stamp": "2023-02-21 22:20:48",
+    "text": "Hello Team!\n\nI'm working on a search feature in one of our cms pages, but I'm having troubles as I hit the complexity limits of graphql. I would like to post an example of what I'm trying to achieve, as is quite long I'll post it in the thread.\n\nAny suggestion is appreciated, thanks! :pray:",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-02-21 22:21:03"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Davide Bragagnolo",
+      "poster_handle": "davide.bragagnolo"
+    },
+    "time_stamp": "2023-02-21 22:21:03",
+    "edited": {
+      "time_stamp": "2023-02-21 22:22:32"
+    },
+    "text": "CRM data structure:\n\nProviderType1 - company\nProviderType2 - company\nProviderType3 - company\nCustomer - company\n\nDeal:\n\t- association with customer\n\t- association with ProviderType1 and/or ProviderType2 and/or ProviderType3 (will always have at least one)\n\nSearch feature required:\n- The provider that uses the cms, can retrieve all his Deals for a specific status, with info about all other providers and customer, optionally filtering for provider_name and/or customer_name\n\nAt first I went down the path of query company(provider logged in) -&gt; deals -&gt; associated_companies, but 3 level association make the complexity increase esponentially\n\nI ended up executing 2 queries in series, the first one I get all deals associated with the company for one of the 3 types\n```query FindDealsForProviderType(\n\t$companyId: String!\n\t$dealStatus: String!\n\t$limit: Int!\n) {\n    CRM {\n        company(uniqueIdentifier: \"id\", uniqueIdentifierValue: $companyId) {\n            name\n            associations {\n                dealsAsProviderType1: deal_collection__providertype1_company_deal(filter:{ deal_status__eq: $dealStatus }, limit: $limit) {\n                    items {\n                        hs_object_id\n                    }\n                }\n                dealsAsProviderType2: deal_collection__providertype2_company_deal(filter:{ deal_status__eq: $dealStatus }, limit: $limit)  {\n                    items {\n                        hs_object_id\n                    }\n                }\n                dealsAsProviderType3: deal_collection__providertype3_company_deal(filter:{ deal_status__eq: $dealStatus }, limit: $limit)  {\n                    items {\n                        hs_object_id\n                    }\n                }\n            }\n        }\n    }\n}```\nThis query is in the order of a couple of thousands of complexity, depending on how big is the limit. Then, with the subset of deal ids, I go to the second query, where I get the associated companies for customer/providers, optionally filtering by name.\n```query FilterDeals(\n\t$dealIds: deals_ids_array\n    $customerName: String!\n    $providerName: String!\n    $limit: Int!\n) {\n    CRM {\n        deal_collection(filter: filter:{ deal_status__in: $dealIds }, limit: $limit) {\n            items {\n                hs_object_id\n                dealname\n                associations {\n                    company_collection__customer_company_deal(filter: { name__contains: $customerName }) {\n                        items {\n                            hs_object_id\n                            name\n                        }\n                        total\n                    }\n                    company_collection__providertype1_company_deal(filter: { name__contains: $providerName }) {\n                        items {\n                            hs_object_id\n                            name\n                        }\n                        total\n                    }\n                    company_collection__providertype2_company_deal(filter: { name__contains: $providerName }) {\n                        items {\n                            hs_object_id\n                            name\n                        }\n                        total\n                    }\n                    company_collection__providertype3_company_deal(filter: { name__contains: $providerName }) {\n                        items {\n                            hs_object_id\n                            name\n                        }\n                        total\n                    }\n                }\n            }\n        }\n    }\n}```\nThis is the tricky one, as if the resulted deals in the first query are 20 or more, HubSpot will trunk the results as the complexity is quite high:\n```  \"extensions\": {\n    \"query_complexity\": {\n      \"max_points\": 30000,\n      \"used_points\": 26976,\n      \"points_for_internal_api_requests\": {\n        \"count\": 82,\n        \"weight\": 300,\n        \"used_points\": 24600\n      },\n      \"points_for_objects_retrieved\": {\n        \"count\": 74,\n        \"weight\": 30,\n        \"used_points\": 2220\n      },\n      \"points_for_properties_with_value\": {\n        \"count\": 52,\n        \"weight\": 3,\n        \"used_points\": 156\n      }\n    }\n  },\n  \"errors\": [\n    {\n      \"message\": \"Exception while fetching data (/CRM/deal_collection/items[16]/associations/company_collection__customer_company_deal/items) : Cannot retrieve due to exceeding the per-query limit.\",\n\n...```\nIs there any better way to handle this type of queries on associated objects?"
+  }
+]

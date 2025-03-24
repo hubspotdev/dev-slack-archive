@@ -1,0 +1,177 @@
+[
+  {
+    "poster": {
+      "poster_name": "Dirk van der Giesen",
+      "poster_handle": "dvandergiesen"
+    },
+    "time_stamp": "2023-11-09 03:37:14",
+    "edited": {
+      "time_stamp": "2023-11-09 03:38:37"
+    },
+    "text": "Thx Evelynn, yes so how do you display an image from the files folder in a template"
+  },
+  {
+    "poster": {
+      "poster_name": "Gianni Ciampi",
+      "poster_handle": "ciampi"
+    },
+    "time_stamp": "2023-11-09 05:06:30",
+    "text": "Hi everybody... I've got a problem with blog_tags function... it return empty array (with both blog id or \"default\" param) even if I have a lot of tags and only one blog defined... I'm using it in a custom module.\nCan anyone suggest how to solve this? Support did not take up the request.....",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-11-09 11:17:22"
+      },
+      {
+        "time_stamp": "2023-11-10 02:48:22"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matheus Jiran",
+      "poster_handle": "matheus"
+    },
+    "time_stamp": "2023-11-09 09:45:59",
+    "text": "Hey I'm trying to pull the Deals associated with a Contact record into an email template module, but I'm having trouble with the crm_associations() function.\n\nIt works when the contact ID is hard coded:\n\n```&lt;h3&gt;Contact Deals&lt;/h3&gt;\n{% set contact_deals = crm_associations(\"682151\", 'HubSpot_DEFINED', 4, \"\", 'dealname,amount,dealstage,createdate,closedate') %}\n\n{% for item in contact_deals.results %}\n\t{{ item.dealname }}\n  {{ item.closedate }}\n{% endfor %}```\n\nBut it does not work I pass the Contact ID as a variable (I've checked and the type is string).\n\n```&lt;h3&gt;Contact Deals&lt;/h3&gt;\n{% set contact_deals = crm_associations(contact.hs_object_id, 'HubSpot_DEFINED', 4, \"\", 'dealname,amount,dealstage,createdate,closedate') %}\n\n{% for item in contact_deals.results %}\n\t{{ item.dealname }}\n  {{ item.closedate }}\n{% endfor %}```\n\nI've tried forcing the conversion to string, but did not work.\n\nAny good soul can help throw a light on this? Thanks!!",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-11-09 10:57:47"
+      },
+      {
+        "time_stamp": "2023-11-09 11:30:57"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-11-09 10:57:47",
+    "text": "Unfortunately, in the context of HubSpot email, you can’t compare or filter contact properties — nor can you use them as function parameters.\n\nI don’t know the exact details of why, but my theory is that contact properties are the very last thing to be evaluated and interpolated during the rendering process. Since all of the rest of the HubL is evaluated before contact properties have their values assigned, they will always be treated as null when passed into a function, filter, or comparison.\n\nI think you’re going to have to find a solution for this that doesn’t require use of a personalization token — perhaps an explicit CRM call to pull contacts? Frankly, I don’t see any obvious path forward."
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-11-09 11:13:42",
+    "text": "Coming back around to this one on <@U049YGVBGBC>’s request! This does look like a pretty odd error, and I think this might be one to go to support for; it may be a bug, especially considering it _had been_ working previously.\n\nI’m fairly certain you’d usually encounter this error when trying to call a module from within another module? Given that, it might be some sort of parsing error, misinterpreting the `module` object as the `module` tag.\n\nSome questions and ideas for troubleshooting:\n• Do you still get that error if you assign `<http://module.blog|module.blog>` to a variable, but don’t pass it into the `blog_recent_posts` function? Basically, trying to sort out whether the issue has to do with the field or the function.\n• Do you still see the error if you pass the value in as an interpolated string? Eg: `blog_recent_posts(\"{{<http://module.blog|module.blog>}}\", 3)`\n• Some other scattershot debugging steps to consider trying: \n    ◦ Does this still happen if you create a new, identical module?\n    ◦ Does this still happen if you rearrange the fields? For example — moving the `blog` field into a group, or renaming it?\nNone of this is definitive, but it might help you track down the cause!"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-11-09 11:17:22",
+    "text": "It’d help if you could share relevant snippets of your code! The additional context could help us come up with potential solutions, and allows us to spot any issues with your implementation that might exist."
+  },
+  {
+    "poster": {
+      "poster_name": "Matheus Jiran",
+      "poster_handle": "matheus"
+    },
+    "time_stamp": "2023-11-09 11:30:57",
+    "text": "Thanks <@U04AQA0QM8E>. It really doesn't make much sense to have a function to pull associations if we cannot use it to pull objects associated with the contact. Though it is frustrating, I will insist in finding a solution for getting a simple contact ID to use as parameter to that function.\n\nI posted on the community and I'll keep trying. When I get a solution, I follow up here :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-11-09 11:31:00",
+    "text": "Typically, there are a few ways you’d display images in a template:\n1. If it’s a fixed image that isn’t going to be changed or altered by end-users, you can include it in your theme’s `images` folder. Then, you can get its URL using <https://developers.HubSpot.com/docs/cms/hubl/functions#get-asset-url|the >`get_asset_url`<https://developers.HubSpot.com/docs/cms/hubl/functions#get-asset-url| function>. Eg: `&lt;img src=\"{{ get_asset_url('/images/your-image.png')}}\" alt=\"…\"&gt;`\n2. If it’s an image that you’d expect your editors/users to change, then you’ll either want to use an `image`<https://developers.HubSpot.com/docs/cms/hubl/tags#image| tag>, the `image`<https://developers.HubSpot.com/docs/cms/building-blocks/modules/default-modules#image| module>, or an `image`<https://developers.HubSpot.com/docs/cms/building-blocks/module-theme-fields#image| field> in a custom module. This will allow them to add and select images directly from the editing interface.\n3. If it’s a collection of images that need to be reused in multiple places on the site, but might still be changed by users, you have a few options:\n    a. Use a global module that has an image field in a repeater group.\n    b. Store them in a HubDB table, and call that table when you need the image URLs.\nHard-coding in HubFS paths typically isn’t recommended, since there’s no way to guarantee or enforce the structure of the file system. Any user who has access to the FS could break your template by renaming, moving, deleting, or otherwise altering the path that you’re referencing."
+  },
+  {
+    "poster": {
+      "poster_name": "Melinda Green",
+      "poster_handle": "melinda.green"
+    },
+    "time_stamp": "2023-11-09 13:21:26",
+    "text": "hi. i have a menu that i'm rendering differently on mobile and desktop. Namely, on desktop, the full menu item name displays, and on mobile, it's a shorter version of the name.\n\nlike: Request a Quote -&gt; Quotes; Find a Sales Partner -&gt; Sales Partners\n\nI'm using a HS advanced menu to avoid writing nav items in code. Has anyone found a convenient way to change the names inside the HubL loop?\n\nI'd rather not create two identical menus with slightly different item names if possible. That seems ridiculous.",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-11-09 14:02:42"
+      },
+      {
+        "time_stamp": "2023-11-09 14:50:58"
+      },
+      {
+        "time_stamp": "2023-11-09 14:52:13"
+      },
+      {
+        "time_stamp": "2023-11-09 14:52:13"
+      },
+      {
+        "time_stamp": "2023-11-09 14:53:41"
+      },
+      {
+        "time_stamp": "2023-11-09 14:54:57"
+      },
+      {
+        "time_stamp": "2023-11-09 14:57:51"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-11-09 14:02:42",
+    "text": "To do that without having multiple menu variants, you’ll have to leverage <https://developers.HubSpot.com/docs/cms/hubl/functions#menu|the >`menu()`<https://developers.HubSpot.com/docs/cms/hubl/functions#menu| function> and write your own markup generation macro. In that loop, you’ll be able to perform comparisons on the menu item labels. Here’s a stripped down version of what that might look like:\n```{# Get the menu items using the menu() function #}\n{% set links = menu(your_menu, \"site_root\").children %}\n\n{# Output those menu items into markup #}\n&lt;nav&gt;\n  &lt;ul&gt;\n  {% for link in links %}\n    &lt;li&gt;\n      &lt;a href=\"{{ link.url }}\"&gt;\n        {% if link.label == \"Request a Quote\" %}\n          &lt;span class=\"menu-label--mobile\"&gt;Quote&lt;/span&gt;\n          &lt;span class=\"menu-label--desktop\"&gt;{{ link.label }}&lt;/span&gt;\n        {% elif link.label == \"Find a Sales Partner\" %}\n          {# ... #}\n        {% else %}\n          &lt;span class=\"menu-label\"&gt;{{ link.label }}&lt;/span&gt;\n        {% endif %}\n      &lt;/a&gt;\n    &lt;/li&gt;\n  {% endfor %}\n  &lt;/ul&gt;\n&lt;/nav&gt;```\nSince these are completely arbitrary and case-specific labels, there’s pretty much no way to handle swapping them out in code except for manually casing them out with if/else logic.\n\nPersonally, I’d recommend against that — it’s going to be a MUCH bigger pain to create and maintain, and it’ll make those menus a huge pain for non-developers to edit."
+  },
+  {
+    "text": "If youre using an advanced menu you can also wrap your labels in the menu builder in spans and then use css to show and hide them.\n```<span class=\"show-desktop\">Long menu name</span><span class=\"show-mobile\">Short name</span>```",
+    "time_stamp": "2023-11-09 14:50:58",
+    "edited": {
+      "time_stamp": "2023-11-09 14:51:19"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-11-09 14:52:13",
+    "text": "Oh, that’s super interesting to know. The labels are raw inputs? Does that mean they take HubL, as well?"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2023-11-09 14:52:13",
+    "text": ":point_up_2: Mostly viable if marketers don’t need access to it though"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2023-11-09 14:53:41",
+    "text": "I believe they do take hubl as well. Though I don’t think that is officially a supported feature. More of a quirk that works (I remember stumbling upon it during my partner days)"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2023-11-09 14:54:57",
+    "text": "But I think I’ve written things like checking to see if user is logged in or not via hubl and changing the text if the user is signed in."
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-11-09 14:57:51",
+    "text": "Wow, this is an *excellent* addition to my tome of “Cursed HubL Techniques and Knowledge.” I can’t wait to use this to write the least maintainable nav menu ever implemented."
+  }
+]

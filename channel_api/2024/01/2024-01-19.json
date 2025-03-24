@@ -1,0 +1,397 @@
+[
+  {
+    "poster": {
+      "poster_name": "Syed Abdul Rahman",
+      "poster_handle": "abdul580"
+    },
+    "time_stamp": "2024-01-19 04:41:43",
+    "text": "Hey everyone,\nI am using the HubSpot tracking code on our website. When submitting the form, I am attempting to send the visitor's email to the HubSpot dashboard using HubSpot's 'identify' call. However, I do not see this API call in the network tab, though I can see the method in the console if i console log the _hsq variable.\n\nthis is i am trying to use but its not working ?\n\n`var _hsq = window._hsq = window._hsq || [];`\n`_hsq.push(['identify',{email:email}]);`",
+    "reply_count": 8,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-01-19 06:55:29"
+      },
+      {
+        "time_stamp": "2024-01-19 08:01:25"
+      },
+      {
+        "time_stamp": "2024-01-19 09:37:14"
+      },
+      {
+        "time_stamp": "2024-01-19 09:37:28"
+      },
+      {
+        "time_stamp": "2024-01-19 09:37:31"
+      },
+      {
+        "time_stamp": "2024-01-19 09:38:11"
+      },
+      {
+        "time_stamp": "2024-01-19 09:38:49"
+      },
+      {
+        "time_stamp": "2024-01-21 01:44:13"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-01-19 06:16:45",
+    "text": "<@UV6UAJ9FS> Where is HubSpot saying that they are updating the api and delivering the response for the IDs differently? This doesn’t state anywhere that they are going to be changing the output of their json format for their APIs.\n\n“Once this change goes into effect, the numbers generated for contact record IDs may be significantly higher than currently generated IDs. The new ID values will require 64 bit data types to store the ID as an integer value.”\n\nI’ll also note right after that they mention “This update will bring contacts in line with all other CRM objects that already use the new system for generating IDs.”\n\nSo other CRM objects are already doing this, and no one’s apis are failing. Custom object APIs are using the 64bit generator and all of those apis are currently sending ID as a string in the json response.\n\nI’m not sure if I’m talking about something differently than you are, but I see the only implication here is if you are storing IDs in a database as 32bit. You would need to make adjustments to this.\n\nInstead of using some theoretical example, I’ll use a real example of the current get contact api.\n`<https://api.hubapi.com/crm/v3/objects/contacts/xxx@gmail.com?idProperty=email>`\nRaw Response: `{\"id\":\"1651\",\"properties\":{\"createdate\":\"2022-10-26T16:43:25.436Z\",\"email\":\"<mailto:xxx@gmail.com|xxx@gmail.com>\",\"firstname\":\"xxx\",\"hs_object_id\":\"1651\",\"lastmodifieddate\":\"2023-10-24T09:07:26.963Z\",\"lastname\":\"xxx\"},\"createdAt\":\"2022-10-26T16:43:25.436Z\",\"updatedAt\":\"2023-10-24T09:07:26.963Z\",\"archived\":false}`\n\nHere is an example of a list of custom objects\n`<https://api.hubapi.com/crm/v3/objects/2-19800623>`\nRaw Response: `{\"results\":[{\"id\":\"11703188049\",\"properties\":{\"hs_createdate\":\"2024-01-09T14:49:25.652Z\",\"hs_lastmodifieddate\":\"2024-01-09T14:49:25.652Z\",\"hs_object_id\":\"11703188049\"},\"createdAt\":\"2024-01-09T14:49:25.652Z\",\"updatedAt\":\"2024-01-09T14:49:25.652Z\",\"archived\":false},{\"id\":\"11703188051\",\"properties\":{\"hs_createdate\":\"2024-01-09T14:49:48.690Z\",\"hs_lastmodifieddate\":\"2024-01-09T14:49:48.690Z\",\"hs_object_id\":\"11703188051\"},\"createdAt\":\"2024-01-09T14:49:48.690Z\",\"updatedAt\":\"2024-01-09T14:49:48.690Z\",\"archived\":false},{\"id\":\"11703188060\",\"properties\":{\"hs_createdate\":\"2024-01-09T14:50:25.400Z\",\"hs_lastmodifieddate\":\"2024-01-09T15:18:40.223Z\",\"hs_object_id\":\"11703188060\"},\"createdAt\":\"2024-01-09T14:50:25.400Z\",\"updatedAt\":\"2024-01-09T15:18:40.223Z\",\"archived\":false},{\"id\":\"11703188062\",\"properties\":{\"hs_createdate\":\"2024-01-09T14:50:35.443Z\",\"hs_lastmodifieddate\":\"2024-01-09T15:18:36.005Z\",\"hs_object_id\":\"11703188062\"},\"createdAt\":\"2024-01-09T14:50:35.443Z\",\"updatedAt\":\"2024-01-09T15:18:36.005Z\",\"archived\":false},{\"id\":\"11703188065\",\"properties\":{\"hs_createdate\":\"2024-01-09T14:50:47.717Z\",\"hs_lastmodifieddate\":\"2024-01-09T15:18:30.255Z\",\"hs_object_id\":\"11703188065\"},\"createdAt\":\"2024-01-09T14:50:47.717Z\",\"updatedAt\":\"2024-01-09T15:18:30.255Z\",\"archived\":false},{\"id\":\"11703188078\",\"properties\":{\"hs_createdate\":\"2024-01-09T14:52:18.401Z\",\"hs_lastmodifieddate\":\"2024-01-09T14:52:18.401Z\",\"hs_object_id\":\"11703188078\"},\"createdAt\":\"2024-01-09T14:52:18.401Z\",\"updatedAt\":\"2024-01-09T14:52:18.401Z\",\"archived\":false},{\"id\":\"11703188080\",\"properties\":{\"hs_createdate\":\"2024-01-09T14:52:29.306Z\",\"hs_lastmodifieddate\":\"2024-01-09T14:52:29.306Z\",\"hs_object_id\":\"11703188080\"},\"createdAt\":\"2024-01-09T14:52:29.306Z\",\"updatedAt\":\"2024-01-09T14:52:29.306Z\",\"archived\":false},{\"id\":\"11703188086\",\"properties\":{\"hs_createdate\":\"2024-01-09T14:52:41.614Z\",\"hs_lastmodifieddate\":\"2024-01-09T14:52:41.614Z\",\"hs_object_id\":\"11703188086\"},\"createdAt\":\"2024-01-09T14:52:41.614Z\",\"updatedAt\":\"2024-01-09T14:52:41.614Z\",\"archived\":false},{\"id\":\"11703188087\",\"properties\":{\"hs_createdate\":\"2024-01-09T14:52:51.082Z\",\"hs_lastmodifieddate\":\"2024-01-09T14:52:51.082Z\",\"hs_object_id\":\"11703188087\"},\"createdAt\":\"2024-01-09T14:52:51.082Z\",\"updatedAt\":\"2024-01-09T14:52:51.082Z\",\"archived\":false},{\"id\":\"11703188088\",\"properties\":{\"hs_createdate\":\"2024-01-09T14:53:00.612Z\",\"hs_lastmodifieddate\":\"2024-01-09T14:53:00.612Z\",\"hs_object_id\":\"11703188088\"},\"createdAt\":\"2024-01-09T14:53:00.612Z\",\"updatedAt\":\"2024-01-09T14:53:00.612Z\",\"archived\":false}],\"paging\":{\"next\":{\"after\":\"11703188089\",\"link\":\"<https://api.hubapi.com/crm/v3/objects/2-19800623?after=11703188089>\"}}}`\n\nMaybe I’m completely missing what you are saying, and you are talking about something different and I’m not understanding this, or it is quite possible that I’m way out of my element here and I’m completely wrong — so let me summarize what I understand and you can point me out where I’m incorrect.\n\n• HubSpot is updating how IDs are generating from 32 bit to 64 bit (I think we both agree on this)\n• This will affect database storage if devs are storing IDs as 32bit, as the change to 64bit will not allow databases to house that number correctly. (I think we both agree on this)\n• HubSpot has made no mention of outputting anything differently in their notice. They have said that this would bring contact id generation in line with every other object. \nThis final item, and having always seen ID and in legacy apis that I used on day 1, vid, have always been sent as a string.\n\nIs it possible that you are using some api wrapper that returns these as numbers? Is it possible that I’m still not understanding this? And maybe I’m confused on what you are actually trying to say, you start off your response by saying “it is not just database storage” and then you end with “I would say that the HubSpot dev team are aware of this as with their more modern APIs they -- generally -- use this stringified number format for 64 bit integer IDs.”\n\nSo based upon this and your initial comment, I recognize that you aren’t speaking to me, but you are trying to speak to a HubSpot Dev. You’ve came to almost a conclusion at the end here that you think HubSpot is thinking about this —\n\nI have no idea how to say this lightly — but do you need confirmation from a HubSpot developer or can you just do an api call to any api other than contacts and confirm that the HubSpot api is sending this data as a string?"
+  },
+  {
+    "poster": {
+      "poster_name": "Edgar Hernandez",
+      "poster_handle": "edgar080"
+    },
+    "time_stamp": "2024-01-19 06:31:32",
+    "text": "Hello everyone, I'm facing some issues with the Conversation API while building a chatbot with HubSpot and Workflows. The issue comes when, during a chat flow, the 'last message sent' property does not update, even if the client sends a message. Has anyone else faced this issue?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-01-19 06:42:04",
+    "text": "You can use the search api to search based upon the property you are looking for, and then in the api call determine what properties you’d like to return: <https://developers.HubSpot.com/docs/api/crm/search>\n\nI’d look at the entire page before jumping into this as search has some limitations"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-01-19 06:52:56",
+    "text": "If you are using a private app, you are giving anyone anyone with access to this full permission of what you can do. You’d need to create your own user permissions / authorization into that, have some sort of admin structure that can set those settings or confirm those settings\n\nIn oauth, you determine what scopes are necessary for them to use the app, and if they don’t have them they won’t have permission to use the app because they won’t authenticate\n\nbefore I get into idor items I guess I’d need to understand more about what you are building for context. public apps, only allow the user to touch things they own or have access to. you can reference contact owner or teams. other exposed items in a web app could be done a few different ways, but you are building out a webapp so just deal with that there.\n\nIn one of the webapps I’ve built we use HubSpot users as a way of confirming differnet levels of security. This allows the client to adjust permissions in HubSpot. If they remove them from HubSpot, then they no longer have access to the webapp. If they change their team, their permissions are different in app. The users also only see leads based upon their companies lead source - This is a property mapped to all deals and other custom objects like “companyA” — and the users contact record has companyA as their owned lead source, so in the app we’ve built out those different pieces to make this more secure"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-01-19 06:55:29",
+    "text": "from the docs: “This function call stores the data in the tracker, but the data is not actually passed to HubSpot with this call. The data will only be passed when tracking a page view or an event (with either the trackPageView or trackEvent functions).”\n\n<https://developers.HubSpot.com/docs/api/events/tracking-code>\n\nAlso, when submitting a form to HubSpot, this should create/update the user based upon the email in the form"
+  },
+  {
+    "text": "Guys, good morning!\nI'm trying to create a connection between Amazon App Flow and HubSpot but I get connection failure.\nI have already created an application within HubSpot and generated the access token and client secret, but when connecting, an error occurs.\nfollow the prints:",
+    "time_stamp": "2024-01-19 07:02:51"
+  },
+  {
+    "poster": {
+      "poster_name": "Syed Abdul Rahman",
+      "poster_handle": "abdul580"
+    },
+    "time_stamp": "2024-01-19 08:01:25",
+    "text": "Hey nichols decker,\nThnaks for your reply :smiley:, i found its sending data when we pass code like this\n\n```_hsq.push([\"identify\",{\n    {email: emailValue}\n}]);```\ni know its not a right syntax of javascript code, but with this i can see network call and the email getting saved in HubSpot (but the page throwing error because this is not a right syntax)\n\nfor my use case its not a Single page application (SPA), i want to implement this in my code, could you please tell me the steps for implementing the trackPageView and identify call ?\n\nThanks in advance!!"
+  },
+  {
+    "poster": {
+      "poster_name": "Gilbert Garcia",
+      "poster_handle": "gilbert"
+    },
+    "time_stamp": "2024-01-19 08:02:58",
+    "edited": {
+      "time_stamp": "2024-01-19 08:03:44"
+    },
+    "text": "Hello everyone! I'm new here and forgive me if I am not good at explaining my problem.\nI have created a workflow with a custom code to merge duplicate contacts.\nIt works! But my issue is that it always makes the latest record's email the primary email and the old one secondary.\nIs there a way to override it to go the other way around?\n\nHere is the code I am using, as you can see, I also added another set of codes at the bottom to try and fix the issue within the code but the results are the same:\n```\n/**\n* Searches for another contact with the same value of DEDUPE_PROPERTY.\n* - If no matches are found, nothing happens\n* - If one match is found, the enrolled contact is merged into the matching contact\n* - If more than one match is found, the action fails\n*/\n\nconst DEDUPE_PROPERTY = 'dedupe_email';\nconst emailprop = 'email';\nconst HubSpot = require('@HubSpot/api-client');\n\nexports.main = (event, callback) => {\n// Make sure to add your API key under \"Secrets\" above.\nconst HubSpotClient = new HubSpot.Client({\naccessToken: process.env.DedupePrivateApp\n});\n\nHubSpotClient.crm.contacts.basicApi\n.getById(event.object.objectId, [DEDUPE_PROPERTY])\n.then(contactResult => {\nlet dedupePropValue = contactResult.properties[DEDUPE_PROPERTY];\nlet mainemail = contactResult.properties[emailprop];\n\nconsole.log(`Looking for duplicates based on ${DEDUPE_PROPERTY} = ${dedupePropValue}`);\nHubSpotClient.crm.contacts.searchApi\n.doSearch({\nfilterGroups: [{\nfilters: [{\npropertyName: DEDUPE_PROPERTY,\noperator: 'EQ',\nvalue: dedupePropValue\n}]\n}]\n})\n.then(searchResults => {\nlet idsToMerge = searchResults.results\n.map(object => object.id)\n.filter(vid => Number(vid) !== Number(event.object.objectId));\n\nif (idsToMerge.length == 0) {\nconsole.log('No matching contact, nothing to merge');\nreturn;\n} else if (idsToMerge.length > 1) {\nconsole.log(`Found multiple potential contact IDs ${idsToMerge.join(', ')} to merge`);\nthrow new Error(\"Ambiguous merge; more than one matching contact\");\n}\n\nlet idToMerge = idsToMerge[0];\nconsole.log(`Merging enrolled contact id=${event.object.objectId} into contact id=${idToMerge}`);\nHubSpotClient\n.apiRequest({\nmethod: 'POST',\npath: `/contacts/v1/contact/merge-vids/${idToMerge}`,\nbody: {\nvidToMerge: event.object.objectId\n}\n})\nHubSpotClient.crm.contacts.basicApi.update(event.object.objectId, {\n        \"properties\": {\n            \"email\": mainemail\n        }\n        })\n.then(mergeResult => {\nconsole.log('Contacts merged!');\n});\n});\n});\n};```",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-01-22 20:00:17"
+      },
+      {
+        "time_stamp": "2024-01-22 23:25:32"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kostiantyn",
+      "poster_handle": "kostiantyn.tsvilii"
+    },
+    "time_stamp": "2024-01-19 08:36:00",
+    "text": "Hi everyone:)\nI'm developing a React app for user registration on my main platform. My registration process contains of several steps (i.e. step 1 - user email, step 2 - user first and last name, etc). Now I want to make an integration with HubSpot to collect data of users who completed or did not complete the registration process (for example, abandoned the registration process after entering email) so that my sales team could somehow follow up on them.\nPreviously I did something similar, I had a one-page registration form with all required fields for registration and I used HubSpot forms API for this. But now, I've changed the registration process, and as HubSpot docs say 'When not to use Forms API - To update contact properties' (<https://legacydocs.HubSpot.com/docs/methods/forms/forms_overview>).\nI also tried to use the HubSpot private app. But the issue with them is that whenever I want to update my prospect's data, the access token is required to be passed in headers, so basically anyone can use my token to get a list of my users.\n\nSo I'm considering these two variants but maybe I'm missing something or HubSpot have an alternative solution for me? Any help is greately appreciated!",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-01-22 20:03:14"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Aitor",
+      "poster_handle": "aitor.tomas"
+    },
+    "time_stamp": "2024-01-19 08:54:36",
+    "edited": {
+      "time_stamp": "2024-01-19 09:00:22"
+    },
+    "text": "I am testing the Files API and when using the search endpoint and trying to search by `name` I get a 400 with the following error message:\n``` Name has a limit of 20 characters for searching```\nThe endpoint I am using is:\n```GET - <https://api.hubapi.com/files/v3/files/search>```\nWhy is there that limit? It makes the usage of the search by name totally unreliable.",
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-01-19 09:09:59"
+      },
+      {
+        "time_stamp": "2024-01-19 09:28:54"
+      },
+      {
+        "time_stamp": "2024-01-19 09:29:26"
+      },
+      {
+        "time_stamp": "2024-01-19 11:49:56"
+      },
+      {
+        "time_stamp": "2024-05-27 00:13:59"
+      },
+      {
+        "time_stamp": "2024-05-28 09:32:58"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2024-01-19 09:09:59",
+    "text": "damn, I’ve never run into that. I agree, it’s a pretty weird limitation. But the docs indicate that it’s a “contains” behind the scenes, so maybe truncating  the names when creating the query could still get the job done?"
+  },
+  {
+    "poster": {
+      "poster_name": "Aitor",
+      "poster_handle": "aitor.tomas"
+    },
+    "time_stamp": "2024-01-19 09:28:54",
+    "text": "I tested it, it is not `contains` it is `starts_with` I think"
+  },
+  {
+    "poster": {
+      "poster_name": "Aitor",
+      "poster_handle": "aitor.tomas"
+    },
+    "time_stamp": "2024-01-19 09:29:26",
+    "text": "I am also wondering if there is also that limitation when creating a new file. I will test that."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-01-19 09:37:14",
+    "text": "you have two objects in your call\n\n```_hsq.push([\"identify\",\n    {email: emailValue}\n]);```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-01-19 09:37:28",
+    "text": "see docuemtnation page:\n```var _hsq = window._hsq = window._hsq || [];\n_hsq.push([\"identify\",{\n    email: getParameterByName(\"email\")\n}]);```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-01-19 09:37:31",
+    "text": "<https://developers.HubSpot.com/docs/api/events/tracking-code>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-01-19 09:38:11",
+    "text": "• This function call stores the data in the tracker, but the data is not actually passed to HubSpot with this call. The data will only be passed when tracking a page view or an event (with either the <https://developers.HubSpot.com/docs/api/events/tracking-code#track-page-view|trackPageView> or <https://developers.HubSpot.com/docs/api/events/tracking-code#events-js-api|trackEvent> functions).\nYour first call is only going to identify them. To send the data to HubSpot you need to trackPageView or trackEvent"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-01-19 09:38:49",
+    "text": "I strongly urge you to read the documentation page because all of the answers are there. There is a spot in there that talks about tracking in single page applications as well"
+  },
+  {
+    "poster": {
+      "poster_name": "Khalid Salama",
+      "poster_handle": "khalid.salama"
+    },
+    "time_stamp": "2024-01-19 10:52:26",
+    "text": "Is there is a way to implement HubSpot LiveChat using React Native or Flutter?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-01-19 11:05:36"
+      },
+      {
+        "time_stamp": "2024-01-19 11:06:50"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Edgar Hernandez",
+      "poster_handle": "edgar080"
+    },
+    "time_stamp": "2024-01-19 11:05:36",
+    "text": "You may use conversation API, with some limitations. You can read the Docs to get more info"
+  },
+  {
+    "poster": {
+      "poster_name": "Khalid Salama",
+      "poster_handle": "khalid.salama"
+    },
+    "time_stamp": "2024-01-19 11:06:50",
+    "text": "Well I can't create a thread or a conversation, which makes it impossible to manage new chats"
+  },
+  {
+    "subtype": "tombstone",
+    "text": "This message was deleted.",
+    "time_stamp": "2024-01-19 11:07:11",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-01-21 23:08:46"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2024-01-19 11:49:56",
+    "text": "the same thought crossed my mind regarding the file name restriction. I’d be curious how your tests turn out. Unfortunate if it’s a starts_with instead of contains - I was going off of the language they use in the docs. Doesn’t sound like you have a specific problem you’re trying to figure out, so I won’t throw out any more advice —  appreciate you sharing that find."
+  },
+  {
+    "poster": {
+      "poster_name": "Darya Kutovaya",
+      "poster_handle": "kutovayadarya"
+    },
+    "time_stamp": "2024-01-19 11:58:26",
+    "text": "Hey everyone! It's my first time working with HubSpot and I would appreciate any guidance on this!\nI'm trying to implement a dashboard for onboarding a user and filing forms (HubSpot Form embedded into my React website) that will create properties in my CRM (some are in Contact object some are in Deals and Companies). I created a private app to call in my backend (NodeJS). I need to be to call an individual user based on their email to pull and write data for that user.  I tested this end point in Postman <https://api.hubapi.com/crm/v3/objects/contacts> with a bearer token I got when created a private app. From there I can see collection of different users but with not the same properties that I can see in GUI. I confirmed that I am calling the right database (cross checked some email addresses) however I can't find a way to call on individual user by their email. I found this article that talks about getting a user by ID but it's deprecated (<https://legacydocs.HubSpot.com/docs/methods/contacts/get_contact_by_email>). Could you point me in the right direction or I am going completely wrong about this?",
+    "reply_count": 3,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-01-19 13:38:03"
+      },
+      {
+        "time_stamp": "2024-01-19 15:16:45"
+      },
+      {
+        "time_stamp": "2024-01-19 22:00:16"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin.perolio"
+    },
+    "time_stamp": "2024-01-19 13:23:55",
+    "edited": {
+      "time_stamp": "2024-01-19 13:24:14"
+    },
+    "text": "I'm trying to retrieve all blog posts via Node. There are rate limits though, so we can only request so many at a time. How do I do an offset with `@HubSpot/api-client`'s `HubSpotClient.cms.blogs.blogPosts.blogPostsApi.getPage` so that I can retrieve them all through batches? It has a `limit` parameter, but no `offset`.",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-01-19 13:46:46"
+      },
+      {
+        "time_stamp": "2024-01-19 13:53:59"
+      },
+      {
+        "time_stamp": "2024-01-19 14:19:32"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2024-01-19 13:38:03",
+    "text": "What’s differing between the properties you see in the GUI and in your API response?\n\nIf you’re using the `/crm/v3/objects/contacts/{contactId}` endpoint, there’s a `properties` parameter that you’ll need to use to specify what properties you’d want to retrieve.\n\nTo retrieve a contact via email address, I’d recommend using the `/crm/v3/objects/contacts/search` endpoint rather than a legacy v1 endpoint.\n\nYou can find the schema for both endpoints in the <https://developers.HubSpot.com/docs/api/crm/contacts|documentation for the Contacts API>. Unfortunately, I can’t link you directly to them, because of how the page is structured."
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2024-01-19 13:46:46",
+    "text": "In the documentation for the endpoint, the sample request has an `after` property right before `limit`:\n```const apiResponse = await HubSpotClient.cms.blogs.blogPosts.blogPostsApi.getPage(createdAt, createdAfter, createdBefore, updatedAt, updatedAfter, updatedBefore, sort, after, limit, archived, property);```"
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin.perolio"
+    },
+    "time_stamp": "2024-01-19 13:53:59",
+    "edited": {
+      "time_stamp": "2024-01-19 14:00:47"
+    },
+    "text": "D'oh, thank you, I missed that. :face_palm: I ended up just using the `created` property value of the last retrieved post of each batch, and then using that for the next call's `createdAfter` parameter."
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2024-01-19 14:19:32",
+    "text": "That was actually the solution I was looking into. :) I stumbled across the `after` parameter when I was looking up the response schema."
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2024-01-19 14:21:44",
+    "text": "is the engadgements API down? i'm sending in a basic payload and getting a COMPLETE back but no results; and it was working"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2024-01-19 14:22:24",
+    "text": "```{\n    \"properties\": {\n        \"hs_timestamp\": 1705699048000,\n        \"hs_note_body\": \"Test\"\n    }\n}```\nall i'm sending so its not a weird payload error"
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2024-01-19 15:16:45",
+    "text": "Both options offered above are likely to satisfy your needs. However, in the event you intend to make a lot of these requests, to the point rate limitations need to be considered, POST*`/crm/v3/objects/contacts/batch/read`* will allow you to pass multiple email addresses, while avoiding the stringent rate limits of the search endpoints. Details can be found in the same documentation linked in the previous response."
+  },
+  {
+    "poster": {
+      "poster_name": "Conrad Deas",
+      "poster_handle": "conradd"
+    },
+    "time_stamp": "2024-01-19 16:36:35",
+    "text": "Airtable is moving to personal access tokens and depreciating their API (<https://support.airtable.com/docs/airtable-api-key-deprecation-notice#>)\nShould we still be able to have a direct connection to HubSpot?\n\nIs there a better channel to ask this in?"
+  },
+  {
+    "poster": {
+      "poster_name": "Darya Kutovaya",
+      "poster_handle": "kutovayadarya"
+    },
+    "time_stamp": "2024-01-19 22:00:16",
+    "text": "I was able to use this endpoint <https://api.hubapi.com/contacts/v1/search/query?q={myemail}>\nwhere I input email for a user that I am trying to get all data on. And now trying to update some properties in my Custom Object using this POST end point <https://api.hubapi.com/contacts/v1/contact/createOrUpdate/email/{myemail}>  and this body:\n{\"properties\":\n      [ { \"property\": \"firstname\", \"value\": \"updated\" }],  \"json\": \"true\" }\n}\nand it worked only first name and last name and not other properties, is there are reason why other's won't update at the same time?\nFor reference I have a Custom Object that's called Dashboard and in it there is a default group called Dashboard Information where all other properties are stored."
+  }
+]

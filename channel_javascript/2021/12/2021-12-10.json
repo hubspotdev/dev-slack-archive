@@ -1,0 +1,265 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jason Adams",
+      "poster_handle": "jason475"
+    },
+    "time_stamp": "2021-12-10 07:09:06",
+    "text": "I tried seeing if I could pass it through onFormReady and that doesn't work either, so I think something is just not working with my setup at all? I created the field, made it hidden, added it to the form, added the form to the page, added my javascript to the footer, everything else is working except the event listeners for the form."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2021-12-10 07:56:57",
+    "edited": {
+      "time_stamp": "2021-12-10 07:57:00"
+    },
+    "text": "What happens if you just run the code in your console?\ne.g. load the page open console then run this code\n```$('input[value=\"state\"]').val('IN').change();\nconsole.log($('input[value=\"state\"]').val());```"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2021-12-10 07:57:11",
+    "text": "it should return the IN value"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2021-12-10 08:03:59",
+    "text": "if that works then you can try this\n```window.addEventListener('message', event =&gt; {\n    if(event.data.type === 'hsFormCallback' &amp;&amp; event.data.eventName === 'onFormReady') {\n      console.log('Form has loaded');\n\n      $('input[value=\"state\"]').val('IN').change();\n      console.log($('input[value=\"state\"]').val());\n    }\n});```"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2021-12-10 08:04:44",
+    "edited": {
+      "time_stamp": "2021-12-10 08:05:55"
+    },
+    "text": "Ah I think I see your problem, hidden fields don’t get the values added to them so the selector won’t work I think"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2021-12-10 08:06:26",
+    "text": "it’s better to select the input via the parent which will have a class of hs_property_name"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2021-12-10 08:07:02",
+    "text": "e.g. `$('.hs_property_name input')`"
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Adams",
+      "poster_handle": "jason475"
+    },
+    "time_stamp": "2021-12-10 08:20:19",
+    "text": "&gt; it’s better to select the input via the parent which will have a class of hs_property_name"
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Adams",
+      "poster_handle": "jason475"
+    },
+    "time_stamp": "2021-12-10 08:23:41",
+    "text": "I'm not sure I know how to do this? If I circle back to what I am trying to accomplish, how would I select the specific field I'm trying to update through the parent? I have for example: `$('input[value=\"desired_features\"]').val('Feature 1').change();` , so how would I select that specific field using `$('.hs_property_name input')`? Do all inputs have `.hs_property_name` as their class? If so, how do I select the correct input among a list of hidden fields? Thank you so much for your help!"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2021-12-10 08:31:48",
+    "text": "can you send me a link to what you’re looking at?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Adams",
+      "poster_handle": "jason475"
+    },
+    "time_stamp": "2021-12-10 08:33:47",
+    "text": "<http://20898867.hs-sites.com/contact-us>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2021-12-10 08:37:49",
+    "edited": {
+      "time_stamp": "2021-12-10 08:41:48"
+    },
+    "text": "when I say property name I mean the name of the field property e.g. hs_desired_features\n\n```window.addEventListener('message', event =&gt; {\n  if(event.data.type === 'hsFormCallback' &amp;&amp; event.data.eventName === 'onFormReady') {\n    console.log('Form has loaded');\n    $('.hs_desired_features input').val('Feature 1').change();\n    console.log($('.hs_desired_features input').val());\n  }\n});```"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2021-12-10 08:38:12",
+    "text": "so this will add Feature 1 to the hidden field"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2021-12-10 08:39:20",
+    "text": "If you wanted to write something like what you previosuly had you’ve got the wrong attribute, it should be the name attribute not value\n`$('input[name=\"desired_features\"]')`"
+  },
+  {
+    "text": "You are making my week, I've been so stressed over this \"small\" issue for a week now! Thank you so much. So I'm now able to see it updating in the console log that Feature 1 was updated in the DOM, but when I check the contact record, no property was updated. For some reason, it's not passing the input and overwriting the value in the property for the contact after form submission.",
+    "time_stamp": "2021-12-10 08:50:27"
+  },
+  {
+    "text": "",
+    "time_stamp": "2021-12-10 08:51:47"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2021-12-10 09:27:47",
+    "text": "So I guess the issue is it’s still on form submit and I think this is more for code after the data is submitted\n\nif you’re still using the classToggle function you could just update the fields in there something like this:\n\n```function classToggle() {\n  this.classList.toggle('active');\n  this.classList.toggle('inactive');\n  if (this.className == \"active\") {\n    $('.hs_desired_features input').val('Feature 1').change();\n  } else {\n     $('.hs_desired_features input').val('').change();\n  }\n}\n\ndocument.querySelector('#feature1').addEventListener('click', classToggle);```\nI tend to use jquery more than native javascript so i’m not 100% on the above but I think it should work\n\nYou shouldn’t actually need to use the onFormSubmit or onFormReady events for it, though you could put it all inside onFormReady just to be sure"
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Adams",
+      "poster_handle": "jason475"
+    },
+    "time_stamp": "2021-12-10 09:47:19",
+    "text": "Gotcha. Lemme give that a try! I also imported the jquery library, so I do have access to that (necessary for the $() call)"
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Adams",
+      "poster_handle": "jason475"
+    },
+    "time_stamp": "2021-12-10 10:42:14",
+    "text": "FYI, I implemented what you suggested to fire during the toggleClass function, and it's working! I can't wait until I am able to return the favor to someone else in need after this, you really made it to where I can have a mental break this weekend, thank you so so much. If there is anything I can do to thank you, please let me know."
+  },
+  {
+    "poster": {
+      "poster_name": "Francisca Vargas",
+      "poster_handle": "francisca"
+    },
+    "time_stamp": "2021-12-10 13:31:44",
+    "text": "hey <@U25PYL3Q8> thanks for answering.  I'm not sure to understand, i am using the module field in a custom module.  The only options are rendered in the json file"
+  },
+  {
+    "poster": {
+      "poster_name": "Francisca Vargas",
+      "poster_handle": "francisca"
+    },
+    "time_stamp": "2021-12-10 13:31:52",
+    "edited": {
+      "time_stamp": "2021-12-10 13:32:24"
+    },
+    "text": "like:\n```{\n  \"name\" : \"footer_menu\",\n  \"label\" : \"Footer Menu\",\n  \"required\" : false,\n  \"locked\" : false,\n  \"type\" : \"menu\",\n  \"default\" : 12345678\n},```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Francisca Vargas",
+      "poster_handle": "francisca"
+    },
+    "time_stamp": "2021-12-10 13:33:10",
+    "text": "so how can i disable a flyout here?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2021-12-10 13:33:29",
+    "text": "```{% menu \"my_menu\" id=456, site_map_name='Default', overrideable=False, root_type='site_root', flyouts='true', max_levels='2', flow='horizontal', label='Advanced Menu' %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2021-12-10 13:33:35",
+    "edited": {
+      "time_stamp": "2021-12-10 13:33:40"
+    },
+    "text": "<https://developers.HubSpot.com/docs/cms/building-blocks/menus-and-navigation>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2021-12-10 13:34:14",
+    "text": "that is how you’d modify the template / module to be set up correctly"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2021-12-10 13:35:09",
+    "text": "you’d need to modify your json if you wanted to add those options"
+  },
+  {
+    "poster": {
+      "poster_name": "Francisca Vargas",
+      "poster_handle": "francisca"
+    },
+    "time_stamp": "2021-12-10 13:36:08",
+    "text": "yeah i did write\n```{% menu id=\"{{ module.secondary_footer_group.footer_secondary_menu }}\",  site_map_name='Footer Secondary Menu', overrideable=False, root_type='site_root', flyouts='false', max_levels='1', flow='horizontal', label='Footer Secondary Advanced Menu' %}```\nbut it still overrides"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2021-12-10 13:36:51",
+    "text": "the js still happens?"
+  },
+  {
+    "poster": {
+      "poster_name": "Francisca Vargas",
+      "poster_handle": "francisca"
+    },
+    "time_stamp": "2021-12-10 13:36:58",
+    "text": "yes"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2021-12-10 13:37:07",
+    "text": "can you share a url?"
+  },
+  {
+    "poster": {
+      "poster_name": "Francisca Vargas",
+      "poster_handle": "francisca"
+    },
+    "time_stamp": "2021-12-10 13:38:00",
+    "text": "i'll send a pm right away"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2021-12-10 14:07:01",
+    "text": "glad it worked out"
+  }
+]

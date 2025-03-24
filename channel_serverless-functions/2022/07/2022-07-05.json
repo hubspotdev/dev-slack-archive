@@ -1,0 +1,136 @@
+[
+  {
+    "poster": {
+      "poster_name": "Christian Dow",
+      "poster_handle": "christianrdow"
+    },
+    "time_stamp": "2022-07-05 11:00:03",
+    "text": "Hello, currently when creating a single new deal with the v3 api endpoint I get a '415 unsupported media type' response from the portal.\nWhen I copy the request body &amp; content-type headers from HubSpot into Postman and make the same request, everything works as expected and the deal is created with the appropriate values.\nI've confirmed the portal has the appropriate subscription level, and that all the properties and values are what is expected as well. Any idea or additional information I could look for regarding this api response?",
+    "reply_count": 11,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-07-05 11:01:49"
+      },
+      {
+        "time_stamp": "2022-07-05 11:03:23"
+      },
+      {
+        "time_stamp": "2022-07-05 11:05:12"
+      },
+      {
+        "time_stamp": "2022-07-05 11:06:58"
+      },
+      {
+        "time_stamp": "2022-07-05 11:07:40"
+      },
+      {
+        "time_stamp": "2022-07-05 11:09:03"
+      },
+      {
+        "time_stamp": "2022-07-05 11:11:54"
+      },
+      {
+        "time_stamp": "2022-07-05 11:16:44"
+      },
+      {
+        "time_stamp": "2022-07-05 11:18:02"
+      },
+      {
+        "time_stamp": "2022-07-05 11:40:34"
+      },
+      {
+        "time_stamp": "2022-07-05 11:42:15"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-07-05 11:01:49",
+    "edited": {
+      "time_stamp": "2022-07-05 11:02:31"
+    },
+    "text": "<@U01AHCQ7EJC> Are you using:\n```'headers': {\n    'Content-Type': 'application/json'\n  },```"
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Dow",
+      "poster_handle": "christianrdow"
+    },
+    "time_stamp": "2022-07-05 11:03:23",
+    "edited": {
+      "time_stamp": "2022-07-05 11:05:33"
+    },
+    "text": "<@U01QVR44MEY> I'm currently passing these headers into my request\n```  const headers = {\n    \"Content-Type\": \"application/json\",\n    \"Accept\": \"application/json\" //also tried \"*/*\" here\n  };```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-07-05 11:05:12",
+    "text": "Interesting. Are you using the Request library?"
+  },
+  {
+    "text": "If so you can use the code snippet in Postman to get the NodeJS code for the request",
+    "time_stamp": "2022-07-05 11:06:58"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-07-05 11:07:40",
+    "text": "I would also try to delete the \"Accept\" header"
+  },
+  {
+    "text": "Per the docs:\n\nSo I don't think you want \"Accept\" as a header",
+    "time_stamp": "2022-07-05 11:09:03"
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Dow",
+      "poster_handle": "christianrdow"
+    },
+    "time_stamp": "2022-07-05 11:11:54",
+    "text": "I've just removed and retested but seems like something else occurring unfortunately. This same setup is working in a few other portals without this issue which is why I am a bit confused :sweat_smile:\nI am currently just making the request using the standard axios library.\nThe most interesting part is that both the headers and body of the request work without issue when sent from postman with all the headers and body copied directly from the HubSpot file &amp; logs which return the 415 error"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-07-05 11:16:44",
+    "text": "Here's the axios code that I just tested and can confirm works:\n```var axios = require('axios');\nvar data = JSON.stringify({\n  \"properties\": {\n    \"amount\": \"1500.00\",\n    \"closedate\": \"2019-12-07T16:50:06.678Z\",\n    \"dealname\": \"Custom data integrations\",\n    \"dealstage\": \"presentationscheduled\",\n    \"HubSpot_owner_id\": \"13555148\",\n    \"pipeline\": \"default\"\n  }\n});\n\nvar config = {\n  method: 'post',\n  url: '<https://api.hubapi.com/crm/v3/objects/deals?hapikey=HAPIKEY>',\n  headers: { \n    'Content-Type': 'application/json'\n  },\n  data : data\n};\n\naxios(config)\n.then(function (response) {\n  console.log(JSON.stringify(response.data));\n})\n.catch(function (error) {\n  console.log(error);\n});```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-07-05 11:18:02",
+    "edited": {
+      "time_stamp": "2022-07-05 11:19:45"
+    },
+    "text": "Obviously you need to switch to a proper owner_id and Hapikey or OAuth token"
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Dow",
+      "poster_handle": "christianrdow"
+    },
+    "time_stamp": "2022-07-05 11:40:34",
+    "text": "<@U01QVR44MEY>, thank you for posting that snippet. I pasted it into my file and everything worked as expected (deal created, etc..). I'll compare to my set up and figure out what I've missed"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-07-05 11:42:15",
+    "text": ":thumbsup:"
+  }
+]

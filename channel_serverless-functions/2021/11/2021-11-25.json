@@ -1,0 +1,42 @@
+[
+  {
+    "poster": {
+      "poster_name": "Alessio Michelini",
+      "poster_handle": "amichelini"
+    },
+    "time_stamp": "2021-11-25 03:16:28",
+    "text": "Your problem is that you are calling an HTTPS resource from an HTTP resource, try to just change the address from http to https"
+  },
+  {
+    "poster": {
+      "poster_name": "Arlo Gilbert",
+      "poster_handle": "a"
+    },
+    "time_stamp": "2021-11-25 12:03:22",
+    "text": "We have a fairly simple endpoint that works very well in local development but i'm wondering if the version of the `@HubSpot/api-client`  that lives in the serverless function live environment is different than the version that is available on NPM.\n\nHere is example code that works great in local dev but fails in production (same exact .js file in both environments):\n\n```const apiCall = await HubSpotClient.crm.objects.searchApi.doSearch{filledwithstufff}```\nIn our live serverless function environment, we get error: `ERROR   TypeError: Cannot read property 'searchApi' of undefined`\n\nIf we bundle the HubSpot client within webpack (thereby adding a meg of file size bloat) it works fine, but if we rely on the api-client provided inside of the serverless environment it fails.\n\nPerhaps this is something to do with our webpack config (webpack 5) but man... i'm struggling and debugging the live code is nearly impossible even with logs being watched because the errors are so vague \"undefined\".... any suggestions?",
+    "reply_count": 4,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2021-11-30 09:18:10"
+      },
+      {
+        "time_stamp": "2021-12-01 15:55:16"
+      },
+      {
+        "time_stamp": "2021-12-10 13:55:15"
+      },
+      {
+        "time_stamp": "2021-12-14 01:33:45"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Arlo Gilbert",
+      "poster_handle": "a"
+    },
+    "time_stamp": "2021-11-25 21:06:07",
+    "text": "My resolution....\n\nSo it seems that HubSpot has some serious issues with keeping stable versioning across all the various places you can run custom code.\n\nGiven how kludgy and buggy it is to debug these hosted functions (log file has gotten too big, you are no longer allowed to know why your function failed)\n\nI foolishly assumed that a brand new hosted product would be using a modern version of the client.... nope!\n\n• The current version of the HubSpot node client API is 5.x\n• Automations with custom code are running client `3.1.4`\n• Serverless functions are running client `1.0.0 beta` \nSo my issue is resolved by wrapping custom object searches with `HubSpotClient.apiRequest` as an \"unwrapped endpoint\".\n\nC'mon HubSpot... do better.... or at least make it a huge bold gigantic red popup at the top of these pages warning developers that the company responsible for writing of the client libraries is using anywhere from 2 to 4 *MAJOR* versions behind the NPM published latest non-beta version."
+  }
+]

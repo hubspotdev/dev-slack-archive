@@ -1,0 +1,384 @@
+[
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-07-26 04:54:46",
+    "text": "Hey, we've talked about this before but I unfortunately forgot the solution. I'm trying to pass in HubL retrieved blog posts into a js_partial. I know I need to convert before passing as a prop but I don't remember to what"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-07-26 04:54:58",
+    "text": "`posts|tojson` does not work"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-07-26 05:06:31",
+    "text": "it looks like the previous discussion about this was for GraphQL queries and passing via a data-attribute"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-07-26 05:07:01",
+    "text": "`posts|escapejson` doesn't break but is missing key parts of the objects"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-07-26 05:08:39",
+    "text": "to add a bit more context, I am trying to do this:\n```  {% js_partial\n    path=\"@projects/resource-hub-project/cms-assets/components/partials/PostGrid/index.jsx\",\n    no_wrapper=True,\n    posts={{ all_posts }} %}```\n",
+    "reply_count": 14,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-07-26 07:54:23"
+      },
+      {
+        "time_stamp": "2023-07-26 07:55:29"
+      },
+      {
+        "time_stamp": "2023-07-26 07:55:43"
+      },
+      {
+        "time_stamp": "2023-07-26 07:58:43"
+      },
+      {
+        "time_stamp": "2023-07-26 07:59:25"
+      },
+      {
+        "time_stamp": "2023-07-26 08:00:49"
+      },
+      {
+        "time_stamp": "2023-07-26 08:02:57"
+      },
+      {
+        "time_stamp": "2023-07-26 08:03:10"
+      },
+      {
+        "time_stamp": "2023-07-26 08:03:13"
+      },
+      {
+        "time_stamp": "2023-07-26 08:03:33"
+      },
+      {
+        "time_stamp": "2023-07-26 08:03:40"
+      },
+      {
+        "time_stamp": "2023-07-26 08:04:08"
+      },
+      {
+        "time_stamp": "2023-07-26 08:04:24"
+      },
+      {
+        "time_stamp": "2023-07-26 08:04:34"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-07-26 05:08:50",
+    "text": "and `{{ all posts }}` is rendering to the page"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-07-26 05:09:16",
+    "text": "on the HubL/module side (directly being rendered from outside the partial"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-07-26 05:10:57",
+    "text": "`|escapejs` also partially works...but is missing most of the object"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-07-26 06:26:29",
+    "text": "this essentially works (after decoding and parsing as JSON on the react side):\n```{% set posts = all_posts|tojson %}\n\n  {% js_partial\n    path=\"@projects/resource-hub-project/cms-assets/components/partials/PostGrid/PostGrid.jsx\",\n    no_wrapper=True,\n    posts=\"{{ posts|escape }}\" %}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-07-26 07:40:18",
+    "text": "this isn't a problem right?\n```{% dnd_row %}\n          {% dnd_module\n            path=\"@projects/resource-hub-project/cms-assets/components/modules/OversizedHeadline\" %}\n          {% end_dnd_module %}\n        {% end_dnd_row %}```\nseems to work...didn't realize I was even doing that"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-07-26 07:40:38",
+    "text": "might not be able to pass in props using this approach?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-07-26 07:49:08",
+    "text": "I'm not getting props passed either way. Does that have something to do with the `hublParameters` update?",
+    "reply_count": 10,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-07-26 07:52:05"
+      },
+      {
+        "time_stamp": "2023-07-26 07:52:28"
+      },
+      {
+        "time_stamp": "2023-07-26 07:52:52"
+      },
+      {
+        "time_stamp": "2023-07-26 07:53:11"
+      },
+      {
+        "time_stamp": "2023-07-26 07:53:23"
+      },
+      {
+        "time_stamp": "2023-07-26 07:53:43"
+      },
+      {
+        "time_stamp": "2023-07-26 07:53:55"
+      },
+      {
+        "time_stamp": "2023-07-26 07:54:10"
+      },
+      {
+        "time_stamp": "2023-07-26 07:55:12"
+      },
+      {
+        "time_stamp": "2023-07-26 07:55:27"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-07-26 07:52:05",
+    "text": "```posts={{ all_posts }}```\nfrom above wasn’t working?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-07-26 07:52:28",
+    "edited": {
+      "time_stamp": "2023-07-26 07:52:35"
+    },
+    "text": "`hublParameters` is a JS module-only change, so they should be just available as props in the partial"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-07-26 07:52:52",
+    "text": "sorry, I mixed up 2 different questions"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-07-26 07:53:11",
+    "text": "the issue with this one is I am not getting any passed in props"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-07-26 07:53:23",
+    "text": "ah with the dnd module?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-07-26 07:53:43",
+    "text": "sorry yeah didn’t realize that that was a module now, i’ll move partial comments up"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-07-26 07:53:55",
+    "text": "both with the dnd_module and with just a regular module:\n```  {% module \"explore_spoke\"\n    extra_classes=\"todo-js-module\",\n    path=\"@projects/resource-hub-project/cms-assets/components/modules/ExploreSpoke\",\n    title=\"something\" %}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-07-26 07:54:10",
+    "text": "title doesn't seem to be available (I started copying the boilerplate to see what might be wrong)"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-07-26 07:54:23",
+    "text": "the one thing you might need is `all_posts.objects` in there if this is from hubdb"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-07-26 07:55:12",
+    "text": "in that case it should be at `props.hublParameters.title`, that’s not working?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-07-26 07:55:27",
+    "text": "unless its a field"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-07-26 07:55:29",
+    "text": "it's not from hubdb"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-07-26 07:55:43",
+    "text": "it's a combined array from `recent_posts`"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-07-26 07:58:43",
+    "text": "ah gotcha, specifically `blog_recent_posts`?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-07-26 07:59:25",
+    "text": "yea"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-07-26 08:00:49",
+    "text": "ok so i think you have the right idea here just passing the array directly like you have at the top of this thread - have you logged out what value you’re getting out for `props.posts` with this setup? are you getting just `undefined`?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-07-26 08:02:57",
+    "text": "with the current setup, I essentially have it working (posts returns posts) but I have to do this to convert it:\n```  const decodedPosts = posts.replace(/&amp;quot;/g, '\"');\n  const allPosts = JSON.parse(decodedPosts);```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-07-26 08:03:10",
+    "text": "the JSON parse makes sense to do"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-07-26 08:03:13",
+    "text": "the decoding doesn't seem right"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-07-26 08:03:33",
+    "edited": {
+      "time_stamp": "2023-07-26 08:03:56"
+    },
+    "text": "hmm ok you shouldn’t need to, we should be passing it as a JS array already"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-07-26 08:03:40",
+    "text": "if you remove that i assume then you’re getting a string?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-07-26 08:04:08",
+    "text": "yea, with `quot/whatever` as well"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-07-26 08:04:24",
+    "text": "gotcha - could you DM me a link to the page with this hubl on it?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-07-26 08:04:34",
+    "text": "yea, one sec"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-07-26 08:50:46",
+    "text": "hi jeff - appreciate the feedback on surfacing configuration for storybook. for the immediate need i can look into adding the `postCss` option by default (which would match our regular dev server) to get tailwind working. for more general changes we can explore surfacing options to merge into our own (we have some modifications to make it work in the context of the dev server and support things like islands)"
+  }
+]

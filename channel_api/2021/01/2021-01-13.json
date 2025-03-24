@@ -1,0 +1,89 @@
+[
+  {
+    "poster": {
+      "poster_name": "Josef Hertl",
+      "poster_handle": "josef.hertl"
+    },
+    "time_stamp": "2021-01-13 01:40:40",
+    "text": "hi everyone, in our company we're working a lot with objects from HubSpot, in particular companies and deals - e.g. we use them to check integrity (making sure our commercial people didn't break anything), to keep our platform up-to-date etc. For that we need to fetch all the companies and deals every day. We're currently doing it via API endpoints `/deals/v1/deal/paged` and `companies/v2/companies/paged`. I'm aware that these are now outdated and e.g. for companies there now is `/crm/v3/objects/companies` :HubSpotheart: However, before I migrate our infrastructure onto the new endpoint, I wonder - isn't there a more efficient way to fetch all companies and deals? The one way I know about is manual CSV export, but that's manual, so clearly not useful for our automated solution. Thanks a lot in advance!"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthieu Veillon",
+      "poster_handle": "matthieu.veillon"
+    },
+    "time_stamp": "2021-01-13 05:57:44",
+    "text": "Hi everyone,\n\nWe are using the object API endpoint : `<https://api.hubapi.com/crm/v3/objects/contacts/search>` to retrieve an existing user by email.\n\nWe do that by adding a filterGroup to the payload as such\n\n```filterGroups: [\n    {\n        filters: [\n            {\n                operator: 'EQ',\n                propertyName: 'email',\n                value: email,\n            },\n        ],\n    },\n],```\nthis seems to only work for the primary email. If a user has a second or third (or subsequent) email, it won't be match to the query resulting in a user not found, which leads to a bug as we're trying to create a new user with this existing email.\n\nIs there anyway to include other emails in the filters params that we send along the way to the search endpoint ?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-01-13 13:14:37"
+      },
+      {
+        "time_stamp": "2021-01-14 04:18:15"
+      },
+      {
+        "time_stamp": "2021-01-14 07:08:05"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Joshua Solomon",
+      "poster_handle": "joshua.solomon"
+    },
+    "time_stamp": "2021-01-13 08:00:49",
+    "text": "I am having the same issue reported here and was hoping that someone can assist...\n<https://community.HubSpot.com/t5/APIs-Integrations/Create-Line-Item-error-Property-values-were-not-valid/td-p/361981>\n\nThe customer has hundreds of products that were created by the Ecommerce Bridge and are in use on existing deals etc.  We must continue to use these products.\nEverything works fine with products that were inserted by means other than the Ecommerce Bridge.\n\nWhen adding line items to deals and using an Ecommerce inserted product id using a V1 or V3 API call:\n\n<https://api.hubapi.com/crm/v3/objects/line_items>\n{\n\"properties\": {\n\"hs_product_id\": 16438860,\n\"name\": \"CX22 Ceiling Antenna\",\n\"quantity\": 2,\n\"price\": 449\n}\n\n\nThe api gives this error and none of these validated fields were sent:\n{\n    \"validationResults\": [\n        {\n            \"isValid\": false,\n            \"message\": \"\\\"ip__ecomm_bridge__ecomm_synced\\\" is a read only property; its value cannot be set.\",\n            \"error\": \"READ_ONLY_VALUE\",\n            \"name\": \"ip__ecomm_bridge__ecomm_synced\"\n        },\n        {\n            \"isValid\": false,\n            \"message\": \"\\\"ip__ecomm_bridge__source_app_id\\\" is a read only property; its value cannot be set.\",\n            \"error\": \"READ_ONLY_VALUE\",\n            \"name\": \"ip__ecomm_bridge__source_app_id\"\n        },\n        {\n            \"isValid\": false,\n            \"message\": \"\\\"ip__ecomm_bridge__source_store_id\\\" is a read only property; its value cannot be set.\",\n            \"error\": \"READ_ONLY_VALUE\",\n            \"name\": \"ip__ecomm_bridge__source_store_id\"\n        }\n    ],\n    \"status\": \"error\",\n    \"message\": \"Property values were not valid\",\n    \"correlationId\": \"XXXXXXXX\"\n}"
+  },
+  {
+    "poster": {
+      "poster_name": "Sena McCarthy",
+      "poster_handle": "sena"
+    },
+    "time_stamp": "2021-01-13 09:33:10",
+    "text": "Hi everyone! I am in the process of creating a custom object through the api &amp; I noticed the documentation says that the object fields can't be edited once created but will I be able to add properties through the front end after I create it or do all the properties need to be created through the API? Thanks in advance :slightly_smiling_face:",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-01-13 09:41:48"
+      },
+      {
+        "time_stamp": "2021-01-13 10:01:13"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2021-01-13 09:41:48",
+    "text": "Hey <@UMA5B6XJ6> where do you see that in our docs?  You can create more properties via the API for custom objects using the properties API"
+  },
+  {
+    "poster": {
+      "poster_name": "Sena McCarthy",
+      "poster_handle": "sena"
+    },
+    "time_stamp": "2021-01-13 10:01:13",
+    "text": "Geez, I'm rereading them now and I must have had my wires crossed, my apologies."
+  },
+  {
+    "poster": {
+      "poster_name": "Neal Stansby",
+      "poster_handle": "neal"
+    },
+    "time_stamp": "2021-01-13 13:14:37",
+    "text": "The additional emails are available in `hs_additional_emails`, so you should be able to add a second filterGroup with:\n```{\n   filters: [\n      {\n         operator: 'CONTAINS_TOKEN',\n         propertyName: 'hs_additional_emails',\n         value: email\n      }\n   ]\n}```\nMake sure you put it in a separate filterGroup, not just another filter in the existing group (because you want a logical \"or\" between them)."
+  },
+  {
+    "poster": {
+      "poster_name": "Gal Briner",
+      "poster_handle": "gal.briner"
+    },
+    "time_stamp": "2021-01-14 00:37:41",
+    "text": "Hi All,\nI'm trying to validate webhooks calls from HubSpot with the header <https://legacydocs.HubSpot.com/docs/faq/v2-request-validation|X-HubSpot-Signature>\nBut in case there are query params, the order of the params is unknown (to me), so I need to try with all permutation (which make no sense, in one case I have 6 parameters which are 720 permutation, if I will have 7 we are getting to 5,040, and so forth).\nIs there I way to know the order, is there a logic to it?\nThanks,\nGal"
+  }
+]

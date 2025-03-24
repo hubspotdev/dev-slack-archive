@@ -1,0 +1,170 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jake Brown",
+      "poster_handle": "jake"
+    },
+    "time_stamp": "2020-02-25 02:47:29",
+    "edited": {
+      "time_stamp": "2020-02-25 02:48:14"
+    },
+    "text": "Hey, I am using multi-dimensional array in Hubl to store relevant data I require, more specifically the type of post and actual post.\n\n`{% set all_posts = [] %}` \n\n`{% for item in module.blog_types %}` \n  `{% for post in blog_recent_posts(item, 9999) %}` \n    `{% do all_posts.append([item, post]) %}`\n  `{% endfor %}` \n`{% endfor %}`\n\nHow can I sort based on the post name in all_posts so that when I loop through all_posts it is already sorted by the name of the post",
+    "reply_count": 5,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2020-02-25 08:46:12"
+      },
+      {
+        "time_stamp": "2020-02-25 10:16:53"
+      },
+      {
+        "time_stamp": "2020-02-27 01:41:54"
+      },
+      {
+        "time_stamp": "2020-02-27 02:32:34"
+      },
+      {
+        "time_stamp": "2020-02-27 14:10:18"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-25 08:42:29",
+    "text": "hi <@U22PJPGK0> i saw that you merged your PR to master -- how long does it typically take to get pushed into production?"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-25 08:43:00",
+    "edited": {
+      "time_stamp": "2020-02-25 08:46:53"
+    },
+    "text": "fyi i've created a testing framework for HUBL and have my tests ready to go (when your update hits my last 3 tests should fail depending on the update syntax you support)"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-25 08:43:02",
+    "text": "<http://HubSpot-developers-g7st39-6514425.hs-sites.com/sip-test-page-1>"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2020-02-25 08:46:12",
+    "text": "<@UFNQ623A8> if you actually store the data as a key/value object it makes it really easy to sort. A simplified example would look something like this\n```{% set all_posts = [] %}\n\n{% for content in contents %}\n   {% do all_posts.append({key: content.name, data: content }) %}\n{% endfor %}```\nKey holds the item that you want to sort by and then data still holds all of the content / whatever content you want it to hold. You can use the hubl sort filter to filter it however you need then\n\n`{% for post in all_posts|sort(False,False,'last_name') %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2020-02-25 10:16:53",
+    "text": ":+1:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2020-02-25 11:54:37",
+    "text": "I’ve been testing it and unfortunately it has revealed a lot of side effects. People unknowingly used keys that are the same as variables in scope like “name” that that has changed the output of their pages. I’m working through some of the issues, but this could cause a lot of problems and I’m considering another approach."
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-25 13:59:38",
+    "text": "yeah i was afraid that might happen... is there a possiblity of introducing a new api that would make sure and not break anything?  i.e. `do dict.setValue(k, v)` ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2020-02-25 14:03:22",
+    "text": "yeah, that’s what I’m thinking"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2020-02-25 14:13:41",
+    "text": "So this works already\n```    {% set myMap = {'key1': 'val1'} %}\n    {% set key = \"key1\" %}\n    {% do myMap.put(key, \"val2\") %}\n    {{ myMap }}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-25 14:29:01",
+    "text": "oh really?  i didn't know about put let me try it now"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-25 14:37:41",
+    "text": "that works!"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-25 14:37:42",
+    "text": "<http://HubSpot-developers-g7st39-6514425.hs-sites.com/sip-test-page-1>"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-25 14:37:53",
+    "text": "added new tests...."
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-25 14:38:05",
+    "text": "so has put been there all along or that is something you recently added?"
+  },
+  {
+    "poster": {
+      "poster_name": "Geoffrey Campbell",
+      "poster_handle": "gcampbell"
+    },
+    "time_stamp": "2020-02-25 14:49:48",
+    "text": "Hi -is it possible to use HUBL filters in emails? I'm having trouble even using the example string\n```{{ content.publish_date_local_time|datetimeformat('%B %e, %Y') }} ```\n from the developer documentation <https://designers.HubSpot.com/docs/hubl/syntax>",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2020-03-02 08:40:25"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jesse Crowell",
+      "poster_handle": "jesse003"
+    },
+    "time_stamp": "2020-02-25 17:21:01",
+    "text": "jinja seems to be pretty good actually"
+  }
+]

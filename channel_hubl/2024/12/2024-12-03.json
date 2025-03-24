@@ -1,0 +1,105 @@
+[
+  {
+    "text": "Hi all! Can anyone advise me on the correct syntax for using IF statements with forms when building a module? I'm trying to build a split form layout where a meeting calendar will be shown only if 2 drop down values are selected or display a placeholder image otherwise - here's what I've got, the image is displaying but can't get the calendar to display when the logic conditions are met:",
+    "time_stamp": "2024-12-03 02:10:22",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-12-03 02:53:15"
+      },
+      {
+        "time_stamp": "2024-12-03 02:57:45"
+      },
+      {
+        "time_stamp": "2024-12-03 03:03:51"
+      },
+      {
+        "time_stamp": "2024-12-03 03:18:54"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2024-12-03 02:53:15",
+    "text": "Hubl is a server side language, nothing of what you're trying to do in the template will work, you need to handle these things with JS"
+  },
+  {
+    "text": "OK maybe I've misunderstood but this example in the developer docs uses a choice field in a similar context so not sure why the same approach would not be applicable to a form: <https://developers.HubSpot.com/beta-docs/reference/cms/hubl/if-statements#basic-if-statement-syntax>",
+    "time_stamp": "2024-12-03 02:57:45"
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2024-12-03 03:03:51",
+    "text": "In that example we're talking about a choice field in the HubSpot CMS that controls what's rendered in the template, what you're trying to do is showing certain sections of a page based on user input, when the page is rendered, hubl is gone, logic that you add there only executes when the page is rendered"
+  },
+  {
+    "poster": {
+      "poster_name": "Davide Bernardi",
+      "poster_handle": "davide.bernardi55"
+    },
+    "time_stamp": "2024-12-03 03:18:14",
+    "text": "Thanks, <@UDJV5B73R>, your approach is interesting, having a module that can be used as page settings in this way, there is also more freedom when creating this setting from the editor :bow:\n\nMaybe this can come in handy, I found out that the `content.widgets` variable stores the data only on edit, so it doesn't have the default value. If you want to use the default value of your 'exported' module it is necessary to use the `widget_data` variable instead. I found this article useful :grin: <https://alyssawilie.com/blog/access-HubSpot-custom-modules-externally>"
+  },
+  {
+    "poster": {
+      "poster_name": "Max Shuter",
+      "poster_handle": "max.shuter"
+    },
+    "time_stamp": "2024-12-03 03:18:54",
+    "text": "Ah OK got you, I already started drafting a JS  event listener function but thought it might be doable with HubL so thanks for clarifying."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-12-03 03:22:08",
+    "text": "Ah yeah sorry should have mentioned that,\nI have this where I use it\n\n{%- set page_settings = widget_data.page_settings -%}\n\nI use the module for custom header settings\nE.g. if i have a transparent nav I can change it from dark to light on a page by page basis\n(since my header module is a global module)"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-12-03 03:23:04",
+    "text": "I also use it to add backgrounds to the body tag"
+  },
+  {
+    "poster": {
+      "poster_name": "Collins",
+      "poster_handle": "collincemokaya"
+    },
+    "time_stamp": "2024-12-03 05:00:00",
+    "text": "Hey guys, I am trying to display applicants details on the landing pages in a table format, my code create the table columns but it fails to populate the rows with the applicants information.\nBelow is the code snippet, could check and let me know what I am doing wrong and how to correct it. thanks\n\n{% set show_dynamic_content = 'true' %}\n\n{% if show_dynamic_content %}\n{# module on dynamic listing page #}\n\n{% set rental_app_id = request.query_dict['r_app'] %}\n\n{% set rental_apps = crm_object(\n  'rental_application',\n  \"limit=5&amp;hs_object_id={{ rental_app_id }}\",\n  \"rental_application_name, do_you_intend_to_have_pets_in_future_, pets_to_occupy_property, tenancy_starts, rental_term, date_premises_required, annual_income_amount, of_adults, tenancy_starts, relevant_notes, pets_details, rental_application_identifier, occupants_smokers_, desired_parking_spots, landlord_reference\",\n  true\n  )\n%}\n\n&lt;table class=\"table table-striped\"&gt;\n    &lt;thead&gt;\n        &lt;tr&gt;\n            &lt;th&gt;Applicant&lt;/th&gt;\n            &lt;th&gt;Property Title&lt;/th&gt;\n            &lt;th&gt;Property Link&lt;/th&gt;\n            &lt;th&gt;Property Address&lt;/th&gt;\n            &lt;th&gt;Lease Start Date&lt;/th&gt;\n            &lt;th&gt;Desired Lease Term&lt;/th&gt;\n            &lt;th&gt;Rental Rate&lt;/th&gt;\n            &lt;th&gt;Applicant's Income&lt;/th&gt;\n            &lt;th&gt;Applicant Requests&lt;/th&gt;\n            &lt;th&gt;Parking Required&lt;/th&gt;\n            &lt;th&gt;Number of Occupants&lt;/th&gt;\n            &lt;th&gt;Applicant(s) Employment&lt;/th&gt;\n            &lt;th&gt;Employment Start Date&lt;/th&gt;\n            &lt;th&gt;Do you intend to have pets in future?&lt;/th&gt;\n            &lt;th&gt;Pets to Occupy Property&lt;/th&gt;\n            &lt;th&gt;Landlord Reference Check&lt;/th&gt;\n            &lt;th&gt;Smoking&lt;/th&gt;\n        &lt;/tr&gt;\n    &lt;/thead&gt;\n    &lt;tbody&gt;\n        {% set rental_app = rental_apps %}\n        {% for rental_app in rental_apps.results %}\n            {% set associated_contacts = crm_associations(\n              rental_app_id,\n              \"USER_DEFINED\",\n              31,\n              \"limit=1\",\n              \"date_of_hire, annual_income_amount, occupation, previous_landlord_reference, other__tenant_smoke___previous_landlord__\",\n              true\n            ) %}\n\n            {% set associated_properties = crm_associations(\n              rental_app_id,\n              \"USER_DEFINED\",\n              34,\n              \"limit=3\",\n              \"property_title, dynamic_page_slug, street_address, city, postal_code, monthly_rate, tenancy_starts, parking_type, professional_cleaning_arrange, property_identifier, desired_parking_spots\",\n              true\n            ) %}\n\n            {% set property = associated_properties.results[0] %}\n            {% set contact = associated_contacts.results[0] %}\n\n            &lt;tr&gt;\n                &lt;td&gt;{{ rental_app.rental_application_name }}&lt;/td&gt;\n                &lt;td&gt;{{ property.property_title }}&lt;/td&gt;\n                &lt;td&gt;&lt;a href=\"/property-view/{{ property.dynamic_page_slug }}\"&gt;Click Here&lt;/a&gt;&lt;/td&gt;\n                &lt;td&gt;{{ property.street_address }}, {{ property.city }}&lt;/td&gt;\n                &lt;td&gt;{{ rental_app.date_premises_required }}&lt;/td&gt;\n                &lt;td&gt;{{ rental_app.rental_term }}&lt;/td&gt;\n                &lt;td&gt;{{ property.monthly_rate }}&lt;/td&gt;\n                &lt;td&gt;{{ rental_app.annual_income_amount }}&lt;/td&gt;\n                &lt;td&gt;{{ rental_app.relevant_notes }}&lt;/td&gt;\n                &lt;td&gt;{{ rental_app.desired_parking_spots[0] }}&lt;/td&gt;\n                &lt;td&gt;{{ rental_app.of_adults }}&lt;/td&gt;\n                &lt;td&gt;{{ contact.occupation }}&lt;/td&gt;\n                &lt;td&gt;{{ contact.date_of_hire }}&lt;/td&gt;\n                &lt;td&gt;{{ rental_app.do_you_intend_to_have_pets_in_future_ }}&lt;/td&gt;\n                &lt;td&gt;{{ rental_app.pets_to_occupy_property }}&lt;/td&gt;\n                &lt;td&gt;{{ rental_app.landlord_reference }}&lt;/td&gt;\n                &lt;td&gt;{{ rental_app.occupants_smokers_ }}&lt;/td&gt;\n            &lt;/tr&gt;\n        {% endfor %}\n    &lt;/tbody&gt;\n&lt;/table&gt;"
+  },
+  {
+    "poster": {
+      "poster_name": "Byren Atkinson",
+      "poster_handle": "byren262"
+    },
+    "time_stamp": "2024-12-03 05:33:49",
+    "text": "Hi Guys, I am creating a page that will show case study listings, this all seems to be working using the HubDB, but is there a way I can set the template on the individual listing to use a different template? So that both my listing and individual pages use different templates :slightly_smiling_face:",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-12-03 08:02:04"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Miteshkumar Padariya",
+      "poster_handle": "mitesh"
+    },
+    "time_stamp": "2024-12-03 08:02:04",
+    "text": "Use listing and individual content using conditional logic: <https://developers.HubSpot.com/beta-docs/reference/cms/hubl/variables#hubdb-variables|https://developers.HubSpot.com/beta-docs/reference/cms/hubl/variables#hubdb-variables>"
+  }
+]

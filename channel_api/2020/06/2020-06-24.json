@@ -1,0 +1,117 @@
+[
+  {
+    "poster": {
+      "poster_name": "John Kelleher",
+      "poster_handle": "john785"
+    },
+    "time_stamp": "2020-06-24 02:41:17",
+    "text": "We're trying to confirm if it's possible to associate a Transactional Email with the HubSpot Campaigns tool via the API. Has anyone tried this before?"
+  },
+  {
+    "poster": {
+      "poster_name": "Taylor C",
+      "poster_handle": "taylorfclark"
+    },
+    "time_stamp": "2020-06-24 07:23:23",
+    "text": "Needing some help here if anyone has a moment. We are trying to handle updates to our customers' HubSpot contacts for contact syncing.\n\n_The webhooks functionality is extremely limiting_ in that 1) we can't subscribe to a general update - we must subscribe to a list of fields and receive an event for any time one of those fields is changed - so if a contact is PATCHed to update 5 fields we get 5 events. 2) We can't possibly support this at scale with every custom field our customers have not only because of the multiple events issue but because we would quickly hit the 1000 subscription limit.\n_The polling functionality has indexing bugs_ using both *Get recently modified contacts* or using the new *V3 Search API.* Contacts are added to these results retroactively so you essentially have to process all updates twice as using the `lastmodifiedtime` as a cursor is not enough once a contact is added to the middle of the list 'late' (<https://community.HubSpot.com/t5/APIs-Integrations/Get-recently-modified-or-created-contacts-bug-Indexing-delay/m-p/349525|forum post I created>). I've seen suggestions to 'store which ones you have already processed' but this also does not scale and is not a realistic approach as you will quickly be tracking hundreds of thousands or even millions of contacts for a set of customer accounts. Additionally, I've seen that this API isn't meant to be used frequently however the indexing issue still exists even if you only polled it a few times a day.\n\nWhat is HubSpot's suggestion for dealing with this? It seems if events webhooks could just be sent for any update (whether a contact had 5 fields updated or 1 send a single webhook event) or if the polling and search APIs did not add data retroactively that this would all be very easy to solve for.",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2020-06-25 00:38:25"
+      },
+      {
+        "time_stamp": "2020-06-25 00:39:01"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Mike Rizzo (MarketingOps.com)",
+      "poster_handle": "mikedrizzo"
+    },
+    "time_stamp": "2020-06-24 10:26:13",
+    "text": "Hey all - does HubSpot's forms API not have the ability to dynamically create hidden fields?"
+  },
+  {
+    "poster": {
+      "poster_name": "mmcdaris",
+      "poster_handle": "morgan"
+    },
+    "time_stamp": "2020-06-24 12:20:54",
+    "text": "The API FAQ mentions a limit on customer merges of 250, is there a limit for company merges?\nAlso does this limit apply to merges through the UI as well?\n&gt;  HubSpot has a few limits in place regarding merged contact records and form submissions for contact records:\n&gt; There's a limit of 250 linked identities per contact.\n&gt; If you try to merge two contacts, and the resulting contact would have more than 250 identities, you will get an error."
+  },
+  {
+    "poster": {
+      "poster_name": "mmcdaris",
+      "poster_handle": "morgan"
+    },
+    "time_stamp": "2020-06-24 12:21:16",
+    "edited": {
+      "time_stamp": "2020-06-24 12:21:38"
+    },
+    "text": "Also what is an identity here? Does that mean unique email address?"
+  },
+  {
+    "poster": {
+      "poster_name": "mmcdaris",
+      "poster_handle": "morgan"
+    },
+    "time_stamp": "2020-06-24 19:49:07",
+    "text": ":bug:Bug report: using `\\n`  or `\\\\n` does not trigger a line break in a company timeline event's details section.",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-06-25 00:33:41"
+      },
+      {
+        "time_stamp": "2020-06-25 00:40:33"
+      },
+      {
+        "time_stamp": "2020-06-25 22:02:45"
+      },
+      {
+        "time_stamp": "2020-06-26 08:55:31"
+      },
+      {
+        "time_stamp": "2020-06-26 08:55:51"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-06-25 00:33:41",
+    "text": "Not a bug. Use HTML. `&lt;p&gt;`"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-06-25 00:38:25",
+    "text": "What happens if you register the webhook to listen to the `lastmodifieddate` property only? Perhaps that will catch any change to any property while only monitoring one property?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-06-25 00:39:01",
+    "text": "In general though, I think the platform is not really designed at the current moment for doing the thing you are trying to do the way you are trying to do it at a tera-scale level."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-06-25 00:40:33",
+    "edited": {
+      "time_stamp": "2020-06-25 01:54:19"
+    },
+    "text": "If you have a look at some notes you enter in the Rich Editor, using the browser dev tools when they are pulled back to the client side, you can see the subset of HTML which is supported... some obvious tags do not work in the input validator code, or work in the validator code but do not work in the client side DOM for whatever hairy UI dev reason... I needed to do some sneaky stuff to get a large bright red block of text for a warning message."
+  }
+]

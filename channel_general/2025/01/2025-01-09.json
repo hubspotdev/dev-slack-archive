@@ -1,0 +1,92 @@
+[
+  {
+    "text": "Hi , Can any help me In HubSpot quotes how to enable product bundle option?",
+    "time_stamp": "2025-01-09 03:17:58"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Tse",
+      "poster_handle": "rtse"
+    },
+    "time_stamp": "2025-01-09 10:46:46",
+    "text": "Hi everyone!\n\nI'm trying to create a data format step in a workflow that formats a phone number with a custom formula. I'm using this formula:\n\nright(cut(cut(cut(cut(cut(trim([enrolled_<http://object.phone/|object.phone>]), \"(\") \")\"), \"*\"), \"#\"), \"+\"), 12)\n\nI'm getting this issue:\n\n1. There was a problem with your formula. We were expecting a valid function or value expression but found `\"` instead.\nIt looks like I have to escape the \"(\" and \")\" but I can't seem to do it, is there a way to do this?",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-01-09 11:34:20"
+      },
+      {
+        "time_stamp": "2025-01-09 11:46:55"
+      },
+      {
+        "time_stamp": "2025-01-09 11:48:53"
+      },
+      {
+        "time_stamp": "2025-01-09 11:49:30"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2025-01-09 11:34:20",
+    "text": "I don't know if this will work, but I would try escaping each quote with a backslash - i.e. \\\""
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2025-01-09 11:46:55",
+    "text": "I re-entered the formula and it worked, thanks everyone."
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2025-01-09 11:48:53",
+    "text": "I haven't tried using this method in a workflow yet - but I love it"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2025-01-09 11:49:30",
+    "text": "I also wish you could add a regular expression as another option"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2025-01-09 14:58:34",
+    "text": "*Hey friends, HubSpotter here looking for some feedback*\nAre you using Projects for any site themes? and what makes you less likely to choose to build a theme in a project?"
+  },
+  {
+    "text": "Hi, I have an urgent issue. I want to send contacts from Zapier to HubSpot trough Webhooks.\nI created the Private app, added all CRM permissions and created the Webhook step in Zapier. The test is successful and the contacts are getting created in HubSpot but without the email. Also the API calls in HubSpot are successful but the contacts are getting created without any emails. How can I solve this?",
+    "time_stamp": "2025-01-09 18:21:19"
+  },
+  {
+    "text": "Hi everyone! Can anyone help me with the “Custom Code” in HubSpot? We are connecting HubSpot to our event platform using the workflow and custom code. I got the code from an external source and it has always worked fine. But now HubSpot says that the language “NODE16X” is outdated and I have to select “Pyton 3.9”. Can I use the same code or does it need to be adapted? Thanks in advance!!! :slightly_smiling_face:  This is the code: // For instructions on how to use this snippet, contact:\n\n\n// Where to make the request\n\nconst endpoint = \"<https://virtualevents.movingimage.com/api/allowGuestInEvent>\";\n\n// The authorization Bearer\n\nconst bearer = process.env.Bearer;\n\nconsole.log(\"bearer: \"+process.env.Bearer);\n\n// Id of the event on which the guest will be added. This field is required.\n\nvar sessionId = \"itok27012025\";\n\n// First name of the guest.\n\nvar firstname = \"\";\n\n// Last name of the guest.\n\nvar lastname = \"\";\n\n// Email of the guest. This field is required and can't be duplicated with other guests.\n\nvar email = \"\";\n\n// List of roles separated by ; Possible values for the roles HOST and SPEAKER.\n\n//const roles = \"HOST\";\n\nconst roles = \"\";\n\n// List of tags separated by ; Each tag can have any custom value.\n\nconst tags = \"\";\n\n/*\n\nCan be one of the following values: REGISTERED or ALLOWED. By default it is ALLOWED, meaning the guest will be automatically allowed into the event. If you set it to REGISTERED, the user is not allowed automatically in the event. If parameter is not present, the guest will be automatically allowed in the event.\n\n*/\n\nconst status = \"ALLOWED\";\n\n//const status = \"REGISTERED\";\n\n/*\n\ntrue or false. In case of being true, the registration email will be triggered if the status value is REGISTERED and in case it is ALLOWED, the guest invite email will be triggered instead. If false no emails will be sent from the platform.\n\n*/\n\n//const triggerEmail = \"true\";\n\nconst triggerEmail = true;\n\nconst config = {\n\n    headers: { Authorization: `Bearer ${bearer}` }\n\n};\n\n// Import Axios library for easier HTTP request making\n\nconst axios = require('axios')\n\nexports.main = async (event, callback) =&gt; {\n\n  // Enable below to override hard coded values and use the values from the form instead\n\n  // sessionId = event.inputFields['sessionId'];\n\n  console.log(\"firstname: \"+event.inputFields['firstname']);\n\n  firstname = event.inputFields['firstname'];\n\n  console.log(\"lastname: \"+event.inputFields['lastname']);\n\n  lastname = event.inputFields['lastname'];\n\n  console.log(\"email: \"+event.inputFields['email']);\n\n  email = event.inputFields['email'];\n\nconst bodyParameters = {\n\n  sessionId: `${sessionId}`,\n\n  firstName: `${firstname}`,\n\n  lastName: `${lastname}`,\n\n  email: `${email}`,\n\n  roles: `${roles}`,\n\n  tags: `${tags}`,\n\n  status: `${status}`,\n\n  triggerEmail: triggerEmail,\n\nguestInvitedTemplateId: \"Z2vLz5N4mA\"\n\n};\n\n  axios\n\n    .post(endpoint,\n\n         bodyParameters,\n\n         config\n\n    ).then(response =&gt; {\n\n      // For the time being, display the query result. Note that the server returns a 406 (not acceptable) is the user already exists.\n\n      console.log(response.data);\n\n      // Use this to eventually return values from this script and use them in the workflow next steps\n\n      callback({\n\n        outputFields: {\n\n          /* A typical response.data looks like this below\n\n             2022-02-01T16:07:39.310Z   INFO    {\n\n                                                    result: 'ok',\n\n                                                    accessLink: '<https://virtualevents.movingimage.com/v/demo_event_october_sales/a/9bdc6729adf38955871940141c87623f/1kz4be0if>'\n\n                                                }\n\n          */\n\n          accessLink: response.data.accessLink // Return the unique access link to the event for the added guest\n\n        }\n\n      })\n\n    });\n\n}",
+    "time_stamp": "2025-01-10 00:40:58"
+  },
+  {
+    "text": "Hello,\n\nI have a website put each page has a language set so <http://domain.com/en/|domain.com/en/>\n\nWhen the primary language is set to English so i just want it to be <http://domain.com|domain.com>\n\nnow when I copy the page the language isn't set so the domain = <http://domain.com|domain.com>\n\nis it possible to remove the page language?",
+    "time_stamp": "2025-01-10 00:47:20",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-01-10 05:25:01"
+      },
+      {
+        "time_stamp": "2025-01-10 05:47:36"
+      },
+      {
+        "time_stamp": "2025-01-10 05:48:03"
+      }
+    ]
+  }
+]

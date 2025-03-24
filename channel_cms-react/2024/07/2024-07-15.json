@@ -1,0 +1,146 @@
+[
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2024-07-15 01:37:05",
+    "text": "FINALLY YESSSS"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-07-15 08:22:50",
+    "text": "In the getting-started example, the path to components/modules needs to be updated to include the `app` folder\n```@projects/getting-started-project/getting-started-app/components/modules/Weather```\n`getting-started-app` is missing"
+  },
+  {
+    "poster": {
+      "poster_name": "Dennis K",
+      "poster_handle": "dennis579"
+    },
+    "time_stamp": "2024-07-15 08:35:05",
+    "text": "View questions for the dev team:\n\n• Will there be a VideoComponent in the near future? I have no idea how to implement a VideoField and display this video in a React Module\n• Are there any fixes for using cms-components within Islands elements which are visible on button click? We have a form which is inside a collapsible element, but it does not render the form. \nAsking this since we need to go live for a client the end of next week"
+  },
+  {
+    "text": "You can definitely have correct types on an import using `?island`. But you’ll have to create a `d.ts` file for each module you want to import as an island. In the example I’ll lay out below, I have a `FilterByTag.tsx` module that I’d like to be dynamic, so that is the one I’ll import elsewhere using the `?island` import syntax.\n\nRight next to `FilterByTag.tsx`, create a `.d.ts` file matching the import statement you are going to make.",
+    "subtype": "thread_broadcast",
+    "time_stamp": "2024-07-15 09:08:50"
+  },
+  {
+    "text": "Inside that file type file, reference the sibling and do a default export using LazyModule. (HS types are wrong right now, so you can’t use LazyIslandModule, which would be _slightly_ simpler)",
+    "time_stamp": "2024-07-15 09:10:15"
+  },
+  {
+    "text": "Now your import is perfectly typed! See it being used here:",
+    "time_stamp": "2024-07-15 09:10:51"
+  },
+  {
+    "poster": {
+      "poster_name": "Don Denton",
+      "poster_handle": "don.denton"
+    },
+    "time_stamp": "2024-07-15 09:12:06",
+    "text": "The only problem now is that `Island` does not throw a type error when you do not provide the necessary props that the Lazy Island expects. So that is still on you. I would assume that some day, the `Island` component  would throw type errors when something like that happens."
+  },
+  {
+    "poster": {
+      "poster_name": "Don Denton",
+      "poster_handle": "don.denton"
+    },
+    "time_stamp": "2024-07-15 09:12:53",
+    "text": "All of this could be relatively easily accomplished with some code generation, similar to what the HS CLI is already doing for FieldTypes."
+  },
+  {
+    "text": "If you don’t need perfectly-typed imports, you could instead use a global that will at least force you to use your imported component in an Island. Similar to how image imports are handled in a lot of projects, you could do this in any `.d.ts` file that will be read by `typescript`. (Meaning it is “included”) I’ve kept a few other global declarations in here since they might be familiar to you.",
+    "time_stamp": "2024-07-15 09:17:07"
+  },
+  {
+    "poster": {
+      "poster_name": "Don Denton",
+      "poster_handle": "don.denton"
+    },
+    "time_stamp": "2024-07-15 09:24:09",
+    "text": "If the TypedIsland idea from above works, then the imports using some code gen should close the loop on the whole thing."
+  },
+  {
+    "poster": {
+      "poster_name": "Josh GH",
+      "poster_handle": "joshgh"
+    },
+    "time_stamp": "2024-07-15 09:26:20",
+    "text": "Oooh, nice! Major congrats on figuring that out Don! I’m still hoping for the type generation to reduce maintenance and overhead for our team, but I’ll play with this locally."
+  },
+  {
+    "poster": {
+      "poster_name": "Don Denton",
+      "poster_handle": "don.denton"
+    },
+    "time_stamp": "2024-07-15 09:42:11",
+    "text": "For any HS developers working on the CLI, if you do indeed add some code generation here, It’d be pretty nice if the files were only added whenever something was actually imported as an island, and if old declaration files were removed if that import went away."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-07-15 10:53:05",
+    "text": "Thanks for figuring this out <@U07A0FAALSY>. I’m trying to get up to speed with typescript and this being an unknown was frustrating"
+  },
+  {
+    "poster": {
+      "poster_name": "Don Denton",
+      "poster_handle": "don.denton"
+    },
+    "time_stamp": "2024-07-15 10:58:18",
+    "text": "It’s definitely not beginner TS stuff. It’s also the kind of thing that is often set up for you via some meta framework. Ultimately, I would bet that this kind of thing makes it into either the docs or into the example repo, after the HS team has a chance to catch their breath."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-07-15 11:02:49",
+    "text": "For sure, I’m hoping for at least the type generation version of this. "
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-07-15 12:17:11",
+    "text": "yea, thanks for taking a look, I'll DM you now"
+  },
+  {
+    "text": "We developed our site redesign using the content staging feature. We've launched and will now be doing future development via a sandbox. I went ahead and cloned a representative sample of pages, blogs, and blog posts from production to the sandbox using the API. However, none of the modules are working, it looks like they have different IDs in the sandbox than those we've given them in our source code, and it looks like the same is true of their usage in production.\n\nAt the moment I'm feeling like there's no way to have these in sync other than to manually build up the mapping of modules from production to the sandbox and replace those references before creating the content via the API. :thinking_face: Shouldn't the IDs be those we've provided and be consistent across environments and usages?",
+    "time_stamp": "2024-07-15 13:13:42",
+    "edited": {
+      "time_stamp": "2024-07-15 13:14:35"
+    },
+    "reply_count": 4,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-07-15 13:41:23"
+      },
+      {
+        "time_stamp": "2024-09-10 14:50:21"
+      },
+      {
+        "time_stamp": "2024-09-16 08:33:03"
+      },
+      {
+        "time_stamp": "2024-09-16 10:40:11"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Hominick",
+      "poster_handle": "never.go.hollow.trill"
+    },
+    "time_stamp": "2024-07-15 13:41:23",
+    "text": "Hmmm, no, that'd not work, the IDs seem to be unique per instance and those get mapped somehow under the hood."
+  }
+]

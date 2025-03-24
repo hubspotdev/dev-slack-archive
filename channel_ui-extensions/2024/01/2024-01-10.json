@@ -1,0 +1,152 @@
+[
+  {
+    "poster": {
+      "poster_name": "prasad",
+      "poster_handle": "prasad.nandamuri"
+    },
+    "time_stamp": "2024-01-10 03:14:37",
+    "edited": {
+      "time_stamp": "2024-01-10 03:16:33"
+    },
+    "text": "Hi <@U03FJQPSC0Y>,  <flex gap=\"flush\"> tag is working to remove space between text components. earlier I used  in that time I used _*<flex gap=\"flush\"><Tile>{seasonsList}</Tile></flex>*_ but it's not working.  Now Today I used this pattern it's working perfectly and removed the space  _*<Tile><flex gap=\"flush\">*_\n_*{seasonsList}</flex></Tile>.* Thanks Sejal for your valuable guidance._"
+  },
+  {
+    "poster": {
+      "poster_name": "Sejal Parikh (HubSpot PM)",
+      "poster_handle": "sparikh"
+    },
+    "time_stamp": "2024-01-10 11:37:37",
+    "edited": {
+      "time_stamp": "2024-01-10 11:37:57"
+    },
+    "text": "Hi all, this should now be resolved. Thank you for your patience, and let us know if you are still facing any problems."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Jordan",
+      "poster_handle": "matthew.jordan"
+    },
+    "time_stamp": "2024-01-10 12:39:46",
+    "text": "I've hit a snag. I have a custom CRM Card setup, I am loading an iFrame on button click to a uri and want to pass along with it some simple object (crm object) properties (deals, dealname sepcifically) but when I am using the fetchCrmObjectProperties it just crashes the card.",
+    "reply_count": 16,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-01-10 12:40:20"
+      },
+      {
+        "time_stamp": "2024-01-10 12:41:55"
+      },
+      {
+        "time_stamp": "2024-01-10 12:43:11"
+      },
+      {
+        "time_stamp": "2024-01-10 12:44:37"
+      },
+      {
+        "time_stamp": "2024-01-10 12:45:42"
+      },
+      {
+        "time_stamp": "2024-01-10 12:46:09"
+      },
+      {
+        "time_stamp": "2024-01-10 12:57:40"
+      },
+      {
+        "time_stamp": "2024-01-10 14:06:49"
+      },
+      {
+        "time_stamp": "2024-01-10 14:41:48"
+      },
+      {
+        "time_stamp": "2024-01-11 10:10:11"
+      },
+      {
+        "time_stamp": "2024-01-12 10:32:00"
+      },
+      {
+        "time_stamp": "2024-01-12 10:32:43"
+      },
+      {
+        "time_stamp": "2024-01-12 10:32:52"
+      },
+      {
+        "time_stamp": "2024-01-12 10:33:17"
+      },
+      {
+        "time_stamp": "2024-01-12 10:33:30"
+      },
+      {
+        "time_stamp": "2024-01-12 10:33:46"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Jordan",
+      "poster_handle": "matthew.jordan"
+    },
+    "time_stamp": "2024-01-10 12:40:20",
+    "text": "Oddly enough I found that the function useEffect is the main culprit."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Jordan",
+      "poster_handle": "matthew.jordan"
+    },
+    "time_stamp": "2024-01-10 12:41:55",
+    "text": "`import React, { useState } from 'react';`\n`import { Link, Button, Text, Box, Flex, HubSpot } from \"@HubSpot/ui-extensions\";`\n\n`HubSpot.extend(({ actions }) =&gt; (`\n  `&lt;Extension` \n    `openIframe={actions.openIframeModal}` \n    `fetchProperties={actions.fetchCrmObjectProperties}`\n  `/&gt;`\n`));`\n\n`const Extension = ({ openIframe, fetchProperties }) =&gt; {`\n  `const [dealName, setDealName] = useState(\"\");`\n  `const handleClick = () =&gt; {`\n    `openIframe({`\n      `uri: \"OMITTED\",`\n      `height: '100%',`\n      `width: '100%',`\n    `});`\n  `};`\n\n  `useEffect(() =&gt; {`\n      `fetchProperties([\"dealname\"])`\n        `.then(properties =&gt; {`\n          `setDealName(properties.dealname);`\n      `});`\n  `}, [fetchProperties]);`\n\n  `return (`\n    `&lt;&gt;`\n      `&lt;Flex direction=\"column\" align=\"start\" gap=\"medium\"&gt;&lt;Box&gt;&lt;Button type=\"submit\" onClick={handleClick}&gt;Click me&lt;/Button&gt;&lt;/Box&gt;&lt;/Flex&gt;`\n    `&lt;/&gt;`\n  `);`\n`};`"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Jordan",
+      "poster_handle": "matthew.jordan"
+    },
+    "time_stamp": "2024-01-10 12:43:11",
+    "text": "This custom card is being loaded under deals and the object type is included in the package.json"
+  },
+  {
+    "text": "When I run it the (Chrome) console reads..",
+    "time_stamp": "2024-01-10 12:44:37"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Jordan",
+      "poster_handle": "matthew.jordan"
+    },
+    "time_stamp": "2024-01-10 12:45:42",
+    "text": "The ReferenceError to userEffect in worker.js is the one seems that is causing errors."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Jordan",
+      "poster_handle": "matthew.jordan"
+    },
+    "time_stamp": "2024-01-10 12:46:09",
+    "text": "If I comment out and do not call userEffect then the card loads, button loads the iFrame."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Jordan",
+      "poster_handle": "matthew.jordan"
+    },
+    "time_stamp": "2024-01-10 12:57:40",
+    "text": "I feel like I am missing something simple and might have to come back to this tomorrow."
+  },
+  {
+    "poster": {
+      "poster_name": "Seth Kaplan",
+      "poster_handle": "skaplan"
+    },
+    "time_stamp": "2024-01-10 14:06:49",
+    "text": "you've gotta import `useEffect` from `react`"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Jordan",
+      "poster_handle": "matthew.jordan"
+    },
+    "time_stamp": "2024-01-10 14:41:48",
+    "text": "lol, it can't be that easy... I thought useEffect was included in the package to be honest."
+  }
+]

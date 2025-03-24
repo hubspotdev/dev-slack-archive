@@ -1,0 +1,77 @@
+[
+  {
+    "poster": {
+      "poster_name": "Hollyce Brammer",
+      "poster_handle": "hollyce"
+    },
+    "time_stamp": "2023-07-11 12:42:43",
+    "text": "<@U01QVR44MEY> Close but not quite! Here is what a test spit out:\n\n```2023-07-11T18:42:10.716Z\tINFO\tDeal ID is 13164761268\n2023-07-11T18:42:11.409Z\tINFO\t# of RESULTS: 2\n2023-07-11T18:42:11.409Z\tINFO\tRESULTS [{\"toObjectId\":12985709,\"associationTypes\":[{\"category\":\"HubSpot_DEFINED\",\"typeId\":3,\"label\":null},{\"category\":\"USER_DEFINED\",\"typeId\":102,\"label\":\"Agent\"}]},{\"toObjectId\":31054203,\"associationTypes\":[{\"category\":\"HubSpot_DEFINED\",\"typeId\":3,\"label\":null},{\"category\":\"USER_DEFINED\",\"typeId\":100,\"label\":\"Policyholder\"}]}]\n2023-07-11T18:42:11.447Z\tINFO\tAgent Contact ID1 not found\n\nMemory: 74/128 MB\nRuntime: 734.03 ms```"
+  },
+  {
+    "poster": {
+      "poster_name": "Hollyce Brammer",
+      "poster_handle": "hollyce"
+    },
+    "time_stamp": "2023-07-11 12:44:08",
+    "text": "I tried altering *\"ContactID1 = result.id;\"* to *\"ContactID1 = result.toObjectId;\"* and still got \"_Agent Contact ID1 not found.\"_"
+  },
+  {
+    "poster": {
+      "poster_name": "Hollyce Brammer",
+      "poster_handle": "hollyce"
+    },
+    "time_stamp": "2023-07-11 12:44:21",
+    "text": "Is there a different notation for accessing the parent node?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-11 13:21:49",
+    "edited": {
+      "time_stamp": "2023-07-11 13:21:56"
+    },
+    "text": "Looks like Agent is capitalized:\n\nhere's the code to match\n\n```axios.get(`<https://api.hubapi.com/crm/v4/objects/deal/${DealID}/associations/contacts>`, {\n  headers: { \n    'Authorization': `Bearer ${HubSpot_TOKEN}`\n  }\n}).then(response =&gt; {\n  // Get data from the results and store in variables\n  console.log(\"# of RESULTS: \" + response.data.results.length); \n\n  console.log(\"RESULTS \" + JSON.stringify(response.data.results));\n  let ContactID1;\n\n  response.data.results.forEach(result =&gt; {\n    if(result.associationTypes) {\n      result.associationTypes.forEach((associationType) =&gt; {\n        if(associationType.label === 'Agent') {\n          ContactID1 = result.toObjectId;\n        }\n      }\n    }\n  });\n  \n  if(ContactID1) {\n    console.log('Agent Contact ID1: ', ContactID1);\n    callback({outputFields: {ContactID1}});\n  } else {\n    console.log('Agent Contact ID1 not found');\n  }\n}).catch(error =&gt; {\n  console.log('Error: ', error);\n});```"
+  },
+  {
+    "poster": {
+      "poster_name": "Hollyce Brammer",
+      "poster_handle": "hollyce"
+    },
+    "time_stamp": "2023-07-11 14:40:28",
+    "text": "<@U01QVR44MEY> Woo-hoo, it worked! Thank you so much! Didn't realize the capitalization mattered there."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-11 14:41:38",
+    "text": "of course, sorry for so much back and forth"
+  },
+  {
+    "poster": {
+      "poster_name": "Troy D",
+      "poster_handle": "troy370"
+    },
+    "time_stamp": "2023-07-11 19:34:08",
+    "edited": {
+      "time_stamp": "2023-07-11 19:43:36"
+    },
+    "text": "I created a workflow to check for changes to contact fields such as name, address, city, state, zip, etc.  I also have it checking for hubpot owner id change or store code change.  Both are select boxes when editing, all the others are regular input fields.  I have the workflow set for re-enrollment.  I have the checks set up as a series of property is known with an or connecting them all.  All the input regular input type of fields trigger the workflow, but when I select a new owner or store code it does not.  I am using the view all properties listing and then editing in there and clicking save.  Can anyone tell me why this is not working or how to debug the workflow triggers?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-07-12 07:30:32"
+      },
+      {
+        "time_stamp": "2023-07-13 08:55:47"
+      },
+      {
+        "time_stamp": "2023-07-13 09:29:04"
+      }
+    ]
+  }
+]

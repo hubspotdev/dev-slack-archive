@@ -1,0 +1,114 @@
+[
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-13 10:58:36",
+    "text": "can anyone point me in the right direction to learn how to handle AND/OR query filters in graphql? or at least if it's \"standard\" graphql syntax or HubSpot specific?",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-03-13 11:13:42"
+      },
+      {
+        "time_stamp": "2024-03-13 11:23:30"
+      },
+      {
+        "time_stamp": "2024-03-13 11:46:06"
+      },
+      {
+        "time_stamp": "2024-03-13 12:57:33"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2024-03-13 11:07:27",
+    "text": "I noticed that if you query for blog_tags in the blog query for graphql it just immediately eats up the data limit even for very small amount of tags....is that a bug?",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-03-13 11:13:05"
+      },
+      {
+        "time_stamp": "2024-03-13 11:13:14"
+      },
+      {
+        "time_stamp": "2024-03-13 11:16:42"
+      },
+      {
+        "time_stamp": "2024-03-13 11:16:55"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-13 11:13:05",
+    "text": "when was the last time you checked? they recently updated it"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2024-03-13 11:13:14",
+    "text": "just this morning"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2024-03-13 11:13:42",
+    "text": "not sure if this will be much help but this is how I do OR\n\n```  company(uniqueIdentifier: \"hs_object_id\", uniqueIdentifierValue: $company_id) {\n            associations {\n              ticket_collection__company_to_ticket(filter: {OR: \n          [{hs_pipeline_stage__neq: \"61272329\", hs_pipeline__eq: \"11082157\", is_expired_credit__neq: true,},\n            {hs_pipeline_stage__neq: \"4\", hs_pipeline__eq: \"0\", is_expired_credit__neq: true,}, \n            {hs_pipeline_stage__neq: \"46835231\", hs_pipeline__eq: \"0\", is_expired_credit__neq: true,}, \n            {hs_pipeline_stage__eq: \"32383833\", hs_time_in_32383833__lte: 2592000000, is_expired_credit__neq: true,}, \n            {hs_pipeline__eq: \"28781587\", hs_pipeline_stage__neq: \"65905072\", is_expired_credit__neq: true,}]},\n          limit: 440, orderBy: createdate__desc) {\n          items {```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-13 11:16:42",
+    "text": "I haven't run into that but I will look out and let you know if/when that happens"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2024-03-13 11:16:55",
+    "text": "thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-13 11:23:30",
+    "text": "thank you, doesn't seem to work for AND\n```query MyQuery {\n  BLOG {\n    post_collection(filter: {AND: tag_ids__in: [101797911401, 103328643883]}, orderBy: updated__desc) {\n      items {\n        html_title\n        blog_tags {\n          id\n          name\n        }\n        category_id\n        content_group_id\n        domain\n        id\n        name\n      }\n    }\n  }\n}```\n(syntax error)"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-13 11:46:06",
+    "text": "this seemed promising but does not work:\n```  BLOG {\n    post_collection(orderBy: updated__desc, filter: {\n      and: [\n      \t{ tag_ids__in: [101797911401] },\n        { tag_ids__in: [103328643883] }\n      ] \n    }) {```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-13 12:57:33",
+    "text": "this should work but does not at the moment:\n```    post_collection(orderBy: updated__desc, filter: {\n      tag_ids__in: \"103328643883\", \n      tag_ids__in: \"101797911401\"\n    }) {```\n"
+  }
+]

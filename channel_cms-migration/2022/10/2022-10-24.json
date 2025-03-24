@@ -1,0 +1,28 @@
+[
+  {
+    "poster": {
+      "poster_name": "Caitlin Kuiper",
+      "poster_handle": "ckuiper"
+    },
+    "time_stamp": "2022-10-24 10:00:32",
+    "text": "We often have clients interested in migrating to HubSpot who have their DNS records managed by the web developer who built their previous site. We ultimately end up migrating the clients’ DNS records. I’d love some feedback about the best DNS provider. Is it best to use a provider like Cloudflare or just move the DNS records to the domain registrar?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-10-26 07:09:46"
+      },
+      {
+        "time_stamp": "2022-10-26 08:48:01"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Klein",
+      "poster_handle": "mattk"
+    },
+    "time_stamp": "2022-10-24 11:27:55",
+    "text": "Here's where I netted out on this. Probably should have posted to the <#C2YHAHB6K|api> channel.\n\na) Seems the HubSpot API docs urge using the Forms API when submitting from a web form to let the contact be created/updated vs. using the Contact API.\n\nb) We set the owner via the Forms API by setting the “HubSpot_owner_id” property to the proper ID of the owner based on our form’s logic. It would be nice if we could assign the owner using an email address, but I don’t think this is an option. Therefore, we have to bake the “HubSpot_owner_id” into our form processing logic/data. HubSpot automatically alerts the owner that they have been assigned ownership, but does not send them Form contents. We send the form contents via email using the Automation upon form submission.\n\nc) Some tips:\n\n1. Fields matching object properties do not have to be present in the form in order to set those properties via the API. Therefore, we did not need to use hidden fields. \n2. Dynamic data from the form is not available in Workflow automations, so you have to plan accordingly. \n3. The JSON needs to match <https://legacydocs.HubSpot.com/docs/methods/forms/submit_form_v3_authentication|exactly the Forms API structure> \n4. If you are having trouble finding the objectTypeID, <https://developers.HubSpot.com/docs/api/crm/crm-custom-objects|I found them here>: \n    ◦ Contact: 0-1\n    ◦ Company: 0-2\n    ◦ Deal: 0-3\n    ◦ Ticket: 0-5\nCheers."
+  }
+]

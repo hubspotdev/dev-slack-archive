@@ -1,0 +1,154 @@
+[
+  {
+    "poster": {
+      "poster_name": "Christensen Magtoto",
+      "poster_handle": "chris858"
+    },
+    "time_stamp": "2024-04-26 02:10:26",
+    "text": "Ow. I see. If you are trying to avoid making API calls to the HubDB then you need to transfer it to an external data store, preferably a data storage you own so there will be no additional cost when making an indefinite number of calls. Well that's how I'll probably approach this problem because workflow triggers in relation to a record of an object and associating every contacts to a custom object holding the data from the private API is not practical because you'll be paying for additional association outside the first 1k association of a record.\n\nI'm also interested if someone else have a better solution that will stay in the HubSpot space and not add calls to HubSpot API limit."
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-04-26 05:46:11",
+    "text": "What is the trigger to select the contacts?  I ask because maybe instead of a workflow you could perform a scheduled task in a private app and bypass all the issues of a workflow.  In your task you could grab (and update) the data from your private API and store it in your local database.  Then you could do a search for the contacts and send the emails.  Perform as much as you can in batch processing as well.  I mean you're still making a ton of calls to send an email from each contact.  Maybe your scheduled task could pull in only a partial amount of contacts to process per hour or something like that as well."
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2024-04-26 08:05:25",
+    "text": "<@U0703RSE4HW> for a fun workaround you can split the contacts entering the workflow from the trigger point into one of several subgroups with differently timed delays. From this, they can route back into the custom code block. \n\nI'm guessing you're using a massive number of contacts all at once and the issue is with the initial push, as you're unlikely to have so many new contacts coming in once the initial push is completed that you hit rate limit from normal function."
+  },
+  {
+    "poster": {
+      "poster_name": "Christina Savage",
+      "poster_handle": "christina107"
+    },
+    "time_stamp": "2024-04-26 17:40:27",
+    "edited": {
+      "time_stamp": "2024-04-26 17:41:02"
+    },
+    "text": "Hi everyone.\n\nI’ve got a client who sends invoices upon quote (proposal) signature. Instead of collecting the total, they collect a deposit for 50% upfront and then 50% at a later date.\n\nGiven this, I’m trying to create a HubSpot workflow + Zap that does the following:\n\n1. HubSpot Workflow: Quote-enrollment trigger that automatically creates a Quickbooks Invoice when a HubSpot Quote is published \n    a. _This is working successfully_\n2. Sends the Invoice Number it created in the Create a Quickbooks Invoice step to Zapier. \n    a. _I’ve tried sending a Webhook at the end of the workflow. The POST data doesn’t include the Invoice number, since the workflow is a quote-based workflow. I’ve tried customize the request body - adding the invoice number to the request body, but it doesn’t come through._\n    b. _I’ve tried creating an invoice enrollment trigger, but it doesn’t fire, because the workflow it original enrolled in was quote-based._\n    c. _I also considered triggering it directly from Quickbooks (New Invoice) on Zapier, but there’s no indication that it was created in HubSpot, and I wouldn’t want to trigger this on every invoice created in QB._\n3. On the Zap, I find the invoice in QB based on inv #, perform line item calculations on the invoice and update the invoice to reflect a 50% deposit invoice, instead of 100% of the line item totals. \n    a. _This works when I force a test through by manually selecting an invoice, but the issue is that I can’t get the invoice number to automatically come through._\n*Any ideas on how to capture that invoice number created in the Create a Quickbooks Invoice step?*",
+    "reply_count": 23,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-04-26 18:04:17"
+      },
+      {
+        "time_stamp": "2024-04-26 19:09:49"
+      },
+      {
+        "time_stamp": "2024-04-26 19:15:42"
+      },
+      {
+        "time_stamp": "2024-04-26 19:23:04"
+      },
+      {
+        "time_stamp": "2024-04-26 20:01:04"
+      },
+      {
+        "time_stamp": "2024-04-26 20:04:58"
+      },
+      {
+        "time_stamp": "2024-04-30 11:43:36"
+      },
+      {
+        "time_stamp": "2024-04-30 11:45:36"
+      },
+      {
+        "time_stamp": "2024-04-30 11:48:58"
+      },
+      {
+        "time_stamp": "2024-04-30 11:53:03"
+      },
+      {
+        "time_stamp": "2024-04-30 11:53:15"
+      },
+      {
+        "time_stamp": "2024-04-30 11:54:54"
+      },
+      {
+        "time_stamp": "2024-04-30 11:56:06"
+      },
+      {
+        "time_stamp": "2024-04-30 11:57:04"
+      },
+      {
+        "time_stamp": "2024-04-30 11:59:24"
+      },
+      {
+        "time_stamp": "2024-04-30 12:06:52"
+      },
+      {
+        "time_stamp": "2024-05-02 12:07:49"
+      },
+      {
+        "time_stamp": "2024-05-02 12:32:14"
+      },
+      {
+        "time_stamp": "2024-05-02 12:32:27"
+      },
+      {
+        "time_stamp": "2024-05-02 12:32:48"
+      },
+      {
+        "time_stamp": "2024-05-02 12:33:17"
+      },
+      {
+        "time_stamp": "2024-05-02 12:33:24"
+      },
+      {
+        "time_stamp": "2024-05-02 12:34:16"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-04-26 18:04:17",
+    "text": "For Step #1 - Are you using custom-coded actions or a native integration step with Quickbooks?"
+  },
+  {
+    "poster": {
+      "poster_name": "Christina Savage",
+      "poster_handle": "christina107"
+    },
+    "time_stamp": "2024-04-26 19:09:49",
+    "edited": {
+      "time_stamp": "2024-04-26 19:09:56"
+    },
+    "text": "Hey <@U05R380MLMC> - a native integration step with Quickbooks. "
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-04-26 19:15:42",
+    "text": "I see - Do you have access to custom-coded actions to program your own invoice api call to quickbooks?"
+  },
+  {
+    "poster": {
+      "poster_name": "Christina Savage",
+      "poster_handle": "christina107"
+    },
+    "time_stamp": "2024-04-26 19:23:04",
+    "text": "I think it would require my client to upgrade their account to Ops Hub Pro or higher. I’ll check. It sounds like that’d be the solution here, eh?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-04-26 20:01:04",
+    "text": "Well - it certainly would be easier.\n\nWhen you use the native Quickbooks integration step to generate the invoice, if when you add a step after this, does the workflow editor give you access to the response data once the invoice is created?"
+  },
+  {
+    "text": "If you are able to create a webhook - this means you have ops pro, no?",
+    "time_stamp": "2024-04-26 20:04:58"
+  }
+]

@@ -1,0 +1,209 @@
+[
+  {
+    "poster": {
+      "poster_name": "Roman Matviichuk",
+      "poster_handle": "roman733"
+    },
+    "time_stamp": "2023-04-27 02:06:51",
+    "edited": {
+      "time_stamp": "2023-04-27 02:14:36"
+    },
+    "text": "Hello everyone! Delighted to join your community!\n\nCurrently, I'm developing email template that should contain special dynamic vehicles recommendations based on the contact it's being sent to. And I'm having an issue.\n\nI need to pull contact's/user's recommendations from custom crm objects my team created. I can pull them based on contact's email address as the recommendations data table has column named contact_email. Therefore I'm using following code to retrieve recommendations for contact but it doesn't work:\n\n```{% set email = contact.email %}\n{% set query = \"contact_email=\" ~ email %}\n{% set recommendations = crm_objects(\"recommendations\", query) %}```\nSomehow it retrieves the correct email address from the contact.email object but it's not working in the query. If I specify manually email as following:\n```{% set email = \"<mailto:desired_email@email.com|desired_email@email.com>\" %}```\nThen it works perfectly fine. But I need to bring the recommendations dynamically for each contact we have individually.\n\nPerhaps there could be some encoding issue with `contact.email`\n\nPlease advise"
+  },
+  {
+    "poster": {
+      "poster_name": "Simone Sanfilippo",
+      "poster_handle": "simone.sanfilippo"
+    },
+    "time_stamp": "2023-04-27 02:45:37",
+    "edited": {
+      "time_stamp": "2023-04-27 02:48:41"
+    },
+    "text": "Hello everyone! Delighted to join your community!\n\nI can’t understand why if I use the crm_associations function in a module with hardcoded values I can see the result in the module preview, but when I use the module in a quote template no result is shown.\n\nPlease note that “contract” is a custom object.\n\nHere is my code:\n```contact associated to contract: {{ crm_associations(996286911, \"USER_DEFINED\", 151) }}```\nAnd this is what I see in the module preview:\n```contact associated to contract: {has_more=false, offset=1, total=1, results=[{firstname=Simone, createdate=22/03/23, id=401, email=simone.sanfilippo@diemmea.com, lastname=Sanfilippo}]}```\nI tried:\n• Copying the module snippet:\n```    {% module \"module_16824942954717\" path=\"/quotes-theme/quote-modules/insuree\", label=\"insuree\" %}```\n• Using the function itself:\n```{{ crm_associations(996286911, \"USER_DEFINED\", 151) }}```\nBut in the quote template this is what I see (I also tried creating a quote using that template but I see the same result):\n```contact associated to contract: {has_more=false, offset=0, total=0, results=[]}\n{has_more=false, offset=0, total=0, results=[]}```\nSo, the question is: why doesn’t the crm_associations function work in quote templates?\nPlease, note that the association ID refers to a custom object, so the following warning highlighted in the <https://developers.HubSpot.com/docs/cms/hubl/functions|documentation> shouldn’t apply:\n```Please note: for security purposes, of the HubSpot standard object types only the product, and marketing_event objects can be retrieved on a publicly accessible page. Any other standard object type must be hosted on a page which is either password protected or requires a CMS Membership login.  Custom objects do not have this same restriction.```\nI also tried using default objects (company to contact) but I get the same problem",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-06-08 10:08:20"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Hardik Metha",
+      "poster_handle": "hardik978"
+    },
+    "time_stamp": "2023-04-27 04:16:59",
+    "edited": {
+      "time_stamp": "2023-04-27 04:19:46"
+    },
+    "text": "Hello,\nI am trying to fetch data using GraphQL.\nMy Graph query\n\n`# $course_id: \"{{ request.query_dict.course_id || ''}\"`\n`query MyQuery($course_id: String){`\n  `CRM {`\n    `p_coursemodules_collection(limit: 4, filter: {course_id__eq: $course_id}) {`\n      `items {`\n        `module_name`\n        `course_id`\n        `credits`\n        `fees`\n        `title`\n      `}`\n    `}`\n  `}`\n`}`\n\nI have attached my graph file to my custom module and then my hubl code is this\n\n `{% set contactCollectionData = module.data_query.data.CRM.p_coursemodules_collection  %}`\n\nmy question is, how do I pass `course_id` variable to graphQL using custom module",
+    "reply_count": 14,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-04-27 05:20:46"
+      },
+      {
+        "time_stamp": "2023-04-27 05:21:45"
+      },
+      {
+        "time_stamp": "2023-04-27 05:22:01"
+      },
+      {
+        "time_stamp": "2023-04-27 05:24:42"
+      },
+      {
+        "time_stamp": "2023-04-27 05:37:15"
+      },
+      {
+        "time_stamp": "2023-04-27 05:39:03"
+      },
+      {
+        "time_stamp": "2023-04-27 05:51:42"
+      },
+      {
+        "time_stamp": "2023-04-27 05:52:40"
+      },
+      {
+        "time_stamp": "2023-04-27 05:58:56"
+      },
+      {
+        "time_stamp": "2023-04-27 06:15:12"
+      },
+      {
+        "time_stamp": "2023-04-27 06:16:57"
+      },
+      {
+        "time_stamp": "2023-04-27 06:17:44"
+      },
+      {
+        "time_stamp": "2023-04-27 06:18:29"
+      },
+      {
+        "time_stamp": "2023-04-27 06:19:12"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2023-04-27 05:20:46",
+    "edited": {
+      "time_stamp": "2023-04-27 05:20:51"
+    },
+    "text": "You are setting your variable `$course_id` to the query parameter `course_id` , so it will be filled when you visit a url like `<http://domain.com?course_id=1234|domain.com?course_id=1234>`"
+  },
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2023-04-27 05:21:45",
+    "text": "This is also further elaborated on here: <https://developers.HubSpot.com/docs/cms/data/use-graphql-data-in-your-website-pages>"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-04-27 05:22:01"
+  },
+  {
+    "poster": {
+      "poster_name": "Hardik Metha",
+      "poster_handle": "hardik978"
+    },
+    "time_stamp": "2023-04-27 05:24:42",
+    "text": "I want to use this graph query within my hubl. is there any other way to pass parameter?\n\nsince currently I am using this for static data\n\n`{% set contactCollectionData = module.data_query.data.CRM.p_coursemodules_collection  %}`\n\nany chance I can use something like this and pass parameter?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2023-04-27 05:37:15",
+    "text": "Yes, that’s how you use it in HubL.\nBut I may be misunderstanding. Where do you want the `course_id` to come from?\nIf it’s something you set up in a module, you can simply add `module.course_id` where `course_id` is the name of the field.\n\nIf it should be dynamic based on the visitor, you can grab it from the contact with i.e. `request.contact.contact_vid` .\n\nIf you want to display a specific page with a specific course_id, you simply pass the query param on the link to that page."
+  },
+  {
+    "poster": {
+      "poster_name": "Hardik Metha",
+      "poster_handle": "hardik978"
+    },
+    "time_stamp": "2023-04-27 05:39:03",
+    "edited": {
+      "time_stamp": "2023-04-27 05:42:11"
+    },
+    "text": "course_id will be come from other query.\nand I am planning to run for loop to load this data.\n\nso it will be like\n\n`{% set courses = crm_objects(dynamic_page_crm_object_type_fqn, \"limit=200\",\"dynamic_page_slug\") %}`\n`{% for course in courses.results %}`\n    `{% set course_id = course.id %}`\n    `here I want to pass course_id into graph query and fetch data to fetch other course ralated data from coursemodule crm`\t\n`{% endfor %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2023-04-27 05:51:42",
+    "text": "As far as I know it’s not possible to grab and use a value, since the GraphQL implementation is based on request.\n\nSeeing your code, since you’re already looping over the specific courses, isn’t all the data already available to you in that loop?\n\n```{% set courses = crm_objects(dynamic_page_crm_object_type_fqn, \"limit=200\",\"dynamic_page_slug\") %}\n{% for course in courses.results %}\n    &lt;p&gt;Course: {{ course.title }}&lt;/p&gt;\n    &lt;span&gt;ID: {{ course.id }}&lt;/span&gt;\n    &lt;p&gt;Fees: {{ course.fees }}&lt;/p&gt;\n{% endfor %}```\nI don’t see the need for the GraphQL here."
+  },
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2023-04-27 05:52:40",
+    "edited": {
+      "time_stamp": "2023-04-27 05:52:48"
+    },
+    "text": "If you would then want a person to click the course, and bring them to a course-specific page. You can utilise your GraphQL and pass the query param `course_id` as an identifier and use that to create a dynamic page based on your content and the query."
+  },
+  {
+    "poster": {
+      "poster_name": "Hardik Metha",
+      "poster_handle": "hardik978"
+    },
+    "time_stamp": "2023-04-27 05:58:56",
+    "text": "`{% set courses = crm_objects(dynamic_page_crm_object_type_fqn, \"limit=200\",\"dynamic_page_slug\") %}`\n`{% for course in courses.results %}`\n    `{% set course_id = course.id %}`\n\ncheck this line\n\t`{% set coursemodule_objects = crm_objects(\"coursemodules\", \"course_id=\"~course.id, \"module_name, fees, description, credits\") %}`\n\n`{% endfor %}`\n\n\nthis is my current code.\n I want to replace this `{% set coursemodule_objects = crm_objects(\"coursemodules\", \"course_id=\"~course.id, \"module_name, fees, description, credits\") %}` line with graph query"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Louden",
+      "poster_handle": "matt562"
+    },
+    "time_stamp": "2023-04-27 06:01:06",
+    "text": "It does not work unfortunately. I tried to encode the string using HubL's encode filter but that returns no results (A&amp;A Electronic Assembly is not the same as A%26A Electronic Assembly)."
+  },
+  {
+    "text": "Okay, instead of using `crm_objects` in the first place, to grab your courses.\nCreate a GraphQL query where you grab the courses.\nThen attach that query to a module.\n\nNow you already have all your data inside GraphQL, and your `data_query` HubL, and can start displaying stuff, based on it.\n\nYou don’t need your ID, when you’re just listing courses on a page.\n\nI created a dummy on my sandbox, this will display all courses created:",
+    "time_stamp": "2023-04-27 06:15:12"
+  },
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2023-04-27 06:16:57",
+    "text": "If you need to do something with the `dynamic_page_slug` , like you do in the code you shared, you can pass this as a parameter to your query, and only get the courses related to that. `{{ request.path_param_dict.dynamic_slug }}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Hardik Metha",
+      "poster_handle": "hardik978"
+    },
+    "time_stamp": "2023-04-27 06:17:44",
+    "text": "got it.\n\nhow can I determine my url for graphQL"
+  },
+  {
+    "poster": {
+      "poster_name": "Hardik Metha",
+      "poster_handle": "hardik978"
+    },
+    "time_stamp": "2023-04-27 06:18:29",
+    "text": "I have created a file name `course.graphql`"
+  },
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2023-04-27 06:19:12",
+    "text": "Check this on how to attach it to a template/module: <https://developers.HubSpot.com/docs/cms/data/use-graphql-data-in-your-website-pages>"
+  }
+]

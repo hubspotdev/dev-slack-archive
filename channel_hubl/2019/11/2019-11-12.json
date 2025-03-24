@@ -1,0 +1,511 @@
+[
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 03:34:25",
+    "text": "<@U6XDD2SAW> are you sure it's not defined? have you tried printing it out or doing {{ contact.custom_property|length} ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 03:35:24",
+    "text": "Could try {% if contact.custom_property is defined and contact.custom_property|length %}"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 03:37:07",
+    "text": "`Just checked on HubSpot docs ```Please note that using personalization variables (contact and company variables) within if statements is not currently supported for email in HubSpot. These variables can be used for logic on HubSpot CMS pages and blog templates. \n\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "John Edward Hidalgo",
+      "poster_handle": "hidajoned"
+    },
+    "time_stamp": "2019-11-12 03:46:42",
+    "text": "Thank you <@UQERM7BLY>, so is there no solution for it?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 03:51:20",
+    "text": "I'm guessing not. Have you tried to output the variable in the email? Does it display anything?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 03:51:27",
+    "text": "If it is actually set that is."
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 03:52:40",
+    "text": "I mean, there is potentially a solution."
+  },
+  {
+    "poster": {
+      "poster_name": "John Edward Hidalgo",
+      "poster_handle": "hidajoned"
+    },
+    "time_stamp": "2019-11-12 04:05:25",
+    "text": "Yes, it shows the value, but, I need that doesn't show the label if it is empty"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 04:08:07",
+    "text": "I wonder if you can cheat the system with something like this"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 04:08:15",
+    "edited": {
+      "time_stamp": "2019-11-12 04:08:48"
+    },
+    "text": "```\n&lt;style&gt;\n.show-custom-prop-true {\n\tdisplay:block;\n}\n.show-custom-prop-false {\n\tdisplay:none;\n}\n&lt;/style&gt;\n\n&lt;div class=\"show-custom-prop-{{ contact.custom_property|bool }}\"&gt;\nLabel: {{ contact.custom_property }}\n&lt;/div&gt;\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 04:10:56",
+    "text": "hopefully the output of |bool is converted to a string representation"
+  },
+  {
+    "poster": {
+      "poster_name": "John Edward Hidalgo",
+      "poster_handle": "hidajoned"
+    },
+    "time_stamp": "2019-11-12 04:19:42",
+    "text": "It doesn't work, it's always false :disappointed:"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 04:21:43",
+    "text": "yeah i realised that"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 04:21:49",
+    "text": "bool doesnt do what i thought :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 04:21:58",
+    "text": "how about a md5 trick"
+  },
+  {
+    "poster": {
+      "poster_name": "John Edward Hidalgo",
+      "poster_handle": "hidajoned"
+    },
+    "time_stamp": "2019-11-12 04:21:59",
+    "text": "but you gave me an idea"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 04:22:03",
+    "edited": {
+      "time_stamp": "2019-11-12 04:26:20"
+    },
+    "text": "``` &lt;style&gt;\n.show-custom-prop-{{ contact.custom_property|trim|md5 }} {\n\tdisplay:block;\n}\n/* empty md5s */\n.show-custom-prop-58b5770ca4e49a5f775badca98dbce21, .show-custom-prop-d41d8cd98f00b204e9800998ecf8427e {\n\tdisplay:none !important;\n}\n&lt;/style&gt;\n\n&lt;div class=\"show-custom-prop-{{ contact.custom_property|trim|md5 }}\"&gt;\nLabel: {{ contact.custom_property }}\n&lt;/div&gt; ```"
+  },
+  {
+    "poster": {
+      "poster_name": "John Edward Hidalgo",
+      "poster_handle": "hidajoned"
+    },
+    "time_stamp": "2019-11-12 04:22:10",
+    "text": "&lt;style&gt;\n.show-custom-prop-{{ contact.bday1 }} {\n    display:block;\n}\n.show-custom-prop- {\n    display:none;\n}\n&lt;/style&gt;\n\n&lt;div class=\"show-custom-prop-{{ contact.bday1 }}\"&gt;\nLabel: {{ contact.bday1 }}\n&lt;/div&gt;"
+  },
+  {
+    "poster": {
+      "poster_name": "John Edward Hidalgo",
+      "poster_handle": "hidajoned"
+    },
+    "time_stamp": "2019-11-12 04:22:14",
+    "text": ":smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 04:22:18",
+    "text": "yeah :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 04:22:27",
+    "text": "but"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 04:22:29",
+    "text": "bday1"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 04:22:34",
+    "text": "could have special chars"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 04:22:46",
+    "text": "which would break the css/html"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 04:23:50",
+    "text": "the md5 is the same approach, but is more secure and robust i think."
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 04:24:19",
+    "text": "essentially the last two md5's are blanks"
+  },
+  {
+    "poster": {
+      "poster_name": "John Edward Hidalgo",
+      "poster_handle": "hidajoned"
+    },
+    "time_stamp": "2019-11-12 04:24:26",
+    "text": "sure! thank you so much Kieran!"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 04:24:46",
+    "text": "oops just fixed a typo in it"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 04:25:36",
+    "edited": {
+      "time_stamp": "2019-11-12 04:25:57"
+    },
+    "text": "I mean, i cant guarantee its going to work in every scenario.. but the worst case is someone sees a email which contains Label: &lt;blank&gt;"
+  },
+  {
+    "poster": {
+      "poster_name": "John Edward Hidalgo",
+      "poster_handle": "hidajoned"
+    },
+    "time_stamp": "2019-11-12 04:27:42",
+    "text": "Yes, I understand , but it is not only label is more"
+  },
+  {
+    "poster": {
+      "poster_name": "John Edward Hidalgo",
+      "poster_handle": "hidajoned"
+    },
+    "time_stamp": "2019-11-12 04:27:57",
+    "text": "md5, not work :disappointed:"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 04:29:00",
+    "text": "is it outputting an md5?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 04:29:05",
+    "text": "when you inspect"
+  },
+  {
+    "poster": {
+      "poster_name": "John Edward Hidalgo",
+      "poster_handle": "hidajoned"
+    },
+    "time_stamp": "2019-11-12 04:30:59",
+    "text": "I was wrong, its works"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 04:32:13",
+    "text": "It may be the case that you need to change the display:none class"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 04:32:30",
+    "edited": {
+      "time_stamp": "2019-11-12 04:32:57"
+    },
+    "text": "```.show-custom-prop-58b5770ca4e49a5f775badca98dbce21, .show-custom-prop-37a6259cc0c1dae299a7866489dff0bd {\n    display:none !important;\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 04:32:41",
+    "edited": {
+      "time_stamp": "2019-11-12 04:36:31"
+    },
+    "text": "I think the last one was wrong (for null), that should fix it ^"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2019-11-12 07:17:17",
+    "text": "Thanks <@U6GNQ7JBU> I ended up using `string_containing` but I’ll keep that in mind"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 11:27:14",
+    "text": "Hi - does anyone know if theres a way for the hubl menu() function to fallback to the default menu by default?",
+    "reply_count": 13,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-11-12 13:32:31"
+      },
+      {
+        "time_stamp": "2019-11-12 13:33:43"
+      },
+      {
+        "time_stamp": "2019-11-12 13:47:08"
+      },
+      {
+        "time_stamp": "2019-11-12 13:48:39"
+      },
+      {
+        "time_stamp": "2019-11-12 13:49:26"
+      },
+      {
+        "time_stamp": "2019-11-12 13:49:28"
+      },
+      {
+        "time_stamp": "2019-11-12 13:49:58"
+      },
+      {
+        "time_stamp": "2019-11-12 13:50:25"
+      },
+      {
+        "time_stamp": "2019-11-12 13:50:49"
+      },
+      {
+        "time_stamp": "2019-11-12 13:51:04"
+      },
+      {
+        "time_stamp": "2019-11-12 13:51:20"
+      },
+      {
+        "time_stamp": "2019-11-12 13:51:36"
+      },
+      {
+        "time_stamp": "2019-11-12 14:00:56"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-11-12 13:32:31",
+    "text": "not 100% sure if this is what you’re meaning but\n<https://designers.HubSpot.com/code-gallery/entry/founders/TheWebTech-Basic-Menu-using-Menu-Function>\n\nThis is a module that basically recreates the html structure the default menu tag/module creates"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-11-12 13:33:43",
+    "text": "since it uses the default css classes, it should inherit the styling from that."
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 13:47:08",
+    "text": "Sorry I didn’t explain it in enough detail. I’m currently building a custom theme for the marketplace. What I planned to do was create a custom module for the menu (so I can tweak the HTML structure). However, if i take this approach it means when the theme is installed/purchased the menu wont be assigned, as menu() doesn’t fallback to the default menu."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-11-12 13:48:39",
+    "text": "oh, I think you can have a module field for the menu, and add to the output variable `|default('default')`. I would test that on a portal before submitting to marketplace"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 13:49:26",
+    "text": "perfect"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 13:49:28",
+    "text": "i’ll give it a try"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 13:49:58",
+    "edited": {
+      "time_stamp": "2019-11-12 13:50:03"
+    },
+    "text": "it was just my interpretation of “2.6  All menu modules must use the default menu menu tree. ” on <https://knowledge.HubSpot.com/resources/what-are-the-submission-requirements-for-the-template-marketplace>"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 13:50:25",
+    "edited": {
+      "time_stamp": "2019-11-12 13:50:43"
+    },
+    "text": "wanted to make sure it wasn’t a case of “you must use the default HubSpot menu module”"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-11-12 13:50:49",
+    "text": "oh, no that’s meaning the actual menu itself"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-11-12 13:51:04",
+    "text": "HubSpot portals have a default menu that’s created."
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 13:51:20",
+    "text": "great - thanks so much Jon!"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-12 13:51:36",
+    "edited": {
+      "time_stamp": "2019-11-12 13:53:19"
+    },
+    "text": "Finally visible developer advocates! Too many companies I’ve worked with have ring-fenced their dev advocates behind layers of support tickets haha"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-11-12 14:00:56",
+    "edited": {
+      "time_stamp": "2019-11-12 14:05:44"
+    },
+    "text": "Ahh, yeah we try to be active in the community. A couple of us directly came from this community. We know what it’s like being on the other side, and do what we can to make it a great experience.\n\nThat said there’s only so many of us, we can’t answer every question here. So anytime someone pays it forward and helps the next dev, that’s huge. We’re pretty excited about this community and everything it is and has achieved."
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Fitzgerald",
+      "poster_handle": "ben.f"
+    },
+    "time_stamp": "2019-11-12 17:00:49",
+    "text": "Does anyone know if you can get the Country based on a visitors IP now? I seem to remember something on slack saying yes but forgot the hubl / method where HS support previously said this wasn’t possible (Slack subscription only shows comments from past few days)",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2019-11-12 19:03:15"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2019-11-12 19:03:15",
+    "text": "look at the developer info.  you should see `geoip_country` in there somewhere"
+  }
+]

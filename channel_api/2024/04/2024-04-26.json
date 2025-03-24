@@ -1,0 +1,256 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jorhel Bourdier",
+      "poster_handle": "jorhel"
+    },
+    "time_stamp": "2024-04-26 01:39:52",
+    "text": "Hello everyone,\n\nI’m currently facing an issue with the HubSpot API using the PHP `HubSpot/api-client` package. When I fetch the owners from the API, the email field for each owner doesn’t display the actual email addresses. Instead, it shows “[email protected]“. Has anyone else encountered this problem? If so, how did you resolve it? Any suggestions or insights would be greatly appreciated!\nThank you in advance for your help!",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-04-26 03:41:57"
+      },
+      {
+        "time_stamp": "2024-04-26 04:00:01"
+      },
+      {
+        "time_stamp": "2024-04-26 04:06:37"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "buchi",
+      "poster_handle": "jeremiah.onyema"
+    },
+    "time_stamp": "2024-04-26 03:31:22",
+    "text": "Hi everyone,\n\nI am collecting logs from this API - <https://api.hubapi.com/account-info/v3/activity/security> via logic app. This I have configured to run every 30minutes, unfortunately it still generates repeated logs from previous 30mins. Has any one had this issue in the past or any help please?\n\ncurl --request GET \\\n --url  <https://api.hubapi.com/account-info/v3/activity/security> \\\n --header 'authorization: Bearer xxxxxxx'\n\n*I also applied the fromtimestamp* int64 Query Param but the same issue persists. Any one has used this in the past or suggestions? - Related documentation: <https://developers.HubSpot.com/docs/api/settings/account-activity-api>",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-04-26 03:43:38"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Edmond Deema",
+      "poster_handle": "edmond"
+    },
+    "time_stamp": "2024-04-26 03:41:57",
+    "text": "Hi Jorhel, I haven't come across this problem but I can think of some reasons maybe:\n Check if your Api has sufficient permission to view the Owners information including the email.\n Ensure you're calling the correct endpoint and not filtering or processing the response in a way that alters the data.\n If you're using caching, clear the cache to see if you're fetching stale data.\nLet us know how it goes:blush:"
+  },
+  {
+    "poster": {
+      "poster_name": "buchi",
+      "poster_handle": "jeremiah.onyema"
+    },
+    "time_stamp": "2024-04-26 03:43:38",
+    "text": "The same configuration gives the expected result with other 2 APIs"
+  },
+  {
+    "poster": {
+      "poster_name": "Jorhel Bourdier",
+      "poster_handle": "jorhel"
+    },
+    "time_stamp": "2024-04-26 04:00:01",
+    "text": "<@U06G4DKLZJP>\nHi Edmon,\n\nI already have sufficient permission (crm.objects.owners/read) and it’s the good endpoint.\nHere is the code I use to get owners :\n```$owners = [];\n$after = null;\n\ndo {\n    $page = $this-&gt;HubSpot-&gt;crm()-&gt;owners()-&gt;ownersApi()-&gt;getPage(null, $after, 100);\n    $results = $page-&gt;getResults();\n\n    if (!empty($results)) {\n        foreach ($results as $result) {\n            $owners[] = json_decode(json_encode($result-&gt;jsonSerialize()), true);\n        }\n    }\n\n    if (!is_null($page-&gt;getPaging())) {\n        $after = $page-&gt;getPaging()-&gt;getNext()-&gt;getAfter();\n    }\n} while (is_object($page) &amp;&amp; $page-&gt;getPaging());\n\nreturn $owners;```\nNote : if I try to call with Postman this endpoint, it’s ok, the email field is not hidden."
+  },
+  {
+    "text": "",
+    "time_stamp": "2024-04-26 04:06:37"
+  },
+  {
+    "poster": {
+      "poster_name": "Danai Chronopoulou",
+      "poster_handle": "danai"
+    },
+    "time_stamp": "2024-04-26 04:21:23",
+    "text": "<@UQERM7BLY> If the access token does not expire, why I still get this error? I am using the batch create `/crm/v3/objects/contacts/batch/create` and I also checked the daily usage which is not yet reached"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2024-04-26 05:02:39",
+    "text": "Are you testing it from your local machine?"
+  },
+  {
+    "poster": {
+      "poster_name": "Danai Chronopoulou",
+      "poster_handle": "danai"
+    },
+    "time_stamp": "2024-04-26 05:05:52",
+    "text": "From my local I dont get that error because I only have only 150 contacts to create. So the batch create requests are only 2.\n\nI'm testing it from a test environment where I need to create more than  3.000 contacts. It creates up to 2.800 and then the api fails with that error"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2024-04-26 05:13:40",
+    "edited": {
+      "time_stamp": "2024-04-26 05:14:11"
+    },
+    "text": "I can think of two things:\n1. Cloudflare has blocked the IP because of previous abuse by someone else\n2. The request is not formed correctly, or is too big, is your batch logic working correctly and only working on 100 at a time.\n3. Is your test env sending credentials correctly (are you missing an env variable)"
+  },
+  {
+    "poster": {
+      "poster_name": "Danai Chronopoulou",
+      "poster_handle": "danai"
+    },
+    "time_stamp": "2024-04-26 05:56:17",
+    "text": "another thing here is that there are no logs under the private app logs for this failed request"
+  },
+  {
+    "poster": {
+      "poster_name": "Danai Chronopoulou",
+      "poster_handle": "danai"
+    },
+    "time_stamp": "2024-04-26 06:10:55",
+    "text": "i tried again, and found out that:\n1. the first batch create with 100 contacts failed with the same error\n2. the second batch create with 3 contacts succeed"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-04-26 06:23:55",
+    "text": "Hey Bryon, you’re totally good man, tag me into anything, happy to help."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-04-26 06:24:48",
+    "text": "Unfortunately you are right, the comments that exist on engagements are their own little thing and don’t actually exist anywhere in the public api"
+  },
+  {
+    "poster": {
+      "poster_name": "Prafful Goyal",
+      "poster_handle": "prafful.goyal"
+    },
+    "time_stamp": "2024-04-26 06:47:14",
+    "text": "perfect, thanks <@U06R1D0LEBF>"
+  },
+  {
+    "poster": {
+      "poster_name": "Isabelle OMahony",
+      "poster_handle": "isabelle.omahony"
+    },
+    "time_stamp": "2024-04-26 10:03:58",
+    "text": "Amazing ! Thanks for your help ! I really appreciate it :star:"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-04-26 10:05:11",
+    "text": "Did this repo help?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Cruz",
+      "poster_handle": "matt.cruz"
+    },
+    "time_stamp": "2024-04-26 11:18:01",
+    "text": "still nothing at the moment, HubSpot gets their ad data by integrating directly with the ad platform and then showing that data in HS via that tool's API, since the information isn't stored in HS, currently you need to essentially develop your own connector or sniff up the data from the page wherever it's not exportable"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Cruz",
+      "poster_handle": "matt.cruz"
+    },
+    "time_stamp": "2024-04-26 11:18:08",
+    "text": "would love to see this too"
+  },
+  {
+    "text": "Hello :wave:\n\nCan individual contacts be updated via a custom property?",
+    "time_stamp": "2024-04-26 11:44:20",
+    "reply_count": 9,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-04-26 12:14:07"
+      },
+      {
+        "time_stamp": "2024-05-07 15:35:29"
+      },
+      {
+        "time_stamp": "2024-05-08 03:15:46"
+      },
+      {
+        "time_stamp": "2024-05-08 03:16:22"
+      },
+      {
+        "time_stamp": "2024-05-09 09:42:57"
+      },
+      {
+        "time_stamp": "2024-05-09 09:47:20"
+      },
+      {
+        "time_stamp": "2024-05-09 09:48:34"
+      },
+      {
+        "time_stamp": "2024-05-09 09:49:09"
+      },
+      {
+        "time_stamp": "2024-05-09 09:51:40"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andrew Daltas",
+      "poster_handle": "adaltas"
+    },
+    "time_stamp": "2024-04-26 12:03:01",
+    "text": "We're facing with this same issue. Our Fivetran HubSpot connector seemed like it was having a data integrity issue. But it seems there's just no mechanism for them to know when an incremental update has occurred."
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-04-26 12:05:04",
+    "text": "Maybe a possibility to work with a custom “To be Archived” property, syncing it with the Datawarehouse, and possibly push data back or archive x amount of time later. It aint pretty but might just do the trick."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrew Daltas",
+      "poster_handle": "adaltas"
+    },
+    "time_stamp": "2024-04-26 12:11:20",
+    "text": "Thanks for the idea, but I don't understand, <@U046C9LKJP8>. In this solution, would we continue using Fivetran as our data integration platform? ANd how would we identify companies that need to be archived?"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-04-26 12:12:53",
+    "text": "I don’t know the fivetran integration. But you pretty much delay the archiving in HubSpot, untill you loaded the “to be archived” objects in the external platform. I’m not used to working with extrenal warehouses so not sure on the best solution "
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-04-26 12:14:07",
+    "text": "Do you want to update a single contact based on a property value?"
+  },
+  {
+    "poster": {
+      "poster_name": "João Demarchi",
+      "poster_handle": "joao.demarchi"
+    },
+    "time_stamp": "2024-04-26 15:07:33",
+    "text": "Hey guys,\n\nI am using the Analytics API to get data from sessions in my website.\nCurrently, I'm making this request: <https://api.hubapi.com/analytics/v2/reports/sources/total?start=2024001&amp;end=20240430>\n\nIt seems to be summarizing all the data from my monitored pages.\n\nI'd like to filter this request for only a specific domain, similar to what we can do with the HubSpot report. Is there anywat I could do that? Haven't found anything that works in the documentation <https://legacydocs.HubSpot.com/docs/methods/analytics/analytics-overview?_ga=2.110917260.80535592.1714157096-1429907109.1714157096&amp;_gl=1*1h4jwdx*_ga*MTQyOTkwNzEwOS4xNzE0MTU3MDk2*_ga_LXTM6CQ0XK*MTcxNDE1NzA5NS4xLjEuMTcxNDE1NzUwMi40Ny4wLjA>."
+  }
+]

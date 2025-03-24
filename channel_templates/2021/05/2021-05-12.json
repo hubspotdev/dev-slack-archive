@@ -1,0 +1,141 @@
+[
+  {
+    "text": "Hi everyone, is there a way to hide the global partials (see red boxes in attached image) from the body modules listing? I would like content editors to focus on the actual page content itself, instead of global header and footer content. Thanks for your help!",
+    "time_stamp": "2021-05-12 09:12:13",
+    "edited": {
+      "time_stamp": "2021-05-12 09:15:40"
+    },
+    "reply_count": 12,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-05-12 09:50:03"
+      },
+      {
+        "time_stamp": "2021-05-12 11:00:30"
+      },
+      {
+        "time_stamp": "2021-05-12 12:42:22"
+      },
+      {
+        "time_stamp": "2021-05-12 12:44:20"
+      },
+      {
+        "time_stamp": "2021-05-12 12:52:57"
+      },
+      {
+        "time_stamp": "2021-05-12 13:19:48"
+      },
+      {
+        "time_stamp": "2021-05-12 14:15:24"
+      },
+      {
+        "time_stamp": "2021-05-12 14:37:48"
+      },
+      {
+        "time_stamp": "2021-05-12 14:56:34"
+      },
+      {
+        "time_stamp": "2021-05-12 15:00:14"
+      },
+      {
+        "time_stamp": "2021-05-12 15:01:13"
+      },
+      {
+        "time_stamp": "2021-05-12 15:12:32"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-05-12 09:50:03",
+    "text": "Would it make sense if global partial content was grouped separately in the contents tab?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeroen Kroes",
+      "poster_handle": "info949"
+    },
+    "time_stamp": "2021-05-12 11:00:30",
+    "text": "Yes, that would definitely already be an improvement "
+  },
+  {
+    "poster": {
+      "poster_name": "Jeroen Kroes",
+      "poster_handle": "info949"
+    },
+    "time_stamp": "2021-05-12 12:42:22",
+    "text": "Is that something that I can fix myself? I see that the order of the modules follows the order in the templates, so moving the Menu modules down would break the layout/flow on the front-end."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-05-12 12:44:20",
+    "text": "No, right now it is not something you can change. You can change the order but the order is dictated by their appearance in the HTML. So it would not be a good idea to re-order arbitrarily because you would need to change the underlying HTML."
+  },
+  {
+    "poster": {
+      "poster_name": "Jeroen Kroes",
+      "poster_handle": "info949"
+    },
+    "time_stamp": "2021-05-12 12:52:57",
+    "text": "Clear, thanks for your answer. So regarding your first reply: is the grouping of global content something that’s planned for a future release?\n\nBTW: it would also work fine if for example non-admin editors cannot see the global partials."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-05-12 13:19:48",
+    "text": "Grouping and separation of global content from the non global content is not a currently planned feature but that doesn’t mean it won’t happen. We’re always looking for ways to make the editing experience more intuitive.\n\n&gt; it would also work fine if for example non-admin editors cannot see the global partials.\nWe want editors to know where editable regions exist, even if they themselves don’t have permission to edit. That at least gives indication that someone they work with may have access to edit that content. If they don’t see a module or can’t highlight it in the page preview - they assume something can’t be edited. This can result in them thinking HubSpot has a limitation, when in reality they just don’t have a permission enabled on their user account.\n\nHow it displays for them does matter though. You are right that it is a little bit strange if you open the contents tab and the first several modules you see are not editable by you.\n\nWe display all of the modules in the order they appear in the HTML. This makes it relatively easy to identify which module instances refer to what in the page preview.\n\n\nIf you have any suggestions on how we might visually identify these modules differently we’d love to hear it."
+  },
+  {
+    "text": "I understand the motivation for the current setup. However, from a UX perspective I’m not sure if users want to see things they cannot edit on this page (especially since in this view the user wants to edit page specific content, and not global content).  The less ‘clutter’, the easier it is for a content editor to create or edit the page.\n\nSome suggestions for improving the UX:\n\n*A. Allow the template developer to determine if a global partial is visible or not* \nThis could be done with a new template annotation, like for example:\n```&lt;!--\n  templateType: global_partial\n  label: Partners Menu\n  showInContentEditor: false\n--&gt;```\nThe new annotation defaults to `true` , so the current setup is still respected.\n\n*B. Add a link or toggle to show locked modules*\nThis option assumes that locked modules (like global partials) are hidden by default. Adding a icon or small textual link next to the Body modules heading allows the user to see all modules, including the locked ones.\n\n*C. Add two extra module group headings*\nAccording to the HS documentation, global partials are generally used for global header and footer content. Global partials that are included before the body content could go into a Header modules group, and partials below the body into a Footer modules group. By default, the Header and Footer modules groups can be collapsed, so they take minimal space without messing up the flow and order of the modules. Clicking on a module group heading will reveal all included modules. See the attached image for a mockup of this suggestion.",
+    "time_stamp": "2021-05-12 14:15:24"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-05-12 14:37:48",
+    "text": "Hey, thanks for the feedback.\n\nthere are some unfortunate gotchas that make things complicated.\n\n&gt; *A. Allow the template developer to determine if a global partial is visible or not*\n&gt; This could be done with a new template annotation\nIf you have the global content permission should the editor ignore the developers decision here? that user would have no way to edit the global content otherwise.\n\n&gt; *B. Add a link or toggle to show locked modules*\nmakes sense having some way to filter it. Would you expect though the filtering default to be different though if you have permission to edit the global content?\n\n&gt; *C. Add two extra module group headings*\nWhere this gets complicated is the developer doesn’t need to follow the header footer pattern. We give you as the developer complete freedom. You could have multiple global partials in the header and footer.\n\nYou could have a sidebar that has a single global module in it etc.\n\nGlobal modules can also be in dnd_areas."
+  },
+  {
+    "poster": {
+      "poster_name": "Jeroen Kroes",
+      "poster_handle": "info949"
+    },
+    "time_stamp": "2021-05-12 14:56:34",
+    "text": "Thanks again for your quick reply.\n\n• A. My idea was that users with the appropriate access rights still can edit the content trough the Design Manager.\n• B. Yeah, the pattern I was thinking of is that every module that is locked for a particular user (group) is hidden by default, but can be made visible with a single click.\n• C. I see the complication in this case. This can only work by dropping the fixed order and grouping all global partials into a second module group below the Body modules (which at least would work great for my current project)."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-05-12 15:00:14",
+    "text": "A. there is no way to edit global partial content in the design manager, which supports drag and drop areas. Only global modules are editable through the design manager. Modules within a global partial are global, but they are not global modules in and of themselves, so they will not appear in the design manager.\n<https://developers.HubSpot.com/docs/cms/building-blocks/global-content>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-05-12 15:01:13",
+    "text": "appreciate you taking the time to chat it through. You are raising good points. Solving the issue though is just a bit tricky"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeroen Kroes",
+      "poster_handle": "info949"
+    },
+    "time_stamp": "2021-05-12 15:12:32",
+    "text": "I understand. For now I’ll try to combine my six global partials in a single header and footer one, so that the content editors will find their way a bit easier. "
+  }
+]

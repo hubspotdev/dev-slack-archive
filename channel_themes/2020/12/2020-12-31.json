@@ -1,0 +1,58 @@
+[
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2020-12-31 03:21:09",
+    "text": "Hi all, got a quick question: I am trying to set the font-weight of my `H1` by using theme settings. But `{{theme.fonts.typography.heading_one.desktop.styles.font-weight}}` somehow always returns `0`. When I output the value of `{{theme.fonts.typography.heading_one.desktop.styles}}` the font-weight is set to 700 tho.\n\nI have the following in my `fields.json`:\n\n```{\n            \"label\": \"Heading one (H1)\",\n            \"name\": \"heading_one\",\n            \"type\": \"group\",\n            \"children\": [\n              {\n                \"label\": \"Desktop\",\n                \"name\": \"desktop\",\n                \"type\": \"font\",\n                \"load_external_fonts\": true,\n                \"inherited_value\": {\n                  \"property_value_paths\": {\n                    \"color\": \"theme.fonts.global_fonts.heading_font.color\",\n                    \"font\": \"theme.fonts.global_fonts.heading_font.font\",\n                    \"font_set\": \"theme.fonts.global_fonts.heading_font.font_set\"\n                  }\n                },\n                \"default\": {\n                  \"size\": 64,\n                  \"size_unit\": \"px\",\n                  \"styles\": {\n                    \"text-decoration\": \"none\"\n                  },\n                  \"variant\": \"700\"\n                }\n              },\n              {\n                \"label\": \"Mobile\",\n                \"name\": \"mobile\",\n                \"type\": \"font\",\n                \"load_external_fonts\": true,\n                \"inherited_value\": {\n                  \"property_value_paths\": {\n                    \"color\": \"theme.fonts.typography.heading_one.desktop.color\",\n                    \"font\": \"theme.fonts.typography.heading_one.desktop.font\",\n                    \"font_set\": \"theme.fonts.typography.heading_one.desktop.font_set\"\n                  }\n                },\n                \"default\": {\n                  \"size\": 45,\n                  \"size_unit\": \"px\",\n                  \"styles\": {\n                    \"text-decoration\": \"none\"\n                  },\n                  \"variant\": \"700\"\n                }\n              }\n            ]\n          },```",
+    "reply_count": 4,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2020-12-31 03:26:02"
+      },
+      {
+        "time_stamp": "2020-12-31 03:32:01"
+      },
+      {
+        "time_stamp": "2020-12-31 03:35:57"
+      },
+      {
+        "time_stamp": "2020-12-31 04:00:45"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2020-12-31 03:26:02",
+    "text": "I know I could use `{{theme.fonts.typography.heading_one.desktop.style}}` but according to the readme of the boilerplate I should also be able to use the `font-weight`"
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2020-12-31 03:32:01",
+    "text": "Just to be clear:\n\n`font-weight: hubl('theme.fonts.typography.heading_one.desktop.styles');` returns `font-weight: {font-weight=700, text-decoration=none, font-family=Merriweather, font-style=normal}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2020-12-31 03:35:57",
+    "text": "I am using sass, so using `{{theme.fonts.typography.heading_one.desktop.style}}` is quite difficult."
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2020-12-31 04:00:45",
+    "text": "Got a really ugly solution for this issue. For anyone using gulp and minifies his files, this is my solution:\n\n```  return src(config.src.scss)\n    .pipe(plugins.sassGlobImport())\n    .pipe(plugins.sass())\n    .pipe(plugins.postcss(postcssPlugins))\n    .pipe(replace(/(hubl\\(\")(.*?)(\"\\))/g, '{{ $2 }}')) // add line to replace function with hubl\n    .pipe(replace('removethis:', ' ')) // removethis: will be removed so we can add some default hubl\n    .pipe(dest(config.dest.scss));```\nI then can use the following code in my sass file:\n\n```h1,\n.h1 {\n  removethis: hubl('theme.fonts.typography.heading_one.desktop.style');\n}```"
+  }
+]

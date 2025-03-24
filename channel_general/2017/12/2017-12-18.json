@@ -1,0 +1,290 @@
+[
+  {
+    "poster": {
+      "poster_name": "Martin Blomqvist",
+      "poster_handle": "martin.blomqvist"
+    },
+    "time_stamp": "2017-12-18 01:33:55",
+    "text": "Hey! Does anyone know how to get the full form-functionality in the new design manager module structure? If I use the form selector in the module, all I get is a dropdown to choose form, and no other functionality like I really need in this case, like the screenshot below:"
+  },
+  {
+    "text": "<@U7W3LPNUT> uploaded a file: <https://HubSpotdev.slack.com/files/U7W3LPNUT/F8GUK20UE/image.png|image.png>",
+    "time_stamp": "2017-12-18 01:34:02"
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Blomqvist",
+      "poster_handle": "martin.blomqvist"
+    },
+    "time_stamp": "2017-12-18 01:34:28",
+    "text": "This is what the new module form selector get you..."
+  },
+  {
+    "text": "<@U7W3LPNUT> uploaded a file: <https://HubSpotdev.slack.com/files/U7W3LPNUT/F8FD4A6SC/image.png|image.png>",
+    "time_stamp": "2017-12-18 01:34:33"
+  },
+  {
+    "poster": {
+      "poster_name": "Yasmin Reda",
+      "poster_handle": "yasmin.reda"
+    },
+    "time_stamp": "2017-12-18 02:14:58",
+    "text": "<@U7ADCU3BM> how can I do this if condition although the topics is drag and drop in the template not written by hubl and if I'll write it in custom hubl it doesn't work by that code                         {% for topic in content.topic_list %}\n                     {% if \"topic\" = topic.slug %}\n                      &lt;div class=\"post-topic-link\"&gt;&lt;a href=\"{{ group.absolute_url }}/topic/{{ topic.slug }}\" class=\"active\"&gt;{{topic.name}}&lt;/a&gt;&lt;/div&gt;\n                      {% else %}\n                         &lt;div class=\"post-topic-link\"&gt;&lt;a href=\"{{ group.absolute_url }}/topic/{{ topic.slug }}\"&gt;{{topic.name}}&lt;/a&gt;&lt;/div&gt;\n                        {% endif %}                     \n                    {% endfor %}",
+    "reply_count": 8,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2017-12-18 03:07:12"
+      },
+      {
+        "time_stamp": "2017-12-18 03:08:38"
+      },
+      {
+        "time_stamp": "2017-12-18 04:54:27"
+      },
+      {
+        "time_stamp": "2017-12-18 04:55:12"
+      },
+      {
+        "time_stamp": "2017-12-18 08:47:01"
+      },
+      {
+        "time_stamp": "2017-12-18 23:34:19"
+      },
+      {
+        "time_stamp": "2017-12-18 23:34:33"
+      },
+      {
+        "time_stamp": "2017-12-18 23:34:42"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Blomqvist",
+      "poster_handle": "martin.blomqvist"
+    },
+    "time_stamp": "2017-12-18 02:32:30",
+    "text": "FYI I have currently solved it by adding a old form widget syntax with export_to_template in the head markup of the landing page, and then the widget_block form with each value collected from the form. Not best practice for sure but at least the client can use the wanted functionality. But if anyone has another, smoother solution, let me know! Also ping <@U22PNRAJD>"
+  },
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2017-12-18 03:07:12",
+    "edited": {
+      "time_stamp": "2017-12-18 08:46:55"
+    },
+    "text": "to do that you need to generate the list by HubL as well, otherwise you need to use JS.\nTo generate the list by hubL you need to swap the block for a hubL block and put this code inside:\n\n{% set topics = blog_topics('{{ content_group_id }}', 5) %}\n&lt;div class=\"widget-type-post_filter\"&gt;\n\t&lt;div class=\"widget-module\"&gt;\n\t\t&lt;ul&gt;\n\t\t{% for topic in topics %}\n\t\t\t{% set count = blog_recent_topic_posts('{{ content_group_id }}', '{{ topic.slug }}', 100 ) %}\n\t\t\t&lt;li&gt;&lt;a {% if topic == topic.slug %}class=\"active\" {% endif %} href=\"{{ group.absolute_url }}/topic/{{ topic.slug }}\"&gt;{{ topic.name }} &lt;span class=\"filter-link-count\"&gt;{{ count|count }}&lt;/div&gt;&lt;/a&gt;&lt;/li&gt;\n\t\t{% endfor %}\n\t\t&lt;/ul&gt;\n\t&lt;/div&gt;\n&lt;/div&gt;"
+  },
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2017-12-18 03:08:38",
+    "edited": {
+      "time_stamp": "2017-12-18 03:09:29"
+    },
+    "text": "the content.topic_list variable as you used only works in the post template (not listing neither author or topic page).\n\nAlso this condition should be without quotes (otherwise you are using the string topic instead the variable.\n {% if \"topic\" = topic.slug %}"
+  },
+  {
+    "text": "<@U25C65C3S> uploaded a file: <https://HubSpotdev.slack.com/files/U25C65C3S/F8H1B1ASJ/form_module_example.py|Form Module Example>",
+    "time_stamp": "2017-12-18 04:46:48"
+  },
+  {
+    "poster": {
+      "poster_name": "Remington Begg",
+      "poster_handle": "remingtonbegg"
+    },
+    "time_stamp": "2017-12-18 04:48:00",
+    "text": "<@U7W3LPNUT> So I set this up with only the features I wanted the marketer to be able to edit. You simply build it right into the form module."
+  },
+  {
+    "poster": {
+      "poster_name": "Remington Begg",
+      "poster_handle": "remingtonbegg"
+    },
+    "time_stamp": "2017-12-18 04:48:44",
+    "text": "<http://designers.HubSpot.com/docs/hubl/hubl-supported-modules#form>"
+  },
+  {
+    "poster": {
+      "poster_name": "Remington Begg",
+      "poster_handle": "remingtonbegg"
+    },
+    "time_stamp": "2017-12-18 04:49:53",
+    "text": "\"module.service_lead_form\" is the form selector module, \"module.form_title\" is the text module and \"module.redirect_destination\" is a page selector module. \n\nHope that helps"
+  },
+  {
+    "text": "<@U25C65C3S> uploaded a file: <https://HubSpotdev.slack.com/files/U25C65C3S/F8H1CELUW/screen_shot_2017-12-18_at_6.50.26_am.png|Screen Shot 2017-12-18 at 6.50.26 AM.png>",
+    "time_stamp": "2017-12-18 04:50:48"
+  },
+  {
+    "poster": {
+      "poster_name": "Yasmin Reda",
+      "poster_handle": "yasmin.reda"
+    },
+    "time_stamp": "2017-12-18 04:54:27",
+    "text": "thanks for ur quick reply,,Actually, I try this code but there is an error in syntax"
+  },
+  {
+    "poster": {
+      "poster_name": "Yasmin Reda",
+      "poster_handle": "yasmin.reda"
+    },
+    "time_stamp": "2017-12-18 04:55:12",
+    "text": "I 'll send a screenshot"
+  },
+  {
+    "text": "<@U831KMEMS> uploaded a file: <https://HubSpotdev.slack.com/files/U831KMEMS/F8G5C803C/screenshot5.png|screenshot5.png>",
+    "time_stamp": "2017-12-18 04:55:43"
+  },
+  {
+    "poster": {
+      "poster_name": "Yasmin Reda",
+      "poster_handle": "yasmin.reda"
+    },
+    "time_stamp": "2017-12-18 04:57:11",
+    "text": "<@U7ADCU3BM> check this screenshot, thanks in advance"
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Blomqvist",
+      "poster_handle": "martin.blomqvist"
+    },
+    "time_stamp": "2017-12-18 05:04:58",
+    "text": "<@U25C65C3S> Alright. Thank you for your answer. However, this means that I need to add fields for this each time I want to set up a form in the module, and there is no fields for campaigns, other notification addresses etc, right? We hit an obstacle on our very first client where we use the new interface and I can imagine that we will continue to get this feedback throughout almost every development process, just for your information. So I would suggest to get back all fields for forms, if that's possible"
+  },
+  {
+    "poster": {
+      "poster_name": "Remington Begg",
+      "poster_handle": "remingtonbegg"
+    },
+    "time_stamp": "2017-12-18 06:09:06",
+    "text": "You can create any of the fields that the module allows, I’m sure the functionality could be replicated."
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Blomqvist",
+      "poster_handle": "martin.blomqvist"
+    },
+    "time_stamp": "2017-12-18 07:47:19",
+    "text": "<@U25C65C3S> Yes, I understand that it can be recreated. But I think it's a step backward. So every time I need a form in a custom module I need to create like 10 fields in each custom module. It is not a good way, we do custom modules for clients everyday and I would say that this is a very bad update for all of us developing in HubSpot. I think you do need to reconsider this and re-implement the needed features out of the box."
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "Martin Blomqvist",
+      "poster_handle": "martin.blomqvist"
+    },
+    "time_stamp": "2017-12-18 07:56:19",
+    "text": "<@U25C65C3S> Sorry mate, thought you worked at HubSpot. Got all tricked by your orange background in the profile pic"
+  },
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2017-12-18 08:47:01",
+    "edited": {
+      "time_stamp": "2017-12-18 08:47:07"
+    },
+    "text": "fixed :wink:"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2017-12-18 08:48:16",
+    "text": "<@U7W3LPNUT> you can use the “how are we doing” on the pages and do a sad face and put that info on there, they generally reach out to you to go over that stuff very quickly"
+  },
+  {
+    "text": "<@U25PYL3Q8> uploaded a file: <https://HubSpotdev.slack.com/files/U25PYL3Q8/F8FK9KDAL/pasted_image_at_2017_12_18_10_58_am.png|is there a default url for this in hubsot?>",
+    "time_stamp": "2017-12-18 08:58:12"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2017-12-18 09:01:01",
+    "text": "yeah - let me go find the format for it"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2017-12-18 09:01:32",
+    "text": "use these tokens and it will drop it into any template when you render"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2017-12-18 09:01:34",
+    "text": "{{unsubscribe_link}}\n{{unsubscribe_link_all}}"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2017-12-18 09:01:42",
+    "text": "then you can figure out the format"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2017-12-18 09:04:14",
+    "text": "<http://brand.com/hs/manage-preferences/&lt;slug&gt;>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2017-12-18 10:35:26",
+    "text": "thanks"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2017-12-18 10:35:29",
+    "text": "i’ll get itno this later"
+  },
+  null,
+  null,
+  {
+    "poster": {
+      "poster_name": "Yasmin Reda",
+      "poster_handle": "yasmin.reda"
+    },
+    "time_stamp": "2017-12-18 23:34:19",
+    "text": "yes,, Thanks for ur effort :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Yasmin Reda",
+      "poster_handle": "yasmin.reda"
+    },
+    "time_stamp": "2017-12-18 23:34:33",
+    "text": "here is the final code"
+  },
+  {
+    "poster": {
+      "poster_name": "Yasmin Reda",
+      "poster_handle": "yasmin.reda"
+    },
+    "time_stamp": "2017-12-18 23:34:42",
+    "text": "{% set topics = blog_topics('{{ content_group_id }}', 5) %}\n{% set turll = group.absolute_url+request.path %}\n   &lt;div class=\"widget-type-post_filter\"&gt;\n        &lt;div class=\"widget-module\"&gt;\n             &lt;ul&gt;\n                {% for topic in topics %}\n                   {% set curll = group.absolute_url+\"/tag/\"+topic.slug %}\n                   {% if curll == turll %}\n                        &lt;li&gt;&lt;a class=\"active\" href=\"{{ group.absolute_url }}/topic/{{ topic.slug }}\"&gt;{{ topic.name }}&lt;/a&gt;&lt;/li&gt;\n                    {%else %}\n                        &lt;li&gt;&lt;a href=\"{{ group.absolute_url }}/topic/{{ topic.slug }}\"&gt;{{ topic.name }}&lt;/a&gt;&lt;/li&gt;                        \n                    {% endif %}\n                {% endfor %}\n             &lt;/ul&gt;\n      &lt;/div&gt;\n  &lt;/div&gt;"
+  }
+]

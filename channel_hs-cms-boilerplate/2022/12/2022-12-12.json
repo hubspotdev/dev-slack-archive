@@ -1,0 +1,18 @@
+[
+  {
+    "poster": {
+      "poster_name": "Alessandra Lima",
+      "poster_handle": "alessandra.lima"
+    },
+    "time_stamp": "2022-12-12 06:10:03",
+    "text": "Yes, I'm integrating my company's google workspace with sso to access private content, and from that I wanted to know if it's possible to embed google calendar, or other google apps on a page"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2022-12-12 13:57:07",
+    "text": "Yes, this is absolutely possible! There’s a few ways you can go about it:\n\nIf you expect these calendars to be embedded in a consistent place on the same type of page, you can build out a page template which has an <https://developers.HubSpot.com/docs/cms/hubl/tags#custom-html|included >`{% html %}`<https://developers.HubSpot.com/docs/cms/hubl/tags#custom-html| tag>, which will provide a content area in which users can input arbitrary HTML — including a Google Calendar embed.\n\nIf you need to be able to place the embeds in different locations via the drag-and-drop builder, there _is_ a solution to create a module that enables this, but it requires using some (spooky!) undocumented functionality. First, I would check whether the theme you’re working off of already a “Custom HTML” module — you may have to look under the collapsed “All Modules” menu in the editor.\n\nIf that doesn’t exist, you’ll have to create one yourself. It’s a relatively simple process if you’re already familiar with the process of creating custom modules — there’s an undocumented `type` of `html`, which provides users a textarea which takes (and does not sanitize) raw HTML. It’d look like this in your fields.json:\n```[\n  {\n    \"label\": \"Raw HTML\",\n    \"name\": \"html\",\n    \"type\": \"html\"\n  }\n]```\nThe caveat here is that you won’t be able to create this via the Design Tools interface, since you’ll need to directly manipulate the module’s fields.json file. Unfortunately, I don’t have the time to cover the details of doing this, so I’ll have to point you to the <https://developers.HubSpot.com/docs/cms/developer-reference/local-development-cms-cli|documentation on Local Development Tooling>.\n\nAs a disclaimer: using undocumented functionality always comes with risks and should be done with caution. However, I stole this knowledge from a module that used to be provided by HS themselves in the module marketplace, so I consider it to be a _little bit_ safer than your typical dark magicks. ;~)\n\nI hope this helps!"
+  }
+]

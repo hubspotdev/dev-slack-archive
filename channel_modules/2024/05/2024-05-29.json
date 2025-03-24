@@ -1,0 +1,82 @@
+[
+  {
+    "poster": {
+      "poster_name": "Tara Flavin",
+      "poster_handle": "tara.flavin"
+    },
+    "time_stamp": "2024-05-29 04:43:48",
+    "edited": {
+      "time_stamp": "2024-05-29 05:26:11"
+    },
+    "text": "Hi, I have a custom module with a field group. I want to do some stuff with the values of that field group in my javascript. Currently I'm passing it into javascript by using a data attribute, e.g. <div id=\"filter-form-container\" data-field-group=\"{{<http://module.my|module.my>_group}}\"> and then in javascript, document.querySelector('#filter-form-container').getAttribute('data-field-group'); However, it comes in as string type, so I can't loop over it without doing some crazy regex parsing logic. Here's an example of what it looks like '[{number_field=10, text_field=test text}]'. It's not formatted as JSON either so I can't use JSON.parse or anything. Is there a better, simpler way to work with module field groups? And no, for some reason none of the HubL JSON filters work. I tried tojson, and escapejson.",
+    "reply_count": 11,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-05-29 06:07:02"
+      },
+      {
+        "time_stamp": "2024-05-29 12:06:24"
+      },
+      {
+        "time_stamp": "2024-05-30 06:03:26"
+      },
+      {
+        "time_stamp": "2024-05-30 06:05:02"
+      },
+      {
+        "time_stamp": "2024-05-30 09:46:53"
+      },
+      {
+        "time_stamp": "2024-05-30 10:05:40"
+      },
+      {
+        "time_stamp": "2024-05-30 10:18:46"
+      },
+      {
+        "time_stamp": "2024-05-30 14:30:27"
+      },
+      {
+        "time_stamp": "2024-05-30 18:57:35"
+      },
+      {
+        "time_stamp": "2024-05-31 03:01:02"
+      },
+      {
+        "time_stamp": "2024-05-31 03:45:03"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Tara Flavin",
+      "poster_handle": "tara.flavin"
+    },
+    "time_stamp": "2024-05-29 04:50:49",
+    "text": "For future, you can also do this in local development by removing the limitations on the text field specified in the fields.json for that module. I've done that with our tabbed card module. But removing the limited field and adding a new rich text field is certainly quicker!"
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2024-05-29 06:07:02",
+    "text": "Hi <@U06GU32ANDV> - if you have your number inside the my_group group or should be something like module.my_group.my_number\nIf the group is a repeater(for-loop) you’ll have a hard time extracting data from it. Would be easier to put the js part right into the for-loop like\n\n```{%for element in module.mygroup%}\n{%require_js%}\n&lt;script&gt;\ndocument.querySelector('#filter-form-container').getAttribute('{{element.my_number}}')\n&lt;/script&gt;\n{%end_require_js%}\n{% endfor %}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Brown",
+      "poster_handle": "scott.brown523"
+    },
+    "time_stamp": "2024-05-29 08:59:16",
+    "text": "Is there a way to extract the CSS of the background image field? IE can I just get the background-position and not all the other css associated with it?"
+  },
+  {
+    "poster": {
+      "poster_name": "Alex Zappa",
+      "poster_handle": "reatlat"
+    },
+    "time_stamp": "2024-05-29 12:06:24",
+    "text": "May do something like\n```function parseCustomJson(input) {\n    let str = input.replace(/([a-zA-Z0-9_]+)=/g, '\"$1\":').replace(/'/g, '\"');\n    try {\n        let obj = JSON.parse(str);\n        return obj;\n    } \n    catch (err) {\n        console.log('The string cannot be parsed into JSON:', err);\n    }\n}\n\nlet jsonString = parseCustomJson(`[{number_field=10, text_field=test text}]`);\nconsole.log(jsonString);```\nMeantime, is group return only one object always?\nmaybe try do something like\n`&lt;div id=\"filter-form-container\" data-field-group=\"{{<http://module.my|module.my>_group | first}}\"&gt;`"
+  }
+]

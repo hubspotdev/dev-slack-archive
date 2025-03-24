@@ -1,0 +1,73 @@
+[
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2020-12-14 08:07:31",
+    "text": "Are the queries correct, technically it should work. Can yoiu DM me the link to the template or page?"
+  },
+  {
+    "poster": {
+      "poster_name": "Surinder Bhomra",
+      "poster_handle": "surinder"
+    },
+    "time_stamp": "2020-12-14 10:46:18",
+    "text": "Hi!\nMy question relates both to HubDB and the API. I’ve been reading the API Documentation on interacting with a HubDB table and wanted to confirm if “Foreign ID” type is supported? This doesn’t seem to be listed in the available types when creating a new table. If the table already exists, can Foreign ID type still be used?\nThanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Hurlburt",
+      "poster_handle": "mark396"
+    },
+    "time_stamp": "2020-12-14 14:24:49",
+    "text": "The documentation here: <https://developers.HubSpot.com/docs/cms/features/hubdb> suggests that its better to query a table once and then filter the results using selectattr. However, when I try this I have not been able to get it to work when filtering based on a Select column. In my case I have a table called “cohorts” with a select field called “course”. One of my options for that field is “FSE”. When I do this:\n\nfse_cohorts = hubdb_table_rows(2663795, “course=FSE”)\n\nIt works fine… But this fails to yield results:\n\ncohorts = hubdb_table_rows(2663795)\nfse_cohorts2 = cohorts|selectattr(‘course’,‘equalto’,‘FSE’)\n\nas does this:\n\ncohorts = hubdb_table_rows(2663795)\nfse_cohorts3 = cohorts|selectattr(‘course=FSE’)\n\nCan someone tell me where I’m going wrong?"
+  },
+  {
+    "poster": {
+      "poster_name": "Abby",
+      "poster_handle": "abby.xia"
+    },
+    "time_stamp": "2020-12-14 16:17:23",
+    "text": "we haven't created the page yet. just created the module for now. but i found the solution, by changing the query to `{% set query='event_id='~dynamic_page_hubdb_row.product_id %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2020-12-14 16:25:24",
+    "text": "I also just the JIRA you created and the page worked <http://businesschicks-7935239-hs-sites-com.sandbox.hs-sites.com/event/business-chicks-presents-kathy-lette>"
+  },
+  {
+    "text": "",
+    "time_stamp": "2020-12-14 16:25:40"
+  },
+  {
+    "poster": {
+      "poster_name": "Abby",
+      "poster_handle": "abby.xia"
+    },
+    "time_stamp": "2020-12-14 17:23:07",
+    "text": "yes, its working now. do you know how to add the tickets/products to cart?"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2020-12-14 17:48:02",
+    "text": "No Abby <@U7SL518D6><@U2H3TT8F2> do u know how other customers do this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2020-12-14 18:53:35",
+    "edited": {
+      "time_stamp": "2020-12-14 18:53:56"
+    },
+    "text": "There's a few ways to create the cart functionality for this. Ultimately the way you do this really depends on your needs. Shopify has a javascript cart script you may be able to use, however if you need inventory management of the tickets, that probably wont be sufficient. \n\nYou have a few options if you want to handle the inventory in your HubDB. Now i didnt look directly at your HubDB structure, I am going off the code you posted so you may have a different structure you want to use.  You could store in a column a total tickets available per event and a count of tickets sold per event.\n\nThen use a serverless function(if you have enterprise or you can use AWS lambda, or perhaps a heroku or other server) to get the row data for the specific event using the HubDB API, check if there are tickets available, hit a payment processors API, on success increment the tickets sold in your HubDB.\n\nThe cart itself it depends what you need to do. You could store the cart information in the client or you could store it in a custom property for a contact and leverage cms memberships with a login system."
+  }
+]

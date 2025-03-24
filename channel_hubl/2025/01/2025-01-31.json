@@ -1,0 +1,37 @@
+[
+  {
+    "poster": {
+      "poster_name": "Adam Nissen Feldt",
+      "poster_handle": "anfe216"
+    },
+    "time_stamp": "2025-01-31 04:24:47",
+    "text": "What is wrong with this??? I get the variable as null when I print it, but all fields check out:   {% set image_frontify = hubdb_table_row(module.field_group.hubdbrow_field.table_id, module.field_group.hubdbrow_field.id).image_preview_url + \"?width=\" + module.field_group.width + \"&amp;height=\" + module.field_group.height + \"&amp;crop=fp&amp;\" + module.field_group.focal_point + \"&amp;fp_zoom=\" + module.field_group.zoom + \"&amp;format=webp\" %}",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2025-01-31 08:24:37"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Aleksandar Perisic",
+      "poster_handle": "fizikaneri"
+    },
+    "time_stamp": "2025-01-31 08:24:37",
+    "text": "```{% set row_data = hubdb_table_row(module.field_group.hubdbrow_field.table_id, module.field_group.hubdbrow_field.id) %}\n{{ row_data.image_preview_url }} ```\nCould be one field returning `null` ...  can predefine for each also `|default()` , would this work\n```{% set image_frontify = '' %}\n{% set row_data = hubdb_table_row(module.field_group.hubdbrow_field.table_id, module.field_group.hubdbrow_field.id) %}\n\n{% if row_data.image_preview_url %}\n  {% set image_frontify = row_data.image_preview_url + \"?width=\" + module.field_group.width|default('') + \"&amp;height=\" + module.field_group.height|default('') + \"&amp;crop=fp&amp;\" + module.field_group.focal_point|default('') + \"&amp;fp_zoom=\" + module.field_group.zoom|default('') + \"&amp;format=webp\" %}\n{% endif %}```\nThere are limits like 10 calls to the `hubdb_table_rows`  per CMS Page\n• 10 Dynamic pages using the same HubDB table...\n<https://developers.HubSpot.com/docs/guides/cms/storage/hubdb/overview>"
+  },
+  {
+    "text": "Hmmm I just tried this and had no issues. I would be curious if you go into the the page editor, configure it to be false, then `?developermode=true` to the page url. Hover over the section and click on “copy as hubl”. Should format it correctly. Does that look any different?",
+    "time_stamp": "2025-01-31 08:28:17"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2025-01-31 09:52:43",
+    "text": "my job is done if BJ is on the case :wink:"
+  }
+]

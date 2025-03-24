@@ -1,0 +1,165 @@
+[
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-12-19 07:30:32",
+    "text": "<@U04DVL5T2TE> ok, thanks, I'll try that. I wonder if I even need it? I am trying to parse the content that HubSpot sends for `post_list_content` in HubL."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-12-19 07:30:58",
+    "text": "maybe I just need dangerously set inner HTML? hmm"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-12-19 07:33:57",
+    "text": "when I do that it renders the HTML as text"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-12-19 07:34:04",
+    "text": "any ideas or recommendations?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-12-19 07:40:41",
+    "text": "ok, I got it. Had to use decode using what seems like a weird trick:\n```  function decodeHtml(html) {\n    var txt = document.createElement(\"textarea\");\n    txt.innerHTML = html;\n    return txt.value;\n  }```"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-12-19 07:51:42",
+    "edited": {
+      "time_stamp": "2023-12-19 07:51:55"
+    },
+    "text": "whoops, just realized document doesn't exist either"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-12-19 07:51:47",
+    "text": ":faceplam:"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-12-19 07:52:07",
+    "text": "can anyone suggest the proper way of doing this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-12-19 07:52:50",
+    "text": "I guess checking for `useIsServerRender` first? that's the only way?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-12-19 07:53:56",
+    "text": "If you’re rendering HTML you don’t need to parse it regardless of server or client except for sanitization, if you need that "
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-12-19 07:54:46",
+    "text": "(I don't think I need to sanitize, it's blog content from HubSpot with no user input)"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-12-19 07:54:59",
+    "text": "Dangerously set inner HTML would be the best way assuming you’re confident about the contents. If that’s not rendering out then something above it is escaping it before it gets there "
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-12-19 07:55:56",
+    "text": "if I log the thing I want to render it shows up as\n```&lt;p&gt;&lt;span&gt;In a recent webinar...```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-12-19 07:56:13",
+    "text": "that comes from `post_list_content`"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-12-19 07:56:45",
+    "text": "Ah yeah then it’ll need to be unescaped"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-12-19 07:57:56",
+    "text": "is there a server friendly way of doing that?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-12-19 07:59:35",
+    "text": "ChatGPT suggest the `he` package"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-12-19 07:59:42",
+    "text": "<https://github.com/mathiasbynens/he>"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-12-19 08:00:06",
+    "text": "That should work"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-12-19 08:00:19",
+    "text": "ok, I'll try that. Thanks"
+  }
+]

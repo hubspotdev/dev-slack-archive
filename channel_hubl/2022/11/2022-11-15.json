@@ -1,0 +1,96 @@
+[
+  {
+    "poster": {
+      "poster_name": "Amanda Olson",
+      "poster_handle": "amanda379"
+    },
+    "time_stamp": "2022-11-15 07:42:45",
+    "text": "Ahh, okay, thank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin",
+      "poster_handle": "justin145"
+    },
+    "time_stamp": "2022-11-15 10:59:46",
+    "text": "I've successfully created a blog listing page that displays posts from two separate blogs following <https://designers.HubSpot.com/docs/tutorials/combining-multiple-sets-of-blog-posts-into-a-single-listing|this article>. I'm wondering if there is a way to customize output on the listing page conditionally based on which blog the post is from. Meaning, if the post is from the default blog do this. But if the post is from blog XXXXXXXXX, do that?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-11-15 18:12:55"
+      },
+      {
+        "time_stamp": "2022-11-16 11:51:44"
+      },
+      {
+        "time_stamp": "2022-11-16 11:55:54"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Mariana Forteza",
+      "poster_handle": "mariana"
+    },
+    "time_stamp": "2022-11-15 12:44:54",
+    "text": "Hello Community.\nI’ve create a custom object and using it in one page with crm_associations.\nI am getting the object but I’m only getting three properties. I’m reviewing the schema to see if I built something wrong but the properties have all the same settings. Why could this be happening? Why am I not seeing all the properties?",
+    "reply_count": 15,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-12-09 13:25:57"
+      },
+      {
+        "time_stamp": "2022-12-09 13:29:03"
+      },
+      {
+        "time_stamp": "2022-12-12 09:08:23"
+      },
+      {
+        "time_stamp": "2022-12-12 09:09:10"
+      },
+      {
+        "time_stamp": "2022-12-12 09:09:29"
+      },
+      {
+        "time_stamp": "2022-12-12 09:09:36"
+      },
+      {
+        "time_stamp": "2022-12-12 09:10:08"
+      },
+      {
+        "time_stamp": "2022-12-12 09:10:24"
+      },
+      {
+        "time_stamp": "2022-12-12 09:11:36"
+      },
+      {
+        "time_stamp": "2022-12-12 09:11:39"
+      },
+      {
+        "time_stamp": "2022-12-12 09:11:45"
+      },
+      {
+        "time_stamp": "2022-12-12 09:11:47"
+      },
+      {
+        "time_stamp": "2022-12-12 09:11:53"
+      },
+      {
+        "time_stamp": "2022-12-12 09:14:36"
+      },
+      {
+        "time_stamp": "2022-12-12 09:14:50"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2022-11-15 18:12:55",
+    "text": "Hmm, it doesn’t look like there’s any properties associated with the blog items being iterated through that’d allow you to do it without some additional logic.\n\nThe most immediate solution that comes to my mind would be to iterate through the posts in the un-merged recent post lists, and check for an ID match against your current post.\n\nHere’s a rough example:\n```{% set blog_one_posts = blog_recent_posts('XXXXXXXX', limit=5) %}\n{% set blog_two_posts = blog_recent_posts('YYYYYYYY', limit=5) %}\n{% set all_posts = (blog_one_posts + blog_two_posts) | sort(true, false, 'publish_date') %}\n\n&lt;ul id=\"blog_posts\"&gt;\n\n   {# Generate listing previews #}\n   {% for post in all_posts %}\n\n      {% set post_origin = \"\" %}\n\n      {# Check current post ID against items in blog_one_posts #}\n      {% for el in blog_one_posts %}\n        {% if post.id == el.id %}\n           {% set post_origin = \"blog_one\" %}\n        {% endif %}\n      {% endfor %}\n\n      &lt;li class=\"blog_post {{ post_origin == 'blog_one' ? 'blog_one_classes' : 'blog_two_classes' }}\"&gt;\n        {# Blog listing content goes here #}\n      &lt;/li&gt;\n   {% endfor %}\n\n&lt;/ul&gt;```\nThat code almost certainly won’t work as-is, but I hope this points you in the right direction!"
+  }
+]

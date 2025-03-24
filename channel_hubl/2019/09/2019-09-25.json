@@ -1,0 +1,156 @@
+[
+  {
+    "text": "Hi!\nI have this simple code that print out the products on a page with a link. Everything fine, but after the 10th element, the element (item) doesn't return a link; seems that {{ content_by_id(item.pagina).absolute_url }} stop working after the 10th element. There is something that I don't know? Or some kind of known issue? Thanks!",
+    "time_stamp": "2019-09-25 06:42:01"
+  },
+  {
+    "text": "Pic for example",
+    "time_stamp": "2019-09-25 06:50:06",
+    "reply_count": 8,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-09-25 06:51:00"
+      },
+      {
+        "time_stamp": "2019-09-25 07:01:07"
+      },
+      {
+        "time_stamp": "2019-09-25 07:14:09"
+      },
+      {
+        "time_stamp": "2019-09-25 07:18:06"
+      },
+      {
+        "time_stamp": "2019-09-25 07:39:21"
+      },
+      {
+        "time_stamp": "2019-09-25 09:41:29"
+      },
+      {
+        "time_stamp": "2019-10-07 03:33:33"
+      },
+      {
+        "time_stamp": "2019-10-07 04:00:21"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Claudio Cappelletti",
+      "poster_handle": "cca"
+    },
+    "time_stamp": "2019-09-25 06:51:00",
+    "text": "As you can see, I can't see the id of the page and the url of the page. And if I mix the products, always the last 2 (11 - 12) doesn't work"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2019-09-25 07:01:07",
+    "text": "This function has a limit of 10 calls per page.\n<https://designers.HubSpot.com/docs/hubl/hubl-supported-functions#content-by-id>\n\nYou will have to use the content_by_ids function\n<https://designers.HubSpot.com/en/docs/hubl/hubl-supported-functions#content-by-ids>\nWhich allows you to pass up to 100 id’s into the function, though it’s a bit more of a pain to set up!\nI’ll see if I can find a snippet from where i’ve used it previously"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2019-09-25 07:14:09",
+    "text": "First create a var with all the id’s in them\n```{% set ids = [] %}\n{% for item in group %}\n\t{% do ids.append(item.pagina) %}\n{% endfor %}\n```\nThen set a var with all the content for those ids\n```{% if ids|first %}\n\t{% set allContent = content_by_ids( ids ) %}\n{% endif %}```\nThen my code differes but I assume you can somehow get the right index from the array of\n```{% for item in module.prodotto %}\n        {{ allContent|Some filter or function to get the contents for you're particular ID }}\n{% endfor %}```\nHope that helps get you started, let me know if you figure out a nice way to get the right value in the final for loop"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2019-09-25 07:18:06",
+    "text": "If you need more that 100 then I guess you’re gonna have to call it multiple times again has a limit of 10 per page but that would theoretically give you up to 1000 items if you really needed"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2019-09-25 07:39:21",
+    "edited": {
+      "time_stamp": "2019-09-25 07:39:26"
+    },
+    "text": "Just found the long winded way I did it would appreciate if you found a better method:\n```{% for item in module.prodotto %}\n\t{% for content in allContent %}\n\t\t{% if  item.pagina == content.id %}\n\t\t\t{{content.absolute_url}}\n\t\t{% endif %}\n\t{% endfor %}\n{% endfor %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Main",
+      "poster_handle": "jmain"
+    },
+    "time_stamp": "2019-09-25 09:22:48",
+    "edited": {
+      "time_stamp": "2019-09-25 09:23:03"
+    },
+    "text": "Hi all! I'm working with a custom repeater module and I'm looking for a way to dynamically assign a unique class to each of the repeaters. Could just be a simple counter or index like this. Any help is greatly appreciated!\n\n```&lt;div class=\"parent\"&gt;\n&lt;div class=\"child div-1\"&gt;\n&lt;div class=\"child div-2\"&gt;\n&lt;div class=\"child div-3\"&gt;\n&lt;/div&gt;```",
+    "reply_count": 4,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2019-09-25 09:34:44"
+      },
+      {
+        "time_stamp": "2019-09-25 09:36:09"
+      },
+      {
+        "time_stamp": "2019-09-25 09:38:28"
+      },
+      {
+        "time_stamp": "2019-09-25 09:38:31"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2019-09-25 09:34:44",
+    "text": "inside of the for loop, use `{{ loop.index }}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-09-25 09:36:09",
+    "text": "<https://designers.HubSpot.com/docs/hubl/for-loops#loop-properties>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Main",
+      "poster_handle": "jmain"
+    },
+    "time_stamp": "2019-09-25 09:38:28",
+    "text": "Ah, wow! Don't know how I missed that in the documentation"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Main",
+      "poster_handle": "jmain"
+    },
+    "time_stamp": "2019-09-25 09:38:31",
+    "text": "Thanks to both of yall"
+  },
+  {
+    "poster": {
+      "poster_name": "Claudio Cappelletti",
+      "poster_handle": "cca"
+    },
+    "time_stamp": "2019-09-25 09:41:29",
+    "text": "Ouch! Thanks for all the support! Tomorrow I will try to figure out something!"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2019-09-25 09:41:38",
+    "text": "the `{{ <http://content.blog|content.blog> }}` alias for `group` is not printing anything on a test portal’s blog. This normal?"
+  }
+]

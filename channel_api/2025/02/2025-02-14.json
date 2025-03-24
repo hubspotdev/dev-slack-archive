@@ -1,0 +1,804 @@
+[
+  {
+    "poster": {
+      "poster_name": "Aritz Bello",
+      "poster_handle": "aritz"
+    },
+    "time_stamp": "2025-02-14 02:50:25",
+    "text": "Hi everyone, we're trying to handle custom workflow actions through the automation v4 api. The issue is that we need to be able to handle bulk actions so we have a processing queue that holds the messages.\n\nThe flow logic is as follows:\n1. Contacts are enrolled in the workflow. \n2. They arrive at our endpoint, where we put them in a processing queue and return a response with code 200 with `hs_execution_state = \"BLOCK\"`.\n3. While the workflow blocks with a queue timeout we process the messages. \n4. We complete in callback, in case it is OK, we indicate `OutputFields.HsExecutionState = \"SUCCESS\"`. In case of error we send `OutputFields.HsExecutionState = \"FAIL_CONTINUE\"; OutputFields.Status= \"ERROR_OCCURRED\"`.\nThe problem with this is that we don't get the enrollment history to show the error. I'll indicate more details about the JSON in the same thread as the message, where I will be happy to add more information if required.\n\nThank you in advice.",
+    "reply_count": 47,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2025-02-14 02:57:23"
+      },
+      {
+        "time_stamp": "2025-02-14 03:02:07"
+      },
+      {
+        "time_stamp": "2025-02-14 03:03:49"
+      },
+      {
+        "time_stamp": "2025-02-14 03:06:19"
+      },
+      {
+        "time_stamp": "2025-02-14 05:45:00"
+      },
+      {
+        "time_stamp": "2025-02-14 05:47:20"
+      },
+      {
+        "time_stamp": "2025-02-14 05:48:34"
+      },
+      {
+        "time_stamp": "2025-02-14 05:51:50"
+      },
+      {
+        "time_stamp": "2025-02-14 05:56:14"
+      },
+      {
+        "time_stamp": "2025-02-14 05:56:56"
+      },
+      {
+        "time_stamp": "2025-02-14 06:44:15"
+      },
+      {
+        "time_stamp": "2025-02-14 06:46:01"
+      },
+      {
+        "time_stamp": "2025-02-14 06:47:10"
+      },
+      {
+        "time_stamp": "2025-02-14 06:47:43"
+      },
+      {
+        "time_stamp": "2025-02-14 06:47:58"
+      },
+      {
+        "time_stamp": "2025-02-14 06:48:16"
+      },
+      {
+        "time_stamp": "2025-02-14 06:50:09"
+      },
+      {
+        "time_stamp": "2025-02-14 06:50:58"
+      },
+      {
+        "time_stamp": "2025-02-14 06:51:12"
+      },
+      {
+        "time_stamp": "2025-02-14 06:52:03"
+      },
+      {
+        "time_stamp": "2025-02-14 06:53:28"
+      },
+      {
+        "time_stamp": "2025-02-14 06:54:07"
+      },
+      {
+        "time_stamp": "2025-02-14 06:54:57"
+      },
+      {
+        "time_stamp": "2025-02-14 06:56:39"
+      },
+      {
+        "time_stamp": "2025-02-14 06:57:04"
+      },
+      {
+        "time_stamp": "2025-02-14 06:57:39"
+      },
+      {
+        "time_stamp": "2025-02-14 06:57:50"
+      },
+      {
+        "time_stamp": "2025-02-14 06:59:17"
+      },
+      {
+        "time_stamp": "2025-02-14 06:59:46"
+      },
+      {
+        "time_stamp": "2025-02-14 06:59:55"
+      },
+      {
+        "time_stamp": "2025-02-14 07:00:31"
+      },
+      {
+        "time_stamp": "2025-02-14 07:01:05"
+      },
+      {
+        "time_stamp": "2025-02-14 07:01:18"
+      },
+      {
+        "time_stamp": "2025-02-14 07:02:43"
+      },
+      {
+        "time_stamp": "2025-02-14 07:05:56"
+      },
+      {
+        "time_stamp": "2025-02-14 07:15:05"
+      },
+      {
+        "time_stamp": "2025-02-14 07:15:44"
+      },
+      {
+        "time_stamp": "2025-02-14 08:00:23"
+      },
+      {
+        "time_stamp": "2025-02-14 08:06:05"
+      },
+      {
+        "time_stamp": "2025-02-14 08:27:08"
+      },
+      {
+        "time_stamp": "2025-02-14 08:35:44"
+      },
+      {
+        "time_stamp": "2025-02-14 15:13:38"
+      },
+      {
+        "time_stamp": "2025-02-14 15:29:50"
+      },
+      {
+        "time_stamp": "2025-02-14 15:35:34"
+      },
+      {
+        "time_stamp": "2025-02-15 20:08:48"
+      },
+      {
+        "time_stamp": "2025-02-17 02:11:44"
+      },
+      {
+        "time_stamp": "2025-02-17 06:41:14"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Aritz Bello",
+      "poster_handle": "aritz"
+    },
+    "time_stamp": "2025-02-14 02:57:23",
+    "edited": {
+      "time_stamp": "2025-02-14 02:59:12"
+    },
+    "text": "The custom workflow has been created as follows through the corresponding endpoint: `<https://api.hubapi.com/automation/v4/actions/0101010?hapikey=OUR_HAPI_KEY>`\n\n The JSON body looks like this, I will fake the corresponding information:\n```{\n    \"actionUrl\": \"<https://ourapiurl.com/api/workflows/workflowhandler>\",\n    \"published\": true,\n    \"inputFields\": [\n        {\n            \"typeDefinition\": {\n                \"name\": \"prop1\",\n                \"type\": \"string\",\n                \"fieldType\": \"text\",\n                \"options\": [],\n                \"optionsUrl\": null,\n                \"referencedObjectType\": null,\n                \"externalOptions\": false,\n                \"externalOptionsReferenceType\": null\n            },\n            \"supportedValueTypes\": [\n                \"OBJECT_PROPERTY\"\n            ],\n            \"isRequired\": true,\n            \"includeEmptyIfValueAbsent\": false,\n            \"automationFieldType\": null,\n            \"allowedObjectTypes\": null\n        },\n        {\n            \"typeDefinition\": {\n                \"name\": \"prop2\",\n                \"type\": \"string\",\n                \"fieldType\": \"text\",\n                \"options\": [],\n                \"optionsUrl\": null,\n                \"referencedObjectType\": null,\n                \"externalOptions\": false,\n                \"externalOptionsReferenceType\": null\n            },\n            \"supportedValueTypes\": [\n                \"STATIC_VALUE\"\n            ],\n            \"isRequired\": true,\n            \"includeEmptyIfValueAbsent\": false,\n            \"automationFieldType\": null,\n            \"allowedObjectTypes\": null\n        },\n        {\n            \"typeDefinition\": {\n                \"name\": \"prop3\",\n                \"type\": \"string\",\n                \"fieldType\": \"text\",\n                \"options\": [],\n                \"optionsUrl\": null,\n                \"referencedObjectType\": null,\n                \"externalOptions\": false,\n                \"externalOptionsReferenceType\": null\n            },\n            \"supportedValueTypes\": [\n                \"STATIC_VALUE\"\n            ],\n            \"isRequired\": false,\n            \"includeEmptyIfValueAbsent\": false,\n            \"automationFieldType\": null,\n            \"allowedObjectTypes\": null\n        },\n        {\n            \"typeDefinition\": {\n                \"name\": \"prop4\",\n                \"type\": \"string\",\n                \"fieldType\": \"text\",\n                \"options\": [],\n                \"optionsUrl\": null,\n                \"referencedObjectType\": null,\n                \"externalOptions\": false,\n                \"externalOptionsReferenceType\": null\n            },\n            \"supportedValueTypes\": [\n                \"STATIC_VALUE\"\n            ],\n            \"isRequired\": false,\n            \"includeEmptyIfValueAbsent\": false,\n            \"automationFieldType\": null,\n            \"allowedObjectTypes\": null\n        },\n        {\n            \"typeDefinition\": {\n                \"name\": \"prop5\",\n                \"type\": \"string\",\n                \"fieldType\": \"text\",\n                \"options\": [],\n                \"optionsUrl\": null,\n                \"referencedObjectType\": null,\n                \"externalOptions\": false,\n                \"externalOptionsReferenceType\": null\n            },\n            \"supportedValueTypes\": [\n                \"STATIC_VALUE\"\n            ],\n            \"isRequired\": false,\n            \"includeEmptyIfValueAbsent\": false,\n            \"automationFieldType\": null,\n            \"allowedObjectTypes\": null\n        }\n    ],\n    \"objectRequestOptions\": {\n        \"properties\": []\n    },\n    \"labels\": {\n        \"en\": {\n            \"inputFieldLabels\": {\n                \"prop1\": \"prop1 label\",\n                \"prop2\": \"prop2 label\",\n                \"prop3\": \"prop3 label\",\n                \"prop4\": \"prop4 label\",\n                \"prop5\": \"prop5 label\"\n            },\n            \"inputFieldDescriptions\": {\n                \"prop1\": \"prop1 desc\",\n                \"prop2\": \"prop2 desc\",\n                \"prop3\": \"prop3 desc\",\n                \"prop4\": \"prop4 desc\",\n                \"prop5\": \"prop5 desc\"\n            },\n            \"actionName\": \"Custom Workflow Action\",\n            \"actionDescription\": \"Makes super cool things, trust me\",\n            \"actionCardContent\": \"Makes super cool things, trust me\",\n            \"executionRules\": {\n                \"errorMessage\": \"An error occurred\"\n            }\n        },\n        \"es\": {\n            \"inputFieldLabels\": {\n                \"prop1\": \"prop1 label\",\n                \"prop2\": \"prop2 label\",\n                \"prop3\": \"prop3 label\",\n                \"prop4\": \"prop4 label\",\n                \"prop5\": \"prop5 label\"\n            },\n            \"inputFieldDescriptions\": {\n                \"prop1\": \"prop1 desc\",\n                \"prop2\": \"prop2 desc\",\n                \"prop3\": \"prop3 desc\",\n                \"prop4\": \"prop4 desc\",\n                \"prop5\": \"prop5 desc\"\n            },\n            \"actionName\": \"Acción Workflow Personalizad\",\n            \"actionDescription\": \"Hace cosas guapísimas, confía en mí\",\n            \"actionCardContent\": \"Hace cosas guapísimas, confía en mí\",\n            \"executionRules\": {\n                \"errorMessage\": \"Se ha producido un error\"\n            }\n        }\n    },\n    \"objectTypes\": [\n        \"0-1\",\n        \"0-2\",\n        \"0-3\"\n    ],\n    \"executionRules\": [\n        {\n            \"labelName\": \"errorMessage\",\n            \"conditions\": {\n                \"status\": \"ERROR_OCCURRED\"\n            }\n        }\n    ]\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Aritz Bello",
+      "poster_handle": "aritz"
+    },
+    "time_stamp": "2025-02-14 03:02:07",
+    "text": "We complete the callback using `/automation/v4/actions/callbacks/{callbackId}/complete` sending the following body:\n```{\n  \"outputFields\":{\n     \"hs_execution_state\":\"FAIL_CONTINUE\",\n     \"status\":\"ERROR_OCCURRED\"\n   }\n}```\n"
+  },
+  {
+    "text": "But HubSpot indicates that everything happened successfully.",
+    "time_stamp": "2025-02-14 03:03:49"
+  },
+  {
+    "poster": {
+      "poster_name": "Aritz Bello",
+      "poster_handle": "aritz"
+    },
+    "time_stamp": "2025-02-14 03:06:19",
+    "text": "It is possible that we are approaching or interpreting the documentation wrong, I'll leave the reference here to make it more accessible to anyone who can help us. We also don't know if it's possible to complete the callbacks the way we are trying, so any help or correction is welcome.\n\n<https://developers.HubSpot.com/docs/guides/api/automation/custom-workflow-actions#asynchronous-execution>"
+  },
+  {
+    "text": "Hey Collin thanks for the response tried adding the scopes required for custom channel\n\nconversations.custom_channels.read\nconversations.custom_channels.write\n\nseems like cant add the scope in the private app as shown in image below(first one)\n\nif thats the case then why the private app is mentioned in the auth method (maybe i'am doing something wrong or there maybe different way of using private app auth method in custom channel api's)\n\nThanks in advance :)",
+    "time_stamp": "2025-02-14 03:54:38"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Buisson",
+      "poster_handle": "thomas586"
+    },
+    "time_stamp": "2025-02-14 04:11:32",
+    "text": "Hello everyone,\nDo you know ho to update a contact with API to make it as a marketing contact ? I can create a new contact as marketing but not update an existing contact.",
+    "reply_count": 4,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2025-02-14 04:31:59"
+      },
+      {
+        "time_stamp": "2025-02-14 04:50:46"
+      },
+      {
+        "time_stamp": "2025-02-14 05:42:20"
+      },
+      {
+        "time_stamp": "2025-02-14 06:31:13"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Aritz Bello",
+      "poster_handle": "aritz"
+    },
+    "time_stamp": "2025-02-14 04:31:59",
+    "edited": {
+      "time_stamp": "2025-02-14 04:32:11"
+    },
+    "text": "Hi <@U07724NLU9H>, from what they say on the HubSpot forums it is not possible to do this programmatically.\n\n<https://community.HubSpot.com/t5/APIs-Integrations/How-do-I-set-a-contact-as-a-marketing-contact-using-HubSpot-s/m-p/895454>"
+  },
+  {
+    "poster": {
+      "poster_name": "Aritz Bello",
+      "poster_handle": "aritz"
+    },
+    "time_stamp": "2025-02-14 04:50:46",
+    "text": "<@U07724NLU9H> I have looked for a bit more on some of our integrations. Maybe you can create a property that you update programmatically and define a workflow that, based on this property updates the status of the marketing contacts.\n\nWhen you create a workflow action, in the side panel you have a “Marketing” dropdown, if you open it there is an option that allows you to define the status of a marketing contact."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 05:42:20",
+    "text": "This is the only way I know how to do this, solid work around "
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 05:45:00",
+    "text": "I haven’t used this api but I’m looking at this from the point of view as you trying to hit a specific endpoint of your own. Are you saying that when you make this API call that the API is not returning information quick enough to HubSpot before it comes out?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 05:47:20",
+    "text": "I’m not sure if you are able to manually send the hs items in the output, because HubSpot is really setting those. I’m not sure if this is true, so I think you could create a different output instead of using the default HubSpot output and check against that?\n\nThat might be a way to see if you get something different and determine if you are able to set those default HubSpot outputs. "
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 05:48:34",
+    "text": "In the case that your API is timing out in HubSpot because the response doesn’t come back soon enough, you could change the way the API response and update your API to hand off a message quickly and do the processing in another task/background task"
+  },
+  {
+    "poster": {
+      "poster_name": "Aritz Bello",
+      "poster_handle": "aritz"
+    },
+    "time_stamp": "2025-02-14 05:51:50",
+    "edited": {
+      "time_stamp": "2025-02-14 05:52:00"
+    },
+    "text": "Hi <@U25PYL3Q8> thanks for your reply, I'll comment quickly.\n\nPreviously we had a direct endpoint that processed the message directly Workflow Action Triggered > Our Api > Third party Api > Return callback.\n\nBut when thousands of contacts were enrolled, our API was not able to handle them to respond to HubSpot in less than 20 seconds, this caused HubSpot to retry and we received up to three events from the same workflow action.\n\nTo solve this problem we created a processing queue, where we store the JSON sent to us by HubSpot to process them asynchronously.\n\nHubSpot workflow arrives > we send a callback with status block > we save the message in queue > we process it > we complete the callback.\n\nThis currently works fine, but completing the callback several minutes later doesn't seem to allow us to tell you that an error has occurred.\n\nI am not sure if I have made myself clear."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 05:56:14",
+    "text": "HubSpot workflow arrives &gt; we send a callback with status block &gt; we save the message in queue &gt; we process it &gt; we complete the callback.\n\nyour api is hit, you respond with a status, what status is that? Does HubSpot at this point believe that the api response is done?\n\nWhen you say return callback, what do you mean by that, is that just returning from third party api back to your api or are you attempting to send another response to the workflow?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 05:56:56",
+    "text": "_This currently works fine, but completing the callback several minutes later doesn’t seem to allow us to tell you that an error has occurred._\nThat is the part I’m not 100% understanding"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Buisson",
+      "poster_handle": "thomas586"
+    },
+    "time_stamp": "2025-02-14 06:31:13",
+    "text": "All good ! Thanks a lot !"
+  },
+  {
+    "poster": {
+      "poster_name": "Aritz Bello",
+      "poster_handle": "aritz"
+    },
+    "time_stamp": "2025-02-14 06:44:15",
+    "text": "Let me explain <@U25PYL3Q8>, the first response we send to HubSpot is a 200, with a response that says that we have blocked it. At this point HubSpot tells us that there is a blocked contact in the indicated workflow action, as indicated in the documentation that it has to be done. (<https://developers.HubSpot.com/docs/guides/api/automation/custom-workflow-actions#blocking-action-execution>).\nIn this status 200 that we return to the HubSpot workflow we send the following body in the response:\n```{\n   \"hs_execution_state\":\"Block\",\n   \"hs_expiration_duration\" = \"PT1M\"\n}```\nTo this point everything works as expected, but HubSpot does not know what has happened yet, so we use the endpoint `/automation/v4/actions/callbacks/{callbackId}/complete`, to *try* to inform HubSpot about what has happened in the workflow event process that has been sent to us.\n\nWe send the POST with the following body, the issue is that at this point we do not know or we do not find how we can tell HubSpot that an error has occurred, because when we complete these callbacks and go to the workflow execution history, they are always shown as succesful.\n```{\n  \"outputFields\":{\n     \"hs_execution_state\":\"FAIL_CONTINUE\",\n     \"status\":\"ERROR_OCCURRED\"\n   }\n}```\nWhat we need is some way to, once we have blocked the workflow and processed it, tell HubSpot that it has happened and that in case an error has occurred, it will be shown in the execution history."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 06:46:01",
+    "text": "I was so confused with you saying block. I apologize, I’ve never seen this before so let me read up a bit"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 06:47:10",
+    "text": "Okay, so in the case of an error — what is your goal with the workflow?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 06:47:43",
+    "text": "I understand what is going on here now lol, thank you —"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 06:47:58",
+    "text": "Would you be branching to handle the error in the next workflow step?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 06:48:16",
+    "text": "or are you hoping that the workflow retries"
+  },
+  {
+    "poster": {
+      "poster_name": "Aritz Bello",
+      "poster_handle": "aritz"
+    },
+    "time_stamp": "2025-02-14 06:50:09",
+    "text": "The goal is to tell HubSpot that an error has occurred so that when the user goes to view the history of workflow executions they will see that the particular action has failed.\n\nThe workflow should continue or not, depending on how the user manages it. But under no circumstances do we want HubSpot to send us retries, as we have our own retry logic in our API to handle this based on third-party API responses."
+  },
+  {
+    "poster": {
+      "poster_name": "Aritz Bello",
+      "poster_handle": "aritz"
+    },
+    "time_stamp": "2025-02-14 06:50:58",
+    "text": "The only thing we want is that when the user goes to see the history of workflow executions, they will see in which contacts an error has occurred and in which not."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 06:51:12",
+    "text": "And in the current state — it doesn’t let the user know, and it just continues on in the workflow, is that correct?"
+  },
+  {
+    "text": "Yes, actually what happens 100% of the time is that it appears as success as shown in the screenshot",
+    "time_stamp": "2025-02-14 06:52:03"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 06:53:28",
+    "text": "So — right now I can tell you a quick work around / a bit hacky maybe, and then I’ll think about this more and get back to you in the next 24 hours. I do have to get some work done this morning, but this whole thing is interesting to me because I am going to have to deal with this in the next 30 days"
+  },
+  {
+    "poster": {
+      "poster_name": "Aritz Bello",
+      "poster_handle": "aritz"
+    },
+    "time_stamp": "2025-02-14 06:54:07",
+    "edited": {
+      "time_stamp": "2025-02-14 06:54:42"
+    },
+    "text": "Any workaround is welcome, I would like to publish the changes early next week. But I've been stuck with this problem all week now."
+  },
+  {
+    "poster": {
+      "poster_name": "Reuben",
+      "poster_handle": "reuben.levine"
+    },
+    "time_stamp": "2025-02-14 06:54:39",
+    "text": "Hi everyone!\nI'm attempting to update an association label between two objects and it keeps adding a new association label instead of replacing the existing one. According to this: <https://developers.HubSpot.com/docs/guides/api/crm/associations/associations-v4#update-record-association-labels>, I believe it should replace the existing label(s) with the new one I'm setting. Is the documentation incorrect, or (more likely) am I doing something wrong? Can someone test on their end to see if they're getting the same results (adding instead of replacing)?\nAs a workaround, I know I can perform two calls (one to delete the existing labels, and another to add the new one), but would obviously prefer a single call if possible.\nThanks, all!"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 06:54:57",
+    "text": "I hardly rely on hs_execution_state in my workflows — I set a variable at the top of the main function, or somettimes an object if I need better debugging\n\nexample\n```let output = { error: false, status: 'start', message: '' }```"
+  },
+  {
+    "poster": {
+      "poster_name": "Aritz Bello",
+      "poster_handle": "aritz"
+    },
+    "time_stamp": "2025-02-14 06:56:39",
+    "text": "I think, not sure, that the callback completion endpoint does not allow to send outputfields, from what I have been trying, I may have been doing it wrong."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 06:57:04",
+    "edited": {
+      "time_stamp": "2025-02-14 06:57:27"
+    },
+    "text": "I then do\n\n```let output = {...}\ntry {\n  // execute code\n  // I will update output.status at different parts if I'm in the early stages of debugging it, that way I can see the last \"status\" checkpoint I make\n} catch(err) {\n  // whatever you do here\n  // if error, I put the message into the output\n} finally {\n  // this is where I send my output to the callback\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Aritz Bello",
+      "poster_handle": "aritz"
+    },
+    "time_stamp": "2025-02-14 06:57:39",
+    "text": "At what stage?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 06:57:50",
+    "text": "With these workflow actions it looks like you are able to send /callbacks/callbackid/complete"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 06:59:17",
+    "text": "In this, I would create your output fields and not use the default ones as maybe something is not right\n\nso I would setup these output variables\n\n```{\n  \"outputFields\": {\n    \"cbstatus\": \"your callback status\"\n    \n  }\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 06:59:46",
+    "text": "These need to be defined\n\n```{\n  \"outputFields\": [\n    {\n      \"typeDefinition\": {\n        \"name\": \"myOutput\",\n        \"type\": \"string\",\n        \"fieldType\": \"text\"\n      }\n    }\n  ]\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 06:59:55",
+    "text": "see this <https://developers.HubSpot.com/docs/guides/api/automation/custom-workflow-actions#output-fields>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 07:00:31",
+    "text": "So if you have this define with a success and a fail, and maybe also a message, you should be able to have a branch after that, that uses that output field"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 07:01:05",
+    "text": "You could also create a custom coded action after that, and you can manually throw an error on that code block that details the previous details that you output"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 07:01:18",
+    "text": "That might be a better option instead of branching"
+  },
+  {
+    "poster": {
+      "poster_name": "Aritz Bello",
+      "poster_handle": "aritz"
+    },
+    "time_stamp": "2025-02-14 07:02:43",
+    "text": "Okay, just to make sure I understand correctly.\n1. I modify the workflow to include the outputfields I need. \n```{\n  \"outputFields\": [\n    {\n      \"typeDefinition\": {\n        \"name\": \"cbstatus\",\n        \"type\": \"string\",\n        \"fieldType\": \"text\"\n      }\n    }\n  ]\n}```\n2. The rest of the flow remains the same.\n3. When I complete the callback I send:\n```{\n  \"outputFields\": {\n    \"cbstatus\": \"your callback status\"\n    \n  }\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Aritz Bello",
+      "poster_handle": "aritz"
+    },
+    "time_stamp": "2025-02-14 07:05:56",
+    "edited": {
+      "time_stamp": "2025-02-14 07:06:28"
+    },
+    "text": "I'll give it a try on Monday, I have to get out of the office, I'll let you know with the results. Thank you so much for your time and patience!"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 07:15:05",
+    "text": "your type defination should be an enum and you’d want to have like ‘success’ and ‘error’ as options.\n\nThen a string for your message\n\nThen you said your callback status and your message"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 07:15:44",
+    "text": "Then you can custom code action one action after that that throws an error, I thin the message needs to reference that the previous workflow action is the one you had the error on for context"
+  },
+  {
+    "text": "That's weird that you can't add the scope to your app. Is it possible that your account isn't a high enough tier to access that scope? I see that these features are locked behind 'Enterprise' level accounts, so maybe it's plausible that the account you are using to add those scopes aren't of that tier? If I remember correctly, developer test accounts are supposed to have 'Enterprise' level access (at least for a period of time - maybe 90 days?). You could maybe use this as a comparison tool against your production app to see (if you don't have access to your account's subscription data).",
+    "time_stamp": "2025-02-14 07:52:58"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2025-02-14 08:00:23",
+    "text": "If you want custom messages back, do what Nicholas said. Update your action to include outputfields."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 08:06:05",
+    "text": "Thanks <@U03REFNRMB3> was the defining the fields as an enum the way to go on this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2025-02-14 08:27:08",
+    "text": "yes that’s how I structure all my outputfields related to system statuses (like errors, success, etc...)"
+  },
+  {
+    "poster": {
+      "poster_name": "Pedro Pulido",
+      "poster_handle": "pedro.pulido"
+    },
+    "time_stamp": "2025-02-14 08:32:32",
+    "text": "Hello world!! Happy to join this community.\n\nI have an issue and maybe someone here could help.\n\nI’m working on an integration with external tools using APIs. I set up a workflow in HubSpot to send a webhook to an API from another platform, and one of the values I want to pass is the *Deal Owner*.\n\nThe issue is that the webhook seems to be sending the *internal ID* of the field instead of the actual value. For example, instead of receiving “Pedro,” I’m getting a numeric string.\n\nIs there a way to fix this within HubSpot so that the webhook sends the *Deal Owner’s name* instead of the internal ID? Any insights would be greatly appreciated!",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-02-14 11:13:31"
+      },
+      {
+        "time_stamp": "2025-02-14 13:27:01"
+      }
+    ]
+  },
+  {
+    "text": "```{\n  \"outputFields\": {\n    \"cbstatus\": \"your callback status\",\n    \"hs_execution_state\": \"FAIL_CONTINUE\",   \n  }\n}```\nJust make sure your documentation or your clients know to use a branch off that action. Example screenshot",
+    "time_stamp": "2025-02-14 08:35:44"
+  },
+  {
+    "poster": {
+      "poster_name": "Hannah Stanford",
+      "poster_handle": "hstanford"
+    },
+    "time_stamp": "2025-02-14 10:35:32",
+    "text": "Thanks so much for this, <@U08AVAYCZ63>!"
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Knobling",
+      "poster_handle": "lukas.knobling"
+    },
+    "time_stamp": "2025-02-14 11:13:31",
+    "text": "No there will be always sent the OwnerID. The Option you have is either you use custom Code before and extract the owners Name with the ID via this api endpoint: <https://api.hubapi.com/crm/v3/owners/%7BownerId%7D|https://api.hubapi.com/crm/v3/owners/{ownerId}>\n\n\nOr you do this afterwards on your side. \n\n<https://developers.HubSpot.com/docs/reference/api/crm/owners|https://developers.HubSpot.com/docs/reference/api/crm/owners>"
+  },
+  {
+    "poster": {
+      "poster_name": "Vanessa Gustin",
+      "poster_handle": "vgustin"
+    },
+    "time_stamp": "2025-02-14 12:51:29",
+    "text": "Hi! I have made an integration where we are passing the quotes to a purchase order on another platform.\nTherefore we are passing each line of the products with all their data.\nSo that is what we are looking to achieve: send the unit discount via API. But I can't find the internal value of this property, can someone help me?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2025-02-17 08:35:13"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Pedro Pulido",
+      "poster_handle": "pedro.pulido"
+    },
+    "time_stamp": "2025-02-14 13:27:01",
+    "text": "Awesome!! Thanks!!"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Lerner",
+      "poster_handle": "ben198"
+    },
+    "time_stamp": "2025-02-14 14:12:48",
+    "text": "I am working currently on a Public App and was wondering.  If a user (within our platform) decides to disconnect / remove a Portal connection, I would remove the option from our DB, but is there a way to also \"uninstall\" the Public App from the said portal?  i.e. remove the connection on both sides.",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-02-14 14:54:43"
+      },
+      {
+        "time_stamp": "2025-02-14 14:55:25"
+      },
+      {
+        "time_stamp": "2025-02-14 14:57:19"
+      },
+      {
+        "time_stamp": "2025-02-14 14:58:46"
+      },
+      {
+        "time_stamp": "2025-02-14 15:01:44"
+      },
+      {
+        "time_stamp": "2025-02-15 04:44:22"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Swanson",
+      "poster_handle": "matt353"
+    },
+    "time_stamp": "2025-02-14 14:54:43",
+    "text": "nope, they have to manually uninstall"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Swanson",
+      "poster_handle": "matt353"
+    },
+    "time_stamp": "2025-02-14 14:55:25",
+    "text": "you’ll also continue to receive webhooks, custom workflow actions, or UIE card requests"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Swanson",
+      "poster_handle": "matt353"
+    },
+    "time_stamp": "2025-02-14 14:57:19",
+    "text": "best you can do is create a link to your app settings within their portal (but no guarantee that the user will have access to uninstall it in HubSpot!)"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Swanson",
+      "poster_handle": "matt353"
+    },
+    "time_stamp": "2025-02-14 14:58:46",
+    "text": "please post/upvote this thread: <https://community.HubSpot.com/t5/APIs-Integrations/I-d-like-to-uninstall-our-app-from-a-churned-customers-account/m-p/1067277>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Swanson",
+      "poster_handle": "matt353"
+    },
+    "time_stamp": "2025-02-14 15:01:44",
+    "text": "also upvote/post here: <https://community.HubSpot.com/t5/HubSpot-Ideas/Uninstall-connected-app-through-API/idi-p/589468>"
+  },
+  {
+    "poster": {
+      "poster_name": "Pedro Pulido",
+      "poster_handle": "pedro.pulido"
+    },
+    "time_stamp": "2025-02-14 15:08:40",
+    "text": "*Missing crm.pipelines.read and crm.owners.read scopes in Private App settings*\n\nHi everyone,\n\nI’m currently working on a Google Apps Script integration with HubSpot using a *Private App*, and I need to retrieve Deal Stages (dealstage) and Owners (HubSpot_owner_id).\n\nAccording to the <https://developers.HubSpot.com/docs/api|HubSpot API documentation>, the necessary scopes for this are:\n\t•\tcrm.pipelines.read → To retrieve deal stages\n\t•\tcrm.owners.read → To retrieve owner names\n\nHowever, when I go to *Settings &gt; Integrations &gt; Private Apps*, these scopes *do not appear in the list of available permissions*.\n\nI *do have access to Pipelines and Owners in my HubSpot account*, as I can see and manage them from:\n\t•\t:gear: Settings &gt; Objects &gt; Deals &gt; Pipelines\n\t•\t:gear: Settings &gt; Users &amp; Teams (where I see all owners)\n\nBut since I can’t enable these scopes in my Private App, my API requests to:\n\t•\tGET /crm/v3/pipelines/deals (for deal stages)\n\t•\tGET /crm/v3/owners (for owners)\nreturn *403 Forbidden* errors due to missing permissions.\n\n*Question:*\n\t1.\t*Are these scopes (crm.pipelines.read and crm.owners.read) restricted to certain HubSpot plans?*\n\t2.\t*Are they only available for Public Apps and not Private Apps?*\n\t3.\t*Is there an alternative way to retrieve this data within the limitations of a Private App?*\n\nAny guidance would be greatly appreciated!\nThanks in advance.",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-02-14 15:40:37"
+      },
+      {
+        "time_stamp": "2025-02-14 15:42:20"
+      },
+      {
+        "time_stamp": "2025-02-14 15:43:12"
+      },
+      {
+        "time_stamp": "2025-02-14 15:47:24"
+      },
+      {
+        "time_stamp": "2025-02-14 15:56:12"
+      },
+      {
+        "time_stamp": "2025-02-14 15:57:25"
+      },
+      {
+        "time_stamp": "2025-02-14 15:58:38"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Swanson",
+      "poster_handle": "matt353"
+    },
+    "time_stamp": "2025-02-14 15:13:38",
+    "text": "<@U085TP6KQP8> you can use `errorCode` in `outputFields` to return a string like “MY_ERROR”\n\n```{\n  \"outputFields\": {\n     errorCode: \"MY_ERROR\",\n     hs_execution_state: \"FAIL_CONTINUE\"\n  }\n}```\nThere is a full example here: <https://developers.HubSpot.com/docs/guides/api/automation/custom-workflow-actions#add-custom-execution-messages-with-rules> that shows how to turn that error code into a user-friendly message"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Swanson",
+      "poster_handle": "matt353"
+    },
+    "time_stamp": "2025-02-14 15:29:50",
+    "text": "I’m not 100% if `errorCode` is a special key or if your usage of `status` could also “match” the execution rules…but I can say that using `errorCode` does work for us and we are processing 100s of workflow actions a day async"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Swanson",
+      "poster_handle": "matt353"
+    },
+    "time_stamp": "2025-02-14 15:35:34",
+    "text": "You should also confirm that the queueing is working: you posted\n\n&gt;  In this status 200 that we return to the HubSpot workflow we send the following body in the response:\n&gt; ```{\n&gt;    \"hs_execution_state\":\"Block\",\n&gt;    \"hs_expiration_duration\" = \"PT1M\"\n&gt; }```\nI believe you need that to be wrapped like:\n\n```{\n  \"outputFields\": {\n    \"hs_execution_state\": \"BLOCK\",\n    \"hs_expiration_duration: \"PT1M\"\n  }\n}```\nYou should confirm in the UI that the workflow enrollment is showing as “block” (I forget the exact why it shows, but the workflow enrollment will be displayed as ‘pending’ or something similar until you complete the callback)"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Swanson",
+      "poster_handle": "matt353"
+    },
+    "time_stamp": "2025-02-14 15:40:37",
+    "edited": {
+      "time_stamp": "2025-02-14 15:40:47"
+    },
+    "text": "hmm, not 100% sure as we have a public app, but we can read from /v3/pipeline/deals with `crm.schemas.deals.read` — we do have `crm.objects.owners.read` as well but dont have `crm.pipelines.read`"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Swanson",
+      "poster_handle": "matt353"
+    },
+    "time_stamp": "2025-02-14 15:42:20",
+    "text": "This page lists all the scopes and any portal restricts (if you scroll the table to the right): <https://developers.HubSpot.com/docs/guides/apps/authentication/scopes>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Swanson",
+      "poster_handle": "matt353"
+    },
+    "time_stamp": "2025-02-14 15:43:12",
+    "text": "though i dont see anything about pipelines there!"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Swanson",
+      "poster_handle": "matt353"
+    },
+    "time_stamp": "2025-02-14 15:47:24",
+    "text": "to be honest, I don’t even know if `crm.pipelines.read` is a valid scope?"
+  },
+  {
+    "poster": {
+      "poster_name": "Pedro Pulido",
+      "poster_handle": "pedro.pulido"
+    },
+    "time_stamp": "2025-02-14 15:56:12",
+    "text": "Thanks for the response!! I used *crm.schemas.deals.read* and *crm.objects.owners.read*, and the code worked, but I’m still getting IDs instead of the actual values. :confused:"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Swanson",
+      "poster_handle": "matt353"
+    },
+    "time_stamp": "2025-02-14 15:57:25",
+    "text": "IDs of the owners?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Swanson",
+      "poster_handle": "matt353"
+    },
+    "time_stamp": "2025-02-14 15:58:38",
+    "text": "not sure I’m understanding, the /v3/pipeline/deals endpoint returns the id and label of the pipeline and the id and labels of all the stages"
+  }
+]

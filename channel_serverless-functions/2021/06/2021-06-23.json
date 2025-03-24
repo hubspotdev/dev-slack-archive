@@ -1,0 +1,137 @@
+[
+  {
+    "poster": {
+      "poster_name": "Mohit Prasad",
+      "poster_handle": "mohit"
+    },
+    "time_stamp": "2021-06-23 06:49:19",
+    "text": "Hello Developers.\nI have created my HubSpot Serverless Function but when I am calling it on my HubSpot module. I am getting a CORS Error.\nCross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at <https://www.catapult.app/_hcms/api/expert>. (Reason: CORS header ‘Access-Control-Allow-Origin’ missing).\n\nHow can I solve this?",
+    "reply_count": 11,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-06-23 06:57:01"
+      },
+      {
+        "time_stamp": "2021-06-23 07:00:08"
+      },
+      {
+        "time_stamp": "2021-06-23 07:32:24"
+      },
+      {
+        "time_stamp": "2021-06-23 07:42:58"
+      },
+      {
+        "time_stamp": "2021-06-23 07:43:53"
+      },
+      {
+        "time_stamp": "2021-06-23 07:45:24"
+      },
+      {
+        "time_stamp": "2021-06-23 08:02:55"
+      },
+      {
+        "time_stamp": "2021-06-23 08:14:32"
+      },
+      {
+        "time_stamp": "2021-06-23 08:15:11"
+      },
+      {
+        "time_stamp": "2021-06-23 08:43:41"
+      },
+      {
+        "time_stamp": "2021-06-23 08:44:53"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Russell Benzing",
+      "poster_handle": "rbenzing"
+    },
+    "time_stamp": "2021-06-23 06:57:01",
+    "text": "Are you using JS request to call your serverless function? what does your client side code look like?"
+  },
+  {
+    "poster": {
+      "poster_name": "Mohit Prasad",
+      "poster_handle": "mohit"
+    },
+    "time_stamp": "2021-06-23 07:00:08",
+    "text": "Yes I'm using a Javascript Request in my module with headers\n{\n      'Content-Type': 'application/json',\n      \"Access-Control-Allow-Origin\": \"*\",\n      \"Access-Control-Allow-Headers\": \"*\",\n      \"Access-Control-Allow-Methods\": \"OPTIONS,POST,GET\"\n}\nI am using fetch() to call my serverless function."
+  },
+  {
+    "poster": {
+      "poster_name": "Russell Benzing",
+      "poster_handle": "rbenzing"
+    },
+    "time_stamp": "2021-06-23 07:32:24",
+    "edited": {
+      "time_stamp": "2021-06-23 07:33:30"
+    },
+    "text": "```var requestOptions = {\n  'method': 'POST',\n  'headers': {\n      'Content-Type': 'application/json',\n   }\n};\n\nfetch(\"<https://www.catapult.app/_hcms/api/expert>\", requestOptions)\n  .then(response =&gt; response.text())\n  .then(result =&gt; console.log(result))\n  .catch(error =&gt; console.log('error', error));```\nIf you requesting it from your domain you shouldnt need to pass cors headers."
+  },
+  {
+    "poster": {
+      "poster_name": "Mohit Prasad",
+      "poster_handle": "mohit"
+    },
+    "time_stamp": "2021-06-23 07:42:58",
+    "text": "Thanks a lot <@U504BHZ6K>. I tried it the way as you said, But I'm still getting the same error.\nAnd the Serverless function is not getting called."
+  },
+  {
+    "poster": {
+      "poster_name": "Russell Benzing",
+      "poster_handle": "rbenzing"
+    },
+    "time_stamp": "2021-06-23 07:43:53",
+    "text": "Are you trying to hit your endpoint with POST or GET? get seems to not be configured:\n```{\"error\":\"The endpoint GET expert has not been configured for portal 788xxxx\"}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Mohit Prasad",
+      "poster_handle": "mohit"
+    },
+    "time_stamp": "2021-06-23 07:45:24",
+    "text": "I'm using the POST method."
+  },
+  {
+    "poster": {
+      "poster_name": "Russell Benzing",
+      "poster_handle": "rbenzing"
+    },
+    "time_stamp": "2021-06-23 08:02:55",
+    "text": "When i try your endpoint using Postman the error is on line 23:\n`A server error occurred: 2021-06-23T14:01:34.468Z\\tINFO\\tBody =  {}\\n2021-06-23T14:01:34.487Z\\tERROR\\tInvoke Error \\t{\\\"errorType\\\":\\\"TypeError\\\",\\\"errorMessage\\\":\\\"Cannot read property 'join' of undefined\\\",\\\"stack\\\":[\\\"TypeError: Cannot read property 'join' of undefined\\\",\\\"    at Object.exports.main (/var/task/test.js:23:55)\\\",\\\"    at Runtime.exports.HubSpot_handler [as handler] (/var/task/HubSpotHandler.js:6:21)\\\",\\\"    at Runtime.handleOnce (/var/runtime/Runtime.js:66:25)\\\"]}  Memory: 81/128 MB\\nRuntime: 2960.08 ms`"
+  },
+  {
+    "poster": {
+      "poster_name": "Mohit Prasad",
+      "poster_handle": "mohit"
+    },
+    "time_stamp": "2021-06-23 08:14:32",
+    "text": "Try the endpoint on Postman with data as in the given format.\n\n{\n    \"firstname\"  : \"mohit\",\n    \"lastname\" : \"test\",\n    \"email\"  : \"<mailto:test123@gmail.com|test123@gmail.com>\",\n    \"number_code\"  : \"number_code\",\n    \"number_code_test\" : \"number_code_test\",\n    \"teach_number\"   : \"9474945388\",\n    \"linkedIn_profile\"   : \"linked_profile\",\n    \"companyname\"   : \"companyname\",\n    \"jobtitle\"   : \"jobtitle\",\n    \"twitter_username\"   : \"twitter_username\",\n    \"sample_materials\" : \"sample_materials\",\n    \"multi_select\"   : [\"Regulatory &amp; Compliance\", \"Marketing (Digital, Email, Social)\"]           \n}"
+  },
+  {
+    "poster": {
+      "poster_name": "Mohit Prasad",
+      "poster_handle": "mohit"
+    },
+    "time_stamp": "2021-06-23 08:15:11",
+    "text": "I guess you passed a string as input for multi_select parameter."
+  },
+  {
+    "text": "201 Success",
+    "time_stamp": "2021-06-23 08:43:41"
+  },
+  {
+    "poster": {
+      "poster_name": "Russell Benzing",
+      "poster_handle": "rbenzing"
+    },
+    "time_stamp": "2021-06-23 08:44:53",
+    "edited": {
+      "time_stamp": "2021-06-23 08:44:59"
+    },
+    "text": "if your fetch isnt working id check your payload that it isnt formatting oddly"
+  }
+]

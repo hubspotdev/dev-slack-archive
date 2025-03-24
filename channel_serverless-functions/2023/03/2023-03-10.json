@@ -1,0 +1,355 @@
+[
+  {
+    "poster": {
+      "poster_name": "Sudhanshu - MakeWebBetter",
+      "poster_handle": "sudhanshukumarrai"
+    },
+    "time_stamp": "2023-03-10 08:59:21",
+    "edited": {
+      "time_stamp": "2023-03-10 08:59:39"
+    },
+    "text": "`const axios = require('axios');`\n`const FormData = require('form-data');`\n\n`exports.main = async (req, res) =&gt; {`\n  `let image_url = req.body.image_data;`\n  `try {`\n    `const formData = new FormData();`\n    `formData.append('file', Buffer.from(image_url, 'base64'), {`\n      `filename: 'image.png',`\n    `});`\n    `formData.append('folderPath', '/', { contentType: 'text/strings' });`\n    `formData.append(`\n      `'options',`\n      `'{\\n  \"access\": \"PUBLIC_INDEXABLE\",\\n  \"ttl\": \"P3M\",\\n  \"overwrite\":\"false\",\\n  \"duplicateValidationStrategy\": \"NONE\",\\n  \"duplicateValidationScope\": \"ENTIRE_PORTAL\"\\n}'`\n    `);`\n\n    `var config = {`\n      `method: 'post',`\n      `url: '<https://api.hubapi.com/files/v3/files>',`\n      `headers: {`\n        `'Content-Type': `multipart/form-data;`,`\n        `Authorization: `Bearer {token}`,`\n      `},`\n      `data: formData,`\n    `};`\n\n    `const uploadRes = await axios(config);`\n    `res({ body: { message: uploadRes }, statusCode: 200 });`\n  `} catch (error) {`\n    `res({ body: { message: error }, statusCode: 200 });`\n  `}`\n`};`\n\n\nI am getting a 400 error response when uploading a file using the HubSpot API converting the base64 to buffer, the same thing is working locally, can someone help me with this error?\n\nI have added the form-data API through webpack bundle\n\n<@UD53A9UUR>",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-03-13 04:56:47"
+      },
+      {
+        "time_stamp": "2023-03-13 04:57:11"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Sudhanshu - MakeWebBetter",
+      "poster_handle": "sudhanshukumarrai"
+    },
+    "time_stamp": "2023-03-10 09:08:23",
+    "text": "Basically, the whole idea is to use base64 image to upload the file to the files API through the serverless function, if anyone can help on this, it would be great."
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-10 09:29:58",
+    "text": "<@U012PBG90SZ> I think there's something going on with the Files API"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-10 09:30:56",
+    "edited": {
+      "time_stamp": "2023-03-10 09:31:59"
+    },
+    "text": "<@U03MLCLS5BN> <@UD53A9UUR> Seems like something wrong with Files API at this moment. That's the third person in a row with a similar issue. I also tried to do a import form url and get a:\n\n```{\n\"status\": \"error\",\n\"message\": \"Csrf token is missing from the request.\",\n\"correlationId\": \"0f57ce45-9d85-45b2-b10a-07f7f2a44d5b\",\n\"engagement\": {\n\"oauth-token\": \"Not engaged, auth is missing\",\n\"hapikey\": \"Not engaged, auth is missing\",\n\"service-to-service\": \"service-to-service not engaged. Metadata for service-to-service request not found.\",\n\"app-cookie\": \"Engaged\",\n\"internal-cookie\": \"internal-cookie not engaged. Cookie not found in the request.\"\n}\n}```\nwhich I presume might be related to the 400s",
+    "reply_count": 24,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-03-10 09:43:43"
+      },
+      {
+        "time_stamp": "2023-03-10 09:44:55"
+      },
+      {
+        "time_stamp": "2023-03-10 09:44:59"
+      },
+      {
+        "time_stamp": "2023-03-10 10:05:44"
+      },
+      {
+        "time_stamp": "2023-03-10 10:05:53"
+      },
+      {
+        "time_stamp": "2023-03-10 10:09:55"
+      },
+      {
+        "time_stamp": "2023-03-10 10:10:10"
+      },
+      {
+        "time_stamp": "2023-03-10 10:10:58"
+      },
+      {
+        "time_stamp": "2023-03-10 10:15:43"
+      },
+      {
+        "time_stamp": "2023-03-10 10:15:58"
+      },
+      {
+        "time_stamp": "2023-03-10 10:16:12"
+      },
+      {
+        "time_stamp": "2023-03-10 10:16:17"
+      },
+      {
+        "time_stamp": "2023-03-10 10:17:03"
+      },
+      {
+        "time_stamp": "2023-03-10 10:19:12"
+      },
+      {
+        "time_stamp": "2023-03-10 10:51:27"
+      },
+      {
+        "time_stamp": "2023-03-10 10:54:26"
+      },
+      {
+        "time_stamp": "2023-03-10 10:58:29"
+      },
+      {
+        "time_stamp": "2023-03-10 10:58:43"
+      },
+      {
+        "time_stamp": "2023-03-10 11:16:04"
+      },
+      {
+        "time_stamp": "2023-03-10 11:22:56"
+      },
+      {
+        "time_stamp": "2023-03-10 11:49:03"
+      },
+      {
+        "time_stamp": "2023-03-10 13:17:57"
+      },
+      {
+        "time_stamp": "2023-03-17 07:20:25"
+      },
+      {
+        "time_stamp": "2023-03-17 07:28:01"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-10 09:43:43",
+    "text": "Which doesn't seem to make sense, because the Docs don't have a problem with the auth we send in and test it that way"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-10 09:44:55",
+    "text": "and so does a postman request"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-10 09:44:59",
+    "text": "so auth isn't being sent over"
+  },
+  {
+    "poster": {
+      "poster_name": "Hannah Seligson - Developer Advocate",
+      "poster_handle": "hseligson"
+    },
+    "time_stamp": "2023-03-10 10:05:44",
+    "text": "Hey Thomas! Looking at this and trying to find reasoning or more information about why this is happening and if others are aware internally."
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-10 10:05:53",
+    "text": "Thank you! :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-10 10:09:55",
+    "text": "I've been experiencing the 400 error also that Sudhanshu and Dustin have also"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-10 10:10:10",
+    "text": "I've boiled it down to the HS Files API suddenly stop working with blob data"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-10 10:10:58",
+    "text": "blob/ buffer/arraybuffer\n\nbut not sure why this auth problem is happening with the external link thing"
+  },
+  {
+    "poster": {
+      "poster_name": "Hannah Seligson - Developer Advocate",
+      "poster_handle": "hseligson"
+    },
+    "time_stamp": "2023-03-10 10:15:43",
+    "text": "Okay, good to know. Carter and I were chatting, and it might be due to a version change or a change within the form module. Let me do some digging."
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-10 10:15:58",
+    "text": "okie dokie"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-10 10:16:12",
+    "text": "<@U03MLCLS5BN> so the files sent through the external file API do upload, just the status screen bugs out"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-10 10:16:17",
+    "text": "and produces that auth error"
+  },
+  {
+    "poster": {
+      "poster_name": "Hannah Seligson - Developer Advocate",
+      "poster_handle": "hseligson"
+    },
+    "time_stamp": "2023-03-10 10:17:03",
+    "text": "Oh, that’s weird.."
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-10 10:19:12",
+    "text": "the formdata module could be likely culprit tho good catch"
+  },
+  {
+    "poster": {
+      "poster_name": "Hannah Seligson - Developer Advocate",
+      "poster_handle": "hseligson"
+    },
+    "time_stamp": "2023-03-10 10:51:27",
+    "text": "<@U04N6N424MB> - I think your issue might be different than Sudhanshu’s. Do you think your issue might be due to a missing OAuth token? As for <@U012PBG90SZ> I wonder if it might be something with how the file is included, I don’t know enough about the specifics of Axios or Buffer - but we aren’t sure why it would need to be base64 encoded. Lemme know your thoughts."
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-10 10:54:26",
+    "text": "<@U03MLCLS5BN> So for this one in particular, this is being done thorugh the <https://developers.HubSpot.com/docs/api/files/files> endpoint on this page test call, so its something internally not being passed, maybe through the docs?\n\n\nfor <@U012PBG90SZ>, the hs files doc says it needs a buffer of binary data to send in. I've done this countless times before with serverless functions but now it doesn't seem to want to work anymore :disappointed:"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-10 10:58:29",
+    "text": "<@U03MLCLS5BN> this affects this account in particular, same with that other issue I found where if you update a secret through the CLI it breaks secrets for all other existing functions created through the UI"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-10 10:58:43",
+    "text": "so maybe the account is fubar-ed or something"
+  },
+  {
+    "poster": {
+      "poster_name": "Hannah Seligson - Developer Advocate",
+      "poster_handle": "hseligson"
+    },
+    "time_stamp": "2023-03-10 11:16:04",
+    "text": "I wish there was a way to update the secret besides the CLI….I’m looking at <https://developers.HubSpot.com/docs/cms/data/serverless-functions#secrets|these docs> and seeing if there’s a solution."
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-10 11:22:56",
+    "text": "yeah thats what I ended up using and thats what messed it all up lol"
+  },
+  {
+    "poster": {
+      "poster_name": "Hannah Seligson - Developer Advocate",
+      "poster_handle": "hseligson"
+    },
+    "time_stamp": "2023-03-10 11:49:03",
+    "text": "It was pointed out that the upload file endpoint is disabled for testing on the docs site since our docs system doesn’t support the multi-part/form-encoded data format the endpoint requires.\n\nMyself and one of my teammates aren’t super familiar with how `Buffer()` works and aren’t sure it will grab a file from a URL and encode it, it just looks like it encodes a provided string, so it would be trying to use the image URL as the file data and not grabbing the file from that URL.\nCould you use other Node modules to grab a file from a URL and encode it into a buffer? For example, you could use the `http` or `https` module to make a request to the URL and get the file content, and then use the `Buffer.from()` method to encode the content into a buffer. This way, you could make an HTTPS request to the URL `<https://example.com/file.txt>`, read the data stream, concatenates the chunks into a string, and finally encode the string into a buffer using `Buffer.from()`"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-10 13:17:57",
+    "text": "Gotcha good to know!!\n\nSo a buffer is the actual file information , the issue I was having and I think Dustin and the others were experiencing was that all of a sudden the the serverless functions on HubSpot weren't supporting storing or accessing the buffer / arraybuffer when they were before, i'm guessing it has to do with temporal storage? which would explain why it works on a offsite server"
+  },
+  {
+    "text": "am I trippin here or is something really borked with this account? Trying to send a GET request to a serverless end point:\n\n```/_hcms/api/proxy-mp3```\n and I get:\n\n```{\n    \"error\": \"The endpoint GET proxy-mp3 has not been configured for portal 20\"\n}```\nhowever....I'm staring at the function in HubSpots UI and it seems to all match...see image.",
+    "time_stamp": "2023-03-10 19:05:07"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas558"
+    },
+    "time_stamp": "2023-03-10 19:06:04",
+    "text": "id matches also lol",
+    "reply_count": 7,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-03-10 19:41:33"
+      },
+      {
+        "time_stamp": "2023-03-10 19:41:58"
+      },
+      {
+        "time_stamp": "2023-03-11 05:34:52"
+      },
+      {
+        "time_stamp": "2023-03-11 07:42:52"
+      },
+      {
+        "time_stamp": "2023-03-11 07:43:06"
+      },
+      {
+        "time_stamp": "2023-03-11 08:46:39"
+      },
+      {
+        "time_stamp": "2023-03-11 10:19:11"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-10 19:41:33",
+    "text": "did you deploy all functions?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-10 19:41:58",
+    "text": "only applicable with you're using the dependecies beta"
+  }
+]

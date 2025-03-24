@@ -1,0 +1,270 @@
+[
+  {
+    "poster": {
+      "poster_name": "Grant Bunyan",
+      "poster_handle": "grantbunyan"
+    },
+    "time_stamp": "2019-08-15 07:27:42",
+    "edited": {
+      "time_stamp": "2019-08-15 07:28:12"
+    },
+    "text": "I seem to be hitting a recurring problem. What’s wrong with how I’m trying to pass dynamic variables to HubSpot functions like this?\n```\n{% set backtrack = content.publishDate|minus_time(1, 'years')|datetimeformat('%Y-%m-%d') %}\n{% related_blog_posts limit=3, post_formatter=\"blog_post_card_formatter\", start_date=backtrack, no_wrapper=True %}\n```",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-08-15 07:32:30"
+      },
+      {
+        "time_stamp": "2019-08-15 07:35:23"
+      },
+      {
+        "time_stamp": "2019-08-15 07:35:46"
+      },
+      {
+        "time_stamp": "2019-08-15 07:41:28"
+      },
+      {
+        "time_stamp": "2019-08-15 07:45:39"
+      },
+      {
+        "time_stamp": "2019-08-15 07:47:39"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2019-08-15 07:32:30",
+    "text": "try it without the datetimeformat"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2019-08-15 07:34:23",
+    "text": "can you / is it possible to perform the `is containing` expression test on an array of objects? It works on regular arrays, but I am not sure how to make it work with objects…",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-08-15 07:45:01"
+      },
+      {
+        "time_stamp": "2019-08-15 07:53:33"
+      },
+      {
+        "time_stamp": "2019-08-15 07:55:08"
+      },
+      {
+        "time_stamp": "2019-08-15 08:20:54"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Grant Bunyan",
+      "poster_handle": "grantbunyan"
+    },
+    "time_stamp": "2019-08-15 07:35:23",
+    "text": "No dice. I’ve had a similar issue trying to pass tags to `blog_recent_tag_posts()`"
+  },
+  {
+    "poster": {
+      "poster_name": "Grant Bunyan",
+      "poster_handle": "grantbunyan"
+    },
+    "time_stamp": "2019-08-15 07:35:46",
+    "text": "I can’t pass anything in via variables."
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2019-08-15 07:41:28",
+    "text": "ohhhh! I’ve ran into this with that function… wrap variables with curly braces `{{ variable }}` inside the function"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2019-08-15 07:45:01",
+    "text": "for those interested, the `|map` filter comes in handy here."
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2019-08-15 07:45:39",
+    "text": "it might also require quotations"
+  },
+  {
+    "poster": {
+      "poster_name": "Grant Bunyan",
+      "poster_handle": "grantbunyan"
+    },
+    "time_stamp": "2019-08-15 07:47:39",
+    "text": "Saved me! I thought I’d tried every combination. This appears to work…\n`start_date='{{ variable }}'`"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-08-15 07:53:33",
+    "text": "What type of objects are these?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-08-15 07:55:08",
+    "text": "This is how the collection membership is calculated <https://github.com/HubSpot/jinjava/blob/master/src/main/java/com/HubSpot/jinjava/el/ext/CollectionMembershipOperator.java#L40>"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2019-08-15 08:20:54",
+    "text": "It was `content.topic_list`. I also tried with custom defined objects. I tried the following\n```\n{% if content.topic_list is containing 'foo' %}\n...\nthis worked for custom defined obj, but not topic_list\n{% if content.topic_list is containing '{name:\"foo\", slug:\"foo\"}' %}\n...\n{% if content.topic_list|map('name') is containing 'foo' %}\n...\nwinner winner chicken dinner\n{% if 'foo' in content.topic_list|map('name') %} \n```"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2019-08-15 09:20:40",
+    "text": "Does content based off of `request.cookies` affect caching?",
+    "reply_count": 3,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2019-08-15 09:28:37"
+      },
+      {
+        "time_stamp": "2019-08-15 09:29:48"
+      },
+      {
+        "time_stamp": "2019-08-15 09:50:58"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-08-15 09:28:37",
+    "text": "Yea it should since it will have to hit origin to check the cookies"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2019-08-15 09:29:48",
+    "text": "that makes me also wonder… does smart content affect caching?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2019-08-15 09:50:58",
+    "text": "yes"
+  },
+  {
+    "poster": {
+      "poster_name": "Stefen Phelps",
+      "poster_handle": "stefen"
+    },
+    "time_stamp": "2019-08-15 12:38:16",
+    "text": "is there a callback I can use with a meetings embed code?"
+  },
+  {
+    "poster": {
+      "poster_name": "Stefen Phelps",
+      "poster_handle": "stefen"
+    },
+    "time_stamp": "2019-08-15 12:38:25",
+    "text": "like with forms"
+  },
+  {
+    "poster": {
+      "poster_name": "Reg Desgroseilliers",
+      "poster_handle": "reg"
+    },
+    "time_stamp": "2019-08-15 13:57:12",
+    "edited": {
+      "time_stamp": "2019-08-15 13:58:11"
+    },
+    "text": "Is there a built-in HubSpot way to show a specific form based on IP address like smart content?",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-08-15 14:36:16"
+      },
+      {
+        "time_stamp": "2019-08-15 14:56:21"
+      },
+      {
+        "time_stamp": "2019-08-15 15:04:20"
+      },
+      {
+        "time_stamp": "2019-08-15 15:06:07"
+      },
+      {
+        "time_stamp": "2019-08-15 15:30:37"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Reg Desgroseilliers",
+      "poster_handle": "reg"
+    },
+    "time_stamp": "2019-08-15 14:36:16",
+    "text": "Found out I can use {{ request.geoip_country }} which will work with a bit of additional coding :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2019-08-15 14:56:21",
+    "text": "this data isn’t amazing, so I’d do some testing before you commit it. It’s especially spotty for IPv6 addresses  (mostly mobile devices)"
+  },
+  {
+    "poster": {
+      "poster_name": "Reg Desgroseilliers",
+      "poster_handle": "reg"
+    },
+    "time_stamp": "2019-08-15 15:04:20",
+    "text": "Hmmm good to know. Do you know of any alternatives? "
+  },
+  {
+    "poster": {
+      "poster_name": "Reg Desgroseilliers",
+      "poster_handle": "reg"
+    },
+    "time_stamp": "2019-08-15 15:06:07",
+    "text": "What does HubSpot use for their smart content based on country? "
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2019-08-15 15:30:37",
+    "text": "We do use the same data."
+  }
+]

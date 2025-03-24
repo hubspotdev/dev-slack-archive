@@ -1,0 +1,132 @@
+[
+  {
+    "poster": {
+      "poster_name": "Fabian Pasin",
+      "poster_handle": "fabian.pasin"
+    },
+    "time_stamp": "2024-05-31 06:19:08",
+    "text": "<@U8249TTCK>, I have been trying different things for different client now. For one domain I disabled CookieBot and instead put the HubSpot Cookie Banner in place. Now the Slide-In CTA  along the Cookie Banner seems to be working on chrome, safari and edge, but not on Firefox and neither does the HS CookieBanner.\nIn the dev tools console I can see that the following scripts are blocked by CORS, could that be the issue?\n<https://js.hsleadflows.net/leadflows.js>\n<https://js.HubSpot.com/web-interactives-embed.js>\n<https://app.HubSpot.com/content-tools-menu/api/v1/tools-menu/has-permission-json?portalId=5039277>\nHubSpot support suggested it could have to do with one of our custom scripts (mm-menu_pa.js, or mm-menu.js), however, these scripts are not loaded for the following page: <https://enit.io/de/ueber-uns>\n\nAnother client has a similar issue on firefox with the CookieBot Concent Banner in place via the CookieBot integration - the banner does not appear."
+  },
+  {
+    "poster": {
+      "poster_name": "Conor Linehan",
+      "poster_handle": "cplinehan"
+    },
+    "time_stamp": "2024-05-31 07:24:24",
+    "text": "Sorry Fabian, I had a brief look yesterday and found the issue was some script moving the iframe the CTA was rendered in causing an issue with inter frame messaging. I’ll have a deeper look tonight to track down what the issue is"
+  },
+  {
+    "poster": {
+      "poster_name": "Christopher Aguilar",
+      "poster_handle": "christopher.aguilar"
+    },
+    "time_stamp": "2024-05-31 08:48:20",
+    "text": "Hi all, I’m new to the community so apologies if I’ve posted this in the wrong place! I posted <https://community.HubSpot.com/t5/APIs-Integrations/Upserting-contacts-and-tracking-page-views/m-p/983817#M74017|this question> on the developer forum a few days ago (copying content here), but thought maybe someone here might be able to offer some insight.\n\nI’m currently trying to integrate the <https://knowledge.HubSpot.com/reports/install-the-HubSpot-tracking-code|HubSpot tracking code> in an existing web app, and am struggling a bit to get it working.\n\nThe goal is to upsert contacts as users login/signup (without any associations to organizations/companies), and track page views to these contacts.\n\nI am building this out in a non-production environment, which has a separate domain from our production environment, and have verified that I’ve added the URL of the environment to my organization’s Advanced Tracking settings. All of the settings here are turned off except for “Bot filtering”; should I enable any of the other settings?\n\nI’ve tried two different methods: the <https://ecosystem.HubSpot.com/marketplace/apps/marketing/data-management/segment-HubSpot-actions-destination-1127026|Segment integration> (which is what we’ve historically used at my company for analytics), and the native HubSpot tracking code.\n\nWith Segment, there are two “destinations”, *<https://segment.com/docs/connections/destinations/catalog/actions-HubSpot-cloud/|HubSpot Cloud Mode (Actions)>* and *<https://segment.com/docs/connections/destinations/catalog/actions-HubSpot-web/|HubSpot Web (Actions)>*; Cloud Mode is meant to send data server-side, Web is meant to send data client-side. With these integrations, I was able to get upserting contacts to work.\n\nHowever, for analytics, I’ve noticed strange behavior that I don’t understand: even if you login to our app as a different user (say, <mailto:bob@example.com|bob@example.com>) using a separate machine and browser, all page views are being tracked to a single contact on HubSpot (say, <mailto:alice@example.com|alice@example.com>), despite the `HubSpotutk` and other analytics cookies being different. I’ve tried manually deleting all analytics cookies both client-side and server-side, yet the behavior remains the same.\n\n```// Example of analytics calls made with Segment\n\nanalytics.identify(\"&lt;User ID from our app&gt;\", {\n  email: \"...\",\n  firstname: \"...\",\n  id: \"&lt;User ID from our app&gt;\",\n  lastname: \"...\",\n  name: \"...\",\n}, {\n  // Enable for both destinations\n  integrations: {\n    'All': false,\n    'HubSpot Web (Actions)': true,\n    'HubSpot Cloud Mode (Actions)': true,\n  }\n});\n\nanalytics.page(/* ... */);```\nWith the native HubSpot tracking code, I’ve not been able to get _any_ data to populate in HubSpot; I’ve verified that the tracking code is loading, and I’ve played around with the order of `identify` and `setPath`/`trackPageView` calls, yet nothing happens: no contacts are upserted, and no page views are tracked.\n\n```// Example of analytics calls made with HubSpot\n\nwindow._hsq.push(['identify', {\n  email: \"...\",\n  firstname: \"...\",\n  id: \"&lt;User ID from our app&gt;\",\n  lastname: \"...\",\n  name: \"...\",\n}]);\n\nwindow._hsq.push(['setPath', window.location.pathname]);\nwindow._hsq.push(['trackPageView']);```\nOne thing to note is that I can *not* use the <https://legacydocs.HubSpot.com/docs/methods/forms/forms_overview|HubSpot Forms SDK> as that’s a security/privacy issue with our web app. I’ve also verified that my ad blocker is turned off.\n\nAny help would be much appreciated!",
+    "reply_count": 10,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-31 11:18:01"
+      },
+      {
+        "time_stamp": "2024-05-31 11:18:42"
+      },
+      {
+        "time_stamp": "2024-05-31 12:01:23"
+      },
+      {
+        "time_stamp": "2024-05-31 12:25:33"
+      },
+      {
+        "time_stamp": "2024-05-31 12:26:21"
+      },
+      {
+        "time_stamp": "2024-05-31 12:26:57"
+      },
+      {
+        "time_stamp": "2024-05-31 12:33:47"
+      },
+      {
+        "time_stamp": "2024-06-04 11:35:35"
+      },
+      {
+        "time_stamp": "2024-06-04 13:00:10"
+      },
+      {
+        "time_stamp": "2024-06-05 05:18:47"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Ainslie",
+      "poster_handle": "rainslie"
+    },
+    "time_stamp": "2024-05-31 11:18:01",
+    "text": "<@U05S1529X9Q>\n• For the Segment integration where all page views are joining to the same record - that sounds like there's a crossed wire either in how the client-side JS is grabbing your client ID or the user tokens OR, the field mapping is off. I'm not a Segment expert, so not totally sure\n• However, for the native HS Tracking Code items - when your code fires, can you view the Network tab and see whether or not an HTTP request fires? If so, inspect the details of that and let me know what you see.\n<https://www.loom.com/share/3e96e9731d4c4c16939f772fb71ec602?sid=595f3e9b-a394-47e8-82c4-f3cf676d1eac|I made this video that explores this concept a bit> - look at ~1:50 for the Network request to <http://track.HubSpot.com|track.HubSpot.com> (also, ignore the internal HubSpot tool that I show in the first minute - I made this for a HubSpot internal audience. Nothing unsavory, it's just a tool you won't have access to)"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Ainslie",
+      "poster_handle": "rainslie"
+    },
+    "time_stamp": "2024-05-31 11:18:42",
+    "text": "Critical piece: the HubSpot Tracking Code has to actually be on the web page - can you confirm that?"
+  },
+  {
+    "poster": {
+      "poster_name": "Fabian Pasin",
+      "poster_handle": "fabian.pasin"
+    },
+    "time_stamp": "2024-05-31 11:33:21",
+    "text": "<@U8249TTCK>, thanks a lot for your help.\nFor the cookie banner issue I think I may have found the culprit: Firefoxes new feature, cookie-blocking. When adding the website as an exception in the privacy section of the settings the banner appears :woozy_face: if that indeed the only reason the issue is probably not easily fixable =/"
+  },
+  {
+    "poster": {
+      "poster_name": "Christopher Aguilar",
+      "poster_handle": "christopher.aguilar"
+    },
+    "time_stamp": "2024-05-31 12:01:23",
+    "text": "Hi <@UJJ239SC9>, thank you for the reply! :slightly_smiling_face:\n\nRE: Field mappings, is there a settings page somewhere within HubSpot where we can control the mapping of data that comes from integrations like Segment, or are you referring to mappings coming _from_ the integration? It may be somewhere super obvious but my organization has strict access control policies so I may just not have the proper permissions to view the page; I can request access to dive deeper if you can point me in the right direction.\n\nRE: Tracking code, the script is definitely on the page, but I don't recall ever seeing any requests to <http://track.HubSpot.com|track.HubSpot.com>, which makes sense as to why I'm not seeing the data come through to HubSpot. Our app is a bit complex (several frameworks trying to play nicely together) so perhaps I'm not loading things in the proper order. I'll play around with it to see if I can get requests to go through and report back.\n\nThank you for your help, I really appreciate it!"
+  },
+  {
+    "subtype": "bot_message",
+    "text": ":sparkles:Slack Tips and Best Practices:sparkles:\n\nTo get the most out the HubSpot Developer Slack, follow these best practices:\n\n• Will your post/question potentially help more than one person? Ask in a public channel instead of 1:1 DMs to help as many folks as possible. \n• Thread all replies to keep topics organized and searchable\n• Thread followup questions/comments to your original post\n• Don't post the same question in multiple channels. If you must, link to your original question in new channels.\nMore <https://slack.com/blog/collaboration/etiquette-tips-in-slack|great tips here>. Thanks for making the HubSpot Developer Slack easier to use for everyone!",
+    "username": "Slack Best Practices",
+    "time_stamp": "2024-05-31 12:05:01",
+    "edited": {
+      "time_stamp": "2024-05-31 12:05:06"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Ainslie",
+      "poster_handle": "rainslie"
+    },
+    "time_stamp": "2024-05-31 12:25:33",
+    "text": "• I mean field mappings in Segment - there's probably a place where you can make the incoming Segment analytics call into the HubSpot analytics event data"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Ainslie",
+      "poster_handle": "rainslie"
+    },
+    "time_stamp": "2024-05-31 12:26:21",
+    "text": "RE: your app - I'm sure it's not this simple, but try adding the _hsq variable declarations above your tracking code calls\n```var _hsq = window._hsq = window._hsq || [];\n_hsq.push(['setPath', { path string }])```"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Ainslie",
+      "poster_handle": "rainslie"
+    },
+    "time_stamp": "2024-05-31 12:26:57",
+    "edited": {
+      "time_stamp": "2024-05-31 12:27:13"
+    },
+    "text": "Your `window._hsq.push(`) might be capturing that already though"
+  },
+  {
+    "text": "Also worth checking out:\nWhen you include the tracking code, it's a script loader: `&lt;script type=\"text/javascript\" id=\"hs-script-loader\" async=\"\" defer=\"\" src=\"/hs/scriptloader/203693.js?businessUnitId=0\"&gt;&lt;/script&gt;` leads to several other scripts loading (screenshot) - the most important of these is the analytics file (screenshot). That analytics file loads all the tracking stuff and also fires the 'trackPageView' .\n\nIf you're firing out of load order without having _hsq declared, it's possible that the async loading files don't pick up and actually fire the Network request",
+    "time_stamp": "2024-05-31 12:33:47"
+  }
+]

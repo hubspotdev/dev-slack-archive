@@ -1,0 +1,75 @@
+[
+  {
+    "poster": {
+      "poster_name": "Maximilian Holzer",
+      "poster_handle": "maximilian.holzer"
+    },
+    "time_stamp": "2024-01-02 06:53:59",
+    "text": "Hey Everyone! :slightly_smiling_face:\nCompletely new beginner coder here (no experience at all)\nI am trying to create a custom code action to subscribe contacts to a specific subscriptionType over the Marketing API.\nEverytime i test the code on a contact the hs_execution_state always tells me SUCCESS but its never going through on the contact side.\nCan somebody tell me what is wrong with my code?(its Client v8 and Node) :sweat_smile:\n\n```const axios = require('axios');\nconst HubSpot = require('@HubSpot/api-client');\nconst emailPropertyName = 'email';\nconst subscriptionTypeId = '*realid*';\nconst HubSpot_PRIVATE_APP_ACCESS_TOKEN = process.env.TestApp2;\n\nexports.main = async (event, callback) =&gt; {\n  console.log('Start of the function');\n  const HubSpotClient = new HubSpot.Client({ accessToken: HubSpot_PRIVATE_APP_ACCESS_TOKEN });\n\n  try {\n    console.log('Fetching contact information');\n    const contactResult = await HubSpotClient.crm.contacts.basicApi.getById(event.object.objectId, [emailPropertyName]);\n    console.log('Contact information:', JSON.stringify(contactResult.properties));\n    const contactEmail = contactResult.properties[emailPropertyName];\n    console.log('Contact Email:', contactEmail);\n\tconst apiUrl = `<https://api.hubapi.com/email/public/v1/subscriptions/${contactEmail}>`;\n    console.log('API URL:', apiUrl);\n    const requestData = {\n      status: 'SUBSCRIBE',\n      subscriptionTypeId: subscriptionTypeId,\n      legalBasis: \"Freely given consent from contact\",\n      legalBasisExplanation: \"1\",\n    };\n    console.log('Request Data:', JSON.stringify(requestData));\n    const response = await axios.put(apiUrl, requestData, {\n      headers: {\n        'Content-Type': 'application/json',\n        'Authorization': `Bearer ${HubSpot_PRIVATE_APP_ACCESS_TOKEN}`,\n      },\n    });\n    console.log('Contact subscribed successfully:', JSON.stringify(response.data));\n  } catch (error) {\n    console.error('Error subscribing contact:', error.response ? JSON.stringify(error.response.data) : error.message);\n  }\n  console.log('End of the function');\n\n};```",
+    "reply_count": 15,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2024-01-02 08:39:45"
+      },
+      {
+        "time_stamp": "2024-01-02 08:42:02"
+      },
+      {
+        "time_stamp": "2024-01-04 04:58:56"
+      },
+      {
+        "time_stamp": "2024-01-04 05:06:11"
+      },
+      {
+        "time_stamp": "2024-01-04 05:11:05"
+      },
+      {
+        "time_stamp": "2024-01-04 06:47:08"
+      },
+      {
+        "time_stamp": "2024-04-02 03:54:00"
+      },
+      {
+        "time_stamp": "2024-04-18 01:08:32"
+      },
+      {
+        "time_stamp": "2024-05-14 04:35:05"
+      },
+      {
+        "time_stamp": "2024-05-27 07:45:10"
+      },
+      {
+        "time_stamp": "2024-05-27 07:45:27"
+      },
+      {
+        "time_stamp": "2024-08-08 02:53:58"
+      },
+      {
+        "time_stamp": "2024-08-08 02:54:18"
+      },
+      {
+        "time_stamp": "2024-08-08 02:57:09"
+      },
+      {
+        "time_stamp": "2024-08-08 06:16:21"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-01-02 08:39:45",
+    "text": "Hey there!\nAlright, let's take a look at your custom code snippet. First off, nice work getting started with coding and jumping into the HubSpot API!\nYour script seems well-structured for the most part. I see that you're using the `@HubSpot/api-client` to fetch the contact's email and then using axios to make a PUT request to subscribe the contact to a certain subscription type.\nA few things to check:\n1. Verify your *Private App Access Token*. Make sure it's valid and has the necessary scopes for updating contact subscriptions.\n2. Check if the `subscriptionTypeId` is correct and that it corresponds to an existing subscription type.\n3. Check that the endpoint you're hitting corresponds to the most up-to-date Email API. As of my last update, the correct URL format for subscription updates should be part of the Email Events API v3 or newer. So double-check that you're using the right endpoint and version.\nIf everything seems alright there, it might be a good idea to test the API request with a tool like Postman or Curl before coding it. This way, you can isolate the issue to either the code or the API request itself.\nLastly, it's not uncommon for an API to show a SUCCESS message even if the changes are not reflecting instantly. Sometimes it might take a few moments for the changes to propagate through HubSpot's systems, so ensure you're giving it a bit of time.\nLet me know how it goes after you check these things! If you're still running into trouble, we can take a closer look."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-01-02 08:42:02",
+    "text": "I personally would only be using the v3 endpoint: <https://developers.HubSpot.com/docs/api/marketing-api/subscriptions-preferences>"
+  }
+]

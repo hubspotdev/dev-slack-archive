@@ -1,0 +1,87 @@
+[
+  {
+    "poster": {
+      "poster_name": "Maia Torell",
+      "poster_handle": "maiatorell123"
+    },
+    "time_stamp": "2022-07-27 02:34:59",
+    "text": "<@UK9BKNBD5> thank you for your answer! How would I write out this function to target specifically the CTA without writing out the href? as this could change depending on what CTA  the user chooses"
+  },
+  {
+    "poster": {
+      "poster_name": "Simon Mertens",
+      "poster_handle": "email.mertens"
+    },
+    "time_stamp": "2022-07-27 05:38:05",
+    "text": "Hi everyone :wave:\n\nI want use HubSpot webhooks for to request Netsuite. The problem is that Netsuite only allows a connection via OAuth 1.0 or 2.0, or if the request comes from a browser (User-Agent: Mozilla for example). Is there a way to customize the header or can you add any authentication in the URL?\n\nI really need help. Thanks in Advance.",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-07-29 03:46:42"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Simon Mertens",
+      "poster_handle": "email.mertens"
+    },
+    "time_stamp": "2022-07-27 05:52:42",
+    "text": "Probably you have to use the search endpoint with this kind of request body"
+  },
+  {
+    "poster": {
+      "poster_name": "Simon Mertens",
+      "poster_handle": "email.mertens"
+    },
+    "time_stamp": "2022-07-27 05:52:46",
+    "edited": {
+      "time_stamp": "2022-07-27 05:54:34"
+    },
+    "text": "```{\n\t\"filterGroups\": [\n\t\t{\n\t\t\t\"filters\": [\n\t\t\t\t{\n\t\t\t\t\t\"propertyName\": \"firstname\",\n\t\t\t\t\t\"operator\": \"EQ\",\n\t\t\t\t\t\"value\": \"Hassan\"\n\t\t\t\t}\n\t\t\t]\n\t\t}\n\t]\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Simon Mertens",
+      "poster_handle": "email.mertens"
+    },
+    "time_stamp": "2022-07-27 05:53:07",
+    "text": "POST Endpoint: <https://api.hubapi.com/crm/v3/objects/contacts/search>"
+  },
+  {
+    "poster": {
+      "poster_name": "Yugeswaran Vasudevon",
+      "poster_handle": "yuges"
+    },
+    "time_stamp": "2022-07-27 07:16:02",
+    "text": "able to find from below code\n```{\n  \"filterGroups\": [\n    {\n      \"filters\": [\n        {\n          \"value\": \"&lt;Your mobile number with country code&gt;\",\n          \"propertyName\": \"mobilephone\",\n          \"operator\": \"EQ\"\n        }\n      ]\n    }\n  ],\n  \"sorts\": [\n    \"mobilephone\"\n  ],\n  \"properties\": [\n    \"firstname\",\n    \"lastname\",\n    \"mobilephone\",\n    \"phone\",\n    \"email\"\n  ],\n  \"limit\": 10,\n  \"after\": 0\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Mitja Lewin",
+      "poster_handle": "m.lewin"
+    },
+    "time_stamp": "2022-07-27 12:54:34",
+    "edited": {
+      "time_stamp": "2022-07-27 13:01:09"
+    },
+    "text": "Okay <@U03CH5VT2NT>.\n\n*Step1*\nI guess your element look something like this. For better usability we add a `with-cta` class. Use HubL for this.\n```&lt;article class=\"card {{ 'with-cta' if module.cta_field }}\"&gt;\n    &lt;div class=\"card-inner\"&gt;\n    \n    {# The CTA #}\n    {% cta guid=\"{{ module.cta_field }}\" %}\n      \n    &lt;/div&gt;\n&lt;/article&gt;```\n*Step2*\nWe need that class, because maybe the CTA is optional and we only want the cursor changed if its truly clickable.\n```&lt;style&gt;\n  .card.with-cta {\n    cursor: pointer;\n  }\n&lt;/style&gt;```\n*Step3*\nAnd then when the element is in the DOM (doc-ready), we add our JavaScript. There we check all clicks on cards and look for the CTA by the class name called `cta_button`. If its there, we do a redirect by changing the document location href.\n```&lt;script&gt;\n  var cards = document.querySelectorAll('.card');\n  for(var i=0; i&lt;cards.length; i++){\n    cards[i].addEventListener('click', function(event) {\n      var cta = event.target.querySelector('.cta_button');\n      if( cta !== null &amp;&amp; typeof(cta) !== 'undefined'){\n          var href = cta.getAttribute('href');\n          document.location.href = href;\n      }\n    });\n  };\n&lt;/script&gt;```\n*Step4*\nIf you like you can add a Fallback to default style, if JavaScript is disabled in the user browser. But this is optional.\n```{% require_css %}\n&lt;noscript&gt;\n  &lt;style&gt;\n    .card.with-cta {\n      cursor: default;\n    }\n  &lt;/style&gt;\n&lt;/noscript&gt;\n{% end_require_css %}```\n*Step5*\nIf you want to trigger the hover effect of CTA when the card is hovered you have to use a unstyled CTA and give them a class name like `cta_hover`. Then use the `:hover` on the card followed by your class. This is optional as well.\n```&lt;style&gt;\n    .card:hover .cta_hover {\n      color: white;\n      background: red;\n    }\n&lt;/style&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Mitja Lewin",
+      "poster_handle": "m.lewin"
+    },
+    "time_stamp": "2022-07-27 13:14:36",
+    "text": "*Note:* There is a better way to iterate the card elements, by pushing the card ids with a CTA from the module into a JavaScript container and then add event listeners only to the related card elements, but that way is litte bit more complicate. Anyway; the solution above should do the job."
+  },
+  {
+    "poster": {
+      "poster_name": "Maia Torell",
+      "poster_handle": "maiatorell123"
+    },
+    "time_stamp": "2022-07-27 13:51:55",
+    "text": "<@UK9BKNBD5> wow! Thank you so much for your help! This have made me so crazy, ended up just expanding the cta_button to cover the whole card on a z-index and position absolute + opacity to not show it :joy: this is so much better!"
+  }
+]

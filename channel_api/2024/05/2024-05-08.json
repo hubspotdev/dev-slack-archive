@@ -1,0 +1,172 @@
+[
+  {
+    "poster": {
+      "poster_name": "Swati Tiwari",
+      "poster_handle": "swati.tiwari"
+    },
+    "time_stamp": "2024-05-08 01:20:46",
+    "text": "When I am trying to get contact I am getting error as when I am trying to import contact I am getting erro r as The maximum number of inputs supported in a batch is 100\nbecause there is contact above 100 which I am trying to import\nso I found solution that only possible with v1 api",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-08 01:25:18"
+      },
+      {
+        "time_stamp": "2024-05-08 01:31:38"
+      },
+      {
+        "time_stamp": "2024-05-08 01:33:33"
+      },
+      {
+        "time_stamp": "2024-05-08 01:56:39"
+      },
+      {
+        "time_stamp": "2024-05-08 01:57:10"
+      },
+      {
+        "time_stamp": "2024-05-08 02:11:18"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Swati Tiwari",
+      "poster_handle": "swati.tiwari"
+    },
+    "time_stamp": "2024-05-08 01:20:56",
+    "text": "Need solution"
+  },
+  {
+    "poster": {
+      "poster_name": "Omar Tanti",
+      "poster_handle": "omar.tanti"
+    },
+    "time_stamp": "2024-05-08 01:25:18",
+    "text": "cannot you split the inputs into batches of 100 <@U07357NKQD6> and do multiple calls?"
+  },
+  {
+    "poster": {
+      "poster_name": "Swati Tiwari",
+      "poster_handle": "swati.tiwari"
+    },
+    "time_stamp": "2024-05-08 01:31:38",
+    "text": "```def action_import_partner(self):\n    \"\"\"\n    Method used fetch data from HubSpot and creates contacts based on it.\n    \"\"\"\n    # Fields needs to fetch from HubSpot.\n\n    needed_fields = [\n        \"firstname\", \"lastname\", \"email\", \"phone\", \"company\", \"jobtitle\",\n        \"website\", \"address\", \"city\", \"state\", \"zip\", \"country\",\n        \"odoo_mail\", \"odoo_image_string\", \"hs_object_id\"\n    ]\n    api_client = HubSpot(access_token=self.access_key)\n    odoo_partners = self.env['res.partner'].search([]).mapped(\n        'hs_object_id')\n    # Getting needed fields from HubSpot\n    print(\"=======\", api_client.crm.contacts.__dir__())\n    HubSpot_partners = api_client.crm.contacts.get_all(\n        properties=needed_fields)\n    partners_to_create = []\n    success_count = 0\n    # Creates Dictionaries from country and state model to fetch\n    # state_id and country_id\n    state_dict = {state['name']: state['id'] for state in self.env[\n        'res.country.state'].search_read([], ['name'])}\n    country_dict = {country['name']: country['id'] for country in self.env[\n        'res.country'].search_read([], ['name'])}\n    for rec in HubSpot_partners:\n        # If HubSpot record not present in odoo records creates it.\n        if rec.properties['hs_object_id'] not in odoo_partners:\n            partners_to_create.append({\n                'name': rec.properties['firstname'] + '' + rec.properties[\n                    'lastname'] if rec.properties[\n                    'lastname'] else rec.properties['firstname'],\n                'email': rec.properties['email'] if rec.properties[\n                    'email'] else rec.properties[\n                    'odoo_mail'] if rec.properties['odoo_mail'] else None,\n                'phone': rec.properties['phone'],\n                'function': rec.properties['jobtitle'],\n                'website': rec.properties['website'],\n                'street': rec.properties['address'],\n                'city': rec.properties['city'],\n                'zip': rec.properties['zip'],\n                'state_id': state_dict.get(str(rec.properties['state']),\n                                           None),\n                'country_id': country_dict.get(\n                    str(rec.properties['country']), None),\n                'image_1920': base64.b64decode(\n                    rec.properties['odoo_image_string']) if rec.properties[\n                    'odoo_image_string'] else None,\n                'hs_object_id': rec.properties['hs_object_id'],\n                'sync_mode': 'import'\n            })\n            # counting total records created\n            success_count += 1\n    if partners_to_create:\n        self.env['res.partner'].sudo().create(partners_to_create)\n    # If new record created, then creates sync history.\n    if success_count &gt; 0:\n        self.env['HubSpot.sync.history'].sudo().create({\n            'date': datetime.now(),\n            'res_model_id': self.env.ref('base.model_res_partner').id,\n            'sync_mode': 'import',\n            'state': 'success',\n            'count': success_count,\n        })\n    self.contacts_last_imported = datetime.now()\n    return success_count```\ncan you help to update this code for doing multiple calls"
+  },
+  {
+    "poster": {
+      "poster_name": "Swati Tiwari",
+      "poster_handle": "swati.tiwari"
+    },
+    "time_stamp": "2024-05-08 01:33:33",
+    "text": "HubSpot_partners = api_client.crm.contacts.get_all(\n        properties=needed_fields)\nin this line I am getting error"
+  },
+  {
+    "poster": {
+      "poster_name": "Omar Tanti",
+      "poster_handle": "omar.tanti"
+    },
+    "time_stamp": "2024-05-08 01:56:39",
+    "text": "`HubSpot_partners = []`\n`offset = 0`\n`batch_size = 100`\n`total_contacts = //user search api to get total count`\n\n`while offset &lt; total_contacts:`\n    `batch = api_client.crm.contacts.get_all(`\n        `properties=needed_fields,`\n        `limit=batch_size,`\n        `offset=offset`\n    `)`\n    `HubSpot_partners.extend(batch)`\n    `offset += batch_size`"
+  },
+  {
+    "poster": {
+      "poster_name": "Omar Tanti",
+      "poster_handle": "omar.tanti"
+    },
+    "time_stamp": "2024-05-08 01:57:10",
+    "text": "not sure but maybe you can give that a try you need to modify it obviously to have it work but to give you an idea on how you can go about it <@U07357NKQD6>"
+  },
+  {
+    "poster": {
+      "poster_name": "Swati Tiwari",
+      "poster_handle": "swati.tiwari"
+    },
+    "time_stamp": "2024-05-08 02:11:18",
+    "text": "I have tried but its not working"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-05-08 03:15:46",
+    "text": "You can use the \"Unique values\" properties to update in the batch api, but I don't think this works with the default basic api PATCH, because there it technically doesn't know if the value behind */crm/v3/objects/contacts/{contactId}* is a contact ID or a different Unique identifier."
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-05-08 03:16:22",
+    "text": "So the batch API would be your only use for now. What's the reason why it would be easier to use the basic api instead of the batch?"
+  },
+  {
+    "poster": {
+      "poster_name": "Juan Felipe Aranguen",
+      "poster_handle": "juan.felipe"
+    },
+    "time_stamp": "2024-05-08 11:07:48",
+    "text": "Thanks <@U06KP87QUJW>. Which api method did you use to search contacts by email address? I’m only finding the batch read supports unique properties :thinking_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Uday Muppana",
+      "poster_handle": "uday"
+    },
+    "time_stamp": "2024-05-08 11:14:52",
+    "text": "Does anyone have a definitive answer to whether the single send email api is rate limited or has max calls limit?"
+  },
+  {
+    "text": "Hello!\n\nCan someone please provide some guidance as to how to use the node api’s (contact) batch read method to look for a contact based on two custom properties?\nThe documentation tends to showing how to look based on only 1 property, but less clear as to >1\n\nBelow I’m trying to get one contact. It works when the property is `email` alone, but gets trickier when including the `celular_ou_whatsapp` one :thinking_face:\n```await this.apiClient.crm.contacts.batchApi.read({\n        propertiesWithHistory: ['email'],\n        properties: ['email', 'celular_ou_whatsapp'],\n        inputs: [{ id: data.email }, { id: data.mobilephone }],\n      });```",
+    "time_stamp": "2024-05-08 11:51:07",
+    "edited": {
+      "time_stamp": "2024-05-08 11:51:44"
+    },
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-08 13:27:20"
+      },
+      {
+        "time_stamp": "2024-05-09 00:09:48"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2024-05-08 13:27:20",
+    "text": "i think you want the <https://developers.HubSpot.com/docs/api/crm/search|search endpoint>"
+  },
+  {
+    "poster": {
+      "poster_name": "Omar Tanti",
+      "poster_handle": "omar.tanti"
+    },
+    "time_stamp": "2024-05-08 22:31:00",
+    "edited": {
+      "time_stamp": "2024-05-08 22:31:13"
+    },
+    "text": "```public static function fetch_by_email_from_hs( $contact_email ) {\n\n   if ( empty( $contact_email ) ) {\n      //Search will give an error if we do not pass a value and there are cases where both email and work email are empty\n      return false;\n   }\n\n   $HubSpotAPI          = new HubSpotAPI();\n   $search_contact_data = [\n      'filterGroups' => [\n         [\n            'filters' => [\n               [\n                  'propertyName' => 'email',\n                  'operator'     => 'EQ',\n                  'value'        => $contact_email\n               ]\n            ]\n         ]\n      ],\n   ];\n\n   // Sync data with HubSpot\n   $response = $HubSpotAPI->makeRequest(\n      '/crm/v3/objects/contacts/search',\n      'POST',\n      $search_contact_data\n   );\n\n   if ( empty( $response['results'] ) ) {\n      return false;\n   }\n\n   return $response['results'][0];\n\n}```\nThat's what I had done - this is with PHP but. endpoint is '/crm/v3/objects/contacts/search' <@U070ATQAMJP>"
+  },
+  {
+    "text": "<@UD53A9UUR> I already left a reply to <@U070ATQAMJP> here with the Search request - mine is with PHP but he can easily change to node.js based on documentation here <https://developers.HubSpot.com/docs/api/crm/contacts>",
+    "time_stamp": "2024-05-08 23:31:46"
+  },
+  {
+    "text": "<@U02Q7439RK2> unfortunately never had such a scenario from my end. I am sure you already did you research and most probably you already tried this.\n\nWith the PATCH request as per attached screenshot, if you remove the property from the `requiredProperties`  parameter, doesn't it get removed from 'required' fields?\n\nAnother option would be to try PATCH on *`/crm/v3/properties/{objectType}/{propertyName}`*  as per documentation here <https://developers.HubSpot.com/docs/api/crm/properties>",
+    "time_stamp": "2024-05-08 23:51:14"
+  },
+  {
+    "poster": {
+      "poster_name": "Omar Tanti",
+      "poster_handle": "omar.tanti"
+    },
+    "time_stamp": "2024-05-09 00:09:48",
+    "text": "Being discussed here <https://HubSpotdev.slack.com/archives/C2YHAHB6K/p1715229060287959?thread_ts=1715117530.250279&amp;cid=C2YHAHB6K>"
+  }
+]

@@ -1,0 +1,98 @@
+[
+  {
+    "poster": {
+      "poster_name": "Dennis K",
+      "poster_handle": "dennis579"
+    },
+    "time_stamp": "2024-06-10 07:34:02",
+    "text": "Correct me if I am wrong, but you can’t use hooks server side, only client side. So the usage of hooks would need to be inside an `Island.` I think people now are a bit over exaggerating the need of putting everything Server side. For years they have all been shipping JS bundles to the client without any issues (for regular marketing website)"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-06-10 07:52:54",
+    "text": "The error means that there was a JS exception or react render failing when rendering that island component on the server. Is there more information in the console on the server-side error (like  `Error when server rendering…`)?\n\n• Right now we do not offer a way to suppress that error message, because it does indicate a significant problem*\n• If the problem goes away with `clientOnly` it likely means that there is some code in that island that is assuming a browser API/global is available and triggering the error\n• Can you replicate the problem locally via dev server proxying? (And if so, what errors do you see in the terminal?)\n*: … though we should probably have some kind of `fallback={…}` or `ErrorComponent={…}` prop to an island to customize failure cases."
+  },
+  {
+    "poster": {
+      "poster_name": "Stefano Chiala",
+      "poster_handle": "stefano599"
+    },
+    "time_stamp": "2024-06-10 10:14:22",
+    "text": "Hi perhaps I can find some help here :slightly_smiling_face:\nI have just released my new island and it's the first time I am trying to work with island and graphql.\nEverything works like a charm locally, the graphql query gets resolved perfectly with database data from the portalId of my config file, which is amazing.\nHowever, after deploy, I drag my island to a page and nothing gets rendered. The only thing I can see when looking at the DOM is the following inside the island wrapper:\n`&lt;!-- Error rendering module tag: dataQueryResult value --&gt;`\n\nCode simplify is something like this:\n```import { Island } from '@HubSpot/cms-components';\nimport MyIsland from '../../islands/MyIsland/MyIsland.jsx?island';\n\nconst dataQuery = `{  \n  HUBDB {\n    collection_one() {\n      items {\n        stuff\n      }\n    }\n    collection_two() {\n      items {\n        stuff\n      }\n    }\n  }\n}`;\n\nexport const Component = (props) =&gt; {\n  const {\n    dataQueryResult: {\n      data: {\n        HUBDB: {\n          collection_one: { items: itemsOne },\n          collection_two: { items: itemsTwo },\n        },\n      },\n    },\n    fieldValues,\n  } = props;\n \n  return (\n    &lt;Layout&gt;\n      &lt;Island\n        module={MyIsland}\n        hydrateOn='load'\n        data={{itemsOne,itemsTwo}}\n        fieldValues={fieldValues}\n      /&gt;\n    &lt;/Layout&gt;\n  );\n};\n\nexport const meta = {\n  label: `MyIsland JS`,\n};\nexport { fields } from './fields.jsx';\nexport const query = dataQuery; ```\nThank you :slightly_smiling_face:",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-06-10 10:57:21"
+      },
+      {
+        "time_stamp": "2024-06-10 14:25:21"
+      },
+      {
+        "time_stamp": "2024-06-10 14:46:38"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-06-10 10:57:21",
+    "text": "First suggestions to debug:\n• Use `import { logInfo } from '@HubSpot/cms-components'`  `logInfo('dataQueryResult', dataQueryResult)` (or `logInfoDebugOnly` with `?hsDebug=true` ) to see what `dataQueryResult` is in the error case before rendering the `&lt;Island…&gt;`\n• Add an error path if `dataQueryResult` or `dataQueryResult.data…` is missing\n• Look at `extensions.rate_limit_info` and similar to see if you are hitting <https://developers.HubSpot.com/docs/cms/data/query-HubSpot-data-using-graphql#query-complexity-and-account-limits|complexity or rate limits>"
+  },
+  {
+    "text": "Hi <@UCY83QS6Q> thanks for your debug suggestions.. when I do log with logInfo the dataQueryResult, the rate_limit_info looks ok to me, this is a screenshot when running the code locally.\nWhen deployed to prod I don't even see my log",
+    "time_stamp": "2024-06-10 14:25:21"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2024-06-10 14:44:59",
+    "text": "maybe a custom structured data module?"
+  },
+  {
+    "poster": {
+      "poster_name": "Stefano Chiala",
+      "poster_handle": "stefano599"
+    },
+    "time_stamp": "2024-06-10 14:46:38",
+    "text": "<@UCY83QS6Q>, it seems I had an issue on my query which did not throw an error when run locally.\n\nWhen adding a name to my query and hs_id, the query worked in prod as well.\n```const dataQuery = `query dataQuery {  \n  HUBDB {\n    collection_one() {\n      items {\n        hs_id\n        stuff\n      }\n    }\n    collection_two() {\n      items {\n        hs_id\n        stuff\n      }\n    }\n  }\n}`;```\nOnce again, thanks for looking at this :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-06-10 17:45:52",
+    "text": "hi y'all! i have been having some issues uploading my app this afternoon. i'm getting this error:\n```[ERROR] `rendering-stack.zip` deployment package is too large to deploy. Please reduce package size and try again.```",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-06-11 06:09:22"
+      }
+    ]
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2024-06-10 21:43:13",
+    "text": "hi, were there any updates to this? looking to make use of the video metadata :slightly_smiling_face:"
+  },
+  {
+    "text": "hi guys, can anyone help me access to the video thumbnail for the video field? only returning me these so im not really sure how i can access it",
+    "time_stamp": "2024-06-11 00:16:53",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-06-13 08:13:30"
+      }
+    ]
+  }
+]

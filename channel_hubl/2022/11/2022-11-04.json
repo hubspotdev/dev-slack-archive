@@ -1,0 +1,251 @@
+[
+  {
+    "poster": {
+      "poster_name": "Neil Junsan",
+      "poster_handle": "neiljunsan09"
+    },
+    "time_stamp": "2022-11-04 01:41:51",
+    "edited": {
+      "time_stamp": "2022-11-04 02:08:14"
+    },
+    "text": "```{% set associated_companies = crm_associations(contact.hs_object_id, \"HubSpot_DEFINED\", 1, \"limit=3&amp;order=-createdate\", \"name\", false) %}\n\n{% set company_deals = crm_associations(associated_companies.results[0].id, 'HubSpot_DEFINED', 6, \"limit=10&amp;offset=0&amp;order=-createdate\", 'dealname,amount,dealstage,createdate,closedate') %}\n \n{% set contact_deals = crm_associations(contact.hs_object_id, 'HubSpot_DEFINED', 4, \"limit=10&amp;offset=0&amp;order=-createdate\", 'dealname,amount,dealstage,createdate,closedate') %} \n\n{% set contactdeals = contact_deals.results %}\n\n{% set deals = [] %}\n\n{% do deals.extend(company_deals.results) %}\n\n{% do deals.extend(contact_deals.results) %} \n\n\n&lt;table id=\"dealtable\" class=\"table table-hover ticket-table\"&gt;\n          &lt;thead&gt;\n        &lt;tr class=\"header-row\"&gt;\n          &lt;th scope=\"col\"&gt;DEAL NAME&lt;/th&gt;\n          &lt;th scope=\"col\"&gt;DEALS STAGE&lt;/th&gt;\n          &lt;th scope=\"col\"&gt;CREATE DATE&lt;/th&gt; \n          &lt;th scope=\"col\"&gt;AMOUNT&lt;/th&gt;   \n          &lt;th scope=\"col\"&gt;CLOSE DATE&lt;/th&gt;   \n        &lt;/tr&gt;\n      &lt;/thead&gt;\n      &lt;tbody&gt; \n        {% for deal in deals %}\n        {% set membership_contact = crm_object('contact', request.contact.contact_vid, 'firstname,lastname,company') %}\n        {% if deal.source_type != \"CHAT\" and deal.source_type != \"Support Automation\" and deal.source_type != \"Internal\"\n        and deal.source_type != \"Community\" and deal.source_type != \"PS\" and deal.source_type != \"Chatter\"%}\n        &lt;tr scope=\"row\"&gt;\n          &lt;td data-label=\"DEAL NAME\" class=\"gray-cell\"&gt;\n             &lt;a href=\"<https://app.HubSpot.com/contacts/7475627/deal/{{deal.id}}>\" target=\"_blank\"&gt;{{ deal.dealname }}&lt;/a&gt;\n          &lt;/td&gt;  \n        {% if deal.dealstage == \"1a4e48ef-e214-468c-9d51-fe5547933286\"%}\n          &lt;td data-label=\"DEAL STAGE\"&gt;\n           &lt;span class=\"badge badge-pill p1\"&gt;Prospecting&lt;/span&gt;\n          &lt;/td&gt;\n         {% elif deal.dealstage == \"72c0e000-d43b-4ed9-a762-fd59723134bc\"%}\n          &lt;td data-label=\"DEAL STAGE\"&gt;\n           &lt;span class=\"badge badge-pill p2\"&gt;Qualifying&lt;/span&gt;\n          &lt;/td&gt;\n         {% elif deal.dealstage == \"79795644-3df1-4060-afbe-560f26a8aaad\"%}\n          &lt;td data-label=\"DEAL STAGE\"&gt;\n           &lt;span class=\"badge badge-pill p3\"&gt;Developing Solution&lt;/span&gt;\n          &lt;/td&gt;\n         {% elif deal.dealstage == \"3e872ef2-3101-4dbf-a85e-417396969466\"%}\n          &lt;td data-label=\"DEAL STAGE\"&gt;\n           &lt;span class=\"badge badge-pill p4\"&gt;Negotiating&lt;/span&gt;\n          &lt;/td&gt;\n         {% elif deal.dealstage == \"0a14ba1e-dacd-4ce5-8ddf-ead56613e16b\"%}\n          &lt;td data-label=\"DEAL STAGE\"&gt;\n           &lt;span class=\"badge badge-pill p5\"&gt;Won&lt;/span&gt;\n          &lt;/td&gt;\n         {% elif deal.dealstage == \"643b73e3-0d56-4be1-9852-a01b15d2a2fc\"%}\n          &lt;td data-label=\"DEAL STAGE\"&gt;\n            &lt;span class=\"badge badge-pill p5\"&gt;Closed Lost&lt;/span&gt;\n          &lt;/td&gt; \n         {% elif deal.dealstage == \"643b73e3-0d56-4be1-9852-sa01b15d2a2fc\"%}\n          &lt;td data-label=\"DEAL STAGE\"&gt;\n            &lt;span class=\"badge badge-pill p5\"&gt;Won&lt;/span&gt;\n          &lt;/td&gt;\n         {% else %}\n          &lt;td data-label=\"DEAL STAGE\"&gt;\n            {{deal.dealstage}}\n          &lt;/td&gt;\n         {% endif %}  \n         &lt;td data-label=\"CREATE DATE\" class=\"gray-cell\"&gt;{{ deal.createdate }}&lt;/td&gt;     \n         &lt;td data-label=\"AMOUNT\" class=\"gray-cell\"&gt;{{deal.amount}}&lt;/td&gt; \n         &lt;td data-label=\"CLOSE DATE\" class=\"gray-cell\"&gt;{{ deal.closedate }}&lt;/td&gt;  \n        &lt;/tr&gt;\n    {% endif %}\n    {% endfor %} \n    &lt;/tbody&gt;\n  &lt;/table&gt;  ```\nI have set the offset to 0 , and limit to 10 already sir. but i tried to search <http://domain.com/test?offset=1|domain.com/test?offset=1> nothings happen"
+  },
+  {
+    "poster": {
+      "poster_name": "Neil Junsan",
+      "poster_handle": "neiljunsan09"
+    },
+    "time_stamp": "2022-11-04 01:45:49",
+    "text": "I found something HubSpot Blog Pagination here sir <https://designers.HubSpot.com/code-gallery/entry/us/dontgojasonwaterfalls-blog-numbered-pagination> does this code works on my case ? :see_no_evil:"
+  },
+  {
+    "poster": {
+      "poster_name": "Neil Junsan",
+      "poster_handle": "neiljunsan09"
+    },
+    "time_stamp": "2022-11-04 02:05:30",
+    "text": "Is the core query param sir in my case code above what should be the input of it something like this sir ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Neil Junsan",
+      "poster_handle": "neiljunsan09"
+    },
+    "time_stamp": "2022-11-04 02:05:33",
+    "text": "```{% set queryparam = \"&amp;orderBy=resource_order\"~\"&amp;resource_order__gt=0\" %}\n{% if request.query_dict.type in [\"1\", \"11\", \"12\", \"13\",\"15\"] %}\n    {% set queryparam = queryparam ~ \"&amp;content_type=\"~request.query_dict.type|urlencode %}\n{% endif %}\n{% if request.query_dict.type == \"show-all\" %}\n    {% set queryparam = queryparam %}\n{% endif %}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Neil Junsan",
+      "poster_handle": "neiljunsan09"
+    },
+    "time_stamp": "2022-11-04 05:17:53",
+    "text": "Hello Folks,  I tried to add pagination on the Deal table I had I found some leads but only using HUBD Table variables here's the code and its working on the page as I tested it.  Hope someone can give a condensed the code below and match my query of this result.\n\n{% set company_deals = crm_associations(associated_companies.results[0].id, 'HubSpot_DEFINED', 6, \"limit=10&amp;offset=0&amp;order=-createdate\", 'dealname,amount,dealstage,createdate,closedate') %}\n\nSample code below pagination from HUBDB TABLE.\n\n```{% set batch_num = 10 %}\n\n{% if not request.query_dict.page_num %}\n   {% set page_num = 1 %}\n   {% set offset_num = 0 %}\n{% elif request.query_dict.page_num %}\n   {% set page_num = request.query_dict.page_num %}\n   {% set offset_num = page_num|add(-1) * batch_num %}\n{% endif %}\n\n{% set query = \"limit=\" ~ batch_num ~ \"&amp;offset=\" ~ offset_num %}\n\n{% set rows = hubdb_table_rows('5493634', query) %}\n\n&lt;ul class=\"item-list\"&gt;\n   {% for row in rows %}`\n     &lt;li class=\"list-item\"&gt;{{ row.name }}&lt;/li&gt;\n   {% endfor %}\n&lt;/ul&gt;\n\n{% set nav = hubdb_table_rows('5493634') %}\n\n{% set total_pages = nav|length|divide(batch_num) %}\n\n{% set more_pages = total_pages - page_num %}\n\n&lt;nav&gt;\n  {% if page_num &gt; 1 %}\n     &lt;a class=\"previous-posts-link\" href=\"{{ content.absolute_url }}?page_num={{ page_num|add(-1) }}\" title=\"Next\"&gt;Next&lt;/a&gt;\n  {% endif %}\n\n  {% if more_pages == 0 %}\n     {% if page_num|add(-4) &gt;= 1 -%} &lt;a href=\"{{ content.absolute_url }}?page_num={{ page_num|add(-4) }}\"&gt;{{ page_num|add(-4) }}&lt;/a&gt;{%- endif %}\n  {% endif %}\n\n  {% if more_pages &lt;= 1 %}\n     {% if page_num|add(-3) &gt;= 1 %}&lt;a href=\"{{ content.absolute_url }}?page_num={{ page_num|add(-3) }}\"&gt;{{ page_num|add(-3) }}&lt;/a&gt;{% endif %}\n  {% endif %}\n\n  {% if page_num|add(-2) &gt;= 1 %} &lt;a href=\"{{ content.absolute_url }}?page_num={{ page_num|add(-2) }}\"&gt;{{ page_num|add(-2) }}&lt;/a&gt;{% endif %}\n\n  {% if page_num|add(-1) &gt;= 1 %}&lt;a href=\"{{ content.absolute_url }}?page_num={{ page_num|add(-1) }}\"&gt;{{ page_num|add(-1) }}&lt;/a&gt;{% endif %}\n\n  &lt;a class=\"active\" href=\"{{ content.absolute_url }}?page_num={{ page_num }}\"&gt;{{ page_num }}&lt;/a&gt;\n\n  {% if page_num|add(1) &lt;= total_pages %}&lt;a href=\"{{ content.absolute_url }}?page_num={{ page_num|add(1) }}\"&gt;{{ page_num|add(1) }}&lt;/a&gt;{% endif %}\n\n  {% if page_num|add(2) &lt;= total_pages %}&lt;a href=\"{{ content.absolute_url }}?page_num={{ page_num|add(2) }}\"&gt;{{ page_num|add(2) }}&lt;/a&gt;{% endif %}\n\n  {% if page_num &lt;= 2 %}\n     {% if page_num|add(3) &lt;= total_pages %}&lt;a href=\"{{ content.absolute_url }}?page_num={{ page_num|add(3) }}\"&gt;{{ page_num|add(3) }}&lt;/a&gt;{% endif %}=\n  {% endif %}\n\n  {% if page_num == 1 %}=\n     {% if page_num|add(4) &lt;= total_pages %}&lt;a href=\"{{ content.absolute_url }}?page_num={{ page_num|add(4) }}\"&gt;{{ page_num|add(4) }}&lt;/a&gt;{% endif %}\n  {% endif %}\n\n  {% if total_pages &gt; page_num %}\n     &lt;a class=\"next-posts-link\" href=\"{{ content.absolute_url }}?page_num={{ page_num|add(1) }}\" title=\"Older Posts\"&gt;Previous&lt;/a&gt;\n  {% endif %}\n&lt;/nav&gt;```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Bilal Ahmad",
+      "poster_handle": "optimist1356"
+    },
+    "time_stamp": "2022-11-04 07:02:21",
+    "text": "Hello Developers, I am using HubSpot code (different forms) in my WordPress website (<https://vanitystudios.co.uk>) but I see strange things\n I use two buttons which upon click will open a popup form, but when the same buttons, if I would hide one of the buttons for desktop and then see the website(button) on mobile the form, would not be popup, I debug it and I see that the popup form would appear there but is hidden because of the CSS toggle class. here is the video this will help you better understand yourself. <https://www.loom.com/share/470aa0acb0fa40c38ac17497e4e286d3>"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Mitchell",
+      "poster_handle": "tom760"
+    },
+    "time_stamp": "2022-11-04 07:24:35",
+    "text": "Hi - marketer more than a developer here. I'm having some problems with what I think should be a super basic for loop. I'm embedding a module that pulls the value of a dropdown-select column from a specified row:\n```{% module \"our_products\" path=\"@HubSpot/text\",\n  label='Our Products',\n  value={{hubdb_table_row('quote_breakdown_pages', lookuprow).our_products}},export_to_template_context=True\n%}```\n`widget_data.our_products.value`  then displays for example:\n```[{\"id\":1,\"name\":\"Scheduling\",\"label\":\"Scheduling\",\"type\":\"option\",\"order\":0}, {\"id\":3,\"name\":\"Wellbeing\",\"label\":\"Wellbeing\",\"type\":\"option\",\"order\":2}, {\"id\":4,\"name\":\"Connect\",\"label\":\"Connect\",\"type\":\"option\",\"order\":3}]```\nBut the below loop is printing absolutely nothing.\n\n```{% for product in widget_data.our_products.value %}\n    {{ product.name }} &lt;br&gt;\n{% endfor %}```\nIs this potentially to do with the speechmarks in the key value pairs? I'm sure I'm doing something completely daft here but can't work out what it is. Any suggestions massively appreciated :+1:",
+    "reply_count": 14,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-11-04 07:49:41"
+      },
+      {
+        "time_stamp": "2022-11-04 07:52:13"
+      },
+      {
+        "time_stamp": "2022-11-04 07:54:16"
+      },
+      {
+        "time_stamp": "2022-11-04 07:56:25"
+      },
+      {
+        "time_stamp": "2022-11-04 07:57:42"
+      },
+      {
+        "time_stamp": "2022-11-04 07:58:32"
+      },
+      {
+        "time_stamp": "2022-11-04 07:58:46"
+      },
+      {
+        "time_stamp": "2022-11-04 08:01:01"
+      },
+      {
+        "time_stamp": "2022-11-04 08:03:13"
+      },
+      {
+        "time_stamp": "2022-11-04 08:03:55"
+      },
+      {
+        "time_stamp": "2022-11-04 08:04:43"
+      },
+      {
+        "time_stamp": "2022-11-04 08:05:41"
+      },
+      {
+        "time_stamp": "2022-11-04 08:08:56"
+      },
+      {
+        "time_stamp": "2022-11-07 07:20:09"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-04 07:49:41",
+    "text": "does {{ product }} instead of {{ product.name }} do anything different"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Mitchell",
+      "poster_handle": "tom760"
+    },
+    "time_stamp": "2022-11-04 07:52:13",
+    "text": "Hey <@U01QVR44MEY> thanks for your reply. So yes {{product}} displays what I'd expect:\n\n```{\"id\":1,\"name\":\"Scheduling\",\"label\":\"Scheduling\",\"type\":\"option\",\"order\":0}\n{\"id\":3,\"name\":\"Wellbeing\",\"label\":\"Wellbeing\",\"type\":\"option\",\"order\":2}\n{\"id\":4,\"name\":\"Connect\",\"label\":\"Connect\",\"type\":\"option\",\"order\":3}```\nBut it won't access the value of 'name' (ie 'Scheduling') using dot notation. Driving me mad!"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-04 07:54:16",
+    "text": "What does {{ product.id }} display?"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Mitchell",
+      "poster_handle": "tom760"
+    },
+    "time_stamp": "2022-11-04 07:56:25",
+    "text": "Nothing at all."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-04 07:57:42",
+    "text": "what about {{ product|tojson.name }}"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Mitchell",
+      "poster_handle": "tom760"
+    },
+    "time_stamp": "2022-11-04 07:58:32",
+    "text": "Nothing there either!"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-04 07:58:46",
+    "text": "Hahaha ok, let me run some tests"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Mitchell",
+      "poster_handle": "tom760"
+    },
+    "time_stamp": "2022-11-04 08:01:01",
+    "text": "It's so weird - if I recreate the object manually like this and loop through it it works fine.\n\n```    {% set products = [{\"id\":1,\"name\":\"Scheduling\",\"label\":\"Scheduling\",\"type\":\"option\",\"order\":0}, {\"id\":3,\"name\":\"Wellbeing\",\"label\":\"Wellbeing\",\"type\":\"option\",\"order\":2}, {\"id\":4,\"name\":Connect\",\"label\":\"Connect\",\"type\":\"option\",\"order\":3}] %}```\nBut I notice that when I print/display this object, the quotation marks around the keys and values are gone. Whereas with the object I've created from the widget data, the quotation marks ARE present when I print it"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-04 08:03:13",
+    "text": "Yeah, this code printed it fine:\n```{% set products = [{\"id\":1,\"name\":\"Scheduling\",\"label\":\"Scheduling\",\"type\":\"option\",\"order\":0}, {\"id\":3,\"name\":\"Wellbeing\",\"label\":\"Wellbeing\",\"type\":\"option\",\"order\":2}, {\"id\":4,\"name\":\"Connect\",\"label\":\"Connect\",\"type\":\"option\",\"order\":3}]%}\n\n{% for product in products %}\n{{ product.name }}\n{% endfor %}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Mitchell",
+      "poster_handle": "tom760"
+    },
+    "time_stamp": "2022-11-04 08:03:55",
+    "text": "Yep no problems there at all. It just seems to be the something to do with the data coming from the widget :confused:"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-04 08:04:43",
+    "text": "What about this: {{ product|fromjson.name }}"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Mitchell",
+      "poster_handle": "tom760"
+    },
+    "time_stamp": "2022-11-04 08:05:41",
+    "text": "No joy! :sob: :joy:"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Mitchell",
+      "poster_handle": "tom760"
+    },
+    "time_stamp": "2022-11-04 08:08:56",
+    "text": "I think for now I can work around it by looking up the data at module level, but I really wanted to get the values stored globally in the template. Not the end of the world. Appreciate you looking at this though and would be super keen to know if I've just been doing something daft here or if there is another reason why these aren't pulling through!"
+  },
+  {
+    "poster": {
+      "poster_name": "Tim L",
+      "poster_handle": "tim462"
+    },
+    "time_stamp": "2022-11-04 09:17:48",
+    "edited": {
+      "time_stamp": "2022-11-04 09:18:25"
+    },
+    "text": "Hi all – I’m getting some really weird behaviour with `{{ standard_header_includes }}` . It’s bringing in some CSS files that are definitely NOT in the standard header, nor are they on the list of default CSS/stylesheets. Are there any other places to edit what comes with `{{ standard_header_includes }}`? TIA!",
+    "reply_count": 3,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2022-11-04 10:26:56"
+      },
+      {
+        "time_stamp": "2022-11-04 10:30:27"
+      },
+      {
+        "time_stamp": "2022-11-14 20:05:59"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2022-11-04 10:26:56",
+    "text": "Module CSS dependancies would also be inserted in that block: <https://developers.HubSpot.com/docs/cms/building-blocks/modules/configuration#adding-css-and-javascript-dependencies>"
+  },
+  {
+    "poster": {
+      "poster_name": "Tim L",
+      "poster_handle": "tim462"
+    },
+    "time_stamp": "2022-11-04 10:30:27",
+    "text": "We’ve checked all of them, it’s not in there. Thanks for bringing that up though!"
+  }
+]

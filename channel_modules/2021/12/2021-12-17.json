@@ -1,0 +1,18 @@
+[
+  {
+    "poster": {
+      "poster_name": "Michele Herzog",
+      "poster_handle": "michele.herzog24"
+    },
+    "time_stamp": "2021-12-17 07:58:03",
+    "text": "Yes! You can basically treat it like an array. Since `pprint` is for debugging, sometimes it gives you less user friendly labels, but you can treat it the same as the regular data structure."
+  },
+  {
+    "poster": {
+      "poster_name": "Olivia Durr",
+      "poster_handle": "olivia.durr"
+    },
+    "time_stamp": "2021-12-17 08:57:08",
+    "text": "No matter what I tried, I can't seem to get this figured out. I've played around with the code more and this is what I currently have:\n```{% if showRelatedProjects %}\n  &lt;div class=\"{{ module_name }}__related-projects\"&gt;\n\t&lt;h3&gt;Related Projects&lt;/h3&gt;\n\t{% set count = module.related_projects_count %}\n\t{% set query1 = '&amp;limit='~count %}\n\t{% set query2 = '&amp;capability__contains='~name|replace(' ', '%20')|replace('&amp;','%26') %}\n\t{% set allHubDBRows = hubdb_table_rows(dynamic_page_hubdb_table_id) %}\n\t{% for capability in capabilities %}\n\t\tCapability: {{capability|pprint}}\n\t\t{% set relatedProjectsQuery = '&amp;limit='~count~'&amp;'~'capability__contains='~capability.name|lower|replace(' ','%20')|replace('&amp;','%26')~'&amp;hs_path__not_like='~path~'&amp;exp_disable=false' %}\n\t\t{{relatedProjectsQuery|pprint}}\n\t\t{% set relatedProjects = hubdb_table_rows(allHubDBRows,relatedProjectsQuery)|rejectattr('disable_project') %}\n\t\tRelatedProject: {{relatedProjects|pprint}}\n\t\t{% for item in relatedProjects %}\n\t\t\tItem: {{item|pprint}}\n\t\t\t{{ project_card(module_name,item) }}\n\t\t{% endfor %}\n\t\t\t\t\t\t\t\t\t\n\t{% endfor %}\n&lt;a class=\"cta-link\" href=\"{{ content.absolute_url|replace(dynamic_page_hubdb_row.hs_path,'') }}\"&gt;\n&lt;span class=\"icon\"&gt;{{ icon('gallery') }}&lt;/span&gt;\n&lt;span&gt;View All Projects&lt;/span&gt;\n &lt;/a&gt;\n&lt;/div&gt;\n{% endif %}```\nThis is one of the strings that it prints from the various `pprint`:\n```Capability: (Option: {id=1, name=Engineering Design, objectAsEncodedString=1, objectMap={id=1, name=Engineering Design, order=0}, order=0, type=option}) \nrelatedProjectsQuery: (String: &amp;limit=2&amp;capability__contains=engineering%20design&amp;hs_path__not_like=bonnabel-and-duncan-pump-stations&amp;exp_disable=false) \nRelatedProject: null \nItem: (Option: {id=1, name=Engineering Design, objectAsEncodedString=1, objectMap={id=1, name=Engineering Design, order=0}, order=0, type=option})```\nThe only way I can get the module that I'm trying to call (project_card) to render, is if I put `{% for item in capability %}` rather than relatedProjects and it's always the same information as the dynamic page that it's on.  If I could just figure out how to get it to call other rows instead, I think I could figure out the rest"
+  }
+]

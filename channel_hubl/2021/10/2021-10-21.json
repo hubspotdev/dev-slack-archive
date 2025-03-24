@@ -1,0 +1,29 @@
+[
+  {
+    "poster": {
+      "poster_name": "Martin Hlavacka",
+      "poster_handle": "mhl"
+    },
+    "time_stamp": "2021-10-22 00:25:20",
+    "edited": {
+      "time_stamp": "2021-10-22 00:29:15"
+    },
+    "text": "Hi everyone, couple of days ago, I was dealing with a problem where *{% related_blog_posts %}* was returning the featured image in full resolution, meaning that I got super heavy page load when I wanted to display list of blog posts on my index page. After multiple chats with support and also asking here on Slack, I got lucky and somebody in HS team updated their backend to actually support image resizing in this function. It is probably still undocumented, just wanted to let you know about it - it might help you at some point, too.\n\n*HubL call to pull the blogposts*\n(the last parameter *`featured_image_resize_options`* will do the resizing &amp; you can specify any width there)\n\n`{% related_blog_posts` \n    `limit=3,`\n    `tags=\"Updates\",`\n    `callback=\"blog_post_formatter\"` \n    *`featured_image_resize_options={width: 500}`*\n`%}`\n\n*Script for styling how the blogposts should be rendered*\n\n`&lt;script&gt;`\n    `var blog_post_formatter = function(blogposts) {`\n        `var formatted = \"&lt;div class='row'&gt;\";`\n        `for (var i = 0; i &lt; blogposts.length; i++) {`\n            `var blogpost = blogposts[i];`\n            `formatted += '&lt;div class=\"related-blog-item col-md-4\"&gt;';`\n            `if (blogpost.featuredImage) {`\n                `formatted += `&lt;div class=\"related-image\" data-src=\"{{` + blogpost.featuredImage + `\"&gt;&lt;/div&gt;`;`\n            `}`\n            `formatted += `&lt;a class=\"related-blog-title\" href=\"${blogpost.url}\"&gt;&lt;span&gt;${blogpost.name}&lt;/span&gt;&lt;/a&gt;`;`\n            `formatted += '&lt;div class=\"related-blog-tags\"&gt;';`\n            `formatted += `${blogpost.postSummary.substring(0,80)}...&lt;br&gt;`;`\n            `formatted += `&lt;a class=\"related-blog-title\" href=\"${blogpost.url}\"&gt;&lt;button&gt;Read more&lt;/button&gt;&lt;/a&gt;`;`\n            `formatted += '&lt;/div&gt;';`\n            `formatted += '&lt;/div&gt;';` \n        `}`\n        `formatted += '&lt;/div&gt;';`\n        `return formatted;`\n    `}`\n`&lt;/script&gt;`\n\n*Lazy-loading images*\n\n`setTimeout(function() {`\n    `const banners = document.querySelectorAll('.related-image');`\n    `function handleIntersection(entries) {`\n        `entries.map((entry) =&gt; {`\n            `if (entry.isIntersecting) {`\n                `entry.target.style.backgroundImage = 'url(\"' + entry.target.dataset.src + '\")';`\n                `observer.unobserve(entry.target);`\n            `}`\n        `});`\n    `}`\n    `const observer = new IntersectionObserver(handleIntersection);`\n    `banners.forEach(banner =&gt; observer.observe(banner));`\n`}, 2000);`"
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Hlavacka",
+      "poster_handle": "mhl"
+    },
+    "time_stamp": "2021-10-22 00:27:23",
+    "text": "Thanks for helps, guys <@UBT0AHWLD> <@U02FP2BG000> <@U7SL518D6>"
+  },
+  {
+    "poster": {
+      "poster_name": "Parth Chaudhary",
+      "poster_handle": "parth.1996.ce"
+    },
+    "time_stamp": "2021-10-22 00:27:58",
+    "text": ":+1:"
+  }
+]

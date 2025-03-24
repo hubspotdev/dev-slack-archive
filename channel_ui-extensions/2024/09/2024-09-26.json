@@ -1,0 +1,114 @@
+[
+  {
+    "poster": {
+      "poster_name": "Sejal Parikh (HubSpot PM)",
+      "poster_handle": "sparikh"
+    },
+    "time_stamp": "2024-09-26 03:49:37",
+    "text": "Thank you, Brad, for taking the time to write down your needs. would you also mind sending a couple of screenshots or GIFs to get some visual idea?\n\nAt the moment, we view iFrame as an escape hatch, to get what you can't using our UI components and SDK. This is because the end user experience for record pages need to be seamless, and the resulting UX need to fit cohesively the page surrounding it. I will keep you posted if we have anything new here to help you better solve your needs."
+  },
+  {
+    "poster": {
+      "poster_name": "Sejal Parikh (HubSpot PM)",
+      "poster_handle": "sparikh"
+    },
+    "time_stamp": "2024-09-26 03:50:54",
+    "text": "&gt; let you step through code with breakpoints? Didn't know a debug flag existed.\nYou can use breakpoints through your IDE."
+  },
+  {
+    "poster": {
+      "poster_name": "Sejal Parikh (HubSpot PM)",
+      "poster_handle": "sparikh"
+    },
+    "time_stamp": "2024-09-26 13:09:12",
+    "text": "Note that `actions.reloadPage` is an undocumented API and we found security issues with that. We will take that away eventually.\n\nWhat's your exact use case?"
+  },
+  {
+    "poster": {
+      "poster_name": "Leandro Michelena",
+      "poster_handle": "leandro.michelena"
+    },
+    "time_stamp": "2024-09-26 14:21:13",
+    "text": "Hi everyone!\n\nI'm trying to retrieve some data that we're settings as \"sensitive-data\" in the properties.\nI see some information on the API guides about retrieving these properties through the <https://developers.HubSpot.com/docs/api/sensitive-data|CRM Objects API endpoints>, but we use GraphQL more often to retrieve properties from associated records to the current record/object.\nIs it possible to retrieve sensitive data property values through GraphQL at all? Many thanks!",
+    "reply_count": 10,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-09-26 15:30:56"
+      },
+      {
+        "time_stamp": "2024-09-26 15:31:30"
+      },
+      {
+        "time_stamp": "2024-09-26 15:31:59"
+      },
+      {
+        "time_stamp": "2024-09-27 06:46:26"
+      },
+      {
+        "time_stamp": "2024-09-27 06:48:35"
+      },
+      {
+        "time_stamp": "2024-09-27 06:50:09"
+      },
+      {
+        "time_stamp": "2024-09-27 06:50:51"
+      },
+      {
+        "time_stamp": "2024-09-27 06:59:10"
+      },
+      {
+        "time_stamp": "2024-09-27 07:00:05"
+      },
+      {
+        "time_stamp": "2024-09-27 12:28:47"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-09-26 15:30:56",
+    "text": "I've had some problems with this as well, I have a portal that doesn't even have sensitive data turned on and GraphQL will 500 if you request an object but don't have the sensitive data scopes turned on for that token"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-09-26 15:31:30",
+    "text": "but the thing is that you can't turn on the sensitive data for the developer project tokens (if you try and then upload it will error out)"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-09-26 15:31:59",
+    "text": "so I had to use an env file for a separate private app token with the scopes turned on"
+  },
+  {
+    "poster": {
+      "poster_name": "Brad Tollett",
+      "poster_handle": "brad208"
+    },
+    "time_stamp": "2024-09-26 15:51:09",
+    "edited": {
+      "time_stamp": "2024-09-26 15:52:17"
+    },
+    "text": "I'm having an issue with CRMAssociatedPropertyList - Everything is displaying, but when a value is changed the `actions.onCrmPropertiesUpdate(propertyNameList, updateProperties);` is not executing and this error is thrown. I cannot see any reason this would be caused by code on my end. It does bring up a question though, does`onCrmPropertiesUpdate` even run when an associated objects properties are updated, or does this method only run when the properties of the object in context updates? How can I get it to run with associated properties?\n\n```{\n  \"status\": \"error\",\n  \"message\": \"Csrf token is missing from the request.\",\n  \"correlationId\": \"0e64f160-c3f6-43de-9b03-d273b6cb1da7\",\n  \"engagement\": {\n    \"service-to-service\": \"Not engaged, Metadata not found for Infra-Idp. Fallback Shhkeys: service-to-service not engaged. Metadata for service-to-service request not found. is missing\",\n    \"hapikey\": \"hapikey not engaged. hapikey is not present in query params.\",\n    \"oauth-token\": \"oauth-token not engaged. OAuth access token not found in request header.\",\n    \"internal-cookie\": \"internal-auth not engaged. You can get a new internal auth cookie for host 'api.HubSpot.com' by visiting following link from your current browser window: <https://tools.hubteam.com/login/host/api.HubSpot.com> .\",\n    \"app-cookie\": \"Engaged\"\n  }\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Brad Tollett",
+      "poster_handle": "brad208"
+    },
+    "time_stamp": "2024-09-26 15:58:09",
+    "edited": {
+      "time_stamp": "2024-09-26 16:03:24"
+    },
+    "text": "My goal here is to only enable a submit button once all properties shown inside of CrmAssociatedPropertyList have values. Between `useEffect`, `actions.fetchCrmObjectProperties` and `actions.onCrmPropertiesUpdate` I was able to accomplish this validation on the object in context; without using serverless functions. I'm realizing now that this probably won't work with associations though :man-facepalming:. Serverless functions wouldn't even work here because something like `onCrmPropertiesUpdate()` is the only type of function that can notify my extension that an associated property has been modified without setting up some kind of inefficient probing via SF's."
+  }
+]

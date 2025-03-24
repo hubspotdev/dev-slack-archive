@@ -1,0 +1,210 @@
+[
+  {
+    "text": "What about the page_field?",
+    "time_stamp": "2021-04-15 01:38:38"
+  },
+  {
+    "poster": {
+      "poster_name": "Mitja Lewin",
+      "poster_handle": "m.lewin"
+    },
+    "time_stamp": "2021-04-15 02:29:31",
+    "edited": {
+      "time_stamp": "2021-04-15 02:30:28"
+    },
+    "text": "*I guess this needs some kind of advanced self-made solution.*\n\nOne way is to create a custom local module with a `choise field` and editor option on cars, trucks etc. Include that module to the top of your blog template file. And set _export to template context_ true.\n`{% module \"layout\" path=\"/modules/layout_choice\", export_to_template_context=True %}`\n\nNow you can use it for styling or as a _if/else_ condition in your template file for further use.\n`{% set choice = widget_data.layout.choice_field %}`\n`&lt;div class=\"{{ choice }}\"&gt;`\n      `{% if choice == 'cars' %}` \n          `&lt;h2&gt;CARS&lt;/h2&gt;`\n      `{% elif choice == 'trucks' %}`\n          `&lt;h2&gt;TRUCKS&lt;/h2&gt;`\n      `{% endif %}`\n`&lt;/div&gt;`\n\nFor use in other custom modules you can create an hidden `text_field`. Those fields are inivsible for the editor. And then push your `choice_field` variable to the module context:\n`{% module \"something\" path=\"/modules/something\", hidden_field=\"{{ widget_data.layout.choice_field }}\" %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Stefan Dzalev",
+      "poster_handle": "stefan632"
+    },
+    "time_stamp": "2021-04-15 02:39:12",
+    "text": "hmm i will try it. what if i dont need it to be a blog it can be a regular page,how can i do that? for an example, i have a main page template for cars and i have 500 cars, is it possible to generate a same template design for every car with different slug etc? (every car has its own page)"
+  },
+  {
+    "poster": {
+      "poster_name": "Stefan Dzalev",
+      "poster_handle": "stefan632"
+    },
+    "time_stamp": "2021-04-15 02:39:21",
+    "text": "i have no idea how to acheave this..."
+  },
+  {
+    "poster": {
+      "poster_name": "Mitja Lewin",
+      "poster_handle": "m.lewin"
+    },
+    "time_stamp": "2021-04-15 02:44:22",
+    "text": "This sounds lika a product catalog. HubSpot has the HubDB Feature. With it you can create dynamic pages, pls take a look at: <https://developers.HubSpot.com/docs/cms/guides/building-dynamic-pages-with-hubdb>"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe O'Hara",
+      "poster_handle": "johara"
+    },
+    "time_stamp": "2021-04-15 03:29:46",
+    "text": "Thanks <@UGDF9EBPW>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jarno Mensink",
+      "poster_handle": "jarnomensink"
+    },
+    "time_stamp": "2021-04-15 06:58:16",
+    "text": "Hello! I'm trying to show a user his submitted form info once the form has been succesfully submitted, how can I retrieve this info back once it has been submitted?",
+    "reply_count": 12,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2021-04-15 07:56:06"
+      },
+      {
+        "time_stamp": "2021-04-16 16:49:25"
+      },
+      {
+        "time_stamp": "2021-04-16 17:05:50"
+      },
+      {
+        "time_stamp": "2021-04-16 17:06:01"
+      },
+      {
+        "time_stamp": "2021-04-16 17:07:30"
+      },
+      {
+        "time_stamp": "2021-04-16 18:08:44"
+      },
+      {
+        "time_stamp": "2021-04-17 13:18:29"
+      },
+      {
+        "time_stamp": "2021-04-18 15:03:56"
+      },
+      {
+        "time_stamp": "2021-04-18 15:04:45"
+      },
+      {
+        "time_stamp": "2021-04-18 15:08:15"
+      },
+      {
+        "time_stamp": "2021-04-18 19:55:48"
+      },
+      {
+        "time_stamp": "2021-04-20 00:52:20"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Joe O'Hara",
+      "poster_handle": "johara"
+    },
+    "time_stamp": "2021-04-15 06:58:55",
+    "text": "Thats fixed now, thanks a lot for reporting"
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2021-04-15 07:28:51",
+    "text": "No problem!"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2021-04-15 07:56:06",
+    "text": "Why don’t you just scrape it before it’s submitted?"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2021-04-15 08:11:52",
+    "text": "Custom Post Types are roughly achieved one of three ways:\n\n• *A heavily customized blog*, where the fields for your custom post type are defined using modules in the \"post\" template, and then you can customize the markup on the listing page and/or use a `blog_recent_posts()` function to insert a custom listing on a page or other asset. This is generally the \"old-school\" way of doing things, and the individual post editing experience isn't great AND a page will always be generated for every item.\n• *Via HubDB* - you can create a table for each custom post type, and HubDB additionally comes with the OPTION to use the post data as data only, or to generate a dynamic page for each row. However, similar to the last option, this does force content editors to manage post data in a certain view, this time being in a table/spreadsheet format.\n• *Custom Objects* - this is the newest way and is overkill for most use-cases, as it requires the Enterprise product and is closely tied with the CRM. If you want to do granular reporting on visits and revenue associated with individual properties in a real estate portfolio, for example, this is the perfect solution, but if not it is probably not the ideal approach.\nGiven your car example above, I would also suggest HubDB; that should give you the flexibility you need to create dynamic pages without any of the additional overhead effort associated with the other two approaches."
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2021-04-15 08:57:48",
+    "text": "Might be a bug but maybe im just using it incorrectly. But if I use `hs --portal=&lt;portal&gt; ls`  I get an error of `[info] No files found in /`  There are def folders and files in my root folder. If I specify one of these folders as the destination path then it seems to work as suspected. It would be great if this worked at the root level though.\n\nThe docs say that its supposed to default to the root but it doesnt seem to be working as expected unless im messing something up.",
+    "reply_count": 9,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2021-04-15 09:15:38"
+      },
+      {
+        "time_stamp": "2021-04-16 07:58:43"
+      },
+      {
+        "time_stamp": "2021-04-16 08:11:51"
+      },
+      {
+        "time_stamp": "2021-04-16 13:53:15"
+      },
+      {
+        "time_stamp": "2021-04-16 17:06:47"
+      },
+      {
+        "time_stamp": "2021-04-27 05:48:07"
+      },
+      {
+        "time_stamp": "2021-04-27 07:48:45"
+      },
+      {
+        "time_stamp": "2021-04-27 18:33:39"
+      },
+      {
+        "time_stamp": "2021-04-27 18:37:34"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2021-04-15 09:15:38",
+    "text": "I tried in another portal and it works. It seems to only not work in one portal."
+  },
+  {
+    "poster": {
+      "poster_name": "Victoria Elliott",
+      "poster_handle": "velliott"
+    },
+    "time_stamp": "2021-04-15 10:52:08",
+    "edited": {
+      "time_stamp": "2021-04-15 10:53:18"
+    },
+    "text": "Hello everyone! One year ago we launched themes alongside our new CMS Hub. We believe themes are a critical part of the future of content creation at HubSpot. We also value your feedback and experiences with themes as we continue to improve them. If you have a moment please take a moment to hop on over to the <#CSFGKSHT7|themes> channel let us know about your experience so far using the linked <https://HubSpotdev.slack.com/archives/CSFGKSHT7/p1618501700084000|poll>."
+  },
+  {
+    "poster": {
+      "poster_name": "Mo Tanveer",
+      "poster_handle": "mtanveer"
+    },
+    "time_stamp": "2021-04-15 10:59:07",
+    "text": "Has anyone had any success w/ tracking a Meeting booked through HubSpot's tool on Google Analytics?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2021-04-16 16:46:26"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Cheryl McNamee",
+      "poster_handle": "cmcnamee"
+    },
+    "time_stamp": "2021-04-15 13:33:25",
+    "text": "I've run a test page to display an image so I can see how HubSpot's auto-resize functionality works.  This is my image tag in my template:\n```&lt;img src=\"<https://f.HubSpotusercontent30.net/hubfs/8588939/web-assets/projects/cascade-county-courthouse/Cascade%202.jpg>\" height=\"955px\" width=\"1500px\"&gt;```\nDisplays fine at desktop full width, but when I go down to tablet or mobile size, the image is completely smooshed.  It appears that width is being changed but not height.  On this page ( <https://knowledge.HubSpot.com/files/automatic-image-resizing-on-HubSpot-content> ) there isn't much documentation other than \"how to use it\" and \"how to not use it\".  So... does anyone know how I can get the image resizer to not make the images look horrible?"
+  }
+]

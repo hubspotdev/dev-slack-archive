@@ -1,0 +1,260 @@
+[
+  {
+    "text": "Hi all, I have reached out to HS about this and they don’t have a solution so I thought I’d try here.\n\nI am trying to create a workflow that works with call activities recorded against the contact record. The problem that I am facing right now is that I would like the enrollment criteria to check the “latest activity” instead “Any Activity”. The downside to using Any Activity is that when there have been 10 outbound calls since an inbound call was recorded then this contact still matches.\n\nIf I have to use this Any Activity enrollment criteria if fields have been updated in the last 1 days. Is there a custom action or another way to isolate if the latest activity record and set 3 properties (listed below) on the contact record?\n\n1. Last Twilio call timestamp - Date\n2. Last Twilio call direction - Inbound or Outbound\n3. Last Twilio call outcome - matches Call activity outcome\nAny help would be greatly appreciated. Thanks",
+    "time_stamp": "2023-11-07 08:08:57",
+    "edited": {
+      "time_stamp": "2023-11-07 08:16:46"
+    },
+    "reply_count": 4,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-11-14 12:08:43"
+      },
+      {
+        "time_stamp": "2023-11-16 03:53:23"
+      },
+      {
+        "time_stamp": "2024-07-29 02:16:49"
+      },
+      {
+        "time_stamp": "2024-08-05 03:16:48"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Bashir",
+      "poster_handle": "ayo_idan"
+    },
+    "time_stamp": "2023-11-07 09:14:41",
+    "text": "So with custom code, what you can try is this… \n\nI tried similar for a client I had to enroll about 10k records. Nightmare\n\n• Export your list, literally add a column with values 1-1000.  Let’s call it ‘count_number’\n• Import/update the contacts so ‘count_number’ is filled in for them\n• Create another property ‘Run_count_number’. Make it a single select. \n• In your WF, the one with the issue at the moment, at the end, add a 1 minute delay with the delay action\n• In the same workflow, add ‘run_count_number’ is true to the enrolment options\n• Then add a custom code action as the last action, after the 1 minute delay that will do the following\n• - The code will take the ‘count_number’ of the current record and add 1 to it i.e. 1 + 1 = 2\n• - it will use the search API to look for the record which has ‘count_number’ 2. It should get only one record\n• - the code will update the ‘run_count_number’ of the existing record to ‘false’ and then\n• - The code will set the value of ‘run_contact_number’ on the record with 2 as ‘count_number’ to ‘true’ \n• When you’re done with the WFs, start the run by setting the value of ‘run_count_number’ to true for the record with ‘count_number’ = 1 \nIdea is a domino/cascade effect, when the record with ‘count_number’ 1 is done with the API, it will delay for 1 minute and then call the next record to visit the API. They will call each other till they finish. Since we are delaying for 1 minute, I’m guessing at least 3-4 hours for the WF. I left mine overnight to run. It was annoying seeing records enrol one after the other but it was sweet to see how the records called the next. Like classmates calling the next person to the principals office. :smile:\n\nI think this work for your case as well. "
+  },
+  {
+    "poster": {
+      "poster_name": "Bashir",
+      "poster_handle": "ayo_idan"
+    },
+    "time_stamp": "2023-11-07 09:15:00",
+    "text": "<@U05J0L2KCF6> "
+  },
+  {
+    "poster": {
+      "poster_name": "Bashir",
+      "poster_handle": "ayo_idan"
+    },
+    "time_stamp": "2023-11-07 09:16:08",
+    "edited": {
+      "time_stamp": "2023-11-07 09:16:18"
+    },
+    "text": "Nice thinking <@U05T394MP6Z> "
+  },
+  {
+    "poster": {
+      "poster_name": "Bálint Sipos",
+      "poster_handle": "sbi85g"
+    },
+    "time_stamp": "2023-11-07 14:30:16",
+    "text": "Hey all,\n\nI am looking to setup a 3 week long webinar drip email campaign in HubSpot the first time (I am new to HubSpot). It would mean weekly emails to the target segment and separate weekly emails to registered people also. Plus the follow ups (attendees/no-shows).\n\nI haven't seen any workflow examples how people run campaigns like this.\nIf you have some please share or give some pointers!\n\nThanks in advance.",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-11-07 14:57:19"
+      },
+      {
+        "time_stamp": "2023-11-08 03:02:10"
+      },
+      {
+        "time_stamp": "2023-11-08 06:23:14"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Emma Tuzicka",
+      "poster_handle": "etuzicka"
+    },
+    "time_stamp": "2023-11-07 14:45:40",
+    "text": "Has anyone created a workflow utilizing line items from a deal? I attempted a code suggested in the email-development thread, but am not having any luck. Hoping someone can pass on their expertise! Thank you in advance.",
+    "reply_count": 15,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-11-07 14:54:20"
+      },
+      {
+        "time_stamp": "2023-11-07 14:58:35"
+      },
+      {
+        "time_stamp": "2023-11-07 14:59:40"
+      },
+      {
+        "time_stamp": "2023-11-07 15:01:25"
+      },
+      {
+        "time_stamp": "2023-11-07 15:02:33"
+      },
+      {
+        "time_stamp": "2023-11-07 15:04:04"
+      },
+      {
+        "time_stamp": "2023-11-07 15:05:33"
+      },
+      {
+        "time_stamp": "2023-11-07 15:05:56"
+      },
+      {
+        "time_stamp": "2023-11-07 15:07:19"
+      },
+      {
+        "time_stamp": "2023-11-07 15:08:14"
+      },
+      {
+        "time_stamp": "2023-11-07 15:09:04"
+      },
+      {
+        "time_stamp": "2023-11-07 15:36:07"
+      },
+      {
+        "time_stamp": "2023-11-07 15:36:30"
+      },
+      {
+        "time_stamp": "2023-11-07 15:47:03"
+      },
+      {
+        "time_stamp": "2023-11-07 15:48:22"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-11-07 14:54:20",
+    "text": "I'm a little confused by what you mean by utilizing line items from a deal. What are you trying to accomplish?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-11-07 14:57:19",
+    "text": "For this type of thing, I would set up 2 workflows, each with different enrollment criteria. The first would enroll people that are in the target segment and the second would enroll based on registration status. then I would use the send marketing email action and the delay for set amount of time option (7 days)"
+  },
+  {
+    "poster": {
+      "poster_name": "Emma Tuzicka",
+      "poster_handle": "etuzicka"
+    },
+    "time_stamp": "2023-11-07 14:58:35",
+    "edited": {
+      "time_stamp": "2023-11-07 14:59:45"
+    },
+    "text": "Hey Carter, certainly. What I am trying to achieve is inserting line items (i.e., product name, SKU, quantity, price, etc.) from a deal to include in a shipping confirmation email. Similar to what you would encounter in an abandoned cart email. However, this email would be a template that can be used for any contact's line items and should automatically populate with the respective data. This email would be included in an order status workflow that includes order confirmation, shipping confirmation, and delivered emails."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-11-07 14:59:40",
+    "text": "Ah so you just want an email template that will show line item from the enrolled deal? And it would be sent to the associated contact(s)"
+  },
+  {
+    "poster": {
+      "poster_name": "Emma Tuzicka",
+      "poster_handle": "etuzicka"
+    },
+    "time_stamp": "2023-11-07 15:01:25",
+    "text": "Yes! But preferably as a template that can auto-populate with the corresponding contact's info - similar to personalization tokens. Does that make sense?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-11-07 15:02:33",
+    "text": "yes of course, here's a thread detailing this exact use-case: <https://community.HubSpot.com/t5/Sales-Email/Personalization-Tokens-Line-Items/m-p/404356>"
+  },
+  {
+    "poster": {
+      "poster_name": "Emma Tuzicka",
+      "poster_handle": "etuzicka"
+    },
+    "time_stamp": "2023-11-07 15:04:04",
+    "edited": {
+      "time_stamp": "2023-11-07 15:05:05"
+    },
+    "text": "I have looked through that but do not see a clear answer as to the correct code to include. Would it be possible to share the correct  HTML?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-11-07 15:05:33",
+    "text": "Sure this is the code that will show the line items for the deal.\n```&lt;span style=\"font-family: Georgia; font-size: 14px;\"&gt;\n{% email_each list=\"deal.line_items\" item=\"line_item\" %}\n{{ personalization_token('line_item.name', 'null') }} ... &lt;small&gt;x&lt;/small&gt; {{personalization_token('line_item.quantity', '0')}} ... $ {{ personalization_token('line_item.price', 'null') }}\n&lt;br&gt;\n{% endemail_each %}&lt;/span&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-11-07 15:05:56",
+    "text": "understand that this code is meant for the email template and not custom code in workflows"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-11-07 15:07:19",
+    "text": "Also if you're using the Shopify integration you can use the abandon email templates"
+  },
+  {
+    "text": "Greatly appreciate it, Carter! However, would you mind sharing more about what you mean by it being meant for only the template but not the workflow? I just sent myself a test email using a specific contact and it did not populate any data.",
+    "time_stamp": "2023-11-07 15:08:14"
+  },
+  {
+    "poster": {
+      "poster_name": "Emma Tuzicka",
+      "poster_handle": "etuzicka"
+    },
+    "time_stamp": "2023-11-07 15:09:04",
+    "text": "I entered the code as an HTML module in the email template, was that the correct method?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-11-07 15:36:07",
+    "text": "No you need to use the programmable email modules: <https://knowledge.HubSpot.com/email/create-programmable-emails>\n<https://developers.HubSpot.com/docs/cms/guides/email/hubdb-crm-objects>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-11-07 15:36:30",
+    "text": "```{% for line_item in deal.line_items %}\n    &lt;li&gt;{{ line_item.name }} - {{ line_item.price }}&lt;/li&gt;\n{% endfor %}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Emma Tuzicka",
+      "poster_handle": "etuzicka"
+    },
+    "time_stamp": "2023-11-07 15:47:03",
+    "text": "Thank you so much for your guidance. I will look into these documents and report back if I need anything else!"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-11-07 15:48:22",
+    "text": "yes of course"
+  }
+]

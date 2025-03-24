@@ -1,0 +1,25 @@
+[
+  {
+    "text": "I found a bug, list items aren’t checkbox’s, screen reader software picks up the role on the li and then won’t allow you to change the actual input which is a checkbox so doesn’t need a role=“checkbox” on it\n\nThe role checkbox is for telling screen readers this is a checkbox when it isn’t for example if you made your own checkbox out of a div for custom styling you could add role=checkbox to it",
+    "time_stamp": "2022-02-04 03:04:29"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2022-02-04 03:08:57",
+    "text": "Also screen readers shouldn’t read out the star to indicate a field as required as the screen reader can already tell that the field is required by the required tag"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2022-02-04 04:22:06",
+    "edited": {
+      "time_stamp": "2022-02-04 04:31:59"
+    },
+    "text": "The following JS (jQuery) seems to sort out the issues i’ve been having, though with the amount of accessibility stuff i’ve come up against there may well be more issues (pretty sure radio’s and date pickers don’t work), (my client is using the JAWS software so i’m testing with that) I have to remove the span tags otherwise the software reads out the label when the checkbox is highlighted and then will go on to highlight and read the label again\n\n```window.addEventListener('message', event =&gt; {\n\tif(event.data.type === 'hsFormCallback' &amp;&amp; event.data.eventName === 'onFormReady') {\n\t\t$('.hs-form-required').attr('aria-hidden',true);\n\t\t$('.hs-form [role=\"checkbox\"]').attr('role','presentation');\n\t\t$('.hs-form [type=\"checkbox\"]').attr('aria-labelledby','');\n\t\t$('.hs-form-checkbox-display').each(function(){\n\t\t\tvar text = $('span',this).text();\n\t\t\t$('span',this).remove();\n\t\t\t$(this).append(text);\n\t\t});\n\t}\n});```"
+  }
+]

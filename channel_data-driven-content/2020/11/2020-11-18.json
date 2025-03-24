@@ -1,0 +1,67 @@
+[
+  {
+    "poster": {
+      "poster_name": "Mohesh Borah",
+      "poster_handle": "mohesh.borah"
+    },
+    "time_stamp": "2020-11-18 08:50:42",
+    "edited": {
+      "time_stamp": "2020-11-18 21:44:27"
+    },
+    "text": "Hi Guys,\n\nI am trying to fetch the rows of data if the value of a column meets as the user input.\nBut I am unable to put the queryparams dynamically.\n\nDetails are as below-\n\n{% set queryParams = \"postcode__contains=\" %}\n{% for row in hubdb_table_rows(2899227, queryParams) %}\n                 .........result design goes here........\n{% endfor %}\n\nSo, now I am trying to provide the user provided value to append at the end of queryParams to make this like-\nqueryParams =\"postcode__contains=\"+dynamic_postcode;\n\nBut the thing is that I am unable to append anything to the hubl variable through the Jquery-\n$(\"#bw-wq-search-button\").click(function(){\n       //show Modal\n       var searchInput = $(\"#bw_wq_search_input\").val();\n        console.log(searchInput)\n       console.log(\"{{ queryParams }}\")// I get the variable as it is set up at first -\"postcode__contains=\"\n       {% set queryParams1 = queryParams.update('postcode__contains='+searchInput ) %}// Throws Error\n{% set queryParams = \"postcode__contains=\" +searchInput %}//gives =&gt; 'postcode__contains=null', but searchInput is not null, getting the user provided input dynamically.\n       console.log(\"{{ queryParams1 }}\")\n});\n\nSo can anyone please help me out to understand that, is this the limitation of HubSpot or we can achieve this ?\n\nThanks in advance,\nMohesh Borah",
+    "reply_count": 4,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2020-11-18 11:06:09"
+      },
+      {
+        "time_stamp": "2020-11-18 21:16:33"
+      },
+      {
+        "time_stamp": "2020-11-18 21:46:10"
+      },
+      {
+        "time_stamp": "2020-11-18 22:24:40"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2020-11-18 11:06:09",
+    "text": "Can u try queryParams `queryParams =\"postcode__contains=\" ~ dynamic_postcode`"
+  },
+  {
+    "poster": {
+      "poster_name": "Mohesh Borah",
+      "poster_handle": "mohesh.borah"
+    },
+    "time_stamp": "2020-11-18 21:16:33",
+    "edited": {
+      "time_stamp": "2020-11-18 21:21:27"
+    },
+    "text": "Hi <@UG52C29EE>\n\nBut this is not working, I tried to put like below.\nAnd I want to append the dynamic_postcode  which is provided by the user inside the {%require_js %} part.\n\n{% require_js %}\n&lt;script&gt;\n  $(document).ready(function() {\n    $(\"#bw-wq-search-button\").click(function(){\n       //show Modal\n       var searchInput = $(\"#bw_wq_search_input\").val();\n        console.log(searchInput)\n       {% set queryParams = \"postcode__contains=\" ~ searchInput  %}//not appending\n       {% set queryParams1 = queryParams ~ searchInput  %}//not appending\n       {{queryParams }}= \"postcode__contains=\" ~ searchInput;// throws error for the '~'\n       //console.log(\"{{ queryParams1 }}\")\n       console.log(\"{{ queryParams }}\")\n\t  });\n  });\n&lt;/script&gt;\n{% end_require_js %}"
+  },
+  {
+    "poster": {
+      "poster_name": "Mohesh Borah",
+      "poster_handle": "mohesh.borah"
+    },
+    "time_stamp": "2020-11-18 21:46:10",
+    "edited": {
+      "time_stamp": "2020-11-18 21:46:21"
+    },
+    "text": "Also , I have tried to set the variable again inside the Jquery but unfortunately it was unable to get the dynamic user input and null was getting appended-\n\n {% set queryParams = \"postcode__contains=\" +searchInput %}//gives =&gt; 'postcode__contains=null', but searchInput is not null, getting the user provided input dynamically."
+  },
+  {
+    "poster": {
+      "poster_name": "Daniel Wong",
+      "poster_handle": "dan.wong"
+    },
+    "time_stamp": "2020-11-18 22:24:40",
+    "text": "you won't be able to do it this way since hubl loads server side.\n\nYou have 2 choices here:\n1. load everything, and hide and show elements via js\n2. use serverless functions to query the hubdb and update rows\nI did do a workaround once for a client who didn't have serverless functions, and that's to create a page which has all data loaded, but has a parameter query to filter. I then make an ajax call to the page with the query in the param and upll the contents of the page over.\n\ne.g\n\n<http://www.example.com/listing|www.example.com/listing> - your page\n<http://www.example.com/all-data|www.example.com/all-data> - dump of data\n<http://www.example.com/all-data?query=xxx|www.example.com/all-data?query=xxx> - dump of all data that matches query\n\nfrom <http://www.example.com/listing|www.example.com/listing>, make an ajax call to grab the contents of <http://www.example.com/all-data?query=xxx|www.example.com/all-data?query=xxx>\n\nHad this idea whilst working with an infinite scroll page and it worked ok"
+  }
+]

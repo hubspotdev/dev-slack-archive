@@ -1,0 +1,206 @@
+[
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-11 16:01:43",
+    "text": "<@UF7FVNA65> <@U22PJPGK0> <@U6GNQ7JBU> well i've spent all day on this but unfortunately the unixtimestamp(none) approach did not really work for me because while it does return \"now\", it's rounded to the nearest whole second"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-11 16:01:54",
+    "text": "any thoughts on how i can get it to return milliseconds?"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-11 16:02:53",
+    "text": "i can use the %f symbol in the datetimeformat filter, but that returns a microsecond instead of a millisecond, so it's not very straightforward to convert back using strtotime filter"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2020-02-11 16:03:49",
+    "edited": {
+      "time_stamp": "2020-02-11 16:06:28"
+    },
+    "text": "wa wa waa"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-11 16:04:31",
+    "edited": {
+      "time_stamp": "2020-02-11 16:10:59"
+    },
+    "text": "and to add to the confusion,  the documentation for datetimeformat says the %f is supposed to return a 6 digit microsecond but it's only returning a 4 digit number, so i'm not sure if that number is rounded ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-11 16:23:21",
+    "text": "<@U6TBZ66FN>?"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-11 16:23:41",
+    "text": "<@U7SL518D6>?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2020-02-11 18:46:52",
+    "edited": {
+      "time_stamp": "2020-02-11 18:46:58"
+    },
+    "text": "Here’s the implementation <https://github.com/HubSpot/jinjava/blob/master/src/main/java/com/HubSpot/jinjava/lib/fn/Functions.java#L89-L121>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2020-02-11 18:48:03",
+    "text": "here’s %f <https://github.com/HubSpot/jinjava/blob/master/src/main/java/com/HubSpot/jinjava/objects/date/StrftimeFormatter.java#L32>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2020-02-11 18:51:32",
+    "text": "From <https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html>, S is fraction of second, so %f = SSSS = 4 digit fraction of second"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2020-02-11 19:01:42",
+    "text": "it does look like unixtimestamp is at the second resolution though, so this won’t help you :disappointed:"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-11 19:02:06",
+    "text": "jeff this is very helpful i didnt' realize i could see the source for hubl"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-11 19:02:34",
+    "text": "yeah i just saw the toEpochSecond() that looks like it's rounding"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-11 19:05:13",
+    "text": "i am able to get a fraction of a second if i ask for the datetimeformat with %f but i get a string which i'm trying to parse, but i was trying to parse it as a micro second which it sounds like a fraction of a second is a millisecond correct?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2020-02-11 19:15:47",
+    "text": "And here’s a fix <https://github.com/HubSpot/jinjava/pull/399>"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-11 19:21:42",
+    "text": "are you saying that is live now?"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-11 19:22:02",
+    "edited": {
+      "time_stamp": "2020-02-11 19:22:27"
+    },
+    "text": "or it has to be accepted by team and put into production?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2020-02-11 19:22:28",
+    "text": "not live yet"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2020-02-11 19:22:37",
+    "text": "actually going to make this microseconds"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-11 19:22:52",
+    "text": "awesome when do u think it might go live?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2020-02-11 19:23:30",
+    "text": "Probably a couple days"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-11 19:24:04",
+    "text": "also note that calling `unixtimestamp()` with no params throws a compiler error but documentation says it should return \"now\""
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-11 19:24:31",
+    "text": "thanks so much Jeff!"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2020-02-11 19:41:23",
+    "text": "fixed the no argument issue as well"
+  }
+]

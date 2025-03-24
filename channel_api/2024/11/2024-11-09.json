@@ -1,0 +1,94 @@
+[
+  {
+    "poster": {
+      "poster_name": "joe conery",
+      "poster_handle": "joe277"
+    },
+    "time_stamp": "2024-11-09 05:16:05",
+    "text": "can I ask what the v4 api url was for this? Or do you have a link to that api? thanks"
+  },
+  {
+    "poster": {
+      "poster_name": "joe conery",
+      "poster_handle": "joe277"
+    },
+    "time_stamp": "2024-11-09 10:31:46",
+    "text": "deals VS orders\nI guess deals are associated with line_items where you can track down product info\nHowever \"orders\" seems to be different.\nThere are no line_items associated with an order. There might be an association with a contact or company, but I have no idea how to get to the products object?!\nIn HubSpot's UI I can see the product for an order and it calls it a \"line item\" but using the api, there are no line items\n\n```<https://api.hubapi.com:443> \"GET /crm-object-schemas/v3/schemas/line_items HTTP/11\" 200 \nresponse status: 200\n\n{\n    \"results\": []\n}```\nsince an order is something that's already purchased, how do I get this info via the API?\nI've used the associations api to try to find any way to get there, but no luck so far.\nthanks for any help here"
+  },
+  {
+    "poster": {
+      "poster_name": "joe conery",
+      "poster_handle": "joe277"
+    },
+    "time_stamp": "2024-11-09 10:32:49",
+    "text": "orders aren't even show in the UI object schema, so it seems to be the red headed step child of the crm"
+  },
+  {
+    "poster": {
+      "poster_name": "Joshua Savage",
+      "poster_handle": "joshua757"
+    },
+    "time_stamp": "2024-11-09 11:37:51",
+    "edited": {
+      "time_stamp": "2024-11-09 13:02:42"
+    },
+    "text": "So I am trying to use the Quotes API to create a quote but it seems that in order to access the line items I must make an association in the code for quote/line items and HS has a strange behavior that if you do so and then delete the quote it also deletes the line items from the deal!!! wtf. I posted here w sample code to clarify <https://community.HubSpot.com/t5/APIs-Integrations/How-to-access-line-items-in-quote-template-without-creating/m-p/1067398#M78071> - any suggestions on accessing line items with HUBL?\nEdit: Ive seen that one needs to clone the line items which wont work for my case. I have patched things by storing the necessary info in some custom object but sure would like to know if its possible to access deal line items without cloning or delete risk",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-11-09 14:37:43"
+      },
+      {
+        "time_stamp": "2024-11-09 14:39:14"
+      },
+      {
+        "time_stamp": "2024-11-09 14:39:50"
+      },
+      {
+        "time_stamp": "2024-11-09 19:15:22"
+      },
+      {
+        "time_stamp": "2024-11-11 13:00:27"
+      },
+      {
+        "time_stamp": "2024-11-11 13:03:53"
+      },
+      {
+        "time_stamp": "2024-11-11 13:45:26"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "joe conery",
+      "poster_handle": "joe277"
+    },
+    "time_stamp": "2024-11-09 14:37:43",
+    "text": "have very little exposure to this, but I did come across something about line items when looking into deals and orders.\nYou can create a deal with \"stand alone\" line items. That is, line items that aren't in your product inventory, unlike normal line items which relate to a product\nSo maybe it has to do with the type of line item that you are creating... I'd dig into various line item properties and see if that's it..\nOr maybe what you did was you didn't update the line item with an additional association... You changed it so that the association was removed from the deal when you put it with the quote."
+  },
+  {
+    "poster": {
+      "poster_name": "joe conery",
+      "poster_handle": "joe277"
+    },
+    "time_stamp": "2024-11-09 14:39:14",
+    "text": "I would try to replicate what you had but look at all the associations along the way, especially before you delete the quote... see if the line item gets associated with the deal. Then see if that association still exists after you associate with the quote."
+  },
+  {
+    "poster": {
+      "poster_name": "joe conery",
+      "poster_handle": "joe277"
+    },
+    "time_stamp": "2024-11-09 14:39:50",
+    "text": "are you sure it should even be the same line item?"
+  },
+  {
+    "poster": {
+      "poster_name": "Joshua Savage",
+      "poster_handle": "joshua757"
+    },
+    "time_stamp": "2024-11-09 19:15:22",
+    "text": "Well when I create the line item (which is a standalone) its associated w deal. All that works. When I create the quote I dont modify the line item - I just create the quote with associations (deal, some custom objects, template and ideally line items). Various association IDs (I think I have the code o the link above) and the end result is all fine. Just when I delete. From reading a bit of what I found on slack it appears the UI will clone line items when creating a quote - since I am not doing that I guess they get trashed w quote. I sort of patched things by not adding line items to the quote and slapping the info I need into the custom objects).  I tried using the hubl functions to get objects or associations as I mentioned but that doesnt return line items. As far as your suggestion - I just tried reloading deal and line items are still there after generating quote"
+  }
+]

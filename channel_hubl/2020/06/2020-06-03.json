@@ -1,0 +1,88 @@
+[
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2020-06-03 06:28:43",
+    "edited": {
+      "time_stamp": "2020-06-03 06:28:55"
+    },
+    "text": "I pushed a fix for this yesterday evening, new indexing should not index this"
+  },
+  {
+    "poster": {
+      "poster_name": "Adrian C. Black",
+      "poster_handle": "adriancblack"
+    },
+    "time_stamp": "2020-06-03 09:12:42",
+    "text": "Does anybody know how to retrieve ONLY 1 post (1st one found) that has 2 particular tags?",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-06-03 09:40:18"
+      },
+      {
+        "time_stamp": "2020-06-03 09:47:26"
+      },
+      {
+        "time_stamp": "2020-06-03 12:12:53"
+      },
+      {
+        "time_stamp": "2020-06-03 14:28:41"
+      },
+      {
+        "time_stamp": "2020-06-03 14:40:11"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Stephanie O'Gay Garcia",
+      "poster_handle": "stephanie"
+    },
+    "time_stamp": "2020-06-03 09:40:18",
+    "text": "Something like this should work:\n\n```{% set tagged_posts = blog_recent_tag_posts('default', ['tag1', 'tag2'], 1) %}\n{% set one_tagged_post = tagged_posts[0] %}```\nUse <https://designers.HubSpot.com/docs/hubl/functions#blog-recent-tag-posts|blog_recent_tag_posts> to get one post with x tags, then use [0] to get the first (and only in this case) item on that list"
+  },
+  {
+    "poster": {
+      "poster_name": "Adrian C. Black",
+      "poster_handle": "adriancblack"
+    },
+    "time_stamp": "2020-06-03 09:47:26",
+    "text": "that gives me tag1 OR tag2 … i need tag1 AND tag2. Thanks anyway, but i found a solution meanwhile"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephanie O'Gay Garcia",
+      "poster_handle": "stephanie"
+    },
+    "time_stamp": "2020-06-03 12:12:53",
+    "text": "Oops! Sorry about that, what solution did you go with in the end?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Sasala",
+      "poster_handle": "jon.sasala"
+    },
+    "time_stamp": "2020-06-03 13:44:48",
+    "text": "I have seen this discussed here before but could not find the answer. Is it possible to pull a properties Internal Value with a HubL token rather than the Label?"
+  },
+  {
+    "poster": {
+      "poster_name": "Adrian C. Black",
+      "poster_handle": "adriancblack"
+    },
+    "time_stamp": "2020-06-03 14:28:41",
+    "text": "```{% set obj = {val : 0} %}\n      {% set ff = blog_recent_tag_posts('default', ['featured']) %}\n      {% for tag_post in ff %}\n      {% for tag in tag_post.tagList %}\n      {% if tag.slug == topic %}\n      {% if obj.val &lt; 1 %}\n      PRINT THE BLOG POST\n      {% endif %}\n      {% do obj.update({val: obj.val + 1 }) %}\n      {% endif %}\n      {% endfor %}\n      {% endfor %} ```"
+  },
+  {
+    "poster": {
+      "poster_name": "Adrian C. Black",
+      "poster_handle": "adriancblack"
+    },
+    "time_stamp": "2020-06-03 14:40:11",
+    "text": "inside the blog_recent_tag_posts for one of the tags check if the other tag exists and print the result. also an object variable used to stop the loop from printing more then one entry."
+  }
+]

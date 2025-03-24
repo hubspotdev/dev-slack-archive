@@ -1,0 +1,158 @@
+[
+  {
+    "poster": {
+      "poster_name": "Arrigo Lupori",
+      "poster_handle": "arrigo.lupori270"
+    },
+    "time_stamp": "2023-12-14 04:22:40",
+    "text": "Hi team,\n\nI'm struggling with getting Storybook to behave properly with GraphQL queries as shown in the documentation.\n\nSee how I set things up and the error I get in the thread:",
+    "reply_count": 8,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-12-14 04:24:00"
+      },
+      {
+        "time_stamp": "2023-12-14 04:26:25"
+      },
+      {
+        "time_stamp": "2023-12-14 07:15:42"
+      },
+      {
+        "time_stamp": "2023-12-14 07:31:47"
+      },
+      {
+        "time_stamp": "2023-12-14 07:36:00"
+      },
+      {
+        "time_stamp": "2023-12-14 07:37:10"
+      },
+      {
+        "time_stamp": "2023-12-14 08:43:04"
+      },
+      {
+        "time_stamp": "2023-12-14 08:54:04"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Arrigo Lupori",
+      "poster_handle": "arrigo.lupori270"
+    },
+    "time_stamp": "2023-12-14 04:24:00",
+    "text": "STORY\n\n```import { moduleStory } from \"@HubSpot/cms-dev-server/storybook\";\nimport { Component, fields } from \"./index.tsx\";\n\nexport default {\n  title: \"Modules/StoryTest\",\n  component: Component,\n};\n\nexport const Default = moduleStory(Component, fields, {\n  dataQueryResult: {\n    data: {\n      HUBDB: {\n        testimonials_en_collection: {\n          items: [{ name: \"Test\" }],\n        },\n      },\n    },\n  },\n});```\nCOMPONENT\n\n```import { ModuleFields, TextField } from \"@HubSpot/cms-components/fields\";\nimport \"../../../lib/styles/tailwind.css\";\n\nexport const meta = {\n  label: \"StoryTest\"\n};\n\nexport const fields = (\n  &lt;ModuleFields&gt;\n    &lt;TextField\n      label=\"Heading\"\n      name=\"heading\"\n      default=\"Hello world\"\n      required\n    /&gt;\n  &lt;/ModuleFields&gt;\n);\n\nexport const query = `\n  query TestimonialQuery {\n    HUBDB {\n      testimonials_en_collection {\n        items {\n          name\n          brand\n          title\n          quote\n          type\n          avatar\n          _metadata {\n            id\n          }\n        }\n      }\n    }\n  }\n`;\n\nexport function Component({ fieldValues, dataQueryResult }: any) {\n  return &lt;h1&gt;{dataQueryResult.data.HUBDB.testimonials_en_collection.items[0].name}&lt;/h1&gt;;\n}```\nERROR\n\n```Cannot read properties of undefined (reading 'data')\nTypeError: Cannot read properties of undefined (reading 'data')\n    at Component (<http://storybook.localhost:3000/@fs/Users/arrigo/Projects/sagewillcom/core/cms-project/src/components/modules/StoryTest/index.tsx?t=1702552714998:63:67>)\n    at renderWithHooks (<http://storybook.localhost:3000/node_modules/.cache/.vite-storybook/deps/chunk-DPQKHIZF.js?v=70fb9b7e:12171:26>)\n    at mountIndeterminateComponent (<http://storybook.localhost:3000/node_modules/.cache/.vite-storybook/deps/chunk-DPQKHIZF.js?v=70fb9b7e:14921:21>)\n    at beginWork (<http://storybook.localhost:3000/node_modules/.cache/.vite-storybook/deps/chunk-DPQKHIZF.js?v=70fb9b7e:15902:22>)\n    at beginWork$1 (<http://storybook.localhost:3000/node_modules/.cache/.vite-storybook/deps/chunk-DPQKHIZF.js?v=70fb9b7e:19749:22>)\n    at performUnitOfWork (<http://storybook.localhost:3000/node_modules/.cache/.vite-storybook/deps/chunk-DPQKHIZF.js?v=70fb9b7e:19194:20>)\n    at workLoopSync (<http://storybook.localhost:3000/node_modules/.cache/.vite-storybook/deps/chunk-DPQKHIZF.js?v=70fb9b7e:19133:13>)\n    at renderRootSync (<http://storybook.localhost:3000/node_modules/.cache/.vite-storybook/deps/chunk-DPQKHIZF.js?v=70fb9b7e:19112:15>)\n    at recoverFromConcurrentError (<http://storybook.localhost:3000/node_modules/.cache/.vite-storybook/deps/chunk-DPQKHIZF.js?v=70fb9b7e:18732:28>)\n    at performConcurrentWorkOnRoot (<http://storybook.localhost:3000/node_modules/.cache/.vite-storybook/deps/chunk-DPQKHIZF.js?v=70fb9b7e:18680:30>)```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Arrigo Lupori",
+      "poster_handle": "arrigo.lupori270"
+    },
+    "time_stamp": "2023-12-14 04:26:25",
+    "text": "Mostly, I don't understand how to debug Storybook properly.\nIs there a way to install integrations in the built-in HubSpot instance?\n<https://storybook.js.org/integrations/tag/debug>"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-12-14 07:15:42",
+    "text": "This is bug on our side, will ship a fix asap"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-12-14 07:31:47",
+    "text": "Also, you can try `moduleStoryWithIsland` , even if you don't have an island in the module, and that will actually hit live GraphQL data"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-12-14 07:36:00",
+    "text": "The trade off is that `moduleStoryWithIsland` doesn't support Hot Module Reloading HMR"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-12-14 07:37:10",
+    "edited": {
+      "time_stamp": "2023-12-14 08:43:16"
+    },
+    "text": "The naming can probably be better here...\n\n• `moduleStory` \n    ◦ Client side _only_ render\n        ▪︎ Doesn't do live GraphQL call\n    ◦ Support HMR\n    ◦ doesn't work with Islands\n• `moduleStoryWithIsland` \n    ◦ Emulates hybrid rendering of islands\n    ◦ Does live GraphQL call\n    ◦ Doesn't support HMR "
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-12-14 08:43:04",
+    "text": "Fix should be out in latest `cms-dev-server`"
+  },
+  {
+    "poster": {
+      "poster_name": "Arrigo Lupori",
+      "poster_handle": "arrigo.lupori270"
+    },
+    "time_stamp": "2023-12-14 08:54:04",
+    "text": "Hi <@UAYBXDG4U>, thank you so much for this :raised_hands:\nWill try again in a few hours."
+  },
+  {
+    "poster": {
+      "poster_name": "Arrigo Lupori",
+      "poster_handle": "arrigo.lupori270"
+    },
+    "time_stamp": "2023-12-14 08:55:05",
+    "text": "Are \"use client\" directives supported with islands?\n\nI get various errors like this in the developer project logs.\n\n```[ERROR]   Dec 14 10:50:20AM  node_modules/@nextui-org/accordion/dist/index.mjs (1:0) Module level directives cause errors when bundled, \"use client\" in \"node_modules/@nextui-org/accordion/dist/index.mjs\" was ignored.```",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-12-14 08:56:12"
+      },
+      {
+        "time_stamp": "2023-12-14 09:13:42"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-12-14 08:56:12",
+    "edited": {
+      "time_stamp": "2023-12-14 08:56:14"
+    },
+    "text": "is that failing the build? my initial sense would be they don’t do anything but anything today but anything with a `\"use client\"` directive should be within an island, theyre similar concepts"
+  },
+  {
+    "poster": {
+      "poster_name": "Arrigo Lupori",
+      "poster_handle": "arrigo.lupori270"
+    },
+    "time_stamp": "2023-12-14 09:13:42",
+    "text": "<@U04DVL5T2TE> doing some more testing, will let you know in 5 minutes."
+  },
+  {
+    "poster": {
+      "poster_name": "Noel Williams",
+      "poster_handle": "noel.williams"
+    },
+    "time_stamp": "2023-12-14 15:49:50",
+    "text": "experiencing this as I'm testing out. So how do you expect this to work with marketing page authors? In a dev account, I had to look in the \"All\" modules section to find it among the 36 defaults. In our production portal we have themes and templates going back 8 years. There's no way in hell you'd be able to use this searching through hundreds of modules. In my mind, this is an absolute deal killer. It's not useable by marketing page authors."
+  },
+  {
+    "poster": {
+      "poster_name": "Noel Williams",
+      "poster_handle": "noel.williams"
+    },
+    "time_stamp": "2023-12-14 16:13:15",
+    "text": "seems like this might solve some of the headache. however, you would need to create custom versions for all defaults. <https://developers.HubSpot.com/docs/cms/building-blocks/themes/hide-modules-and-sections> (`hidden_modules` in theme config)"
+  }
+]

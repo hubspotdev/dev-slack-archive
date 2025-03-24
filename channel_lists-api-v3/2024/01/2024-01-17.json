@@ -1,0 +1,34 @@
+[
+  {
+    "poster": {
+      "poster_name": "Tim Munro",
+      "poster_handle": "tim809"
+    },
+    "time_stamp": "2024-01-17 14:33:46",
+    "edited": {
+      "time_stamp": "2024-01-17 14:34:18"
+    },
+    "text": "In this new lists API the IDs of members (e.g. GET*`/crm/v3/lists/{listId}/memberships`*) are returned as integers rather than strings, and the same applies when adding/updating list memberships. This is inconsistent with other HubSpot v3 APIs where, e.g. contact/company/object IDs, are always to be sent as/returned as strings (example <https://developers.HubSpot.com/docs/api/crm/contacts|here>). I will give more context below, however can these new endpoints be updated to present IDs as strings rather than numbers? Alternatively add a switch (query parameter) allowing the caller to specify that ID should be sent/returned in string format.\n\nGiven the recent HubSpot change to use full 64 bit integers (announced <https://community.HubSpot.com/t5/Developer-Announcements/Increasing-the-size-of-contact-record-IDs/m-p/890611/thread-id/571|here>) numeric strings for IDs rather 64 bit integers are *much* preferred. Specifically, in the world of JavaScript (browser, NodeJS) native JSON serialization/parsing cannot handle large numbers, meaning that an ID like 9123372036854000123 will become 9123372036854000000. There is non-trivial complexity to work around this, requiring implementation of custom JSON.parse(...) and JSON.stringify(...) all over the place.\n\nWe are currently expending quite some effort migrating all customers from HubSpot v1 APIs to the v3 APIs to address this and it will be most disappointing if some of the v3 APIs still use IDs as numbers.\nThanks!",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-01-17 17:39:13"
+      },
+      {
+        "time_stamp": "2024-01-19 11:54:22"
+      },
+      {
+        "time_stamp": "2024-01-21 19:19:39"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Bevolo",
+      "poster_handle": "jbevolo"
+    },
+    "time_stamp": "2024-01-17 17:39:13",
+    "text": "Hey Tim - this is great feedback, thank you for bringing this up. I have taken your ideas to the team and will keep you updated!"
+  }
+]

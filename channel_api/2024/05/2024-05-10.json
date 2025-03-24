@@ -1,0 +1,288 @@
+[
+  {
+    "poster": {
+      "poster_name": "Kobe Kapoor",
+      "poster_handle": "kobe"
+    },
+    "time_stamp": "2024-05-10 01:06:04",
+    "text": "Hey everyone, just doing a migration between two HubSpot portals.\n\nDoes anyone have any opinions on using the export/import API vs standard object CRUD APIs?\n\nWe’re sending about 40,000 contacts and 25,000 deals all with 4-5 associated comms objects (calls/emails/etc)",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-05-13 03:42:10"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Dahlén Jansson",
+      "poster_handle": "martin631"
+    },
+    "time_stamp": "2024-05-10 01:12:25",
+    "edited": {
+      "time_stamp": "2024-05-10 01:14:36"
+    },
+    "text": "Hi!\nIm trying to create a deal with the following props\n```[\n    'dealname' => 'Deal name',\n    'amount' => '100000',\n    'description' => 'Lorem ipsum',\n    'dealstage' => 'contractsent'\n]```\nAnd associate it with a comapny and contact\n\n```$companyAssoc = new PublicAssociationsForObject([\n            'types' => [[\n                'association_category' => 'HubSpot_DEFINED',\n                'association_type_id' => 5\n            ]],\n            'to' => $companyId\n        ]);\n        $contactAssoc = new PublicAssociationsForObject([\n            'types' => [[\n                'association_category' => 'HubSpot_DEFINED',\n            'association_type_id' => 3\n            ]],\n            'to' => $contactId\n        ]);```\n\nThe deal gets created but no props and associations are set, what am i missing? :S",
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-05-10 01:13:05"
+      },
+      {
+        "time_stamp": "2024-05-10 01:13:35"
+      },
+      {
+        "time_stamp": "2024-05-10 01:17:10"
+      },
+      {
+        "time_stamp": "2024-05-10 01:17:15"
+      },
+      {
+        "time_stamp": "2024-05-10 02:08:44"
+      },
+      {
+        "time_stamp": "2024-05-10 03:23:08"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Daniel Jesús",
+      "poster_handle": "ddominguez"
+    },
+    "time_stamp": "2024-05-10 01:13:05",
+    "text": "what language?"
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Dahlén Jansson",
+      "poster_handle": "martin631"
+    },
+    "time_stamp": "2024-05-10 01:13:35",
+    "text": "PHP"
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Dahlén Jansson",
+      "poster_handle": "martin631"
+    },
+    "time_stamp": "2024-05-10 01:17:10",
+    "edited": {
+      "time_stamp": "2024-05-10 01:17:42"
+    },
+    "text": "The company and contact i create gets its props and associations set correctly, but not the deal for some reason"
+  },
+  {
+    "poster": {
+      "poster_name": "Omar Tanti",
+      "poster_handle": "omar.tanti"
+    },
+    "time_stamp": "2024-05-10 01:17:15",
+    "edited": {
+      "time_stamp": "2024-05-10 01:17:34"
+    },
+    "text": "<@U01F0D3NY05> this is how I did it with PHP\n\n```function create_deal( $deal_name, $company_id, $contact_id ) {\n\n   $dealstage     = 'qualifiedtobuy';\n   $deal_pipeline = 'default';\n   if ( defined( 'HS_DEAL_PIPELINE' ) ) {\n      $deal_pipeline = HS_DEAL_PIPELINE;\n   }\n   if ( defined( 'HS_DEAL_STAGE' ) ) {\n      $deal_pipeline = HS_DEAL_STAGE;\n   }\n   $deal_data = [\n      'properties'   => [\n         'dealname'  => $deal_name,\n         'dealstage' => $dealstage,\n         'pipeline'  => $deal_pipeline\n      ],\n      'associations' => [\n         [\n            'to'    => [\n               'id' => $contact_id,\n            ],\n            'types' => [\n               [\n                  'associationCategory' => 'HubSpot_DEFINED',\n                  'associationTypeId'   => 3\n               ]\n            ]\n         ],\n         [\n            'to'    => [\n               'id' => $company_id,\n            ],\n            'types' => [\n               [\n                  'associationCategory' => 'HubSpot_DEFINED',\n                  'associationTypeId'   => 5\n               ]\n            ]\n         ]\n      ]\n   ];\n\n   $deal_args = [\n      'headers' => [\n         'Content-Type'  => 'application/json',\n         'Authorization' => 'Bearer ' . HS_API_KEY,\n      ],\n      'body'    => json_encode( $deal_data ),\n      'method'  => 'POST',\n   ];\n\n   $deal_response = wp_remote_request( HS_DEAL_API_ENDPOINT, $deal_args );\n\n   if ( is_wp_error( $deal_response ) ) {\n      write_log( 'HubSpot Deal API Error: ' . $deal_response->get_error_message() );\n\n      return;\n   }\n\n   $deal_body   = wp_remote_retrieve_body( $deal_response );\n   $deal_result = json_decode( $deal_body, true );\n   $deal_id     = $deal_result['id'];\n\n   if ( ! $deal_id ) {\n      write_log( '$deal_result' );\n      write_log( $deal_result );\n\n      return false;\n   }\n\n   return $deal_id;\n\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Daniel Jesús",
+      "poster_handle": "ddominguez"
+    },
+    "time_stamp": "2024-05-10 01:19:30",
+    "text": "hi there, i'm wondering if its possible to add a property to the tables by code. For example, if the ticket has a property with a dropdown, i would like, by code to add a new item to that dropdown. Is that possible? or is only possible by the website. :)",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-10 03:27:25"
+      },
+      {
+        "time_stamp": "2024-05-13 03:39:29"
+      }
+    ]
+  },
+  {
+    "text": "My php function\n```public function createDeal($companyId, $contactId, $properties)\n    {\n        \n        $data = new SimplePublicObjectInputForCreate([\n            'associations' =&gt; [\n                [\n                    'to' =&gt; [\n                        'id' =&gt; $contactId\n                    ], \n                    'types' =&gt; [\n                        'association_category' =&gt; 'HubSpot_DEFINED',\n                        'association_type_id' =&gt; 3\n                    ]\n                ],\n                [\n                    'to' =&gt; [\n                        'id' =&gt; $companyId\n                    ], \n                    'types' =&gt; [\n                        'association_category' =&gt; 'HubSpot_DEFINED',\n                        'association_type_id' =&gt; 5\n                    ]\n                ]\n            ],\n            'properties' =&gt; $properties,\n        ]);\n\n        try {\n            $apiResponse = $this-&gt;client-&gt;crm()-&gt;deals()-&gt;basicApi()-&gt;create($data);\n            dd($apiResponse);\n        } catch (ApiException $e) {\n            echo \"Exception when calling basic_api-&gt;create: \", $e-&gt;getMessage();\n        }\n    }```\nUsed like this\n\n```\n$deal = $this-&gt;hs-&gt;createDeal($company-&gt;getId(), $contact-&gt;getId(), [\n        'dealname' =&gt; $dealName,\n        'amount' =&gt; $amount,\n        'description' =&gt; $desc,\n        'dealstage' =&gt; 'contractsent',\n        'pipeline' =&gt; 'default'\n      ]);```\nBut deals are still empty for some reason",
+    "time_stamp": "2024-05-10 02:08:44"
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Dahlén Jansson",
+      "poster_handle": "martin631"
+    },
+    "time_stamp": "2024-05-10 03:23:08",
+    "text": "Got it working had to import the correct classes, but change the name of them since its the same name for all types of endpoints. :slightly_smiling_face:\n\n```use HubSpot\\Client\\Crm\\Deals\\ApiException as DealApiException;\nuse HubSpot\\Client\\Crm\\Deals\\Model\\AssociationSpec as DealAssociationSpec;\nuse HubSpot\\Client\\Crm\\Deals\\Model\\PublicAssociationsForObject as DealPublicAssociationsForObject;\nuse HubSpot\\Client\\Crm\\Deals\\Model\\PublicObjectId as DealPublicObjectId;\nuse HubSpot\\Client\\Crm\\Deals\\Model\\SimplePublicObjectInputForCreate as DealSimplePublicObjectInputForCreate;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Muhammad Mustaqeem",
+      "poster_handle": "muhammad.mustaqeem"
+    },
+    "time_stamp": "2024-05-10 03:27:25",
+    "text": "you can add/edit custom proeprties using the API using postman or cURL"
+  },
+  {
+    "poster": {
+      "poster_name": "Olivier Doucet",
+      "poster_handle": "odoucet"
+    },
+    "time_stamp": "2024-05-10 06:26:20",
+    "edited": {
+      "time_stamp": "2024-05-10 06:26:51"
+    },
+    "text": "Hello everyone !\nI'm using the form API to submit forms (<https://legacydocs.HubSpot.com/docs/methods/forms/submit_form_v3_authentication>).\nAccording to documentation, on legalConsentOptions, if we use \"consent\" mode, we can have multiple subscriptions (in `legalconsentoptions.consent.communications[]`) at the same time, but with \"legitimateInterest\" there can be only one (field\n`legalConsentOptions.legitimateInterest.subscriptionTypeId`). It is not the same behaviour as in the UI, where we can definitely have multiple subscriptions with legitimateInterest mode. any workaround ?"
+  },
+  {
+    "poster": {
+      "poster_name": "John Silva",
+      "poster_handle": "johnn.silva"
+    },
+    "time_stamp": "2024-05-10 06:50:46",
+    "text": "```Hello Omar, thank you for your response. We are gonna try without the data parameter as you say```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Hisham Ouberkni",
+      "poster_handle": "hicham"
+    },
+    "time_stamp": "2024-05-10 07:18:02",
+    "edited": {
+      "time_stamp": "2024-05-10 07:49:27"
+    },
+    "text": "Hello everyone :alert::alert:,\nI hope you're doing well. I have a question regarding the configuration of a *private app's* API key in HubSpot.\nIs it possible to restrict the *API key* generated from the private app to access only certain objects that belong to a specific team? For example, I want the API key to retrieve and modify deals that are associated with a particular HubSpot team, without access to deals belonging to other teams. Essentially, each team should have read/write access only to its own resources (deals, companies, contacts), without access to resources of other teams.\nI've reviewed the HubSpot documentation, but it seems that private apps can only manage endpoint access. However, I believe that this level of access control is possible within the HubSpot UI, so I'm curious if it can also be achieved through the API.\nThank you for your assistance.",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-05-10 08:51:05"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-05-10 07:45:04",
+    "text": "I would add that in the docs page you can test from right there and then you can see how it's coded as well in those examples.  I find that very useful in learning the various API calls."
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-05-10 07:47:40",
+    "text": "you can do that using the properties API:  <https://developers.HubSpot.com/docs/api/crm/properties>"
+  },
+  {
+    "poster": {
+      "poster_name": "Roger Brown",
+      "poster_handle": "robrown"
+    },
+    "time_stamp": "2024-05-10 08:51:05",
+    "text": "Hi Hisham, at the moment this is not a feature we currently support for Private App Tokens. The full list of supported scopes available to configure for an app are listed <https://developers.HubSpot.com/docs/api/scopes|here>.\n\nI am interested to hear more about your use case for overlapping with the teams feature, and would love some more detail if you can share with me directly. I assume your development team also overlaps in some way to predefined teams."
+  },
+  {
+    "poster": {
+      "poster_name": "Aaron Gutierrez",
+      "poster_handle": "aaron.gutierrez"
+    },
+    "time_stamp": "2024-05-10 09:05:06",
+    "text": "Yes I did"
+  },
+  {
+    "poster": {
+      "poster_name": "Aaron Gutierrez",
+      "poster_handle": "aaron.gutierrez"
+    },
+    "time_stamp": "2024-05-10 09:05:07",
+    "text": "thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Murphy",
+      "poster_handle": "rmurphy"
+    },
+    "time_stamp": "2024-05-10 09:48:03",
+    "text": "Hello everyone, this is my first post, and I appreciate any guidance!\n\n- *Context*: We're using a HubSpot landing page designed to drive opt-ins for a webinar. However, we prefer using an embedded form from WebinarGeek.\n\n- *Issue*: The WebinarGeek form lacks UTM tracking support. Consequently, our Meta ad conversion tracking through HubSpot isn't functioning correctly. All contacts are currently marked as Offline Sources due to the nature of the WebinarGeek integration with HubSpot.\n\n- *Objectives*: Maintain the use of the WebinarGeek form (or somehow leverage the API of HubSpot or WebinarGeek or both) while implementing a solution that:\n  1. Emulates the behavior of a native HubSpot form submission.\n  2. Restores functionality to the Meta ad tracking module in HubSpot.\n  3. Ensures conversions are not recorded as offline sources.\n\n- *Current Progress*:\n  - I have placed a HubSpot form alongside the WebinarGeek form and hid the form with CSS.\n  - Managed to store UTM values from the URL into the browser's local storage.\n\n- *Stuck Point*: Need help progressing beyond storing UTM values—looking to effectively use these values for tracking and store them alongside the WebinarGeek form submission in HubSpot.\n\n- *Request for Help*: I'm open to other ideas or approaches that might help achieve these objectives. Any advice on how to proceed would be greatly appreciated!",
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-05-13 02:35:58"
+      },
+      {
+        "time_stamp": "2024-05-13 03:36:42"
+      },
+      {
+        "time_stamp": "2024-06-19 03:27:33"
+      },
+      {
+        "time_stamp": "2024-06-19 04:00:26"
+      },
+      {
+        "time_stamp": "2024-06-19 04:01:48"
+      },
+      {
+        "time_stamp": "2024-06-21 01:27:55"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andrew Yoo",
+      "poster_handle": "andrew788"
+    },
+    "time_stamp": "2024-05-10 10:51:18",
+    "text": "I'm sending a post request to start a new import at /crm/v3/imports/.\n\nfolderPath = 'Alb/Alb Prod/Deal.xlsx'\nfileName = 'Deal.xlsx'"
+  },
+  {
+    "poster": {
+      "poster_name": "João Demarchi",
+      "poster_handle": "joao.demarchi"
+    },
+    "time_stamp": "2024-05-10 11:58:43",
+    "text": "Hi guys,\n\nI need a more efficient way to retrieve the associations between all the companies to contacts and deals to company and contacs.\n\nI tried using the assciations v4 API (<https://developers.HubSpot.com/docs/api/crm/associations>) List endpoint:\n<https://api.hubapi.com/crm/v4/objects/{objectType}/{objectId}/associations/{toObjectType}>\n\nHowever, using this endpoint, I can only retrieve the associations of 1 object at a time, here is an example request:\n<https://api.hubapi.com/crm/v4/objects/0-2/19200544796/associations/0-1?limit=500>\n\nThis request only returns the contacts associated with the company <https://api.hubapi.com/crm/v4/objects/0-2/19200544796/associations/0-1?limit=500|19200544796>.\n\nBut, in our case, we have 50000 companies, which means I'd have to make 50000 requests to get all the companies and the contacts associated to each of them.\n\nDo you guys know if there's a way to retrive associations between objects and not one at a time?",
+    "reply_count": 3,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-05-11 01:02:54"
+      },
+      {
+        "time_stamp": "2024-05-13 03:34:10"
+      },
+      {
+        "time_stamp": "2024-05-14 11:37:36"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Suhas Chalotra",
+      "poster_handle": "suhas.chalotra"
+    },
+    "time_stamp": "2024-05-10 12:35:22",
+    "text": "Hey everyone, I was wondering if there exists a way to efficiently get all the contacts enrolled in a workflow. I see That I can get current enrollments for a specific contact but if we have thousands of contacts, that doesn't seem to be a feasible approach. Thanks for any help you can provide.",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-05-23 14:48:27"
+      },
+      {
+        "time_stamp": "2024-05-23 14:51:59"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "James Kupczak",
+      "poster_handle": "jimmykup"
+    },
+    "time_stamp": "2024-05-10 16:44:22",
+    "text": "Is there a way to use an API to send an email to a list of contacts? I’m familiar with the Single Send API and it’s ability to send emails to one contact at a time. But I need an API solution that will mimic the behavior of a regular email send within HubSpot where I just select a HubSpot List as the recipient."
+  }
+]

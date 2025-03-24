@@ -1,0 +1,726 @@
+[
+  {
+    "text": "Hi guys, just need some help few tweaks to my code the results is looping my items. I should have 6 items to display only but the results on the image below it got loop redundant here's my code. repeated the all list of items twice or trice  :see_no_evil:\n```async function loadDealsDetails2() {\n  try {\n    const dealsResponse = await fetch(\n      '<https://transforminator.com/_hcms/api/congratsdeal>',\n      requestOptions\n    )\n    const dealsData = await dealsResponse.json()\n    console.log(dealsData)\n    if (dealsData.length &gt; 0) {         \n      // Create a list of unique contact IDs\n        const contactsIds = dealsData.reduce((acc, curr) =&gt; {\n        const partnerContact = curr.associations.contacts.results.find(\n          (result) =&gt; result.type === 'partner_contact' || curr.associations.contacts.results[0]\n        )\n        return [...new Set([...acc, partnerContact.id])]\n      }, [])\n\n      // Create a list of all unique company IDs\n      const companiesIds = dealsData.reduce((acc, curr) =&gt; {\n        const partnerCompany = curr.associations.companies.results.find(\n          (result) =&gt; result.type === 'partner_company' || curr.associations.companies.results[0]\n        )\n        return [...new Set([...acc, partnerCompany.id])]\n      }, [])\n      \n      // Create a list of deal owners\n      const dealOwnersIds = dealsData.map(({ properties }) =&gt; properties.HubSpot_owner_id)\n\n      // Fetch contacts, companies, and owners details      \n      const contactsDetails = await fetchObjectsDetails('contactdetails', contactsIds.join(','))\n      const companyiesDetails = await fetchObjectsDetails('companydetails', companiesIds.join(','))     \n      const ownersDetails = await fetchObjectsDetails('ownerdetails', dealOwnersIds.join(','))\n      \n      const userCompanyId = document.getElementById('companyId').value \n\n      if (dealsData.length &gt; 0) {\n        const table = document\n          .getElementById('demoC')\n          .getElementsByTagName('tbody')[0]\n        const companyIdd = document.getElementById('companyId').value\n\n        dealsData.forEach((element) =&gt; {\n          const row = table.insertRow()\n          let cell = row.insertCell()\n          cell.innerHTML =\n            '&lt;a class=\"hyper_linkhere_trigger_javascript\" target=\"_blank\" href=\"/deal-details?dealid=' +\n            element['id'] +\n            '\"&gt;' +\n            element['properties']['dealname'] +\n            '&lt;/a&gt;'\n          cell = row.insertCell()\n          cell.innerHTML =\n           getCompanyName(companyiesDetails, element['associations']['companies']['results'][0]['id'])\n          cell = row.insertCell()\n          cell.innerHTML = getOwnerDetails(ownersDetails, element['properties']['HubSpot_owner_id'])\n          cell = row.insertCell()\n          cell.innerHTML = getContactDetails(contactsDetails, element['associations']['contacts']['results'][0]['id']).fullName \n          cell = row.insertCell()\n          cell.innerHTML = getLabelName(element['properties']['dealtype'])\n          cell = row.insertCell()\n          cell.innerHTML = '$' + element['properties']['amount']\n          cell = row.insertCell()\n          cell.innerHTML = getLabelName(element['properties']['dealstage'])\n        })\n       } \n      }\n    } catch (error) {\n      console.log('error', error)\n    }\n  } \n\n  loadDealsDetails2()```",
+    "time_stamp": "2023-04-07 03:06:01",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-04-07 04:15:22"
+      }
+    ]
+  },
+  {
+    "text": "Hello,\nI've got an issue trying to PATCH a contact with the API\nAny idea from where the issue would come ?\nthanks",
+    "time_stamp": "2023-04-07 03:39:50",
+    "reply_count": 18,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-04-07 04:20:15"
+      },
+      {
+        "time_stamp": "2023-04-07 04:22:50"
+      },
+      {
+        "time_stamp": "2023-04-07 04:28:18"
+      },
+      {
+        "time_stamp": "2023-04-07 04:28:37"
+      },
+      {
+        "time_stamp": "2023-04-07 04:28:50"
+      },
+      {
+        "time_stamp": "2023-04-07 04:31:41"
+      },
+      {
+        "time_stamp": "2023-04-07 04:32:33"
+      },
+      {
+        "time_stamp": "2023-04-07 04:32:48"
+      },
+      {
+        "time_stamp": "2023-04-07 04:32:54"
+      },
+      {
+        "time_stamp": "2023-04-07 09:45:07"
+      },
+      {
+        "time_stamp": "2023-04-07 09:45:41"
+      },
+      {
+        "time_stamp": "2023-04-07 09:46:12"
+      },
+      {
+        "time_stamp": "2023-04-07 10:06:13"
+      },
+      {
+        "time_stamp": "2023-04-07 10:07:44"
+      },
+      {
+        "time_stamp": "2023-04-07 10:19:39"
+      },
+      {
+        "time_stamp": "2023-04-10 12:01:34"
+      },
+      {
+        "time_stamp": "2023-04-10 12:02:30"
+      },
+      {
+        "time_stamp": "2023-04-10 12:03:15"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Pokorniecki",
+      "poster_handle": "byron.pokorniecki.ext"
+    },
+    "time_stamp": "2023-04-07 04:15:22",
+    "text": "I think the easiest way to find the problem is by logging the dealdsData.length after each .map or .reduce call but they should not alter the actual dealsData.\nIf there are any parts of your code that you have not shared but touch the dealsData, I would also console.log after them.\n\nBtw I would suggest to return if dealsData.length == 0 instead of going down the \"if\" path. That saves you the indentation and makes it more readable."
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Pokorniecki",
+      "poster_handle": "byron.pokorniecki.ext"
+    },
+    "time_stamp": "2023-04-07 04:20:15",
+    "text": "I would change the Body Type to JSON.\n\nThe body that you should submit would look something like this:\n```{\n  \"firstname\": \"Test\"\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Pokorniecki",
+      "poster_handle": "byron.pokorniecki.ext"
+    },
+    "time_stamp": "2023-04-07 04:22:50",
+    "text": "You may also have to add the header\n'content-type: application/json', if that doesnt get applied automaticly on changing the Body Type."
+  },
+  {
+    "poster": {
+      "poster_name": "Vivien BOUANCHEAU",
+      "poster_handle": "vivien.bouancheau"
+    },
+    "time_stamp": "2023-04-07 04:28:18",
+    "text": "Thanks !\nI've got now a new issue ^^'"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-04-07 04:28:37"
+  },
+  {
+    "poster": {
+      "poster_name": "Vivien BOUANCHEAU",
+      "poster_handle": "vivien.bouancheau"
+    },
+    "time_stamp": "2023-04-07 04:28:50",
+    "text": "No properties found :thinking_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Pokorniecki",
+      "poster_handle": "byron.pokorniecki.ext"
+    },
+    "time_stamp": "2023-04-07 04:31:41",
+    "text": "Pardon me.\n\nI missed something obvious the body needs a properties key first.\n\n```{\n  \"properties\": {\n    \"firstname\": \"Test\"\n  }\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Vivien BOUANCHEAU",
+      "poster_handle": "vivien.bouancheau"
+    },
+    "time_stamp": "2023-04-07 04:32:33",
+    "text": "Oh perfect !\nthanks =D !"
+  },
+  {
+    "poster": {
+      "poster_name": "Vivien BOUANCHEAU",
+      "poster_handle": "vivien.bouancheau"
+    },
+    "time_stamp": "2023-04-07 04:32:48",
+    "text": "thanks for your help !"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Pokorniecki",
+      "poster_handle": "byron.pokorniecki.ext"
+    },
+    "time_stamp": "2023-04-07 04:32:54",
+    "edited": {
+      "time_stamp": "2023-04-07 04:33:25"
+    },
+    "text": "You're welcome :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Teigseth",
+      "poster_handle": "arno.teigseth"
+    },
+    "time_stamp": "2023-04-07 08:42:30",
+    "text": "Hi guys, is it possible to filter Contacts by email, when the search string contains @ ? I search with this:\n```\n\"filters\": [ \n            {\n                    \"operator\": \"CONTAINS_TOKEN\",\n                    \"propertyName\": \"email\",\n                    \"value\": \"*arno@*\"\n                }\n            ]```\n  and it returns too many results:\n```arno@teig…      (correct)\narnoemail@gmai  (incorrect, should match arno@ only)```",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-04-07 09:09:05"
+      },
+      {
+        "time_stamp": "2023-04-07 09:11:03"
+      },
+      {
+        "time_stamp": "2023-04-07 09:11:16"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Teigseth",
+      "poster_handle": "arno.teigseth"
+    },
+    "time_stamp": "2023-04-07 08:42:51",
+    "text": "(tried uriencoding the @ too, but `arno%40` gives 0 results)"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-07 09:09:05",
+    "edited": {
+      "time_stamp": "2023-04-07 09:09:09"
+    },
+    "text": "use EQ instead"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Teigseth",
+      "poster_handle": "arno.teigseth"
+    },
+    "time_stamp": "2023-04-07 09:11:03",
+    "text": "ahh so you can use EQ *and* wildcards :sweat_smile: nice! I was a bit pessimistic thinking EQ would actually be exact matches…\n\nYep that worked. Thank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-07 09:11:16",
+    "text": "of course"
+  },
+  {
+    "poster": {
+      "poster_name": "Vivien BOUANCHEAU",
+      "poster_handle": "vivien.bouancheau"
+    },
+    "time_stamp": "2023-04-07 09:45:07",
+    "text": "Again me <@U04UF7BNBK4> :slightly_smiling_face:"
+  },
+  {
+    "text": "I'm trying to GET a contact with a specific HubSpot property",
+    "time_stamp": "2023-04-07 09:45:41"
+  },
+  {
+    "poster": {
+      "poster_name": "Vivien BOUANCHEAU",
+      "poster_handle": "vivien.bouancheau"
+    },
+    "time_stamp": "2023-04-07 09:46:12",
+    "text": "but it's not proposing me to ask something in JSON only with parameter, and I don't know what to ask ^^' (i'm not a dev)"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Pokorniecki",
+      "poster_handle": "byron.pokorniecki.ext"
+    },
+    "time_stamp": "2023-04-07 10:06:13",
+    "text": "In that case you would use the contacts search api and create a filter where the property EQ a certain value. \n\n<https://developers.HubSpot.com/docs/api/crm/contacts|https://developers.HubSpot.com/docs/api/crm/contacts> In the endpoints tab you will find the search request example"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Pokorniecki",
+      "poster_handle": "byron.pokorniecki.ext"
+    },
+    "time_stamp": "2023-04-07 10:07:44",
+    "text": "If you already know which properties are relevant from that contact, then you should include those property names in this call aswell, else you will only get the contacts internal HubSpot id and a few other standard properties."
+  },
+  {
+    "text": "I've tried this",
+    "time_stamp": "2023-04-07 10:19:39"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Louden",
+      "poster_handle": "matt562"
+    },
+    "time_stamp": "2023-04-07 13:04:55",
+    "text": "Hello everyone, I was working on something for a client and basically it reads data from a google sheet and then updates or creates a contact in HubSpot based on the info. For some reason my axios request isn't working with HubSpot's API to update or create. Maybe I have been looking at too long today or what but I was hoping for some feedback. And before you ask, yes axios is included at the top of the script.\n```exports.main = async (event, callback) =&gt; {\n    try {\n        const google_response = await axios.get('<https://sheets.googleapis.com/v4/spreadsheets/>' + sheetId + '/values/' + range + '?key=' + apiKey + '');\n\n        const rows = google_response.data.values;\n\n        let $count = 1;\n\n        // Send data to HubSpot API for each row\n        for (const row of rows) {\n            if ($count != 1) {\n                const [contactID, studentID, studentName, currentGrade, currentSchool, firstName, lastName, relationship, language, phone, email, address, city, zip, zone, alignedSchool, participation, registerDate, attendedEvent, contactAttempt1, contactMade1, contactNotes1, contactAttempt2, contactMade2, contactNotes2, contactAttempt3, contactMade3, contactNotes3, contactAttempt4, contactMade4, contactNotes4, contactAttempt5, contactMade5, contactNotes5, contactAttempt6, contactMade6, contactNotes6, choice] = row;\n\n                // Check if contact already exists in HubSpot\n                try {\n                    let config = {\n                        method: 'get',\n                        url: '<https://api.hubapi.com/crm/v3/objects/contacts/>' + email + '?idProperty=email',\n                        headers: {\n                            'Authorization': 'Bearer ' + hsKey\n                        }\n                    };\n\n                    axios.request(config).then(response =&gt; {\n                        var $id = response.data.id;\n                        if ($id) {\n                            // Update existing contact\n                            let $props = JSON.stringify({\n                                \"properties\": {\n                                    'student_id_if_available_': studentID,\n                                    'current_grade': currentGrade,\n                                    'school': currentSchool,\n                                    'student__full_name_': studentName,\n                                    'firstname': firstName,\n                                    'lastname': lastName,\n                                    'contact_relationship': relationship,\n                                    'home_language': language,\n                                    'phone': phone,\n                                    'address': address,\n                                    'city': city,\n                                    'zip': zip,\n                                    'projected_boundary___enrollment_zone': zone,\n                                    'dsst_aligned_school': alignedSchool,\n                                    'participated_in_school_choice': participation,\n                                    'registered_for_an_event': registerDate,\n                                    'event_name_attended': attendedEvent,\n                                    'contact_attempt_1': contactAttempt1,\n                                    'contact_made_': contactMade1,\n                                    'results_notes_1': contactNotes1,\n                                    'contact_attempt_2': contactAttempt2,\n                                    'contact_made_2_': contactMade2,\n                                    'results_notes_2': contactNotes2,\n                                    'contact_attempt_3': contactAttempt3,\n                                    'contact_made_3_': contactMade3,\n                                    'results_notes_3': contactNotes3,\n                                    'contact_attempt_4': contactAttempt4,\n                                    'contact_made_4_': contactMade4,\n                                    'results_notes_4': contactNotes4,\n                                    'contact_attempt_5': contactAttempt5,\n                                    'contact_made_5_': contactMade5,\n                                    'results_notes_5': contactNotes5,\n                                    'contact_attempt_6': contactAttempt6,\n                                    'contact_made_6_': contactMade6,\n                                    'results_notes_6': contactNotes6,\n                                    'going_to_choice_': choice\n                                }\n                            });\n                            let configUpdate = {\n                                method: 'put',\n                                url: '<https://api.hubapi.com/crm/v3/objects/contacts/>' + email + '?idProperty=email',\n                                headers: {\n                                    'Authorization': 'Bearer ' + hsKey\n                                },\n                                body: $props\n                            };\n                            axios.request(configUpdate).then(response =&gt; {\n                                console.log(response);\n                            }).catch(error =&gt; {\n                                //console.log(error);\n                            });\n                        } else {\n                            // Create new contact\n                            let $props = JSON.stringify({\n                                \"properties\": {\n                                    'student_id_if_available_': studentID,\n                                    'current_grade': currentGrade,\n                                    'school': currentSchool,\n                                    'student__full_name_': studentName,\n                                    'firstname': firstName,\n                                    'lastname': lastName,\n                                    'contact_relationship': relationship,\n                                    'home_language': language,\n                                    'phone': phone,\n                                    'email': email,\n                                    'address': address,\n                                    'city': city,\n                                    'zip': zip,\n                                    'projected_boundary___enrollment_zone': zone,\n                                    'dsst_aligned_school': alignedSchool,\n                                    'participated_in_school_choice': participation,\n                                    'registered_for_an_event': registerDate,\n                                    'event_name_attended': attendedEvent,\n                                    'contact_attempt_1': contactAttempt1,\n                                    'contact_made_': contactMade1,\n                                    'results_notes_1': contactNotes1,\n                                    'contact_attempt_2': contactAttempt2,\n                                    'contact_made_2_': contactMade2,\n                                    'results_notes_2': contactNotes2,\n                                    'contact_attempt_3': contactAttempt3,\n                                    'contact_made_3_': contactMade3,\n                                    'results_notes_3': contactNotes3,\n                                    'contact_attempt_4': contactAttempt4,\n                                    'contact_made_4_': contactMade4,\n                                    'results_notes_4': contactNotes4,\n                                    'contact_attempt_5': contactAttempt5,\n                                    'contact_made_5_': contactMade5,\n                                    'results_notes_5': contactNotes5,\n                                    'contact_attempt_6': contactAttempt6,\n                                    'contact_made_6_': contactMade6,\n                                    'results_notes_6': contactNotes6,\n                                    'going_to_choice_': choice\n                                }\n                            });\n                            let configCreate = {\n                                method: 'post',\n                                url: '<https://api.hubapi.com/crm/v3/objects/contacts/>',\n                                headers: {\n                                    'Authorization': 'Bearer ' + hsKey\n                                },\n                                body: $props\n                            };\n                            axios.request(configCreate).then(response =&gt; {\n                                console.log(response);\n                            }).catch(error =&gt; {\n                                //console.log(error);\n                            });\n                        }\n                    }).catch(error =&gt; {\n                        //console.log(error);\n                    });\n                } catch (error) {\n                    console.log(error);\n                }\n            }\n            $count++;\n        }\n    } catch (error) {\n        console.error(error);\n    }\n}```",
+    "reply_count": 42,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2023-04-07 13:09:51"
+      },
+      {
+        "time_stamp": "2023-04-07 13:17:07"
+      },
+      {
+        "time_stamp": "2023-04-07 13:17:33"
+      },
+      {
+        "time_stamp": "2023-04-07 13:19:12"
+      },
+      {
+        "time_stamp": "2023-04-07 13:20:03"
+      },
+      {
+        "time_stamp": "2023-04-07 13:20:11"
+      },
+      {
+        "time_stamp": "2023-04-07 13:20:22"
+      },
+      {
+        "time_stamp": "2023-04-07 13:39:29"
+      },
+      {
+        "time_stamp": "2023-04-07 15:26:52"
+      },
+      {
+        "time_stamp": "2023-04-07 15:47:18"
+      },
+      {
+        "time_stamp": "2023-04-07 16:25:07"
+      },
+      {
+        "time_stamp": "2023-04-07 16:45:32"
+      },
+      {
+        "time_stamp": "2023-04-07 16:46:16"
+      },
+      {
+        "time_stamp": "2023-04-07 16:46:48"
+      },
+      {
+        "time_stamp": "2023-04-07 16:49:32"
+      },
+      {
+        "time_stamp": "2023-04-07 16:49:42"
+      },
+      {
+        "time_stamp": "2023-04-07 16:49:49"
+      },
+      {
+        "time_stamp": "2023-04-07 16:49:57"
+      },
+      {
+        "time_stamp": "2023-04-07 16:50:11"
+      },
+      {
+        "time_stamp": "2023-04-07 16:51:17"
+      },
+      {
+        "time_stamp": "2023-04-07 16:51:38"
+      },
+      {
+        "time_stamp": "2023-04-07 16:51:40"
+      },
+      {
+        "time_stamp": "2023-04-07 16:52:16"
+      },
+      {
+        "time_stamp": "2023-04-07 16:52:36"
+      },
+      {
+        "time_stamp": "2023-04-07 16:54:47"
+      },
+      {
+        "time_stamp": "2023-04-07 16:55:26"
+      },
+      {
+        "time_stamp": "2023-04-07 16:56:41"
+      },
+      {
+        "time_stamp": "2023-04-07 16:56:42"
+      },
+      {
+        "time_stamp": "2023-04-07 16:57:20"
+      },
+      {
+        "time_stamp": "2023-04-07 16:57:34"
+      },
+      {
+        "time_stamp": "2023-04-07 16:58:00"
+      },
+      {
+        "time_stamp": "2023-04-07 16:58:55"
+      },
+      {
+        "time_stamp": "2023-04-07 16:59:42"
+      },
+      {
+        "time_stamp": "2023-04-07 17:00:06"
+      },
+      {
+        "time_stamp": "2023-04-07 17:00:12"
+      },
+      {
+        "time_stamp": "2023-04-07 17:01:04"
+      },
+      {
+        "time_stamp": "2023-04-07 17:02:05"
+      },
+      {
+        "time_stamp": "2023-04-07 17:03:49"
+      },
+      {
+        "time_stamp": "2023-04-07 17:07:06"
+      },
+      {
+        "time_stamp": "2023-04-07 17:07:31"
+      },
+      {
+        "time_stamp": "2023-04-27 10:14:12"
+      },
+      {
+        "time_stamp": "2023-04-28 08:48:29"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Hirsh",
+      "poster_handle": "ehirsh"
+    },
+    "time_stamp": "2023-04-07 13:05:37",
+    "text": "doc updated!"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-07 13:05:51",
+    "text": ":fire:"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Louden",
+      "poster_handle": "matt562"
+    },
+    "time_stamp": "2023-04-07 13:09:51",
+    "text": "<@U01QVR44MEY> you are the master of HubSpot API my friend. Any thoughts on the above code?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-07 13:17:07",
+    "text": "Hey <@U04GMCM7AP3>, lol don't know about master but let me check it out"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-07 13:17:33",
+    "text": "you have `put` where you should have `patch`"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Louden",
+      "poster_handle": "matt562"
+    },
+    "time_stamp": "2023-04-07 13:19:12",
+    "text": ":face_palm: I see that now. Thanks. Do I have the \"properties\" set correctly though in the request?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-07 13:20:03",
+    "text": "personally I would make all the `'` in the properties object to `\"`"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-07 13:20:11",
+    "text": "but I don't think it should matter too much"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-07 13:20:22",
+    "text": "is there a particular error that you're getting?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Louden",
+      "poster_handle": "matt562"
+    },
+    "time_stamp": "2023-04-07 13:39:29",
+    "text": "This is part of the error that I'm getting in the console. Its definitely not working as it should. This error is produced by line 91\n```yMvIguhOP%2FrHXcEWVGxQ7H1k1S%2FwYrrfwt81mXCrYX6ty37DsNe5rcSNzTXena\"}],\"group\":\"cf-nel\",\"max_age\":604800}',\n      nel: '{\"success_fraction\":0.01,\"report_to\":\"cf-nel\",\"max_age\":604800}',\n      server: 'cloudflare',\n      'alt-svc': 'h3=\":443\"; ma=86400, h3-29=\":443\"; ma=86400'\n    },\n    config: {\n      transitional: [Object],\n      adapter: [Array],\n      transformRequest: [Array],\n      transformResponse: [Array],\n      timeout: 0,\n      xsrfCookieName: 'XSRF-TOKEN',\n      xsrfHeaderName: 'X-XSRF-TOKEN',\n      maxContentLength: -1,\n      maxBodyLength: -1,\n      env: [Object],\n      validateStatus: [Function: validateStatus],\n      headers: [AxiosHeaders],\n      method: 'patch',\n      url: '<https://api.hubapi.com/crm/v3/objects/contacts/matt@hive.com?idProperty=email>',\n      body: '{\"properties\":{\"student_id_if_available_\":\"2314414\",\"current_grade\":\"2\",\"school\":\"Joe Shoemaker School\",\"student__full_name_\":\"Elon Louden\",\"firstname\":\"Matt\",\"lastname\":\"Louden\",\"contact_relationship\":\"Father\",\"home_language\":\"English\",\"phone\":\"123-456-7890\",\"address\":\"123 Test\",\"city\":\"Test\",\"zip\":\"12345\",\"projected_boundary___enrollment_zone\":\"n/a\",\"dsst_aligned_school\":\"n/a\",\"participated_in_school_choice\":\"n/a\",\"registered_for_an_event\":\"n/a\",\"event_name_attended\":\"n/a\",\"contact_attempt_1\":\"n/a\",\"contact_made_\":\"n/a\",\"results_notes_1\":\"n/a\",\"contact_attempt_2\":\"n/a\",\"contact_made_2_\":\"n/a\",\"results_notes_2\":\"n/a\",\"contact_attempt_3\":\"n/a\",\"contact_made_3_\":\"n/a\",\"results_notes_3\":\"n/a\",\"contact_attempt_4\":\"n/a\",\"contact_made_4_\":\"n/a\",\"results_notes_4\":\"n/a\",\"contact_attempt_5\":\"n/a\",\"contact_made_5_\":\"n/a\",\"results_notes_5\":\"n/a\",\"contact_attempt_6\":\"n/a\",\"contact_made_6_\":\"n/a\",\"results_notes_6\":\"n/a\",\"going_to_choice_\":\"n/a\"}}',\n      data: undefined\n    },\n    request: &lt;ref *1&gt; ClientRequest {\n      _events: [Object: null prototype],\n      _eventsCount: 7,\n      _maxListeners: undefined,\n      outputData: [],\n      outputSize: 0,\n      writable: true,\n      destroyed: false,\n      _last: true,\n      chunkedEncoding: false,\n      shouldKeepAlive: false,\n      maxRequestsOnConnectionReached: false,\n      _defaultKeepAlive: true,\n      useChunkedEncodingByDefault: true,\n      sendDate: false,\n      _removedConnection: false,\n      _removedContLen: false,\n      _removedTE: false,\n      strictContentLength: false,\n      _contentLength: 0,\n      _hasBody: true,\n      _trailer: '',\n      finished: true,\n      _headerSent: true,\n      _closed: false,\n      socket: [TLSSocket],\n      _header: 'PATCH /crm/v3/objects/contacts/matt@hive.com?idProperty=email HTTP/1.1\\r\\n' +\n        'Accept: application/json, text/plain, */*\\r\\n' +\n        'Content-Type: application/x-www-form-urlencoded\\r\\n' +\n        'Authorization: Bearer &lt;REDACTED&gt;\\r\\n' +\n        'User-Agent: axios/1.2.4\\r\\n' +\n        'Accept-Encoding: gzip, compress, deflate, br\\r\\n' +\n        'Host: <http://api.hubapi.com|api.hubapi.com>\\r\\n' +\n        'Connection: close\\r\\n' +\n        'Content-Length: 0\\r\\n' +\n        '\\r\\n',\n      _keepAliveTimeout: 0,\n      _onPendingData: [Function: nop],\n      agent: [Agent],\n      socketPath: undefined,\n      method: 'PATCH',\n      maxHeaderSize: undefined,\n      insecureHTTPParser: undefined,\n      path: '/crm/v3/objects/contacts/matt@hive.com?idProperty=email',\n      _ended: true,\n      res: [IncomingMessage],\n      aborted: false,\n      timeoutCb: null,\n      upgradeOrConnect: false,\n      parser: null,\n      maxHeadersCount: null,\n      reusedSocket: false,\n      host: '<http://api.hubapi.com|api.hubapi.com>',\n      protocol: 'https:',\n      _redirectable: [Writable],\n      [Symbol(kCapture)]: false,\n      [Symbol(kBytesWritten)]: 0,\n      [Symbol(kEndCalled)]: true,\n      [Symbol(kNeedDrain)]: false,\n      [Symbol(corked)]: 0,\n      [Symbol(kOutHeaders)]: [Object: null prototype],\n      [Symbol(kUniqueHeaders)]: null\n    },\n    data: ''\n  }\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "erin wiggers",
+      "poster_handle": "erin245"
+    },
+    "time_stamp": "2023-04-07 15:26:52",
+    "text": "<@U04GMCM7AP3> this is a complete guess based on things that have made me bang my head against a wall for a while but have you tried v4 of the API instead of v3?"
+  },
+  {
+    "text": "Oh also <@U04GMCM7AP3> I think properties is supposed to be an array",
+    "time_stamp": "2023-04-07 15:47:18"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-07 16:25:07",
+    "text": "<@U022FJKR4CQ> properties is supposed to be an object that's for the read api telling the api which properties you would like to read"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Louden",
+      "poster_handle": "matt562"
+    },
+    "time_stamp": "2023-04-07 16:45:32",
+    "text": "Thanks <@U01QVR44MEY> and <@U022FJKR4CQ> for taking the time to look at my code. I FINALLY got it working. I went ahead and used the HubSpot api library instead of using axios to get access to HubSpot.\n```exports.main = async (event, callback) =&gt; {\n    try {\n        const google_response = await axios.get('<https://sheets.googleapis.com/v4/spreadsheets/>' + sheetId + '/values/' + range + '?key=' + apiKey + '');\n\n        const rows = google_response.data.values;\n\n        let $count = 1;\n\n        // Send data to HubSpot API for each row\n        for (const row of rows) {\n            if ($count != 1) {\n                const [contactID, studentID, studentName, currentGrade, currentSchool, firstName, lastName, relationship, language, phone, email, address, city, zip, zone, alignedSchool, participation, registerDate, attendedEvent, contactAttempt1, contactMade1, contactNotes1, contactAttempt2, contactMade2, contactNotes2, contactAttempt3, contactMade3, contactNotes3, contactAttempt4, contactMade4, contactNotes4, contactAttempt5, contactMade5, contactNotes5, contactAttempt6, contactMade6, contactNotes6, choice] = row;\n\n                // Check if contact already exists in HubSpot\n                try {\n                    let config = {\n                        method: 'get',\n                        url: '<https://api.hubapi.com/crm/v3/objects/contacts/>' + email + '?idProperty=email',\n                        headers: {\n                            'Content-Type': 'application/json',\n                            'Authorization': 'Bearer ' + hsKey\n                        }\n                    };\n                    const HubSpotClient = new HubSpot.Client({\n                        \"accessToken\": hsKey\n                    });\n                    axios.request(config).then(response =&gt; {\n                        var $id = response.data.id;\n                        const properties = {\n                            \"student_id_if_available_\": studentID,\n                            \"current_grade\": currentGrade,\n                            \"school\": currentSchool,\n                            \"student__full_name_\": studentName,\n                            \"firstname\": firstName,\n                            \"lastname\": lastName,\n                            \"contact_relationship\": relationship,\n                            \"home_language\": language,\n                            \"phone\": phone,\n                            \"address\": address,\n                            \"city\": city,\n                            \"zip\": zip,\n                            \"projected_boundary___enrollment_zone\": zone,\n                            \"dsst_aligned_school\": alignedSchool,\n                            \"participated_in_school_choice\": participation,\n                            \"registered_for_an_event\": registerDate,\n                            \"event_name_attended\": attendedEvent,\n                            \"contact_attempt_1\": contactAttempt1,\n                            \"contact_made_\": contactMade1,\n                            \"results_notes_1\": contactNotes1,\n                            \"contact_attempt_2\": contactAttempt2,\n                            \"contact_made_2_\": contactMade2,\n                            \"results_notes_2\": contactNotes2,\n                            \"contact_attempt_3\": contactAttempt3,\n                            \"contact_made_3_\": contactMade3,\n                            \"results_notes_3\": contactNotes3,\n                            \"contact_attempt_4\": contactAttempt4,\n                            \"contact_made_4_\": contactMade4,\n                            \"results_notes_4\": contactNotes4,\n                            \"contact_attempt_5\": contactAttempt5,\n                            \"contact_made_5_\": contactMade5,\n                            \"results_notes_5\": contactNotes5,\n                            \"contact_attempt_6\": contactAttempt6,\n                            \"contact_made_6_\": contactMade6,\n                            \"results_notes_6\": contactNotes6,\n                            \"going_to_choice_\": choice\n                        };\n                        const SimplePublicObjectInput = {\n                            properties,\n                            associations: []\n                        };\n                        const contactId = $id;\n                        try {\n                            const apiResponse = HubSpotClient.crm.contacts.basicApi.update(contactId, SimplePublicObjectInput);\n                            console.log(JSON.stringify(apiResponse, null, 2));\n                        } catch (e) {\n                            e.message === 'HTTP request failed' ?\n                                console.error(JSON.stringify(e.response, null, 2)) :\n                                console.error(e)\n                        }\n                    }).catch(error =&gt; {\n                        const properties = {\n                            \"student_id_if_available_\": studentID,\n                            \"current_grade\": currentGrade,\n                            \"school\": currentSchool,\n                            \"student__full_name_\": studentName,\n                            \"firstname\": firstName,\n                            \"lastname\": lastName,\n                            \"contact_relationship\": relationship,\n                            \"home_language\": language,\n                            \"phone\": phone,\n                            \"email\": email,\n                            \"address\": address,\n                            \"city\": city,\n                            \"zip\": zip,\n                            \"projected_boundary___enrollment_zone\": zone,\n                            \"dsst_aligned_school\": alignedSchool,\n                            \"participated_in_school_choice\": participation,\n                            \"registered_for_an_event\": registerDate,\n                            \"event_name_attended\": attendedEvent,\n                            \"contact_attempt_1\": contactAttempt1,\n                            \"contact_made_\": contactMade1,\n                            \"results_notes_1\": contactNotes1,\n                            \"contact_attempt_2\": contactAttempt2,\n                            \"contact_made_2_\": contactMade2,\n                            \"results_notes_2\": contactNotes2,\n                            \"contact_attempt_3\": contactAttempt3,\n                            \"contact_made_3_\": contactMade3,\n                            \"results_notes_3\": contactNotes3,\n                            \"contact_attempt_4\": contactAttempt4,\n                            \"contact_made_4_\": contactMade4,\n                            \"results_notes_4\": contactNotes4,\n                            \"contact_attempt_5\": contactAttempt5,\n                            \"contact_made_5_\": contactMade5,\n                            \"results_notes_5\": contactNotes5,\n                            \"contact_attempt_6\": contactAttempt6,\n                            \"contact_made_6_\": contactMade6,\n                            \"results_notes_6\": contactNotes6,\n                            \"going_to_choice_\": choice\n                        };\n                        const SimplePublicObjectInputForCreate = {\n                            properties,\n                            associations: []\n                        };\n                        try {\n                            const apiResponse = HubSpotClient.crm.contacts.basicApi.create(SimplePublicObjectInputForCreate);\n                            console.log(JSON.stringify(apiResponse, null, 2));\n                        } catch (e) {\n                            e.message === 'HTTP request failed' ?\n                                console.error(JSON.stringify(e.response, null, 2)) :\n                                console.error(e)\n                        }\n                    });\n                } catch (error) {\n                    console.log(JSON.stringify(error));\n                }\n            }\n            $count++;\n        }\n    } catch (error) {\n        console.error(error);\n    }\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-07 16:46:16",
+    "text": "Awesome nice work <@U04GMCM7AP3>"
+  },
+  {
+    "poster": {
+      "poster_name": "erin wiggers",
+      "poster_handle": "erin245"
+    },
+    "time_stamp": "2023-04-07 16:46:48",
+    "text": "Word nice job glad you got it figured out!"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Louden",
+      "poster_handle": "matt562"
+    },
+    "time_stamp": "2023-04-07 16:49:32",
+    "text": "I still don't understand why Axios wasn't working though. It bugs me not knowing why that solution didn't work. It must have been something with my JSON data fudging things up. Oh well. This solution works and I probably should be using the HubSpot node package anyway."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Louden",
+      "poster_handle": "matt562"
+    },
+    "time_stamp": "2023-04-07 16:49:42",
+    "text": "Thanks again though you all"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-07 16:49:49",
+    "text": "Did you generate the axios code with postman?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-07 16:49:57",
+    "text": "that's what I always do to double check myself"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-07 16:50:11",
+    "text": "if it works in postman and then it will work with postman generated axios"
+  },
+  {
+    "poster": {
+      "poster_name": "erin wiggers",
+      "poster_handle": "erin245"
+    },
+    "time_stamp": "2023-04-07 16:51:17",
+    "text": "Yeah I struggle to format the JSON sometimes and cause myself a headache but definitely recommend <@U01QVR44MEY>'s suggestion about postman"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-07 16:51:38",
+    "text": "Yeah definitely been there before"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Louden",
+      "poster_handle": "matt562"
+    },
+    "time_stamp": "2023-04-07 16:51:40",
+    "text": "Valid point <@U01QVR44MEY> I have postman and I probably should have tested it in there. I was getting 400 errors based on the API log. So definitely will check in there"
+  },
+  {
+    "poster": {
+      "poster_name": "erin wiggers",
+      "poster_handle": "erin245"
+    },
+    "time_stamp": "2023-04-07 16:52:16",
+    "text": "Also try the console logging in the CLI that can be more helpful than the API logs in the UI"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-07 16:52:36",
+    "text": ":fire:"
+  },
+  {
+    "poster": {
+      "poster_name": "erin wiggers",
+      "poster_handle": "erin245"
+    },
+    "time_stamp": "2023-04-07 16:54:47",
+    "text": "`hs logs nameOf/function --follow` or something like that off the top of my head don't quote me lol <@U04GMCM7AP3>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-07 16:55:26",
+    "text": "but that's only if you're deploying the code in a CMS function"
+  },
+  {
+    "poster": {
+      "poster_name": "erin wiggers",
+      "poster_handle": "erin245"
+    },
+    "time_stamp": "2023-04-07 16:56:41",
+    "text": "Oh true I was assuming this was a serverless my bad that's a good call <@U01QVR44MEY>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-07 16:56:42",
+    "text": "is there a way to just test core api calls in the CLI?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-07 16:57:20",
+    "text": "oh yeah it is a serverless function but currently HubSpot has like 4 different serverless function types"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-07 16:57:34",
+    "edited": {
+      "time_stamp": "2023-04-07 16:57:38"
+    },
+    "text": "and the logs will only work in CMS functions"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Louden",
+      "poster_handle": "matt562"
+    },
+    "time_stamp": "2023-04-07 16:58:00",
+    "text": "I was using this in a workflow but yes for a serverless function I would have ran the logs command"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Louden",
+      "poster_handle": "matt562"
+    },
+    "time_stamp": "2023-04-07 16:58:55",
+    "text": "Client requested it be done in a workflow but I suggested a serverless function. Client doesn't want to pay for CMS Enterprise either."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-07 16:59:42",
+    "text": "well honestly you probably went the better route, custom code has a 20 second execution limit whereas cms has a 10 second limit"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-07 17:00:06",
+    "text": "plus the logs for cms functions are just a real struggle to work with when you're not just running tests"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Louden",
+      "poster_handle": "matt562"
+    },
+    "time_stamp": "2023-04-07 17:00:12",
+    "text": "wow I wasn't aware of that fact <@U01QVR44MEY>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Louden",
+      "poster_handle": "matt562"
+    },
+    "time_stamp": "2023-04-07 17:01:04",
+    "text": "I would have thought the execution time would have been reversed honestly"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-07 17:02:05",
+    "edited": {
+      "time_stamp": "2023-04-07 17:02:11"
+    },
+    "text": "Yeah it's a little strange, and then dev project functions have a 5 second limit"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-07 17:03:49",
+    "text": "but cms functions have a 600 execution/sec limit whereas workflow custom code will only allow 300 executions/sec (but you don't have control over this). Also if you had deployed with a CMS function you would have to send the workflow data through a webhook which has a 300 sends/sec limit so you would be right back where you started"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Louden",
+      "poster_handle": "matt562"
+    },
+    "time_stamp": "2023-04-07 17:07:06",
+    "text": "Thanks for all the good info <@U01QVR44MEY>. I'll keep this in mind for future projects."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-07 17:07:31",
+    "text": "of course"
+  }
+]

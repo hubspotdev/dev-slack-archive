@@ -1,0 +1,341 @@
+[
+  {
+    "poster": {
+      "poster_name": "Max Slabyak",
+      "poster_handle": "max.slabyak"
+    },
+    "time_stamp": "2022-02-08 10:01:48",
+    "text": "hey fam. I think my approach needs a slight tweak and I am sure it's easy and I am just missing a semi-colon or something.\nI want to display a module conditionally, only if it has text. It's a regular rich text module.\n```{% if module.widgets.rightRailRTF %}\n            &lt;div class=\"{{ col_2_size }}\"&gt;\n              {% module \"rightRailRTF\" path=\"/vendor/modules/Rich Text Module\", label=\"Right Rail - Rich Text\" %}\n            &lt;/div&gt;\n{% endif %}```",
+    "reply_count": 8,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-02-08 10:11:21"
+      },
+      {
+        "time_stamp": "2022-02-08 10:13:10"
+      },
+      {
+        "time_stamp": "2022-02-08 10:14:29"
+      },
+      {
+        "time_stamp": "2022-02-08 10:25:33"
+      },
+      {
+        "time_stamp": "2022-02-08 10:27:16"
+      },
+      {
+        "time_stamp": "2022-02-08 10:33:01"
+      },
+      {
+        "time_stamp": "2022-02-08 10:33:20"
+      },
+      {
+        "time_stamp": "2022-02-08 10:33:21"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Max Slabyak",
+      "poster_handle": "max.slabyak"
+    },
+    "time_stamp": "2022-02-08 10:02:15",
+    "text": "only issue with above is it isn't displayed in the Contents section during edit mode",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-02-08 10:24:23"
+      },
+      {
+        "time_stamp": "2022-02-08 10:25:16"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Max Slabyak",
+      "poster_handle": "max.slabyak"
+    },
+    "time_stamp": "2022-02-08 10:02:45",
+    "text": "I want it to be displayed in edit mode on the left for me to add text if I choose, but only displayed on the page if there is anything actually there"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2022-02-08 10:11:21",
+    "text": "Is this in a module.html or a template html file? If it’s a module, it can’t have another nested module within it. If it’s a template, you would want to reference it as `{% if content.widgets.rightRailRTF.body.value %}` or something along those lines. You can find that module declaration in the “Developer Info” view using the sprocket menu while looking at a page preview."
+  },
+  {
+    "poster": {
+      "poster_name": "Max Slabyak",
+      "poster_handle": "max.slabyak"
+    },
+    "time_stamp": "2022-02-08 10:13:10",
+    "text": "this is used in a template"
+  },
+  {
+    "poster": {
+      "poster_name": "Max Slabyak",
+      "poster_handle": "max.slabyak"
+    },
+    "time_stamp": "2022-02-08 10:14:29",
+    "text": "this approach works perfectly in toggling the display on the published page, but that logic also hides it form the list of modules in the edit left pane"
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2022-02-08 10:24:23",
+    "text": "can you not do something like this within the rich text module:\n\n`{% if module.html %}`\n        `_&lt;_div class=\"{{ col_2_size }}\"_&gt;_`\n                `{% rich_text html=\"{{module.html}}\" %}`\n        `_&lt;/_div_&gt;_`\n`{% endif %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Max Slabyak",
+      "poster_handle": "max.slabyak"
+    },
+    "time_stamp": "2022-02-08 10:25:16",
+    "text": "within the module, yes. I was just curious if there was no way to do it from the template level"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2022-02-08 10:25:33",
+    "text": "Ah, now I think I see what you’re trying to do. In this case, I’d do something like this:\n\n```{% module \"rightRailRTF\" path=\"/vendor/modules/Rich Text Module\", label=\"Right Rail - Rich Text\" export_to_template_context=True %}\n{% if widget_data.rightRailRTF.body.value %}\n            &lt;div class=\"{{ col_2_size }}\"&gt;\n              {% module \"rightRailRTF\" path=\"/vendor/modules/Rich Text Module\", label=\"Right Rail - Rich Text\" %}\n            &lt;/div&gt;\n{% endif %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2022-02-08 10:27:16",
+    "text": "I know this looks weird, but essentially you want the module “on the page” regardless of the if statement so that you can use it for logic. Having the second module have the same ID _should_ give you the same value on either, while also keeping it available for in-preview editing. Historically, you would render the value of that module with just `{{ widget_data.rightRailRTF }}` but then be forced to edit it only in the sidebar."
+  },
+  {
+    "poster": {
+      "poster_name": "Max Slabyak",
+      "poster_handle": "max.slabyak"
+    },
+    "time_stamp": "2022-02-08 10:33:01",
+    "text": "that's exactly it! thanks <@U26BLKGE4>. weird yes, but much better than me hacking this approach using html comments"
+  },
+  {
+    "poster": {
+      "poster_name": "Max Slabyak",
+      "poster_handle": "max.slabyak"
+    },
+    "time_stamp": "2022-02-08 10:33:20",
+    "text": "`export_to_template_context` was the missing piece for me"
+  },
+  {
+    "poster": {
+      "poster_name": "Max Slabyak",
+      "poster_handle": "max.slabyak"
+    },
+    "time_stamp": "2022-02-08 10:33:21",
+    "text": "thank you"
+  },
+  {
+    "poster": {
+      "poster_name": "Felix",
+      "poster_handle": "felixmacaspac.freelan"
+    },
+    "time_stamp": "2022-02-08 21:34:22",
+    "edited": {
+      "time_stamp": "2022-02-08 21:34:37"
+    },
+    "text": "testing my luck here haha. did you push through adding a pagination in the /all slug before? <@U3TR96G84> if so what method did u do?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-02-08 21:36:54",
+    "text": "How many posts do you need?"
+  },
+  {
+    "poster": {
+      "poster_name": "Felix",
+      "poster_handle": "felixmacaspac.freelan"
+    },
+    "time_stamp": "2022-02-08 21:37:09",
+    "text": "I was planning to render 10 posts <@U25PYL3Q8>"
+  },
+  {
+    "poster": {
+      "poster_name": "Felix",
+      "poster_handle": "felixmacaspac.freelan"
+    },
+    "time_stamp": "2022-02-08 21:37:18",
+    "text": "on the /all slug."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-02-08 21:37:54",
+    "text": "How many total posts?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-02-08 21:38:11",
+    "text": "Like In the blog. "
+  },
+  {
+    "poster": {
+      "poster_name": "Felix",
+      "poster_handle": "felixmacaspac.freelan"
+    },
+    "time_stamp": "2022-02-08 21:39:16",
+    "text": "currently we only have some dummy posts for the blog/all. but we're planning to render only 10 posts in the \"/all\" slug and use a pagination for it.\n\nI found out that the \"/all\" slug has a maximum of 200 posts."
+  },
+  {
+    "poster": {
+      "poster_name": "Felix",
+      "poster_handle": "felixmacaspac.freelan"
+    },
+    "time_stamp": "2022-02-08 21:40:18",
+    "text": "I was planning to use the `blog_recent_posts` function and paginate it every 10 recent posts, does that make sense?\n\nmy 2nd option will be using the blog CMS api to paginate it."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-02-08 21:40:27",
+    "text": "So a hubl call has a max of 200 posts as well"
+  },
+  {
+    "poster": {
+      "poster_name": "Felix",
+      "poster_handle": "felixmacaspac.freelan"
+    },
+    "time_stamp": "2022-02-08 21:40:36",
+    "text": "yup yup"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-02-08 21:40:36",
+    "text": "Yup"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-02-08 21:41:04",
+    "text": "So are you you looking to bring all the posts in as a js object?"
+  },
+  {
+    "poster": {
+      "poster_name": "Felix",
+      "poster_handle": "felixmacaspac.freelan"
+    },
+    "time_stamp": "2022-02-08 21:41:25",
+    "text": "yeah, but I have no idea how to implement it lol. do you have any code snippets there?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-02-08 21:41:30",
+    "text": "And have no page loads?"
+  },
+  {
+    "poster": {
+      "poster_name": "Felix",
+      "poster_handle": "felixmacaspac.freelan"
+    },
+    "time_stamp": "2022-02-08 21:41:50",
+    "text": "no we're planning to use JS to make the posts load for every pagination"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-02-08 21:42:14",
+    "text": "Ya I can give you some code I have but can you ping me tomorrow morning to remind me?"
+  },
+  {
+    "poster": {
+      "poster_name": "Felix",
+      "poster_handle": "felixmacaspac.freelan"
+    },
+    "time_stamp": "2022-02-08 21:42:30",
+    "text": "sure sure, thanks for the help <@U25PYL3Q8> really appreciate it. :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-02-08 21:42:34",
+    "text": "It's past my bedtime for computer time lol"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-02-08 21:42:48",
+    "text": "I am not sure why I still use my phone. Baby steps I guess "
+  },
+  {
+    "poster": {
+      "poster_name": "Felix",
+      "poster_handle": "felixmacaspac.freelan"
+    },
+    "time_stamp": "2022-02-08 21:43:04",
+    "text": "go to sleep buddy haha. talk to u tomorrow, thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-02-08 21:43:17",
+    "text": "I can talk you through the code so understand it if you need as well"
+  },
+  {
+    "poster": {
+      "poster_name": "Felix",
+      "poster_handle": "felixmacaspac.freelan"
+    },
+    "time_stamp": "2022-02-08 21:47:08",
+    "edited": {
+      "time_stamp": "2022-02-08 21:47:16"
+    },
+    "text": "do you think it would be possible to create a slug something like <https://blog.name.com/all/page/2> :thinking_face: for every pagination"
+  },
+  {
+    "poster": {
+      "poster_name": "Quentin Gerard",
+      "poster_handle": "quentin"
+    },
+    "time_stamp": "2022-02-08 23:33:20",
+    "text": "Hi there, is it possible to pull a certain blog post by pulling its ID to a custom email module?\n```{% set rec_posts = content_by_ids([{{ module.blog_id }}]) %}```\nThis is what I have done, but I am getting an error that it cannot parse `{{ module.blog_id }}` inside that `set` code. Please take note that this field is a text field.",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-02-09 02:30:59"
+      },
+      {
+        "time_stamp": "2022-02-09 04:15:22"
+      }
+    ]
+  }
+]

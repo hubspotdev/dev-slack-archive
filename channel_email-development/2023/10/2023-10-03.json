@@ -1,0 +1,84 @@
+[
+  {
+    "poster": {
+      "poster_name": "Anthony Lamoureux",
+      "poster_handle": "alamoureux"
+    },
+    "time_stamp": "2023-10-03 15:34:24",
+    "text": "Hello! I am looking to better understand what might be going wrong with the module I have created for line-items being inserted into a programmable email.\n\nI have this code that works wonders:\n```{% set line_items = deal['line_items'] %}\n\n&lt;ul&gt;\n  {% for line_item in line_items %}\n    &lt;li&gt;\n      &lt;h4&gt;{{ line_item['name'] }}&lt;/h4&gt;\n      &lt;p&gt;Quantity: {{ line_item['quantity'] }}&lt;/p&gt;\n      &lt;p&gt;Price: {{ line_item['price'] }}&lt;/p&gt;\n    &lt;/li&gt;\n  {% endfor %}\n&lt;/ul&gt;```\nBut when I try to add something that will multiply the quantity by the price in order to get the _total_ it makes the template in-usable. I was using something like this:\n```&lt;p&gt;Total: ${{ line_item['quantity'] * line_item['price'] }}&lt;/p&gt;```\nHowever this seems to be the issue. Any time I try to get the module to do math on the values.",
+    "reply_count": 10,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2023-10-03 16:47:07"
+      },
+      {
+        "time_stamp": "2023-10-03 17:16:35"
+      },
+      {
+        "time_stamp": "2023-10-03 17:38:33"
+      },
+      {
+        "time_stamp": "2023-10-03 17:54:33"
+      },
+      {
+        "time_stamp": "2023-10-03 19:33:09"
+      },
+      {
+        "time_stamp": "2023-10-03 19:33:22"
+      },
+      {
+        "time_stamp": "2023-10-04 07:14:11"
+      },
+      {
+        "time_stamp": "2023-10-04 07:38:09"
+      },
+      {
+        "time_stamp": "2023-10-04 07:39:31"
+      },
+      {
+        "time_stamp": "2023-11-07 14:18:05"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-10-03 16:47:07",
+    "text": "This isn’t an uncommon issue using HubL in emails — sometimes, there isn’t much you can do about it, unfortunately.\n\nIn this case, however, I think you should be able to get away with using <https://developers.HubSpot.com/docs/cms/hubl/filters#render|the >`render`<https://developers.HubSpot.com/docs/cms/hubl/filters#render| filter>, like so:\n``` {{ line_item.quantity|render * line_item.price|render }}```"
+  },
+  {
+    "text": "Well that's a bummer <@U04AQA0QM8E> :sweat_smile: but totally get it.\n\nAppreciate the insight for the render filter. Would it be inserted like the following?\n\nNot a typically coder with HubL so this is a first endeavor for me haha",
+    "time_stamp": "2023-10-03 17:16:35"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-10-03 17:38:33",
+    "text": "That looks about right!"
+  },
+  {
+    "text": "Sad day, still getting my error when sending the email as a test.\n\nIt isn't showing any errors in design manager which is good. Just seems like it may not be possible to get those values multiplied. :upside_down_face:",
+    "time_stamp": "2023-10-03 17:54:33"
+  },
+  {
+    "poster": {
+      "poster_name": "Anthony Lamoureux",
+      "poster_handle": "alamoureux"
+    },
+    "time_stamp": "2023-10-03 19:33:09",
+    "text": "So I think I figured out what the issue is likely. And it's definitely the \"calculation\" piece. I found the `amount` property that exists on the line item level and tried implementing that in the module as well. Even when trying to print that property we run into issues with the template. Turns out that property is the property type of `calculation_equation`. So it really just seems like emails are not happy with math. :laughing:"
+  },
+  {
+    "poster": {
+      "poster_name": "Anthony Lamoureux",
+      "poster_handle": "alamoureux"
+    },
+    "time_stamp": "2023-10-03 19:33:22",
+    "text": "<@U04BWKTAVJ6> FYI"
+  }
+]

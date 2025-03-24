@@ -1,0 +1,102 @@
+[
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2019-06-27 09:04:50",
+    "text": "I've got an interesting problem with HubDB dynamic pages.  We've got a \"Customer Stories\" dynamic page.  The situation is that we would like to hide certain stories from the listing page, but still have them available to share with potential clients.\n\nRight now, I've just added a boolean column to set the items in the listing to `display: none`.  This is working, but the problem is that these \"hidden\" pages are still being indexed by Google.\n\nWondering if there is a way to add meta tags to the head of dynamic pages so I could prevent indexing?",
+    "reply_count": 8,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2019-06-27 09:06:12"
+      },
+      {
+        "time_stamp": "2019-06-27 09:07:36"
+      },
+      {
+        "time_stamp": "2019-06-27 09:07:59"
+      },
+      {
+        "time_stamp": "2019-06-27 09:08:21"
+      },
+      {
+        "time_stamp": "2019-06-27 09:08:47"
+      },
+      {
+        "time_stamp": "2019-06-27 09:10:17"
+      },
+      {
+        "time_stamp": "2019-06-27 09:11:35"
+      },
+      {
+        "time_stamp": "2019-06-27 09:20:44"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-06-27 09:06:12",
+    "text": "Is this a coded template?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2019-06-27 09:07:36",
+    "text": "it is"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe",
+      "poster_handle": "joe"
+    },
+    "time_stamp": "2019-06-27 09:07:59",
+    "text": "if it's a coded template, you could add something like the following to the &lt;head&gt; section:\n```\n{% if dynamic_hubdb_row.boolean == false %}\n&lt;meta name=\"robots\" content=\"noindex, nofollow\"&gt;\n{% endif %}\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2019-06-27 09:08:21",
+    "text": "Brilliant!"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe",
+      "poster_handle": "joe"
+    },
+    "time_stamp": "2019-06-27 09:08:47",
+    "text": "correction `{{ dynamic_page_hubdb_row.boolean }}`  should get the column output you're looking for"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe",
+      "poster_handle": "joe"
+    },
+    "time_stamp": "2019-06-27 09:10:17",
+    "text": "and obvious for `boolean`, using w/e the internal name is for that column.\nBeen working a lot with HubDB stuff lately for a client so i've had similar struggles with those dynamic pages at times lol"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-06-27 09:11:35",
+    "text": "Also `{% if not dynamic_hubdb_row.boolean %}` would be the cleanest :wink:"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2019-06-27 09:20:44",
+    "text": "Thanks so much <@UHB1CSK33> and <@U6GNQ7JBU> Turned out I used a checkbox instead of a boolean, so `{{ if dynamic_hubdb_row.checkbox }}` worked perfectly.\n\nI honestly thought this was going to be a lot more complicated than a simple little HUBL statement.\n\nThis is great"
+  }
+]

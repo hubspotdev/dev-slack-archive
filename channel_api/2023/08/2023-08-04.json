@@ -1,0 +1,56 @@
+[
+  {
+    "poster": {
+      "poster_name": "Ben Ramos",
+      "poster_handle": "ben.ramos"
+    },
+    "time_stamp": "2023-08-04 08:47:19",
+    "text": "Howdy HubSpot dev community!\n\nI have been trying to improve an integration i built and have been getting stuck. I’m attempting to SEARCH the CRM by ownerIds. Ideally i’d love to search for new/updated records for an array of users. Essentially the use case is I don’t need every user’s data, i just need specific users data. Has anyone tried doing the below but with\n\nHubSpot_owner_id // Activity assigned to\n\n        {\n    “propertyName”:“dealstage”,\n     “operator”:“IN”,\n      “values”: [“12345\", “12346”, “12347\"]\n        }\n\nOr is there any other way to pull user specific data for an array of users?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-08-04 09:04:09"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2023-08-04 09:04:09",
+    "text": "I haven’t tried that one specifically, but I don’t see why it wouldn’t work."
+  },
+  {
+    "poster": {
+      "poster_name": "Nícolas Tiago Dias Caruso",
+      "poster_handle": "nicolas.caruso"
+    },
+    "time_stamp": "2023-08-04 12:55:28",
+    "text": ":wave: Olá, equipe!"
+  },
+  {
+    "poster": {
+      "poster_name": "Nícolas Tiago Dias Caruso",
+      "poster_handle": "nicolas.caruso"
+    },
+    "time_stamp": "2023-08-04 13:05:13",
+    "text": "```Good afternoon, can anyone help me with a url to validate if there is a ticket in the 'new' pipeline by sending the customer id of the client <https://api.hubapi.com/crm/v3/associations>```\n",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-08-04 14:25:11"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2023-08-04 14:25:11",
+    "text": "I think you’re going to have to make a POST request  in order to do something like this, which means it’ll be a bit more involved than making a GET with the appropriate URL query parameters.\n\nI’m going to assume the “customer id” is referring to a contact’s record ID. If it’s a custom object, and/or custom property, the process will be a bit more involved. You’d probably want to use the associations API to get all of that record’s associated tickets -&gt; read all of those tickets using the ticket batch read endpoint-&gt; filter/find by stage.\n\nAnd in the event you don’t know how to find the internal name for a deal stage - the easiest way to find it will be by going to settings -&gt; data managements -&gt; objects -&gt; tickets -&gt; pipelines -&gt; choose  the appropriate pipeline in the dropdown -&gt; click on the little `&lt;/&gt;` next to the “new” stage to get the internal name, and then use that as the value in your search request. If it’s just the default support pipeline, and just the default “new” status, the internal id is likely “1\".\n\n\nExample request might look like the following:\n\n```\tlet searchOptions = {\n\t\tmethod: \"POST\",\n\t\turl: `<https://api.hubapi.com/crm/v3/objects/ticket/search>`,\n\t\theaders: {\n\t\t\taccept: \"application/json\",\n\t\t\t\"content-type\": \"application/json\",\n\t\t\tAuthorization: `Bearer ${accessToken}`\n\t\t},\n\t\tdata: {\n\t\t\tfilterGroups: [\n\t\t\t\t{\n\t\t\t\t\tfilters: [\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\tvalue: `${contactId}`,\n\t\t\t\t\t\t\tpropertyName: \"associations.contact\",\n\t\t\t\t\t\t\toperator: \"EQ\"\n\t\t\t\t\t\t},\n                        {\n                            value: `${internalValueForTheStage}`,\n                            propertyName: \"hs_pipeline_stage\",\n                            operator: \"EQ\"\n                        }\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t],\n\t\t\tassociations: [\"contact\"],\n\t\t\tlimit: 100,\n\t\t\tsorts: [\n\t\t\t\t{\n\t\t\t\t\tpropertyName: \"lastmodifieddate\",\n\t\t\t\t\tdirection: \"DESCENDING\"\n\t\t\t\t}\n\t\t\t]\n\t\t}\n\t};\n\ttry {\n\t\tlet res = await axios(searchOptions);\n\t\tconsole.log(\"Tickets\", res.data.results);\n\t\tlet tickets= res.data.results;\n\t} catch (err) {\n\t\tthrow err;\n\t}```"
+  }
+]

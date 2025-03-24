@@ -1,0 +1,85 @@
+[
+  {
+    "text": "hello , the code is now functional after the modifications made, now with a view to optimization by reducing the number of network calls and improve the overall performance of the operation, I opted for a Dosearch instead of get ById and here is the updated code,                                                                                                                                                                                                                                                                                                                                                         `const HubSpot = require('@HubSpot/api-client');`\n\n`function chunkArray(array, size) {`\n  `const chunks = [];`\n  `for (let i = 0; i &lt; array.length; i += size) {`\n    `chunks.push(array.slice(i, i + size));`\n  `}`\n  `return chunks;`\n`}`\n\n`exports.main = async (event, callback) =&gt; {`\n  `try {`\n    `// Initialisation du client HubSpot`\n    `const HubSpotClient = new HubSpot.Client({ accessToken: _______});`\n\n    `// Récupération des valeurs des champs d'entrée`\n    `const dealId = event.inputFields['dealId'];`\n    `const dateDebut = new Date(event.inputFields['dateDebut'] * 1);`\n    `const dateFin = new Date(event.inputFields['dateFin'] * 1);`\n\n    `// Vérification si dealId est défini`\n    `if (!dealId) {`\n      `console.error(\"dealId is not defined\");`\n      `return;`\n    `}`\n\n    `const toDeal = \"DEAL\";`\n    `const toLogement = \"2-112304201\";`\n\n    `console.log('dealId:', dealId);`\n\n    `// Récupération de l'association entre le deal et le logement`\n    `const apiCustomResponse = await HubSpotClient.crm.objects.associationsApi.getAll(toDeal, dealId, [toLogement]);`\n\n    `const logementId = apiCustomResponse.results[0].id;`\n    `console.log(\"logementId: \" + logementId);`\n\n    `// Récupération des transactions associées au logement`\n    `const dealsApiResponse = await HubSpotClient.crm.objects.associationsApi.getAll(toLogement, logementId, [\"DEAL\"]);`\n    `const deals = dealsApiResponse.results;`\n    `console.log(deals.length);`\n\n    `// Utilisation d'un ensemble pour stocker les ID de deals uniques`\n    `const uniqueDealIds = new Set();`\n    `deals.forEach(association =&gt; {`\n      `uniqueDealIds.add(association.id);`\n    `});`\n\n    `// Affichage du nombre de deals distincts`\n    `console.log(\"Nombre de deals distincts associés au logement :\", uniqueDealIds.size);`\n\n    `const uniqueDealIdsArray = Array.from(uniqueDealIds);`\n    `const dealsWithMatchingDates = [];`\n\n    `// Découper la liste des ID de deals en sous-listes de 100 pour contourner la limite`\n    `const dealIdChunks = chunkArray(uniqueDealIdsArray, 100);`\n\n    `for (const chunk of dealIdChunks) {`\n      `const PublicObjectSearchRequest = {`\n        `filterGroups: [`\n          `{`\n            `filters: [`\n              `{`\n                `values: chunk,`\n                `propertyName: \"id\",`\n                `operator: \"IN\"`\n              `},`\n              `{`\n                `value: \"196998086\",`\n                `propertyName: \"dealstage\",`\n                `operator: \"EQ\"`\n              `},`\n              `{`\n                `value: \"closedwon\",`\n                `propertyName: \"dealstage\",`\n                `operator: \"EQ\"`\n              `}`\n            `]`\n          `}`\n        `],`\n        `properties: [\"ph_date_debut\", \"dealstage\"],`\n        `limit: 0,`\n        `after: 0`\n      `};`\n\n      `const searchResponse = await HubSpotClient.crm.deals.searchApi.doSearch(PublicObjectSearchRequest);`\n      `const results = searchResponse.body.results;`\n\n      `for (const result of results) {`\n        `const currentDeal = result.properties;`\n\n        `const currentTransactionStartDate = new Date(<http://currentDeal.ph|currentDeal.ph>_date_debut);`\n\n        `if (`\n          `dateFin.getFullYear() === currentTransactionStartDate.getFullYear() &amp;&amp;`\n          `dateFin.getMonth() === currentTransactionStartDate.getMonth() &amp;&amp;`\n          `dateFin.getDate() === currentTransactionStartDate.getDate()`\n        `) {`\n          `dealsWithMatchingDates.push(currentDeal);`\n        `}`\n      `}`\n    `}`\n\n    `console.log(\"dealsWithMatchingDates :\", dealsWithMatchingDates);`\n\n    `// Appel du callback avec les champs de sortie`\n    `callback({`\n      `outputFields: {`\n        `dealId: dealId,`\n      `}`\n    `});`\n  `} catch (e) {`\n    `if (e.code === 400 &amp;&amp; e.body &amp;&amp; e.body.message) {`\n      `console.error(\"API Error:\", e.body.message);`\n    `} else {`\n      `console.error(e);`\n    `}`\n  `}}`\n\n\nthe console returns this message:",
+    "time_stamp": "2023-07-07 05:06:12"
+  },
+  {
+    "poster": {
+      "poster_name": "Troy D",
+      "poster_handle": "troy370"
+    },
+    "time_stamp": "2023-07-07 07:40:17",
+    "text": "I figured out the issue. I needed to select re-enrollment allowed."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-07 07:43:58",
+    "text": "```HubSpotClient.crm.objects.associationsApi.getAll('deals', DealID, toObjectType).then(apiResponse =&gt; {\n    let ContactID1; \n\n    apiResponse.results.forEach(result =&gt; {\n        result.associationTypes.forEach(type =&gt; {\n            if (type.label === 'agent') {\n                ContactID1 = result.toObjectId;\n            }\n        });\n    });\n\n    console.log(\"Agent ContactID: \" + ContactID1);\n    callback({outputFields: {ContactID1}});\n})```\nSo HubSpot used to have an endpoint for getting associations by a label but I can't find it now (I search for it for a little bit). So I just built out a simple for loop to do the search for you, let me know if that works"
+  },
+  {
+    "poster": {
+      "poster_name": "Hollyce Brammer",
+      "poster_handle": "hollyce"
+    },
+    "time_stamp": "2023-07-07 12:03:31",
+    "text": "<@U01QVR44MEY> Hm, not quite. I got this error:\n\n```2023-07-07T18:02:33.611Z\tINFO\tDeal ID is 13164709930\n2023-07-07T18:02:35.043Z\tERROR\tTypeError: Cannot read properties of undefined (reading 'forEach')\n    at /var/task/file.js:32:33\n    at Array.forEach (&lt;anonymous&gt;)\n    at /var/task/file.js:31:25\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n\nMemory: 74/128 MB\nRuntime: 1472.45 ms```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-07 12:09:32",
+    "edited": {
+      "time_stamp": "2023-07-07 12:09:36"
+    },
+    "text": "aw sorry forgot that the default contacts won't have an associationType. Use this code instead.\n```HubSpotClient.crm.objects.associationsApi.getAll('deals', DealID, toObjectType).then(apiResponse =&gt; {\n  // Get data from the results and store in variables\n  console.log(\"# of RESULTS: \" + apiResponse.results.length); // - FOR DEBUG\n\n  console.log(\"RESULTS \" + JSON.stringify(apiResponse.results));\n\n  let ContactID1;\n\n  apiResponse.results.forEach(result =&gt; {\n      if(result.associationTypes) {\n        result.associationTypes.forEach((associationType) =&gt; {\n          if(associationType.label === 'agent') {\n            ContactID1= result.id;\n          }\n        });\n    }\n  });\n  \n  if(ContactID1) {\n    console.log('Agent Contact ID1: ', ContactID1);\n    callback({outputFields: {ContactID1}});\n  } else {\n    console.log('Agent Contact ID1 not found');\n  }\n}).catch(error =&gt; {\n  console.log('Error: ', error);\n});```"
+  },
+  {
+    "text": "<@U01QVR44MEY> Okay, no error this time, but it did not find an agent label even though there definitely is one.\n```2023-07-07T18:58:57.487Z\tINFO\tDeal ID is 13164788746\n2023-07-07T18:58:58.830Z\tINFO\t# of RESULTS: 2\n2023-07-07T18:58:58.830Z\tINFO\tRESULTS [{\"id\":\"444856\",\"type\":\"deal_to_contact\"},{\"id\":\"26540329\",\"type\":\"deal_to_contact\"}]\n2023-07-07T18:58:58.830Z\tINFO\tAgent Contact ID1 not found\n\nMemory: 74/128 MB\nRuntime: 1407.30 ms```",
+    "time_stamp": "2023-07-07 13:00:48"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-07 13:16:03",
+    "text": "lol, you want to know what's happening. The HubSpot SDK is using the old associations API not the V4 endpoint (which returns the labels). This is why I hate the SDK. It's terrible"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-07 13:16:14",
+    "text": "Let me update the code for you to use the endpoints"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-07 13:18:09",
+    "text": "```axios.get(`<https://api.hubapi.com/crm/v4/objects/deal/${DealID}/associations/contacts>`, {\n  headers: { \n    'Authorization': `Bearer ${HubSpot_TOKEN}`\n  }\n}).then(response =&gt; {\n  // Get data from the results and store in variables\n  console.log(\"# of RESULTS: \" + response.data.results.length); \n\n  console.log(\"RESULTS \" + JSON.stringify(response.data.results));\n\n  let ContactID1;\n\n  response.data.results.forEach(result =&gt; {\n    if(result.associationTypes) {\n      result.associationTypes.forEach((associationType) =&gt; {\n        if(associationType.label === 'agent') {\n          ContactID1= result.id;\n        }\n      });\n    }\n  });\n  \n  if(ContactID1) {\n    console.log('Agent Contact ID1: ', ContactID1);\n    callback({outputFields: {ContactID1}});\n  } else {\n    console.log('Agent Contact ID1 not found');\n  }\n}).catch(error =&gt; {\n  console.log('Error: ', error);\n});```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-07 13:18:29",
+    "text": "replace ${HubSpot_TOKEN}` with your private app token"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-07 13:18:56",
+    "text": "and make sure to have axios imported outside the main loop:\n\n```const axios = require('axios');```"
+  }
+]

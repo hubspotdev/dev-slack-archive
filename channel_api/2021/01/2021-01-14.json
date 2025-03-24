@@ -1,0 +1,113 @@
+[
+  {
+    "poster": {
+      "poster_name": "Christian Lackas",
+      "poster_handle": "lackas"
+    },
+    "time_stamp": "2021-01-14 02:57:21",
+    "text": "Hi Gal, I haven't done it myself (for HS), however, you typically have to use the url and the raw request body exactly as they came in (so don't parse the url/body to get your parameters and try to build the request again yourself, potentially in a different order).\nOnly after you validated the request (`Client secret` + `http method` + `URI` + `request body`) you can parse the parameters and continue. <@U01FS7JA06R>\n\nOr said differently, the expected order is the order they came in.",
+    "reply_count": 7,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2021-01-14 03:25:17"
+      },
+      {
+        "time_stamp": "2021-01-14 03:43:06"
+      },
+      {
+        "time_stamp": "2021-01-14 08:27:43"
+      },
+      {
+        "time_stamp": "2021-01-15 08:29:37"
+      },
+      {
+        "time_stamp": "2021-01-15 08:33:41"
+      },
+      {
+        "time_stamp": "2021-01-15 08:34:40"
+      },
+      {
+        "time_stamp": "2021-01-17 00:03:34"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "framelah",
+      "poster_handle": "frans.meang99"
+    },
+    "time_stamp": "2021-01-14 03:01:28",
+    "text": "Hi guys,\nI'm trying to export email event using this api <https://legacydocs.HubSpot.com/docs/methods/email/get_events>\nI need to export CTA id also that placed CTA button on the email, but I didn't found CTA in the response\nCan you please help me where I can find mapping between email and CTA?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2021-01-14 15:52:56"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Gal Briner",
+      "poster_handle": "gal.briner"
+    },
+    "time_stamp": "2021-01-14 03:25:17",
+    "text": "Thanks <@U01KDTU5U2U>\nI did exactly that and failed to get the same signature, so I was trying guessing, and that how I found out that with different order it does work.\nI checked and it doesn't looks that my framework rearrange the order of the query string, so I assume HubSpot does."
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Lackas",
+      "poster_handle": "lackas"
+    },
+    "time_stamp": "2021-01-14 03:43:06",
+    "edited": {
+      "time_stamp": "2021-01-14 03:44:10"
+    },
+    "text": "I would say, show your code, then. In particular would be interested to see the *raw* `request body` and what order did work for you.\nIn my experience in such situations (curse you AWS v4 signatures! :slightly_smiling_face: ), it is possible, however, very unlikely that they are wrong and far more likely that I did do something to screw the signature up."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthieu Veillon",
+      "poster_handle": "matthieu.veillon"
+    },
+    "time_stamp": "2021-01-14 04:18:15",
+    "text": "thanks Neal - works perfectly !"
+  },
+  {
+    "poster": {
+      "poster_name": "Neal Stansby",
+      "poster_handle": "neal"
+    },
+    "time_stamp": "2021-01-14 07:08:05",
+    "text": "Awesome.  I was thinking about this a bit more... I used the `CONTAINS_TOKEN` operator because I assumed it's potentially a comma-separated list of additional emails.  But that means you should probably test each match more carefully though; if I was searching for `<mailto:neal@example.com|neal@example.com>` and the list contained `<mailto:happy-neal@example.com|happy-neal@example.com>`, the API would consider that a match.  So you should probably break down the response and check that it's an exact match in your code."
+  },
+  {
+    "poster": {
+      "poster_name": "Lance Erickson",
+      "poster_handle": "lance.erickson"
+    },
+    "time_stamp": "2021-01-14 08:27:43",
+    "text": "I had this problem working with data fetch for CRM Cards behind AWS API Gateway, which doesn't expose raw request URL for some insane reason. It worked for me to hit something like <https://requestinspector.com/> which let me get the raw string without standing up a server (or something like ngrok). I found that the param order was consistent between requests and just manually rebuild the request as suggested by Christian. It has stayed consistent so far.\nThere is also an issue if any param values contain emails; they must be %-encoded while other portions do not appear to be... I don't quite get it."
+  },
+  {
+    "poster": {
+      "poster_name": "Nakul Kadaba",
+      "poster_handle": "nkadaba"
+    },
+    "time_stamp": "2021-01-14 11:10:17",
+    "text": "Hi team — any thoughts to this question? I would imagine this would involve H-APIs but wanted to get a gut check as to those endpoints."
+  },
+  {
+    "poster": {
+      "poster_name": "Amy Parker",
+      "poster_handle": "amyparker2401"
+    },
+    "time_stamp": "2021-01-14 15:52:56",
+    "text": "xapp-1-A01FG6GDG5N-1639225770852-e626f00de43df6f3b163d0b1323d701ad1cf81d253e40d765e6a1865dec50fe5xapp-1-A01FG6GDG5N-1639225770852-e626f00de43df6f3b163d0b1323d701ad1cf81d253e40d765e6a1865dec50fe5"
+  },
+  {
+    "text": "Hello everyone - I’m working on a workflow and was wondering if it’s possible to customize the outputted text on the object instance associated with the workflow (see image for reference).\n\nWhat I read on the Events and Timeline APIs doesn’t seem to provide support for events that would be triggered by workflows nor have I seen anything regarding these Activity cards.",
+    "time_stamp": "2021-01-14 19:44:04"
+  }
+]

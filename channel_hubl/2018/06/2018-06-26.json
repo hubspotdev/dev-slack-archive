@@ -1,0 +1,291 @@
+[
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-06-26 08:13:26",
+    "text": "Can anyone direct how to shove output from a loop into an array and use the `|unique` filter?"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-06-26 08:21:15",
+    "text": "im basically using a loop output the assigned \"category\" column value of a row, but I am looking to only output unique values, like a `select distinct category from hubdb_table`"
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "eileenk",
+      "poster_handle": "eileenk"
+    },
+    "time_stamp": "2018-06-26 10:43:57",
+    "text": "Hey all, I have a quick question b/c I think I’m missing something super obvious. \n\nI’m trying to replicate this page as an HTML template to create it on HubSpot COS: <http://leaderstat.com/careerportal/#/jobs>\n\nThe client sent me all of the style and script files, which I added to their file manager and updated my HTML code to reflect the new URLs.\n\nDropping my code below."
+  },
+  {
+    "text": "<@U24PLTUJD> uploaded a file: <https://HubSpotdev.slack.com/files/U24PLTUJD/FBE5A19A8/-.html|Untitled>",
+    "time_stamp": "2018-06-26 10:44:22"
+  },
+  {
+    "poster": {
+      "poster_name": "eileenk",
+      "poster_handle": "eileenk"
+    },
+    "time_stamp": "2018-06-26 10:44:38",
+    "text": "When I publish the page is blank. Completely blank. Any ideas?"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-06-26 11:03:37",
+    "text": "It doesnt look like there is any content in the actual `&lt;body&gt;` area. Is this loaded via JS?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2018-06-26 11:43:23"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-06-26 11:05:16",
+    "text": "if your looking to replicate that page, your best option is to use HubDB with the dynamic page setting enabled. you can then have these list out like you see on the page and if you need the filtering, you can do that through parameter adding and filtering on the table"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2018-06-26 11:17:17",
+    "edited": {
+      "time_stamp": "2018-06-26 11:17:33"
+    },
+    "text": "taking a look at the example page it looks like it is using Angular and loading in that content dynamically after an initial pageload, similar to a React app. Looks like vendor is a webpacked bundle of the Angular library and a few plugins, then the app file is the custom script handling the api and the routing.\n\nFor simplicity's sake, if you're going after simply replicating the layout of the page, you're probably better off copying the html from the inspector, after the window was finished loading, rather than the code produced by 'View Source'\n\nThat being said, I am not aware of any restriction that would prevent Angular from running on the HSCMS, so theoretically as long as the JS is exactly the same there shouldn't be anything preventing it from functioning as usual... When you say the page loads blank, are you getting any JS errors in the debug console?\n\nLet me know if that any of that doesn't make sense, I'm not sure I did the best job explaining it.",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2018-06-26 11:44:49"
+      },
+      {
+        "time_stamp": "2018-06-26 12:17:13"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "eileenk",
+      "poster_handle": "eileenk"
+    },
+    "time_stamp": "2018-06-26 11:43:23",
+    "text": "Yes, I believe so. The intention of the page is to automatically pull in job posting from a third party source which gets updated 2-3 times a day by multiple parties, so I’m thinking that a HubDB table wouldn’t be ideal."
+  },
+  {
+    "poster": {
+      "poster_name": "eileenk",
+      "poster_handle": "eileenk"
+    },
+    "time_stamp": "2018-06-26 11:44:49",
+    "text": "I’m not getting any errors, it just seems like the script isn’t correctly loading the content onto the page. \n\nI’ll try pulling the HTML from the inspector and se if that yields a different result. Thanks!"
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2018-06-26 12:17:13",
+    "edited": {
+      "time_stamp": "2018-06-26 12:17:39"
+    },
+    "text": "alright, I think I found the problem. had to pretty print the minified app script, but the Angular app is bringing in modules (Angular, not HubSpot) from local files declared within that script, for example: \n\nn = function s() {\n        \"ngInject\";\n        a(this, s);\n        var e = {\n            restrict: \"E\",\n            templateUrl: \"app/main/main.html\",\n            scope: !1,\n            controller: i,\n            controllerAs: \"main\",\n            bindToController: !0,\n            replace: !0\n        };\n        return e\n    };\n\nThat 'app/main/main.html' file isn't going to be found in the root of the HubSpot hosted version. However, I'm not personally familiar enough with Angular to know whether or not you would be able to replace that url value with a non-local file."
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-06-26 12:21:12",
+    "text": "We've used angular with HS befor. The main issue we ran into is with Angular, they use `{{var}}` syntax as well so we needed to use angular sanitize if i recall"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-06-26 12:31:24",
+    "edited": {
+      "time_stamp": "2018-06-26 12:31:34"
+    },
+    "text": "i lied, it wasn't through sanitize (had to ask the guy who helped with it). You can do it through this:\n```\nangular.module('myApp', []).config(function($interpolateProvider){\n    \n        // for HubSpot tokens\n        $interpolateProvider.startSymbol('{[');\n        $interpolateProvider.endSymbol(']}');\n});\n\n```",
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2018-06-26 12:34:17"
+      },
+      {
+        "time_stamp": "2018-06-26 12:35:50"
+      },
+      {
+        "time_stamp": "2018-06-26 12:41:07"
+      },
+      {
+        "time_stamp": "2018-06-26 12:43:00"
+      },
+      {
+        "time_stamp": "2018-06-26 12:43:24"
+      },
+      {
+        "time_stamp": "2020-10-09 13:13:50"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-06-26 12:32:34",
+    "text": "basically means that instead of using the normal `{{variable}}` for Angular code you can use `{[variable]}` which then it wont conflict with HS's vars that use `{{ hsVar }}`"
+  },
+  {
+    "poster": {
+      "poster_name": "eileenk",
+      "poster_handle": "eileenk"
+    },
+    "time_stamp": "2018-06-26 12:34:17",
+    "text": "Gotcha. And (excuse my ignorance) where do I need to add that code?"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-06-26 12:35:50",
+    "text": "No worries, that's the part where I am unsure of as I am not deep into Angular, i just remember having those same issues with Angular conflicting on HS's platform due to the same syntax uses"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-06-26 12:41:07",
+    "edited": {
+      "time_stamp": "2018-06-26 12:42:17"
+    },
+    "text": "you can try placing it here in the area from the image i sent you"
+  },
+  {
+    "poster": {
+      "poster_name": "eileenk",
+      "poster_handle": "eileenk"
+    },
+    "time_stamp": "2018-06-26 12:43:00",
+    "text": "Gotcha. Okay, I’ll mess with it a bit. Thanks for all the help!"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-06-26 12:43:24",
+    "text": "anytime :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Seth Randall",
+      "poster_handle": "sethrwcs"
+    },
+    "time_stamp": "2018-06-26 13:28:58",
+    "text": "How can i change a variable? I have a variable set to false then inside an if statement I want to change that. Do i just do {% set var = x %} or does that make a new variable inside the if statement?",
+    "reply_count": 8,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2018-06-26 13:29:35"
+      },
+      {
+        "time_stamp": "2018-06-26 13:31:00"
+      },
+      {
+        "time_stamp": "2018-06-26 13:32:22"
+      },
+      {
+        "time_stamp": "2018-06-26 13:38:11"
+      },
+      {
+        "time_stamp": "2018-06-26 13:38:21"
+      },
+      {
+        "time_stamp": "2018-06-26 13:42:00"
+      },
+      {
+        "time_stamp": "2018-06-26 13:54:44"
+      },
+      {
+        "time_stamp": "2018-06-27 11:52:31"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-06-26 13:29:35",
+    "text": "That should work, however you cannot do this within a `for` loop"
+  },
+  {
+    "poster": {
+      "poster_name": "Seth Randall",
+      "poster_handle": "sethrwcs"
+    },
+    "time_stamp": "2018-06-26 13:31:00",
+    "text": "ok so,"
+  },
+  {
+    "poster": {
+      "poster_name": "Seth Randall",
+      "poster_handle": "sethrwcs"
+    },
+    "time_stamp": "2018-06-26 13:32:22",
+    "text": "{% set var = x %}\n{% for loop %}\n{% if statement %}\n{% set var = y %}\n{% endif %}\n{% endfor %}\nThis would not work?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-06-26 13:38:11",
+    "text": "Yep"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-06-26 13:38:21",
+    "text": "Current limitation with jinjava"
+  },
+  {
+    "poster": {
+      "poster_name": "Seth Randall",
+      "poster_handle": "sethrwcs"
+    },
+    "time_stamp": "2018-06-26 13:42:00",
+    "text": "How could something like this be done? Is it just not possible to do anything like this? Alternatives?"
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2018-06-26 13:54:44",
+    "text": "Are you able to explain the use case and what your trying to accomplish as a whole? We might be able to help figure a way to make it happen."
+  },
+  null,
+  null,
+  null
+]

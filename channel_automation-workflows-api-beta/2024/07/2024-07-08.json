@@ -1,0 +1,141 @@
+[
+  {
+    "poster": {
+      "poster_name": "Paul Schwarz",
+      "poster_handle": "pschwarz"
+    },
+    "time_stamp": "2024-07-08 08:53:24",
+    "text": "Thanks for the ping on this. It looks like the drop-down for `type` is showing the wrong values, they should be `CONTACT_FLOW` or `PLATFORM_FLOW` — instead it looks like the doc’s site is confused on showing the `flowType` values there — which are different. Pinging <@UPGCST015>, can you route this issue to the right place?"
+  },
+  {
+    "poster": {
+      "poster_name": "Paul Schwarz",
+      "poster_handle": "pschwarz"
+    },
+    "time_stamp": "2024-07-08 08:55:52",
+    "text": "Hi <@U03REFNRMB3> — re-enrollment isn’t fully implemented yet. We can show the re-enrollment filters for already-existing flows, but we haven’t yet implemented the ability to set re-enrollment criteria from this new API. Sorry for the confusion here!\n\nYour JSON looks right, though. When this gets implemented your request should work."
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2024-07-08 09:24:01",
+    "text": "well dang! We migrated all our workflow calls from v3 to v4….time to revert.\n\n`goalFilterBranch` also doesn’t work. Is that just like `re-enrollment` ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kyle Knapp",
+      "poster_handle": "kyle.knapp"
+    },
+    "time_stamp": "2024-07-08 09:26:40",
+    "text": "Following up here, we now have real world customer data and are seeing similar failures without clear error messages.\n\nFrom within our dev portal for app `285871`, filtering API Calls since 2024-07-03 for endpoint `/automation/v4/flows` with method = `POST` and responses of `4xx` and `5xx` - the responses are either:\n\n`HTTP 400: Invalid request to flow creation`\nExample correlation ids:\n```c89ecd98-91ac-4b43-b9c3-10a133e1eb95\n484d737e-bbb9-4e97-bc36-f3723bf534fb\ned863463-32f1-4f12-8315-48c357a7a0a7```\nOr `HTTP 500: internal error`\nExample correlation ids:\n```2836a62a-685a-41a0-98c8-2ec3aad04548\n3fb51b11-76c8-4a3d-9ad1-389292ed02b9\nc2f4000e-16f2-40e3-a427-17eb4c5c9f06```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Minsu Jung",
+      "poster_handle": "mjung"
+    },
+    "time_stamp": "2024-07-08 09:27:13",
+    "text": "Hi Kyle, I'll take a look into this today!"
+  },
+  {
+    "poster": {
+      "poster_name": "Paul Schwarz",
+      "poster_handle": "pschwarz"
+    },
+    "time_stamp": "2024-07-08 09:38:57",
+    "text": "Oof, sorry about that.\n\nGoals should work, though. Can you send me an example portalId/flowId of a flow where the goal list should’ve been set but wasn’t?"
+  },
+  {
+    "poster": {
+      "poster_name": "Minsu Jung",
+      "poster_handle": "mjung"
+    },
+    "time_stamp": "2024-07-08 12:44:18",
+    "text": "For your 500 errors, I believe most of them are due to a bug on our end creating contact-based `Go to workflow:` actions - we will push a fix for this soon!"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2024-07-08 12:44:53",
+    "text": "Sorry <@U060JS28BNJ>, just sent these do you via DM."
+  },
+  {
+    "poster": {
+      "poster_name": "Minsu Jung",
+      "poster_handle": "mjung"
+    },
+    "time_stamp": "2024-07-08 12:51:23",
+    "text": "For your `ed863463-32f1-4f12-8315-48c357a7a0a7` 400 error, it looks like one of your list object types is a `DEAL` object, while the flow object type is `CONTACT`\nFor your `484d737e-bbb9-4e97-bc36-f3723bf534fb` 400 error, it looks like listId `186` is missing"
+  },
+  {
+    "poster": {
+      "poster_name": "Minsu Jung",
+      "poster_handle": "mjung"
+    },
+    "time_stamp": "2024-07-08 12:51:59",
+    "text": "Apologies for the sparse error messaging, reworking our validation error messages is on our to-do before the general release!"
+  },
+  {
+    "poster": {
+      "poster_name": "Paul Schwarz",
+      "poster_handle": "pschwarz"
+    },
+    "time_stamp": "2024-07-08 13:38:36",
+    "text": "Thanks for this info, I was able to recreate. You’re right, there’s something wrong with `goalFilterBranch` — it’s complicated. It works in that it does effectively set the goal for the flow — so flow enrollment/unenrollment will still work. But it doesn’t set the goal filter in a way that will show up in the HubSpot UI, and it can get clobbered when the flow is then updated via the UI.\n\nWe’ll work on this, resolve this be simplifying how goals works across both the product and the new API, so this will take a little while to fix as it’s not just a fix to the new API."
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2024-07-08 14:14:22",
+    "text": "yeah, all our flows that we generate are updated in the UI from our clients."
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2024-07-08 14:14:37",
+    "text": "For now, I’ll revert to v3."
+  },
+  {
+    "poster": {
+      "poster_name": "Paul Schwarz",
+      "poster_handle": "pschwarz"
+    },
+    "time_stamp": "2024-07-08 14:54:47",
+    "text": "Got it, sorry about this. From this thread I take it you need both goal lists and re-enrollment to work before upgrading to v4, right? Or is it primarily one of them?"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2024-07-08 15:47:10",
+    "edited": {
+      "time_stamp": "2024-07-08 15:49:43"
+    },
+    "text": "Yea, goal and re-enrollment because if we have to tell our 400+ clients to then remember…if you edit the workflow…you have to reedit these things…\n\nHubSpot wouldn’t be viewed as bad…our platform would be the blame. Because we would be the one telling them that."
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2024-07-08 15:55:15",
+    "text": "BUT now I remember why… workflows v3 do not support List ILS IDs!!! :face_palm:"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2024-07-08 15:57:38",
+    "text": "It also seems that v3 docs have been removed"
+  }
+]

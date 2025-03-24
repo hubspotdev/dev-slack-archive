@@ -1,0 +1,37 @@
+[
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2022-07-14 06:44:48",
+    "text": "<@UQWGKUEN7> hey came across this. you have a way to get the image width and height with this? I've been trying to figure it out, no luck so far"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-07-14 07:09:26",
+    "text": "I can play around with it a bit today!"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-07-14 12:21:46",
+    "edited": {
+      "time_stamp": "2022-07-14 12:22:45"
+    },
+    "text": "<@UATE4ATHP> So it doesnt look like I can get the height attribute to come through in the actual image tag at all. But If you want to grab the width attribute set in the editor you can add a width key to the `img_obj`  variable.\n\n```        {% set image_obj = {\n           src:\"\",\n           alt:\"\",\n           width: \"\"\n        }%}```\nAnd then change this:\n\n```        {% for item in image_temp %}\n           {% if item is string_containing \"src\" %}\n              {# append src to final image_obj.src #}\n              {% do image_obj.update({src: item|replace('src=','')|replace('\"','')})%}\n           {% endif %}\n        {% endfor %}```\nTo\n\n```{% for item in image_temp %}\n           {% if item is string_containing \"src\" %}\n              {# append src to final image_obj.src #}\n              {% do image_obj.update({src: item|replace('src=','')|replace('\"','')})%}\n           {% endif %}\n           {% do image_obj.update({\"width\": item|replace('width=','')|replace('\"','')}) if item is string_containing \"width=\" %}\n        {% endfor %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2022-07-14 13:57:51",
+    "text": "<@UQWGKUEN7> What the heck. HS doesn't add height to images in RTEs? Lame\n\nThansk!"
+  }
+]

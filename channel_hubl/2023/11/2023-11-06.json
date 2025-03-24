@@ -1,0 +1,80 @@
+[
+  {
+    "poster": {
+      "poster_name": "Dirk van der Giesen",
+      "poster_handle": "dvandergiesen"
+    },
+    "time_stamp": "2023-11-06 06:32:01",
+    "edited": {
+      "time_stamp": "2023-11-06 06:50:18"
+    },
+    "text": "Hi all, i have this code\n```{% set objects = crm_objects(\"artikelen\", \"limit=3&classificatie_niveau_1=Hoefijzers\", \"collectie\") %}\n<h3>Total: {{objects.total}}<h3>\n{% for object in objects.results %}\n\t<p>Object: {{ object }}<br />Collection : {{ object.collectie }}</p>\n{% endfor %}```\nWhich gives me the following result:\n\nTotal: 1577\nObject: {collectie=Triumph collectie, classificatie_niveau_1=Hoefijzers, id=9846002072}\nCollection : Triumph collectie\nObject: {collectie=Classic collectie, classificatie_niveau_1=Hoefijzers, id=9846002073}\nCollection : Classic collectie\nObject: {collectie=Triumph collectie, classificatie_niveau_1=Hoefijzers, id=9846002076}\nCollection : Triumph collectie\n\nI only want the result to hold unique values for the Collection and not as you see now have twice Triumph collection.\nI don't understand how and where to use unique as a piped filter or distinct in the query to achieve this.\nActually i want to filter on the collection property value of the returned objects",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-11-06 09:36:53"
+      },
+      {
+        "time_stamp": "2023-11-06 09:38:31"
+      },
+      {
+        "time_stamp": "2023-11-07 08:03:45"
+      },
+      {
+        "time_stamp": "2023-11-07 08:56:48"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2023-11-06 09:36:53",
+    "text": "Should be able to just chain the unique filter call on your existing one, like so:\n```{% set objects = crm_objects(\"artikelen\", \"limit=3&amp;classificatie_niveau_1=Hoefijzers\", \"collectie\")|unique(collectie) %}\n&lt;h3&gt;Total: {{objects.total}}&lt;h3&gt;\n{% for object in objects.results %}\n\t&lt;p&gt;Object: {{ object }}&lt;br /&gt;Collection : {{ object.collectie }}&lt;/p&gt;\n{% endfor %}```\nIf that doesn’t work for whatever reason, try wrapping the collectie argument in the unique call in quotes."
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2023-11-06 09:38:31",
+    "text": "or `{% set objects = objects|unique(collectie)`  on the line below your existing query."
+  },
+  {
+    "poster": {
+      "poster_name": "SJ Morris (she/her)",
+      "poster_handle": "sjmorris"
+    },
+    "time_stamp": "2023-11-06 10:06:58",
+    "edited": {
+      "time_stamp": "2023-11-06 10:07:31"
+    },
+    "text": "Hey <@U062FEZB9B9> please, don't post the same question in multiple channels at once... try one and see how it goes before trying another. Thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Taylor O'Reilly",
+      "poster_handle": "taylor699"
+    },
+    "time_stamp": "2023-11-06 10:44:34",
+    "text": "Hey everyone, Im having an issue with a template where my entire dnd area is being listed as global content but its A - doesn't even contain a global module and B doesn't allow for any editing either way.\n\nhas anyone come across this before and might have some advice on where to look?"
+  },
+  {
+    "poster": {
+      "poster_name": "Simon Harvey",
+      "poster_handle": "sharvey"
+    },
+    "time_stamp": "2023-11-06 10:47:46",
+    "text": "Hi all. I’m trying to general a dynamic HubDB page and want to be able to have a “Published” flag on the entries in my database. If the row is not set to published then the page should be hidden from the top level index page and should throw a 404 error if someone tried to access the URL for the “detail” page. The first part I’ve got working, but anyone any idea how I can generate a 404 error in HubL"
+  },
+  {
+    "poster": {
+      "poster_name": "Taylor O'Reilly",
+      "poster_handle": "taylor699"
+    },
+    "time_stamp": "2023-11-06 13:55:45",
+    "text": "Hey, I just wanted to circle back and tell you I figured this out and realized I was making things harder for myself. To resolve this, all I did was create a module with nothing but the fields I needed for this template. I make it so it's unavailable in the page builder UI and then add it to my template and export it to the template context. Everything worked as expected."
+  }
+]

@@ -1,0 +1,183 @@
+[
+  null,
+  {
+    "poster": {
+      "poster_name": "Stefen Phelps",
+      "poster_handle": "stefen"
+    },
+    "time_stamp": "2018-04-24 14:52:28",
+    "text": "I now understand why someone might want to put a loop within a loop on a hubdb powered page"
+  },
+  {
+    "poster": {
+      "poster_name": "Stefen Phelps",
+      "poster_handle": "stefen"
+    },
+    "time_stamp": "2018-04-24 14:53:23",
+    "text": "<https://preview.hs-sites.com/_hcms/preview/template/multi?portalId=2062618&amp;tc_deviceCategory=desktop&amp;domain=default&amp;template_file_path=Custom%2Fpage%2Fbz-guru-2018%2Fbz-integration-partners.html>\n\n:point_up: the partners (row) loop is inside of a category (column) loop. Is this bad practice or acceptable?",
+    "reply_count": 15,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2018-04-24 14:56:27"
+      },
+      {
+        "time_stamp": "2018-04-24 14:57:55"
+      },
+      {
+        "time_stamp": "2018-04-24 14:58:17"
+      },
+      {
+        "time_stamp": "2018-04-24 14:58:29"
+      },
+      {
+        "time_stamp": "2018-04-24 14:58:31"
+      },
+      {
+        "time_stamp": "2018-04-24 15:01:29"
+      },
+      {
+        "time_stamp": "2018-04-24 15:01:42"
+      },
+      {
+        "time_stamp": "2018-04-24 15:01:47"
+      },
+      {
+        "time_stamp": "2018-04-24 15:03:12"
+      },
+      {
+        "time_stamp": "2018-04-24 15:03:17"
+      },
+      {
+        "time_stamp": "2018-04-24 15:04:11"
+      },
+      {
+        "time_stamp": "2018-04-24 15:06:03"
+      },
+      {
+        "time_stamp": "2018-04-24 15:18:26"
+      },
+      {
+        "time_stamp": "2018-04-24 15:24:20"
+      },
+      {
+        "time_stamp": "2018-05-24 11:52:08"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-04-24 14:56:27",
+    "text": "This really depends on the use case. The best way to tell is add `hsDebug=true` and look at the bottom of the source. It will contain render timings for the page"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-04-24 14:57:55",
+    "text": "The page is super fast to render and is cacheable which is more important"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-04-24 14:58:17",
+    "text": "In this case choose whatever is easier to implement on your end"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-04-24 14:58:29",
+    "text": "Now if you had 10,000 rows in the table, that would be a different discussion :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Stefen Phelps",
+      "poster_handle": "stefen"
+    },
+    "time_stamp": "2018-04-24 14:58:31",
+    "text": "<@U6GNQ7JBU> good to know. Does this count as just 2 queries if it's the same request in each loop?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-04-24 15:01:29",
+    "text": "Looks like you only make one request `{% set integration_partners = hubdb_table_rows(683441) %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-04-24 15:01:42",
+    "text": "There is a fast way though"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-04-24 15:01:47",
+    "text": "You can use `selectattr`"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-04-24 15:03:12",
+    "text": "`{% for partner in integration_partners|selectattr(\"category\", \"equalto\", category.id) %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-04-24 15:03:17",
+    "text": "something like that"
+  },
+  {
+    "poster": {
+      "poster_name": "Stefen Phelps",
+      "poster_handle": "stefen"
+    },
+    "time_stamp": "2018-04-24 15:04:11",
+    "text": "oh nice! that'd save me from using the if statement"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-04-24 15:06:03",
+    "text": "`selectattr` is a very powerful filter now that it's been upgraded: <https://github.com/HubSpot/jinjava/pull/183>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-04-24 15:18:26",
+    "edited": {
+      "time_stamp": "2018-04-24 15:19:02"
+    },
+    "text": "O_O that looks super useful. we’ve been doing it the hard way or querying the db again\n<@U7TAZ6V2Q> see the message above - you’ll find it useful"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-04-24 15:24:20",
+    "text": "Querying the DB each time using filters can be faster if the number of rows is large. I would only use that if you notice hubdb calls taking up a significant portion of rendering time in the output"
+  }
+]

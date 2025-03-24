@@ -1,0 +1,111 @@
+[
+  {
+    "text": "Can someone tell me what I'm missing here? Any time I use a Form component, the Button component is smashed up next to the last Input. Am I missing a wrapper or something? I've had success dropping a Divider before the button but it seems like these should style themselves better out of the box. I suspect I'm just missing something? Anyone?",
+    "time_stamp": "2024-10-03 07:03:28",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-10-03 07:23:32"
+      },
+      {
+        "time_stamp": "2024-10-03 07:24:12"
+      },
+      {
+        "time_stamp": "2024-10-03 07:25:01"
+      },
+      {
+        "time_stamp": "2024-10-03 07:27:26"
+      },
+      {
+        "time_stamp": "2024-10-03 07:28:15"
+      },
+      {
+        "time_stamp": "2024-10-03 07:29:52"
+      },
+      {
+        "time_stamp": "2024-10-03 07:30:06"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Sébastien Rochon",
+      "poster_handle": "srochon"
+    },
+    "time_stamp": "2024-10-03 07:23:32",
+    "edited": {
+      "time_stamp": "2024-10-03 07:23:52"
+    },
+    "text": "Rap the form elements in a\n```<Flex direction=\"column\" gap=\"medium\"></Flex>```\nIt should create spacing between element contain in the Flex component.\n<https://developers.HubSpot.com/beta-docs/reference/ui-components/standard-components/flex>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Bell - Level 4",
+      "poster_handle": "jeffrey.bell"
+    },
+    "time_stamp": "2024-10-03 07:24:12",
+    "text": "Yeah, I tried that without luck"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Bell - Level 4",
+      "poster_handle": "jeffrey.bell"
+    },
+    "time_stamp": "2024-10-03 07:25:01",
+    "text": "```&lt;Flex direction={\"column\"} gap={\"md\"}&gt;\n        &lt;Text&gt;\n          Use this form to find information on a tail number. You can use this\n          research card from any contact, company, or aircraft object.\n        &lt;/Text&gt;\n        &lt;Form autoComplete=\"off\" onSubmit={() =&gt; searchJetNet()}&gt;\n          &lt;Input\n            label=\"Tail Number\"\n            name=\"tailnumber\"\n            tooltip=\"Please enter a tail number to search JetNet\"\n            description=\"Enter a tail number to search JetNet\"\n            placeholder=\"N123DX\"\n            required={true}\n            error={!isValid}\n            validationMessage={validationMessage}\n            onChange={(value) =&gt; {\n              setTailNumber(value);\n            }}\n            onInput={(value) =&gt; {\n              if (!value.startsWith(\"N\") &amp;&amp; !value.startsWith(\"n\")) {\n                setValidationMessage(\"Tail numbers must begin with an 'N'\");\n                setIsValid(false);\n              } else if (value === \"\") {\n                setValidationMessage(\"Tail number is required to search.\");\n                setIsValid(false);\n              } else {\n                setValidationMessage(\n                  \"Nice tail number. Can't wait to see what information we can find!\"\n                );\n                setIsValid(true);\n              }\n            }}\n          /&gt;\n          &lt;Divider /&gt;\n          &lt;Button variant=\"primary\" type=\"submit\"&gt;\n            Search\n          &lt;/Button&gt;\n        &lt;/Form&gt;\n      &lt;/Flex&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Sébastien Rochon",
+      "poster_handle": "srochon"
+    },
+    "time_stamp": "2024-10-03 07:27:26",
+    "text": "```&lt;Flex direction={\"column\"} gap={\"md\"}&gt;\n  &lt;Text&gt;\n    Use this form to find information on a tail number. You can use this\n    research card from any contact, company, or aircraft object.\n  &lt;/Text&gt;\n  &lt;Form autoComplete=\"off\" onSubmit={() =&gt; searchJetNet()}&gt;\n    &lt;Flex direction={\"column\"} gap={\"md\"}&gt;\n      &lt;Input\n        label=\"Tail Number\"\n        name=\"tailnumber\"\n        tooltip=\"Please enter a tail number to search JetNet\"\n        description=\"Enter a tail number to search JetNet\"\n        placeholder=\"N123DX\"\n        required={true}\n        error={!isValid}\n        validationMessage={validationMessage}\n        onChange={(value) =&gt; {\n          setTailNumber(value);\n        }}\n        onInput={(value) =&gt; {\n          if (!value.startsWith(\"N\") &amp;&amp; !value.startsWith(\"n\")) {\n            setValidationMessage(\"Tail numbers must begin with an 'N'\");\n            setIsValid(false);\n          } else if (value === \"\") {\n            setValidationMessage(\"Tail number is required to search.\");\n            setIsValid(false);\n          } else {\n            setValidationMessage(\n              \"Nice tail number. Can't wait to see what information we can find!\"\n            );\n            setIsValid(true);\n          }\n        }}\n      /&gt;\n      &lt;Divider /&gt;\n      &lt;Button variant=\"primary\" type=\"submit\"&gt;\n        Search\n      &lt;/Button&gt;\n    &lt;/Flex&gt;\n  &lt;/Form&gt;\n&lt;/Flex&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Sébastien Rochon",
+      "poster_handle": "srochon"
+    },
+    "time_stamp": "2024-10-03 07:28:15",
+    "text": "Flex is only apply on direct child component since form acte has a parent you must add on more flex inside form"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Bell - Level 4",
+      "poster_handle": "jeffrey.bell"
+    },
+    "time_stamp": "2024-10-03 07:29:52",
+    "text": "ah HA! Thank you <@U0682QW2QN7>! I knew I must have been missing something simple!"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Bell - Level 4",
+      "poster_handle": "jeffrey.bell"
+    },
+    "time_stamp": "2024-10-03 07:30:06",
+    "text": "Thank you! The world makes sense again :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe Collins",
+      "poster_handle": "joecollins"
+    },
+    "time_stamp": "2024-10-03 21:55:52",
+    "text": "hi all - I was wondering about a 'custom react card' reaction time - i.e if the card shows a list of records, a record in the list is updated, and the how long it takes for the custom card to reflect that change.\n\nDoes it automatically load outside the DOM of HubSpot? or do you need to manually refresh the page?\n\nThanks in advance!",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-10-07 07:54:19"
+      },
+      {
+        "time_stamp": "2024-10-07 07:55:05"
+      },
+      {
+        "time_stamp": "2024-10-07 20:00:27"
+      }
+    ]
+  }
+]

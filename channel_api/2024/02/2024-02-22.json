@@ -1,0 +1,301 @@
+[
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-02-22 02:02:52",
+    "text": "Is there already any API endpoints for the new Lead Object?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-02-22 02:04:19"
+      },
+      {
+        "time_stamp": "2024-03-14 08:56:47"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-02-22 02:04:19",
+    "text": "Just did a search in the slack here, and there are a couple of answers that say no API, so got my answer!"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-02-22 03:00:18",
+    "text": "So you get 4115 IDs but if you do calls for those specific ids you only get data for 800 of them?"
+  },
+  {
+    "poster": {
+      "poster_name": "Yiz Segall",
+      "poster_handle": "yiz.segall"
+    },
+    "time_stamp": "2024-02-22 03:10:09",
+    "text": "yes"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-02-22 03:15:09",
+    "text": "Depending on how you are pulling in that data, there might be some issues you are running in.\nCouple of things to note:\n• Are you running into API limits? And just getting no data back because your're sending API calls too fast\n• If you are working with the API in custom code, and creating records, to immediatly request them via the API, there is a delay before a record is created and available in the API, but shouldnt be more then a couple minutes.\nNext to that, might be good to explain how you are doing your requests."
+  },
+  {
+    "poster": {
+      "poster_name": "Yiz Segall",
+      "poster_handle": "yiz.segall"
+    },
+    "time_stamp": "2024-02-22 03:21:35",
+    "text": "No, i'm not running into any rate limiting issues. I'm not creating any records. Essentially I ran an export of the all the companies in an account, then I go through each company using the bulk association api to find all the deals, for instance, that are connected to that company. This is done inside a node js server. Then it goes through each of the results of that association, and retrieving certain information about each of those deals."
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-02-22 03:38:32",
+    "text": "So:\n• You exported an excel / ID file?\n• You get all Deal Associations for a single company, via getting all associations via the batch api\n• And then you have a list of IDs for each of the Deals, and you retrieve data for that one\nIt's hard to say what's going wrong without seeing how the code / which api calls specifically you are doing. I haven't come accross any difference in data, maybe you are having multiple Associations, under te same record ID and that's what inflates the numbers or something?"
+  },
+  {
+    "poster": {
+      "poster_name": "Yiz Segall",
+      "poster_handle": "yiz.segall"
+    },
+    "time_stamp": "2024-02-22 03:47:58",
+    "text": "no, the ids are all unique. It's a csv that's not really downloaded. The user clicks on a button which triggers the export of companies, which is then opened and read by the node js, and the extracted. The node js server then gets all related objects from these companies.\n\nI have a list of ids for the deals and then I bulk get the details for all of them, not one at a time. this particular account had over 4116 deals in it.\n\nBut either way, the answer is not that the api is limited, but there is something wrong with the way I am retrieving the data or processing it."
+  },
+  {
+    "poster": {
+      "poster_name": "Paul",
+      "poster_handle": "paul.buskovskij"
+    },
+    "time_stamp": "2024-02-22 04:25:40",
+    "text": "Any updates on that?"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-02-22 05:26:42",
+    "text": "It's a bit confusing to me the way you have set it up. If you could share some code snippets on the different steps being done that would make things a lot easier.\nAre you also saying you have 1 contact that has 4116 deals? Because if you are getting the information that way, I would genuinely think you are running into API Rate limits or Page issues."
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-02-22 05:43:01",
+    "text": "I'm thinking that maybe somewhere in the JSON is a reference to an object id or other id value where it would be a differrent value in the other portal."
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-02-22 05:49:16",
+    "text": "When you manually publish a post in the UI you can go to the Publishing Options tab and select Schedule For Later and you can backdate that to the original date you want.  It will notify you that the date is in the past but it will let you do it."
+  },
+  {
+    "poster": {
+      "poster_name": "Yiz Segall",
+      "poster_handle": "yiz.segall"
+    },
+    "time_stamp": "2024-02-22 07:07:35",
+    "text": "no, not 1 company. There are 15750 and there are 4116 deals associated with those companies."
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-02-22 07:12:47",
+    "text": "Yhea I am super confused.\nYou have a export (csv,...) loading into your nodejs, and there you get ID's, you are loading into a batch API request, to get all the associated Deals?"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-02-22 07:14:05",
+    "text": "Which I would think you are using *`/crm/v4/associations/{fromObjectType}/{toObjectType}/batch/read`* to load in all these IDs"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-02-22 07:15:47",
+    "text": "Not sure what the limit is to this, but I think you can maximum get data for 500 records, are you paging these?"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-02-22 07:17:35",
+    "text": "Because that might make some sense, if 300 companies in the first call have more then 1 deal association, this makes the 500 + 300 = 800 sense. But again, I'm unsure how your functionality is set up.\nWould it be possible to write out which export, and which calls you are using a bit clearer?"
+  },
+  {
+    "poster": {
+      "poster_name": "Yiz Segall",
+      "poster_handle": "yiz.segall"
+    },
+    "time_stamp": "2024-02-22 07:18:09",
+    "text": "you can only load 100 companies at a time in the batches"
+  },
+  {
+    "poster": {
+      "poster_name": "Yiz Segall",
+      "poster_handle": "yiz.segall"
+    },
+    "time_stamp": "2024-02-22 07:19:08",
+    "text": "so the 15000 are divided into 150 batches, it would require more than 4 deals per company to have that issue, but I can check"
+  },
+  {
+    "text": "Ah it's from the list that it shows 500 limit",
+    "time_stamp": "2024-02-22 07:20:12"
+  },
+  {
+    "poster": {
+      "poster_name": "Yiz Segall",
+      "poster_handle": "yiz.segall"
+    },
+    "time_stamp": "2024-02-22 07:20:21",
+    "text": "that's the results"
+  },
+  {
+    "poster": {
+      "poster_name": "Yiz Segall",
+      "poster_handle": "yiz.segall"
+    },
+    "time_stamp": "2024-02-22 07:20:28",
+    "text": "you can only have 100 input ids at a time"
+  },
+  {
+    "poster": {
+      "poster_name": "Yiz Segall",
+      "poster_handle": "yiz.segall"
+    },
+    "time_stamp": "2024-02-22 07:21:15",
+    "text": "any batch request has that limitation, and if you are getting property values about an specific object id, and you have want property history, you can only have 50"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-02-22 07:23:14",
+    "text": "Yhea got them confused. Working a lot with that single API endpoint at the moment. But still, I woulnd't see why you would be getting less data witht he ID calls, if you are pulling in all Object IDs"
+  },
+  {
+    "poster": {
+      "poster_name": "Yiz Segall",
+      "poster_handle": "yiz.segall"
+    },
+    "time_stamp": "2024-02-22 07:36:05",
+    "text": "hence my question"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-02-22 07:49:40",
+    "text": "If you just a manual list of all the Id's and try to call that way in eg postman or something, do you get all results that way?"
+  },
+  {
+    "poster": {
+      "poster_name": "Yiz Segall",
+      "poster_handle": "yiz.segall"
+    },
+    "time_stamp": "2024-02-22 07:53:13",
+    "text": "haven't tried that yet"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-02-22 07:55:42",
+    "text": "I think you can also load in CSV eg in Postman, I remember I used the Import API before, not sure if that helps"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-02-22 07:55:56",
+    "edited": {
+      "time_stamp": "2024-02-22 07:55:58"
+    },
+    "text": "But at least it might pinpoint the exact location where it goes wrong :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Yiz Segall",
+      "poster_handle": "yiz.segall"
+    },
+    "time_stamp": "2024-02-22 07:58:47",
+    "text": "i've already done that part. I think what I will do is create conditional breakpoints in debug to see if it does require paging"
+  },
+  {
+    "poster": {
+      "poster_name": "Michèle Fischer",
+      "poster_handle": "mfischer"
+    },
+    "time_stamp": "2024-02-22 08:19:50",
+    "text": "Hi folks. Does anyone know if it is possible to transfer a chatbot built with Microsoft Copilot Studio to a HubSpot agent via Handoff?\n<https://learn.microsoft.com/en-us/microsoft-copilot-studio/configure-generic-handoff>\nI'm afraid this is not possible, but before I spend hours on research I thought I'd ask you guys. Thank you very much!"
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2024-02-22 09:20:09",
+    "text": "you’ll have to do some development - there isn’t anything that is going to automatically download a published quote (outside of the download module on the web based quote), or create a zip for you, for example.\n\nHow you go about it is highly dependent upon the setup you’re working with. Some questions I’d be asking:\n\n• what’s the relationship between the contact and the quotes they need to have access to? \n• what is the series of events/triggers that should lead up to a zip of the quotes being accessible by the user? \n• what tools should be used to facilitate the download? \n    ◦ <https://stackoverflow.com/questions/15641243/need-to-zip-an-entire-directory-using-node-js>\n    ◦ <https://stackoverflow.com/questions/3749231/download-file-using-javascript-jquery>"
+  },
+  {
+    "poster": {
+      "poster_name": "Alex Ratiu",
+      "poster_handle": "alex.ratiu"
+    },
+    "time_stamp": "2024-02-22 16:11:21",
+    "text": "Hello folks, this endpoint can be accessed with OAuth or a Token? <https://app.HubSpot.com/api/automationapps/v1/history?portalId=x>\n\nI want to get \"all the companies enrolled into a workflow\", I've spent a few days to understand only the contacts can be found but only those that are still active in these workflows. Also as a workaround can be a list of contacts from a workflow but I couldn't find a way to get the Companies enrolled to a workflow.\n\nHas anyone tried already? Is that API available from an external service based on OAuth or Token? Are there any other solutions that someone knows?\n\nThank you.",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-02-23 00:53:42"
+      },
+      {
+        "time_stamp": "2024-02-23 01:04:43"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Alex Ratiu",
+      "poster_handle": "alex.ratiu"
+    },
+    "time_stamp": "2024-02-22 16:25:09",
+    "text": "Have you managed to access that endpoint in a way or other?"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2024-02-23 00:53:42",
+    "text": "You can always create a field and set it to yes at the beginning and clear it at the end. Use the search api.\nI’ve used this history one before but it’s a v1 so usually a bigger hassle to get data out."
+  }
+]

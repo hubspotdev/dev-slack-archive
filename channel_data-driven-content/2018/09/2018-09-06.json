@@ -1,0 +1,199 @@
+[
+  null,
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2018-09-06 13:04:54",
+    "text": "Hey guys.. anyone have any success with using Batch with hubdb?"
+  },
+  {
+    "text": "",
+    "time_stamp": "2018-09-06 13:05:02"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2018-09-06 13:05:14",
+    "text": "I get a warning and no data"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2018-09-06 13:06:29",
+    "edited": {
+      "time_stamp": "2018-09-06 13:06:35"
+    },
+    "text": "`Warning:44:0Cannot resolve property 'url' in '&lt;div class=\"class=\"product__grid--item\"&gt;&lt;/div&gt;'`"
+  },
+  null,
+  null,
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-09-06 13:52:59",
+    "text": "`batch` fills out empty items with the second argument. Like if you would have 3 in a row but the last row would only contain 2 items, the last one would be your placeholder. Therefore, the placeholder doesn't have `url` and `image` and `name`, so it's erroring trying to access those in the string you provided it."
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-09-06 13:53:22",
+    "edited": {
+      "time_stamp": "2018-09-06 13:54:03"
+    },
+    "text": "You can fix it by just checking for the placeholder. Something like\n```{% for cat in row %}\n{% if cat.url %}\n  ...\n{% else %}\n  {# This shows the placeholder #}\n  {{ cat }}\n{% endif %}\n{% endfor %}\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2018-09-06 13:56:22",
+    "text": "yeah baby.. that is direct I needed… #opensourcedocumentation"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2018-09-06 13:56:33",
+    "text": "thank you <@U3A4KEWK1>"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2018-09-06 13:58:47",
+    "text": "and So we are clear the |batch() still goes on the for loop right?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-09-06 13:58:57",
+    "text": "Yeah"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-09-06 14:00:02",
+    "text": "What the batch filter does is basically take your list and split it into a list of lists"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-09-06 14:01:49",
+    "text": "For example:\n```set example = [1, 2, 3, 4, 5, 6, 7]|batch(3, 'placeholder')\nexample == [[1, 2, 3], [4, 5, 6], [7, 'placeholder', 'placeholder']]```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-09-06 14:02:42",
+    "text": "And when you loop through that, the first iteration of the loop would be `[1, 2, 3]`, and you could nest a loop to loop through those"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-09-06 14:03:01",
+    "text": "That's more or less what you're doing there"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2018-09-06 14:04:49",
+    "text": "Yeah. that stuff I get. But it is still seeing the cat.url and throwing an error."
+  },
+  {
+    "text": "",
+    "time_stamp": "2018-09-06 14:06:33"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-09-06 14:20:26",
+    "text": "Hm"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-09-06 14:20:44",
+    "text": "Try testing if cat is a string"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2018-09-06 14:34:58",
+    "text": "it come out as a pymap and if i `tojson` it is creates a string"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2018-09-06 14:36:35",
+    "text": "it outputs this into the dom as a string `[{id=6027044666, createdAt=1533092855109, 1='{type=string, value=Lightning}', 2='{type=image, value=Image{width=165, height=165, url='<https://cdn2.HubSpot.net/hubfs/2821511/images-2018/Premium%20Line/lightning.jpg>'}}', 3='{type=string, value=/lightning}'}, {id=6026667209, createdAt=1533092868182, 1='{type=string, value=PHD&amp;PHDX}', 2='{type=image, value=Image{width=165, height=165, url='<https://cdn2.HubSpot.net/hubfs/2821511/images-2018/Premium%20Line/phd.jpg>'}}', 3='{type=string, value=/phd-phdx}'}, {id=6027044722, createdAt=1533092868906, 1='{type=string, value=Lasertech}', 2='{type=image, value=Image{width=165, height=165, url='<https://cdn2.HubSpot.net/hubfs/2821511/images-2018/Premium%20Line/lasertech.jpg>'}}', 3='{type=string, value=/lasertech}'}] [{id=6027044725, createdAt=1533092870055, 1='{type=string, value=Cleancut}', 2='{type=image, value=Image{width=165, height=165, url='<https://cdn2.HubSpot.net/hubfs/2821511/images-2018/Premium%20Line/cleancut.jpg>'}}', 3='{type=string, value=/cleancut}'}, {id=6026667216, createdAt=1533092870830, 1='{type=string, value=Thermatech}', 2='{type=image, value=Image{width=165, height=165, url='<https://cdn2.HubSpot.net/hubfs/2821511/images-2018/Premium%20Line/thermatech.jpg>'}}', 3='{type=string, value=/thermatech}'},  ]`"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2018-09-06 14:36:53",
+    "text": "code"
+  },
+  {
+    "text": "",
+    "time_stamp": "2018-09-06 14:37:12"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2018-09-06 14:37:43",
+    "text": "This shouldnt be so dificult."
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2018-09-06 14:39:30",
+    "text": "I figured it out"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2018-09-06 14:51:33",
+    "text": "I kinda did."
+  }
+]

@@ -1,0 +1,362 @@
+[
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-02 06:07:35",
+    "text": "Is it possible to filter by a variable blog at this point in the `Component`?\n```export const query = `\nquery BlogPostsQuery {\n  BLOG {\n    post_collection(limit: 10, orderBy: publish_date__desc, filter: {state__eq: \"PUBLISHED\"}) {\n      items {\n        id\n        featured_image\n        featured_image_alt_text\n        tag_ids\n        widgets\n        url\n        html_title\n        name\n        current_state\n        publish_date\n        blog_tags {\n          id\n          name\n        }\n      }\n      total\n    }\n  }\n}\n`;```\nin other words, is the blog id available here?",
+    "reply_count": 23,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2024-04-02 06:10:21"
+      },
+      {
+        "time_stamp": "2024-04-02 06:10:51"
+      },
+      {
+        "time_stamp": "2024-04-02 06:17:38"
+      },
+      {
+        "time_stamp": "2024-04-02 06:18:18"
+      },
+      {
+        "time_stamp": "2024-04-02 06:25:31"
+      },
+      {
+        "time_stamp": "2024-04-02 06:25:50"
+      },
+      {
+        "time_stamp": "2024-04-02 07:15:21"
+      },
+      {
+        "time_stamp": "2024-04-02 07:16:14"
+      },
+      {
+        "time_stamp": "2024-04-02 07:16:53"
+      },
+      {
+        "time_stamp": "2024-04-02 07:20:56"
+      },
+      {
+        "time_stamp": "2024-04-02 07:21:36"
+      },
+      {
+        "time_stamp": "2024-04-02 07:23:38"
+      },
+      {
+        "time_stamp": "2024-04-02 07:26:01"
+      },
+      {
+        "time_stamp": "2024-04-02 08:22:52"
+      },
+      {
+        "time_stamp": "2024-04-02 08:23:31"
+      },
+      {
+        "time_stamp": "2024-04-02 08:34:21"
+      },
+      {
+        "time_stamp": "2024-04-02 09:16:53"
+      },
+      {
+        "time_stamp": "2024-04-02 09:17:13"
+      },
+      {
+        "time_stamp": "2024-04-02 09:17:16"
+      },
+      {
+        "time_stamp": "2024-04-02 09:26:52"
+      },
+      {
+        "time_stamp": "2024-04-02 09:27:07"
+      },
+      {
+        "time_stamp": "2024-05-16 09:11:06"
+      },
+      {
+        "time_stamp": "2024-05-16 09:21:39"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-04-02 06:10:21",
+    "text": "```/*\n * This query string includes a comment which creates a GraphQL variable \"$email\",\n * which is populated by referencing a HubL variable which is assumed to be\n * present in the render context. Here is a list of more variables from the\n * CMS Reference docs <https://developers.HubSpot.com/docs/cms/hubl/variables>.\n *\n * There are scenarios in which these predefined variables are undefined,\n * to account for this the query sets a fallaback. In this case the fallback\n * is \"<mailto:bh@HubSpot.com|bh@HubSpot.com>\".\n */\nexport const query = `\n# $email: \"{{ contact.email }}\"\nquery ContactQuery($email: String! = \"<mailto:bh@HubSpot.com|bh@HubSpot.com>\") {\n  CRM {\n    contact(uniqueIdentifier: \"email\", uniqueIdentifierValue: $email) {\n      firstname\n      lastname\n      email\n      country\n      city\n      company\n      associations {\n        company_collection__primary {\n          items {\n            name\n            description\n          }\n        }\n      }\n    }\n  }\n}\n`;```\nConsider this example. The HubL expression at the top sets a variable based on a HubL expression. If that query is in the context of a page where the content group id (blog id) is present you should be able to make use of it."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-02 06:10:51",
+    "text": "awesome, thank you"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-02 06:17:38",
+    "text": "<@UAYBXDG4U> can I use fieldValues in a similar way? Are they available at that point? (any props?)"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-02 06:18:18",
+    "edited": {
+      "time_stamp": "2024-04-02 06:18:35"
+    },
+    "text": "the goal is to filter by a tag id that is variable"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-02 06:25:31",
+    "text": "or maybe I can set a tag based on the url? Can I \"process\" the value that gets passed in before adding it to the query?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-02 06:25:50",
+    "text": "for example, if I want to match a part of the url in `content.absolute_url` to a tag_id number?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-02 07:14:02",
+    "text": "what are the various ways to set variables in a JS module?\n1. through on-page HubL variables when using a GraphQL or hublDataTemplate\n2. through fields.jsx when accessing props inside of an exported `Component`\n3. ???\nI'm hoping number 3 is a way that I can dynamically set a tag_id...\n\nMy current approach is to try to check a url inside of an island and then use that value to load data on the client side. It would be nice if I could load that data on the server but I don't think that's possible?",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-04-02 07:56:07"
+      },
+      {
+        "time_stamp": "2024-04-02 07:57:18"
+      },
+      {
+        "time_stamp": "2024-04-02 08:12:32"
+      },
+      {
+        "time_stamp": "2024-04-02 08:14:58"
+      },
+      {
+        "time_stamp": "2024-04-02 08:15:09"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-04-02 07:15:21",
+    "text": "you do have access to field values relative to that module"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-02 07:16:14",
+    "text": "so in other words I can use variable field values in the query? (like from a user dropdown?)"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-04-02 07:16:53",
+    "text": "Pretty sure <@U04DLJH3W94> would you check my math here"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-02 07:20:56",
+    "text": "would it be something like?\n```export { fields } from \"./fields.tsx\";\n\nexport const query = `\n# $tag: fields.tags.selected_tag \n...```"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-04-02 07:21:36",
+    "edited": {
+      "time_stamp": "2024-04-02 07:21:47"
+    },
+    "text": "```export { fields } from \"./fields.tsx\";\n\nexport const query = `\n# $tag: \"{{ fields.tags.selected_tag }}\"\n...```"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-04-02 07:23:38",
+    "edited": {
+      "time_stamp": "2024-04-02 07:23:46"
+    },
+    "text": "I am not 100% on the graphQL use case, not  quite the same as hublDataTemplate, but I don't think it would be `fields`\n\nmaybe something like this?\n# $tag: \"{{ module.<field_name>.property }}\"\n\n\n..."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-02 07:26:01",
+    "text": "ok, I'll try a simple version of that and let you know if it works"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-04-02 07:27:22",
+    "text": "<@UAYBXDG4U> do you know about the leveling for CTA access?"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-04-02 07:27:59",
+    "text": "CMS sandbox should have all the things, just without the ability to connect a domain"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-04-02 07:28:31",
+    "text": "I'll ping internally"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-04-02 07:37:33",
+    "text": "<@U044BTK3EGP> can you DM me portal id"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-04-02 07:56:07",
+    "text": "How is the dynamic tag_id derived? Where is it coming from?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-02 07:57:18",
+    "text": "Ideally from user input (like fields) or through the url (if the result can be processed) "
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-04-02 08:12:32",
+    "text": "Youre loading data based on some user value from an external service?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-02 08:14:58",
+    "text": "yes, but not exactly an external service, I'm trying to modify a graphql query so that data can initially be loaded on the server"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-02 08:15:09",
+    "edited": {
+      "time_stamp": "2024-04-02 08:15:34"
+    },
+    "text": "it's post_collection data"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-02 08:22:52",
+    "text": "this is almost working, I'm getting the default value that I'm setting when a value isn't available. Does this look right?\n```// fields.tsx\n  &lt;ModuleFields&gt;\n    &lt;TextField name=\"tag_id\" label=\"Page tag id\" /&gt;\n  &lt;/ModuleFields&gt;\n\n/ index.jsx\nexport const query = `\n# $tag_id: \"{{ module.tag_id }}\"\nquery BlogPostsQuery($tag_id: [Number]! = 102580275203) {\n  BLOG {\n    post_collection(limit: 10, orderBy: publish_date__desc, filter: {state__eq: \"PUBLISHED\", tag_ids__in: $tag_id}) {\n      items {```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-02 08:23:31",
+    "text": "I'm updating to use a NumberField in case that is the issue..."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-02 08:34:21",
+    "text": "I'm trying to deploy again to make sure all the values are updated. Not sure if {{ module.tag_id }} has a value or if I need to dig in? trying to console log in some other way"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-02 09:16:53",
+    "text": "looks like this does not work, I can set a tag_id value that shows up under fieldValues but cannot use it in a query"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-02 09:17:13",
+    "text": "I think I'm just not going to worry about the server side value for now"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-02 09:17:16",
+    "text": "so that I can keep making progress"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-02 09:26:52",
+    "text": "I think I got it!"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-02 09:27:07",
+    "text": "this seems to be working:\n```export const query = `\n# $tag_id: \"{{ module.tag_id }}\"\nquery BlogPostsQuery($tag_id: [Number]! = 102580275203) {\n  BLOG {\n    post_collection(limit: 10, orderBy: publish_date__desc, filter: {state__eq: \"PUBLISHED\", tag_ids__in: $tag_id}) {\n      items {```"
+  }
+]

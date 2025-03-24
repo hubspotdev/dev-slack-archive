@@ -1,0 +1,168 @@
+[
+  {
+    "poster": {
+      "poster_name": "Glen Satchwell",
+      "poster_handle": "glen.satchwell"
+    },
+    "time_stamp": "2019-12-17 08:02:32",
+    "edited": {
+      "time_stamp": "2019-12-17 08:02:54"
+    },
+    "text": "Hey :wave:\nHas anyone had issues with .hsignore and node_modules?\nI seem to get `System limit for number of file watchers reached` even though I have ignore the folder in the file? The upload command works fine and doesn't upload the folder.. :thinking_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-12-17 08:11:59",
+    "text": "how many files is your HubSpot cli project?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-12-17 08:13:33",
+    "text": "It may be that something has crashed and not freed up your inotify limits"
+  },
+  {
+    "poster": {
+      "poster_name": "Glen Satchwell",
+      "poster_handle": "glen.satchwell"
+    },
+    "time_stamp": "2019-12-17 08:16:09",
+    "text": "<@UQERM7BLY> Not many I've only just started it up, 30 at most. I have a feeling it's still watching node_modules for some reason?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-12-17 08:16:33",
+    "text": "ah yeah"
+  },
+  {
+    "poster": {
+      "poster_name": "Glen Satchwell",
+      "poster_handle": "glen.satchwell"
+    },
+    "time_stamp": "2019-12-17 08:17:00",
+    "text": "<@UQERM7BLY> I may have found the issue looks like it is related to inotify as setting `echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf &amp;&amp; sudo sysctl -p` seems to have fixed the issue :tada:"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-12-17 08:17:06",
+    "text": "Yeah"
+  },
+  {
+    "poster": {
+      "poster_name": "Glen Satchwell",
+      "poster_handle": "glen.satchwell"
+    },
+    "time_stamp": "2019-12-17 08:17:12",
+    "edited": {
+      "time_stamp": "2019-12-17 08:17:16"
+    },
+    "text": "Still worried that it's watching the files still though :thinking_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-12-17 08:17:12",
+    "text": "I would look at removing node_modules"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-12-17 08:17:15",
+    "text": "from that directory"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-12-17 08:17:23",
+    "text": "I imagine it is - i wonder if the .hsignore is just for uploads"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-12-17 08:17:25",
+    "text": "and not watches"
+  },
+  {
+    "poster": {
+      "poster_name": "Glen Satchwell",
+      "poster_handle": "glen.satchwell"
+    },
+    "time_stamp": "2019-12-17 08:17:39",
+    "text": "I thought that although it does specify watch also"
+  },
+  {
+    "poster": {
+      "poster_name": "Glen Satchwell",
+      "poster_handle": "glen.satchwell"
+    },
+    "time_stamp": "2019-12-17 08:17:59",
+    "text": "&gt; Files matching the patterns specified in the `.hsignore` file will not be uploaded to HubSpot when using the `upload` or `watch` commands."
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-12-17 08:21:57",
+    "text": "I would maybe look at having a src and build folder"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-12-17 08:22:08",
+    "text": "and using gulp/webpack"
+  },
+  {
+    "poster": {
+      "poster_name": "Glen Satchwell",
+      "poster_handle": "glen.satchwell"
+    },
+    "time_stamp": "2019-12-17 08:48:12",
+    "text": "Yeah ok I'm using webpack currently but may have to move the node_modules outside and then watch the build folder"
+  },
+  {
+    "poster": {
+      "poster_name": "Glen Satchwell",
+      "poster_handle": "glen.satchwell"
+    },
+    "time_stamp": "2019-12-17 08:48:17",
+    "text": "Many thanks :tada:"
+  },
+  {
+    "poster": {
+      "poster_name": "Gregory Cornelius",
+      "poster_handle": "gcornelius"
+    },
+    "time_stamp": "2019-12-17 09:51:04",
+    "text": "I think that this is a problem on our end. The ignore file is not changing which files are being watched only the files that are being uploaded. I just filed <https://github.com/HubSpot/HubSpot-cms-tools/issues/28> to cover the work."
+  },
+  {
+    "poster": {
+      "poster_name": "Gregory Cornelius",
+      "poster_handle": "gcornelius"
+    },
+    "time_stamp": "2019-12-17 11:04:17",
+    "text": "sorry for the delay. i created <https://github.com/HubSpot/HubSpot-cms-tools/issues/29> to track work on this."
+  }
+]

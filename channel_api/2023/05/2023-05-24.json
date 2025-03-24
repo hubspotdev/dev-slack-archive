@@ -1,0 +1,197 @@
+[
+  {
+    "poster": {
+      "poster_name": "Bent Becker",
+      "poster_handle": "bent"
+    },
+    "time_stamp": "2023-05-24 01:50:10",
+    "text": "Thank you for your response. But I am like completely now to this. Where en how should I place this code? in my theme right? but how and where? (Sorry for my stupid question but I am just not able to figure this out :sweat_smile:)"
+  },
+  {
+    "poster": {
+      "poster_name": "Marvin Estacio",
+      "poster_handle": "maverick_mle"
+    },
+    "time_stamp": "2023-05-24 01:50:26",
+    "text": "I just joined our dev team and we're using <https://api.hubapi.com/>.  Based on our config settings, it seems we're using it for development, staging and prod environments.  Not sure why though since it's an old code.  Hopefully this helps"
+  },
+  {
+    "poster": {
+      "poster_name": "Marvin Estacio",
+      "poster_handle": "maverick_mle"
+    },
+    "time_stamp": "2023-05-24 01:56:00",
+    "edited": {
+      "time_stamp": "2023-05-24 02:00:50"
+    },
+    "text": "Hi, we're currently using an old Contact API (<https://legacydocs.HubSpot.com/docs/methods/contacts/create_contact>) and I'm trying to save some dates.  But somehow the Unix milliseconds created in C# are not accepted but the ones created with Moment (library to manipulate dates in JS) are okay.  Sample code below for C#\n\n```var currentUtcDate = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc);\nvar unixTime = new DateTimeOffset(currentUtcDate).ToUnixTimeMilliseconds();\n\nvar now = DateTime.UtcNow;\nvar unixTime2 = new DateTimeOffset(now).ToUnixTimeMilliseconds();```\nBoth _unixTime_ and _unixTime2_ values are not accepted.\n\nThe unix time from Moment (JS) is accepted though. Sample code below.\n```const format_date_time = \"YYYY-MM-DD HH:mm:ss\";\nconst format_date = \"YYYY-MM-DD\";\nconst getTime = (date) =&gt; {\n  let formattedDateTime = moment(date).format(format_date_time);\n  let dateOnly = moment(formattedDateTime).format(format_date);\n  let convertedDate = new Date(`${dateOnly}T00:00:00.000Z`);\n  let unix_timestamp = moment(convertedDate).valueOf();\n  return unix_timestamp;\n};```\nError message from Postman\n```{\n    \"validationResults\": [\n        {\n            \"isValid\": false,\n            \"message\": \"1684914035320 is at 7:40:35.320 UTC, not midnight!\",\n            \"error\": \"INVALID_DATE\",\n            \"name\": \"user_created_date\"\n        },\n        {\n            \"isValid\": false,\n            \"message\": \"1684914036292 is at 7:40:36.292 UTC, not midnight!\",\n            \"error\": \"INVALID_DATE\",\n            \"name\": \"user_updated_date\"\n        }\n    ],\n    \"status\": \"error\",\n    \"message\": \"Property values were not valid\",\n    \"correlationId\": \"af185936-94dc-4b20-82d0-f385c9ed0123\"\n}```\nAny ideas why Unix time from C# is not accepted?",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-05-24 02:07:43"
+      },
+      {
+        "time_stamp": "2023-05-24 02:09:01"
+      },
+      {
+        "time_stamp": "2023-05-24 02:12:49"
+      },
+      {
+        "time_stamp": "2023-05-24 02:58:55"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Pokorniecki",
+      "poster_handle": "byron.pokorniecki.ext"
+    },
+    "time_stamp": "2023-05-24 02:07:43",
+    "text": "Basicly the error states the problem:\nIf the type of the field ist date you have to have a timestamp that matches midnight in UTC.\nOnly if the field type is datetime you can add the actual time aswell.\n\nI am guessing you will also see that if you output the timestamp and convert it to a human readable date."
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Pokorniecki",
+      "poster_handle": "byron.pokorniecki.ext"
+    },
+    "time_stamp": "2023-05-24 02:09:01",
+    "text": "so its not directly related to the way moment handles it - there you just passing the time as 00:00:00.000Z instead of using the time of the the invocation as you do in your top example."
+  },
+  {
+    "poster": {
+      "poster_name": "Marvin Estacio",
+      "poster_handle": "maverick_mle"
+    },
+    "time_stamp": "2023-05-24 02:12:49",
+    "text": "Thanks! Let me try to convert it to midnight UTC for C#"
+  },
+  {
+    "poster": {
+      "poster_name": "Marvin Estacio",
+      "poster_handle": "maverick_mle"
+    },
+    "time_stamp": "2023-05-24 02:58:55",
+    "text": "Yeah that solved my problem. Thanks a lot!  For reference, this was the code change in C#\n\n```var now = DateTime.Today;\nvar midnight = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0, DateTimeKind.Utc);\nvar unixTime = new DateTimeOffset(midnight).ToUnixTimeMilliseconds();```"
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Voorzanger",
+      "poster_handle": "birdman"
+    },
+    "time_stamp": "2023-05-24 03:54:40",
+    "text": "Tx <@U057X1ZENDV> I am still unsure if there are any differences because I had an issue on 1 of the endpoint and switching over seemed to have solved it."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-24 07:22:57",
+    "text": "of course"
+  },
+  {
+    "poster": {
+      "poster_name": "Guy Mofley",
+      "poster_handle": "guy.mofley"
+    },
+    "time_stamp": "2023-05-24 07:49:45",
+    "text": "thank you <@U038DUUV3GE>, your reply was very helpful!  I suspected the same."
+  },
+  {
+    "poster": {
+      "poster_name": "Alejandro Rodriguez",
+      "poster_handle": "alerodriguezlarosa"
+    },
+    "time_stamp": "2023-05-24 10:15:06",
+    "edited": {
+      "time_stamp": "2023-05-24 12:45:43"
+    },
+    "text": "nah there's not stupid questions <@U051U23LBKP> and I will say depending on what you are trying to do. Is hard to say because I don't know what are you trying to do lol. If you just need the table in some page, you could create a serverless function, add your code there that fetches your data and creates the row. There's a button in the design tools in your portal that allows you to create a new serverless function. Also if you are making an integration you can host your app somewhere. If you want to build a custom module to handle your code with client-side you can just use jquery or vanilla js to make a request to the HubSpot API it all depends on what you are trying to do. I asked the same question before, and although I did not get an answer for it I just try-error and figured what worked for me. It would help if you could tell us a general idea of what you are trying to do, to see if I have done it before and point you the where I would add the code. Here is an example how you can add your code to a custom module:\n\n```{# Custom Module in your theme inside design tools #}\n&lt;div id=\"{{ name }}\"&gt;\n  &lt;div id=\"blogTable\"&gt;\n    {% hubdb_table id_goes_here %}\n  &lt;/div&gt;\n&lt;/div&gt;\n\n{% require_js %}\n&lt;script&gt;\n    HERE YOU CAN ADD YOUR JAVASCRIPT CODE TO FETCH THE BLOGS TITLE\n    THEN CREATE ROW IN THE TABLE \n&lt;/script&gt;\n{% end_require_js %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ai Kurashina",
+      "poster_handle": "akurashina"
+    },
+    "time_stamp": "2023-05-24 11:54:59",
+    "text": "Hello there! How do I add more drop down values to a property via API in companies (or any object as a matter of fact)?",
+    "reply_count": 5,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-05-24 12:55:51"
+      },
+      {
+        "time_stamp": "2023-05-24 13:08:12"
+      },
+      {
+        "time_stamp": "2023-05-25 17:24:22"
+      },
+      {
+        "time_stamp": "2023-05-25 17:44:25"
+      },
+      {
+        "time_stamp": "2023-05-25 17:46:10"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-05-24 12:55:51",
+    "text": "PATCH on *`/crm/v3/properties/{objectType}/{propertyName}`*\ndocumentation is here: <https://developers.HubSpot.com/docs/api/crm/properties>"
+  },
+  {
+    "poster": {
+      "poster_name": "Ai Kurashina",
+      "poster_handle": "akurashina"
+    },
+    "time_stamp": "2023-05-24 13:08:12",
+    "text": "I'll try that thank you!!"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Hirsh",
+      "poster_handle": "ehirsh"
+    },
+    "time_stamp": "2023-05-24 14:41:45",
+    "text": "Greetings from the HubSpot Product Manager that owns this API and has a Slack keyword notification on 'conversation api' :slightly_smiling_face:\n\nThis is not supported today but coincidentally is something we are starting to work on. Would you mind explaining more about what you are trying to build that you are looking for this sort of filtering?"
+  },
+  {
+    "poster": {
+      "poster_name": "Valentina Varela Alzate",
+      "poster_handle": "valentina.varela"
+    },
+    "time_stamp": "2023-05-24 15:55:26",
+    "text": "We have an application in which we want to put a HubSpot module with the information related to the user: his profile information, his tickets, and his conversations.\n\nFor the conversations we want to list both open and closed conversations.\nFor this it is necessary to filter by the contact associated to the conversation."
+  },
+  {
+    "poster": {
+      "poster_name": "Valentina Varela Alzate",
+      "poster_handle": "valentina.varela"
+    },
+    "time_stamp": "2023-05-24 15:55:46",
+    "text": "<@U04B32JHTUZ>"
+  },
+  {
+    "poster": {
+      "poster_name": "D. Bnonn Tennant",
+      "poster_handle": "bnonn"
+    },
+    "time_stamp": "2023-05-24 21:31:08",
+    "text": "hi there, I'm wanting to submit data from a client's website (using a jamstack build on netlify) to a form in HubSpot. I am looking at the docs here: <https://legacydocs.HubSpot.com/docs/methods/forms/submit_form_v3_authentication#:~:text=As%20this%20API%20is%20authenticated%2C>\n\nBut I can't find any mention of where to find the portal Id and form Guid that I need. I've looked at the form in HubSpot but there's nothing obvious to tell me its id. Is it just in the URL for that form? E.g., `<https://app.HubSpot.com/forms/3390067/editor/3d3dfdcd-aef4-43bd-b259-9a56217724a9/edit/form>` &lt;-- is 3390067 the portal id and then the longer hash the form guid?\n\nSorry if this is a dumb question, I really did try to figure it out myself!",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-05-25 04:24:47"
+      },
+      {
+        "time_stamp": "2023-05-25 04:37:27"
+      }
+    ]
+  }
+]

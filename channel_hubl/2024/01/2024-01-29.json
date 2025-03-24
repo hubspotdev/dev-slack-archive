@@ -1,0 +1,18 @@
+[
+  {
+    "poster": {
+      "poster_name": "Thi",
+      "poster_handle": "thi.senaratne"
+    },
+    "time_stamp": "2024-01-29 17:23:34",
+    "text": "<@UCJANAW1Y> thanks for the suggestion. For a simple macro that indeed seems to solve the problem. sadly i actually simplified my usecase quite a bit, and i need to use `{% raw %}` inside a caller macro. as far as im aware, you cannot call a macro that uses `caller()` with `print`?\n\nhere is a more specific example:\n\nDefine the caller macro:\n```{% macro my_macro() %}\n  &lt;div&gt;\n    &lt;div&gt;\n      {% raw %} {{\"Sample Text A\"}} {% endraw %}\n    &lt;/div&gt;\n    &lt;div&gt;\n      {{ caller() }}\n    &lt;/div&gt;\n  &lt;/div&gt;\n{% endmacro %}```\nCall the macro:\n```{% call my_macro() %}\n  &lt;div&gt;\n    {% raw %} {{\"Sample Text B\"}} {% endraw %}\n  &lt;/div&gt;\n{% endcall %}```\nexpected output:\n```{{\"Sample Text A\"}}\n{{\"Sample Text B\"}}```\nactual output:\n```Sample Text A\nSample Text B```\nAny suggestions/ideas?"
+  },
+  {
+    "poster": {
+      "poster_name": "Thi",
+      "poster_handle": "thi.senaratne"
+    },
+    "time_stamp": "2024-01-29 17:50:01",
+    "text": "for anyone in the same situation, we came up with a solution by nesting html/hubl between the call into another macro, and passing the output as an input for the main macro, and using print as <@UCJANAW1Y> suggested. this works like a charm. heres an example:\n\nDefine the main (caller) macro:\n```{% macro my_macro(body_input) %}\n  &lt;div&gt;\n    &lt;div&gt;\n      {% raw %} {{\"Sample Text A\"}} {% endraw %}\n    &lt;/div&gt;\n    &lt;div&gt;\n      {% print body_input %}\n    &lt;/div&gt;\n  &lt;/div&gt;\n{% endmacro %}```\ncall it without using caller but instead with a parameter that has the body text:\n```{% macro randomMacroToWrapTheInput() %}\n  &lt;div&gt;\n    {% raw %} {{\"Sample Text B\"}} {% endraw %}\n  &lt;/div&gt;\n{% endcall %}\n\n{% print my_macro(randomMacroToWrapTheInput()) %}```\noutput:\n```{{\"Sample Text A\"}}\n{{\"Sample Text B\"}}```\n"
+  }
+]

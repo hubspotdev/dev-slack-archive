@@ -1,0 +1,167 @@
+[
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2024-08-01 01:40:54",
+    "text": "Hey <@U07C65L86QY> - yes this is possible. HubSpot will most likely throw some sort of warning but it's valid.\n\nanother possible way is to do it like this:\n\n```{% set headline_settings ={\n\"tag\" : module.tag,\n\"size\" : module.size\n\"text\" : module.heading\n}\n%}\n...\n&lt;{{headline_settings.tag}} class=\"heading {{ headline_settings.size }}\"&gt;{{ headline_settings.text }}&lt;/{{ headline_settings.tag }}&gt;```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Gustavo Graeff",
+      "poster_handle": "gustavo.graeff"
+    },
+    "time_stamp": "2024-08-01 01:48:17",
+    "text": "So we have to first create an object and from this object retrieve the value"
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2024-08-01 01:49:31",
+    "text": "If you want to work with objects, yes. But this:\n`&lt;{{ module.tag }} class=\"heading {{ module.size }}\"&gt;{{ module.heading }}&lt;/{{ module.tag }}&gt;` will work totally fine :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Gustavo Graeff",
+      "poster_handle": "gustavo.graeff"
+    },
+    "time_stamp": "2024-08-01 01:53:07",
+    "text": "Have you tested it? It seems like not to work here"
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2024-08-01 01:53:14",
+    "text": "you can even think about utilizing macros in a seperate file...\n\nMacro.html:\n```{% set macro headline(h_tag,h_class, h_content) %}\n&lt;{{h_tag}} class=\"headline {{h_class}}\"&gt;{{h_content}}&lt;/{{h_tag&gt;\n{% endmacro %}```\nModule.html\n```{% import headline from 'PATH-TO-MACRO.html' %}\n...\n{{ headline(module.tag, module.class, module.headline ) }}```\n"
+  },
+  {
+    "text": "This is how it looks here",
+    "time_stamp": "2024-08-01 01:53:26"
+  },
+  {
+    "poster": {
+      "poster_name": "Gustavo Graeff",
+      "poster_handle": "gustavo.graeff"
+    },
+    "time_stamp": "2024-08-01 01:54:44",
+    "text": "```&lt;{{ module.headingtag }}\n        class=\"heading {{ module.headingSize }}\"\n        style=\"\n          font-family: Diatype, Helvetica Neue, Helvetica, Arial, sans-serif;\n          font-style: normal;\n          font-weight: 700;\n          white-space: pre-wrap;\n        \"\n        &gt;{{ module.heading }}\n      &lt;/{{ module.headingtag }}&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Gustavo Graeff",
+      "poster_handle": "gustavo.graeff"
+    },
+    "time_stamp": "2024-08-01 01:55:19",
+    "text": "Wait"
+  },
+  {
+    "poster": {
+      "poster_name": "Gustavo Graeff",
+      "poster_handle": "gustavo.graeff"
+    },
+    "time_stamp": "2024-08-01 01:55:26",
+    "text": "Lemme check something"
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2024-08-01 01:55:51",
+    "text": "what does {{ module.headingtag|pprint }} show you"
+  },
+  {
+    "poster": {
+      "poster_name": "Gustavo Graeff",
+      "poster_handle": "gustavo.graeff"
+    },
+    "time_stamp": "2024-08-01 01:57:00",
+    "text": "Sorry, it was a typo here"
+  },
+  {
+    "poster": {
+      "poster_name": "Gustavo Graeff",
+      "poster_handle": "gustavo.graeff"
+    },
+    "time_stamp": "2024-08-01 01:57:08",
+    "text": "it should be heading*T*ag"
+  },
+  {
+    "poster": {
+      "poster_name": "Gustavo Graeff",
+      "poster_handle": "gustavo.graeff"
+    },
+    "time_stamp": "2024-08-01 01:57:18",
+    "text": "thanks"
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2024-08-01 01:58:11",
+    "text": "you're welcome"
+  },
+  {
+    "poster": {
+      "poster_name": "Gustavo Graeff",
+      "poster_handle": "gustavo.graeff"
+    },
+    "time_stamp": "2024-08-01 01:58:50",
+    "edited": {
+      "time_stamp": "2024-08-01 02:01:44"
+    },
+    "text": "The build process here uses cheerio, and its parser options was lowerCaseAttributeNames: true and lowerCaseTags: true"
+  },
+  {
+    "poster": {
+      "poster_name": "Gustavo Graeff",
+      "poster_handle": "gustavo.graeff"
+    },
+    "time_stamp": "2024-08-01 01:58:58",
+    "text": "So that's why the built file had the typo"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-08-01 02:53:22",
+    "text": "Thanks, just an edit on above\nI realised the tojson fromjson bit had to be done outside the macro to set my data, just to explain why I needed this:\n\nI had a hubdb table of data and I wanted to order them alphabetically but some items missed the name and I wanted to give them a generic name of “Catalogue Sheet”\n\nThis means I can’t order them in the hubdb query so I wanted to use the |sort filter\n\n```{%- macro updateEmptyRows(seq,key,val) -%}\n\t{%- for row in seq|selectattr(key,'none') -%}\n        {# This updates the existing dictionary #}\n        {%- do row.put(key,val) -%}\n    {%- endfor -%}\n{%- endmacro -%}\n\n{# Convert from hubdb object to dictionary with to/from json #}\n{% set catalogue_sheets = row.catalogue_sheet|tojson|fromjson %}\n\n{# Set the nice name to catalogue sheet if empty #}\n{% do updateEmptyRows(catalogue_sheets,'nice_name','Catalogue Sheet') %}\n\n{# sort the sheets and then loop through #}\n{% for file in catalogue_sheets|sort(false,false,'nice_name') if catalogue_sheets %}\n...```"
+  },
+  {
+    "poster": {
+      "poster_name": "Fillipe Montenegro",
+      "poster_handle": "fillipe"
+    },
+    "time_stamp": "2024-08-01 07:28:35",
+    "text": "I am working on a module and I can't get data from a field (the options we give to users). It's in preview, for a global module. I don't want to publish, but it's saved. Should it be showing in preview or some data really will only show up once the content is published/updated?",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-08-04 05:59:23"
+      },
+      {
+        "time_stamp": "2024-08-06 06:43:33"
+      },
+      {
+        "time_stamp": "2024-08-06 06:43:38"
+      },
+      {
+        "time_stamp": "2024-08-06 06:44:50"
+      },
+      {
+        "time_stamp": "2024-08-07 06:04:59"
+      },
+      {
+        "time_stamp": "2024-08-07 08:28:01"
+      }
+    ]
+  }
+]

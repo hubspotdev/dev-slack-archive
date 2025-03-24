@@ -1,0 +1,31 @@
+[
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2024-01-27 05:16:48",
+    "edited": {
+      "time_stamp": "2024-01-27 11:15:29"
+    },
+    "text": "Anyone worked with the new `x-HubSpot-signature-v3` ? I can't get it to work for some reason, followed everything in the doc. Ignore the mess, would need to be refactored also\n\n```export function validateHubSpotSignature(req: FastifyRequest, reply: FastifyReply, done: HookHandlerDoneFunction) {\n  if (req.routeOptions.config && req.routeOptions.config.skipValidation) {\n    done();\n  }\n\n  const signature = req.headers[\"x-HubSpot-signature\"] as string;\n  const clientSecret = process.env.HubSpot_CLIENT_SECRET as string;\n\n  const httpMethod = req.method;\n  const uri = req.url;\n  const body = req.body;\n\n  let string = clientSecret + httpMethod + req.protocol + \"://\" + req.hostname + uri;\n\n  if (httpMethod === \"POST\") {\n    string += JSON.stringify(body);\n  }\n\n  console.log(\"string\", string);\n  const hash = crypto.createHash(\"sha256\").update(string).digest(\"hex\");\n\n  if (hash === signature) {\n    done(); // The request is valid\n  } else {\n    reply.code(401).send(\"Invalid signature\"); // The request may have been tampered with or spoofed\n    done(); // The request is valid\n  }\n}```",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-01-27 22:26:00"
+      },
+      {
+        "time_stamp": "2024-01-28 05:33:03"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Aruljothi Kuppusamy",
+      "poster_handle": "aj974"
+    },
+    "time_stamp": "2024-01-27 22:26:00",
+    "text": "<@U05CAJG8D98> I didn't worked, but this will help you, Please refer the official HubSpot nodejs lib <https://github.com/HubSpot/HubSpot-api-nodejs/blob/master/src/utils/signature.ts>"
+  }
+]

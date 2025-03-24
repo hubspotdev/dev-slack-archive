@@ -1,0 +1,117 @@
+[
+  {
+    "poster": {
+      "poster_name": "Thomas",
+      "poster_handle": "lass"
+    },
+    "time_stamp": "2019-12-12 02:00:01",
+    "text": "There is the draft stage and the proof stage, before you publish the site to your domain. In the proof stage, you can test the dynamic pages."
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2019-12-12 09:42:32",
+    "text": "Anyone ever set up dynamic pages with a parent/child relationship using foreign_id columns?",
+    "reply_count": 9,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2019-12-12 10:00:55"
+      },
+      {
+        "time_stamp": "2019-12-12 10:03:37"
+      },
+      {
+        "time_stamp": "2019-12-12 10:08:15"
+      },
+      {
+        "time_stamp": "2019-12-12 10:48:22"
+      },
+      {
+        "time_stamp": "2019-12-12 12:14:58"
+      },
+      {
+        "time_stamp": "2019-12-12 12:15:10"
+      },
+      {
+        "time_stamp": "2019-12-12 12:17:01"
+      },
+      {
+        "time_stamp": "2019-12-12 12:17:28"
+      },
+      {
+        "time_stamp": "2019-12-12 21:24:36"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jaydip Suvagiya",
+      "poster_handle": "jaydip"
+    },
+    "time_stamp": "2019-12-12 10:00:55",
+    "text": "```{% if dynamic_page_hubdb_row %}\n            &lt;section class=\"event-detail\"&gt;\n                &lt;h1&gt;{{ dynamic_page_hubdb_row.event_name }}&lt;/h1&gt;\n                &lt;div class=\"richtext-box tw-mt-4\"&gt;\n                  {{ dynamic_page_hubdb_row.event_description }}\n                &lt;/div&gt;\n                &lt;hr class=\"tw-my-6\" /&gt;\n                &lt;div class=\"event-essencial\"&gt;\n                  &lt;p&gt;{{ module.detail_page.event_location_label }} : \n                    &lt;b&gt;\n                      {% for evLocation in dynamic_page_hubdb_row.event_location %}\n                        {{ evLocation.location_name }}\n                        {% if loop.last != true %} , {% endif %}\n                      {% endfor %}\n                    &lt;/b&gt;\n                  &lt;/p&gt;\n                  &lt;p class=\"tw-mb-4\"&gt;{{ module.detail_page.event_date_label }} : &lt;b&gt;{{ dynamic_page_hubdb_row.event_date|datetimeformat('%d.%m.%Y') }}&lt;/b&gt;&lt;/p&gt;\n                  {% if dynamic_page_hubdb_row.event_availability.id == 1 %}\n                    &lt;a href=\"javascript:void(0)\" data-target=\"#bookingModal\" data-activate=\"modal\" class=\"btn\"&gt;{{ module.seats_available_btn }}&lt;/a&gt;\n                  {% elif dynamic_page_hubdb_row.event_availability.id == 2 %}\n                    &lt;a href=\"javascript:void(0)\" data-target=\"#bookingModal\" data-activate=\"modal\" class=\"btn-orange-300\"&gt;{{ module.almost_sold_out_btn }}&lt;/a&gt;\n                  {% elif dynamic_page_hubdb_row.event_availability.id == 3 %}\n                    &lt;a href=\"javascript:void(0)\" class=\"btn-orange-100\"&gt;{{ module.sold_out_btn }}&lt;/a&gt;\n                  {% endif %}\n                &lt;/div&gt;\n              &lt;/section&gt;  \n          {% elif dynamic_page_hubdb_table_id %}\n              &lt;section class=\"section comedy-events\" {% if module.module_name %}id=\"{{ module.module_name }}\"{% endif %}&gt;\n                &lt;div&gt;\n                  {% if module.description %}\n                    &lt;div class=\"richtext-box tw-mb-12\"&gt;\n                        {{ module.description }}\n                    &lt;/div&gt;\n                  {% endif %}\n                  {% for location in hubdb_table_rows(parent_table_id) %}\n                    &lt;h3 class=\"section-title\"&gt;&lt;span&gt;{{ location.location_name }}&lt;/span&gt;&lt;/h3&gt;\n                    {% set eventFilter = \"&amp;orderBy=event_date\" %}\n                    {% for foreign_row in hubdb_table_rows(child_table_id,eventFilter) %}\n                      {#{% if (foreign_row['event_date']|datetimeformat('%j')) &gt;= (local_dt|datetimeformat('%j')) %}#}\n                        {% for demo in foreign_row.event_location %}\n                          {% if demo.hs_id == location.hs_id %}\n                            &lt;div class=\"event tw-py-4\"&gt;\n                              &lt;div class=\"event-info\"&gt;\n                                &lt;b&gt;{{ foreign_row.event_date|datetimeformat('%d.%m.%Y') }}&lt;/b&gt; - {{ foreign_row.host_name }}\n                                &lt;br&gt;\n                                &lt;b&gt;{{ module.location_label }}&lt;/b&gt; - {{ foreign_row.event_name }}\n                                {% if foreign_row.event_note %}\n                                &lt;br&gt;\n                                &lt;small class=\"tw-mt-4 tw-block\"&gt;{{ foreign_row.event_note }}&lt;/small&gt;\n                                {% endif %}\n                              &lt;/div&gt;\n                              &lt;div class=\"event-button md:tw-text-right\"&gt;\n                                {% if foreign_row.event_availability.id == 1 %}\n                                  &lt;a href=\"javascript:void(0)\" data-target=\"#bookingModal\" data-event=\"{{ foreign_row.event_date|datetimeformat('%d.%m.%Y') }} - {{ foreign_row.hs_name }}\" data-activate=\"modal\" class=\"btn\"&gt;{{ module.seats_available_btn }}&lt;/a&gt;\n                                {% elif foreign_row.event_availability.id == 2 %}\n                                  &lt;a href=\"javascript:void(0)\" data-target=\"#bookingModal\" data-activate=\"modal\" class=\"btn-orange-300\"&gt;{{ module.almost_sold_out_btn }}&lt;/a&gt;\n                                {% elif foreign_row.event_availability.id == 3 %}\n                                  &lt;a href=\"javascript:void(0)\" class=\"btn-orange-100\"&gt;{{ module.sold_out_btn }}&lt;/a&gt;\n                                {% endif %}\n                                {% if foreign_row.event_description %}\n                                  &lt;div class=\"tw-mt-1\"&gt;\n                                    &lt;a href=\"{{ request.path }}/{{ foreign_row.hs_path }}\"&gt;{{ module.know_more_button_label }}&lt;/a&gt;\n                                  &lt;/div&gt;\n                                {% endif %}\n                              &lt;/div&gt;\n                            &lt;/div&gt;\n                            &lt;hr&gt; \n                          {% endif %}\n                        {% endfor %}\n                      {#{% endif %}#}\n                    {% endfor %}\n                  {% endfor %}\n              &lt;/div&gt;\n              &lt;/section&gt;\n          {% endif %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jaydip Suvagiya",
+      "poster_handle": "jaydip"
+    },
+    "time_stamp": "2019-12-12 10:03:37",
+    "text": "in this example, foreign id column is set in events table and i make another table for locations"
+  },
+  {
+    "text": "and you also need to select  hubDb in page setting, i selected events table here",
+    "time_stamp": "2019-12-12 10:08:15"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2019-12-12 10:48:22",
+    "text": "Thanks <@UNWHHSWHJ>!"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-12-12 12:14:58",
+    "text": "Yes is was so nice"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-12-12 12:15:10",
+    "text": "its like using a better version of multi select"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-12-12 12:17:01",
+    "text": "Also the foreign row data is lazily loaded in HubL so you don’t get too much of a performance hit for using foreign rows"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-12-12 12:17:28",
+    "text": "Didnt know that but that is a great feature"
+  },
+  {
+    "poster": {
+      "poster_name": "Jaydip Suvagiya",
+      "poster_handle": "jaydip"
+    },
+    "time_stamp": "2019-12-12 21:24:36",
+    "text": "No worries <@U26BLKGE4> :simple_smile:"
+  }
+]

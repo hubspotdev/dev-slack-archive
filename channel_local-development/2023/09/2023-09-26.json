@@ -1,0 +1,121 @@
+[
+  {
+    "poster": {
+      "poster_name": "Sejal Parikh (HubSpot PM)",
+      "poster_handle": "sparikh"
+    },
+    "time_stamp": "2023-09-26 09:57:06",
+    "text": "My first thought is that this is likely the problem inside your code, where you may be trying to return data from APIs but they are null. Can you try logging output to check?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kellen Rogers",
+      "poster_handle": "kellenr"
+    },
+    "time_stamp": "2023-09-26 17:13:56",
+    "text": "Hello, I am trying to add multiple private apps to the same HubSpot CRM Project.\n\nEverything works fine with a single app where the app is in `/src/app/app.json`\n\nHowever when I move the app to `/src/payments-app/app.json` I get a build error on the extensions subdirectory as follows:\n\n```This extension file has an invalid file path: /payments-app/extensions/CollectPaymentOnDeal.tsx. Make sure it's inside the /app/extensions/ directory and not in a subdirectory, and try again.```\nI have reviewed the logs and it appears it is building the app.functions directly without issue, but it's having issues on the extensions folder.\n\nHas anyone had any luck getting multiple private apps to work under the same project?",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-09-26 17:17:10"
+      },
+      {
+        "time_stamp": "2023-09-26 17:22:28"
+      },
+      {
+        "time_stamp": "2023-09-26 17:28:58"
+      },
+      {
+        "time_stamp": "2023-09-27 08:54:37"
+      },
+      {
+        "time_stamp": "2023-09-27 09:21:46"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Sejal Parikh (HubSpot PM)",
+      "poster_handle": "sparikh"
+    },
+    "time_stamp": "2023-09-26 17:17:10",
+    "text": "Hello Kellen, I am curious to know what prompted you to add multiple private apps to a project?"
+  },
+  {
+    "text": "We have 5 different projects for various integrations to 3rd party systems and a couple for UI-Extensions. I wanted to move all our UI-Extensions into a single project so they were easy to find and manage. We are about to start creating 5-10 additional UI Extensions so working on standardizing everything.\n\nIs there a reason that I shouldn't have multiple apps in a project?\n\nAccording to the documentation it should be possible.",
+    "time_stamp": "2023-09-26 17:22:28"
+  },
+  {
+    "poster": {
+      "poster_name": "Kellen Rogers",
+      "poster_handle": "kellenr"
+    },
+    "time_stamp": "2023-09-26 17:28:58",
+    "text": "And thank you for responding so quickly! I wasn't sure I would get anything until tomorrow."
+  },
+  {
+    "poster": {
+      "poster_name": "Ryo Nishizaki",
+      "poster_handle": "rn.383.b2fz"
+    },
+    "time_stamp": "2023-09-26 19:00:41",
+    "text": "Hi <@U03FJQPSC0Y>\nHow is it appropriate to plant logs?\nThe code is as follows\n```import React, { useState } from \"react\";\nimport {\n  Tile,\n  Divider,\n  Link,\n  Button,\n  Alert,\n  Text,\n  Input,\n  Flex,\n  HubSpot,\n} from \"@HubSpot/ui-extensions\";\nimport { CrmAssociationsPivot, CrmActionLink, CrmActionButton } from '@HubSpot/ui-extensions/crm';\nimport { Client } from '@HubSpot/api-client';\n\nconst dealContext = {\n objectTypeId: \"0-3\",\n objectId: 14795354663,\n}; \n\nconst associateContext = {\nobjectTypeId: \"0-3\",\nassociation: {\n objectTypeId: \"0-1\",\n objectId: 769851,\n },\n};\n\nHubSpot.extend(({ context, runServerlessFunction, actions }) =&gt; {\n  const HubSpotClient = new Client({ accessToken: \"hogehoge\" });\n\n  const [searchResult, setSearchResult] = useState([]);\n\n  const handleSearch = async () =&gt; {\n    const BatchInputPublicObjectId = { inputs: [{ id: \"151\" }] };\n    const fromObjectType = \"contact\";\n    const toObjectType = \"JobOffers\";\n\n    try {\n      const apiResponse = await HubSpotClient.crm.associations.batchApi.read(\n        fromObjectType,\n        toObjectType,\n        BatchInputPublicObjectId\n      );\n\n      console.log(JSON.stringify(apiResponse, null, 2));\n\n      setSearchResult(apiResponse.body.results);\n    } catch (e) {\n      e.message === \"HTTP request failed\"\n        ? console.error(JSON.stringify(e.response, null, 2))\n        : console.error(e);\n    }\n  };\n\n  return (\n    &lt;&gt;\n      &lt;Tile&gt;\n        &lt;Text&gt;JobOffer&lt;/Text&gt;\n        &lt;Divider /&gt;\n        &lt;Flex direction=\"column\"&gt;\n          &lt;Input placeholder=\"JobOfferName\" /&gt;\n          &lt;Input placeholder=\"Owner\" /&gt;\n          &lt;Button onClick={handleSearch}&gt;Search&lt;/Button&gt;\n        &lt;/Flex&gt;\n        &lt;Divider /&gt;\n        {searchResult.length &gt; 0 &amp;&amp; (\n          &lt;Alert type=\"success\"&gt;Search Result&lt;/Alert&gt;\n        )}\n      &lt;/Tile&gt;\n    &lt;/&gt;\n  );\n});```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Sejal Parikh (HubSpot PM)",
+      "poster_handle": "sparikh"
+    },
+    "time_stamp": "2023-09-26 20:49:59",
+    "text": "It looks like you are trying to make an API call from client-side, which is not allowed and it's documented as a limitation - <https://developers.HubSpot.com/docs/platform/ui-extensions-overview#limitations>\n\nYou should use serverless function to perform the data fetch. Here's a simple code sample to show how it can be done <https://github.com/HubSpot/ui-extensions-examples/tree/main/deals-summary>"
+  },
+  {
+    "poster": {
+      "poster_name": "Sejal Parikh (HubSpot PM)",
+      "poster_handle": "sparikh"
+    },
+    "time_stamp": "2023-09-26 20:52:35",
+    "text": "Btw, we have <#C05R599UA12|ui-extensions> channel where you can post to get responses from developers who are trying the same beta."
+  },
+  {
+    "poster": {
+      "poster_name": "Sejal Parikh (HubSpot PM)",
+      "poster_handle": "sparikh"
+    },
+    "time_stamp": "2023-09-26 20:57:24",
+    "text": "<@U05RK1H29LH> We are looking at extending index pages, I want to understand your use cases a little more. Can you set up a short 15-20 min call?"
+  },
+  {
+    "poster": {
+      "poster_name": "Sejal Parikh (HubSpot PM)",
+      "poster_handle": "sparikh"
+    },
+    "time_stamp": "2023-09-26 20:57:25",
+    "text": "<http://meetings.HubSpot.com/sparikh1|meetings.HubSpot.com/sparikh1>"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryo Nishizaki",
+      "poster_handle": "rn.383.b2fz"
+    },
+    "time_stamp": "2023-09-26 21:02:12",
+    "text": "I'm sorry.\nPlease text."
+  },
+  {
+    "poster": {
+      "poster_name": "Ryo Nishizaki",
+      "poster_handle": "rn.383.b2fz"
+    },
+    "time_stamp": "2023-09-26 21:04:08",
+    "text": "I would like to be invited to the channel"
+  },
+  {
+    "poster": {
+      "poster_name": "Sejal Parikh (HubSpot PM)",
+      "poster_handle": "sparikh"
+    },
+    "time_stamp": "2023-09-26 23:16:26",
+    "text": "You can just join in, since it's a public channel."
+  }
+]

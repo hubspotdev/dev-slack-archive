@@ -1,0 +1,122 @@
+[
+  {
+    "poster": {
+      "poster_name": "Andrei Axinoi",
+      "poster_handle": "andreiaxinoi"
+    },
+    "time_stamp": "2024-08-12 08:31:02",
+    "text": "I actually ended up abandoning the approach . The PDFs I'm planning to generate are highly graphic and dynamic, including headers, footers, charts, and tables, and most of the PDF libraries out there are pretty limited for what I need.\nInstead, I'm working on running a headless browser in an AWS Lambda function and triggering it through AWS API Gateway. This will be accessed by firing a webhook from a private app. Once the PDF is generated, I'll attach it via the HubSpot API. I found some solutions on the HubSpot forums about how to attach files via API, and it looks like it’s possible to save a file using the Notes API and then attach it to the corresponding object."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-12 14:22:30",
+    "text": "```const axios = require('axios')\n\nexports.main = async (event, callback) =&gt; {\n  let fileId = false\n  const apiKey = process.env.hsApiKey\n  const pdfURL = event.inputFields.pdfUrl\n\n  const fileApiData = {\n    \"folderPath\": \"your-HubSpot-folder\",\n    \"access\": \"PUBLIC_INDEXABLE\",\n    \"url\": pdfURL,\n    \"overwrite\": true\n  }\n\n  const fileConfig = {\n    method: 'post',\n    url: '<https://api.hubapi.com/files/v3/files/import-from-url/async>',\n    headers: {\n      'Content-Type': 'application/json',\n      'Authorization': `Bearer ${apiKey}`,\n    },\n    data: fileApiData\n  };\n  try {\n    const fileResponse = await axios.request(fileConfig)\n\n    fileId = fileResponse.data.id\n\n    callback({\n      outputFields: {\n        fileId\n      }\n    });    \n  } catch(err) {\n    const error = err.response ? err.response.data : err.message\n    console.log(error)\n    throw err\n  }\n\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-12 14:22:39",
+    "text": "if you want to save into file manager you can do that"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-12 14:23:09",
+    "text": "then after that is complete, like delay a minute or whatever length it takes\n```const HubSpot = require('@HubSpot/api-client');\n\nexports.main = async (event, callback) =&gt; {\n    const { fileId } = event.inputFields\n    const HubSpotClient = new HubSpot.Client({\n        accessToken: process.env.hsApiKey,\n    });\n\n    const importFile = await HubSpotClient.files.filesApi.checkImport(fileId)\n\n\n    callback({\n        outputFields: {\n            file: importFile.result.id,\n            url: importFile.result.url\n        },\n    });\n};```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-12 14:23:35",
+    "text": "then if you want to update a property on the object, you use that url and pop it in thhere"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-12 14:23:54",
+    "text": "wo do pdfs via headless/puppeteer"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-12 14:24:00",
+    "text": "just easier that way"
+  },
+  {
+    "poster": {
+      "poster_name": "Rahul Sharma",
+      "poster_handle": "rkbagra0490"
+    },
+    "time_stamp": "2024-08-13 00:04:20",
+    "text": "*Hello, How do I get the email address and name of a user viewing a page that has signed in via sso?*",
+    "reply_count": 12,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-08-13 00:08:18"
+      },
+      {
+        "time_stamp": "2024-08-13 00:13:06"
+      },
+      {
+        "time_stamp": "2024-08-14 08:23:22"
+      },
+      {
+        "time_stamp": "2024-08-14 08:23:39"
+      },
+      {
+        "time_stamp": "2024-08-14 09:22:35"
+      },
+      {
+        "time_stamp": "2024-08-14 10:09:56"
+      },
+      {
+        "time_stamp": "2024-08-14 10:10:27"
+      },
+      {
+        "time_stamp": "2024-08-14 10:10:41"
+      },
+      {
+        "time_stamp": "2024-08-14 10:46:06"
+      },
+      {
+        "time_stamp": "2024-08-14 12:03:29"
+      },
+      {
+        "time_stamp": "2024-08-15 10:55:52"
+      },
+      {
+        "time_stamp": "2024-08-15 13:59:18"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "韋佳雯",
+      "poster_handle": "ma8521999"
+    },
+    "time_stamp": "2024-08-13 00:08:18",
+    "text": "I would like to know too"
+  },
+  {
+    "poster": {
+      "poster_name": "Rahul Sharma",
+      "poster_handle": "rkbagra0490"
+    },
+    "time_stamp": "2024-08-13 00:13:06",
+    "text": "let me know if you can find any solution for it"
+  }
+]

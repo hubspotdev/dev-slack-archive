@@ -1,0 +1,55 @@
+[
+  {
+    "poster": {
+      "poster_name": "Swathik Devadiga",
+      "poster_handle": "swathik"
+    },
+    "time_stamp": "2023-11-16 01:57:15",
+    "text": "It looks like the value of 'serial_number' is empty."
+  },
+  {
+    "poster": {
+      "poster_name": "Swathik Devadiga",
+      "poster_handle": "swathik"
+    },
+    "time_stamp": "2023-11-16 02:09:20",
+    "text": "Hi Everyone,\nI've encountered rate limit errors in custom code actions while bulk enrollments via the HubSpot API. Despite implementing a randomized delay of 4 to 16 seconds between calls, I'm still experiencing approximately 5% errors when enrolling 1k contacts and around 15% errors with 7k contacts.\n\nWe're on the enterprise plan, allowing 150 calls per 10 seconds. However, despite the attempts to introduce delays, the issue persists.\nCould anyone suggest additional solutions or optimizations that I might have overlooked in my current code?\n\nHere's a snippet of my code:\n```const axios = require('axios');\n\nfunction getRandomInt(min, max) {\n    min = Math.ceil(min);\n    max = Math.floor(max);\n    return Math.floor(Math.random() * (max - min) + min);\n}\n\nexports.main = async (event) =&gt; {\n    const accessToken = process.env.token;\n\n    try {\n        const delayBeforeFetch = getRandomInt(4000, 16000);\n        console.log(`Delaying before fetching associated companies for ${delayBeforeFetch} milliseconds`);\n\n        await new Promise((resolve) =&gt; {\n            setTimeout(() =&gt; {\n                resolve();\n            }, delayBeforeFetch);\n        });\n\n        // API call to fetch associated companies\n        const response = await axios({\n            method: 'get',\n            url: `<https://api.hubapi.com/crm/v4/objects/contacts/${event.object.objectId}/associations/companies>`,\n            headers: {\n                Authorization: `Bearer ${accessToken}`,\n                'Content-Type': 'application/json',\n            }\n        });\n\n        console.log(JSON.stringify(response.data));\n        const companiesList = response.data.results;\n        const companiesIds = companiesList.map((company) =&gt; company.toObjectId);\n\n        // Log the total count of companiesIds\n        console.log('Total count of companiesIds for contact', event.object.objectId, ':', companiesIds.length);\n\n        // Check if the length of companiesIds is greater than 1\n        if (companiesIds.length &gt; 1) {\n            // API call to add contact to a list\n            try {\n                const addLine = await axios.request({\n                    data: [event.object.objectId],\n                    method: 'PUT',\n                    maxBodyLength: Infinity,\n                    url: '<https://api.hubapi.com/crm/v3/lists/436/memberships/add>',\n                    headers: {\n                        Authorization: `Bearer ${accessToken}`,\n                        'Content-Type': 'application/json',\n                    },\n                });\n\n                console.log(JSON.stringify(addLine.data));\n            } catch (addLineError) {\n                console.error(addLineError);\n                throw addLineError;\n            }\n        }\n    } catch (error) {\n        console.error(error);\n        throw error;\n    }\n};```",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-11-16 10:45:54"
+      },
+      {
+        "time_stamp": "2023-11-27 19:41:21"
+      },
+      {
+        "time_stamp": "2023-11-29 23:50:32"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Alex Woodbridge",
+      "poster_handle": "alex.woodbridge"
+    },
+    "time_stamp": "2023-11-16 03:53:23",
+    "text": "Thanks Amalia, I managed to get me engineering team to write data to new properties."
+  },
+  {
+    "poster": {
+      "poster_name": "Drew Davidoff",
+      "poster_handle": "drew244"
+    },
+    "time_stamp": "2023-11-16 09:02:34",
+    "text": "I was hoping that wasn’t the reason :melting_face: It’s lame that there has to be a value for an “OBJECT_PROPERTY” input field. I’m just trying to define the property where the functionality will set a serial number. I have a solution for handling this. Thanks for the help <@U04EGUY0U06>"
+  },
+  {
+    "poster": {
+      "poster_name": "Earl Jenkins",
+      "poster_handle": "earl"
+    },
+    "time_stamp": "2023-11-16 10:45:54",
+    "text": "Question: How are you calling this `exports.main` function? You're calling it in a loop?"
+  }
+]

@@ -1,0 +1,422 @@
+[
+  null,
+  null,
+  null,
+  {
+    "poster": {
+      "poster_name": "Parag Jagdale",
+      "poster_handle": "parag"
+    },
+    "time_stamp": "2018-11-05 10:24:16",
+    "edited": {
+      "time_stamp": "2018-11-05 10:25:58"
+    },
+    "text": "How do I check whether a personalization token’s value is empty in an email hubl/html template? I’m having a lot of trouble getting it to work. Here’s what I tried:\n```\n                \n                value:   {{ contact.city }}&lt;br&gt;\n                type: {{ type(contact.city) }} &lt;br&gt;\n                length:  {{ contact.city|string|length }} &lt;br&gt;\n                \n                &lt;br&gt;--------------------&lt;br&gt;\n                                               \n                is empty?\n                {% if contact.city == \"\" %}\n                yes, empty\n                {% else %}\n\t                no, value is: {{ contact.city }}\n                {% endif %}\n                &lt;br&gt;\n                \n                is not empty?\n                {% if contact.city != \"\" %}\n                not empty, value is: {{ contact.city }}\n\t\t\t\t\t\t\t\t{% else %}\n                \tit's empty\n                {% endif %}\n```"
+  },
+  {
+    "text": "a contact with a non-empty City property",
+    "time_stamp": "2018-11-05 10:24:52"
+  },
+  {
+    "text": "a contact with an empty “City” property",
+    "time_stamp": "2018-11-05 10:25:18"
+  },
+  {
+    "poster": {
+      "poster_name": "Stefen Phelps",
+      "poster_handle": "stefen"
+    },
+    "time_stamp": "2018-11-05 10:27:16",
+    "text": "<@UBRG1R3EW> usually if something doesn't exist you can just use `{% if contact.city %} city exists {% endif %}` if it doesn't exist it won't output anything"
+  },
+  {
+    "poster": {
+      "poster_name": "Parag Jagdale",
+      "poster_handle": "parag"
+    },
+    "time_stamp": "2018-11-05 10:30:52",
+    "text": "<@U7V9DQ31P> thats what I started with, but it doesn’t work … see this"
+  },
+  {
+    "text": "",
+    "time_stamp": "2018-11-05 10:31:20"
+  },
+  {
+    "text": "",
+    "time_stamp": "2018-11-05 10:31:32"
+  },
+  {
+    "poster": {
+      "poster_name": "Parag Jagdale",
+      "poster_handle": "parag"
+    },
+    "time_stamp": "2018-11-05 10:31:46",
+    "text": "after adding\n```\n                {% if contact.city %}\n\t                city exists: {{ contact.city }}\n                {% endif %}\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Parag Jagdale",
+      "poster_handle": "parag"
+    },
+    "time_stamp": "2018-11-05 10:33:04",
+    "text": "I think {% if contact.city %} returns true because that property itself exists, but that doens’t help to see the contents"
+  },
+  {
+    "poster": {
+      "poster_name": "Stefen Phelps",
+      "poster_handle": "stefen"
+    },
+    "time_stamp": "2018-11-05 10:40:31",
+    "text": "I wonder if that contact property is setup to have a default value?"
+  },
+  {
+    "poster": {
+      "poster_name": "Parag Jagdale",
+      "poster_handle": "parag"
+    },
+    "time_stamp": "2018-11-05 10:41:52",
+    "text": "happens with other properties too - even custom properties i made"
+  },
+  {
+    "poster": {
+      "poster_name": "Stefen Phelps",
+      "poster_handle": "stefen"
+    },
+    "time_stamp": "2018-11-05 10:46:16",
+    "text": "I know I've done it before, let me see how I did it"
+  },
+  {
+    "poster": {
+      "poster_name": "Stefen Phelps",
+      "poster_handle": "stefen"
+    },
+    "time_stamp": "2018-11-05 10:49:40",
+    "text": "yeah in the past I've checked for a specific value like so `{% if contact.custom_property == \"Yes\" %} returns true {% endif %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Parag Jagdale",
+      "poster_handle": "parag"
+    },
+    "time_stamp": "2018-11-05 10:50:51",
+    "text": "ah. it’s so weird this that this won’t work to check for empty"
+  },
+  {
+    "text": "rock and a hard place! even this won’t work — won’t let me publish the template",
+    "time_stamp": "2018-11-05 11:06:53"
+  },
+  {
+    "poster": {
+      "poster_name": "Shamash Athoraya",
+      "poster_handle": "shamash.athoraya"
+    },
+    "time_stamp": "2018-11-05 11:45:32",
+    "text": "<@UBRG1R3EW> I'm no expert, but I don't think if statements work in email templates.. :thinking_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Shamash Athoraya",
+      "poster_handle": "shamash.athoraya"
+    },
+    "time_stamp": "2018-11-05 11:46:18",
+    "text": "yeah\n&gt;Please note that using personalization variables (contact and company variables) within if statements is not currently supported for email in HubSpot. These variables can be used for logic on COS page and blog templates."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-11-05 11:46:31",
+    "text": "Also `{% mycity|default('city') %}` is invalid syntax"
+  },
+  null,
+  {
+    "text": "<@U6GNQ7JBU> thanks — what should it be? I’m referencing this in the docs:",
+    "time_stamp": "2018-11-05 11:57:02"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-11-05 12:02:27",
+    "text": "Fixed the mistake"
+  },
+  {
+    "poster": {
+      "poster_name": "Parag Jagdale",
+      "poster_handle": "parag"
+    },
+    "time_stamp": "2018-11-05 12:02:55",
+    "text": "ah, makes sense, thanks"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2018-11-05 13:03:34",
+    "edited": {
+      "time_stamp": "2018-11-05 13:04:23"
+    },
+    "text": "perhaps try  ```none```\n\nI would think that would allow you to capture the null value\n<https://designers.HubSpot.com/docs/hubl/operators-and-expression-tests>\n```\n{% text \"user_email\" label='Enter user email', value='<mailto:example@HubSpot.com|example@HubSpot.com>', export_to_template_context=True %}\n{% unless widget_data.user_email.value is none %}\n{{ widget_data.user_email.value }}\n{% endunless %}\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2018-11-05 13:09:32",
+    "text": "Hey all. I'm working with a related blog post area, and using the _unless content.absolute_url -- post.absolute.url_ to strip the matching post from the listings. However, we would like to retain 3 items showing in the list of the most recent posts EXCLUDING the one that was just published that is related to the next three items.  With the following code chunk (from the HubSpot post on this), with a limit of 3 items, where the most recently published is the active URL, it skips it and only shows 2 items.\n\n```{% if content.topic_list %}\n&lt;h3&gt;Related posts&lt;/h3&gt;\n    {% for topic in content.topic_list %}\n        {% if loop.first %}\n            {% set related_posts = blog_recent_topic_posts('default', topic.slug, 3 ) %}\n            {% for post in related_posts %}\n                {% unless content.absolute_url == post.absolute_url %}\n                    &lt;div class=\"related-post-item\"&gt;\n                        &lt;div class=\"related-title\"&gt;&lt;a href=\"{{post.absolute_url}}\"&gt;{{ post.name}}&lt;/a&gt;&lt;/div&gt;\n                        &lt;div class=\"related-image\"&gt;&lt;img src=\"{{ post.featured_image }}\" alt=\"{{ post.name }}\"&gt;&lt;/div&gt;\n                    &lt;/div&gt;\n                {% endunless %}\n            {% endfor %}\n        {% endif %}\n    {% endfor %}\n{% endif %}  \n```\nIs there a way to skip that one in the count total? This is driving me insane!",
+    "reply_count": 14,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2018-11-05 13:11:02"
+      },
+      {
+        "time_stamp": "2018-11-05 13:29:16"
+      },
+      {
+        "time_stamp": "2018-11-05 13:31:56"
+      },
+      {
+        "time_stamp": "2018-11-05 13:33:07"
+      },
+      {
+        "time_stamp": "2018-11-05 13:35:24"
+      },
+      {
+        "time_stamp": "2018-11-05 13:36:11"
+      },
+      {
+        "time_stamp": "2018-11-05 13:36:14"
+      },
+      {
+        "time_stamp": "2018-11-05 13:36:48"
+      },
+      {
+        "time_stamp": "2018-11-05 13:37:07"
+      },
+      {
+        "time_stamp": "2018-11-05 13:38:58"
+      },
+      {
+        "time_stamp": "2018-11-05 13:46:46"
+      },
+      {
+        "time_stamp": "2018-11-05 13:51:21"
+      },
+      {
+        "time_stamp": "2018-11-05 13:52:39"
+      },
+      {
+        "time_stamp": "2018-11-05 14:13:50"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-11-05 13:11:02",
+    "text": "Why not use one of the loop properties: <https://designers.HubSpot.com/docs/hubl/for-loops>"
+  },
+  {
+    "poster": {
+      "poster_name": "LOIC BURDET",
+      "poster_handle": "loic_burdet"
+    },
+    "time_stamp": "2018-11-05 13:20:44",
+    "text": "Does someone know if it’s possible to import a “non-wordpress data” as a new blog via the feature BLOG IMPORT in HubSpot ? Should I create a XML file similar to XML Export File WordPress ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2018-11-05 13:27:01",
+    "text": "XML, yes"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2018-11-05 13:27:33",
+    "text": "just mirror the structure of a WP export file and it should work"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2018-11-05 13:29:16",
+    "text": "I've been trying to figure out how/where I would apply that, but I can't seem to really hone in on a solution. I would think that nesting an additional _if loop.index &lt;= 3_  within the _unless_ statement would produce the result, but it acts the same as the limit value on the _set related_posts_ element"
+  },
+  {
+    "poster": {
+      "poster_name": "William Spiro",
+      "poster_handle": "wspiro"
+    },
+    "time_stamp": "2018-11-05 13:29:39",
+    "text": "<@U3TR96G84> <@U26BLKGE4> I built an open source tool which looks at any blog and builds a HubSpot importable XML file for you if you want to check it out <https://github.com/williamspiro/hubXml>"
+  },
+  {
+    "poster": {
+      "poster_name": "LOIC BURDET",
+      "poster_handle": "loic_burdet"
+    },
+    "time_stamp": "2018-11-05 13:29:53",
+    "text": "You’re amazing !"
+  },
+  {
+    "poster": {
+      "poster_name": "LOIC BURDET",
+      "poster_handle": "loic_burdet"
+    },
+    "time_stamp": "2018-11-05 13:30:24",
+    "edited": {
+      "time_stamp": "2018-11-05 13:30:32"
+    },
+    "text": "my client has 6000 posts to import ..."
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-11-05 13:31:56",
+    "text": "You should pull 4 posts"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2018-11-05 13:33:07",
+    "text": "The issue with this is that on the other post pages, which the most recent related posts don't match the post page url, this produces a list of 4, as opposed to keeping it at a limit of 3 posts"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-11-05 13:35:24",
+    "edited": {
+      "time_stamp": "2018-11-05 13:36:00"
+    },
+    "text": "should be `if loop.index &lt; 3`"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-11-05 13:36:11",
+    "text": "`&lt;=3` will pull in 4 posts"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-11-05 13:36:14",
+    "text": "0, 1, 2"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2018-11-05 13:36:48",
+    "text": "isn't loop.index supposed to start at [1]? \"The current iteration of the loop. This variable starts counting at 1\""
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2018-11-05 13:37:07",
+    "text": "... I had to double check that one... it threw me as I expected it to start at 0"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-11-05 13:38:58",
+    "text": "Ahh so `{% unless content.absolute_url == post.absolute_url or loop.index &gt; 3 %}` should work"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2018-11-05 13:45:44",
+    "text": "anyone know how to format numbers to where they have leading zeros in hubl/jinja?\n```Example\n8 would be 08\n93 would be 93```"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2018-11-05 13:46:46",
+    "text": "this still creates the same results, where the pages with related posts that don't meet the _content.absolute_url == post.absolute_url_  criteria end up having 4 items. I feel like this logic should be so simple to carry out... agh! Like...  _ { if a == absolute_url, skip a, loop over b, c, d } { if a != absolute_url, loop over a, b, c }_ ¯\\_(ツ)_/¯"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-11-05 13:51:09",
+    "edited": {
+      "time_stamp": "2018-11-05 13:51:19"
+    },
+    "text": "if number &lt;10 add “0” to number|string  (thats a guess)"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-11-05 13:51:21",
+    "text": "Why not use `selectattr` before the loop?"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2018-11-05 13:52:03",
+    "text": "its a situation where the data might have have a leading 0 in it. But I guess I could strip that out and then do that"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-11-05 13:52:39",
+    "text": "`|rejectattr('absolute_url', 'equalto', post.absolute_url)`"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2018-11-05 13:53:02",
+    "text": "thanks <@U7SL518D6> for whiffing away my brain fart :stuck_out_tongue:"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2018-11-05 14:13:50",
+    "text": "no dice. Thanks for helping me mash a bit, but I'm going to put this one to the side for a bit until my brain clears and it's after business hours for the site I'm working on :slightly_smiling_face: ¯\\_(ツ)_/¯"
+  },
+  null,
+  null
+]

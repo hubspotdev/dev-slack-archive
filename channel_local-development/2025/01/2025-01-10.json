@@ -1,0 +1,162 @@
+[
+  {
+    "poster": {
+      "poster_name": "Sean Henri",
+      "poster_handle": "sean615"
+    },
+    "time_stamp": "2025-01-10 05:42:08",
+    "text": "As of yesterday evening all of my github deploy actions are failing after years of success with this error:\n`Error:  An account needs to be supplied either via \"--account\" or through setting a \"defaultPortal\"`\nno changes to the yml, secrets, etc... anyone else hitting this? was working through mid-day yesterday",
+    "reply_count": 28,
+    "reply_users_count": 6,
+    "replies": [
+      {
+        "time_stamp": "2025-01-10 06:03:58"
+      },
+      {
+        "time_stamp": "2025-01-10 06:10:01"
+      },
+      {
+        "time_stamp": "2025-01-10 06:10:06"
+      },
+      {
+        "time_stamp": "2025-01-10 06:21:27"
+      },
+      {
+        "time_stamp": "2025-01-10 08:39:35"
+      },
+      {
+        "time_stamp": "2025-01-10 11:02:48"
+      },
+      {
+        "time_stamp": "2025-01-10 13:09:22"
+      },
+      {
+        "time_stamp": "2025-01-10 14:27:38"
+      },
+      {
+        "time_stamp": "2025-01-13 02:00:11"
+      },
+      {
+        "time_stamp": "2025-01-13 11:41:51"
+      },
+      {
+        "time_stamp": "2025-01-14 04:08:03"
+      },
+      {
+        "time_stamp": "2025-01-14 07:22:19"
+      },
+      {
+        "time_stamp": "2025-01-14 19:29:14"
+      },
+      {
+        "time_stamp": "2025-01-14 20:05:28"
+      },
+      {
+        "time_stamp": "2025-01-14 20:13:48"
+      },
+      {
+        "time_stamp": "2025-01-14 20:38:28"
+      },
+      {
+        "time_stamp": "2025-01-14 20:38:42"
+      },
+      {
+        "time_stamp": "2025-01-14 20:39:36"
+      },
+      {
+        "time_stamp": "2025-01-14 20:40:13"
+      },
+      {
+        "time_stamp": "2025-01-14 20:40:31"
+      },
+      {
+        "time_stamp": "2025-01-14 20:41:38"
+      },
+      {
+        "time_stamp": "2025-01-14 20:43:33"
+      },
+      {
+        "time_stamp": "2025-01-14 20:43:56"
+      },
+      {
+        "time_stamp": "2025-01-14 20:49:48"
+      },
+      {
+        "time_stamp": "2025-01-14 20:52:54"
+      },
+      {
+        "time_stamp": "2025-01-14 21:08:42"
+      },
+      {
+        "time_stamp": "2025-01-14 21:28:53"
+      },
+      {
+        "time_stamp": "2025-01-15 08:29:11"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Aleksandar Perisic",
+      "poster_handle": "fizikaneri"
+    },
+    "time_stamp": "2025-01-10 06:03:58",
+    "text": "looks like <@UTRKEGMKQ> has the same issue"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Henri",
+      "poster_handle": "sean615"
+    },
+    "time_stamp": "2025-01-10 06:10:01",
+    "text": "Comforting to know I might not be the only one :slightly_smiling_face: \n\nI wonder if this might be related <https://github.com/HubSpot/HubSpot-cms-deploy-action/pull/35|https://github.com/HubSpot/HubSpot-cms-deploy-action/pull/35>"
+  },
+  {
+    "poster": {
+      "poster_name": "Aleksandar Perisic",
+      "poster_handle": "fizikaneri"
+    },
+    "time_stamp": "2025-01-10 06:10:06",
+    "text": "also the same issue <@U06E2TGEJUT>"
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Ruffa",
+      "poster_handle": "federico248"
+    },
+    "time_stamp": "2025-01-10 06:21:27",
+    "text": "This is my main.yml configuration, I changed version numbers but still the same issue. Any suggestions?\n```on:\n  push:\n    branches:\n    - main\njobs:\n  deploy:\n    runs-on: ubuntu-latest\n    steps:\n      - name: Checkout\n        uses: actions/checkout@v4\n      - name: HubSpot Deploy Action\n        uses: HubSpot/HubSpot-cms-deploy-action@v1.7\n        with:\n          src_dir: sprchrgr-theme\n          dest_dir: sprchrgr-theme\n          portal_id: ${{ secrets.HubSpot_portal_id }}\n          personal_access_key: ${{ secrets.HubSpot_personal_access_key }}\n ```"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Henri",
+      "poster_handle": "sean615"
+    },
+    "time_stamp": "2025-01-10 08:39:35",
+    "text": "<@UQ3DGT8VC> <@U7SL518D6> any chance you might know what might be going on here?"
+  },
+  {
+    "poster": {
+      "poster_name": "Aleksandar Perisic",
+      "poster_handle": "fizikaneri"
+    },
+    "time_stamp": "2025-01-10 11:02:48",
+    "text": "Update: <https://HubSpotdev.slack.com/archives/C22PU4LV8/p1736531225689809?thread_ts=1736501983.500739&amp;cid=C22PU4LV8>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2025-01-10 13:09:22",
+    "text": "Hey there this issue should be resolved now you did not need to do anything to resolve it.\n\nThe issue is with a change to an environment variable name in the CLI.\n\nWe’ll be putting out a new version of the GH action eventually which will require changing to use the new account_id environment variable instead of portal_id.\n\n\nWe don’t have a timeline right now but eventually you will need to upgrade to the upcoming version of the github action to ensure it continues working properly. We’ll announce this through the changelog though when this happens and what the timeframe is."
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Henri",
+      "poster_handle": "sean615"
+    },
+    "time_stamp": "2025-01-10 14:27:38",
+    "text": "Thanks <@U7SL518D6> and <@U07FRARFZS7>!"
+  }
+]

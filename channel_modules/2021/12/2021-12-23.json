@@ -1,0 +1,147 @@
+[
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2021-12-23 09:31:15",
+    "text": "What’s the use-case? Cache-busting for users, or is this still in development?"
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2021-12-23 09:38:52",
+    "edited": {
+      "time_stamp": "2021-12-23 09:44:03"
+    },
+    "text": "<@U26BLKGE4> Yeah, development, I wouldn’t ship it to a user in that state. There seems to be a potential bug with the module caching involving global theme setting value inheritance in modules, which I’ve talked to Jon about, but for now, I need to be able to test as I develop the theme. I’m not even 100% sure cache-busting the modules is going to work to fix the problem, but it’s the next thing I need to try, but I can’t seem to do it."
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2021-12-23 09:49:55",
+    "edited": {
+      "time_stamp": "2021-12-23 09:50:15"
+    },
+    "text": "If you have any insight, I would love to hear it. I’ve spent many hours on this already."
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2021-12-23 10:03:56",
+    "text": "Gotcha, yeah, I’d probably do something like this to be safe:\n```{% if !('hsCacheBuster' in request.query_dict.items()) %}\n{% require_js %}\n&lt;script&gt;\nconst urlParams = new URLSearchParams(window.location.search);\nurlParams.set('hsCacheBuster', Math.floor(1000 + Math.random() * 9000));\nwindow.location.search = urlParams;\n&lt;/script&gt;\n{% end_require_js %}\n{% endif %}```\nNot tested, but basically check to see if the param is in the URL. If not, add it using a randomly generated number (4 digits in this example)"
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2021-12-23 10:45:02",
+    "text": "<@U26BLKGE4> That sends you into an infinite reload loop modifying the random number each time on hsCacheBuster. This works as far as what you were trying to do there:\n```{% unless 'hsCacheBuster' in request.query_dict.items()|join() %}\n  {% require_js %}\n    &lt;script&gt;\n      const random = Math.floor(1000 + Math.random() * 9000);\n      const urlParams = new URLSearchParams(window.location.search);\n      urlParams.set('hsCacheBuster', random);\n      window.location.search = urlParams;\n    &lt;/script&gt;\n  {% end_require_js %}\n{% endunless %}```\nThe problem is, the values are cached on the server-side. So we need to force a refresh of the values on the server-side re-compile somehow, or whatever HubSpot does."
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2021-12-23 10:48:16",
+    "text": "Like I said, wasn’t tested, but I was looking for any value. Either way, the hsCacheBuster will bust anything HS has cached, so we might not be using the right word here. Is the issue perhaps a mismatch between default content you’re setting for the module in development, and content that may be overriding it at the page or template level?"
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2021-12-23 10:58:43",
+    "text": "Ugh, just played around with it a bit more and I think there might not actually be a way to handle it right now… I may just have to wait on a fix from HubSpot, which could be weeks. :cry:"
+  },
+  {
+    "text": "<@U26BLKGE4> Here’s a video demonstration of the issue:",
+    "time_stamp": "2021-12-23 11:01:36"
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2021-12-23 11:02:35",
+    "edited": {
+      "time_stamp": "2021-12-23 11:03:58"
+    },
+    "text": "You’ll notice the UI select updates to what the value should be, when you change the global theme setting (which the module is using as its fallback value) but the actual values in the module markup for it never change."
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2021-12-23 11:06:18",
+    "text": "yeah… weird for sure. Can’t say I’ve ever needed to use two live preview windows at the same time, but this does look like a bug of some kind.\n\nIf I were in your shoes, I’d put the module on a page and then do manual page refreshes rather than relying on HS’s hot-reloading; that’s my typical workflow."
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2021-12-23 11:07:20",
+    "edited": {
+      "time_stamp": "2021-12-23 11:08:00"
+    },
+    "text": "The issue is on the page level as well though. The value will never update, unless you manually update it with the module’s select input. The value in the select input is always correct, but it uses the wrong value in the actual markup when it’s not manually set and is relying on the global theme setting value as its default."
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2021-12-23 11:09:28",
+    "edited": {
+      "time_stamp": "2021-12-23 11:11:37"
+    },
+    "text": "I’m trying to make an idea work, and this is like the 6th workaround I thought of to get it work, but there’s always some small bug or lack of feature blocking the way. :disappointed:"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2021-12-23 11:13:49",
+    "text": "Got it, now I’m starting to track what you’re trying to accomplish. Likely a lifecycle issue, where the theme settings aren’t set/available in time to evaluate within a module… I’ve run into this before in a couple of edge cases where certain HubL things will work to print out a value, but not be used for logic. Last ditch effort… assuming you’ve tried the `|render` filter on the theme setting you’re looking to compare? That may increase the priority."
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2021-12-23 11:19:34",
+    "edited": {
+      "time_stamp": "2021-12-23 11:20:06"
+    },
+    "text": "Yeah, no, didn’t do anything. In fact, now that I think about it, yeah the global theme setting value isn’t updating in the module markup either, so that seems like it’s actually a pretty big issue. I’m certain the official HS boilerplate relies on global theme settings inside of its modules, so they shouldn’t be updating either… Time to play with their boilerplate and see if it’s experiencing the same issue."
+  },
+  {
+    "poster": {
+      "poster_name": "Karey Mitchell",
+      "poster_handle": "kareybm"
+    },
+    "time_stamp": "2021-12-23 22:08:07",
+    "text": "My 2 cents, copy all the code from the module and store it locally. Delete the module and without importing any of the backup code, create a new super basic module with only the parts that's giving you issues. If the problem persist, and it's the only module on a page, then the issue is bigger than a single module."
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2021-12-23 22:14:52",
+    "edited": {
+      "time_stamp": "2021-12-23 22:15:14"
+    },
+    "text": "Yup, I have done that more than once, and tried slightly different scenarios, but the issue persists."
+  }
+]

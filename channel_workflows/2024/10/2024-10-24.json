@@ -1,0 +1,181 @@
+[
+  {
+    "poster": {
+      "poster_name": "Chiara Simoni",
+      "poster_handle": "chiara.simoni"
+    },
+    "time_stamp": "2024-10-24 06:50:48",
+    "text": "Hi! I wrote this Python code to insert as custom code into a workflow, can you tell me if this is correct?\nIt reads the \"id_campagna_refresh\" property and extrapolates a string inside it (we call it productName),\nthen it updates the \"lead_score___productName\" and the \"tipologia_lead___productName\" properties.\nAs you can see the \"lead_score___productName\" and the \"tipologia_lead___productName\" depend on the productName string.\nCan you tell my if it is corresct?\n\nfrom HubSpot import HubSpot\nfrom HubSpot.crm.contacts import SimplePublicObjectInput\n\ndef getProductName(event, internal_property_name):\n    campaignName = event.get('inputFields').get(internal_property_name, \"\")\n    if \"ade\" in campaignName:\n        product = \"ade\"\n    elif \"cia\" in campaignName or \"icmd\" in campaignName:\n        product = \"cia\"\n    elif \"div_coach\" in campaignName or \"diventa_coach\" in campaignName:\n        product = \"div_coach\"\n    elif \"mbe_mktg\" in campaignName or \"mbe_marketing\" in campaignName:\n        product = \"mbe_mktg\"\n    elif \"mbe_mngt\" in campaignName or \"mbe_management\" in campaignName:\n        product = \"mbe_mngt\"\n    elif \"mbe_sales\" in campaignName:\n        product = \"mbe_sales\"\n    elif \"mep\" in campaignName:\n        product = \"mep\"\n    elif \"rem\" in campaignName or \"lres\" in campaignName:\n        product = \"rem\"\n    else:\n        product = \"\"\n\n    return product\n\n\ndef getLeadScoreValue(contact_id, api_client, lead_score_property_name, lead_score_new_value):\n    current_contact = api_client.crm.contacts.basic_api.get_by_id(contact_id, properties=[lead_score_property_name])\n    current_lead_score_value = current_contact.properties.get(lead_score_property_name, 0)\n    if current_lead_score_value == '' or current_lead_score_value is None:\n        current_lead_score_value = 0\n    #somma al valore corrente del lead score il valore calcolato\n    lead_score_updated_value = int(current_lead_score_value) + lead_score_new_value\n\n    return lead_score_updated_value\n\n\ndef getLeadTypeValue(lead_score_updated_value):\n    leadType = \"\"\n    if lead_score_updated_value &lt;= 1:\n        leadType = \"FREDDISSIMO\"\n    elif lead_score_updated_value &lt;= 5:\n        leadType = \"FREDDO\"\n    elif lead_score_updated_value &lt;= 20:\n        leadType = \"TIEPIDO\"\n    elif lead_score_updated_value &lt;= 50:\n        leadType = \"CALDO\"\n    else:\n        leadType = \"SCOTTA\"\n\n    return leadType\n\n\ndef setProperty(contact_id, api_client, property_name, property_value):\n    propertiesX = {\n        property_name: property_value\n    }\n    simple_public_object_input = SimplePublicObjectInput(properties=propertiesX)\n    api_response = api_client.crm.contacts.basic_api.update(contact_id, simple_public_object_input)\n\n    return\n\n\ndef main(event):  \t\n    productName = getProductName(event, \"id_campagna_refresh\")\n\n    if productName:\n        api_client = HubSpot(access_token='MY TOKEN')\n        contact_id = event['object']['objectId']\n        lead_score_property_name = f\"lead_score___{productName}\"\n        lead_type_property_name = f\"tipologia_lead___{productName}\"\n\n        lead_score_updated_value = getLeadScoreValue(contact_id, api_client, lead_score_property_name, 25)\n        setProperty(contact_id, api_client, lead_score_property_name, lead_score_updated_value)\n\n        lead_type_updated_value = getLeadTypeValue(lead_score_updated_value)\n        setProperty(contact_id, api_client, lead_type_property_name, lead_type_updated_value)\n\n    return {\n        \"outputFields\": {}\n    }",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-10-24 07:56:44"
+      },
+      {
+        "time_stamp": "2024-10-24 07:58:49"
+      },
+      {
+        "time_stamp": "2024-10-24 07:58:58"
+      },
+      {
+        "time_stamp": "2024-10-24 07:59:19"
+      },
+      {
+        "time_stamp": "2024-10-24 08:00:24"
+      },
+      {
+        "time_stamp": "2024-10-24 08:00:24"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kilian Trunk",
+      "poster_handle": "kilian"
+    },
+    "time_stamp": "2024-10-24 07:56:44",
+    "text": "why dont you test it by inserting it and then running it?"
+  },
+  {
+    "poster": {
+      "poster_name": "Chiara Simoni",
+      "poster_handle": "chiara.simoni"
+    },
+    "time_stamp": "2024-10-24 07:58:49",
+    "text": "I did it and it work but I'm afrai of side effects"
+  },
+  {
+    "poster": {
+      "poster_name": "Chiara Simoni",
+      "poster_handle": "chiara.simoni"
+    },
+    "time_stamp": "2024-10-24 07:58:58",
+    "text": "that I don't see"
+  },
+  {
+    "poster": {
+      "poster_name": "Kilian Trunk",
+      "poster_handle": "kilian"
+    },
+    "time_stamp": "2024-10-24 07:59:19",
+    "text": "&gt; I did it and it work but I'm afrai of side effects\nsuch as?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kilian Trunk",
+      "poster_handle": "kilian"
+    },
+    "time_stamp": "2024-10-24 08:00:24",
+    "text": "your best bet is to do QA, test it with multiple cases (and some edge cases where it should fail or smthing)"
+  },
+  {
+    "poster": {
+      "poster_name": "Chiara Simoni",
+      "poster_handle": "chiara.simoni"
+    },
+    "time_stamp": "2024-10-24 08:00:24",
+    "text": "don't know, I wrote the code with AI so I'm not in control of the code"
+  },
+  {
+    "poster": {
+      "poster_name": "Chiara Simoni",
+      "poster_handle": "chiara.simoni"
+    },
+    "time_stamp": "2024-10-24 08:28:20",
+    "text": "but is it wrong to name a variabile variableName or instead of variable_name?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-10-24 23:45:30"
+      },
+      {
+        "time_stamp": "2024-10-25 00:32:46"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Knobling",
+      "poster_handle": "lukas.knobling"
+    },
+    "time_stamp": "2024-10-24 10:39:38",
+    "text": "Hi Everyone,\nshort question ...is it right that when using webhooks in workflows if I select Include all contact properties I get the portal-id, is-contact and objectTypeId... but when selecting customized request body those informations are missing??? Why? those should be important informations that are simply always sent along, shouldn't it? Or am I doing something wrong"
+  },
+  {
+    "poster": {
+      "poster_name": "Kilian Trunk",
+      "poster_handle": "kilian"
+    },
+    "time_stamp": "2024-10-24 11:41:05",
+    "text": "<@U05QGQ7LUVB> I think you kinda answered your question yourself. Customized requests are meant to decrease the requests size and potentially performance, so you would have to include the properties you need by yourself.",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-10-24 21:28:16"
+      },
+      {
+        "time_stamp": "2024-10-24 21:34:08"
+      },
+      {
+        "time_stamp": "2024-10-24 21:34:52"
+      },
+      {
+        "time_stamp": "2024-10-25 00:50:14"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Knobling",
+      "poster_handle": "lukas.knobling"
+    },
+    "time_stamp": "2024-10-24 21:28:16",
+    "text": "Okay… but the PortalID and the ObjectTypeiD aren‘t properties :see_no_evil: "
+  },
+  {
+    "poster": {
+      "poster_name": "Kilian Trunk",
+      "poster_handle": "kilian"
+    },
+    "time_stamp": "2024-10-24 21:34:08",
+    "text": "but still, are they not available as a key-value pair when selecting properties?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kilian Trunk",
+      "poster_handle": "kilian"
+    },
+    "time_stamp": "2024-10-24 21:34:52",
+    "text": "sorry havent tried them out yet"
+  },
+  {
+    "poster": {
+      "poster_name": "Chiara Simoni",
+      "poster_handle": "chiara.simoni"
+    },
+    "time_stamp": "2024-10-24 23:45:30",
+    "edited": {
+      "time_stamp": "2024-10-24 23:45:45"
+    },
+    "text": "why? <@U07TCB5LBDF>"
+  },
+  {
+    "poster": {
+      "poster_name": "Kilian Trunk",
+      "poster_handle": "kilian"
+    },
+    "time_stamp": "2024-10-25 00:32:46",
+    "text": "<@U07SYLU3R4K> it’s not wrong"
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Knobling",
+      "poster_handle": "lukas.knobling"
+    },
+    "time_stamp": "2024-10-25 00:50:14",
+    "text": "no unfortunately this is not possible but thanks for your suggestions anyway :)"
+  }
+]

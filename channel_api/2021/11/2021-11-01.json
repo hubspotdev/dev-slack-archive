@@ -1,0 +1,264 @@
+[
+  {
+    "poster": {
+      "poster_name": "Ibrahim Elsanosi",
+      "poster_handle": "ibrahimsabat"
+    },
+    "time_stamp": "2021-11-01 05:45:19",
+    "text": "Hello,\n\nI am trying to use Operations Hub-Workflow Extensions feature. I use workflow trigger company-based. When even is triggered I want to run JS custom code to retrieve company data and process the data and produce output for next workflow step. My JS custom code is …\n// Import the HubSpot NodeJS Client Library - this will allow us to use the HubSpot APIs\nconst HubSpot = require('@HubSpot/api-client');\nlet value1 = 0;\nlet value2 = 0;\nlet percentageAccountsRegistered = 0;\nlet isEqualOrGreater50 = false;\n \nexports.main = (event, callback) =&gt; {\n \n  const HubSpotClient = new HubSpot.Client({\n    apiKey: process.env.HAPIKEY\n  });\n \n  HubSpotClient.crm.companies.basicApi.getById(event.object.objectId, [\"data1\", \"data2\"])\n    .then(results =&gt; {\n      value1 = results.body.properties.data1;\n      value2 = results.body.properties.data2;\n      percentageAccountsRegistered = (value1 / value2) * 100;\n      if (percentageAccountsRegistered &gt;= 50) {\n        isEqualOrGreater50 = true;\n      }\n    });\n \n  callback({ outputFields: {} });\n \n}\n \n\nIs the logic correct, and how can I pass the value of isEqualOrGreater50 to next step in workflow “Value equals branch” ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Korn",
+      "poster_handle": "sam594"
+    },
+    "time_stamp": "2021-11-01 13:01:03",
+    "text": "Im using the python library: <https://github.com/HubSpot/HubSpot-api-python/>\nIm able to generate an access_token and a refresh_token, but I dont see any methods for refreshing an access_token using the refresh token. Anybody know where that is?",
+    "reply_count": 16,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-11-01 13:02:38"
+      },
+      {
+        "time_stamp": "2021-11-01 13:06:16"
+      },
+      {
+        "time_stamp": "2021-11-01 13:06:17"
+      },
+      {
+        "time_stamp": "2021-11-01 13:06:55"
+      },
+      {
+        "time_stamp": "2021-11-01 13:07:27"
+      },
+      {
+        "time_stamp": "2021-11-01 13:07:59"
+      },
+      {
+        "time_stamp": "2021-11-01 13:42:55"
+      },
+      {
+        "time_stamp": "2021-11-01 14:24:59"
+      },
+      {
+        "time_stamp": "2021-11-01 14:26:01"
+      },
+      {
+        "time_stamp": "2021-11-01 14:26:16"
+      },
+      {
+        "time_stamp": "2021-11-01 14:31:29"
+      },
+      {
+        "time_stamp": "2021-11-01 14:45:12"
+      },
+      {
+        "time_stamp": "2021-11-01 15:03:17"
+      },
+      {
+        "time_stamp": "2021-11-01 15:03:56"
+      },
+      {
+        "time_stamp": "2021-11-01 15:04:17"
+      },
+      {
+        "time_stamp": "2021-11-01 15:04:31"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-11-01 13:02:38",
+    "text": "You want to use createToken, but pass in refresh_token as the first param."
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-11-01 13:06:16",
+    "text": "```tokens = api_client.auth.oauth.default_api.create_token(\n        grant_type=\"refresh_token\",\n        redirect_uri=None,\n        client_id='client_id',\n        client_secret='client_secret',\n        code=None\n        refresh_token=xxxxxx```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-11-01 13:06:17",
+    "text": "<https://github.com/HubSpot/HubSpot-api-python/blob/3b68d9a594d43e916ceff0a8f868189accc565c1/HubSpot/auth/oauth/api/tokens_api.py#L36>"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Korn",
+      "poster_handle": "sam594"
+    },
+    "time_stamp": "2021-11-01 13:06:55",
+    "text": "Doesnt it seem like a waste that you need the client_id and client_secret again?"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Korn",
+      "poster_handle": "sam594"
+    },
+    "time_stamp": "2021-11-01 13:07:27",
+    "text": "I almost might as we'll generate a completely new token?"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Korn",
+      "poster_handle": "sam594"
+    },
+    "time_stamp": "2021-11-01 13:07:59",
+    "text": "I guess `code=None` so doesnt require interactivity"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Korn",
+      "poster_handle": "sam594"
+    },
+    "time_stamp": "2021-11-01 13:42:55",
+    "text": "Sorry, but how to use this token in the timeline api?\n<https://github.com/HubSpot/HubSpot-api-python/blob/master/HubSpot/crm/timeline/api/events_api.py>\n\nIt doesnt look like I can pass in the oauth token anywhere?"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Korn",
+      "poster_handle": "sam594"
+    },
+    "time_stamp": "2021-11-01 13:58:44",
+    "text": "How to use this OAUTH token in the timeline api?\n<https://github.com/HubSpot/HubSpot-api-python/blob/master/HubSpot/crm/timeline/api/events_api.py>\n\nIt doesnt look like I can pass in the oauth token anywhere?\nLooking at the code, it doesnt allow me to pass in a header?"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Korn",
+      "poster_handle": "sam594"
+    },
+    "time_stamp": "2021-11-01 14:04:57",
+    "text": "Found it...\n```oauth_api_client = HubSpot(access_token=tokens.access_token)```\nThis would be handy to have in the README",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-11-01 14:35:25"
+      },
+      {
+        "time_stamp": "2021-11-01 14:45:55"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-11-01 14:24:59",
+    "text": "in the constructor"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-11-01 14:26:01",
+    "text": "```api_client = HubSpot()\napi_client.access_token = 'your_access_token'```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-11-01 14:26:16",
+    "text": "so you can then set the token again by just doing api_client.access_token = 'xxxx';"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-11-01 14:31:29",
+    "edited": {
+      "time_stamp": "2021-11-01 14:33:41"
+    },
+    "text": "When a user grants access to your application (and the scopes you're requesting) HubSpot sends them back to your return uri with a authorization code - this is a one-time token which you can then use to create an access token+refresh token.\n\nYou cannot re-use the authorization code - there is no point in storing it. You can however, reuse the access token (until it expires - there is an expiry included in the payload - it's recommended you store this and implement logic to use the refresh token when time is up - you'll also want to store the refresh token) the refresh token does not expire unless you rotate your secret and/or the user uninstalls your app."
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-11-01 14:35:25",
+    "text": "The SDKs are auto generated (HubSpot use open api spec) - so the docs for the NodeJS client can help too <https://github.com/HubSpot/HubSpot-api-nodejs>"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Korn",
+      "poster_handle": "sam594"
+    },
+    "time_stamp": "2021-11-01 14:45:12",
+    "text": "If you store the access token and refresh token, you can refresh the access token each time before usage?"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Korn",
+      "poster_handle": "sam594"
+    },
+    "time_stamp": "2021-11-01 14:45:55",
+    "text": "Thanks, good idea"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-11-01 15:03:17",
+    "text": "adds extra overhead + uses one of your API requests."
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-11-01 15:03:56",
+    "text": "you can also catch exceptions"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-11-01 15:04:17",
+    "text": "and if the status code is 401, refresh the token."
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Korn",
+      "poster_handle": "sam594"
+    },
+    "time_stamp": "2021-11-01 15:04:31",
+    "text": "I like that"
+  },
+  {
+    "poster": {
+      "poster_name": "Christopher Chiha",
+      "poster_handle": "christopher051"
+    },
+    "time_stamp": "2021-11-02 00:00:55",
+    "edited": {
+      "time_stamp": "2021-11-02 00:01:05"
+    },
+    "text": "Hello,\nIs there a way to pull an email html template/email html blocks from a website backend into HubSpot using API so we can send it from the CRM itself ?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-11-02 07:15:15"
+      },
+      {
+        "time_stamp": "2021-11-02 07:23:44"
+      }
+    ]
+  }
+]

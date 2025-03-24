@@ -1,0 +1,196 @@
+[
+  {
+    "poster": {
+      "poster_name": "Adam Nicholas Burke",
+      "poster_handle": "adam502"
+    },
+    "time_stamp": "2022-07-29 06:31:14",
+    "text": "I am not a developer, and I am attempting to build out a simple referral program using custom code actions per this article: <https://www.linkedin.com/pulse/create-referral-program-HubSpot-using-marketing-hub-jack-coldrick/>\n\nI am using <https://gist.github.com/jackcoldrick90/b38268080650f8531650c2b47f681d8d|V3 of this script> as a custom code action within an attribution workflow - modified with my internal property names as needed. Again, not a developer, but the code appears to be pretty straight forward. Adding my script as a reply to this comment.\n\nI keep getting errors when I test the code, and I think they have to do with not being able to see my database through the API key I am using.\n\nCan someone please review the script I have built and let me know what I am doing wrong?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-07-29 06:31:33"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Adam Nicholas Burke",
+      "poster_handle": "adam502"
+    },
+    "time_stamp": "2022-07-29 06:31:33",
+    "text": "`const HubSpot = require('@HubSpot/api-client');`\n\nexports.main = (event, callback) =&gt; {\n    const HubSpotClient = new HubSpot.Client({\n        apiKey: process.env.HAPIKEY\n    });\n\n    const referrer = event.inputFields['referrer'];\n    console.log(\"REFERRED ID: \" + referrer);\n\n    //2) Search for the contact using the deals referrer_id and update\n    const filter = {\n        propertyName: 'referral___referred_by___referrer_id',\n        operator: 'EQ',\n        value: referrer\n    }\n    const filterGroup = {\n        filters: [filter]\n    }\n    const sort = JSON.stringify({\n        propertyName: 'referral___referred_by___referrer_id',\n        direction: 'DESCENDING'\n    })\n    const properties = ['referral___referred_by___referrer_id', 'referral___total_referrals', 'firstname', 'lastname', 'email']\n    const limit = 1000000000\n    const after = 0\n\n    const publicObjectSearchRequest = {\n        filterGroups: [filterGroup],\n        sorts: [sort],\n        properties,\n        limit,\n        after,\n    };\n\n    HubSpotClient.crm.contacts.searchApi.doSearch(publicObjectSearchRequest).then(results =&gt; {\n\n        let contactId = results.body.results[0].id;\n        let referral___referred_by___email = results.body.results[0].properties.email\n        let totalReferrals = 0;\n\n        if (results.body.results[0].properties.referral___total_referrals === null || results.body.results[0].properties.referral___total_referrals === undefined || results.body.results[0].properties.referral___total_referrals === \"\") {\n            totalReferrals = 0;\n        } else {\n            totalReferrals = parseInt(results.body.results[0].properties.referral___total_referrals)\n        }\n\n        let totalReferralsUpdated = totalReferrals + 1;\n\n        var d = new Date();\n        d.setUTCHours(0, 0, 0, 0);\n\n      \t//Update Referred Contact      \t\n        HubSpotClient.crm.contacts.basicApi.update(event.object.objectId, {\n            \"properties\": {\n                \"referred_by\": referral___referred_by___email\n            }\n        })\n\n\t\t//Update Referring Contact      \t\n        HubSpotClient.crm.contacts.basicApi.update(contactId, {\n            \"properties\": {\n                \"referral___total_referrals\": totalReferralsUpdated,\n                \"referral___recent_referral_date\": d\n            }\n        })\n    });\n}"
+  },
+  {
+    "poster": {
+      "poster_name": "Amber Behring-Wojcek",
+      "poster_handle": "awojcek"
+    },
+    "time_stamp": "2022-07-29 06:36:09",
+    "text": "How did you get Associated to: Form Submission i the first place? Forms are not an object so I’ve never seen an object able to be associated with a form.\n\nGenerally in a workflow (such as a contact workflow) you can only define forms by choosing the form or the page it is on; there’s no way to say “form name contains x” (which is a huge shortcoming)."
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2022-07-29 07:22:29",
+    "text": "what constitutes a \"registered\" user?"
+  },
+  {
+    "poster": {
+      "poster_name": "Muhsin Meydan",
+      "poster_handle": "muhsin"
+    },
+    "time_stamp": "2022-07-29 08:07:46",
+    "edited": {
+      "time_stamp": "2022-07-29 08:08:50"
+    },
+    "text": "I mean contact. However I figured I can use lifecycle status which initially becomes null/empty/unknown and can be used to trigger the workflow. Then I set a property value when the email is sent so I know this contact is created in HubSpot."
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2022-07-29 08:43:56",
+    "text": "yeah that would be a great way to trigger the workflow"
+  },
+  {
+    "text": "I selected case object in the first screen as you see in screenshot and then selected a form submission and provided  form name. When entry is made in form record gets created in case object but workflow do not trigger.",
+    "subtype": "thread_broadcast",
+    "time_stamp": "2022-07-29 08:54:42"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2022-07-29 09:11:04",
+    "text": "<@U03QU2AEWMR> could you confirm for us that `Form submission` in your portal is a custom object itself? I have a feeling this portal has a special definition that happens to be called Form submission, hence the confusion"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2022-07-29 09:12:26",
+    "text": "FWIW we are working on an active Beta that brings the power of Events at HubSpot to Workflows, making it far easier to select Form events directly as a trigger. Feel free to email <mailto:egolborne@HubSpot.com|egolborne@HubSpot.com> if you'd like to hear more about the Beta"
+  },
+  {
+    "text": "Check out this Workflow our team came up with in an exercise with engineering on \"How to run a Webinar email reminder workflow\". It was fun but also interesting to find some of the holes in our user experience",
+    "time_stamp": "2022-07-29 09:19:55",
+    "reply_count": 13,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2022-07-29 09:20:21"
+      },
+      {
+        "time_stamp": "2022-07-29 11:10:52"
+      },
+      {
+        "time_stamp": "2022-07-29 11:41:25"
+      },
+      {
+        "time_stamp": "2022-07-29 11:42:17"
+      },
+      {
+        "time_stamp": "2022-07-29 11:45:25"
+      },
+      {
+        "time_stamp": "2022-07-29 11:57:59"
+      },
+      {
+        "time_stamp": "2022-07-29 12:02:58"
+      },
+      {
+        "time_stamp": "2022-07-29 12:20:35"
+      },
+      {
+        "time_stamp": "2022-07-30 10:35:12"
+      },
+      {
+        "time_stamp": "2022-07-30 10:36:14"
+      },
+      {
+        "time_stamp": "2022-07-31 18:33:30"
+      },
+      {
+        "time_stamp": "2022-08-01 07:03:14"
+      },
+      {
+        "time_stamp": "2022-08-01 08:30:30"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2022-07-29 09:20:21",
+    "text": "For example, we have some work to do in the image export feature as you can see since the Go To action arrows are sometimes misaligned"
+  },
+  {
+    "poster": {
+      "poster_name": "Muhsin Meydan",
+      "poster_handle": "muhsin"
+    },
+    "time_stamp": "2022-07-29 10:36:06",
+    "text": "thank you for your hint :+1:"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2022-07-29 11:10:52",
+    "text": "Wow, this looks great.\n\n(Not saying you did it wrong, learning) Is there a reason why you didn't separate this out into multiple workflows to allow for easier updates?"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2022-07-29 11:41:25",
+    "text": "Yeah I find that doing as much in the same workflow is better for historical reasons. I can track enrollment data, execution data, goals, etc, much better if it all executes as one. Since this is all one goal (send reminder emails about an event) it doesn't make sense to split any part of it out. I think of it as a codebase. There's friction in creating different repositories that talk to each other, but benefits that sometimes outweigh this friction."
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2022-07-29 11:42:17",
+    "text": "One of our goals in the Workflows team is to enable complex use cases within the same workflow, so we're always looking for cases where people split their workflows up because of lack of features rather than it making sense to do it that way"
+  },
+  {
+    "text": "awesome response. Here's a crazy one I made. The goal was ensure a contact owner first. Second ensure the customer get emails about the main product their interested in but then send all the other ones.",
+    "time_stamp": "2022-07-29 11:45:25"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2022-07-29 11:57:59",
+    "text": "this is a great use of multiple workflows because you're separating the concerns of this workflow (automation of validation, basically) and discrete automation processes depending on the validation state"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2022-07-29 12:02:58",
+    "text": "Thanks! I built it this way so my team could easier make changes to emails and flows in each workflow and not break the main one."
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2022-07-29 12:20:35",
+    "text": "Exactly, that's fantastic. Where there any friction points that you found while creating this ecosystem of workflows?"
+  }
+]

@@ -1,0 +1,111 @@
+[
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin-tekpartners"
+    },
+    "time_stamp": "2022-07-06 09:25:36",
+    "edited": {
+      "time_stamp": "2022-07-06 09:29:24"
+    },
+    "text": "So I have a native HubSpot form module in a coded HubL template. How can I manually set the default style for the button background color and button text color? I tried\n```{% dnd_module\n  path='@HubSpot/form',\n  form={\n    form_id: '',\n    form_type: 'HubSpot',\n    message: 'Thanks for submitting the form.'\n  },\n  styles={\n    button: {\n      background_color: '#fff'\n    }\n  }\n%}```\nto no avail",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-09-09 06:26:43"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2022-07-06 10:36:11",
+    "edited": {
+      "time_stamp": "2022-07-07 07:01:40"
+    },
+    "text": "Wanted to share a fix that took me WAY too long to figure out, and I’ve seen some other devs struggle with as well. With the switch to HS Video 2.0 from VidYard, we lost a true JS client for controlling video play/pause states. The new module, `hsVideoApi` does have a `pauseAllPlayers()` option, but does not offer an obvious way to trigger plays. Further, the poster control doesn’t work half the time for assigning custom video thumbnails (within custom modules at least). I made this simple script to loop through the players on a page, look for custom posters, and once they’re clicked, refreshes the video iFrame with the `'autoplay'` option set to True.\n\n```window.onload = () =&gt; {\n    modulesWithVideo = document.querySelectorAll(\".module-with-video\");\n    modulesWithVideo.forEach(moduleWithVideo =&gt; {\n        const poster = moduleWithVideo.querySelector(\".custom-poster\");\n        const iframe = moduleWithVideo.querySelector(\"iframe\");\n        const hsVideos = hsVideoApi.getPlayers();\n        poster.addEventListener(\"click\", (e) =&gt; {\n            poster.style.display = \"none\";\n            hsVideos.forEach(video =&gt; {\n                console.log(video);\n                if (iframe.id.includes(video.id)) {\n                    let videoOptions = video.options;\n                    videoOptions.autoplay = true;\n                    hsVideoApi.updatePlayer(video.id, videoOptions);\n                }\n            })\n        })\n    })\n};```",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-07-21 11:40:38"
+      },
+      {
+        "time_stamp": "2023-01-26 14:53:06"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2022-07-06 10:37:22",
+    "text": "Hey <@U01DQEZ7BCZ>, I know this is a few months too late, but thought I’d bring it to your attention: <https://HubSpotdev.slack.com/archives/C2YH119N2/p1657125371225509>"
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin Ordener",
+      "poster_handle": "k.ordener.dev"
+    },
+    "time_stamp": "2022-07-06 11:06:32",
+    "text": "Sweet Mark! I was able to figure out a solution for the project I was working on at the time of the op, but this will definitely come in handy in the future. Thanks for your hard work with this stuff and thanks for reaching out to me!"
+  },
+  {
+    "poster": {
+      "poster_name": "Erlend Powell",
+      "poster_handle": "erlend.powell"
+    },
+    "time_stamp": "2022-07-06 15:28:47",
+    "text": "Anyone know why the following code isn’t working as expected?\n\n```{% set thumbnail_url = personalization_token(\"contact.thumbnail_1\", \"0\") %}\n\n&lt;p&gt;{{ thumbnail_url }}&lt;/p&gt;\n{% if thumbnail_url == \"0\" %}\n  &lt;p&gt;zero&lt;/p&gt;\n{% else %}\n  &lt;p&gt;{{ thumbnail_url }}&lt;/p&gt;\n{% endif %}```\nWhen no value is present for the specified property, it appears to correctly set the `thumbnail_url` variable to `0` (and correctly prints 0 for the first `p` block, but the if statement doesn’t evaluate to true, and instead the output is `0` rather than the expected `zero`  for the second `p` block.\n\nNote that I’m trying to use this template in an email.",
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2022-07-06 17:35:29"
+      },
+      {
+        "time_stamp": "2022-07-06 17:37:04"
+      },
+      {
+        "time_stamp": "2022-07-06 17:37:33"
+      },
+      {
+        "time_stamp": "2022-07-07 11:39:08"
+      },
+      {
+        "time_stamp": "2022-07-11 02:35:34"
+      },
+      {
+        "time_stamp": "2022-07-11 02:36:05"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Erlend Powell",
+      "poster_handle": "erlend.powell"
+    },
+    "time_stamp": "2022-07-06 17:35:29",
+    "text": "By the way - if I don’t use the personalization_token function, formatting becomes broken in the editor, which isn’t a great experience for the designers."
+  },
+  {
+    "poster": {
+      "poster_name": "Erlend Powell",
+      "poster_handle": "erlend.powell"
+    },
+    "time_stamp": "2022-07-06 17:37:04",
+    "text": "I have found a work-around, but not sure if it’s ‘officially’ supported, but using `contact_without_defaults.thumbnail_1`  instead appears to work as expected, and I can compare correctly check values in conditions without breaking the layout."
+  },
+  {
+    "poster": {
+      "poster_name": "Erlend Powell",
+      "poster_handle": "erlend.powell"
+    },
+    "time_stamp": "2022-07-06 17:37:33",
+    "text": "P.S. - This seems like a bug to me."
+  }
+]

@@ -1,0 +1,72 @@
+[
+  {
+    "text": "Can we have a class in the module wrapper that indicates whether it's a built-in module or a custom module?\n\nIn the new design manager, custom modules and built-in modules share the exact same wrapper classes. In the old design manager, custom modules would have their own class \"hs_cos_wrapper_type_custom_widget\".\n\nUse case: For example, in Flexible Columns we may want to put a max-width on all built-in modules, while custom modules should by default be full width (so we can create full width banners and whatnot).",
+    "time_stamp": "2018-03-20 02:46:47"
+  },
+  {
+    "poster": {
+      "poster_name": "Remington Begg",
+      "poster_handle": "remingtonbegg"
+    },
+    "time_stamp": "2018-03-20 03:17:17",
+    "text": "I think best practice would be to target by a container class/id "
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Bennedbæk",
+      "poster_handle": "thomas_katalysator"
+    },
+    "time_stamp": "2018-03-20 05:38:01",
+    "edited": {
+      "time_stamp": "2018-03-20 05:42:27"
+    },
+    "text": "<@U25C65C3S> Not totally sure what you mean in this case? :slightly_smiling_face: The problem here is that when you place a built-in module inside a Flexible Column, the module wrapper is the only container there is to target if you want to apply styles specifically to built-in modules inside that Flexible Column."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-03-20 08:39:37",
+    "text": "I think what Remington is saying is that you should apply your wrapper inside of the custom module itself. and leave the outer wrapper alone for the most part.\n\nThere are few cases where it makes sense to style the custom module wrapper and HS module wrapper different. (Especially in design manager 2)"
+  },
+  {
+    "text": "Well, here's a case :slightly_smiling_face: These two modules sit inside a full width Flexible Container, so the content creator can add or remove the modules they need. The top module is a custom module, the bottom is a standard Rich Text module.\n\nAs you can see, the content in the custom module has a max-width (1440px) and is centered on the page with auto margins, while the background image is viewport width.\n\nNow, the standard module below is not correctly centered on the page, so I want to also add max-width and auto margins to that module. But since its wrapping `div` uses the same classes as the custom modules' wrapping `div` (`hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module`), this styling would apply to both modules, which would make the background image also center on the page instead of taking up the entire viewport width.\n\nHope I'm making sense here :slightly_smiling_face:\n\nI eventually worked around it by targeting the `span.hs_cos_wrapper` inside the standard module (since custom modules don't have this `span` in the DOM), but I'm thinking it would be more ideal and pretty hassle-free to just add an extra class on the module wrapper instead.\n\nFor example:\n`hs_cos_wrapper_widget_standard` for built-in modules and `hs_cos_wrapper_widget_custom` for custom modules.",
+    "time_stamp": "2018-03-20 09:32:35"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-03-20 09:44:05",
+    "text": "thought the rich text modules have their own specific wrapper class(it’s not the outermost in the container  but is close if I remember right. That’s what I’ve styled on in the past to do exactly what you’re talking about) \n\nMost sites we do though we have our own rich text module our marketers prefer to use, the downside being that with custom modules we can’t yet use smart content but the upside for them is that they can achieve the designs they want faster/easier."
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-03-20 09:48:31",
+    "text": "<@U7SL518D6> are you implying you implemented your own rich text editor for HubSpot (at least thats what I'm getting from your message)"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-03-20 09:50:23",
+    "edited": {
+      "time_stamp": "2018-03-20 09:51:08"
+    },
+    "text": "sorry no, not my own rich text editor. just a custom module with a rich text field in it- which solves the need to do what Thomas was dealing with. It also adds several features that our marketers like to use. (backgrounds, they can choose how many columns of content they want, they can set some visual pre-sets to use for like testimonials and things like that(each preset configured to the specific site))\n\nGoing the custom module route loses your ability(for now) to use smart content, which really bites."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-03-20 09:53:38",
+    "text": "If anyone has created their own rich text editor I’d be interested in seeing that in action.\n\nWe have built external apps that update HS blogs and pages before which did have their own editor, but you had to sign into an external portal(not HS directly)."
+  }
+]

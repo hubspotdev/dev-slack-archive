@@ -1,0 +1,255 @@
+[
+  {
+    "poster": {
+      "poster_name": "Dharmendra Kachhawaha",
+      "poster_handle": "dharmendra.k"
+    },
+    "time_stamp": "2021-05-05 05:47:05",
+    "text": "Can we use serverless-functions as well to consume another Application REST API's?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-05-05 05:57:33"
+      },
+      {
+        "time_stamp": "2021-05-05 07:05:19"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-05-05 05:57:33",
+    "edited": {
+      "time_stamp": "2021-05-05 05:57:47"
+    },
+    "text": "yes, its just a standard node application/lambda. Do what you wish with it as long as you don’t exceed timeouts/keep within rate limits."
+  },
+  {
+    "poster": {
+      "poster_name": "Dharmendra Kachhawaha",
+      "poster_handle": "dharmendra.k"
+    },
+    "time_stamp": "2021-05-05 07:05:19",
+    "text": "Thanks @*<https://app.slack.com/team/UQERM7BLY|Kieran>, do we have any blog, video or documentation which describes the* serverless-functions implementation to call another Application REST API's to get the data and populate HubSpot CRM custom objects with that data."
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Bergeron",
+      "poster_handle": "eric.bergeron"
+    },
+    "time_stamp": "2021-05-05 07:47:42",
+    "text": "<@UEKMY50SU> - just tagging you so this bubbles up on your feed again.  Something seems to be failing server-side before it gets to my function and I can’t figure out what."
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Krainer",
+      "poster_handle": "bkrainer"
+    },
+    "time_stamp": "2021-05-05 07:58:58",
+    "text": "it looks like your function is running successfully.\n```{\"error\":\"The \\\"key\\\" argument must be of type string or an instance of Buffer, TypedArray, DataView, or KeyObject. Received type number (NaN)\"}```\nis being returned by the `catch` block in your function on line 46."
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Krainer",
+      "poster_handle": "bkrainer"
+    },
+    "time_stamp": "2021-05-05 07:59:28",
+    "text": "i'd recommend using `console.log` statements to help with debugging, as those statements will be included in the `hs logs` output"
+  },
+  {
+    "poster": {
+      "poster_name": "Dharmendra Kachhawaha",
+      "poster_handle": "dharmendra.k"
+    },
+    "time_stamp": "2021-05-05 08:19:00",
+    "text": "*Do we have any blog, video or documentation which describes the* serverless-functions implementation to call another Application REST API's to get the data and populate HubSpot CRM custom objects with that data.",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-05-05 08:43:38"
+      },
+      {
+        "time_stamp": "2021-05-05 08:45:11"
+      },
+      {
+        "time_stamp": "2021-05-06 07:07:40"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Bergeron",
+      "poster_handle": "eric.bergeron"
+    },
+    "time_stamp": "2021-05-05 08:24:48",
+    "edited": {
+      "time_stamp": "2021-05-05 08:27:16"
+    },
+    "text": "My function on that page is running successfully; it’s the server-less function I can’t reach (and that I’m following with hs logs.)  My use case is I’m trying to embed Billflow’s account management pages for Stripe so my users have a seamless integration once they log into our site.  In order to do that, I have to pass a hash of the Stripe Customer ID to Billflow.  I have that working standalone with my the hash hard-coded, but I need the server-less function to do it dynamically for each user.  Like this:\n1. User clicks the “Account” link.\n2. The page template has a function to determine if the user is logged in and then retrieve the Stripe ID from the contact.\n3. I have a function in the head of the template to post that Stripe ID to the server-less function and return the hash value. (_*this is where I’m stuck*_).\n4. I have a custom module which loads the Billflow pages with the hash value (so I can use this elsewhere)."
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2021-05-05 08:43:38",
+    "text": "Follow this to get setup <https://developers.HubSpot.com/docs/cms/guides/getting-started-with-serverless-functions>\n\nI like to use axios, over fetch\n\nThen you can GET from one API and POST to the other\n\n```axios\n\t.get('<http://example.com/api>')\n\t.then(function (response) {\n\t\taxios\n\t\t\t.post('<https://api.hubapi.com/whatever>', response.data)\n\t\t\t.then(function (response) {\n\t\t\t\tsendResponse({ body: 'yay', statusCode: 200 });\n\t\t\t})\n\t\t\t.catch(function (error) {\n\t\t\t\t// handle error\n\t\t\t\tconsole.log(error);\n\t\t\t});\n\t})\n\t.catch(function (error) {\n\t\t// handle error\n\t\tconsole.log(error);\n\t});```"
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2021-05-05 08:45:11",
+    "text": "Obviously you can't just copy and paste this but that's the general concept"
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Krainer",
+      "poster_handle": "bkrainer"
+    },
+    "time_stamp": "2021-05-05 09:02:16",
+    "text": "how are you attempting to `POST` in step 3?"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Bergeron",
+      "poster_handle": "eric.bergeron"
+    },
+    "time_stamp": "2021-05-05 09:03:17",
+    "text": "With fetch:\n\n      \t\tfetch(‘<https://studiog.getovation.com/_hcms/api/bf-hmac>’, {\n\t\t\t      method:‘POST’,\n\t\t\t      headers: {\n\t\t\t\t      ‘Content-Type’: ‘application/json’\n\t\t\t      },"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Bergeron",
+      "poster_handle": "eric.bergeron"
+    },
+    "time_stamp": "2021-05-05 09:03:48",
+    "text": "I’m not sending any parameters yet (and not expecting any).  I’m just trying to return the hard coded hash."
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Krainer",
+      "poster_handle": "bkrainer"
+    },
+    "time_stamp": "2021-05-05 09:20:01",
+    "text": "and you're saying the serverless function never gets called? can you verify this by looking at the network tab in devtools?"
+  },
+  {
+    "text": "Yes:",
+    "time_stamp": "2021-05-05 09:27:10"
+  },
+  {
+    "text": "I just refreshed my test page before that screen shot. This is what the console shows, and that line in the source is fetch for the server-less function:",
+    "time_stamp": "2021-05-05 09:29:02"
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Krainer",
+      "poster_handle": "bkrainer"
+    },
+    "time_stamp": "2021-05-05 09:37:24",
+    "text": "could you send me a link to the page?"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Bergeron",
+      "poster_handle": "eric.bergeron"
+    },
+    "time_stamp": "2021-05-05 09:40:47",
+    "text": "Sure: <https://studiog.getovation.com/test-function>"
+  },
+  {
+    "text": "Here’s a screen shot of the source in the template:",
+    "time_stamp": "2021-05-05 09:41:58"
+  },
+  {
+    "text": "this is what i'm seeing in devtools",
+    "time_stamp": "2021-05-05 11:00:21"
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Krainer",
+      "poster_handle": "bkrainer"
+    },
+    "time_stamp": "2021-05-05 11:00:36",
+    "text": "what happens if you change `body: \"\"` to `body: {}`?"
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Krainer",
+      "poster_handle": "bkrainer"
+    },
+    "time_stamp": "2021-05-05 11:05:19",
+    "text": "or if you omit `body` completely?"
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Krainer",
+      "poster_handle": "bkrainer"
+    },
+    "time_stamp": "2021-05-05 11:12:06",
+    "text": "actually, i think `JSON.stringify({})` will work"
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Krainer",
+      "poster_handle": "bkrainer"
+    },
+    "time_stamp": "2021-05-05 11:13:18",
+    "text": "that seemed to do the trick for me"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Bergeron",
+      "poster_handle": "eric.bergeron"
+    },
+    "time_stamp": "2021-05-05 11:23:31",
+    "text": "Hmm, let me try."
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Bergeron",
+      "poster_handle": "eric.bergeron"
+    },
+    "time_stamp": "2021-05-05 11:26:30",
+    "text": "I got 500 server error with that.  I tried omitting the body previously and that got the same 400 error."
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Bergeron",
+      "poster_handle": "eric.bergeron"
+    },
+    "time_stamp": "2021-05-05 11:28:48",
+    "text": "Actually, I changed it to this: body: JSON.stringify({‘’}), and now I get this: Uncaught SyntaxError: Unexpected token ‘}’.  That I can troubleshoot, so it definitely was the request it didn’t like.  I think I’ve got it now, I’ll let you know."
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Bergeron",
+      "poster_handle": "eric.bergeron"
+    },
+    "time_stamp": "2021-05-05 14:01:49",
+    "text": "<@UEKMY50SU> - I’m stumped.  Do you think I should take this to support?  I can’t get anything more than a generic 400 or 500 error.  I tried putting JSON.stringify(“test”) in the body and it makes no difference."
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Krainer",
+      "poster_handle": "bkrainer"
+    },
+    "time_stamp": "2021-05-05 14:02:53",
+    "text": "i think `JSON.stringify({})` is what you want. the 500 error sounds like it's coming from within your serverless function, no?"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Bergeron",
+      "poster_handle": "eric.bergeron"
+    },
+    "time_stamp": "2021-05-05 14:08:22",
+    "text": "Actually, there is something in the log now.  I’m just coming back to this after a couple meetings.  I’ll try a little more."
+  }
+]

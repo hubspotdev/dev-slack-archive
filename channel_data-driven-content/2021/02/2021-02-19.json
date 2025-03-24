@@ -1,0 +1,306 @@
+[
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-02-19 02:28:38",
+    "text": "Hey is that all of your code?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-02-19 02:30:10",
+    "text": "It looks like you’re just missing the hubdb_table_rows query at the end"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-02-19 02:54:54",
+    "text": "The method to select the rows is `hubdb_table_rows` - here you’re going to need to pass in the table and the query to filter the data.\n\nSo you have table 3415518 which has warehouse_location and destination_country columns (and i imagine some more) so with your two scenarios you’re going to need to run the following queries:\n\n```{% set rows = hubdb_table_rows(3415518, \"warehouse_location=Finland&amp;warehouse_destination=Sweden\") %}```\nOR\n```{% set rows = hubdb_table_rows(3415518, \"warehouse_location=Finland\") %}```\nSo really all you need to do is use that queryparam var you’ve built.\nI would recommend two things: use the table names vs the id’s - HubSpots docs recommend this too."
+  },
+  {
+    "poster": {
+      "poster_name": "Tuomas Malinen",
+      "poster_handle": "tuomas.malinen"
+    },
+    "time_stamp": "2021-02-19 03:40:24",
+    "text": "Listing section looks like this:\n\n{% set table = hubdb_table_rows(3415518, queryparam) %}\n\n{% if table == [] %}\n    &lt;p class=‘align-center’&gt;Sorry, no listings found for that Search. Try changing your filter and search again.&lt;/p&gt;\n{% else %}\n  {% for row in table %}\n\t\t&lt;div&gt;\n\t\t\t\t&lt;div class=“{{ row[“warehouse_location”].name }}“&gt;\n\t\t\t\t\t\t\t\t&lt;div&gt;\n\t\t\t\t\t\t\t\t\t&lt;h4&gt;From {{ row[“warehouse_location”].name }} to {{ row[“destination_country”].name }}&lt;/h4&gt;\n\t\t\t\t\t\t\t\t\t&lt;div&gt;\n\t\t\t\t\t\t\t\t\t\t\t&lt;ul&gt;\n\t\t\t\t\t\t\t\t\t\t\t\t\t&lt;li&gt;CO2 emissions&lt;br&gt;&lt;span&gt;{{ row[“air_freight_co2”] }}&lt;/span&gt;&lt;br&gt;g/km&lt;/li&gt;\n\t\t\t\t\t\t\t\t\t\t\t\t\t&lt;li&gt;Price&lt;br&gt;&lt;span&gt;{{ row[“air_freight_price”] }}&lt;/span&gt;&lt;br&gt;€&lt;/li&gt;\n\t\t\t\t\t\t\t\t\t\t\t\t\t&lt;li&gt;CO2 emissions&lt;br&gt;&lt;span&gt;{{ row[“road_freight_co2”] }}&lt;/span&gt;&lt;br&gt;g/km&lt;/li&gt;\n\t\t\t\t\t\t\t\t\t\t\t\t\t&lt;li&gt;Price&lt;br&gt;&lt;span&gt;{{ row[“road_freight_price”] }}&lt;/span&gt;&lt;br&gt;€&lt;/li&gt;\n\t\t\t\t\t\t\t\t\t\t\t&lt;/ul&gt;\n\t\t\t\t\t\t\t\t\t&lt;/div&gt;\n\t\t\t\t\t\t\t\t&lt;/div&gt;\n\t\t\t\t&lt;/div&gt;\n\t\t&lt;/div&gt;\n{% endfor %}\n{% endif %}"
+  },
+  {
+    "poster": {
+      "poster_name": "Tuomas Malinen",
+      "poster_handle": "tuomas.malinen"
+    },
+    "time_stamp": "2021-02-19 03:58:26",
+    "text": "And what i try to achieve is not only to get listing from Finland to Sweden or vice versa but every possible combination of countries found in both drop down menus. “show all” in destination menu should give me listing of every possible countries based on selection in warehouse location menu like Finland to Sweden, Finland to Germany and so on."
+  },
+  {
+    "poster": {
+      "poster_name": "Kris Gösser",
+      "poster_handle": "kris443"
+    },
+    "time_stamp": "2021-02-19 11:47:04",
+    "text": "Hey fam — Looking to understand how dynamic HubDB can be with Form submissions. Let me give you an example scenario. I wasn't able to find a good answer via documentation or searching Slack, so if someone simply has a link to an answer, I appreciate it!\n\nScenario:\n\nI have a landing page with an intake form. The user fills out the form to share information with us.\n\nSome info is basic, like normal Contact properties like name/email/etc.\n\nSome info is a custom HubDB table, however. For a simple example, let's say I have a HubDB table called `table_cars`. In that table, there are basic properties like `model`, `year`, `color`.\n\n*In this scenario, the user might have more than one Car to submit. I won't know if they have 1, or 2, or N Cars they need to share with me.*\n\nTherefore, the UX I'm trying to create is the ability dynamically allow the user to \"add a new row\" to the form to input a second Car's info, then a third, etc. I don't want to force the user to submit the form and refresh the page for each new Car to submit.\n\nDoes that make sense? Is it possible? Can someone point me to documentation? I tried a combination of keywords like 'hubdb dynamic form' etc but couldn't really find anything.\n\nThanks!",
+    "reply_count": 21,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-02-19 12:18:01"
+      },
+      {
+        "time_stamp": "2021-02-19 12:18:17"
+      },
+      {
+        "time_stamp": "2021-02-19 12:26:19"
+      },
+      {
+        "time_stamp": "2021-02-19 12:27:32"
+      },
+      {
+        "time_stamp": "2021-02-19 12:27:41"
+      },
+      {
+        "time_stamp": "2021-02-19 12:29:37"
+      },
+      {
+        "time_stamp": "2021-02-19 12:45:33"
+      },
+      {
+        "time_stamp": "2021-02-19 12:46:35"
+      },
+      {
+        "time_stamp": "2021-02-19 12:47:43"
+      },
+      {
+        "time_stamp": "2021-02-19 12:47:46"
+      },
+      {
+        "time_stamp": "2021-02-19 12:49:58"
+      },
+      {
+        "time_stamp": "2021-02-19 12:50:44"
+      },
+      {
+        "time_stamp": "2021-02-19 12:50:48"
+      },
+      {
+        "time_stamp": "2021-02-19 12:53:15"
+      },
+      {
+        "time_stamp": "2021-02-19 12:55:11"
+      },
+      {
+        "time_stamp": "2021-02-19 12:55:47"
+      },
+      {
+        "time_stamp": "2021-02-19 13:00:03"
+      },
+      {
+        "time_stamp": "2021-02-19 13:01:18"
+      },
+      {
+        "time_stamp": "2021-02-19 13:01:26"
+      },
+      {
+        "time_stamp": "2021-02-19 13:01:37"
+      },
+      {
+        "time_stamp": "2021-02-19 13:02:22"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-02-19 12:18:01",
+    "text": "So hubdb will power the selection list (ie. a list of vehicles)"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-02-19 12:18:17",
+    "text": "and you want to then store the list of vehicles they select against the form submission?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kris Gösser",
+      "poster_handle": "kris443"
+    },
+    "time_stamp": "2021-02-19 12:26:19",
+    "text": "Hi <@UQERM7BLY>. Think based on your reply, I mean the opposite: I want to add a new row to `table_cars` based on whatever the User inputs into the Form. I won't be populating the Form with anything from HubDB, a la dropdownlists etc."
+  },
+  {
+    "poster": {
+      "poster_name": "Kris Gösser",
+      "poster_handle": "kris443"
+    },
+    "time_stamp": "2021-02-19 12:27:09",
+    "text": "In my scenario, it doesn't quite make sense to have these as properties on a standard object, like a Contact, Company, or Deal, because there could be N number of \"Cars\" per customer, each with its own set of properties.\n\nSeems like HubDB is what I need to use here, but everything I'm reading is that the use case is pretty limited. i.e. I can't submit a form to HubDB except via API, and if that, there is a ton of extra wonkiness to do.\n\nBy comparison, using a tool like FormKeep or TypeForm where I can simply point the &lt;form action&gt; to the form while having control of the frontend HTML and UX/UI is what I'm trying to do. Would just prefer to do it in HubSpot if possible.",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2021-02-23 05:33:35"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-02-19 12:27:32",
+    "text": "well, i’d imagine you’d usually use workflows to do something like that - but not sure you can do that with hubdb"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-02-19 12:27:41",
+    "edited": {
+      "time_stamp": "2021-02-19 12:28:02"
+    },
+    "text": "however, this could be a use case for custom objects. This will need an enterprise package though."
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-02-19 12:29:37",
+    "edited": {
+      "time_stamp": "2021-02-19 12:30:09"
+    },
+    "text": "You could look at using webhooks, to trigger either a 3rd party script when the contact is created which would insert into HubDB, or if you have CMS Enteprise this is a perfect use case for Serverless functions."
+  },
+  {
+    "poster": {
+      "poster_name": "Kris Gösser",
+      "poster_handle": "kris443"
+    },
+    "time_stamp": "2021-02-19 12:45:33",
+    "text": "I have CMS enterprise, yep. Along with HubDB. I'm hosting my marketing site on the CMS."
+  },
+  {
+    "poster": {
+      "poster_name": "Kris Gösser",
+      "poster_handle": "kris443"
+    },
+    "time_stamp": "2021-02-19 12:46:35",
+    "text": "But Custom Objects, you mean tables within HubDB? Or did you mean something else, like objects alongside Contact, Company, Deals, etc?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kris Gösser",
+      "poster_handle": "kris443"
+    },
+    "time_stamp": "2021-02-19 12:47:43",
+    "text": "<https://www.HubSpot.com/products/custom-objects>"
+  },
+  {
+    "poster": {
+      "poster_name": "Kris Gösser",
+      "poster_handle": "kris443"
+    },
+    "time_stamp": "2021-02-19 12:47:46",
+    "text": "Ah, I see now."
+  },
+  {
+    "poster": {
+      "poster_name": "Kris Gösser",
+      "poster_handle": "kris443"
+    },
+    "time_stamp": "2021-02-19 12:49:58",
+    "text": "I now notice I don't have the the Enterprise... I thought I did. Dammit, everytime I want to do something in HubSpot, it's blocked behind another upgrade."
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-02-19 12:50:44",
+    "text": "If you have professional and are not using the default products crm object"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-02-19 12:50:48",
+    "text": "you might be able to use that."
+  },
+  {
+    "poster": {
+      "poster_name": "Kris Gösser",
+      "poster_handle": "kris443"
+    },
+    "time_stamp": "2021-02-19 12:53:15",
+    "text": "Hm, thanks for the direction, I'll investigate that next"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-02-19 12:55:11",
+    "text": "If you have professional"
+  },
+  {
+    "poster": {
+      "poster_name": "Kris Gösser",
+      "poster_handle": "kris443"
+    },
+    "time_stamp": "2021-02-19 12:55:47",
+    "text": "re: Custom Objects <@UQERM7BLY>, do you know if there can be a one-to-many relationship?\n\ni.e. there is the basic `Company` object. I set up a custom `Car Object` which has it's own properties like 'model', 'color', etc.\n\nCan `Company` have N number of `Cars` associated? Or Can a company only have one?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-02-19 13:00:03",
+    "text": "hmm i dont know the answer to that, i dont do a lot of work with crm objects at the moment unfortunately"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-02-19 13:01:18",
+    "text": "heres another option rather than having to setup /configure an app and HubSpot webhook - <https://legacydocs.HubSpot.com/docs/methods/workflow-extensions/workflow-extensions-overview>"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-02-19 13:01:26",
+    "text": "if you want to dump the data into hubdb"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-02-19 13:01:37",
+    "text": "that’ll just POST to an endpoint of your choosing from a workflow"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-02-19 13:02:22",
+    "text": "You can then use the HubSpot api to simply insert into hubdb"
+  }
+]

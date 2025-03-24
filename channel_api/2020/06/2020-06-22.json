@@ -1,0 +1,261 @@
+[
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2020-06-22 08:59:50",
+    "text": "Just wanted to jump into to confirm that there is no requirement to list an app. You can create apps to use to take advantage of webhooks but never share the authorization URL with anyone so only your client can use the app"
+  },
+  {
+    "poster": {
+      "poster_name": "chrispecoraro",
+      "poster_handle": "chrispecoraro"
+    },
+    "time_stamp": "2020-06-22 10:49:42",
+    "text": "I would like to send a webhook as a trigger any time the \"email opened/clicked\" and \"last email opened/clicked\" properties are changed."
+  },
+  {
+    "poster": {
+      "poster_name": "chrispecoraro",
+      "poster_handle": "chrispecoraro"
+    },
+    "time_stamp": "2020-06-22 10:50:11",
+    "text": "I can't access these through the app webhook listeners, but I can access them through the workflows."
+  },
+  {
+    "poster": {
+      "poster_name": "chrispecoraro",
+      "poster_handle": "chrispecoraro"
+    },
+    "time_stamp": "2020-06-22 10:52:03",
+    "text": "The issue is that every time the value increases or updates, the user is already enrolled, so the workflow doesn't try to renroll (therefore not sending another webhook). So question: do I need to find a hack to \"unenroll\" that user from the list, like \"last modified less one day ago\"? If I do this, though, \"less than...\"  can't be use for renrollment."
+  },
+  {
+    "poster": {
+      "poster_name": "chrispecoraro",
+      "poster_handle": "chrispecoraro"
+    },
+    "time_stamp": "2020-06-22 10:55:52",
+    "text": "...or... should I create a custom field and then update that from the workflow and then use that custom field in the app?",
+    "reply_count": 9,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2020-06-22 10:56:27"
+      },
+      {
+        "time_stamp": "2020-06-22 10:56:32"
+      },
+      {
+        "time_stamp": "2020-06-22 10:59:56"
+      },
+      {
+        "time_stamp": "2020-06-22 11:00:38"
+      },
+      {
+        "time_stamp": "2020-06-22 14:28:06"
+      },
+      {
+        "time_stamp": "2020-06-22 14:28:46"
+      },
+      {
+        "time_stamp": "2020-06-22 14:41:22"
+      },
+      {
+        "time_stamp": "2020-06-22 14:59:46"
+      },
+      {
+        "time_stamp": "2020-06-22 16:03:08"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2020-06-22 10:56:27",
+    "text": "(Optional) For property change events, select the property in question. Note: You can also manually enter property names, allowing you to use custom properties."
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2020-06-22 10:56:32",
+    "text": "I wonder if you can just type it in?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2020-06-22 10:59:56",
+    "text": "I think it’s “hs_sales_email_last_opened”"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2020-06-22 11:00:38",
+    "text": "or hs_email_last_open_date"
+  },
+  {
+    "poster": {
+      "poster_name": "chrispecoraro",
+      "poster_handle": "chrispecoraro"
+    },
+    "time_stamp": "2020-06-22 14:28:06",
+    "text": "That works, but I just get the bare minimum\n```array (\n    'objectId' =&gt; 8646....,\n    'propertyName' =&gt; 'hs_email_last_open_date',\n    'propertyValue' =&gt; '15928574....',\n    'changeSource' =&gt; 'EMAIL',\n    'eventId' =&gt; 427835....,\n    'subscriptionId' =&gt; 24...,\n    'portalId' =&gt; 3779...,\n    'appId' =&gt; 2024..,\n    'occurredAt' =&gt; 159285748...,\n    'subscriptionType' =&gt; 'contact.propertyChange',\n    'attemptNumber' =&gt; 0,\n  ),\n)  ```\n, whereas with enroll/reenroll in workflow gives me the whole record."
+  },
+  {
+    "poster": {
+      "poster_name": "chrispecoraro",
+      "poster_handle": "chrispecoraro"
+    },
+    "time_stamp": "2020-06-22 14:28:46",
+    "edited": {
+      "time_stamp": "2020-06-22 14:31:43"
+    },
+    "text": "Should I then take the id out of this record and perform a follow-up GET request to pull out the rest of the contact's fields? Keying off of\n```'objectId' =&gt; 868....,```\n?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-06-22 14:30:56",
+    "text": "Try using the CRM V3\n\nPOST*`/crm/v3/properties/{objectType}/batch/create`*\n\n<https://developers.HubSpot.com/docs/api/crm/properties>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-06-22 14:31:53",
+    "text": "Can you be more specific? I have been able to mark timeline events with exact timestamps down to millisecond level, but I suspect I might be missing part of what you are trying to do."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-06-22 14:32:33",
+    "text": "Take a look at <https://legacydocs.HubSpot.com/docs/faq/do-HubSpot-apis-support-ajax-request> ."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-06-22 14:34:31",
+    "text": "I have had the same problem on every endpoint that does any kind of search from every API version; there is a race condition between when an object is made or updated, and when it becomes viewable via search endpoints. I have not found any documentation of how this works so far, but if the endpoint is going X days back in history, can't you work around your specific issue by just marking off which ones you have and have not processed on a per-record basis?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-06-22 14:35:44",
+    "text": "The timestamp stuff, in my admittedly limited experience, appears to work basically the same in all API versions, and gets you millisecond resolution, except in places where the system expects a day, in which case you have to use the stamp for 00:00:00 UTC on said day."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-06-22 14:37:36",
+    "text": "Try using Postman, SoapUI, or another REST Client for this"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-06-22 14:38:06",
+    "text": "The ID of the attachment, is a file. Try feeding it to this: <https://developers.HubSpot.com/docs/api/cms/files> ."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-06-22 14:41:22",
+    "text": "That's the normal way to back-fetch the required obj properties... just go do a GET on that obj ID."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-06-22 14:43:54",
+    "text": "I think I *might* have found a bug in this page of API docs: <https://developers.HubSpot.com/docs/api/cms/files> . The files API is marked Beta, but when you click Get Access, you get options for Events V3, CRM V3, CMS V3, Marketing V3, and Analytics APIs, but no Files API listed. Also, isn't CRM V3 no longer beta? It seems like this needs an update or fix of some sort.",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-06-22 16:07:42"
+      },
+      {
+        "time_stamp": "2020-06-23 02:55:34"
+      },
+      {
+        "time_stamp": "2020-06-23 10:47:06"
+      },
+      {
+        "time_stamp": "2020-06-23 11:44:41"
+      },
+      {
+        "time_stamp": "2020-06-23 17:19:59"
+      },
+      {
+        "time_stamp": "2020-06-30 14:04:14"
+      },
+      {
+        "time_stamp": "2020-07-01 09:49:45"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "chrispecoraro",
+      "poster_handle": "chrispecoraro"
+    },
+    "time_stamp": "2020-06-22 14:59:46",
+    "text": "ok, I just thought it was convenient that the workflows send everything over, though :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-06-22 16:03:08",
+    "text": "The challenge with APIs, is supporting everything we all will do, without breaking something somebody else will do. :wink:"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-06-22 16:07:42",
+    "text": "Posted to\n\n<https://community.HubSpot.com/t5/APIs-Integrations/Files-API-docs-have-an-outdated-Beta-form/m-p/349042#M34217>"
+  },
+  {
+    "poster": {
+      "poster_name": "Taylor C",
+      "poster_handle": "taylorfclark"
+    },
+    "time_stamp": "2020-06-22 17:29:23",
+    "text": "Yea I guess. It just seems silly that the API works this way."
+  },
+  {
+    "poster": {
+      "poster_name": "Taylor C",
+      "poster_handle": "taylorfclark"
+    },
+    "time_stamp": "2020-06-22 17:29:43",
+    "text": "`addedAt` is clearly not accurate :expressionless:"
+  }
+]

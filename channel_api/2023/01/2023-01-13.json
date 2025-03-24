@@ -1,0 +1,1094 @@
+[
+  {
+    "poster": {
+      "poster_name": "Danny Brauer",
+      "poster_handle": "danny401"
+    },
+    "time_stamp": "2023-01-13 03:27:11",
+    "edited": {
+      "time_stamp": "2023-01-13 03:27:32"
+    },
+    "text": "I just dealt with this recently, and found the `GET /oauth/v1/access-tokens/{token}` endpoint, which will give you more information about the access token you got out of the OAuth dance. One of the fields returned is `hub_id` , which is the same as the portal ID you want."
+  },
+  {
+    "poster": {
+      "poster_name": "Danny Brauer",
+      "poster_handle": "danny401"
+    },
+    "time_stamp": "2023-01-13 03:28:04",
+    "text": "Documentation <https://developers.HubSpot.com/docs/api/oauth/tokens|here>, under the Endpoints tab"
+  },
+  {
+    "poster": {
+      "poster_name": "Danny Brauer",
+      "poster_handle": "danny401"
+    },
+    "time_stamp": "2023-01-13 03:35:22",
+    "text": "I just did this the other day, although not in Javascript. It’s frustrating because the signature will either match or not, and you get no feedback on why it doesn’t match.\n\nJust looking through your code, one thing which jumps out at me is `JSON.stringify(req.body)`. I think this is an unnecessary transformation, and you should just use the raw body when getting a signature."
+  },
+  {
+    "poster": {
+      "poster_name": "Danny Brauer",
+      "poster_handle": "danny401"
+    },
+    "time_stamp": "2023-01-13 03:38:04",
+    "text": "Looks like you’re also missing the `url` options parameter. This is <https://github.com/HubSpot/HubSpot-api-nodejs/blob/master/src/utils/signature.ts|required> for v2 and v3 signatures."
+  },
+  {
+    "poster": {
+      "poster_name": "Danny Brauer",
+      "poster_handle": "danny401"
+    },
+    "time_stamp": "2023-01-13 03:40:59",
+    "text": "Note that the URL <https://developers.HubSpot.com/docs/api/webhooks/validating-requests|should not contain any encoded components>."
+  },
+  {
+    "poster": {
+      "poster_name": "Danny Brauer",
+      "poster_handle": "danny401"
+    },
+    "time_stamp": "2023-01-13 03:45:53",
+    "text": "It looks like this is exposed in the Python library as `AccessTokensApi.get_access_token()`"
+  },
+  {
+    "poster": {
+      "poster_name": "Danny Brauer",
+      "poster_handle": "danny401"
+    },
+    "time_stamp": "2023-01-13 03:51:35",
+    "text": "You can do this, but the user will be prompted to specify a portal, and the process will result in your HubSpot app being installed in that portal."
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Grothe",
+      "poster_handle": "christian947"
+    },
+    "time_stamp": "2023-01-13 04:58:03",
+    "text": "Hey! Iam getting familiar with the HubSpot api. I created a private app and could make a request with axios to get my contacts. but it fails when I want to create a contact with that api. With a post request I get a auth fails and i with put i dont get a auth error but it also does not create that contact. I granted write and read for crm.objects.contact in my private app settings. this is my code:\n```require(\"dotenv\").config();\nconst axios = require(\"axios\");\n\nconst getData = async () =&gt; {\n  const response = await axios.get(\n    \"<https://api.hubapi.com/crm/v3/objects/contacts>\",\n    {\n      headers: {\n        Authorization: `Bearer ${process.env.HubSpot_TOKEN}`,\n        \"Content-Type\": \"application/json\",\n      },\n    }\n  );\n  const { results } = response.data;\n  results.forEach((result) =&gt; {\n    console.log(result);\n  });\n};\n\nconst createContact = async () =&gt; {\n  const response = await axios.put(\n    \"<https://api.hubapi.com/crm/v3/objects/contacts>\",\n    {\n      headers: {\n        Authorization: `Bearer ${process.env.HubSpot_TOKEN}`,\n        \"Content-Type\": \"application/json\",\n      },\n      data: {\n        properties: {\n          email: \"<mailto:test@test.de|test@test.de>\",\n          firstname: \"Test\",\n          lastname: \"Contact\",\n        },\n      },\n    }\n  );\n  console.log(response.data);\n};\n\ncreateContact();\n//getData();```",
+    "reply_count": 24,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-01-13 05:01:52"
+      },
+      {
+        "time_stamp": "2023-01-13 05:05:19"
+      },
+      {
+        "time_stamp": "2023-01-13 05:06:19"
+      },
+      {
+        "time_stamp": "2023-01-13 05:07:03"
+      },
+      {
+        "time_stamp": "2023-01-13 05:08:19"
+      },
+      {
+        "time_stamp": "2023-01-13 05:19:02"
+      },
+      {
+        "time_stamp": "2023-01-13 08:33:16"
+      },
+      {
+        "time_stamp": "2023-01-13 08:33:37"
+      },
+      {
+        "time_stamp": "2023-01-13 08:33:59"
+      },
+      {
+        "time_stamp": "2023-01-13 08:35:09"
+      },
+      {
+        "time_stamp": "2023-01-13 08:35:34"
+      },
+      {
+        "time_stamp": "2023-01-13 08:36:15"
+      },
+      {
+        "time_stamp": "2023-01-13 08:36:35"
+      },
+      {
+        "time_stamp": "2023-01-13 08:36:50"
+      },
+      {
+        "time_stamp": "2023-01-13 08:37:01"
+      },
+      {
+        "time_stamp": "2023-01-13 08:37:08"
+      },
+      {
+        "time_stamp": "2023-01-13 08:37:12"
+      },
+      {
+        "time_stamp": "2023-01-13 09:07:08"
+      },
+      {
+        "time_stamp": "2023-01-13 09:09:54"
+      },
+      {
+        "time_stamp": "2023-01-13 09:27:15"
+      },
+      {
+        "time_stamp": "2023-01-13 09:27:34"
+      },
+      {
+        "time_stamp": "2023-01-13 09:28:01"
+      },
+      {
+        "time_stamp": "2023-01-13 09:29:03"
+      },
+      {
+        "time_stamp": "2023-01-13 09:29:16"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Danny Brauer",
+      "poster_handle": "danny401"
+    },
+    "time_stamp": "2023-01-13 05:01:52",
+    "text": "What does the auth error look like?"
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Grothe",
+      "poster_handle": "christian947"
+    },
+    "time_stamp": "2023-01-13 05:05:19",
+    "text": "oh nevermind... I got the solution. I was using axios wrong actually. For some reason i putted the properties in the options object. it should look like this\n```const createContact = async () =&gt; {\n  const response = await <http://axios.post|axios.post>(\n    \"<https://api.hubapi.com/crm/v3/objects/contacts>\",\n    {\n      properties: {\n        firstname: \"Test\",\n        lastname: \"User\",\n        email: \"<mailto:test@test.de|test@test.de>\",\n      },\n    },\n    {\n      headers: {\n        Authorization: `Bearer ${process.env.HubSpot_TOKEN}`,\n        \"Content-Type\": \"application/json\",\n      },\n    }\n  );\n  console.log(response.data);\n};```"
+  },
+  {
+    "poster": {
+      "poster_name": "Danny Brauer",
+      "poster_handle": "danny401"
+    },
+    "time_stamp": "2023-01-13 05:06:19",
+    "text": "Ah yeah, I remember having that issue. Axios’ signatures for different HTTP methods are annoyingly different from one another."
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Grothe",
+      "poster_handle": "christian947"
+    },
+    "time_stamp": "2023-01-13 05:07:03",
+    "text": "yeah..."
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Grothe",
+      "poster_handle": "christian947"
+    },
+    "time_stamp": "2023-01-13 05:08:19",
+    "text": "even chat gpt was confused :smile: :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Grothe",
+      "poster_handle": "christian947"
+    },
+    "time_stamp": "2023-01-13 05:19:02",
+    "text": "is there a way to update a contact if it already exsists?"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "lchausse"
+    },
+    "time_stamp": "2023-01-13 06:54:00",
+    "text": "Hello!\n\nI have used GraphQL a bit yet to create dynamic pages, but I have another use case that I want to know if you guys think would be possible:\n\n*Is it possible to trigger a query on a js event (input or click)?*\n\nMy idea is to use this to validate if a contact already exist in HubSpot when a visitor fill his email in a signup form. The end goal would be to return a message like \"This user already exists. Please login or use another email address to signup if it is not you.\"\n\nSo on input I would like to trigger this query:\n\n```query MyQuery {\n  CRM {\n    contact(uniqueIdentifier: \"email\", uniqueIdentifierValue: \"<mailto:lchausse@auxilio.io|lchausse@auxilio.io>\") {\n      email\n    }\n  }\n}```\nThat would return this if the contact is not in the HS contact DB:\n\n```\"data\": {\n    \"CRM\": {\n      \"contact\": {\n        \"email\": null\n      }\n    }\n  }\n}```\n<@UGDF9EBPW> I am cc ing you here since you seem to have a good experience with GraphQL\n\n<@U021LKY2L0J> :eyes:",
+    "reply_count": 4,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-01-13 07:34:01"
+      },
+      {
+        "time_stamp": "2023-01-13 07:34:36"
+      },
+      {
+        "time_stamp": "2023-01-13 12:52:26"
+      },
+      {
+        "time_stamp": "2023-01-16 06:49:35"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 07:34:01",
+    "text": "Yeah you can trigger Graphql queries by using url parameters"
+  },
+  {
+    "poster": {
+      "poster_name": "Stan Zeehandelaar",
+      "poster_handle": "stan225"
+    },
+    "time_stamp": "2023-01-13 07:34:26",
+    "edited": {
+      "time_stamp": "2023-01-13 07:35:54"
+    },
+    "text": "Hi everyone, <https://developers.HubSpot.com/docs/api/crm/meetings|on this page in the API documentation>, there is an example code to get a meeting by meetingId (GET *`/crm/v3/objects/meetings/{meetingId}`*) but when I use this code in a custom code block in workflows, I get\n```[ERROR] Runtime.ImportModuleError: Unable to import module 'HubSpotHandler': No module named 'HubSpot.crm.objects.meetings'```\nDoes anyone know how to solve this?\n\n\nFor reference: This is the code I’m trying to run:\n```import HubSpot\nfrom pprint import pprint\nfrom HubSpot.crm.objects.meetings import ApiException\n\nclient = HubSpot.Client.create(access_token=\"YOUR_ACCESS_TOKEN\")\n\ntry:\n    api_response = client.crm.objects.meetings.basic_api.get_by_id(meeting_id=\"meetingId\", properties=[\"test\"], archived=False)\n    pprint(api_response)\nexcept ApiException as e:\n    print(\"Exception when calling basic_api-&gt;get_by_id: %s\\n\" % e)```",
+    "reply_count": 15,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-01-13 07:35:27"
+      },
+      {
+        "time_stamp": "2023-01-13 07:39:29"
+      },
+      {
+        "time_stamp": "2023-01-13 07:39:38"
+      },
+      {
+        "time_stamp": "2023-01-13 07:40:01"
+      },
+      {
+        "time_stamp": "2023-01-13 07:40:22"
+      },
+      {
+        "time_stamp": "2023-01-13 07:46:35"
+      },
+      {
+        "time_stamp": "2023-01-13 07:52:09"
+      },
+      {
+        "time_stamp": "2023-01-13 08:29:17"
+      },
+      {
+        "time_stamp": "2023-01-13 08:29:32"
+      },
+      {
+        "time_stamp": "2023-01-13 08:30:15"
+      },
+      {
+        "time_stamp": "2023-01-16 01:03:19"
+      },
+      {
+        "time_stamp": "2023-01-16 07:21:35"
+      },
+      {
+        "time_stamp": "2023-01-16 08:15:49"
+      },
+      {
+        "time_stamp": "2023-01-18 11:24:32"
+      },
+      {
+        "time_stamp": "2023-01-19 07:38:52"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 07:34:36",
+    "text": "so like you can just pass the email through in the url and have gql check for that email and then return if they're registered or not"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 07:35:27",
+    "text": "Yeah so it's actually going to be a little different, let me get you the complete code"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 07:39:29",
+    "text": "```const HubSpot = require('@HubSpot/api-client');\n\nconst HubSpotClient = new HubSpot.Client({\"accessToken\":\"YOUR_ACCESS_TOKEN\"});\n\nconst meetingId = \"meetingId\";\nconst properties = undefined;\nconst propertiesWithHistory = undefined;\nconst associations = undefined;\nconst archived = false;\nconst idProperty = undefined;\n\ntry {\n  const apiResponse = await HubSpotClient.crm.objects.basicApi.getById(\"meetings\", {meetingId, properties, propertiesWithHistory, associations, archived, idProperty});\n  console.log(JSON.stringify(apiResponse.body, null, 2));\n} catch (e) {\n  e.message === 'HTTP request failed'\n    ? console.error(JSON.stringify(e.response, null, 2))\n    : console.error(e)\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 07:39:38",
+    "text": "This code should work but let me run a quick test"
+  },
+  {
+    "poster": {
+      "poster_name": "Stan Zeehandelaar",
+      "poster_handle": "stan225"
+    },
+    "time_stamp": "2023-01-13 07:40:01",
+    "text": "Wow. that was quick <@U01QVR44MEY>. Do you have this available in Python code as well or not?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 07:40:22",
+    "text": "yeah one moment"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 07:46:35",
+    "text": "sorry just running tests"
+  },
+  {
+    "poster": {
+      "poster_name": "Stan Zeehandelaar",
+      "poster_handle": "stan225"
+    },
+    "time_stamp": "2023-01-13 07:52:09",
+    "text": "All good, I appreciate it a lot!"
+  },
+  {
+    "poster": {
+      "poster_name": "Lilian Pires",
+      "poster_handle": "lilian.pires"
+    },
+    "time_stamp": "2023-01-13 08:11:08",
+    "text": "<@U04CY7LLMQE>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 08:29:17",
+    "text": "<@U033JRJHUVC> something is messed up. I got the first error to go away by changing line 3 to `from HubSpot.crm.objects.exceptions import ApiException` but the meetings api call is broken"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 08:29:32",
+    "text": "```api_response = client.crm.objects.meetings.basic_api.get_by_id(meeting_id=\"meetingId\", properties=[\"test\"], archived=False)\npprint(api_response)```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 08:30:15",
+    "text": "<@U04J72L6M8D> do you have any ideas, this is basically the same problem we were working on the other day because meetings are an engagement"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 08:33:16",
+    "text": "use a PATCH request"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 08:33:37",
+    "text": "and you can provide the email as the id as an idProperty"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 08:33:59",
+    "text": "this will update the contact if it exists and if it doesn't it will tell you"
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Grothe",
+      "poster_handle": "christian947"
+    },
+    "time_stamp": "2023-01-13 08:35:09",
+    "text": "aha atm I do this. first I call createContact() and when create contact fails cause the contact already exsists it is calling update user with the user ID I get from the error message of createContact()\n```require(\"dotenv\").config();\nconst axios = require(\"axios\");\nconst express = require(\"express\");\nconst app = express();\n\napp.use(express.json());\n\napp.get(\"/\", async (req, res) =&gt; {\n  const data = await getData();\n  res.status(200).json(data);\n});\n\n<http://app.post|app.post>(\"/\", async (req, res) =&gt; {\n  const props = req.body;\n  createContact(props);\n  res.status(200).json({ msg: \"okay\" });\n});\n\nconst getData = async () =&gt; {\n  const response = await axios.get(\n    \"<https://api.hubapi.com/crm/v3/objects/contacts>\",\n    {\n      headers: {\n        Authorization: `Bearer ${process.env.HubSpot_TOKEN}`,\n        \"Content-Type\": \"application/json\",\n      },\n    }\n  );\n  const { results } = response.data;\n  return results;\n};\n\nconst createContact = async (props) =&gt; {\n  try {\n    const response = await <http://axios.post|axios.post>(\n      \"<https://api.hubapi.com/crm/v3/objects/contacts>\",\n      {\n        properties: props,\n      },\n      {\n        headers: {\n          Authorization: `Bearer ${process.env.HubSpot_TOKEN}`,\n          \"Content-Type\": \"application/json\",\n        },\n      }\n    );\n    console.log(response.data);\n  } catch (error) {\n    console.log(\"user exists, updating\");\n    const message = error.response.data.message.split(\" \");\n    updateContact(message[message.length - 1], props);\n  }\n};\n\nconst updateContact = async (id, props) =&gt; {\n  try {\n    const response = await axios.patch(\n      `<https://api.hubapi.com/crm/v3/objects/contacts/${id}>`,\n      {\n        properties: props,\n      },\n      {\n        headers: {\n          Authorization: `Bearer ${process.env.HubSpot_TOKEN}`,\n          \"Content-Type\": \"application/json\",\n        },\n      }\n    );\n    console.log(response.data);\n  } catch (error) {\n    console.log(error.message.data);\n  }\n};\n\napp.listen(3000, () =&gt; {\n  console.log(\"listening on port 3000\");\n});```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 08:35:34",
+    "text": "Ah understood"
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Grothe",
+      "poster_handle": "christian947"
+    },
+    "time_stamp": "2023-01-13 08:36:15",
+    "text": "but you said I can already call updateContact with the email as an ID?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 08:36:35",
+    "text": "Yep just use the idProperty parameter"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 08:36:50",
+    "text": "<https://developers.HubSpot.com/hs-search-results?term=idProperty>"
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Grothe",
+      "poster_handle": "christian947"
+    },
+    "time_stamp": "2023-01-13 08:37:01",
+    "text": "would make things easier ! thanks! will check it out!"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-01-13 08:37:08"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 08:37:12",
+    "text": "<https://developers.HubSpot.com/docs/api/crm/contacts>"
+  },
+  {
+    "poster": {
+      "poster_name": "Fatimah Ali",
+      "poster_handle": "fatimah"
+    },
+    "time_stamp": "2023-01-13 08:48:23",
+    "text": "Hey team, I had a question, is there a way to constantly pull all properties for all tickets from HubSpot. I am integrating our database with HubSpot data and working with the API. I understand I have to manually define properties but in that case new properties would have to be updated or would not be captured. Is there any way to default to all properties?"
+  },
+  {
+    "poster": {
+      "poster_name": "Fatimah Ali",
+      "poster_handle": "fatimah"
+    },
+    "time_stamp": "2023-01-13 08:51:11",
+    "text": "Hey <@U042VFE86EM> did you ever find an answer to this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Grothe",
+      "poster_handle": "christian947"
+    },
+    "time_stamp": "2023-01-13 09:07:08",
+    "text": "hmm i tried it out. it seems like it lets me update a contact by the email this way, but not create a new one when it does not exist yet. but this will save me acrobatics of getting the user id out of that error message string."
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Grothe",
+      "poster_handle": "christian947"
+    },
+    "time_stamp": "2023-01-13 09:09:54",
+    "text": "here they say, you have to do multiple request: <https://community.HubSpot.com/t5/APIs-Integrations/Updating-integration-to-API-v3-to-create-or-update-and-batch/m-p/724663>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan De Long",
+      "poster_handle": "ndelong"
+    },
+    "time_stamp": "2023-01-13 09:25:02",
+    "edited": {
+      "time_stamp": "2023-01-13 09:25:42"
+    },
+    "text": "I'm working on a custom code action and I'm hitting a bit of a wall, so I thought I'd post here and see if anyone had some insights.\n\nWhat I'd really like is a custom code action that can be used to associate a parent company's contacts with its child companies. For example, I might have:\n\nCompany A: Associated with Contact 1 and Contact 2\n\nIf I then set Company B as a child of Company A, I would like Contact 1 and Contact 2 to be associated with Company B\n\nMy code so far is below, but I don't think it's quite right. When I get the company IDs back, they're enclosed in single quotes, which doesn't seem quite correct. Also, the JSON returned by my function is missing apostrophes and just shows as below instead of with the actual object IDs.\n\nDoes anyone have any advice on where I might be going wrong?\n\n```{ from: [Object], to: [Object], type: 'contact_to_company' },\n    { from: [Object], to: [Object], type: 'contact_to_company' },\n    { from: [Object], to: [Object], type: 'contact_to_company' },\n    { from: [Object], to: [Object], type: 'contact_to_company' }```\n```const HubSpot = require('@HubSpot/api-client');\n\nexports.main = async (event, callback) =&gt; {\n\n  /*****\n    How to use secrets\n    Secrets are a way for you to save API keys or private apps and set them as a variable to use anywhere in your code\n    Each secret needs to be defined like the example below\n  *****/\n\n  const HubSpotClient = new HubSpot.Client({\n    accessToken: process.env.hstoken\n  });\n  \n  try{\n  //get the associated contacts for the parent company. note, trigger for this workflow is companies where number of child companies is greater than 0\n  \n  const hs_object_id = event.inputFields['hs_object_id'];\n  //first, reach out to the associations API to get the contacts associated with the parent company. \n  const apiResponse = await HubSpotClient\n              .apiRequest({\n              method: 'GET',\n              path: `/crm/v4/objects/company/${hs_object_id}/associations/contact`,\n              body: {}\n            });\n  //show the contacts associated with the parent company in the console\n  console.log(JSON.stringify(apiResponse.body, null, 2));\n  //put the IDs for the associated contacts into an array\n  var associatedContactIDs = apiResponse.body.results.map(resultItem =&gt; resultItem.toObjectId);\n  console.log(associatedContactIDs);\n  \n  //get the child companies associated with the parent company\n  const apiResponse2 = await HubSpotClient.crm.companies.associationsApi.getAll(event.object.objectId, \"company\");\n  //show the child companies associated with the parent company in the console\n  console.log(JSON.stringify(apiResponse2.body, null, 2));\n  //put the IDs for the associated child companies into an array\n  var associatedCompanyIDs = apiResponse2.body.results.map(resultItem =&gt; resultItem.id);\n  console.log(associatedCompanyIDs);\n    \n  //call the createJSON function to generate input for crm/v3/associations/contact/company/batch/create  \n  let batchInput = createJSON(associatedContactIDs, associatedCompanyIDs);\n  console.log(batchInput);\n\n} catch (e) {\n  e.message === 'HTTP request failed'\n    ? console.error(JSON.stringify(e.response, null, 2))\n    : console.error(e)\n}\n\nfunction createJSON(Contacts, Companies) {\n  let inputs = [];\n  for (let i = 0; i &lt; Contacts.length; i++) {\n    for (let j = 0; j &lt; Companies.length; j++) {\n      let input = {\n        from: {\n          id: Contacts[i].toString()\n        },\n        to: {\n          id: Companies[j]\n        },\n        type: \"contact_to_company\"\n      };\n      inputs.push(input);\n    }\n  }\n  return { inputs };\n}\n\n} ```",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-01-13 20:22:33"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 09:27:15",
+    "text": "I never said you could do it with one request"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 09:27:34",
+    "text": "With the v3/v4 endpoints it's 2 requests"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 09:28:01",
+    "text": "there's a really old v1 endpoint called createorupdate that will do it in 1 but it's been deprecated"
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Grothe",
+      "poster_handle": "christian947"
+    },
+    "time_stamp": "2023-01-13 09:29:03",
+    "text": "Ah then I misunderstood you. Thx!"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 09:29:16",
+    "text": "of course"
+  },
+  {
+    "poster": {
+      "poster_name": "Guillaume Pommier",
+      "poster_handle": "guillaume.pommier"
+    },
+    "time_stamp": "2023-01-13 09:55:21",
+    "text": "Hi :wave: everyone and happy new year to all in <#C2YHAHB6K|api>!\nHas anyone ever tried to use the API v3 to import CSV for multiple objects (ie. contacts and deals) ?\nOn my side, upload and import are OK but I'm having difficulties making the association between them."
+  },
+  {
+    "poster": {
+      "poster_name": "David Manouchehri",
+      "poster_handle": "david.manouchehri"
+    },
+    "time_stamp": "2023-01-13 10:13:36",
+    "text": "Is there an API endpoint I can use to check my usage, _without_ consuming API usage itself?"
+  },
+  {
+    "text": "Stupid question, how am I supposed to figure out `email_to_contact` == `198`? Doing a `GET` to `/crm/v4/objects/email_to_contact` does not work.\n\n<https://developers.HubSpot.com/docs/api/crm/email>",
+    "time_stamp": "2023-01-13 12:23:02"
+  },
+  {
+    "poster": {
+      "poster_name": "David Manouchehri",
+      "poster_handle": "david.manouchehri"
+    },
+    "time_stamp": "2023-01-13 12:27:30",
+    "text": "Doing a GET on `/crm/v3/associations/emails/contact/types`  did work.. but I had to guess that `contact` was the right thing."
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2023-01-13 12:52:26",
+    "text": "<@U01QVR44MEY> is always here to save the day!"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Niederberger",
+      "poster_handle": "thomas.niederberger"
+    },
+    "time_stamp": "2023-01-13 16:43:58",
+    "text": "Hello. I’m in the middle of creating an integration with a couple 3rd party systems. I’m using the HubSpot *Webhooks* for it - works pretty well. I’m having on the Company Object the *Creation* and *propertyChange* listening. I’m just wondering, every time I create a company the propertyChange is also fired. I thought that’s probably just as it is. I’m just curious as other people are doing that. Perfect would be if you only can listen to the *propertyChange* of *hs_lastmodifieddate* but that doens’t work.",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-01-13 16:54:01"
+      },
+      {
+        "time_stamp": "2023-01-13 16:58:39"
+      },
+      {
+        "time_stamp": "2023-01-13 16:59:09"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 16:54:01",
+    "text": "could you just turn off the listening for creation?"
+  },
+  {
+    "text": "I wish, but as it seems the Apps allow only one URL.",
+    "time_stamp": "2023-01-13 16:58:39"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-01-13 16:59:09"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas558"
+    },
+    "time_stamp": "2023-01-13 17:06:26",
+    "text": "If a Private App (one that uses OAuth) changes scope, does the HubSpot instance that installs it need to uninstall and reinstall the app to work with the new scopes?",
+    "reply_count": 40,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2023-01-13 17:17:32"
+      },
+      {
+        "time_stamp": "2023-01-13 17:17:54"
+      },
+      {
+        "time_stamp": "2023-01-13 17:19:06"
+      },
+      {
+        "time_stamp": "2023-01-13 17:20:11"
+      },
+      {
+        "time_stamp": "2023-01-13 17:20:52"
+      },
+      {
+        "time_stamp": "2023-01-13 17:21:00"
+      },
+      {
+        "time_stamp": "2023-01-13 17:21:12"
+      },
+      {
+        "time_stamp": "2023-01-13 17:21:28"
+      },
+      {
+        "time_stamp": "2023-01-13 17:21:36"
+      },
+      {
+        "time_stamp": "2023-01-13 17:21:47"
+      },
+      {
+        "time_stamp": "2023-01-13 17:22:09"
+      },
+      {
+        "time_stamp": "2023-01-13 17:22:16"
+      },
+      {
+        "time_stamp": "2023-01-13 17:22:33"
+      },
+      {
+        "time_stamp": "2023-01-13 17:22:43"
+      },
+      {
+        "time_stamp": "2023-01-13 17:22:55"
+      },
+      {
+        "time_stamp": "2023-01-13 17:23:08"
+      },
+      {
+        "time_stamp": "2023-01-13 17:23:12"
+      },
+      {
+        "time_stamp": "2023-01-13 17:35:19"
+      },
+      {
+        "time_stamp": "2023-01-13 17:36:28"
+      },
+      {
+        "time_stamp": "2023-01-13 17:36:41"
+      },
+      {
+        "time_stamp": "2023-01-13 17:41:25"
+      },
+      {
+        "time_stamp": "2023-01-13 17:41:29"
+      },
+      {
+        "time_stamp": "2023-01-13 17:41:35"
+      },
+      {
+        "time_stamp": "2023-01-13 17:42:59"
+      },
+      {
+        "time_stamp": "2023-01-13 17:43:24"
+      },
+      {
+        "time_stamp": "2023-01-13 17:43:26"
+      },
+      {
+        "time_stamp": "2023-01-13 17:43:42"
+      },
+      {
+        "time_stamp": "2023-01-13 17:43:50"
+      },
+      {
+        "time_stamp": "2023-01-13 17:43:54"
+      },
+      {
+        "time_stamp": "2023-01-13 17:44:32"
+      },
+      {
+        "time_stamp": "2023-01-13 17:44:39"
+      },
+      {
+        "time_stamp": "2023-01-13 17:44:49"
+      },
+      {
+        "time_stamp": "2023-01-13 17:45:20"
+      },
+      {
+        "time_stamp": "2023-01-13 17:45:39"
+      },
+      {
+        "time_stamp": "2023-01-13 17:45:55"
+      },
+      {
+        "time_stamp": "2023-01-13 17:46:25"
+      },
+      {
+        "time_stamp": "2023-01-13 17:46:30"
+      },
+      {
+        "time_stamp": "2023-01-13 18:52:52"
+      },
+      {
+        "time_stamp": "2023-01-13 18:53:03"
+      },
+      {
+        "time_stamp": "2023-01-13 18:53:23"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 17:17:32",
+    "text": "The first part of this, if the app changes scopes to a lower level. Say for example: you install an app to read contacts but decide later you don't want it reading contacts, the last access token generated will still have access to the contacts scope until it expires. This is the same for a upgraded app the last access token generated will have the scopes for when it was generated."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 17:17:54",
+    "text": "Let me get a new access token without install my app again and we'll see what happens"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas558"
+    },
+    "time_stamp": "2023-01-13 17:19:06",
+    "text": "interesting, yeah one of our friends is having a issue with a private app and I figured i'd try to see - theyre getting 403s on reading line items (supposedbly e-commerce is in scope)"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 17:20:11",
+    "text": "And they don't have the line_items scope right? crm.objects.line_items"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas558"
+    },
+    "time_stamp": "2023-01-13 17:20:52",
+    "text": "they do!"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 17:21:00",
+    "text": "Amazing"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas558"
+    },
+    "time_stamp": "2023-01-13 17:21:12",
+    "text": "lol"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas558"
+    },
+    "time_stamp": "2023-01-13 17:21:28",
+    "text": "I think your answer of not letting the original token expire might be it"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas558"
+    },
+    "time_stamp": "2023-01-13 17:21:36",
+    "text": "thanks dude"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 17:21:47",
+    "text": "Of course, now you have me interested"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 17:22:09",
+    "text": "I think if you change the scopes on the fly it will carry over to all the portals but I have to be sure"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas558"
+    },
+    "time_stamp": "2023-01-13 17:22:16",
+    "text": "yeah thats what I was wondering"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 17:22:33",
+    "text": "I know for sure (just tested) that after a token is generated it's scopes won't change"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas558"
+    },
+    "time_stamp": "2023-01-13 17:22:43",
+    "text": "interesting"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas558"
+    },
+    "time_stamp": "2023-01-13 17:22:55",
+    "text": "and thats all the OAuth is doing in HubSpot right, just generating a new token"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 17:23:08",
+    "text": "correct"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas558"
+    },
+    "time_stamp": "2023-01-13 17:23:12",
+    "text": "interesting"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 17:35:19",
+    "text": "What's even more of a concern is that I can access the contacts scope even after reinstalling my app and the app doesn't have the scope in the url"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 17:36:28",
+    "text": "I didn't uninstall the app I just reinstalled it, so I think that answers the question. If you downgrade or upgrade the scopes without an uninstall and reinstall the scopes might not change"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 17:36:41",
+    "text": "I need to build out a better test setup to be sure though"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas558"
+    },
+    "time_stamp": "2023-01-13 17:41:25",
+    "text": "interesting"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas558"
+    },
+    "time_stamp": "2023-01-13 17:41:29",
+    "text": "yeah thats kinda concerning"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 17:41:35",
+    "text": "very"
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Wessolly",
+      "poster_handle": "webdesign"
+    },
+    "time_stamp": "2023-01-13 17:42:59",
+    "text": "“What’s even more of a concern is that I can access the contacts scope even after reinstalling my app and the app doesn’t have the scope in the url” - wow, that does not sound good!"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas558"
+    },
+    "time_stamp": "2023-01-13 17:43:24",
+    "text": "<@U01NMMDTERZ> heads up"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 17:43:26",
+    "edited": {
+      "time_stamp": "2023-01-13 17:43:33"
+    },
+    "text": "I can't say for sure if this is completely accurate"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 17:43:42",
+    "text": "My test setup is jack as heck"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 17:43:50",
+    "text": "but that's just my initial finding"
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Wessolly",
+      "poster_handle": "webdesign"
+    },
+    "time_stamp": "2023-01-13 17:43:54",
+    "text": "it could be the case that its still in the browsers application cache, right?"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas558"
+    },
+    "time_stamp": "2023-01-13 17:44:32",
+    "text": "How do you reinstall it without uninstall?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 17:44:39",
+    "text": "<@UBT0AHWLD> No I'm generating a new code using the same install url"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 17:44:49",
+    "text": "Just click the install button again"
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Wessolly",
+      "poster_handle": "webdesign"
+    },
+    "time_stamp": "2023-01-13 17:45:20",
+    "text": "you can click the install button, even if its already installed?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 17:45:39",
+    "text": "yep but it will bypass the are you sure you want to install this app"
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Wessolly",
+      "poster_handle": "webdesign"
+    },
+    "time_stamp": "2023-01-13 17:45:55",
+    "text": "ah ok."
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas558"
+    },
+    "time_stamp": "2023-01-13 17:46:25",
+    "text": "thanks for all your help Carter"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 17:46:30",
+    "text": "100%"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Anderson",
+      "poster_handle": "banderson"
+    },
+    "time_stamp": "2023-01-13 18:52:52",
+    "text": "&gt; I can't say for sure if this is completely accurate\nIf you verify this either way, can you report back?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 18:53:03",
+    "text": "of course"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-13 18:53:23",
+    "text": "Currently working on something else but I'll come right back to this when finished"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan De Long",
+      "poster_handle": "ndelong"
+    },
+    "time_stamp": "2023-01-13 20:22:33",
+    "edited": {
+      "time_stamp": "2023-01-13 20:25:00"
+    },
+    "text": "I got it figured out! In case anyone wants to play with it, this will copy a parent company's contacts to any child companies associated with the parent (obviously, use at your own risk :slightly_smiling_face: )\n\n```const HubSpot = require('@HubSpot/api-client');\n\nexports.main = async (event, callback) =&gt; {\n\n  /*****\n    How to use secrets\n    Secrets are a way for you to save API keys or private apps and set them as a variable to use anywhere in your code\n    Each secret needs to be defined like the example below\n  *****/\n\n  const HubSpotClient = new HubSpot.Client({\n    accessToken: process.env.hstoken\n  });\n  \n  try{\n  //get the associated contacts for the parent company. note, trigger for this workflow is companies where number of child companies is greater than 0\n  \n  const hs_object_id = event.inputFields['hs_object_id'];\n  //first, reach out to the associations API to get the contacts associated with the parent company. \n  const apiResponse = await HubSpotClient\n              .apiRequest({\n              method: 'GET',\n              path: `/crm/v4/objects/company/${hs_object_id}/associations/contact`,\n              body: {}\n            });\n  //show the contacts associated with the parent company in the console\n  console.log(JSON.stringify(apiResponse.body, null, 2));\n  //put the IDs for the associated contacts into an array\n  var associatedContactIDs = apiResponse.body.results.map(resultItem =&gt; resultItem.toObjectId);\n  console.log(associatedContactIDs);\n  \n  //get the child companies associated with the parent company\n  const apiResponse2 = await HubSpotClient.crm.companies.associationsApi.getAll(event.object.objectId, \"company\");\n  //show the child companies associated with the parent company in the console\n  console.log(JSON.stringify(apiResponse2.body, null, 2));\n  //put the IDs for the associated child companies into an array\n  var associatedCompanyIDs = apiResponse2.body.results.map(resultItem =&gt; resultItem.id);\n  console.log(associatedCompanyIDs);\n    \n  let inputs = [];\n  for (let i = 0; i &lt; associatedContactIDs.length; i++) {\n      for (let j = 0; j &lt; associatedCompanyIDs.length; j++) {\n          let input = {\n              from: {\n                  id: associatedContactIDs[i].toString()\n              },\n              to: {\n                  id: associatedCompanyIDs[j]\n              },\n              type: \"contact_to_company_unlabeled\"\n          };\n          inputs.push(input);\n      }\n  }\n  \n  let output = { inputs };\n  console.log(output);\n\n  const BatchInputPublicAssociation = JSON.stringify(output,null, 2);\n  console.log(BatchInputPublicAssociation)\n  const fromObjectType = \"contact\";\n  const toObjectType = \"company\";\n\n  const apiResponse3 = await HubSpotClient.crm.associations.batchApi.create(fromObjectType, toObjectType, JSON.parse(BatchInputPublicAssociation));\n  console.log(JSON.stringify(apiResponse3.body, null, 2));\n  \n} catch (e) {\n  e.message === 'HTTP request failed'\n    ? console.error(JSON.stringify(e.response, null, 2))\n    : console.error(e)\n}\n}```"
+  }
+]

@@ -1,0 +1,133 @@
+[
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-09-05 05:37:12",
+    "text": "proxy doesn't work in content staging right?"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-09-05 06:09:49",
+    "text": "Short answer, HubL functions cannot be used in JS Modules."
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-09-05 06:14:12",
+    "text": "If you are looking at the local dev server, and navigating to the module in isolation (not in a proxied page), then there is not module _instance_ to pull and field values from. In this case we can only rely on defaults. You can also pass in field values as params in the URL."
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-09-05 06:15:22",
+    "text": "When you are looking at the dev server navigating to a proxied page, the field values are passed from the HubSpot HubL renderer to the local dev server and the JS Module is rendered locally with those field values."
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-09-05 06:15:29",
+    "text": "Hopefully that clarifies."
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-09-05 06:48:58",
+    "edited": {
+      "time_stamp": "2023-09-05 06:55:42"
+    },
+    "text": "`@HubSpot/cms-components` exports `logInfo` ,`logWarn` and `logError` which prints to HTML `console.log` , `console.warn` and `console.error`lines respectively. You can use them to surface issues that occur during the server render in the client."
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-09-05 06:49:42",
+    "text": "There is no way currently to view any kind of live render log, though I think it also an area we can improve."
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-09-05 06:51:05",
+    "text": "&gt; _P.s. and sorry for all the questions_ :slightly_smiling_face:\nNever! Keep them coming !"
+  },
+  {
+    "poster": {
+      "poster_name": "George Grigorita",
+      "poster_handle": "george.grigorita"
+    },
+    "time_stamp": "2023-09-05 08:56:50",
+    "text": "I got this error when deploying to live. On local it worked fine. Seems to not like the `@mui/material` import.\n```[ERROR] Building JS Project with error message `[vite]: Rollup failed to resolve import \"@mui/material/Slider\" from \"/tmp/cms_IMqU2G/cms-js-build/customer-package/components/islands/CheckEligibilityForm.jsx?client-entry\".\nThis is most likely unintended because it can break your application at runtime.\nIf you do want to externalize this module explicitly add it to\n`build.rollupOptions.external`\nfile:///tmp/cms_IMqU2G/cms-js-build/node_modules/vite/dist/node/chunks/dep-f7d05e3f.js:46547\n                throw new Error(`[vite]: Rollup failed to resolve import \"${exporter}\" from \"${id}\".\\n` +```",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-09-05 09:10:57"
+      },
+      {
+        "time_stamp": "2023-09-05 09:13:44"
+      },
+      {
+        "time_stamp": "2023-09-05 09:15:49"
+      },
+      {
+        "time_stamp": "2023-09-05 09:16:34"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-09-05 09:10:57",
+    "text": "hi george, looking at your build it seems like material UI isn’t in your `package.json` in `custom-forms-app` currently, maybe it’s in a a `package.json` farther up the tree?"
+  },
+  {
+    "poster": {
+      "poster_name": "George Grigorita",
+      "poster_handle": "george.grigorita"
+    },
+    "time_stamp": "2023-09-05 09:13:44",
+    "text": "Hi Ben, yeah, you’re right, I ran npm install in the root folder, not in the project folder. Yup, sorry :smile:\n\nWhy did it work on local though?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-09-05 09:15:49",
+    "text": "no problem! node will try to resolve a module first in its own folder, then go all the way up the folder tree looking for `node_modules` with the right package, which is what happened locally. but when you deploy we’re only uploading the `custom-forms-app` folder so the folder with your dependency wasn’t there to be found"
+  },
+  {
+    "poster": {
+      "poster_name": "George Grigorita",
+      "poster_handle": "george.grigorita"
+    },
+    "time_stamp": "2023-09-05 09:16:34",
+    "text": "okay, thanks! :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Arrigo Lupori",
+      "poster_handle": "arrigo.lupori270"
+    },
+    "time_stamp": "2023-09-05 11:22:55",
+    "text": "<@UAYBXDG4U> Thanks for all the answers, this is super helpful, including the logging methods below :slightly_smiling_face:\n\nThe only question that remains for me is what's the best method to load CTAs?\n\nI know it's very specific to one module type but they are very relevant to my use case. I've tried loading them from hublParameters but all it does is pass the CTA's HTML into a string, not very ideal. I would like to avoid React's `dangerouslySetInnerHtml` property.\n\nIt might work but might introduce security issues."
+  }
+]

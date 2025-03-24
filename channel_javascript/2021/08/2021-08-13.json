@@ -1,0 +1,78 @@
+[
+  {
+    "text": "Hi folks,\n\nI hope someone can help\nI have a serverless function running a post request via axios, which isn't working for some reason. Basically the function receives a payload and posts it to an API. However when executed I get \"message\": \"Request failed with status code 400\". However if I run the request directly to the API via postman the request is succesful (sort of I have a validation error, which isnt the problem).\n\nI believe the problem might be that the data being sent via axios isn't what is expected, however the data I send when I go directly to the endpoint is exactly the same as what I'm giving the function: screenshots to follow.\n\nThe vat_no validation error is the expected result at this point.\n\nI can send the  function endpoint with a dummy dataset if needed",
+    "time_stamp": "2021-08-13 02:41:00",
+    "edited": {
+      "time_stamp": "2021-08-13 02:41:37"
+    },
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2021-08-13 06:35:37"
+      },
+      {
+        "time_stamp": "2021-08-13 07:24:56"
+      },
+      {
+        "time_stamp": "2021-08-13 07:29:06"
+      },
+      {
+        "time_stamp": "2021-08-13 08:01:55"
+      },
+      {
+        "time_stamp": "2021-08-13 08:13:22"
+      },
+      {
+        "time_stamp": "2021-08-16 16:29:35"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Knowles",
+      "poster_handle": "chris.knowles"
+    },
+    "time_stamp": "2021-08-13 02:50:52",
+    "text": "Hey <@U02BSTRJ0UQ>, could you save yourself a headache here by having a single input field that is styled differently on mobile/desktop?"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Ainslie",
+      "poster_handle": "rainslie"
+    },
+    "time_stamp": "2021-08-13 06:35:37",
+    "text": "400s are 'bad request' errors, which in my experience usually indicates that there's some issues with your data formatting. Based on the error response in the JSON section that's `error.config.data`, my bet is that the issue is the `\\` being included. That looks like the data is being escaped / stringified - prior to sending, so it's not actually being sent as an unaltered JSON blob.\n\nTry logging your incoming _data and viewing your function logs to see if you can confirm that.\n\nThen, try using either `JSON.parse(_data)` or `JSON.stringify(_data)` to try converting that body to the right formatting"
+  },
+  {
+    "text": "Hey, thanks for the reply,\n\nso I've logged the data variable see: screenshots: 1st unstringified, 2nd stringified\n\nHowever regardless of whether i use JSON.stringify, I still get the same error.\n\nJSON.parse just gives me unexpected token presumably because my json is already parsed",
+    "time_stamp": "2021-08-13 07:24:56"
+  },
+  {
+    "text": "I'll add also.\n\nSince posting I decided to check that the axios function is working properly, created a quick node app doing basically the same thing, just with out the HubSpot wrapper.\n\nfunction is using exactly same dataset as the example before. However here the function does as expected",
+    "time_stamp": "2021-08-13 07:29:06",
+    "edited": {
+      "time_stamp": "2021-08-13 08:02:37"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Ainslie",
+      "poster_handle": "rainslie"
+    },
+    "time_stamp": "2021-08-13 08:01:55",
+    "text": "Interesting. My money is still on there being something strange with either the incoming payload or how the data is getting put together.\n\nIn your HubSpot function, could you try hard coding in the data payload and sending that? (so, hard code the payload into the function, reference that data, but then trigger the function as normal, but without reference to the actual incoming event payload)"
+  },
+  {
+    "text": "Aye i agree there something odd might be happening to the data.\n\nI've setup the function as such:",
+    "time_stamp": "2021-08-13 08:13:22"
+  },
+  {
+    "poster": {
+      "poster_name": "Jesse Christensen",
+      "poster_handle": "jeminsen"
+    },
+    "time_stamp": "2021-08-13 10:38:56",
+    "text": "Thanks Chris, when I style it to hide the placeholder text on smaller screens the search bar does a weird jump around thing when crossing the viewport threshold. But I suppose that's a bit nitpicky as not many users are resizing their window back and forth over the threshold like I do when testing... You're probably right that it's not worth the headache"
+  }
+]

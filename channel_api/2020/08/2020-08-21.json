@@ -1,0 +1,127 @@
+[
+  {
+    "poster": {
+      "poster_name": "Wouter Leistra",
+      "poster_handle": "wouter.leistra"
+    },
+    "time_stamp": "2020-08-21 01:10:09",
+    "edited": {
+      "time_stamp": "2020-08-21 01:17:55"
+    },
+    "text": "Hi all, I've been sent on a mission to integrate HubSpot into our core product. The use case i have is to retrieve a list of all emails (marketing, transactional, any other) through the HubSpot API(s) for a specific contact (through email or through a custom property on the contact representing our product's customer id). I'm completely lost in the api documentation on what's new and legacy and what can be found where. I have something working for marketing emails i think, but i would really need the transactional ones as well... Can anyone point me in the right direction. I will integrate through GraphQL so calling multiple APIs through a loop is not a huge issue given the performance is ok",
+    "reply_count": 8,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-08-21 01:16:28"
+      },
+      {
+        "time_stamp": "2020-08-21 13:02:23"
+      },
+      {
+        "time_stamp": "2020-08-21 13:02:47"
+      },
+      {
+        "time_stamp": "2020-08-21 13:03:45"
+      },
+      {
+        "time_stamp": "2020-08-24 00:13:44"
+      },
+      {
+        "time_stamp": "2020-08-24 12:42:35"
+      },
+      {
+        "time_stamp": "2020-08-25 00:50:01"
+      },
+      {
+        "time_stamp": "2020-08-25 10:06:18"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Wouter Leistra",
+      "poster_handle": "wouter.leistra"
+    },
+    "time_stamp": "2020-08-21 01:16:28",
+    "edited": {
+      "time_stamp": "2020-08-21 01:17:09"
+    },
+    "text": "my UI would ideally show the following pieces of information for every delivered email:\n• Email subject\n• Timestamp of when the email was delivered"
+  },
+  {
+    "poster": {
+      "poster_name": "William Spiro",
+      "poster_handle": "wspiro"
+    },
+    "time_stamp": "2020-08-21 09:07:47",
+    "edited": {
+      "time_stamp": "2020-08-21 09:08:14"
+    },
+    "text": "Gotchya - so it looks like you have a data source, <https://newsrelease.columbusit.com/api/json/v2/releases>, and you are looking to be able to set up a simple listing page/details pages for each entry in this JSON.\n\nAt the moment, there is not a great way to set this up so it acts like <https://developers.HubSpot.com/docs/cms/guides/building-dynamic-pages-with-hubdb|HubDB dynamic pages>.\n\nOne thought would be to use a query string parameter to identify when you are supposed to render a detail page, rather than the listing page. And if that query string exists in the URL, you can render the page to show all of the details of the entry.\n\nFor example, you have the listing page at <https://www.columbusglobal.com/en/news-detail>. And a detail page could be <https://www.columbusglobal.com/en/news-detail?detail=Udenrigsministeren-besøger-Grønland> and if that `detail` parameter existed in the URL, you would have logic in your code to render out the detail page."
+  },
+  {
+    "poster": {
+      "poster_name": "William Spiro",
+      "poster_handle": "wspiro"
+    },
+    "time_stamp": "2020-08-21 09:09:01",
+    "text": "You could also have this data in, or sync this data into <https://developers.HubSpot.com/docs/cms/features/hubdb|HubDB> so you can use <https://developers.HubSpot.com/docs/cms/guides/building-dynamic-pages-with-hubdb|HubDB dynamic pages> to accomplish this."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-08-21 12:47:53",
+    "text": "IE, they are building them and making them for everything, but not all of them are done yet"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-08-21 12:49:20",
+    "text": "Not everything has gotten ported to V3 yet, so if you can't find it there after a keyword search, you use the legacy version for now, and just mark it in your code so you can come back periodically and refresh. You can sign up for weekly emails from HubSpot with updates to the APIs so as to find out when something has been retrofitted to the new V3 system."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-08-21 12:50:51",
+    "text": "All the contacts, yes, via paging.\n\nAll the properties, sort of, you have to dump out the list of all the properties using `<https://api.hubapi.com/crm/v3/properties/contact>` first then dump the list of property names into the contacts API, to get them with every single property rendered into the JSON response."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-08-21 12:57:06",
+    "text": "Two forum posts imply you did it right, so you might have unearthed a bug\n\n<https://community.HubSpot.com/t5/APIs-Integrations/Metadata-for-recording-call-duration-via-API/m-p/225816/highlight/true?profile.language=es>\n\n<https://community.HubSpot.com/t5/APIs-Integrations/How-to-log-a-call-via-API/td-p/359025>\n\nMy advice would be, first, use browser dev tools on the same page in your screenshot, and see if you can prove that the JSON coming back to make the page has the right duration (display bug) or is missing the duration (backend bug).\n\nCompare that against the response JSON when you generate the call record (which shows what the backend thinks it stored to the storage layer) and against the response JSON when you get the call record after that (what the storage layer gives back).\n\nThen we should be able to isolate the specific area where you are getting the issue."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-08-21 13:02:23",
+    "text": "Transactional email could be the thing which blows up your project."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-08-21 13:02:47",
+    "text": "Because it's kind of a bolted-on separate HubSpot feature, and is not always going to behave the same when it comes to the engagement APIs."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-08-21 13:03:45",
+    "text": "This could require some pretty deep spelunking into how the information about the transactional emails are stored in the system, and many of us normal users cannot help you much as this is an additional expensive feature which the vast majority of us don't have enabled on our HS accounts"
+  }
+]

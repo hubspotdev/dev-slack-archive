@@ -1,0 +1,147 @@
+[
+  {
+    "text": "*Can't place the German date formats (DD.MM.YYYY) in Datepicker / HubSpot form date fields.* \nField validation doesn't work. Console log error below. Seems validation rule is YYYY-MM-DD, doesn't matter what I choose as default in the form editor.\nThe native Datepicker worked, but keyboard is horribly.",
+    "time_stamp": "2021-09-09 03:05:35",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2021-09-09 04:28:01"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2021-09-09 04:28:01",
+    "edited": {
+      "time_stamp": "2021-09-09 04:29:02"
+    },
+    "text": "I recently had similar issues\n<https://HubSpotdev.slack.com/archives/CBA9UA4EN/p1630659180037400>\n\nAnd added to forum here\n<https://community.HubSpot.com/t5/CMS-Development/Accessibility-BUG-Can-t-update-Date-Picker-Field-without-using/td-p/489629>\n\nI’m not entirely sure how your doing it, but for me I made the field hidden in the form,\nThen I use js to reshow the item, but leave the input as hidden,\nthen append a new input with just the default browser date picker, then check when this is changed and update the hidden field.\n\nThe input type=date field will default to the browsers format settings so you shouldn’t have to change anything there, the pattern and placeholder is for internet explorer which doesn’t support the date input so you would be required to to add it as yyyy-mm-dd\n\nwhen you do .val() on the field it returns it as yyyy-mm-dd whatever format is displayed to you\n\n```window.addEventListener('message', event =&gt; {\n\tif(event.data.type === 'hsFormCallback' &amp;&amp; event.data.eventName === 'onFormReady') {\n\t\tif ($('.hs_date_name').length &gt; 0) {\n\t\t\t$('.hs_date_name').show();\n\t\t\t$('.hs_date_name .input').append('&lt;input class=\"hs-input hs_date_name__custom-input\" type=\"date\" required pattern=\"\\d{4}-\\d{2}-\\d{2}\" placeholder=\"yyyy-mm-dd\"&gt;');\n\t\t\t$('.hs_date_name__custom-input').on('change',function(){\n\t\t\t\tvar GivenDate = $('.hs_date_name__custom-input').val();\n\t\t\t\t$('.hs_date_name [name=\"hs_date_name\"]').val(GivenDate).change();\n\t\t\t});\n    \t}\n\t}\n});```"
+  },
+  {
+    "poster": {
+      "poster_name": "Orianne Shahar Gilaad",
+      "poster_handle": "orianne"
+    },
+    "time_stamp": "2021-09-09 10:55:16",
+    "edited": {
+      "time_stamp": "2021-09-09 12:07:53"
+    },
+    "text": "*Hi there :)*\nIm facing an issue with HubSpot script inside of react app, and wondering if someone here could help…\nIn short: I have react app, with HubSpot script embedded inside the index.js file. \nI can see the script itself when running the app in the browser, \nSince react is a single-page app, the source code inside of the index.html will be fired only once, in the initial rendering of the app, meaning when the user visit the first URL inside the app, and not when navigating to any other pages inside the app.\nThe problem that it causes is that leads go in HubSpot only if the user fill this input in the first page he visits. \n\nFor example, a user visit <http://joonko.co|joonko.co> and submitting a form - the leads go into HubSpot.\nBut if the case is: a user visit <http://joonko.co|joonko.co> and then navigating to <http://joonko.co/talent-stream|joonko.co/talent-stream> and only then submitting a form - the leads will not go into HubSpot\n\nReally important to note - we are using history.push (react-router-dom) to navigate between pages.\nI was also trying to add this to the index.html :\n```    &lt;script&gt;\n      var _hsq = window._hsq = window._hsq || [];\n      _hsq.push(['setPath', '/']);\n    &lt;/script&gt;\n\n    &lt;!-- Load the HubSpot tracking code --&gt;\n    &lt;!-- Start of HubSpot Embed Code --&gt;\n    &lt;script type=\"text/javascript\" id=\"hs-script-loader\" async defer src=\"//js-eu1.hs-scripts.com/${MyHubSpotKey}.js\"&gt;&lt;/script&gt;\n    &lt;!-- End of HubSpot Embed Code --&gt;\n\n    &lt;!-- Tracking subsequent page views --&gt;\n    &lt;script&gt;\n      var _hsq = window._hsq = window._hsq || [];\n      _hsq.push(['setPath', '/talent-stream']);\n      _hsq.push(['trackPageView']);\n    &lt;/script&gt;```\n\nWill appreciate any help,\nthanks :)"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2021-09-09 12:32:39",
+    "text": "<@U02E2U8J544> I don't really know but I'm curious. If I had to guess, it looks like you need to trigger the `&lt;!-- Tracking subsequent page views --&gt;` part of the script when the route changes. Can you run a function in React on route change?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2021-09-09 12:33:04",
+    "text": "or maybe setup a listener on the window (something like that)"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2021-09-09 14:19:28",
+    "text": "Is anyone here a regex pro? I need to write some regex that would match `/*{% raw %}*/` and `/*{% endraw %}*/`",
+    "reply_count": 12,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2021-09-09 14:31:07"
+      },
+      {
+        "time_stamp": "2021-09-09 14:31:43"
+      },
+      {
+        "time_stamp": "2021-09-09 14:43:25"
+      },
+      {
+        "time_stamp": "2021-09-09 14:43:30"
+      },
+      {
+        "time_stamp": "2021-09-09 14:50:29"
+      },
+      {
+        "time_stamp": "2021-09-09 14:50:40"
+      },
+      {
+        "time_stamp": "2021-09-10 07:30:54"
+      },
+      {
+        "time_stamp": "2021-09-10 07:33:26"
+      },
+      {
+        "time_stamp": "2021-09-10 07:39:09"
+      },
+      {
+        "time_stamp": "2021-09-10 09:30:58"
+      },
+      {
+        "time_stamp": "2021-10-25 09:45:50"
+      },
+      {
+        "time_stamp": "2021-10-26 06:43:50"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2021-09-09 14:31:07",
+    "text": "helpful tool for testing out your regex: <https://regexr.com/>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2021-09-09 14:31:43",
+    "text": "this one may be even better: <https://www.regextester.com/>"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2021-09-09 14:43:25",
+    "text": "<@U02CUFSCXHQ> thanks, I found an option that will allow `@preserve`comments to match so I think `/** @preserve {% raw %}*/` will work Not sure if the HubSpot processing will still work with `@preserve` in there"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2021-09-09 14:43:30",
+    "text": "but I'm going to try to find out!"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2021-09-09 14:50:29",
+    "text": "I think it still works..."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2021-09-09 14:50:40",
+    "text": "I feel like a crazy person with this huge webpack config"
+  }
+]

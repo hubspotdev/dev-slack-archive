@@ -1,0 +1,48 @@
+[
+  {
+    "poster": {
+      "poster_name": "Mitja Lewin",
+      "poster_handle": "m.lewin"
+    },
+    "time_stamp": "2022-07-15 02:46:36",
+    "text": "<@UHA0L28CW> Test for the `string`, if you don't need to calculate with the `timestamp`, it's simple as that:\n```{# Lookup Table #}\n{% set year = ['January','February','March','April','May','June','July','August','September','October','November','December'] %}\n\n{# Date Time String #}\n{% set dts_single = '8 - 12 August' %}\n{% set dts_period = '8 July - 12 August' %}\n\n{# Result Container #}\n{% set result = [] %}\n\n{# Test For Month #}\n{% for month in year %}\n  {% if dts_single is containing month %}{# change dts here #}\n    {% do result.append( month ) %}\n  {% endif %}\n{% endfor %}\n\n{# Validate Result #}\n{% if result|length == 1 %}\n  it's a single\n{% elif result|length == 2 %}\n  it's a period\n{% else %}\n  it's invaild\n{% endif %}```\nYou can add different writings, like \"Aug.\" or different languages for the month names to the lookup array."
+  },
+  {
+    "poster": {
+      "poster_name": "Giovanni Zuanon",
+      "poster_handle": "giovanni.zuanon"
+    },
+    "time_stamp": "2022-07-15 03:11:21",
+    "text": "Thank you Mitja,\nI have to work with real dates and not text strings;\nTo understand better:\nFrom the dates table I extract the loop of dates of the various performances\nwhich would look, for example, like this\n4 July 2022\n5 July 2022\n6 July 2022\n...\n12 July 2022\nand instead I have to write\nPerformance 1: 4 to 12 July 2022\n\nPerformance 2: 20 July to 7 August 2022"
+  },
+  {
+    "poster": {
+      "poster_name": "Mitja Lewin",
+      "poster_handle": "m.lewin"
+    },
+    "time_stamp": "2022-07-15 03:33:23",
+    "edited": {
+      "time_stamp": "2022-07-15 03:34:20"
+    },
+    "text": "Okay, but then you have to apply the `|first` and `|last` filter directly to the  `foreign_row.date` array, not to the converted `datetimeformat`.\n\n```{% if array|first|datetimeformat('%B') == array|last|datetimeformat('%B') %}\n  ...\n{% endif %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Giovanni Zuanon",
+      "poster_handle": "giovanni.zuanon"
+    },
+    "time_stamp": "2022-07-15 05:30:11",
+    "text": "Yes, but I have to convert to months precisely to check whether the month is the same or not, whereas if I do not convert I only have timestamps"
+  },
+  {
+    "poster": {
+      "poster_name": "Miteshkumar Padariya",
+      "poster_handle": "mitesh"
+    },
+    "time_stamp": "2022-07-15 07:53:52",
+    "edited": {
+      "time_stamp": "2022-07-15 07:54:41"
+    },
+    "text": "```{{ group.header }} ```\nis not working. :red_circle:\n```{{ group.public_title }} ```\nis working for the blog header option :large_green_circle:, can this be updated here: <https://developers.HubSpot.com/docs/cms/hubl/variables>"
+  }
+]

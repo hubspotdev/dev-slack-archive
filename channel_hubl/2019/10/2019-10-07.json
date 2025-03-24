@@ -1,0 +1,642 @@
+[
+  {
+    "poster": {
+      "poster_name": "Tomek Rodakiewicz",
+      "poster_handle": "tr"
+    },
+    "time_stamp": "2019-10-07 03:15:35",
+    "edited": {
+      "time_stamp": "2019-10-07 03:16:48"
+    },
+    "text": "When iterating through a dictionary, how can I access the key? I have a dict set like this:\n```{% set language = {\n  en : \"Language\",\n  de : \"Sprache\",\n  fr : \"Langue\",\n  pl : \"Język\"\n  }\n%}```\nand then a loop\n```{% for lan in language %}\nLanguage: {{ lan.KEY??? }}, Value {{ lan }}\n{% endfor %}```\nPLZ help :slightly_smiling_face:",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-10-07 03:45:39"
+      },
+      {
+        "time_stamp": "2019-10-07 03:46:22"
+      },
+      {
+        "time_stamp": "2019-10-07 03:51:28"
+      },
+      {
+        "time_stamp": "2019-10-07 03:53:19"
+      },
+      {
+        "time_stamp": "2019-10-07 03:56:10"
+      }
+    ]
+  },
+  {
+    "text": "<@UDJV5B73R>\nHey, thank again for the explanation, here is my full working code; I didn't found a better method.. but this is working :slightly_smiling_face:",
+    "time_stamp": "2019-10-07 03:33:33"
+  },
+  {
+    "poster": {
+      "poster_name": "Claudio Cappelletti",
+      "poster_handle": "cca"
+    },
+    "time_stamp": "2019-10-07 03:45:39",
+    "text": "did you try with index? {{ lan.index }}"
+  },
+  {
+    "poster": {
+      "poster_name": "Claudio Cappelletti",
+      "poster_handle": "cca"
+    },
+    "time_stamp": "2019-10-07 03:46:22",
+    "text": "or you can use the index of the for loop using {{ loop.index }} or {{ loop.index0 }} if you want to start from 0"
+  },
+  {
+    "poster": {
+      "poster_name": "Tomek Rodakiewicz",
+      "poster_handle": "tr"
+    },
+    "time_stamp": "2019-10-07 03:51:28",
+    "edited": {
+      "time_stamp": "2019-10-07 03:51:40"
+    },
+    "text": "my mistake - I got it all wrong :wink: now it is:\n```{% set language = {\n  'en' : 'Language',\n  'de' : 'Sprache',\n  'fr' : 'Langue',\n  'pl' : 'Język'\n  }\n%}```\nand a loop:\n```{% for key, val in language.items() %}\nLanguage {{ key }}, Value {{ val }}\n{% endfor %}```\nWorking like charm :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Tomek Rodakiewicz",
+      "poster_handle": "tr"
+    },
+    "time_stamp": "2019-10-07 03:53:19",
+    "text": "`index` and `index0` returns integer value equal to the iteration number inside a loop - I wanted to get the text value of a key inside my dictionary - working great with `items()` function"
+  },
+  {
+    "poster": {
+      "poster_name": "Tomek Rodakiewicz",
+      "poster_handle": "tr"
+    },
+    "time_stamp": "2019-10-07 03:56:10",
+    "edited": {
+      "time_stamp": "2019-10-07 03:56:22"
+    },
+    "text": "the most amazing thing is that the function is listed here <https://designers.HubSpot.com/docs/hubl/for-loops>, but not here: <https://designers.HubSpot.com/en/docs/hubl/hubl-supported-functions> :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2019-10-07 04:00:21",
+    "text": "Ah nice, glad it's working, it would be nice if we didn't have to loop inside the loop just to get the content for the matching ID but I haven't found a better way"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Kvedaras",
+      "poster_handle": "stephen.kvedaras"
+    },
+    "time_stamp": "2019-10-07 08:18:56",
+    "edited": {
+      "time_stamp": "2019-10-07 08:24:21"
+    },
+    "text": "Hey guys, I am trying to create a custom module CTA with a href that points towards a contact property. (Product and URL defined by data crew). I'm curious to see if I can change\n\n&gt;{% set href = module.cta_url.url.href %}\n\nto\n\n&gt;{% set href = contact.examplecontactproperty %}\n\nwill work?\n\nIt'll result in a useless URL field within the editor, but I am hoping it will still give the team the ability to set \"_blank\" or \"nofollow\" as normal, but will remain a dynamic href",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2019-10-07 08:25:29"
+      }
+    ]
+  },
+  {
+    "text": "Total Snippet output",
+    "time_stamp": "2019-10-07 08:25:29"
+  },
+  {
+    "poster": {
+      "poster_name": "RepreZenTed",
+      "poster_handle": "ted.epstein"
+    },
+    "time_stamp": "2019-10-07 08:34:04",
+    "edited": {
+      "time_stamp": "2019-10-07 08:37:19"
+    },
+    "text": "Hello! I'm trying to get the following code to work, but there seems to be a problem passing `contact_id` as the first argument to the HUBL `crm_associations` function.\n\n```\n{% set contact_id = contact.hs_object_id %}\n{% set deals = crm_associations(contact_id, 4) %} \n&lt;p&gt;\n    {{deals.results|length}} deals for contact {{contactID}}, {{contact.firstname}} {{contact.lastname}}:\n&lt;/p&gt;\n&lt;ul&gt;\n    {% for deal in deals.results %}\n        &lt;li&gt;{{ deal.dealname }}&lt;/li&gt;\n    {% endfor %}\n&lt;/ul&gt;\n```\n\nIn the editor, it marks the line with a warning: \"invalid id: null\"\n\nAnd when I preview an email based on this template, the deals variable is empty or null. If I replace that first argument with a literal contact ID, it works fine. But that won't work for my purposes; I need it to be dynamic.\n\nHow can I pass a variable expression as the function argument?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2019-10-08 06:45:10"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-10-07 08:52:10",
+    "text": "Output {{ contact_id }}"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-10-07 08:52:17",
+    "text": "See what it shows"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-10-07 08:52:21",
+    "text": "In preview"
+  },
+  {
+    "text": "<@ULN0EDRNZ>, here's the output:",
+    "time_stamp": "2019-10-07 09:17:40",
+    "edited": {
+      "time_stamp": "2019-10-07 09:18:02"
+    },
+    "reply_count": 33,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-10-07 11:08:04"
+      },
+      {
+        "time_stamp": "2019-10-07 11:08:37"
+      },
+      {
+        "time_stamp": "2019-10-07 11:09:06"
+      },
+      {
+        "time_stamp": "2019-10-07 11:09:15"
+      },
+      {
+        "time_stamp": "2019-10-07 11:09:20"
+      },
+      {
+        "time_stamp": "2019-10-07 11:09:23"
+      },
+      {
+        "time_stamp": "2019-10-07 11:09:25"
+      },
+      {
+        "time_stamp": "2019-10-07 11:09:36"
+      },
+      {
+        "time_stamp": "2019-10-07 11:09:54"
+      },
+      {
+        "time_stamp": "2019-10-07 11:10:17"
+      },
+      {
+        "time_stamp": "2019-10-07 11:10:31"
+      },
+      {
+        "time_stamp": "2019-10-07 11:10:58"
+      },
+      {
+        "time_stamp": "2019-10-07 11:11:39"
+      },
+      {
+        "time_stamp": "2019-10-07 11:12:10"
+      },
+      {
+        "time_stamp": "2019-10-07 11:12:33"
+      },
+      {
+        "time_stamp": "2019-10-07 11:13:06"
+      },
+      {
+        "time_stamp": "2019-10-07 11:15:33"
+      },
+      {
+        "time_stamp": "2019-10-07 11:26:48"
+      },
+      {
+        "time_stamp": "2019-10-07 11:27:02"
+      },
+      {
+        "time_stamp": "2019-10-07 11:27:10"
+      },
+      {
+        "time_stamp": "2019-10-07 11:34:24"
+      },
+      {
+        "time_stamp": "2019-10-07 11:35:54"
+      },
+      {
+        "time_stamp": "2019-10-07 11:36:43"
+      },
+      {
+        "time_stamp": "2019-10-07 11:39:58"
+      },
+      {
+        "time_stamp": "2019-10-07 12:25:01"
+      },
+      {
+        "time_stamp": "2019-10-07 12:25:17"
+      },
+      {
+        "time_stamp": "2019-10-07 12:25:47"
+      },
+      {
+        "time_stamp": "2019-10-07 12:25:55"
+      },
+      {
+        "time_stamp": "2019-10-07 12:27:08"
+      },
+      {
+        "time_stamp": "2019-10-07 12:27:25"
+      },
+      {
+        "time_stamp": "2019-10-07 12:28:41"
+      },
+      {
+        "time_stamp": "2019-10-07 12:29:09"
+      },
+      {
+        "time_stamp": "2019-10-07 12:29:11"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "RepreZenTed",
+      "poster_handle": "ted.epstein"
+    },
+    "time_stamp": "2019-10-07 09:20:48",
+    "text": "It's the correct ID for the selected contact.\n\nBTW, the preview in the Design Manager is not helpful, because it doesn't have the `contact` variable defined. This is an email template which does define `contact`. The screenshot came from the email editor in preview mode, with a contact selected for the preview."
+  },
+  {
+    "poster": {
+      "poster_name": "RepreZenTed",
+      "poster_handle": "ted.epstein"
+    },
+    "time_stamp": "2019-10-07 10:28:55",
+    "text": "Something interesting: I _can_use a variable, as long as the variable has a static value assigned to it.  This works:\n\n```\n{% set contact_id = 5242123 %}\n{% set deals = crm_associations(contact_id, 4) %} \n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Diego Valle",
+      "poster_handle": "dvalle"
+    },
+    "time_stamp": "2019-10-07 10:55:19",
+    "text": "Hi, anyone know how I can custo the format currency on hubl"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2019-10-07 11:04:16",
+    "edited": {
+      "time_stamp": "2019-10-07 11:05:17"
+    },
+    "text": "Anyone use the update function often? <https://designers.HubSpot.com/en/docs/hubl/hubl-supported-functions#update>\n\nTried to update an object from within a loop but couldn't get the new value to apply. tried with both the included {% set %} syntax as well as {% do %} as I think is more common in jinja, but neither applied the new key:val pair.\n\nso my syntax basically looked like:\n```\n{% for obj in group1 %}\n    {% do obj.update( { 'key' : 'val' } ) %}\n    {{ obj|tojson }}\n{% endfor %}\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-10-07 11:08:04",
+    "text": "its because the contact isnt defined. That is probably the reason."
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-10-07 11:08:37",
+    "text": "if it is JUT outputting the ID # then it should work."
+  },
+  {
+    "poster": {
+      "poster_name": "RepreZenTed",
+      "poster_handle": "ted.epstein"
+    },
+    "time_stamp": "2019-10-07 11:09:06",
+    "text": "Sorry, what is 'JUT' ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-10-07 11:09:15",
+    "text": "JUST"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-10-07 11:09:20",
+    "text": "sorry miss spelling"
+  },
+  {
+    "poster": {
+      "poster_name": "RepreZenTed",
+      "poster_handle": "ted.epstein"
+    },
+    "time_stamp": "2019-10-07 11:09:23",
+    "text": "NP."
+  },
+  {
+    "poster": {
+      "poster_name": "RepreZenTed",
+      "poster_handle": "ted.epstein"
+    },
+    "time_stamp": "2019-10-07 11:09:25",
+    "text": ":slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "RepreZenTed",
+      "poster_handle": "ted.epstein"
+    },
+    "time_stamp": "2019-10-07 11:09:36",
+    "text": "Well, the contact is defined in the email context."
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-10-07 11:09:54",
+    "text": "somtimes the editor doesnt know what to do if the varialbe doesnt have a legitimate value."
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-10-07 11:10:17",
+    "text": "try using an if statement and capture the ID if contact is defined."
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-10-07 11:10:31",
+    "text": "make sence?"
+  },
+  {
+    "poster": {
+      "poster_name": "RepreZenTed",
+      "poster_handle": "ted.epstein"
+    },
+    "time_stamp": "2019-10-07 11:10:58",
+    "text": "Sure, I can try that."
+  },
+  {
+    "poster": {
+      "poster_name": "RepreZenTed",
+      "poster_handle": "ted.epstein"
+    },
+    "time_stamp": "2019-10-07 11:11:39",
+    "text": "It does seem to be a design-time issue, because I see this cryptic error message in the editor."
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-10-07 11:12:10",
+    "text": "yeah."
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-10-07 11:12:33",
+    "edited": {
+      "time_stamp": "2019-10-07 11:12:40"
+    },
+    "text": "<@U6W3H6YN8> <@U2H3TT8F2> any help here would be appreciated"
+  },
+  {
+    "text": "",
+    "time_stamp": "2019-10-07 11:13:06"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-10-07 11:15:33",
+    "text": "`{% set contact_id =  contact is truthy ? 0 : contact.hs_object_id %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "RepreZenTed",
+      "poster_handle": "ted.epstein"
+    },
+    "time_stamp": "2019-10-07 11:26:48",
+    "text": "Doesn't seem to work."
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-10-07 11:27:02",
+    "text": "herm.."
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-10-07 11:27:10",
+    "text": "I wonder if if statments work in Emails"
+  },
+  {
+    "poster": {
+      "poster_name": "RepreZenTed",
+      "poster_handle": "ted.epstein"
+    },
+    "time_stamp": "2019-10-07 11:34:24",
+    "edited": {
+      "time_stamp": "2019-10-07 11:34:47"
+    },
+    "text": "I tried this:\n\n```\n{% set contact_id =  5242123 %}\n{% if contact is defined %}\n  {% set contact_id = contact.hs_object_id %}\n{% endif %}\n{% set deals = crm_associations(contact_id, 4) %} \n```\n\nThe `if` seems to work fine, but I still see the same error message in the editor, and it yields the same result in the email."
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-10-07 11:35:54",
+    "text": "try seeing if `contact.hs_object_id` is defined"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-10-07 11:36:43",
+    "text": "```{% set contact_id =  5242123 %}\n{% if contact.hs_object_id is defined %}\n  {% set contact_id = contact.hs_object_id %}\n{% endif %}\n{% set deals = crm_associations(contact_id, 4) %} ```"
+  },
+  {
+    "poster": {
+      "poster_name": "RepreZenTed",
+      "poster_handle": "ted.epstein"
+    },
+    "time_stamp": "2019-10-07 11:39:58",
+    "text": "It is defined. That code doesn't show an error in the editor, but it still doesn't work in the email."
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Gallant",
+      "poster_handle": "ben457"
+    },
+    "time_stamp": "2019-10-07 11:59:29",
+    "text": "<@U26BLKGE4> What is group1?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2019-10-07 12:27:52"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-10-07 12:25:01",
+    "text": "herm.."
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-10-07 12:25:17",
+    "text": "well. maybe a HubSpotter can help"
+  },
+  {
+    "poster": {
+      "poster_name": "RepreZenTed",
+      "poster_handle": "ted.epstein"
+    },
+    "time_stamp": "2019-10-07 12:25:47",
+    "text": "Thanks for your help here, <@U38EZFVFE>. I do appreciate it."
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-10-07 12:25:55",
+    "text": "yeah man"
+  },
+  {
+    "poster": {
+      "poster_name": "RepreZenTed",
+      "poster_handle": "ted.epstein"
+    },
+    "time_stamp": "2019-10-07 12:27:08",
+    "text": "I have a ticket open, and have also posted on the dev forum. So yes, hoping a HubSpotter can let us know what's going on, suggest a workaround, and (hopefully) expedite a fix for this bug, if it is a bug. I'm strongly suspecting a bug at this point."
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-10-07 12:27:25",
+    "text": "could be'"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2019-10-07 12:27:52",
+    "text": "A collection of objects. in this case, it was values from a multi-select field in a HubDB, but would be synonymous with recent posts or any other list of objects"
+  },
+  {
+    "poster": {
+      "poster_name": "RepreZenTed",
+      "poster_handle": "ted.epstein"
+    },
+    "time_stamp": "2019-10-07 12:28:41",
+    "text": "Meanwhile, I'm working around it by directly calling the HubSpot CRM Associations REST API, and storing the response in a custom contact property. Kind of brute force, but it should work."
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-10-07 12:29:09",
+    "text": "yeah that is a sledge hammer approach"
+  },
+  {
+    "poster": {
+      "poster_name": "RepreZenTed",
+      "poster_handle": "ted.epstein"
+    },
+    "time_stamp": "2019-10-07 12:29:11",
+    "text": "... of course that has to be done outside of HubSpot."
+  },
+  {
+    "poster": {
+      "poster_name": "RepreZenTed",
+      "poster_handle": "ted.epstein"
+    },
+    "time_stamp": "2019-10-07 14:43:53",
+    "text": ":confused: Stuck again. I've populated a custom property with a comma-delimited list of deal IDs. Now I'm trying to create a list of deal IDs from that in a `{% set %}` tag. But again, it won't process the property expression."
+  },
+  {
+    "poster": {
+      "poster_name": "RepreZenTed",
+      "poster_handle": "ted.epstein"
+    },
+    "time_stamp": "2019-10-07 14:45:46",
+    "edited": {
+      "time_stamp": "2019-10-07 15:09:32"
+    },
+    "text": "```\n{% set contact_id = contact.hs_object_id %}\n{% set deal_ids = contact.associated_deal_ids|split(',', 20)  %}\n&lt;p&gt;\n  There are {{deal_ids|length}} deals for {{contact.firstname}} {{contact.lastname}} (id # {{contact_id}}\n  &lt;br/&gt;{{ contact.associated_deal_ids }}\n&lt;/p&gt;\n&lt;ul&gt;\n  {% for deal_id in deal_ids %}\n  {% set deal = crm_object(\"deal\", deal_id) %}\n  &lt;li&gt;{{ deal.dealname }}&lt;/li&gt;\n  {% endfor %}\n&lt;/ul&gt;\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "RepreZenTed",
+      "poster_handle": "ted.epstein"
+    },
+    "time_stamp": "2019-10-07 14:46:51",
+    "edited": {
+      "time_stamp": "2019-10-07 14:52:09"
+    },
+    "text": "Again, it just doesn't seem to process the expression `contact.associated_deal_ids...` when it occurs in a tag argument."
+  },
+  {
+    "poster": {
+      "poster_name": "RepreZenTed",
+      "poster_handle": "ted.epstein"
+    },
+    "time_stamp": "2019-10-07 14:47:44",
+    "text": "So I think I need to ask a more general question:\n\n*What is the right way to embed an expression in a statement or tag?*"
+  },
+  {
+    "poster": {
+      "poster_name": "RepreZenTed",
+      "poster_handle": "ted.epstein"
+    },
+    "time_stamp": "2019-10-07 14:48:29",
+    "text": "There must be a way to do this, right? I've tried surrounding the expression with `{{ double curly braces }}` but I get an error in the editor and it doesn't work."
+  },
+  {
+    "poster": {
+      "poster_name": "RepreZenTed",
+      "poster_handle": "ted.epstein"
+    },
+    "time_stamp": "2019-10-07 14:48:39",
+    "text": "maybe there's another syntax...?"
+  }
+]

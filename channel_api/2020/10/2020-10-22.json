@@ -1,0 +1,356 @@
+[
+  {
+    "poster": {
+      "poster_name": "Quentin Lamamy",
+      "poster_handle": "quentin.lamamy"
+    },
+    "time_stamp": "2020-10-22 02:23:51",
+    "text": "Hey guys, what’s up today ? On my side i have a new challenge, looking for a way to get all company of HubSpot with sdk, before digging the source code i ask, maybe someone have answer"
+  },
+  {
+    "poster": {
+      "poster_name": "Quentin Lamamy",
+      "poster_handle": "quentin.lamamy"
+    },
+    "time_stamp": "2020-10-22 02:33:57",
+    "text": "nothing in the doc of the sdk about batch..."
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2020-10-22 07:04:34",
+    "text": "<@U01DF3PNCKA> I’ll use the Node SDK as the example since that’s what Im familiar with though this should apply to any language we support. There are two ways to go about this. 1. If you don’t know the Ids of the companies you want, you can use the `HubSpot.crm.companies.getAll()` method (<https://github.com/HubSpot/HubSpot-api-nodejs/blob/master/src/client.ts#L186|source>). This will handle the pagination through the responses for for you. The second method is if you do know the IDs, you can do a batch get `HubSpot.crm.companies.batch.read()` method (<https://github.com/HubSpot/HubSpot-api-nodejs/blob/master/codegen/crm/companies/api/batchApi.ts#L264|source>). `getAll` is the more common solution",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-10-22 07:08:08"
+      },
+      {
+        "time_stamp": "2020-10-22 10:22:18"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2020-10-22 07:08:08",
+    "text": "If you would prefer to handle the pagination yourself, we also have an <https://github.com/HubSpot/HubSpot-api-nodejs/blob/master/sample-apps/companies-app/src/index.js#L115|example app> in that repo that shows how to get a single page of results for a company along with a few other common actions"
+  },
+  {
+    "poster": {
+      "poster_name": "chrispecoraro",
+      "poster_handle": "chrispecoraro"
+    },
+    "time_stamp": "2020-10-22 07:51:06",
+    "text": "When importing many contacts, I have two options: one by one (and needing to put a pause in between each) or batch. Since I get a list of emails that are generated using OCR, the addresses are often, for example, `gmail.c0m` and `gmail.con`. Since if any of the records are rejected, the entire batch is rejected, I have to fix them by hand, whereas if I enter them one-by one, at least the valid records get inserted.",
+    "reply_count": 9,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2020-10-22 09:21:35"
+      },
+      {
+        "time_stamp": "2020-10-22 14:38:32"
+      },
+      {
+        "time_stamp": "2020-10-23 08:11:37"
+      },
+      {
+        "time_stamp": "2020-10-23 08:19:57"
+      },
+      {
+        "time_stamp": "2020-10-23 08:25:12"
+      },
+      {
+        "time_stamp": "2020-10-23 08:27:01"
+      },
+      {
+        "time_stamp": "2020-10-23 09:19:45"
+      },
+      {
+        "time_stamp": "2020-10-23 09:37:09"
+      },
+      {
+        "time_stamp": "2020-10-23 11:19:03"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "chrispecoraro",
+      "poster_handle": "chrispecoraro"
+    },
+    "time_stamp": "2020-10-22 07:51:52",
+    "text": "I would like to clean the records beforehand. I'm using Laravel's email validator, but I was wondering if there is a specific check that HubSpot uses to determine validity, so that I can create a perfect copy."
+  },
+  {
+    "poster": {
+      "poster_name": "chrispecoraro",
+      "poster_handle": "chrispecoraro"
+    },
+    "time_stamp": "2020-10-22 07:52:46",
+    "edited": {
+      "time_stamp": "2020-10-22 07:53:06"
+    },
+    "text": "I can apply any or all of these, although some of them take more time:\n```Here's a full list of validation styles you can apply:\n\nrfc: RFCValidation\nstrict: NoRFCWarningsValidation\ndns: DNSCheckValidation\nspoof: SpoofCheckValidation\nfilter: FilterEmailValidation```"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2020-10-22 09:21:35",
+    "text": "On this <https://developers.HubSpot.com/docs/api/faq|page>, there is a FAQ about how we validate email addresses. That should help you scrub out invalid ones ahead of time"
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2020-10-22 10:22:18",
+    "edited": {
+      "time_stamp": "2020-10-22 10:24:36"
+    },
+    "text": "*Information about PHP SDK v3*\n\nWell after lot of work to understand how it work i succeed to get some technical information :\n\n```$HubSpot-&gt;crm-&gt;companies-&gt;getAll() ```\nReturn an array of object\n```HubSpot\\Client\\Crm\\Companies\\Model\\SimplePublicObject```\nOne by entry , on my test env i have 200 companies and i get an array of 200 objects, so it seems that their is no pagination (or maybe the limit by page is more than 200, still need to make test to understand the offset and pagging methods)\n\nHere is getters of this object :\n• getId\n• getProperties\n• getCreatedAt\n• getUpdatedAt\n• getAssociation (stil need to make some test on it to understand how it will work, keep in touch)\n• getArchived\n• getArchivedAt"
+  },
+  {
+    "poster": {
+      "poster_name": "Quentin Lamamy",
+      "poster_handle": "quentin.lamamy"
+    },
+    "time_stamp": "2020-10-22 10:25:02",
+    "text": "hope it will help someone"
+  },
+  {
+    "poster": {
+      "poster_name": "Quentin Lamamy",
+      "poster_handle": "quentin.lamamy"
+    },
+    "time_stamp": "2020-10-22 10:58:29",
+    "text": "If you want to bookmark it i made a post on the community board : <https://community.HubSpot.com/t5/APIs-Integrations/Info-PHP-SDK-V3-How-to-list-all-companies/m-p/381098>",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-10-22 17:16:41"
+      },
+      {
+        "time_stamp": "2020-10-22 18:50:44"
+      },
+      {
+        "time_stamp": "2020-10-22 21:40:41"
+      },
+      {
+        "time_stamp": "2020-10-22 21:41:20"
+      },
+      {
+        "time_stamp": "2020-10-23 02:45:46"
+      },
+      {
+        "time_stamp": "2020-10-23 09:14:27"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "mulan",
+      "poster_handle": "mulan114"
+    },
+    "time_stamp": "2020-10-22 12:54:42",
+    "text": "hey all, does anyone know if there is an issue with the oauth server? i was doing some testing and now getting a \"this app is already connected to this account. you will be redirected back to the app provider in xx\" but i never get redirected and a console.log indicates that i didn't receive an authorization code...",
+    "reply_count": 8,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2020-10-22 13:55:54"
+      },
+      {
+        "time_stamp": "2020-10-22 17:15:16"
+      },
+      {
+        "time_stamp": "2020-10-23 06:46:46"
+      },
+      {
+        "time_stamp": "2020-10-23 06:52:25"
+      },
+      {
+        "time_stamp": "2020-11-10 10:12:29"
+      },
+      {
+        "time_stamp": "2020-11-10 10:15:23"
+      },
+      {
+        "time_stamp": "2020-11-10 13:40:50"
+      },
+      {
+        "time_stamp": "2020-11-10 17:13:16"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "mulan",
+      "poster_handle": "mulan114"
+    },
+    "time_stamp": "2020-10-22 12:56:17",
+    "text": "if i uninstall the app from the test account, all my code works again... it's just the second attempt (after the app has already been installed) that my code gets hung up..."
+  },
+  {
+    "poster": {
+      "poster_name": "Connor Redmon",
+      "poster_handle": "connor854"
+    },
+    "time_stamp": "2020-10-22 13:05:52",
+    "text": "We are having the same issue"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2020-10-22 13:06:37",
+    "text": "This change is in process of being rolled back FYI",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2020-10-22 13:08:01"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Connor Redmon",
+      "poster_handle": "connor854"
+    },
+    "time_stamp": "2020-10-22 13:06:54",
+    "text": "Thanks <@UFBNA9K9A>!"
+  },
+  {
+    "poster": {
+      "poster_name": "mulan",
+      "poster_handle": "mulan114"
+    },
+    "time_stamp": "2020-10-22 13:07:05",
+    "text": "thank you <@UFBNA9K9A>"
+  },
+  {
+    "poster": {
+      "poster_name": "Will Craig",
+      "poster_handle": "will582"
+    },
+    "time_stamp": "2020-10-22 13:07:13",
+    "text": ":i_love_you_hand_sign:"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2020-10-22 13:08:01",
+    "text": "Should be all set now"
+  },
+  {
+    "poster": {
+      "poster_name": "Will Craig",
+      "poster_handle": "will582"
+    },
+    "time_stamp": "2020-10-22 13:09:13",
+    "text": "Works!"
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2020-10-22 13:55:54",
+    "text": ":wave: Hey folks! I’m on HubSpot’s app developer experience team. *I’d love to know more about how you’re using this re-auth behavior*. To be honest we thought it was a UX bug since users installing apps would be immediately redirected, bypassing the app permissions screen, without any indication that the app was already installed. So we skipped the re-auth and added messaging with the delayed redirect. But it sounds like this may have also affected your integrations  :confused:"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-10-22 14:35:28",
+    "text": "I'll vote for it as optional, I won't vote for it as mandatory."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-10-22 14:36:11",
+    "text": "I would definitely appreciate an upsert for every object type. Right now only contacts have upsert and only on a legacy API, you cannot upsert companies on any API."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-10-22 14:36:23",
+    "text": "Trolling?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-10-22 14:38:32",
+    "text": "Known issue re: batch failing in funny ways. You'll have to do some DNS, Regex, and Public Suffix List (in Python, TLDExtract, in Java, Guava InternetDomainName class)."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-10-22 14:41:46",
+    "text": "Can you report the doc bugs as a separate topic here so we can get those fixed"
+  },
+  {
+    "poster": {
+      "poster_name": "Quentin Lamamy",
+      "poster_handle": "quentin.lamamy"
+    },
+    "time_stamp": "2020-10-22 16:39:53",
+    "text": "Even if it’s not an upsert, just the same behavior than contact which have a primary key check will be a great update"
+  },
+  {
+    "poster": {
+      "poster_name": "Walter Gueler",
+      "poster_handle": "wgueler"
+    },
+    "time_stamp": "2020-10-22 17:15:16",
+    "text": "Hi Mark, I lead the team behind WhatHub (3000+ installs) . We use HubSpot oauth to identify every single user that uses our app. We use the oauth flow for the first time each user connects the app and also to (re)authenticate every time they signed out. Every user has their own HubSpot token which is critical for us to show them only the HubSpot objects (contacts/deals) they have permissions to."
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2020-10-22 17:16:41",
+    "text": "Thank you for adding to the community!  Go ahead and mark it as a solution!"
+  },
+  {
+    "poster": {
+      "poster_name": "Quentin Lamamy",
+      "poster_handle": "quentin.lamamy"
+    },
+    "time_stamp": "2020-10-22 18:50:44",
+    "text": "How can I mark it as solution, I don’t see any buttons’ or link to do that"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2020-10-22 21:40:41",
+    "text": "That is a great question. It appears a response is the only way you can have a solution."
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2020-10-22 21:41:20",
+    "text": "I will check it out tomorrow to confirm"
+  }
+]

@@ -1,0 +1,687 @@
+[
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2022-11-09 02:19:19",
+    "text": "<@U0336QCR2FQ> I've actually done something simmilar before"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2022-11-09 02:22:15",
+    "text": "Some basic explenation:\n• Loading in external object from a third party API on contact form submit\n• Run a daily sync on these objects form an API endpoint\n• The API endpoint will provide all updated objects, but I only update the ones that are actually inside my HubSpot\nI am using a \"Daily sync\" contact to write the current page and total page of the API endpoint. It's kind of hacky but I didn't find a better solution to do it"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2022-11-09 02:23:21",
+    "text": "Total pages in the endpoint range from 50 to 300, each with 100 objects in it each that are being checking in a custom code block, to stay within the. 20 second limit"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2022-11-09 02:44:03",
+    "text": "<@U01QVR44MEY> How exactly does the storing values between workflow runs work? Setting a var will save it's value when the workflow is done and when another contact goes through it, this value will be used?"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas558"
+    },
+    "time_stamp": "2022-11-09 05:49:42",
+    "text": "Too funny <@U046C9LKJP8>, basically what I was also doing. Unfortunately HubSpot was timing out no matter what - I think the individual objects were too big to handle so I had to grab a object of like 50 at a time meaning 400+ api calls lol."
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas558"
+    },
+    "time_stamp": "2022-11-09 05:55:45",
+    "text": "So I stopped that method and just used Carter's idea of a XLSX"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2022-11-09 06:09:39",
+    "text": "Yhea it's not ideal, but it works the way I set it up right now, so I'm keeping my hands of it :joy: Pushing HubSpot to its limits! :rocket:"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas558"
+    },
+    "time_stamp": "2022-11-09 06:14:03",
+    "text": "lol"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2022-11-09 07:13:33",
+    "text": "And as you guys push those limits, we’ll hopefully catch up and implement better solutions so you don’t have to do such hacky, and limit pushing, things. A looping action perhaps? or a way to batch API calls"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-09 07:16:30",
+    "text": "A looping action would fix a lot of things."
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2022-11-09 07:29:11",
+    "text": "To give some more input, setup is like this:\n• Initial workflow that runs daily is triggered, loads in count of total amount of records via 1 API call\n• \"Check if pages are left\" is triggered when above fields are filled, this one pretty much loads the \"current page\" field, increments current page and clears variables when no pages are left\n• \"Sync page\" workflow is triggered, loads in data  via 1 API call, gets all custom objects for these third party id's via 1 API call, alters the data, and pushes this back in batch via 1 API call, if this one is done, go to workflow above\nRecursive workflows just like that. Fields syncRunning, SyncCurrentPage, SyncTotalPages and SyncNextPage are being used.\nSome of these things are pretty specific to our setup, but hope this helps anyone coming across this :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2022-11-09 07:30:02",
+    "text": "<@U046C9LKJP8> how many executions (objects enrolled across these Workflows) would you say you’re hitting on a daily basis?"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2022-11-09 07:40:09",
+    "text": "In total we have 30k Custom objects, there are more than 850k objects that are bound to change in the external system. Usually we range between 0 changes to 100k changed records on a daily basis, but I only update the ones that are in our system. And only the fields that we are using.\n\nOn the Sync page workflow: Total enrolled: 6759, 7 day: 41. been running for 4-5 months.\nSo on average that's about 4500 records being checked each day."
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2022-11-09 07:49:08",
+    "text": "that’s not bad, ok thanks for the info, that helps with some of the exploratory work we’ve been doing into these kind of applications"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas558"
+    },
+    "time_stamp": "2022-11-09 08:05:47",
+    "text": "hmm yeah in our use case, the outside API has no way to tie the record to HubSpot, so we'd have to individually run the look up I believe"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas558"
+    },
+    "time_stamp": "2022-11-09 08:06:05",
+    "text": "but I can't even get HS to format the query without running into a time out error so"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-09 08:06:44",
+    "text": "Maybe cca timeouts could be increase?"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas558"
+    },
+    "time_stamp": "2022-11-09 08:07:28",
+    "text": "that would be nice"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-09 08:07:41",
+    "text": "CC <@U022ANB8ZC4>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-09 08:08:04",
+    "text": "and <@U02EFVAAGCR>"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2022-11-09 08:08:42",
+    "text": "I think the 20 second timeouts are pretty fair, 30 second is usually the way to go but still.\nTo think about it, it's still a small piece of functionality.\nTo give an example, Google App Scripts for sheets have a 30 second timeout as well."
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas558"
+    },
+    "time_stamp": "2022-11-09 08:09:19",
+    "text": "I dunno Arno, you gotta remember people are paying $$$$ for this functionality that can easily be replicated with a $25/mo server on Heroku"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2022-11-09 08:09:39",
+    "text": "Also true :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-09 08:10:19",
+    "text": "Or a 5 dollar server on digital ocean"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-09 08:10:48",
+    "text": "Or just a couple pennies to setup a real lambda function"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-09 08:10:57",
+    "text": "<https://aws.amazon.com/about-aws/whats-new/2018/10/aws-lambda-supports-functions-that-can-run-up-to-15-minutes/>"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2022-11-09 08:16:16",
+    "text": "Interesting discussion nonetheless, really looking forward to how the custom code stuff grows, using it for a couple of clients and it's fun to use, but indeed lots of improvements possible as well."
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2022-11-09 08:21:19",
+    "text": "What would be the best way to give our input on this? Next to random slack threads and community tickets? Is there like a monthly workgroup or smth?"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2022-11-09 08:33:05",
+    "text": "I’m taking notes and sharing them with our teams. I lead the engineers of one of the three Workflow teams. You also have two of the Workflows product managers in this thread. I’d say this is as direct as you’ll get :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2022-11-09 09:42:46",
+    "text": "Amazing! Thanks for the responses :heart:"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-11-09 12:06:06",
+    "text": "I have a Workflow Action in development now. One of the input fields is a `OBJECT_PROPERTY` one. The config for it looks like below. In my test workflow using the published (published=true) action, I have selected a field from this input field (I chose State/Region). When I enroll a Contact in the workflow, this input field is not sent in the payload to the actionURL. I made sure that the contact I enrolled has a value in that field. I was expecting to receive either the value from the selected field from the contact or just the field name that was selected. I didn't receive anything. Thoughts?\n```{\n  typeDefinition: {\n    name: 'HubSpotField',\n    type: 'string'\n  },\n  supportedValueTypes: ['OBJECT_PROPERTY'],\n  isRequired: false\n}```",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-11-09 12:29:49"
+      },
+      {
+        "time_stamp": "2022-11-09 12:30:01"
+      },
+      {
+        "time_stamp": "2022-11-09 12:30:41"
+      },
+      {
+        "time_stamp": "2022-11-09 13:05:57"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-11-09 12:29:49",
+    "text": "nevermind. I figured it out. PEBKAC"
+  },
+  {
+    "time_stamp": "2022-11-09 12:30:01",
+    "text": "homer disappear"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-11-09 12:30:41",
+    "edited": {
+      "time_stamp": "2022-11-09 12:47:31"
+    },
+    "text": "for the record, it sends the value from the selected field"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2022-11-09 13:05:57",
+    "text": "<@U032A8A6P1T> yes that is correct. Selected fields in custom actions provide the value, not the Label."
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-11-09 13:37:40",
+    "text": "I have a Workflow Action in development now. I am testing using different types of outputFields. I have learned that type of output field you return impacts how you can use that value downstream in the workflow. e.g. if you set an outputField as a \"number\", it can only be copied into number and text fields. I have most of this figured out except for Dates. I have a custom property called \"Test Date Field\" on my Contact object and I am trying to use a property in the response of my workflow action to populate that field. The output field in the WF action is configured as show below, but I cannot figure out how to format the date value in the workflow action response to have it able to be used to populate the test date property i created. I have tried '2022-11-09', Date.now(), and several others. Thoughts?\n```{\ntypeDefinition: {\n  name: 'resultDate',\n  type: 'date'\n}\n}```",
+    "reply_count": 25,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2022-11-09 13:38:45"
+      },
+      {
+        "time_stamp": "2022-11-09 13:39:22"
+      },
+      {
+        "time_stamp": "2022-11-09 13:40:03"
+      },
+      {
+        "time_stamp": "2022-11-09 13:44:21"
+      },
+      {
+        "time_stamp": "2022-11-09 13:44:27"
+      },
+      {
+        "time_stamp": "2022-11-09 13:44:38"
+      },
+      {
+        "time_stamp": "2022-11-09 13:50:04"
+      },
+      {
+        "time_stamp": "2022-11-09 13:50:22"
+      },
+      {
+        "time_stamp": "2022-11-09 13:50:23"
+      },
+      {
+        "time_stamp": "2022-11-09 13:51:03"
+      },
+      {
+        "time_stamp": "2022-11-09 13:55:15"
+      },
+      {
+        "time_stamp": "2022-11-09 13:55:44"
+      },
+      {
+        "time_stamp": "2022-11-09 13:56:00"
+      },
+      {
+        "time_stamp": "2022-11-09 13:56:18"
+      },
+      {
+        "time_stamp": "2022-11-09 13:56:59"
+      },
+      {
+        "time_stamp": "2022-11-09 13:57:14"
+      },
+      {
+        "time_stamp": "2022-11-09 13:57:41"
+      },
+      {
+        "time_stamp": "2022-11-09 13:57:45"
+      },
+      {
+        "time_stamp": "2022-11-09 13:57:45"
+      },
+      {
+        "time_stamp": "2022-11-09 14:00:17"
+      },
+      {
+        "time_stamp": "2022-11-09 14:00:43"
+      },
+      {
+        "time_stamp": "2022-11-09 14:02:06"
+      },
+      {
+        "time_stamp": "2022-11-09 15:03:29"
+      },
+      {
+        "time_stamp": "2022-11-09 15:04:31"
+      },
+      {
+        "time_stamp": "2023-02-09 04:25:04"
+      }
+    ]
+  },
+  {
+    "text": "this is the error shown in the workflow logs",
+    "time_stamp": "2022-11-09 13:38:45"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-09 13:39:22",
+    "text": "It's epoc milliseconds"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-09 13:40:03",
+    "text": "So try to return this:\n```1668026385764```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-11-09 13:44:21",
+    "text": "same result. I tried returning is as `resultDate: '1668026403660'` and also `resultDate: 1668026403660`"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-11-09 13:44:27",
+    "text": "neither worked. get the error"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-09 13:44:38",
+    "text": "Is the return type datetime?"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-11-09 13:50:04",
+    "text": "it was date. i changed to datetime and same result."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-09 13:50:22",
+    "text": "Let me give it a go real quick"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-11-09 13:50:23",
+    "text": "per <https://developers.HubSpot.com/docs/api/crm/properties#property-type-and-fieldtype-values> both date and datetime should accept the same values."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-09 13:51:03",
+    "text": "Yes but I think (50-50 chance) that date needs to accept midnight timestamps"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-11-09 13:55:15",
+    "text": "midnight it is."
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-11-09 13:55:44",
+    "text": "I set the outputfield to datetime in my action. When i return a date value, i set it to a datetime value at midnight."
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-11-09 13:56:00",
+    "text": "e.g. `1668124800000` is 2022-11-11"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-11-09 13:56:18",
+    "text": "works now."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-09 13:56:59",
+    "text": "Really?"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-11-09 13:57:14",
+    "text": "yep"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-11-09 13:57:41",
+    "text": "since it was going into a Date Picker field."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-09 13:57:45",
+    "text": "Can you paste your output for future reference"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-11-09 13:57:45",
+    "text": "i think"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-11-09 14:00:17",
+    "text": "```resultDate: 1668124800000,\nresultDateTime: 1668027502459```\nThe resultDate is able to be used in workflow to populate a Date picker field because it translates to midnight. I am still testing resultDateTime and its ability to populate fields that include times."
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-11-09 14:00:43",
+    "text": "`resultDateTime` fails to populate a Date picker field"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-09 14:02:06",
+    "text": "Gotit, yeah while there are 2 date field types on the backend of HubSpot the ui only shows dates not datetime fields. Plus datetime fields can only be created through the api not through normal properties manager"
+  },
+  {
+    "poster": {
+      "poster_name": "Austin Heimerman",
+      "poster_handle": "austinbh"
+    },
+    "time_stamp": "2022-11-09 14:25:38",
+    "text": "<@U02KBCJ0EDS> try using “deal.hs_object_id” on the first crm_object set insead of deal.id"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-11-09 15:03:29",
+    "text": "i would've thought that HubSpot would have taken the date portion from the non-midnight timestamp and used that to populate the date field, but nope. They need it to be at midnight."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-09 15:04:31",
+    "text": "Yeah, you could round but I don't think they want to deal with people wondering why the date field isn't storing the correct value"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-11-09 16:43:21",
+    "text": "I have a Workflow Action in development. I am testing being able to use output from the action to update a custom HubSpot User property. My workflow action has an output field of type `enumeration`. This allows me to use the Copy Property Value action to get the value from the Workflow Action and update a HubSpot User property. However, I keep getting errors actually writing a value from my workflow action response to that field. I have tried populating it with a user Id as a string and as a number. I've also tried to see if returned an email address works. When using Copy Property Value to update a HubSpot User property, what is the value that should actually be used to set the value if not a User ID?",
+    "reply_count": 8,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-11-09 17:07:21"
+      },
+      {
+        "time_stamp": "2022-11-09 18:14:29"
+      },
+      {
+        "time_stamp": "2022-11-09 18:15:16"
+      },
+      {
+        "time_stamp": "2022-11-09 18:15:48"
+      },
+      {
+        "time_stamp": "2022-11-09 18:16:24"
+      },
+      {
+        "time_stamp": "2022-11-09 18:16:36"
+      },
+      {
+        "time_stamp": "2022-11-09 18:16:59"
+      },
+      {
+        "time_stamp": "2022-11-09 18:19:37"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-11-09 17:07:21",
+    "text": "Well, I think I figured this one out too. Need to populate it with the Owner ID from *`/crm/v3/owners/` and not the actual User ID.* "
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-09 18:14:29",
+    "text": "Yep, exactly"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-09 18:15:16",
+    "text": "It's called an owners id, they are used most object types; tickets, contacts, deals, etc"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-09 18:15:48",
+    "text": "It's switches off being called `hs_owner_id` and `HubSpot_owner_id`"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-11-09 18:16:24",
+    "text": "right. if you create a custom property that is a user type, it acts the same"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-09 18:16:36",
+    "text": "And a quick and easy way to see owners and id is to open up the properties manager for contact owners where you can see the label and internal values right next to each other"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-09 18:16:59",
+    "edited": {
+      "time_stamp": "2022-11-09 18:17:18"
+    },
+    "text": "Yep, called an HubSpot owner/user field"
+  },
+  {
+    "text": "Here's a quick example of the information you can quickly find using the ui property manager instead of hitting the owners endpoint",
+    "time_stamp": "2022-11-09 18:19:37"
+  },
+  {
+    "poster": {
+      "poster_name": "Richard Owens",
+      "poster_handle": "rich151"
+    },
+    "time_stamp": "2022-11-09 18:32:26",
+    "text": "Hey <@U02KBCJ0EDS> did you have any luck resolving this issue? Stuck here with the Deal Objects are only usable on password protected sites"
+  }
+]

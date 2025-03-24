@@ -1,0 +1,36 @@
+[
+  {
+    "poster": {
+      "poster_name": "Joao",
+      "poster_handle": "joao.lopes480"
+    },
+    "time_stamp": "2022-09-13 06:48:59",
+    "text": "Hi there, anyone managed to have system pages (404 for instance) in multi languages?\nWe use glossary for everything but I see that these pages are not \"affected\" by it.\nThanks",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-09-13 13:23:07"
+      },
+      {
+        "time_stamp": "2022-09-13 22:39:34"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2022-09-13 13:23:07",
+    "text": "This is a pretty big pain point for multi-lang users"
+  },
+  {
+    "poster": {
+      "poster_name": "Mitja Lewin",
+      "poster_handle": "m.lewin"
+    },
+    "time_stamp": "2022-09-13 22:39:34",
+    "text": "<@U03MY3KUDMW> Links from emails that have a defined language in settings have the query parameter `languagePreference`. So you definitive should check the request.query on your system pages like this:\n```{% if request.query is string_containing \"languagePreference=de\" %}```\nElse, you can check the browser language, with `request.headers['accept-language']`. But you need a map of key languages to work further with the returned values from `accept-language`. I found the code below in a Marketplace module that translate the subscription-settings page. It's customized, for more supported languages please take a look at the original module.\n\n```{% set countryCodes = {\n  'en':'en',  'en-au':'en',  'en-ca':'en',  'en-hk':'en',  'en-in':'en',  'en-ie':'en',  'en-my':'en',  'en-mt':'en',  'en-nz':'en',  'en-ph':'en',  'en-sg':'en',  'en-za':'en', 'en-gb':'en',  'en-us':'en',  'en-zw':'en',\n  'es':'es',  'es-ar':'es',  'es-bo':'es',  'es-cl':'es',  'es-co':'es',  'es-cr':'es',  'es-cu':'es',  'es-do':'es',  'es-ec':'es',  'es-sv':'es',  'es-gt':'es',  'es-hn':'es',  'es-ni':'es', 'es-pa':'es',  'es-py':'es',  'es-pe':'es',  'es-pr':'es',  'es-es':'es',  'es-us':'es',  'es-uy':'es',  'es-ve':'es',  'es-mx':'es',\n  'fr':'fr',  'fr-be':'fr',  'fr-ca':'fr',  'fr-fr':'fr',  'fr-lu':'fr',  'fr-mc':'fr',  'fr-ch':'fr',\n  'de':'de',  'de-at':'de',  'de-de':'de',  'de-gr':'de',  'de-li':'de',  'de-lu':'de',  'de-ch':'de',\n  'nl':'nl',  'nl-be':'nl',  'nl-nl':'nl',\n  'it':'it',  'it-it':'it',  'it-ch':'it'\n} %}\n\n{% set language = request.headers['accept-language']|split(',')|map('lower') %}\n{% set location = countryCodes[language[0]] || countryCodes[language[1]|split(';')|first] || 'en' %}```\nThe variable `location` can be `en/es/fr/de/nl/it` - fallback is `en`.\nTransaltion it self has to be done in code."
+  }
+]

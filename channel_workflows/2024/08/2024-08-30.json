@@ -1,0 +1,223 @@
+[
+  {
+    "poster": {
+      "poster_name": "Camille Markentive",
+      "poster_handle": "camille.saute"
+    },
+    "time_stamp": "2024-08-30 02:35:14",
+    "text": "Hi there,\nMaybe there is an easier solution, but what about pushing this link in a contact property, then use this property as a token in the email ?"
+  },
+  {
+    "text": "Also, I’ve done something similar for a client of mine, and I’ve encoded the URL directly in the property using a calculated property, and I use it in an email.",
+    "time_stamp": "2024-08-30 02:37:34",
+    "edited": {
+      "time_stamp": "2024-08-30 02:37:43"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Rodrigo Apetito",
+      "poster_handle": "rodrigoapetito"
+    },
+    "time_stamp": "2024-08-30 03:53:46",
+    "text": "Yeah <@U06K19BGMNE>.. I was thinking to do on that way, but I would like to do just using the return of custom code... anyway.. I agree ... I will do as your suggestion.. thanks!!"
+  },
+  {
+    "poster": {
+      "poster_name": "Camille Markentive",
+      "poster_handle": "camille.saute"
+    },
+    "time_stamp": "2024-08-30 04:12:24",
+    "text": "If you find another way and only use the custom code return, I’d be interested!"
+  },
+  {
+    "poster": {
+      "poster_name": "Rodrigo Apetito",
+      "poster_handle": "rodrigoapetito"
+    },
+    "time_stamp": "2024-08-30 04:14:31",
+    "text": "Sure.. I let you know"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2024-08-30 09:33:08",
+    "text": "Hey <@U07JR5BAVPZ> can you share your custom code?\n\nTo get the output from the previous action, you just need to define the outputs from that action."
+  },
+  {
+    "poster": {
+      "poster_name": "Rodrigo Apetito",
+      "poster_handle": "rodrigoapetito"
+    },
+    "time_stamp": "2024-08-30 10:35:57",
+    "text": "sure..\n```exports.main = async (event, callback) =&gt; {\n  const encodedName = encodeURI(event.inputFields['contactFirstName'] + ' ' + event.inputFields['contactLastName']);\n  const encodedShipName = encodeURI(event.inputFields['shipName']);\n  const base64EmailArrivalDate = Buffer.from(event.inputFields['arrivalDate'] + event.inputFields['email']).toString('base64');\n  const email = event.inputFields['email'];\n  const reviewLink = `<https://mydomain.com?contactid=${encodeURI(base64EmailArrivalDate)}&amp;name=${encodedName}&amp;email=${email}&amp;ship=${encodedShipName}>`;\n\n  callback({\n    outputFields: {\n      reviewLink: reviewLink, \n      encodedName: encodedName,\n      encodedShipName: encodedShipName,\n      contactId: encodeURI(base64EmailArrivalDate)\n    }\n  });\n};```"
+  },
+  {
+    "text": "I also did it:",
+    "time_stamp": "2024-08-30 10:36:34"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2024-08-30 10:36:50",
+    "text": "So you’re trying to use reviewLink in a follow up action?"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2024-08-30 10:37:20",
+    "text": "like an email template?"
+  },
+  {
+    "poster": {
+      "poster_name": "Rodrigo Apetito",
+      "poster_handle": "rodrigoapetito"
+    },
+    "time_stamp": "2024-08-30 10:38:08",
+    "text": "yep... the idea is use in email like this `&lt;a href=\"{{custom_code.reviewLink}}\"&gt;My link&lt;/a&gt;`"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2024-08-30 10:38:27",
+    "text": "Since you can’t edit the email template on the “fly”"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2024-08-30 10:38:53",
+    "text": "You’ll need to use the Set a Contact Property. Then use that contact property within the email template."
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2024-08-30 10:39:19",
+    "text": "When you use the action set property, you can then select a previous action outputs, like reivewLink to copy that into a property."
+  },
+  {
+    "text": "hummm... I'm using on that way on email:",
+    "time_stamp": "2024-08-30 10:40:59",
+    "edited": {
+      "time_stamp": "2024-08-30 10:43:09"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Rodrigo Apetito",
+      "poster_handle": "rodrigoapetito"
+    },
+    "time_stamp": "2024-08-30 10:41:21",
+    "text": "so I should to create a property on contact, save it and after use on email body, right?"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2024-08-30 10:41:45",
+    "edited": {
+      "time_stamp": "2024-08-30 10:42:01"
+    },
+    "text": "Yes! Use a contact property."
+  },
+  {
+    "poster": {
+      "poster_name": "Rodrigo Apetito",
+      "poster_handle": "rodrigoapetito"
+    },
+    "time_stamp": "2024-08-30 10:43:31",
+    "text": "hummm... there is no way to do it without save into contact ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2024-08-30 10:43:57",
+    "text": "Do you have Marketing Hub Enterprise with the Transactional Email Addon?"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2024-08-30 10:44:19",
+    "text": "what’s your concern with using a property?"
+  },
+  {
+    "poster": {
+      "poster_name": "Rodrigo Apetito",
+      "poster_handle": "rodrigoapetito"
+    },
+    "time_stamp": "2024-08-30 10:45:29",
+    "text": "none.. I can do that.. just checking if I can do it without add another field on contact.. but it's fine.. I will try on that way..  :wink:"
+  },
+  {
+    "poster": {
+      "poster_name": "Rodrigo Apetito",
+      "poster_handle": "rodrigoapetito"
+    },
+    "time_stamp": "2024-08-30 10:45:46",
+    "text": "thanks for your help Justin!"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2024-08-30 10:46:20",
+    "text": "yup, if you don’t want to save that property long-term..\n\nThen in the same workflow just clear that property after you send the email."
+  },
+  {
+    "poster": {
+      "poster_name": "Rodrigo Apetito",
+      "poster_handle": "rodrigoapetito"
+    },
+    "time_stamp": "2024-08-30 10:46:40",
+    "text": "yep.. exactly!"
+  },
+  {
+    "poster": {
+      "poster_name": "Rodrigo Apetito",
+      "poster_handle": "rodrigoapetito"
+    },
+    "time_stamp": "2024-08-30 10:46:55",
+    "text": "like a temp info.. :wink:"
+  },
+  {
+    "poster": {
+      "poster_name": "Rodrigo Apetito",
+      "poster_handle": "rodrigoapetito"
+    },
+    "time_stamp": "2024-08-30 10:46:57",
+    "text": "thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2024-08-30 10:54:15",
+    "text": "yup!"
+  },
+  {
+    "poster": {
+      "poster_name": "Sierra Howard",
+      "poster_handle": "showard"
+    },
+    "time_stamp": "2024-08-30 12:30:36",
+    "text": "Hello everyone!\n\nI’m the Product Manager for the Automation Extension team here at HubSpot. Our focus is on equipping developers with the tools they need to create, customize, and scale automation using our frameworks and APIs. Specifically, we manage the <https://developers.HubSpot.com/docs/api/automation/custom-workflow-actions|Custom Action API>, which enables the creation of custom actions.\n\nWe’re committed to enhancing your experience and improving our tools, and we need your input to do that! Please take a moment to share your feedback through <https://docs.google.com/forms/d/e/1FAIpQLSegfw484-sfPWfRPy5Msn0jvy5cx4-ZH60O0l0XpdtyJaE9Gw/viewform|this survey>. Feel free to forward it to anyone else who might have valuable insights.\n\nYour feedback is crucial in helping us serve you better, and we truly appreciate your time and input.\n\nThank you! :orange_heart:"
+  }
+]

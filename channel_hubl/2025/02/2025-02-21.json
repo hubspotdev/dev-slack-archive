@@ -1,0 +1,48 @@
+[
+  {
+    "poster": {
+      "poster_name": "Andrew Willoughby",
+      "poster_handle": "andrewwilloughby"
+    },
+    "time_stamp": "2025-02-21 08:08:59",
+    "text": "Hello,\nI am trying to make an edit of the subscription preferences theme, and it seems that I can't edit the copy. Here is the code:\n\n`&lt;!--`\n  templateType: email_subscription_preferences_page\n  isAvailableForNewContent: true\n  label: Elevate - email subscription preferences\n  screenshotPath: ../../images/template-previews/email-subscription-preferences.png\n--&gt;\n{% set template_css = \"../../assets/dist/css/system.hubl.css\" %}\n{% set template_js = \"../../assets/js/subscription-preferences.js\" %}\n{% extends \"../layouts/base.hubl.html\" %}",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2025-02-21 08:09:34"
+      }
+    ]
+  },
+  {
+    "text": "This is the error I'm getting",
+    "time_stamp": "2025-02-21 08:09:34"
+  },
+  {
+    "poster": {
+      "poster_name": "Terry McMillan",
+      "poster_handle": "tmcmillan877"
+    },
+    "time_stamp": "2025-02-21 15:46:42",
+    "text": "Running into a weird hubl/hubdb loop issue. I created a custom gallery module for a client that's pulling the data from a HubDB table. Each image has a \"grade\" and \"category\" assigned to it. There are 3 grades and various categories belong to each grade. My code has several nested \"for loops\" due to how I need to display the images. Basically, I want to list each grade, the categories that belong to the grade, then the images that belong to each category. Have some major trial and error, I have it rendering like it should except for one issue. The images for the very last category do not display for some reason. The category title displays but not the images. Not sure if I have any issues in my hubl that would cause this. I have tested a couple variations of my code and depending on the version, it either doesn't display the last category or the last two categories. Currently, the page is published in content staging so I think it's publicly available-\n<https://www-artcobell-com.sandbox.hs-sites.com/en-us/textile-grades>\nHere is my current code for the gallery loops-\n```      {% set grad_id = module.grd_id %}\n      {% set grades = hubdb_table_column(db, grad_id) %}\n      {% for item in grades.options %}\n      &lt;div class=\"grades w-full\" x-show.transition.duration.1000ms=\"['{{ item.name }}', 'all'].includes(grd)\"&gt;\n        &lt;div class=\"grade-item pt-16\"&gt;\n          &lt;h3 style=\"color: #009CA6;\"&gt;\n            {{ item.label }} \n          &lt;/h3&gt;\n        &lt;/div&gt; \n        {% set grd_match = item.name %}\n        {% set groups = [] %}\n        {% for row in hubdb_table_rows(db, 'grade=' + grd_match ) %}\n        {% do groups.append(row.cat.name) %}\n        {% endfor %}\n        {% for group in groups|unique %}\n        &lt;div class=\"category pt-8 pb-4\" x-show.transition.duration.1000ms=\"['{{ group }}', 'all'].includes(cat)\"&gt;\n          &lt;h4 class=\"capitalize\"&gt;\n            {{ group }} \n          &lt;/h4&gt;\n          &lt;div class=\"img-gallery grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4\"&gt;\n            {% set imgs = hubdb_table_rows(db, 'cat=' + group ) %}\n            {% for img in imgs %}\n            &lt;div class=\"img-item w-full\" x-data=\"{ModalIsOpen: false}\"&gt;\n              &lt;div class=\"thumb-img aspect-square rounded-md overflow-hidden cursor-pointer\" @click=\"ModalIsOpen = true\"&gt;\n                &lt;img src=\"{{ img.swatch.url }}\" alt=\"{{ group + '-' + img.title }}\" class=\"w-full h-full object-cover\"&gt;\n              &lt;/div&gt;\n              &lt;div class=\"thumb-img-title text-center p-4\"&gt;\n                &lt;p&gt;\n                  {{ img.title }}\n                &lt;/p&gt;\n              &lt;/div&gt;\n              &lt;div x-cloak x-show=\"ModalIsOpen\" x-transition.opacity.duration.200ms x-trap.inert.noscroll=\"ModalIsOpen\" @keydown.esc.window=\"ModalIsOpen = false\" @click.self=\"ModalIsOpen = false\" class=\"fixed inset-0 z-30 flex items-center justify-center bg-black/20 p-4 backdrop-blur-md lg:p-8\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"imgModalTitle\"&gt;\n                &lt;!-- Modal Dialog --&gt;\n                &lt;div x-show=\"ModalIsOpen\" x-transition:enter=\"transition ease-out duration-300 delay-200\" x-transition:enter-start=\"opacity-0 translate-y-8\" x-transition:enter-end=\"opacity-100 translate-y-0\" class=\"max-w-3xl w-full relative\"&gt;\n                  &lt;!-- Close Button --&gt;\n                  &lt;button type=\"button\" x-show=\"ModalIsOpen\" @click=\"ModalIsOpen = false\" x-transition:enter=\"transition ease-out duration-200 delay-500\" x-transition:enter-start=\"opacity-0 scale-0\" x-transition:enter-end=\"opacity-100 scale-100\" class=\"close-btn absolute -top-4 -right-4 flex items-center justify-center rounded-full bg-neutral-50 p-1.5 text-neutral-900 hover:opacity-75 active:opacity-100 dark:bg-neutral-900 dark:text-white\" aria-label=\"close modal\"&gt;\n                    &lt;svg xmlns=\"<http://www.w3.org/2000/svg>\" viewBox=\"0 0 24 24\" aria-hidden=\"true\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.4\" class=\"w-4 h-4\"&gt;\n                      &lt;path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M6 18L18 6M6 6l12 12\"/&gt;\n                    &lt;/svg&gt;\n                  &lt;/button&gt;\n                  &lt;!-- Lightbox Image --&gt;\n                  &lt;div class=\"img-full w-full max-w-3xl rounded-md\"&gt;\n                    &lt;img class=\"w-full aspect-video object-cover\" src=\"{{ img.swatch.url }}\"&gt;\n                    &lt;div class=\"lb-content w-full flex items-center justify-center bg-white p-8\"&gt;\n                      {{ module.lb_text }}\n                    &lt;/div&gt;\n                  &lt;/div&gt;\n                &lt;/div&gt;\n              &lt;/div&gt;\n            &lt;/div&gt; &lt;!-- end img-item --&gt;\n            {% endfor %}\n          &lt;/div&gt; &lt;!-- end img-gallery --&gt;\n        &lt;/div&gt; &lt;!-- end groups --&gt;\n        {% endfor %}\n      &lt;/div&gt; &lt;!-- end grades --&gt;\n      {% endfor %}```\nAny recommendations would be greatly appreciated. I'm sure they might be a better way to accomplish this. Thanks.",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-02-24 10:02:57"
+      },
+      {
+        "time_stamp": "2025-02-24 10:06:19"
+      },
+      {
+        "time_stamp": "2025-02-24 10:13:54"
+      },
+      {
+        "time_stamp": "2025-02-24 10:19:00"
+      },
+      {
+        "time_stamp": "2025-02-24 10:26:57"
+      }
+    ]
+  }
+]

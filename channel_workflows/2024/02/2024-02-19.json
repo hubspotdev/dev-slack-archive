@@ -1,0 +1,90 @@
+[
+  {
+    "poster": {
+      "poster_name": "Carlsson Elkins",
+      "poster_handle": "carlsson.e"
+    },
+    "time_stamp": "2024-02-19 01:29:45",
+    "text": "Thanks so much <@U0695UMTM2M>, that would be amazing! The goal is to log it as conversion info, so probably add it as a record.  There may be a future requirement to add one of the lines as a property so that we can run automated follow ups off the back of it."
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2024-02-19 06:26:36",
+    "text": "Got it, makes sense. What API endpoint is the data coming from?"
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2024-02-19 06:28:53",
+    "text": "Because it looks like the JSON data is a bit off from normal (it is has some formatting isues)."
+  },
+  {
+    "poster": {
+      "poster_name": "Carlsson Elkins",
+      "poster_handle": "carlsson.e"
+    },
+    "time_stamp": "2024-02-19 07:00:02",
+    "text": "Thanks <@U0695UMTM2M>, I've asked the question, will let you know as soon as I do :+1:"
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2024-02-19 07:01:06",
+    "text": "Perfect, if it is coming from outside HubSpot can you ask them for another sample? If not we can probably re-pull it in the workflow to get it perfect!"
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2024-02-19 07:01:27",
+    "text": "(We could if it coming from outside too but may be a bigger job to understand the other vendors API)."
+  },
+  {
+    "poster": {
+      "poster_name": "Carlsson Elkins",
+      "poster_handle": "carlsson.e"
+    },
+    "time_stamp": "2024-02-19 07:01:36",
+    "text": "Sure, will do that now"
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2024-02-19 07:43:36",
+    "text": "Hi Carlsson, here is the fixed version of what you are trying to do. If you need help with pulling and pushing with the SKD I can do that too, but also if you want to do over it together lmk."
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2024-02-19 07:43:57",
+    "text": "```# import HubSpot (Will need when we push data to where it needs to go.)\n# import json (Will need if \"data\" comes in via JSON and we do not already have a python dict.)\n\n# Note: Data was already in a Python dict.\ndata = [\n  {\n    \"image\": \"<https://assets.josephgiles.com/m/72d8d29f4291b87f/webimage-Bespoke-Cube-Door-Pull-DP1009-PSS-on-Shower-Door-jpg.png>\",\n    \"quantity\": 1,\n    \"childProductName\": \"'ARNOLD' Solid brass glass shower door pull handles 244mm (225mm c/c)\",\n    \"name\": \"'ARNOLD' Solid brass glass shower door pull handles\",\n    \"id\": \"42533\",\n    \"product_code\": \"BA1007\",\n    \"parameters\": [\n      {\n        \"valueName\": \"PMB\",\n        \"name\": \"FINISHING\",\n        \"value\": \"320\"\n      }\n    ],\n    \"slug\": \"arnold-solid-brass-glass-shower-door-pull-handles\"\n  }\n]\n\n# Print unformatted data:\nprint(f\"json is: {data}\")\n\ndef format_product(item):\n  # Format Friendly in a var:\n  productDetails = {\n    \"Product Name\": item[\"name\"],\n    \"Quantity\": item[\"quantity\"],\n    \"Child Product Name\": item[\"childProductName\"],\n    \"Product Code\": item[\"product_code\"],\n    \"Finishing\": next((param[\"value\"] for param in item[\"parameters\"] if param[\"name\"] == \"FINISHING\"), \"N/A\"),\n    \"Image URL\": item[\"image\"],\n    \"Product URL\": f\"<https://www.josephgiles.com/products/{item['slug']}>\"    \n  }\n  return productDetails\n\nfriendlyformat = format_product(data[0])\n\n# To print each key-value pair on a new line\nfor key, value in friendlyformat.items():\n    print(f\"{key}: {value}\\n\")```"
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2024-02-19 07:46:29",
+    "text": "Also I noticed that ChatGPT tried to generalize based on the number of associated parameters to the product, if there needs to be more than one we can expand that area."
+  },
+  {
+    "poster": {
+      "poster_name": "Stacey Thomas",
+      "poster_handle": "stacey.thomas"
+    },
+    "time_stamp": "2024-02-19 10:07:00",
+    "text": "Not sure if this is exactly what you mean, but I have a custom code workflow that completes 3 API calls in one custom code one after the other, each getting response data which is then being used in the subsequent call(s). I then specify all fields I want to retrieve as an output to be used in HubSpot at the callback at the very end rather than at each step. So - it is only called once but can collect data form various points of the calls.\nIf you are after something different can you expand on the use case?"
+  }
+]

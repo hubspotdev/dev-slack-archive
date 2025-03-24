@@ -1,0 +1,71 @@
+[
+  {
+    "poster": {
+      "poster_name": "Tom Bossink",
+      "poster_handle": "t.bossink"
+    },
+    "time_stamp": "2025-02-24 02:30:03",
+    "text": "hi <@U0846LQ5R45> thanks for your response. But I can’t figure out how exactly the threading works when the model is set to ‘DELIVERY_IDENTIFIER_BASED_THREADING’.\n\nI have connected two channel accounts - one with identifier CHANNEL_SPECIFIC_OPQAUE_ID’. With this channel account i’m sending messages from my dashboard (the external service). The other channel account is set with identifier HS_EMAIL_ADDRESS"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Bossink",
+      "poster_handle": "t.bossink"
+    },
+    "time_stamp": "2025-02-24 02:31:42",
+    "text": "It is possible that a user has 2 support request open and that he/she wants to reply to a thread. How to switch between threads when the model is set to DELIVERY_IDENTFIER_BASED_THREADING?"
+  },
+  {
+    "poster": {
+      "poster_name": "DarkoC",
+      "poster_handle": "dc"
+    },
+    "time_stamp": "2025-02-24 13:07:21",
+    "text": "Hey, I'm building an app on top of this API. Currently, it seems to me that DELIVERY_IDENTIFIER_BASED_THREADING threading model is the way to go for my app, but I'm not able to create a channel with that configuration. I'll leave the request body and response in the thread so it doesn't create noise here.\n\nAlso, if you could please provide insight on these questions so we can plan for the future:\n• are there plans to enable updates to a message status? So the application can make requests to update status to `delivered` (for example)\n• are there plans for additional message events like when an agent closes a conversation?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-02-24 13:08:18"
+      },
+      {
+        "time_stamp": "2025-02-24 18:08:17"
+      },
+      {
+        "time_stamp": "2025-02-24 18:08:46"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "DarkoC",
+      "poster_handle": "dc"
+    },
+    "time_stamp": "2025-02-24 13:08:18",
+    "text": "```{\n  \"webhookUrl\": \"<https://webhook.url>\",\n  \"channelAccountConnectionRedirectUrl\": \"<https://channelconnect.url>\",\n  \"capabilities\": {\n    \"allowInlineImages\": false,\n    \"maxFileAttachmentCount\": 0,\n    \"outgoingAttachmentTypes\": [\"FILE\"],\n    \"allowedFileAttachmentMimeTypes\": [],\n    \"maxFileAttachmentSizeBytes\": 0,\n    \"richText\": [],\n    \"threadingModel\": \"DELIVERY_IDENTFIER_BASED_THREADING\",\n    \"maxTotalFileAttachmentSizeBytes\": 0,\n    \"allowFileAttachments\": false,\n    \"allowOutgoingMessages\": true,\n    \"deliveryIdentifierTypes\": [\n      \"HS_PHONE_NUMBER\",\n      \"CHANNEL_SPECIFIC_OPAQUE_ID\"\n    ],\n    \"allowMultipleRecipients\": false,\n    \"allowConversationStart\": true\n  },\n  \"name\": \"CustomChannelName\"\n}```\n```{\n  \"status\": \"error\",\n  \"message\": \"One or more Channel Capabilities specified had invalid values: `\\\"threadingModel\\\": \\\"\\\"DELIVERY_IDENTFIER_BASED_THREADING\\\"\\\"`\",\n  \"correlationId\": \"5716475c-e850-46c4-8dd2-6df8237ebd34\",\n  \"context\": {\n    \"capabilityKeysAndValues\": [\n      \"\\\"threadingModel\\\": \\\"\\\"DELIVERY_IDENTFIER_BASED_THREADING\\\"\\\"\"\n    ]\n  },\n  \"category\": \"VALIDATION_ERROR\",\n  \"subCategory\": \"CustomChannelsError.INVALID_CHANNEL_CAPABILITY_VALUES\"\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nik Patel",
+      "poster_handle": "me1438"
+    },
+    "time_stamp": "2025-02-24 18:08:17",
+    "text": "It should be part of threadingModel property instead of delivery type. "
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2025-02-24 18:08:46",
+    "text": "<https://developers.HubSpot.com/docs/guides/api/conversations/create-custom-channels#specifying-a-threading-model|https://developers.HubSpot.com/docs/guides/api/conversations/create-custom-channels#specifying-a-threading-model>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nik Patel",
+      "poster_handle": "me1438"
+    },
+    "time_stamp": "2025-02-24 18:10:18",
+    "edited": {
+      "time_stamp": "2025-02-24 18:10:32"
+    },
+    "text": "You might have to handle that on your side. Some sort of composite ID and then get back to using Thereading ID? "
+  }
+]

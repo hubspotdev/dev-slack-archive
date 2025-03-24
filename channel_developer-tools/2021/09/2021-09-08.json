@@ -1,0 +1,214 @@
+[
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2021-09-08 08:17:42",
+    "text": "<@UD53A9UUR> so it turns out, the issue might be either a bug in the client or my misunderstanding of the documentation, particularly the `after` and `limit` params. As you can see, the following request works using curl:\n```\n  curl --request GET \\\n  --url '<https://api.hubapi.com/crm/v3/objects/deals/6139552033/associations/2-3155152?limit=500&amp;hapikey=>&lt;REDACTED&gt;'\n{\"results\":[{\"id\":\"309459790\",\"type\":\"customobj_to_deal\"}]}%```\nhowever, the following custom code returns a 500:\n```const HubSpot = require('@HubSpot/api-client');\n\nexports.main = (event) =&gt; {\n  const HubSpotClient = new HubSpot.Client({\n    apiKey: process.env.apiKey\n  });\n  \n  HubSpotClient.crm.deals.associationsApi.getAll(event.object.objectId, \"2-3155152\", 0, 500)\n    .then(results =&gt; {\n      console.log(results.body);\n    })\n    .catch(err =&gt; {\n      console.error(err);\n    });\n}```\nResponse:\n```body: {\n      status: 'error',\n      message: 'internal error',\n      correlationId: '2fc3b7e3-f5c7-441f-8502-e629c9235d61'\n    },\n    [Symbol(kCapture)]: false\n  },\n  body: CollectionResponseAssociatedId {\n    results: undefined,\n    paging: undefined\n  },\n  statusCode: 500```\nWhat is the best channel for this question?"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2021-09-08 10:30:53",
+    "text": "<@U26BLKGE4>, <@UQERM7BLY> would either of you be able to help here :pray:"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-09-08 10:33:10",
+    "text": "let me check"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2021-09-08 10:34:43",
+    "text": "If I'm reading it correctly, I think that means that either your request returned no results, or the request wasn't properly formatted. What was the event.object.objectID argument you provided in that request?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-09-08 10:36:27",
+    "text": "Ah i remember this - I don’t think you can set 0 as an offset"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2021-09-08 10:38:00",
+    "text": "thanks all!"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-09-08 10:40:44",
+    "edited": {
+      "time_stamp": "2021-09-08 10:41:06"
+    },
+    "text": "I worked on this a while ago - but based on the signature you cannot specify limit without after - but the value of after comes from HubSpot (in the nodejs lib that is)"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-09-08 10:41:18",
+    "text": "```public async getAll (dealId: string, toObjectType: string, after?: string, limit?: number, [...]```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-09-08 10:43:13",
+    "text": "So maybe try\n```HubSpotClient.crm.deals.associationsApi.getAll(event.object.objectId, \"2-3155152\", undefined, 500)```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-09-08 10:51:47",
+    "text": "I’m not sure if this worked in the end - as i went a different route. I did recall having an issue with this - I’m not sure if setting it to undefined actually removed the param from the query string (and error)"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2021-09-08 11:08:48",
+    "text": "i got the same response with using `undefined` instead of `0` for `after`"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2021-09-08 11:09:52",
+    "text": "<@U26BLKGE4> the `event.object.ObjectId` is the 613... number I used in the curl request (in fact, I got the deal id from the error message in the client response)"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2021-09-08 11:10:23",
+    "text": "i've tried using `null` and `undefined` for both of those params and got 500s each time"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-09-08 11:31:11",
+    "text": "Ok figured it out I think"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-09-08 11:31:35",
+    "text": "```HubSpotClient.crm.deals.associationsApi.getAll(event.object.objectId, \"2-3155152\", true, undefined, 500)```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2021-09-08 11:33:28",
+    "text": "oh cool! I'll try that after i get out of a meeting. Thanks! (does this mean the documentation needs an update?)"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-09-08 11:43:28",
+    "text": "<@UD53A9UUR> documentation looks to be wrong for associations on deals for Node (i imagine likely more) under “List associations of a deal by type”\n\nIt’s\n```const after = undefined;\nconst limit = 500;\n\ntry {\n  const apiResponse = await HubSpotClient.crm.deals.associationsApi.getAll(dealId, toObjectType, after, limit);\n  console.log(JSON.stringify(apiResponse.body, null, 2));```\nwhen it should be:\n```const after = undefined;\nconst limit = 500;\n\ntry {\n  const apiResponse = await HubSpotClient.crm.deals.associationsApi.getAll(dealId, toObjectType, true, after, limit);\n  console.log(JSON.stringify(apiResponse.body, null, 2));```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-09-08 11:43:43",
+    "text": "(the true) i assume relates to <https://developers.HubSpot.com/changelog/announcing-a-change-to-how-v3-crm-apis-return-association-data>"
+  },
+  {
+    "time_stamp": "2021-09-08 11:45:41",
+    "text": "thank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2021-09-08 11:46:20",
+    "text": "fix it, <@UQERM7BLY> :stuck_out_tongue_winking_eye:"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-09-08 11:47:07",
+    "text": "I would make sure you have your IDE setup properly with autocomplete <@U02CUFSCXHQ>, as that’s how i figured it out."
+  },
+  {
+    "text": "",
+    "time_stamp": "2021-09-08 11:47:20"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-09-08 11:47:34",
+    "text": "but i did actually have this issue myself a few months ago"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2021-09-08 11:48:01",
+    "text": "sounds good! i was just coding inside the `custom code` window in the browser."
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2021-09-08 12:15:16",
+    "text": "consider this issue reported.  thanks for pointing it out, kind sir"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2021-09-08 12:16:55",
+    "text": "The request was successful using the client as <@UQERM7BLY> described above!"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2021-09-08 12:17:46",
+    "text": "he is a smart guy.  dont tell him, though"
+  },
+  {
+    "time_stamp": "2021-09-08 12:17:54",
+    "text": "ego"
+  }
+]

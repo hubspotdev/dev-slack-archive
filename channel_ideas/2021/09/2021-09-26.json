@@ -1,0 +1,10 @@
+[
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2021-09-26 05:10:19",
+    "text": "<@U6GNQ7JBU> <@U019B8DUNBE> <@U7SL518D6>\nFollowing this:\nI would appreciate even more control! :grin:\nCan we have a kind of \"priority\" attribute to place in a better order our assets?\nI am working heavily on performance and while I always try to do my best on ordering the assets this means that I have to go far from the sweet-spot of performance vs code organization.\n\nTo ilustrate the situation:\nI would love to keep all the require JS under the modules so it's self contained and easier to find. Although when working with extra/secondary JS (for example to expand accessibility keyboard control on menus). I would love to call that way after common website functionalities has been already exec. So if I place that JS within the module that will be enqueue before the rest of the JS of other modules or template calls in the footer.\n\nSo ideally I would have a extra attribute to  set a queue or prioritization for the resources like so:\n`{% require_js(\"./path/to/secondary/file.js\", {\"defer\": true, priority:-1) %}`\nSo this will be place at the bottom of the list no matter where has been called.\nI understand this is more complex that what I asked earlier but will really benefit a major control over there.\n\nExpected behavior for edge cases:\n• Multiple items with the same number of priority: order as arrives.\n• No priority provided: find the last item in the dependencies list and add 1 to that.\n```{% require_js(\"path/to/file-unknown-prio.js\") %}\n{% require_js(\"path/to/file-no-prio.js\", {priority: -1}) %}\n{% require_js(\"path/to/file-repeated-prio2.js\", {priority: 2}) %}\n{% require_js(\"path/to/file-repeated-prio22.js\", {priority: 2}) %}\n{% require_js(\"path/to/file-prio.js\", {priority: 0}) %}```\n\n```[\n0: path/to/file-prio.js,\n1: path/to/file-unknown-prio.js,\n2: [path/to/file-repeated-prio2.js,\n    path/to/file-repeated-prio22.js],\n3: path/to/file-no-prio.js\n]```"
+  }
+]

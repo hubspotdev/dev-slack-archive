@@ -1,0 +1,139 @@
+[
+  {
+    "poster": {
+      "poster_name": "Gijs Jager (Workit)",
+      "poster_handle": "gijs.jager"
+    },
+    "time_stamp": "2025-01-27 01:19:09",
+    "text": "Hi all,\n\nWe are currently building a new website with React / HubSpot but facing some basic blockades in the development, because we are missing some necassry documentation or know-how it would be very useful if we could get in contact with someone who has successfully build a website with React\n\nThe things we are having trouble with at the moment are:\n• Using the useState in a custom component / island\n• Using custom JS \n• Altering the GraphQL endpoints when loading paginated data \nI think most of them er kinda basic and not very hard to tackle problems (therefor very frustrating that we are facing these issues :smile:)\n\nIs someone here willing to spend a (half) hour in a huddle to help us?\n(we are willing to pay for it!)"
+  },
+  {
+    "text": "Hi, I can see that `fieldValues` has different behavior in HubSpot/cms-dev-server@0.18.11 and HubSpot/cms-dev-server@0.18.12 (and newer [i tested 0.18.17 &amp; 0.18.12]).\n\nIn older version `RepeatedFieldGroup` returns the `default` attribute.\nIn newer it only returns first element of the array (multiplied by `occurence.defualt`. See screenshots\nWhat's the desired behavior? am i missing something? Is there way to 'force' it to return the default data I pass to group [in localhost ofc]?",
+    "time_stamp": "2025-01-27 05:03:33",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-01-27 05:04:02"
+      },
+      {
+        "time_stamp": "2025-01-27 08:51:45"
+      },
+      {
+        "time_stamp": "2025-01-27 13:58:26"
+      },
+      {
+        "time_stamp": "2025-01-27 14:19:49"
+      },
+      {
+        "time_stamp": "2025-01-27 14:50:36"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Tomasz Kłusak",
+      "poster_handle": "tomasz.klusak"
+    },
+    "time_stamp": "2025-01-27 05:04:02",
+    "text": "code i used to test it:\n```import {\n  ModuleFields,\n  RepeatedFieldGroup,\n  TextField\n} from '@HubSpot/cms-components/fields';\n\nexport function Component({ fieldValues }) {\n  console.log(fieldValues);\n\n  return null;\n}\n\nconst def = [{ test_field: 'test field' }, { test_field: 'test field 2' }];\n\nexport const fields = (\n  &lt;ModuleFields&gt;\n    &lt;RepeatedFieldGroup\n      name=\"field_group\"\n      label=\"field_group\"\n      occurrence={{ min: 2, max: 2, default: 2 }}\n      default={def}\n    &gt;\n      &lt;TextField label=\"test_field\" name=\"test_field\" /&gt;\n    &lt;/RepeatedFieldGroup&gt;\n  &lt;/ModuleFields&gt;\n);\n\nexport const meta = {\n  label: 'Test Module'\n};```"
+  },
+  {
+    "poster": {
+      "poster_name": "Aaron Mead",
+      "poster_handle": "amead"
+    },
+    "time_stamp": "2025-01-27 08:51:45",
+    "text": "<@U02MBQ9U2F5> Mind sharing which version of `@HubSpot/cms-components` you have to go along with that version of cms-dev-server?"
+  },
+  {
+    "poster": {
+      "poster_name": "Tricia Leach",
+      "poster_handle": "tleach"
+    },
+    "time_stamp": "2025-01-27 10:47:19",
+    "edited": {
+      "time_stamp": "2025-01-27 10:48:21"
+    },
+    "text": "<@U06C9826HHQ> In my experience the CLI upload process doesn't remove files at all, it just overwrites existing files. Which was contrary to how I thought it would work—I thought the upload theme command would replace the entire folder.\n\nSo you probably still have that template in Design Manager. You'll have to manually delete it.\n\nUrl should look something like this: <https://app.HubSpot.com/design-manager/12345678>\n\ncc: <@U061NQ66Y6S>"
+  },
+  {
+    "poster": {
+      "poster_name": "Tricia Leach",
+      "poster_handle": "tleach"
+    },
+    "time_stamp": "2025-01-27 10:48:36",
+    "text": "Replace the numbers in that url with your portal id"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Miller",
+      "poster_handle": "jon894"
+    },
+    "time_stamp": "2025-01-27 11:01:55",
+    "edited": {
+      "time_stamp": "2025-01-27 14:06:14"
+    },
+    "text": "Hello <@UK277PCMP> <@U083Z05GQSJ> <@U081PH5SETT>, an update on the form bugs/behavior you all mentioned experiencing:\n\n*Thank you message not appearing on live page*\n• I have been unable to reproduce the bug where the thank you message does not appear, so if <@U081PH5SETT> can send me a page link where this bug is occurring I can do some more investigating. \n*Using videos in the thank you message*\n• Using HubL video in the thank you message does not look like this is natively supported in our forms editor, so this would likely need a workaround. The reason providing the hubl isn't working is that hubl needs to be executed server side so when that code is in an island (client side), the hubl gets processed as a string. You would likely need to use the hubLDataTemplate export to get the HTML for the video and pass that along to your component. I will play around with this and see what I can get working. "
+  },
+  {
+    "poster": {
+      "poster_name": "Aitor",
+      "poster_handle": "aitor.tomas"
+    },
+    "time_stamp": "2025-01-27 11:07:34",
+    "text": "Hi <@U02G7H60YCS>, thanks for the response.\n&gt; • Using HubL video in the thank you message does not look like this is natively supported in our forms editor, so this would likely need a workaround. The reason providing the hubl isn't working is that hubl needs to be executed server side so when that code is in an island (client side), the hubl gets processed as a string. You would likely need to use the hubLDataTemplate export to get the HTML for the video and pass that along to your component. I will play around with this and see what I can get working.\nThis is indeed what I ended up doing in a quite nasty way. In hublDataTemplate I extract the thank you message and apply hubl's filter `render` . Then pass directly the HTML to the form.\nThe problem is finding the form in the layout. I ended up searching in `content.layoutSections.dnd_area.rows`. Quite nasty.\nIs there a better way to get the form in hubl?"
+  },
+  {
+    "poster": {
+      "poster_name": "Maria Dabezies",
+      "poster_handle": "maria.dabezies"
+    },
+    "time_stamp": "2025-01-27 12:42:49",
+    "text": "Hello, everyone, we're looking to build some modules that render CTAs within them. We are using the &lt;CtaFields&gt; component to set fields and &lt;Cta&gt; to render them.\nHowever, we would need better control over their UI, but, since they're rendered inside an iframe we can access, we can-t override them. Any tips on how we could go about this?\n\nThank you!",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-01-29 07:33:29"
+      },
+      {
+        "time_stamp": "2025-01-29 07:34:53"
+      },
+      {
+        "time_stamp": "2025-01-29 07:36:01"
+      },
+      {
+        "time_stamp": "2025-01-29 08:00:28"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Tomasz Kłusak",
+      "poster_handle": "tomasz.klusak"
+    },
+    "time_stamp": "2025-01-27 13:58:26",
+    "text": "<@U07JJ8MCCK0>\ntested in on `@HubSpot/cms-components@0.18.15`.\nsame behavior on newest versions of both `@HubSpot/cms-components@0.18.18` &amp; `@HubSpot/cms-dev-server/0.18.18` - returns 2x 'test'field'.\ndoes it work on your side?\njust in case - i use node v22.11.0"
+  },
+  {
+    "text": "<@U066BM0FLH0> we use the project theme setup. There is nothing to see inside design-manager. :(",
+    "time_stamp": "2025-01-27 14:05:59"
+  },
+  {
+    "poster": {
+      "poster_name": "Tomasz Kłusak",
+      "poster_handle": "tomasz.klusak"
+    },
+    "time_stamp": "2025-01-27 14:19:49",
+    "text": "Okay, i think i found a reason.\n\nIt does not work if you run `npm run start`.\n```  \"scripts\": {\n    \"start\": \"hs-cms-dev-server .\",\n  }```\nIt works as it should (returns default value) if you run `hs-cms-dev-server .` directly\n\nlovely bug :upside_down_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Aaron Mead",
+      "poster_handle": "amead"
+    },
+    "time_stamp": "2025-01-27 14:50:36",
+    "text": ":thinking_face: hmm, I'm not sure why that would impact it but will note it!  I was able to recreate the issue though and will make sure it is logged &amp; will reach out when it is fixed.  Thanks for bringing it up Tomasz"
+  }
+]

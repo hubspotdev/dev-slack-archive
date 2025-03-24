@@ -1,0 +1,338 @@
+[
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2020-08-25 05:19:40",
+    "text": "I will also ask this question here."
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2020-08-25 05:20:42",
+    "text": "Yeah, hard answers are available!"
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2020-08-25 05:21:38",
+    "text": "<@U3T21PDBK> Recently shared this with me when I had a similar question: ‘try watching<https://www.youtube.com/watch?v=VpArzDy5ny4&amp;t=6634s| this segment>… I can’t quite remember but I think it might help’"
+  },
+  {
+    "poster": {
+      "poster_name": "Adam Nissen Feldt",
+      "poster_handle": "anfe216"
+    },
+    "time_stamp": "2020-08-25 05:23:44",
+    "text": "Hi <@UGDF9EBPW>. We pull in an accumulated list of vacancies to HubDB. We use this only as a way to display and distribute vacancies on our site, but we do the actual combining in Integromat. Out of Integromat we also create an RSS and an XML version of the same combined vacancy feed. You could do something similar and build your e-mail flow from the feed I guess"
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2020-08-25 05:27:43",
+    "text": "Which lead me to the following solution:"
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2020-08-25 05:32:06",
+    "text": "```// Module HTML\n\n&lt;div class=\"c-training-form__form\" id=\"js-training-form\" data-portal_id=\"{{hub_id}}\"\n        data-form_id=\"{{module.form.form_id}}\" data-rows='{{hubdb_table_rows(module.table_id)|tojson}}'\n        data-placeholder=\"{{module.settings.placeholder}}\"&gt;\n        &lt;script&gt;\n          var container = document.getElementById('js-training-form');\n\n          if (container) {\n            var portalId = container.dataset.portal_id;\n            var formId = container.dataset.form_id;\n\n            hbspt.forms.create({\n              portalId: portalId,\n              formId: formId,\n              cssRequired: '',\n              onFormReady: function ($form) {\n                var fieldset = window.generateSelect(container, false);\n                $form.prepend(fieldset);\n              },\n              onFormSubmit: function ($form) {\n                $('select.js-training-select').each(function () {\n                  $(`input[name=\"${$(this).data('target')}\"]`).val($(this).val()).change()\n                })\n              }\n            });\n          }\n        &lt;/script&gt;\n      &lt;/div&gt;```\n```// generateSelect function\n\nwindow.generateSelect = (container, part) =&gt; {\n  const fieldname = 'training_part_1';\n  const target = 'training_deel_1';\n\n  const targetInput = document.querySelector(`.hs_${target}`);\n  targetInput.style.display = 'none';\n\n  // Create container\n  let fieldset = document.createElement('fieldset');\n  fieldset.setAttribute('class', 'form-columns-1');\n\n  // Create form-field wrapper\n  let formfield = document.createElement('div');\n  formfield.setAttribute('class', 'hs-form-field');\n\n  // Create input containter\n  let input = document.createElement('div');\n  input.setAttribute('class', 'input c-training-form__input');\n\n  // Create select\n  let select = document.createElement('select');\n  select.setAttribute('name', fieldname);\n  select.setAttribute('class', 'hs-input js-training-select');\n  select.setAttribute('data-target', target);\n\n  // Append elements\n  fieldset.appendChild(formfield);\n  formfield.appendChild(input);\n  input.appendChild(select);\n\n  // Create options\n  const rows = JSON.parse(container.dataset.rows);\n  let firstOption = document.createElement('option');\n  firstOption.innerHTML = 'Kies datum';\n  firstOption.setAttribute('value', '');\n  select.appendChild(firstOption);\n\n  [...rows.objects].forEach(object =&gt; {\n    let option = document.createElement('option');\n\n    option.innerHTML = object.name;\n    option.setAttribute('value', container.dataset.training + ' - ' + object.name);\n\n    select.appendChild(option);\n  });\n\n  return fieldset;\n};```"
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2020-08-25 05:34:22",
+    "text": "I used Javascript to create the fields just because I am more familiar with Javascript. But the video shows a great ‘inline’ solution as well.\nWhat I did in the above code is pass the rows of the HubDB as a JSON object and make them available in a dataset. I am then able to create the select through Javascript.\nThe form I created has a field with the name ‘training_deel_1’. I hide that field and update its value based on the value that is selected (happens in the form callback).\n\nIf you watch the video, this should make sense."
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2020-08-25 05:35:53",
+    "text": "<@URP2UL0PJ> Thank you for your input! So RSS feed is the best option when using marketing emails right?"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2020-08-25 06:09:18",
+    "text": "ahhhhh! I totally read <@UDZ9QUU4T>’s question as source for options in a _module_ field. Since you meant form field, then obviously _yes._ Thanks <@UGDF9EBPW>!"
+  },
+  {
+    "poster": {
+      "poster_name": "Adam Nissen Feldt",
+      "poster_handle": "anfe216"
+    },
+    "time_stamp": "2020-08-25 06:43:42",
+    "text": "<@UGDF9EBPW> Dont know about best...  but it is quite easy"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Hurlburt",
+      "poster_handle": "mark396"
+    },
+    "time_stamp": "2020-08-25 08:59:43",
+    "text": "Thanks, I’ll look into this!"
+  },
+  {
+    "poster": {
+      "poster_name": "Chandler Ives",
+      "poster_handle": "cives727"
+    },
+    "time_stamp": "2020-08-25 10:00:30",
+    "text": "Can you use the |unique filter on strings? Trying to exclude duplicates within a for loop. It's iterating through a multi-check hubDB column and spitting out a list of car manufacturers.\n\n```&lt;h5 class=\"font-size-15 pb-3\"&gt;Manufacturer&lt;/h5&gt;\n{% set queryparam = \"&amp;orderBy=manufacturers\" %}\n{% for row in hubdb_table_rows(2666166, queryparam) %}\n{% for tag in row.manufacturers|unique %}\n&lt;div class=\"checkbox\"&gt;\n&lt;input type=\"checkbox\" value=\".{{ tag.name }}\"/&gt;\n&lt;label class=\"checkbox-label\"&gt;{{ tag.name }}&lt;/label&gt;\n&lt;/div&gt;\n{% endfor %} \n{% endfor %}```\n",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-08-25 10:14:37"
+      },
+      {
+        "time_stamp": "2020-08-25 10:34:15"
+      },
+      {
+        "time_stamp": "2020-08-25 10:34:38"
+      },
+      {
+        "time_stamp": "2020-08-25 10:42:56"
+      },
+      {
+        "time_stamp": "2020-08-25 13:52:22"
+      },
+      {
+        "time_stamp": "2020-08-25 13:53:22"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2020-08-25 10:14:37",
+    "text": "Does not multi-select values for row already unique? I mean how did allow you select duplicate values for a multi-select column in a single row?"
+  },
+  {
+    "poster": {
+      "poster_name": "Chandler Ives",
+      "poster_handle": "cives727"
+    },
+    "time_stamp": "2020-08-25 10:34:15",
+    "edited": {
+      "time_stamp": "2020-08-25 10:34:50"
+    },
+    "text": "There are over 400 rows, many of which have the same option selected in that column"
+  },
+  {
+    "poster": {
+      "poster_name": "Chandler Ives",
+      "poster_handle": "cives727"
+    },
+    "time_stamp": "2020-08-25 10:34:38",
+    "text": "My checkbox list is showing that value however many times it appears in rows, I only need it to show once"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Mitchell",
+      "poster_handle": "tom.mitchell"
+    },
+    "time_stamp": "2020-08-25 10:36:16",
+    "edited": {
+      "time_stamp": "2020-08-25 10:42:02"
+    },
+    "text": "Hi - could I please get a bit of advice on how to limit the below to return just the first item that matches the two 'if' queries? I've used 'limit=1' in the for statement but that has just stopped the loop from reaching the row that I do actually want to populate the div with. Many thanks :)\n\n```  {% for row in hubdb_table_rows(table_id,\"&amp;orderBy=event_date\") %}\n     {% if (row['event_date']) &gt;= (current_dt) %}\n     {% if row.webinar == \"1\" %}\n       {% if row.customer_only == \"0\" %}\n&lt;div&gt;-----&lt;/div&gt;```",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-08-25 13:48:21"
+      },
+      {
+        "time_stamp": "2020-08-25 13:49:23"
+      },
+      {
+        "time_stamp": "2020-08-25 13:49:30"
+      },
+      {
+        "time_stamp": "2020-08-25 13:55:32"
+      },
+      {
+        "time_stamp": "2020-08-25 14:05:48"
+      },
+      {
+        "time_stamp": "2020-08-25 14:19:15"
+      }
+    ]
+  },
+  {
+    "text": "Example:",
+    "time_stamp": "2020-08-25 10:42:56"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2020-08-25 13:48:21",
+    "text": "you can include all the conditions in hubdb_table_rows function with `limit=1`"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2020-08-25 13:49:23",
+    "text": "````hubdb_table_rows(table_id,\"webinar=1&amp;event_date__gt=0s&amp;orderBy=event_date&amp;limit=1\")````\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2020-08-25 13:49:30",
+    "text": "Will this work for you?"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2020-08-25 13:52:22",
+    "text": "I think you need to add the manufacturer names into  a new array when looping through rows and then outside of the loop do the unique filter on new array.."
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2020-08-25 13:53:22",
+    "text": "Why don't you display all the options from column defintion by using hubdb_table fucntion?"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Mitchell",
+      "poster_handle": "tom.mitchell"
+    },
+    "time_stamp": "2020-08-25 13:55:32",
+    "text": "Hi <@UG52C29EE>, thanks so much - yes this looks like it's working fine. Does the event_data__gt=0s replace the line {% if (row['event_date']) &gt;= (current_dt) %}?"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2020-08-25 14:05:48",
+    "text": "yes,"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Mitchell",
+      "poster_handle": "tom.mitchell"
+    },
+    "time_stamp": "2020-08-25 14:19:15",
+    "text": "thank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Elise Ferguson",
+      "poster_handle": "elise.ferguson"
+    },
+    "time_stamp": "2020-08-25 14:44:50",
+    "text": "Not sure if this question belongs here or elsewhere (or if I can even explain it properly):\n\nI’m using a dynamic page to show “products” from my HubDB table.  Unfortunately I’m dealing with a very custom design.  There are some things on the page that are not items from the DB, a CTA for example.  If I use a CTA Module inside the “if dynamic_page_hudb_row” statement the options to edit that module do not show up for the client to edit leaving me with just the default content of the CTA with no way to change it (realizing that this CTA would end up being the same for every product page, we can deal with that).  Any thoughts on how to work around this?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-08-27 08:23:12"
+      },
+      {
+        "time_stamp": "2020-08-27 09:04:12"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2020-08-25 15:02:23",
+    "text": "<@UBNBAAQSH>  if you are using a custom module."
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2020-08-25 15:02:52",
+    "text": "You can loop the cta in every x number or after x number of items from the db",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-08-25 15:07:12"
+      },
+      {
+        "time_stamp": "2020-08-25 15:08:48"
+      },
+      {
+        "time_stamp": "2020-08-25 15:09:11"
+      },
+      {
+        "time_stamp": "2020-08-25 15:09:28"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2020-08-25 15:03:44",
+    "text": "`if loop.index == x`"
+  },
+  {
+    "poster": {
+      "poster_name": "Elise Ferguson",
+      "poster_handle": "elise.ferguson"
+    },
+    "time_stamp": "2020-08-25 15:07:12",
+    "text": "Not sure that would help me?  I just want a regular custom module available to edit when the user goes into that particular “page” on the site.  If I put the module outside the if statement then it shows up for editing but that also means it’ll show up on my listing page as well as individual product pages. Maybe that’s the price that has to be paid for this."
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2020-08-25 15:08:48",
+    "text": "I've done this with ctas and forms before"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2020-08-25 15:09:11",
+    "text": "We have a module at the top of the page and that module gets inserted into the dynamic page loop or output into the dynamic page itself"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2020-08-25 15:09:28",
+    "text": "But if you edit the page you'll see the module"
+  }
+]

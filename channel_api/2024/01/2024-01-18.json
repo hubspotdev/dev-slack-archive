@@ -1,0 +1,251 @@
+[
+  {
+    "poster": {
+      "poster_name": "Harris D",
+      "poster_handle": "harris.douglas"
+    },
+    "time_stamp": "2024-01-18 03:45:01",
+    "text": "What specifically are you trying to display?"
+  },
+  {
+    "poster": {
+      "poster_name": "Pål Sivertsen",
+      "poster_handle": "palsivertsen"
+    },
+    "time_stamp": "2024-01-18 03:47:13",
+    "text": "Apologies if this is the wrong place to post this.\n\nI'm having issues with the <https://api.HubSpot.com/api-catalog-public/v1/apis/crm/v4/associations|associations API> where I get an integer overflowing 32 bits for the `LabelsBetweenObjectPair.results.fromObjectId` field in the result of a batch create operation. Is this a bug or am I doing something wrong?",
+    "reply_count": 8,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-01-18 06:45:08"
+      },
+      {
+        "time_stamp": "2024-01-18 07:05:47"
+      },
+      {
+        "time_stamp": "2024-01-18 07:13:37"
+      },
+      {
+        "time_stamp": "2024-01-18 07:18:11"
+      },
+      {
+        "time_stamp": "2024-01-18 07:20:00"
+      },
+      {
+        "time_stamp": "2024-01-18 07:21:54"
+      },
+      {
+        "time_stamp": "2024-01-18 07:35:28"
+      },
+      {
+        "time_stamp": "2024-01-18 07:39:37"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Harris D",
+      "poster_handle": "harris.douglas"
+    },
+    "time_stamp": "2024-01-18 03:47:38",
+    "text": "<@U06DDNTH9DE> <https://app-eu1.HubSpot.com/docs/{portalID}/doc/cms/data/query-HubSpot-data-using-graphql>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-01-18 06:42:54",
+    "text": "I’m guessing you are trying to do api calls from the front end. You need to have api calls down from a server/cloud function, not originating from the client side of things"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-01-18 06:43:43",
+    "text": "then you need to use hubl if you are trying to display this like that. Hubl can bring in data from the CRM for the current contact, hubdb, and custom objects. If you want to display other contact/deal data it has to be behind private / membership pages"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-01-18 06:45:08",
+    "text": "It is difficult to determine either with the amount of information you have provided. We cannot see what data you have sent to the api, and we can’t see what you are doing in the code or the response from the server"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-01-18 06:59:55",
+    "text": "I’ve read this as “the contacts api id generation system is going to work like all other objects”\n\nTo me this seems like it would affect storage in databases over anything. “The new ID values will require 64 bit data types to store the ID as an integer value.”\n\nIf you are storing these as an int i feel bad for you son I’ve got 99 problems buy number types aint one\n\nIn reality, dan adams likely had this post reviewed buy multiple people. The post doesn’t state anything except the fact that these are going to be 64bit generated ids. They aren’t talking about sending data via the api out as a different type.\n\nYou post in the community looks like you are asking about the marketing events api. that VID is the contact ID for contacts. Current contacts will be int32, new contacts will be created using int64."
+  },
+  {
+    "text": "The value returned from the API is for a custom object with id `11625347725`. If I'm reading the spec correctly it should be an int32.",
+    "time_stamp": "2024-01-18 07:05:47"
+  },
+  {
+    "poster": {
+      "poster_name": "Harun Kumar Siva",
+      "poster_handle": "harun"
+    },
+    "time_stamp": "2024-01-18 07:13:37",
+    "text": "There was a developer changelog announcement that Ids could be 64 bit integers. But it is supposed to be only <https://developers.HubSpot.com/changelog/increasing-the-size-of-contact-record-ids#:~:text=Beginning%20in%20March%202024|from March this year>."
+  },
+  {
+    "poster": {
+      "poster_name": "Pål Sivertsen",
+      "poster_handle": "palsivertsen"
+    },
+    "time_stamp": "2024-01-18 07:18:11",
+    "text": ":eyes: interesting.\n&gt; ... all other CRM objects that already use the new system for generating IDs.\nThen this must surely be a bug. Maybe it should have been a string instead of a int :thinking_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Pål Sivertsen",
+      "poster_handle": "palsivertsen"
+    },
+    "time_stamp": "2024-01-18 07:20:00",
+    "text": "Seems there are similar issues with other APIs:\n<https://community.HubSpot.com/t5/Developer-Announcements/Increasing-the-size-of-contact-record-IDs/m-p/905353/highlight/true#M590>"
+  },
+  {
+    "poster": {
+      "poster_name": "Maximilian Holzer",
+      "poster_handle": "maximilian.holzer"
+    },
+    "time_stamp": "2024-01-18 07:21:50",
+    "text": "heyho everyone! new coder here :slightly_smiling_face:\n\nCan somebody help me out on my code here.\nI am trying to create an association between a Custom Object \"Messebericht\" and a Company. I am using this custom code in a object based workflow right now.\n\nThe process is as follows when someone creates the custom object they need to associate a contact to it, but not a company.\nSo now we have a Contact which is associated to a custom object and the code should then get the info of the primary company that the contact is associated to and then associate the Primary Company to the Custom Object.\n\nI dont know where to go on (still very new to code) did i make this way more complicated as it is? (bc it looks like it)\nAnd would it make it easier if i just create a custom property for the record id of the associated primary company?  :sos:\nAny help and advice is appreciated thx! :slightly_smiling_face:\n```const HubSpot = require('@HubSpot/api-client');\nconst HubSpotClient = new HubSpot.Client({ apiKey: process.env.TestApp2 });\n\nasync function getAssociationTypeId(2-116144011) {\n  try {\n    const response = await HubSpotClient.apiRequest({\n      method: 'GET',\n      path: `/crm/v3/schemas/${2-116144011}`,\n    });\n\n    const associations = response.body.associations;\n\n    // Find the desired association type (replace 'your_association_name' with the actual name)\n    const desiredAssociation = associations.find(association =&gt; association.name === 'messeberichte');\n\n    if (!desiredAssociation) {\n      throw new Error('Desired association not found.');\n    }\n\n    return desiredAssociation.id;\n\n  } catch (error) {\n    console.error('Error fetching association type ID:', error);\n    throw error;\n  }\n}\n\nasync function associateCustomObjectToCompany(objectTypeId, customObjectId, companyId) {\n  try {\n    // Get the association type ID\n    const associationTypeId = await getAssociationTypeId(objectTypeId);\n\n    // Build the association specification\n    const associationSpec = [{\n      associationCategory: 'USER_DEFINED',\n      associationTypeId: associationTypeId,\n    }];\n\n    // Perform the association\n    const response = await HubSpotClient.apiRequest({\n      method: 'PUT',\n      path: `/crm/v4/objects/${objectTypeId}/${customObjectId}/associations/contact/${companyId}`,\n      body: associationSpec,\n    });\n\n    console.log('Association response:', JSON.stringify(response, null, 2));\n\n    return response;\n\n  } catch (error) {\n    console.error('Error associating custom object to contact:', error);\n    throw error;\n  }\n}\n\nexports.main = async (event) =&gt; {\n  try {\n    // Define variables\n    const objectTypeId = '2-116144011'; // Custom Object \"objectTypeId\" (this will be different for you)\n    const objectId = event.object.objectId; // Currently enrolled Custom Object Record Id\n\n    // Get associated Primary Company ID\n    const CompanyId = await getAssociationTypeId(objectTypeId);\n    console.log('Company ID: ' + CompanyId);\n\n    // Get associated Primary Company Contact ID\n    const contactId = await getAssociationTypeId('company', CompanyId, 'contact');\n    console.log('Contact ID: ' + contactId);\n\n    // Associate Object to Company\n    const apiResponse = await associateCustomObjectToCompany(objectTypeId, objectId, CompanyId);\n    console.log('SUCCESS: ' + JSON.stringify(apiResponse, null, 2));\n\n  } catch (e) {\n    e.message === 'HTTP request failed' ?\n      console.error('ERROR: ' + JSON.stringify(e.response, null, 2)) : console.error('ERROR: ' + e);\n  }\n};```"
+  },
+  {
+    "poster": {
+      "poster_name": "Harun Kumar Siva",
+      "poster_handle": "harun"
+    },
+    "time_stamp": "2024-01-18 07:21:54",
+    "text": "perhaps all 32 bit combinations have been exhausted for these id sequences earlier than planned."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-01-18 07:35:28",
+    "text": "I’d attempt to change this to string and see how this works"
+  },
+  {
+    "poster": {
+      "poster_name": "Pål Sivertsen",
+      "poster_handle": "palsivertsen"
+    },
+    "time_stamp": "2024-01-18 07:39:37",
+    "text": "That's not easy to do since I'm using a client generated directly from the spec.\n\nI'm just ignoring the error for now, since I'm not really interested in the response values as long as the request was successful."
+  },
+  {
+    "poster": {
+      "poster_name": "Aaron Ehrensberger",
+      "poster_handle": "aehrensberger"
+    },
+    "time_stamp": "2024-01-18 12:08:45",
+    "edited": {
+      "time_stamp": "2024-01-18 12:09:25"
+    },
+    "text": "Possible to get the company ID if I only know the company name?\n\nFrom one system to HubSpot, I want to write an integration and pull back company data.  I can do that via the API with <https://api.hubapi.com/companies/v2/companies/15966746457>   The problem I'm facing is that the last parameter there is the HubSpot company ID.  In my 'other' system, I don't have that...  I only have Company Name and another unique identifier called \"Internal ID\".\n\nI'd like to use either company name or internal ID to call HubSpot and find out the company ID.  Is this possible?  With what call?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-01-18 13:56:03"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-01-18 12:40:55",
+    "text": "<https://developers.HubSpot.com/docs/api/crm/search>",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-01-18 12:44:34"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Aaron Ehrensberger",
+      "poster_handle": "aehrensberger"
+    },
+    "time_stamp": "2024-01-18 12:44:34",
+    "text": "Awesome!  Thanks - did exactly what I was looking for."
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2024-01-18 13:45:28",
+    "text": "I'm having a issue with workflows and the attachments API; I have a URL to a file uploaded to HubSpot that works fine:\n<https://api-na1.HubSpot.com/form-integrations/v1/uploaded-files/signed-url-redirect/153541161227?portalId=9028197&amp;sign=YEjJdPoeAytJEwDDes-z8IrFYzw%3D&amp;conversionId=e10e2d40-b621-44a2-93b6-f84008ae3949&amp;filename=e10e2d40-b621-44a2-93b6-f84008ae3949-2-16987941/dr_files-20240117_073934.jpg|https://api-na1.HubSpot.com/form-integrations/v1/uploaded-files/signed-url-redirect/15[…]2-93b6-f84008ae3949-2-16987941/dr_files-20240117_073934.jpg>\n\nof which I am:\n\n• querying that file for its id\n• using that ID to send to the attachments API\nBut for somereason that final step is attaching it as a txt file isntead of a jpg....the files work if you go to them but for some reason once the ID is passed through the notes api it just ignores filetype....any idea how to get it to force the right file type"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-01-18 13:56:03",
+    "text": "you can use the search api for this. you can also use idProperty as a variable in the get calls\n\nv2/companies/{companyName}?idProperty=company_name"
+  },
+  {
+    "text": "pessoal, boa noite!\n\nestou tentando criar uma conexão do amazon app flow com o HubSpot mas recebo falha na conexão.\n\njá criei um aplicativo dentro do HubSpot e ja gerei o token de acesso e segredo do cliente, mas ao conectar acontece uma falha.\n\nsegue os prints:",
+    "time_stamp": "2024-01-18 15:03:40"
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2024-01-18 18:35:32",
+    "edited": {
+      "time_stamp": "2024-01-18 18:36:09"
+    },
+    "text": "Unfortunately it is not just database storage. It will impact any JavaScript code that interacts with JSON received from HubSpot APIs that present full range 64 bit IDs as a number. Native JavaScript `number` data type cannot handle full range 64 bit integers.\n\nExample: if you query the API the raw HTTP response body (text) from HubSpot might look like this:\n`{\"vid\": 9123372036854000123}`\nTo work with this response in JavaScript it is converted to an object. Most browser/API clients transparently hydrate HTTP response `content-type`'s that are `application/json` to JavaScript objects, mapping JSON numbers to the JavaScript type of `number`. The standard function for this (built into all modern JavaScript runtimes) is `JSON.parse(...)` -- which will yield the following as a JavaScript object:\n`{\"vid\": 9123372036854000000}`\nNotice that vid is now rounded & wrong.\n\nThere are no trivial ways to work around this. Most APIs do not transmit 64 bit integers as numbers for this reason; rather they transmit them as strings which work great:\n`{\"vid\": \"9123372036854000123\"}`\n\nI would say that the HubSpot dev team are aware of this as with their more modern APIs they -- generally -- use this stringified number format for 64 bit integer IDs."
+  },
+  {
+    "poster": {
+      "poster_name": "karthick S",
+      "poster_handle": "karthickselvam.ait"
+    },
+    "time_stamp": "2024-01-18 22:02:25",
+    "edited": {
+      "time_stamp": "2024-01-18 23:44:40"
+    },
+    "text": "hey everyone!\nHow can I use the HubSpot CRM API to retrieve information about a specific company with a Salesforce Account ID of '001E000000DzJCiIAN'? I want to retrieve only the properties related to this specific Salesforce Account ID. Please provide the appropriate API request,\nusing <https://api.hubapi.com/crm/v3/objects/companies?properties=salesforceaccountid> API to get salesforceaccountid. Based on salesforceaccountid I want to retrieve companyid.\n\nThanks in advance.",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-01-19 06:42:04"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "DarkoC",
+      "poster_handle": "dc"
+    },
+    "time_stamp": "2024-01-18 23:55:10",
+    "text": "Hey everyone, I'm kinda stuck on something and would need a bit of help. We have an application where we're trying to implement a custom app settings module for the application. I'm worried about security on that screen. Due to the nature of how the config is built, I'd like to run some checks on user permissions whether the user is allowed to alter settings (basically avoid elevation of privileges and IDOR).\n\nIs there such a way? Thanks in advance",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-01-19 06:52:56"
+      },
+      {
+        "time_stamp": "2024-07-22 22:49:29"
+      }
+    ]
+  }
+]

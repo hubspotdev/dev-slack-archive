@@ -1,0 +1,258 @@
+[
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2022-08-08 01:22:40",
+    "text": "hello <@U03QF878ABE>! You are right, it needs updating due to API keys being sunset.\n\n1. ~leave the bin folder and its contents as they are, no need to change something. (note: only if your deploy step has a differrent destination or source folder change its name in the deploy.sh file, mine is \"dist\" but in the docs it says \"src\" so I had to change it, it depends on your project structure).~ You don't need the bin folder with the files anymore, you could use it but there is only one command to execute and you can do it directly from the pipeline file.\n2. swap the deploy.yml with the bitbucket-pipelines.yml (you can find <https://support.atlassian.com/bitbucket-cloud/docs/get-started-with-bitbucket-pipelines/|more info in this link> about pipelines)\n3. go in bitbucket repository menu \"pipelines\" and enable pipeline\n4. go in bitbucket repository menu \"deployments\" and add the variables as in your file.\nthe bitbucket-pipelines.yml should look like below:\n\n```image: node:10.13.0\n\npipelines:\n  branches:\n    master:\n      - step:\n          name: 'Install NPM deps'\n          caches:\n            - node\n          script:\n            - npm install\n      - step:\n          name: 'Build &amp; Deploy'\n          caches:\n            - node\n          script:\n            - npx gulp build --production\n            - npx --yes --package=@HubSpot/cli@latest --call='hs upload &lt;YOUR DIST FOLDER&gt; &lt;THE DESTINATION FOLDER&gt; --use-env'```\nfor the repo variables you need to use `HubSpot_PERSONAL_ACCESS_KEY`\nand `HubSpot_PORTAL_ID`"
+  },
+  {
+    "poster": {
+      "poster_name": "Mac Kang",
+      "poster_handle": "mac630"
+    },
+    "time_stamp": "2022-08-08 01:33:02",
+    "text": "Hi All~! does HubSpot support adding a non-english custom font to CTA?\nI was trying to add google fonts and non-google fonts into HubSpot but it seems not working",
+    "reply_count": 14,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2022-08-08 07:35:11"
+      },
+      {
+        "time_stamp": "2022-08-08 08:19:25"
+      },
+      {
+        "time_stamp": "2022-08-08 08:26:34"
+      },
+      {
+        "time_stamp": "2022-08-08 08:56:56"
+      },
+      {
+        "time_stamp": "2022-08-08 08:58:20"
+      },
+      {
+        "time_stamp": "2022-08-08 08:58:33"
+      },
+      {
+        "time_stamp": "2022-08-08 08:59:01"
+      },
+      {
+        "time_stamp": "2022-08-08 09:00:11"
+      },
+      {
+        "time_stamp": "2022-08-08 09:00:50"
+      },
+      {
+        "time_stamp": "2022-08-08 09:35:15"
+      },
+      {
+        "time_stamp": "2022-08-08 09:35:36"
+      },
+      {
+        "time_stamp": "2022-08-08 09:36:22"
+      },
+      {
+        "time_stamp": "2022-08-08 14:10:34"
+      },
+      {
+        "time_stamp": "2022-08-08 19:54:06"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Hanna",
+      "poster_handle": "h.przygoda820"
+    },
+    "time_stamp": "2022-08-08 06:49:33",
+    "text": "Hello everyone :slightly_smiling_face:\n\nI don't know if this is the correct channel, but I'm having problems with the forms.\nI  have a few questions regarding the functionality of the forms:\n\n1. Is it possible to validate the fields in real time (eg when you click on the field and enter at least 1 character - without the need to click the button sending the entire \"Send\" form)?\n2. Can form fields use the auto-complete mechanism of data from browsers (Chrome, FireFox, etc.) and properly paste the values ​​(eg Name into the surname field, Company into the company field, etc.)? Does it depend on personal browser settings?\n3. Can the form accept various forms of a telephone number: with \"+\", spaces, \"-\" and \"/\", but it should not accept characters such as \"!\", \"?\", Letters? Is a custom validation rule for this field possible?\n4.  Is it possible to create 1 checkbox that marks the other agreements below? E.g:\nCheckbox: \"Select / deselect all\" - at the top in front of consents.\nAnd in the case of two agreements below, when you click on \"Select / deselect all\" if:\n• no agreement is selected -&gt; all are selected (thus all want boxes are selected),\n• one agreement is selected -&gt; the second one is selected (thus all want boxes are selected),\n• two agreements are checked -&gt; all agreements are deselected. \nThanks in advance if anyone has any ideas :wink:",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-08-08 09:29:27"
+      },
+      {
+        "time_stamp": "2022-08-08 09:30:04"
+      },
+      {
+        "time_stamp": "2022-08-24 23:46:21"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2022-08-08 07:35:11",
+    "text": "Not with the font field. You’ll have to make your own module or just add the font and font css properly into your theme css"
+  },
+  {
+    "text": "Hi, <@U3T21PDBK> Thanks for reaching out to me! I wanted to create CTA buttom with Google font with Custom CSS class and Custom CSS. like the image below.\ndoes it need to dig into theme css too?",
+    "time_stamp": "2022-08-08 08:19:25"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2022-08-08 08:26:34",
+    "text": "custom css class should be a valid css selector class – not an import rule.\nYou’ll need to call the gfont in the head of your site using a `&lt;link&gt;` tag instead of import"
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2022-08-08 08:56:56",
+    "text": "<@U3T21PDBK> He could probably just move the import to the Custom CSS there, right?"
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2022-08-08 08:58:20",
+    "edited": {
+      "time_stamp": "2022-08-08 08:58:29"
+    },
+    "text": "Then put like `some-cool-class` as the class in the Custom CSS class, and add\n```.some-cool-class {\n  font-family: 'Nanum Gothic', sans-serif;\n}```\nto the Custom CSS as well."
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2022-08-08 08:58:33",
+    "text": "The custom css is inlined"
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2022-08-08 08:59:01",
+    "text": "Seems to work for me. I don't think it is."
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2022-08-08 09:00:11",
+    "text": "cool! thanks for taking the time to test <@U021H3TV338>. I guess we can add it all to custom css then"
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2022-08-08 09:00:50",
+    "text": "No problem, I wasn't sure either."
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Niederberger",
+      "poster_handle": "thomas.niederberger"
+    },
+    "time_stamp": "2022-08-08 09:29:27",
+    "text": "A few things are depend the HubSpot version you’re using. Number 4 needs the Professional Hub: <https://knowledge.HubSpot.com/forms/use-dependent-form-fields>"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Niederberger",
+      "poster_handle": "thomas.niederberger"
+    },
+    "time_stamp": "2022-08-08 09:30:04",
+    "text": "...and if you have that, you also can work with Javascript to validate as it runs not within an iFrame."
+  },
+  {
+    "poster": {
+      "poster_name": "Mac Kang",
+      "poster_handle": "mac630"
+    },
+    "time_stamp": "2022-08-08 09:35:15",
+    "text": "<@U021H3TV338> Hi, I tried the way you said!"
+  },
+  {
+    "poster": {
+      "poster_name": "Mac Kang",
+      "poster_handle": "mac630"
+    },
+    "time_stamp": "2022-08-08 09:35:36",
+    "text": "<https://fonts.google.com/specimen/Jua?__hstc=20629287.8dbba7333884de7ad84baf9c18f00d6a.1655443835022.1659948701567.1659965941092.107&amp;__hssc=20629287.2.1659965941092&amp;__hsfp=233591508&amp;subset=korean&amp;preview.text=%EA%B0%80%EB%82%98%EB%8B%A4%EB%9D%BCsdf&amp;preview.text_type=custom|https://fonts.google.com/specimen/Jua?__hstc=20629287.8dbba7333884de7ad84baf9c18f00d6[…]B0%80%EB%82%98%EB%8B%A4%EB%9D%BCsdf&amp;preview.text_type=custom>\n\nThis is the font I used.."
+  },
+  {
+    "text": "and this is the code I used in Custom CSS class and Custom CSS.\nBut it seems not working what would be the problem?",
+    "time_stamp": "2022-08-08 09:36:22"
+  },
+  {
+    "poster": {
+      "poster_name": "Mariana Forteza",
+      "poster_handle": "mariana"
+    },
+    "time_stamp": "2022-08-08 13:02:05",
+    "text": "I’m going to try that! Thank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Mariana Forteza",
+      "poster_handle": "mariana"
+    },
+    "time_stamp": "2022-08-08 13:28:43",
+    "text": "I did remove the thank you message and set the thank you page again, but the thank you url is still showing empty."
+  },
+  {
+    "text": "",
+    "time_stamp": "2022-08-08 13:28:57"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-08-08 13:34:15",
+    "text": "Did you remove the inlineMessage key/value pair entirely?"
+  },
+  {
+    "poster": {
+      "poster_name": "Amy Ciceraro",
+      "poster_handle": "amyciceraro"
+    },
+    "time_stamp": "2022-08-08 13:44:23",
+    "text": "Any ideas on how we can qualify leads on a landing page based on the zip code they enter in the form. We’d like to show a message stating whether they are qualified checking against 700 zip codes. Note: Form logic does not appear to be available for multiple variables.",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-08-08 14:02:51"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Stefen Phelps",
+      "poster_handle": "stefen"
+    },
+    "time_stamp": "2022-08-08 14:02:51",
+    "text": "might be easiest to do this with some javascript on the page."
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2022-08-08 14:10:34",
+    "edited": {
+      "time_stamp": "2022-08-08 14:10:48"
+    },
+    "text": "Try moving the @import line above the `.some-cool-class {` line, and remove the . in the Custom CSS class."
+  },
+  {
+    "text": "<@U021H3TV338> Hi, I tried this way too. but it seems not working at all.\nwhat could be the problem to this..",
+    "time_stamp": "2022-08-08 19:54:06"
+  }
+]

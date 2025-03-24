@@ -1,0 +1,26 @@
+[
+  {
+    "poster": {
+      "poster_name": "Kayron Macon",
+      "poster_handle": "kayron"
+    },
+    "time_stamp": "2023-08-16 10:05:33",
+    "text": "hey wondering if you can see whats wrong <@U04AQA0QM8E> `{# if product.hs_object_id == products2.results[0].hs_object_id || product.hs_object_id == products2.results[1].hs_object_id`\n     `|| product.hs_object_id == products2.results[2].hs_object_id #}`\n\nwas the original code, tried switching to `{% if  products2.results.hs_object_id is containing product.hs_object_id %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2023-08-16 10:36:25",
+    "text": "if you print out products2.results.hs_object_id, you won’t see anything because it isn’t an element in your results array. What you have would only be valid if results was an object, e.g. {results: {hs_object_id: 1}}.  To accomplish what it looks like you’re trying to, you could try something along the lines of:\n\n```{% if products2.results|map(\"hs_object_id\") is containing product.hs_object_id %}```\nThis will give you an array of all of the hs_object_id values in the objects of your results array. Which you can then use to check your product.hs_object_id against.\n\nUsing a piece of the example Evelynn provided would work too, and would arguably be a bit more concise:\n\n```{% if products2.results|selectattr(\"hs_object_id\", \"equalto\", product.hs_object_id) %}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan Gifford",
+      "poster_handle": "ngifford949"
+    },
+    "time_stamp": "2023-08-16 13:57:24",
+    "text": "We've done it both ways... one where the megamenu is built dynamically based on the HubSpot menu and it's parent/child structure. That is good, but we've more often built it where it was a separate custom module. In the module, there's a repeater for the main level menu, then within each one, there are options and child fields. We have a free theme in Marketplace that has a megamenu module that you could check out:\n<https://ecosystem.HubSpot.com/marketplace/website/fusion-theme-by-new-era-technology>"
+  }
+]

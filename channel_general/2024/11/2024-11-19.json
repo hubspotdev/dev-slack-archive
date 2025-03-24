@@ -1,0 +1,31 @@
+[
+  {
+    "subtype": "bot_message",
+    "text": ":orange_heart:*Please take a moment to review our Code of Conduct*:orange_heart:\n\nWe want the HubSpot Developer community to be inclusive and welcoming. By following our Code of Conduct, you can help ensure that's the case.\n\nTL;DR:\n• Be respectful\n• Be inclusive (try not to say, \"Hey guys, hey boys, hey [any specific group]\")\n• No self promotion, except for <#C0121KGC6RM|showcase> and <#CBNDYJJAZ|jobs> \n• No unsolicited DMs\nRead the <https://developers.HubSpot.com/slack/code-of-conduct|whole thing here> - and thanks for being a part of the HubSpot Developer Community!\n\nWant to report a violation? DM <@UQNEXHW14> or fill out the <https://form.asana.com/?k=p7aM0fpd3G4JGETDL_nYXg&amp;d=8587152060687|anonymous form here>.",
+    "username": "Code of Conduct Reminder",
+    "time_stamp": "2024-11-19 09:00:13",
+    "edited": {
+      "time_stamp": "2024-11-19 09:00:27"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Ainslie",
+      "poster_handle": "rainslie"
+    },
+    "time_stamp": "2024-11-19 09:59:59",
+    "text": "Yea - this is a great option to track individual clicks and you can likely capture the event details scaleably\n\n• create one event type \"Marketing PDF Click\", and then give it a few custom properties \"Asset Name\", \"Asset URL\", \"Asset Category\", etc\n• Create a general click listener on the button, fire the event on click with the properties filled in for the specifics of which asset was clicked. \n• Depending on how the page is built, you could include this script on just the one page\n• Or, if you create a custom JS event type, that script gets packaged in your HubSpot tracking code and loads anywhere the tracking code loads - you would build the click listener in the JS snippet of the event and it gets published - I'll show an example of that \nAn alternative approach is creating an embedded HubSpot CTA for each link - but they you end up reporting on individual clicks."
+  },
+  {
+    "text": "<https://knowledge.HubSpot.com/reports/create-custom-behavioral-events-with-the-code-wizard#create-events-with-a-javascript-code-snippet>\n\nThis example is capturing \"scroll percentage\" on a page",
+    "time_stamp": "2024-11-19 10:01:05"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Ainslie",
+      "poster_handle": "rainslie"
+    },
+    "time_stamp": "2024-11-19 10:01:13",
+    "text": "```function getScrollPercentage() {\n    const scrollTop = window.scrollY || document.documentElement.scrollTop;\n    const documentHeight = document.documentElement.scrollHeight;\n    const windowHeight = window.innerHeight;\n  \n    return Math.round((scrollTop / (documentHeight - windowHeight)) * 100);\n  }\n  let hsScrollEventCounter = {\"scroll_25\":false,\"scroll_50\":false,\"scroll_75\":false,\"scroll_100\":false}\nfunction fireHSScrollEvent (scrollPercent) {\n    if (scrollPercent ==25 &amp;&amp; hsScrollEventCounter.scroll_25 == false){\n        _hsq.push([\"trackCustomBehavioralEvent\", {\n            name: \"pe203693_software_usage_event\",\n            properties: {\n                n25__scroll:1,\n                hs_page_title: document.title\n                \n            }\n         }]);\n         hsScrollEventCounter.scroll_25 = true\n    }\n    else if (scrollPercent ==50 &amp;&amp; hsScrollEventCounter.scroll_50 == false){\n        _hsq.push([\"trackCustomBehavioralEvent\", {\n            name: \"pe203693_software_usage_event\",\n            properties: {\n                n50__scroll:1,\n                hs_page_title: document.title\n                \n            }\n         }]);\n         hsScrollEventCounter.scroll_50 = true\n    }\n    else if (scrollPercent ==75 &amp;&amp; hsScrollEventCounter.scroll_75 == false) {\n        _hsq.push([\"trackCustomBehavioralEvent\", {\n            name: \"pe203693_software_usage_event\",\n            properties: {\n                n75__scroll:1,\n                hs_page_title: document.title\n                \n            }\n         }]);\n        hsScrollEventCounter.scroll_75 = true\n    }\n    else if(scrollPercent ==100 &amp;&amp; hsScrollEventCounter.scroll_100 == false){\n        _hsq.push([\"trackCustomBehavioralEvent\", {\n            name: \"pe203693_software_usage_event\",\n            properties: {\n                n100__scroll:1,\n                hs_page_title: document.title\n                \n            }\n         }]);\n        hsScrollEventCounter.scroll_100 = true\n    }\n}\n  \n  // Example usage:\n  window.addEventListener('scroll', () =&gt; {\n    const scrollPercentage = getScrollPercentage();\n    fireHSScrollEvent(scrollPercentage)\n    //console.log('Scroll Percentage:', scrollPercentage);\n   // console.log(`Fired event`,hsScrollEventCounter)\n  });```"
+  }
+]

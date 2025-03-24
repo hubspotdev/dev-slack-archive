@@ -1,0 +1,165 @@
+[
+  {
+    "poster": {
+      "poster_name": "Thomas Niederberger",
+      "poster_handle": "thomas.niederberger"
+    },
+    "time_stamp": "2024-05-08 05:26:42",
+    "edited": {
+      "time_stamp": "2024-05-08 11:32:11"
+    },
+    "text": "Great, Thank You - it does work. If someone needs it, that’s the snippet I’m using now. I do it now without and read the languages like that.\n\n```{% for item in content.translated_content %}\n<a class=\"button {{ module.style.primary }}\" href=\"{{ item.absoluteUrl }}\">{{ locale_name(item.language) }}</a>\n{% endfor %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-05-08 06:57:08",
+    "edited": {
+      "time_stamp": "2024-05-08 06:58:21"
+    },
+    "text": "Hey there, I've relayed your feedback to our forms team. I can't make any promises on timelines. I know the forms team cares a lot about performance and strives hard to make the embed code as efficient as possible, while balancing several other crucial parts of forms such as backward compatibility, accessibility, reliability, security, spam prevention, and their visual appearance when using HubSpot visual settings for forms.\n\nAny changes to the forms have to take into account how all of the other pieces get affected, so it may take time."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-05-08 07:08:23",
+    "text": "I guess the ideal solution would be able to choose between render blocking e.g. the form shows above the fold so needs to load immediately but has a negative impact on page speed, or async where the JS can load as and when it can and then the form js loads once the v2.js has finished loading"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-05-08 07:11:33",
+    "text": "I guess maybe you could add defer too, if a form is just going to appear in a popup then you might as well wait till the page is loaded before loading the JS"
+  },
+  {
+    "text": "<https://pagespeedchecklist.com/img/articles/async-vs-defer.svg>",
+    "time_stamp": "2024-05-08 07:11:55",
+    "edited": {
+      "time_stamp": "2024-05-08 07:12:23"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2024-05-08 07:37:21",
+    "text": "honestly if the hubl tag could just output the html and eliminate the need for iframe creation, extraction, and then code injection, then half of our problems would be fixed with lighthouse/page speed <@U7SL518D6>"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2024-05-08 07:38:18",
+    "edited": {
+      "time_stamp": "2024-05-08 07:38:45"
+    },
+    "text": "the cms/content hub puts a bad taste in people’s mouth when their entire blog _– meaning every single post –_ is dinged by hs seo scanner because they have a subscribe form at the bottom of every post"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-05-08 07:59:28",
+    "text": "This is very true, just pre-render the forms!"
+  },
+  {
+    "poster": {
+      "poster_name": "Pat Pope",
+      "poster_handle": "patrick.pope847"
+    },
+    "time_stamp": "2024-05-08 08:32:02",
+    "text": "Hey all,\n\nI have a question about using HubDB with a custom module.\n\nI am developing a custom module that pulls data from HubDB and displays as a table but I am only getting 10 rows\n\nThe goal is to make so the content editor can drop the table module onto the page and select the table. Which is working fine in terms of selecting different HubDB tables are being selected and rows are being pulled in.\n\nI can see that all row IDs from a HubDB table are being pulled in, and the HTML is rendering all the rows. However, the data from columns stops at 10. This makes me think I may be hitting some kind of call limit of 10, although I don't believe I am.\n\nHere's a quick video explaining the issue: <https://www.dropbox.com/scl/fi/tzj0r3h4u3jm1cm2bw32d/HubDB_Table.mp4?rlkey=b1gw4w731c6484aw50pmp020m&amp;st=l99685jg&amp;dl=0>\n\n\n```{# Table Macros #}\n{% set hubdb_table = hubdb_table(module.hubdb_tables.choose_table) %} {# Selects the table #}\n  {% set column_count = hubdb_table.columns|length %} {# Number of columns in the table #}\n    {% set skipped_column_count = column_count - 1 %} {# Skip first column (Name) #}\n      \n  {% set row_ids = [] %}\n  {% for row_id in hubdb_table_rows(hubdb_table.id) %}\n      {% set _ = row_ids.append(row_id.hs_id) %}\n  {% endfor %}\n  \n  {# Sorting based on user selection #}\n  {% if module.hubdb_tables.sort_rows == 'most_recent' %}\n      {% set sorted_row_ids = row_ids %}\n  {% elif module.hubdb_tables.sort_rows == 'oldest' %}\n      {% set sorted_row_ids = row_ids|reverse %}\n  {% else %}\n      {% set sorted_row_ids = row_ids %} {# Default to no sorting #}\n  {% endif %}\n\n\n{# HTML Starts #}\n&lt;div class=\"tabledb-wrapper_{{ name }}\"&gt;\n&lt;div class=\"tabledb-container_{{ name }}\" role=\"table\" aria-label=\"\"&gt;\n  &lt;div class=\"tabledb_{{ name }} headertb firstrow\" role=\"rowgroup\"&gt;\n    {% for i in range(1, column_count) %} {# Loop through columns, skipping the first column #}\n      {% set column_info = hubdb_table.columns[i] %}\n        &lt;div class=\"rowdb_{{ name }}{% if loop.first %} sticky {% endif %}\" role=\"columnheader\"&gt;{{ column_info.label }}&lt;/div&gt;\n    {% endfor %}\n  &lt;/div&gt;\n  {% for row_id in sorted_row_ids[:20] %} {# Tried to manually set number of rows to come in #}\n    {% set hubdb_row = hubdb_table_row(hubdb_table.id, row_id) %}\n    &lt;div class=\"tabledb_{{ name }} rowdb_{{ name }}\" role=\"rowgroup\"&gt;\n      {% for i in range(1, column_count) %} {# Loop through columns, skipping the first column #}\n        {% set column_info = hubdb_table.columns[i] %}\n        {% set value = hubdb_row[column_info.name] %}\n         {# Check if processing the first column #}\n          &lt;div class=\"rowdb_{{ name }}{% if loop.first %} sticky {% endif %}\" role=\"cell\"&gt;{{ value }}&lt;/div&gt;\n      {% endfor %}\n    &lt;/div&gt;\n  {% endfor %}\n&lt;/div&gt;\n&lt;/div&gt; ```\n",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-08 08:42:02"
+      },
+      {
+        "time_stamp": "2024-05-08 08:43:44"
+      },
+      {
+        "time_stamp": "2024-05-08 08:58:24"
+      },
+      {
+        "time_stamp": "2024-05-08 08:59:48"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2024-05-08 08:41:40",
+    "text": "Chatted with the teams involved. I can't give specifics but, the teams have heard your feedback, and work to improve this has already been under way.\nI think you'll be happy with the solution they've come up with."
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2024-05-08 08:42:02",
+    "text": "Yes you're hitting the limit of 10 hubdb calls per page, btw it looks like you're overcomplicating this, you can just call:\n`{% set rows = hubdb_table_rows(table_id) %}`  and loop over each row `{% for row in rows %} {{ row.field_name }} {% endfor %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Pat Pope",
+      "poster_handle": "patrick.pope847"
+    },
+    "time_stamp": "2024-05-08 08:43:44",
+    "edited": {
+      "time_stamp": "2024-05-08 08:45:59"
+    },
+    "text": "<@UV23JHEJY>\nWhat would be a good way, (or is it even possible?) to display all rows of a table?\n\nOr would your suggested edits solve the issue"
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2024-05-08 08:58:24",
+    "text": "The suggested edit solve the issue, hubdb_table_rows already fetch all single rows informations so no need to make all those additional hubdb_table_row calls"
+  },
+  {
+    "poster": {
+      "poster_name": "Olia Gozha",
+      "poster_handle": "olia"
+    },
+    "time_stamp": "2024-05-08 08:59:09",
+    "text": "<@U7SL518D6> that’s awesome! So excited about this :dance-panda: "
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Wessolly",
+      "poster_handle": "webdesign"
+    },
+    "time_stamp": "2024-05-08 08:59:45",
+    "text": "Indeed, looking forward to it <@U7SL518D6>!"
+  },
+  {
+    "poster": {
+      "poster_name": "Pat Pope",
+      "poster_handle": "patrick.pope847"
+    },
+    "time_stamp": "2024-05-08 08:59:48",
+    "text": "<@UV23JHEJY> cool, I'm going to give it a shot now. Thank so much, first time dev'ing a module like this"
+  },
+  {
+    "poster": {
+      "poster_name": "Albert Soriano",
+      "poster_handle": "sorianogrande"
+    },
+    "time_stamp": "2024-05-08 09:21:22",
+    "text": "Thank you so much <@U7SL518D6>! And thanks everyone for replying to my message, I really appreciate all your suggestions! :orange_heart:"
+  }
+]

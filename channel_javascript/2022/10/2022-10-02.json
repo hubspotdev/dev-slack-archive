@@ -1,0 +1,13 @@
+[
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2022-10-02 12:20:10",
+    "edited": {
+      "time_stamp": "2022-10-02 12:22:25"
+    },
+    "text": "Hello, just to add, I needed the same thing and pretty much ( a modal that when opened would play the video and pause it when clicked outside or close button ) did the same thing and deep dove in the source code to see what api is exposed. Ended up with this:\n\n```window.addEventListener('message', function(e){ \n  if(e.data.videoId) {\n    const stop = document.querySelector('.js-stop');\n    const watch = document.querySelector('.js-watchButton');\n    watch.addEventListener('click', openModal);\n    stop.addEventListener('click', pauseMedia);\n    let hsPlayers = hsVideoApi.getPlayers();\n    let hsPlayer = hsPlayers[0];\n    function pauseMedia() {\n      hsPlayer.triggerPause();\n    }\n    function openModal() {\n      hsPlayer.postMessageToPlayer(\"SET_PLAYER_STATUS\", {status: \"PLAYING\"})\n    }\n  }\n});```\n_*Note: this only selects one video (the first one) since in my case I didn't have others on the page.*_"
+  }
+]

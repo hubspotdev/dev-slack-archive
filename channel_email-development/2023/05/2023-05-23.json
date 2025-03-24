@@ -1,0 +1,111 @@
+[
+  {
+    "poster": {
+      "poster_name": "Rezki Bennamane",
+      "poster_handle": "rezki"
+    },
+    "time_stamp": "2023-05-23 04:18:13",
+    "text": "Hello everybody,\nI have a question: I want to insert a logo in an email marketing, how to do it? Knowing that the logo I have already undergreed from the company's domain name",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-05-23 13:52:17"
+      },
+      {
+        "time_stamp": "2023-05-26 02:26:30"
+      },
+      {
+        "time_stamp": "2023-05-26 07:16:21"
+      },
+      {
+        "time_stamp": "2023-05-26 07:16:32"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Amit Das",
+      "poster_handle": "adas"
+    },
+    "time_stamp": "2023-05-23 10:39:31",
+    "text": "Hi <@UCTAN7RPA>, good to meet you, I am a Solutions Architect here at HubSpot and work with Jodi who is your CSM. I wanted to confirm the code you posted as from my code snippet below not everything is necessarily a variable. For example set related_jobs is a variable but also I can reference the query directly in the for loop. In addition I can display images in the for loop without using variables. Does this address your question on variable declaration?\n\n```&lt;div&gt;\n  You may be interested in these positions.\n  &lt;br&gt;\n  &lt;br&gt;\n  {% set _c = personalization_token('contact.firstname') %}\n  {% set _salary = personalization_token('contact.expected_salary') %}\n  &lt;br&gt;&lt;br&gt;\n  \n  \n  {% set jTitle = p21613634_job_applications.job_title %}\n  {% set query_job = \"job_title=\"~jTitle %}\n\n  {% set related_jobs = crm_objects(\"jobs\", query_job, \"job_title,city,state,salary_range,minimum_salary,type,image_url\") %} \n\n  {% for job in crm_objects(\"jobs\", query_job, \"job_title,city,state,salary_range,minimum_salary,type,image_url\").results %}\n      {{ job.job_title}} &lt;br&gt;\n      {{ job.salary_range }} &lt;br&gt;\n      {{ job.city }} {{ job.state }} &lt;br&gt; \n      &lt;img src=\"{{ job.image_url }}\" border=\"0\" alt=\"\" class=\"img-max\" style=\"width:50px;height:60px;\"&gt;\n    &lt;br&gt;\n    &lt;hr&gt;\n  {% endfor %}\n  \n&lt;/div&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Noel Williams",
+      "poster_handle": "noel.williams"
+    },
+    "time_stamp": "2023-05-23 12:19:23",
+    "text": "<@U03C0L82F3N>, nice to met you as well. It's an issue specific to the 2 stage processing. I don't think your code would have an issue since it doesn't use a contact property for comparision. It only impacts variables where the logic has a dependency on a contact property and the evaluation gets deferred to to the 2nd stage.\n_\"Comparing the property against a contact property here will cause all_properties to be deferred. If we use the same variable name again within the same email (or through modules) the variable will be recognized as already deferred.\"_"
+  },
+  {
+    "poster": {
+      "poster_name": "Noel Williams",
+      "poster_handle": "noel.williams"
+    },
+    "time_stamp": "2023-05-23 12:27:51",
+    "edited": {
+      "time_stamp": "2023-05-23 12:31:47"
+    },
+    "text": "in my testing, this impacts additional instances of a programmable modules with the same variable names. as well as standard module fields if thy share a property name. So a module with the following code with 2 instances in the email would show the same output even if the module fields have different values.\n```{% if contact.some_property.value &gt; 10 %}\n&lt;p&gt;{{ module.option_1_text}}&lt;/p&gt;\n{% elif contact.some_property.value &gt; 20 %}\n&lt;p&gt;{{ module.option_2_text}}&lt;/p&gt;\n{% else %}\n&lt;p&gt;\n{{ module.option_3_text}}\n&lt;/p&gt;\n{% endif %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Amit Das",
+      "poster_handle": "adas"
+    },
+    "time_stamp": "2023-05-23 13:08:28",
+    "text": "<@UCTAN7RPA> could you explain a little on the 2nd stage processing (deferred)? So when an email is ready to be sent to a contact and in your code it looks at the brand value how does the end goal (CTA) gets impacted? Trying to understand what it means to have all properties deferred."
+  },
+  {
+    "poster": {
+      "poster_name": "Noel Williams",
+      "poster_handle": "noel.williams"
+    },
+    "time_stamp": "2023-05-23 13:37:50",
+    "edited": {
+      "time_stamp": "2023-05-23 13:38:30"
+    },
+    "text": "this is the document I'm referencing. <https://docs.google.com/document/d/1BxxVwSgBcPZ1GdmaaNcoj2fgKSrM2ORZA_fiX7cHER8/edit#>\nFrom what I can tell any variable that's deferred to the 2nd stage is no longer contained within the scope of the module and is not re-evaluated after the first instance. This includes module field variables, not just custom variables. so in my code example above if i had 2 instances of the module in the email with different text for the field option_1_text...\n\nInstance 1\n module.option_1_text = \"Hello World\"\n\nInstance 2\n module.option_1_text = \"Goodbye World\"\n\nexpected  results...\nHello World\nGoodbye World\n\nactual results...\nHello World\nHello World"
+  },
+  {
+    "poster": {
+      "poster_name": "Courtney Fantinato",
+      "poster_handle": "courtneyfantinato"
+    },
+    "time_stamp": "2023-05-23 13:52:17",
+    "text": "Are you using the drag and drop editor?"
+  },
+  {
+    "poster": {
+      "poster_name": "Amit Das",
+      "poster_handle": "adas"
+    },
+    "time_stamp": "2023-05-23 14:17:01",
+    "text": "I see what you are referring to over here. Let me check internally on this."
+  },
+  {
+    "poster": {
+      "poster_name": "Noel Williams",
+      "poster_handle": "noel.williams"
+    },
+    "time_stamp": "2023-05-23 15:25:15",
+    "text": "<@U03C0L82F3N>, Thank you, I appreciate the help."
+  },
+  {
+    "poster": {
+      "poster_name": "Amanda Holtz",
+      "poster_handle": "amanda.holtz"
+    },
+    "time_stamp": "2023-05-23 16:54:17",
+    "text": "Hey there, has anyone managed to get Google E-mail Annotations? Is it already available to everyone?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-05-25 05:39:42"
+      }
+    ]
+  }
+]

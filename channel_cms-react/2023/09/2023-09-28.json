@@ -1,0 +1,209 @@
+[
+  {
+    "poster": {
+      "poster_name": "Federico Bartoli",
+      "poster_handle": "federico.bartoli"
+    },
+    "time_stamp": "2023-09-28 09:04:18",
+    "text": "Hi guys, I'm using GraphQL, but when I change a property in a contact on HubSpot in the GraphQL query, I don't see the reflection of the modification. It takes quite a while before I see it. Is there a solution to this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-09-28 13:43:10",
+    "edited": {
+      "time_stamp": "2023-09-28 13:43:33"
+    },
+    "text": "Hey <@U04DVL5T2TE> totally missed this reply. I'm not doing anything crazy to get that warning, just adding a basic element story `Img.stories.jsx`:\n\n```import Img from './Img';\nimport { StorybookCommonDecorators, StorybookCommonParams } from '../../utils/Storybook';\n\nexport default {\n  title: 'Elements/Image',\n  component: Img,\n  parameters: StorybookCommonParams,\n  decorators: StorybookCommonDecorators,\n};\n\nexport const Default = {\n  args: {\n    src: '<https://picsum.photos/400>',\n  },\n};```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-09-28 13:43:58",
+    "text": "interesting"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-09-28 13:45:03",
+    "text": "out of curiosity is that still the case on 0.10.1? we released some improvements to the storybook configuration that may be related enough to that to help"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-09-28 13:46:28",
+    "text": "`0.10.0`"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-09-28 13:49:09",
+    "text": "Just updated, testing..."
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-09-28 13:50:53",
+    "text": "Hmm, that seems to have cleared it..."
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-09-28 13:50:57",
+    "text": "nice!"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-09-28 13:51:23",
+    "text": "i should have realized it the first time around but that line it mentions comes from the plugin that makes hot module reloads work"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-09-28 13:51:36",
+    "text": "and i updated that to include the babel plugins for CSS in JS and macros"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-09-28 13:51:52",
+    "edited": {
+      "time_stamp": "2023-09-28 13:51:55"
+    },
+    "text": "so icons should now work in storybook if you were also running into that issue"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-09-28 13:52:46",
+    "text": "Also, just noticing that when I pass `parameters` &amp; `decorators` to the export default, the `moduleStoryWithIsland` method doesn't seem to pass them, and `moduleStory` doesn't merge the objets (getting:\n```Duplicate key \"parameters\" in object literal\n11 |    parameters: StorybookCommonParams,\n12 |    decorators: StorybookCommonDecorators,\n13 |    parameters: {\n   |    ^\n14 |      docs: {\n15 |        description: { ```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-09-28 13:53:19",
+    "text": "I haven't had a chance to jump back into icons stuff yet"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-09-28 13:54:06",
+    "text": "no problem - that parameters error is odd"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-09-28 13:54:24",
+    "edited": {
+      "time_stamp": "2023-09-28 13:55:04"
+    },
+    "text": "ohhh when you use `moduleStory`/ `moduleStoryWithIsland`"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-09-28 13:55:25",
+    "text": "`moduleStoryWithIsland` none are passed. The duplicate arises from `moduleStory`"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-09-28 13:56:06",
+    "text": "hmm that is a little surprising still - either of those just adds `args` and `argTypes`, doesn’t mess with parameters or decorators at all"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-09-28 13:58:00",
+    "edited": {
+      "time_stamp": "2023-09-28 13:58:04"
+    },
+    "text": "Here's the decorators and params I'm using if it helps\n```/**\n * Common Storybook config parameters\n */\nexport const StorybookCommonParams = {\n  backgrounds: {\n    values: [\n      { name: 'Light (Default)', value: 'var(--colorBodyBg, #FFF)' },\n      { name: 'Grey', value: 'var(--colorBgMuted, #F2F2F2)' },\n      { name: 'Vena Green', value: 'var(--colorSecondaryLight, #4A9462)' },\n      { name: 'Dark', value: 'var(--colorBase, #222)' },\n    ],\n  },\n  controls: {\n    hideNoControlsWarning: true,\n  },\n\n};\n\n/**\n * Common Storybook config decorators\n */\nexport const StorybookCommonDecorators = [\n  (Story) => (\n    <StorybookWrapper>\n      <Story />\n    </StorybookWrapper>\n  ),\n];```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-09-28 13:58:35",
+    "text": "thank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-09-28 13:58:37",
+    "text": "`&lt;StorybookWrapper /&gt;`  just has some global styles"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-09-28 17:25:55",
+    "edited": {
+      "time_stamp": "2023-09-28 17:31:45"
+    },
+    "text": "So digging around a bit, it seems that the `moduleStoryWithIsland` wraps the component into another iframe w/ encoded field json. Decorators are loaded into it's parent iframe, therefore global styles aren't available to the child iframe. Mostly just loading in CSS variables for components..."
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-09-28 17:27:58",
+    "text": "The duplicate `parameter`  that was causing problems was due to a comment in the source :exploding_head:\n\nDoesn't work\n```import { moduleStory, moduleStoryWithIsland } from '@HubSpot/cms-dev-server/storybook';\nimport { StorybookCommonDecorators, StorybookCommonParams } from '../../utils/Storybook';\nimport { Component, fields } from './index.jsx';\n\n/**\n * Story Configuration\n */\nexport default {\n  title: 'Modules/Module Template',\n  component: Component,\n  parameters: StorybookCommonParams,\n  decorators: StorybookCommonDecorators,\n};```\nWorks\n```import { moduleStory, moduleStoryWithIsland } from '@HubSpot/cms-dev-server/storybook';\nimport { StorybookCommonDecorators, StorybookCommonParams } from '../../utils/Storybook';\nimport { Component, fields } from './index.jsx';\n\nexport default {\n  title: 'Modules/Module Template',\n  component: Component,\n  parameters: StorybookCommonParams,\n  decorators: StorybookCommonDecorators,\n};```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-09-28 18:20:42",
+    "text": "Wonder if it'd be possible to hydrate iframe via `srcdoc`<https://caniuse.com/iframe-srcdoc| attribute> w/ component + decorators..?"
+  },
+  {
+    "poster": {
+      "poster_name": "Arrigo Lupori",
+      "poster_handle": "arrigo.lupori270"
+    },
+    "time_stamp": "2023-09-28 23:25:24",
+    "text": "This is super helpful! That way I won't have to bother you guys nearly as often :smile: "
+  }
+]

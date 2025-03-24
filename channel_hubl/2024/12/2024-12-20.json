@@ -1,0 +1,106 @@
+[
+  {
+    "poster": {
+      "poster_name": "T. Roberts",
+      "poster_handle": "direstardb"
+    },
+    "time_stamp": "2024-12-20 06:48:10",
+    "text": "I have tried to use the crm_objects function, but it's not finding my custom object.  Is there something I could be missing?  I have also tried accessing the custom object via the dynamic pages and again, it's not returning anything."
+  },
+  {
+    "poster": {
+      "poster_name": "T. Roberts",
+      "poster_handle": "direstardb"
+    },
+    "time_stamp": "2024-12-20 07:00:01",
+    "text": "Hi!  I'm trying to access a custom object with the Hubl function crm_objects like <https://developers.HubSpot.com/docs/guides/cms/content/data-driven-content/crm-objects#crm-object-data-available-for-all-pages|this documentation> and it's not finding the object.  I'm also trying to <https://developers.HubSpot.com/docs/guides/cms/content/data-driven-content/dynamic-pages/crm-objects|set up the dynamic pages> with the custom object and getting no results.  Any thoughts on why I'm unable to access the custom object?",
+    "reply_count": 11,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-12-20 09:02:06"
+      },
+      {
+        "time_stamp": "2024-12-20 09:07:55"
+      },
+      {
+        "time_stamp": "2024-12-20 09:21:24"
+      },
+      {
+        "time_stamp": "2024-12-20 09:45:19"
+      },
+      {
+        "time_stamp": "2024-12-20 13:55:14"
+      },
+      {
+        "time_stamp": "2024-12-21 11:12:29"
+      },
+      {
+        "time_stamp": "2024-12-21 13:36:33"
+      },
+      {
+        "time_stamp": "2024-12-23 09:21:06"
+      },
+      {
+        "time_stamp": "2024-12-23 10:05:06"
+      },
+      {
+        "time_stamp": "2024-12-23 10:28:07"
+      },
+      {
+        "time_stamp": "2025-02-14 13:52:58"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Josh Braner",
+      "poster_handle": "braner.josh"
+    },
+    "time_stamp": "2024-12-20 09:02:06",
+    "text": "Hey there, can you please provide the code you're using?"
+  },
+  {
+    "poster": {
+      "poster_name": "T. Roberts",
+      "poster_handle": "direstardb"
+    },
+    "time_stamp": "2024-12-20 09:07:55",
+    "text": "Hi Josh!  Thanks for reaching out.  Here's the code:\n\n{% set objects = crm_objects(\"rebates\", \"limit=3\", \"\") %}  where rebates is the custom object.\n\n_*And for the dynamic pages:*_ \n\n{% if dynamic_page_crm_object and !module.rebate %}{# detail page and content creator has not selected an object#}\n\n   {% set rebate = dynamic_page_crm_object %}\n   {# easy variable to access the CRM objects properties from #}\n\n   {# To see all of the properties your object during development, print it to the page with the |pprint filter #}\n   &lt;h1&gt;{{rebate.company_name}} {{rebate.rebate_amount}} &lt;/h1&gt;\n    &lt;div class=\"rebate\"&gt;\n\n       &lt;div class=\"rebateDetails\"&gt;\n           &lt;div class=\"rebateAmount\"&gt;\n               Amount: {{ rebate.rebate_amount|format_currency(\"en-US\") }}\n           &lt;/div&gt;\n          &lt;!--&lt;div class=\"carBody\"&gt;\n               Body Type: {{ car.body_style.name}}\n           &lt;/div&gt;\n           &lt;div class=\"carDescription\"&gt;\n               {{ car.description }}\n           &lt;/div&gt;\n           &lt;div class=\"carDistance\"&gt;\n               Distance from Cambridge: &lt;span class=\"dealer_location\"&gt; {{ car.location }}&lt;/span&gt; Miles\n           &lt;/div&gt;\n           &lt;div class=\"carListingDate\"&gt;\n               Time since listing: &lt;span class=\"listing_date\"&gt;{{ car.date_received }}&lt;/span&gt;\n           &lt;/div&gt;\n         --&gt;\n       &lt;/div&gt;\n   &lt;/div&gt;\n\n{% else %}{# The page is not a dynamic page or the user selects a specific object, we can get the data from a CRM object field if there is data. #}\n\n  {% set rebate = module.rebate.properties %}\n  {# easy variable to access the CRM objects properties from #}\n  {# To see all of the properties your object during development, print it to the page with the |pprint filter #}\n\n  &lt;section aria-label=\"featured rebate\"&gt;\n      &lt;div class=\"rebateImage\"&gt;\n         {% if rebate.image %}\n         &lt;img src=\"{{rebate.image}}\" alt=\"{{rebate.company_name}}\"&gt;\n         {% else %}\n         &lt;img src=\"<https://f.HubSpotusercontent20.net/hubfs/9307273/Imported%20images/plchldr255.png>\" alt=\"Picture coming soon\"&gt;\n         {% endif %}\n        &lt;h3 class=\"rebate-name\"&gt;{{rebate.company_name}} &lt;/h3&gt;\n        &lt;div class=\"amount\"&gt;\n          {{rebate.rebate_amount|format_currency(\"en-US\")}}\n        &lt;/div&gt;\n      &lt;/div&gt;\n  &lt;/section&gt;\n{% endif %}"
+  },
+  {
+    "poster": {
+      "poster_name": "Josh Braner",
+      "poster_handle": "braner.josh"
+    },
+    "time_stamp": "2024-12-20 09:21:24",
+    "text": "Two things I would do here...\n\n`{% set objects = crm_objects(\"rebates\", \"limit=3\", \"\") %}`\n\n1. Set your variable to something like `rebates_object` instead of just `object`\n2. Add some properties to pull, right now you have it set to `\"\"` and that could be causing an issue. For testing you can just pick the primary property and add it there.\nTo test and see if any data comes out, you could just add something like...\n`&lt;p&gt;{{rebates.object.results}}&lt;/p&gt;`\nto the module to see it on the page."
+  },
+  {
+    "poster": {
+      "poster_name": "T. Roberts",
+      "poster_handle": "direstardb"
+    },
+    "time_stamp": "2024-12-20 09:45:19",
+    "text": "Ok thanks!  I'll try it."
+  },
+  {
+    "poster": {
+      "poster_name": "T. Roberts",
+      "poster_handle": "direstardb"
+    },
+    "time_stamp": "2024-12-20 13:55:14",
+    "text": "Hey Josh - I've got the crm_objects working now!  Thanks.\n\nStill no results with the dynamic pages, but I'm happy for some progress!"
+  },
+  {
+    "poster": {
+      "poster_name": "Curtis Morte",
+      "poster_handle": "cmorte"
+    },
+    "time_stamp": "2024-12-20 17:17:05",
+    "edited": {
+      "time_stamp": "2024-12-20 17:17:57"
+    },
+    "text": "Does anyone know why a Link to a Landing Page from a HubSpot marketing email will allow the HubL variable `{{ contact }}` to be populated with the Contact's information for the first page load, but if the user reloads the page, the `{{ contact }}` variable no longer has the Contact's information who clicked the link?\n\n#HappyHolidays"
+  }
+]

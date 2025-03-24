@@ -1,0 +1,187 @@
+[
+  {
+    "poster": {
+      "poster_name": "Paddy",
+      "poster_handle": "patrick464"
+    },
+    "time_stamp": "2021-08-11 03:50:24",
+    "text": "Just wondering does anyone know if possible to create a DND area inside a module - so effectively allowing a module to be nested within another module?\n\nI dont think its possible form looking through docs but thought would ask here as maybe it is?",
+    "reply_count": 4,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2021-08-11 06:14:05"
+      },
+      {
+        "time_stamp": "2021-08-11 07:37:50"
+      },
+      {
+        "time_stamp": "2021-08-11 08:04:35"
+      },
+      {
+        "time_stamp": "2021-08-13 05:16:50"
+      }
+    ]
+  },
+  {
+    "text": "From looking at these options I'm going to say no.",
+    "time_stamp": "2021-08-11 06:14:05"
+  },
+  {
+    "poster": {
+      "poster_name": "Paddy",
+      "poster_handle": "patrick464"
+    },
+    "time_stamp": "2021-08-11 07:37:50",
+    "text": "Thanks for the reference image :+1:"
+  },
+  {
+    "poster": {
+      "poster_name": "Ken Westfall",
+      "poster_handle": "ken.westfall"
+    },
+    "time_stamp": "2021-08-11 08:01:33",
+    "text": "I'm pulling content from a HubDB table, and a tag stopped working for some reason. {{ row.resource_hours }} That used to render the rich text content in the field but stopped working last night. The module doesn't show any errors. I have other tags in the `% for row in table %}` loop that are currently working. Can anyone help figure out why?",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-08-11 08:05:11"
+      },
+      {
+        "time_stamp": "2021-08-11 09:55:05"
+      },
+      {
+        "time_stamp": "2021-08-11 10:01:11"
+      },
+      {
+        "time_stamp": "2021-08-11 11:05:57"
+      },
+      {
+        "time_stamp": "2021-08-11 11:07:46"
+      },
+      {
+        "time_stamp": "2021-08-12 12:01:56"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2021-08-11 08:02:00",
+    "text": "Code?"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2021-08-11 08:02:11",
+    "text": "What type of column is it?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ken Westfall",
+      "poster_handle": "ken.westfall"
+    },
+    "time_stamp": "2021-08-11 08:03:49",
+    "text": "<@U38EZFVFE> If that's for me I'll respond in the message thread."
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2021-08-11 08:04:35",
+    "text": "You can create sections instead of a module."
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2021-08-11 08:05:11",
+    "edited": {
+      "time_stamp": "2021-08-11 08:05:52"
+    },
+    "text": "Here's the section of code:\n `{% set table = hubdb_table_rows(3417125, queryparam)%}`\n                  `{% set queryparam = \"&amp;orderBy=-resource_name\" %}`\n                  `{% if table == [] %}`\n                      `&lt;p class='align-center'&gt;Sorry, no resources found for that Search. Try changing your filter and search again.&lt;/p&gt;`\n                  `{% else %}`\n                    `{% for row in table %}`\n\n                  `&lt;div class=\"accordion\"&gt;`\n\t\t\t\t\t\t\t\t\t\t`&lt;div class=\"accordion_group{% if loop.first %} expanded{% endif %}\"&gt;`\n\t\t\t\t\t\t\t\t\t\t\t`&lt;div class=\"accordion_header {% for cat in row.resource_category %}{% if loop.first %}{% if cat.name == 'Children' %}children{% elif cat.name == 'Crisis Intervention' %}crisis{% elif cat.name == 'Emergency Assistance' %}emergency{% elif cat.name == 'Employment &amp; Careers' %}employment{% elif cat.name == 'Health &amp; Wellness' %}health{% elif cat.name == 'Housing' %}housing{% elif cat.name == 'Special Populations' %}special{% endif %}{% endif %}{% endfor %}\"&gt;`\n\t\t\t\t\t\t\t\t\t\t\t\t`&lt;h6 {% if module.accordion_text_color != 'auto' %}class=\"text-{{ module.accordion_text_color }}\"{% endif %}&gt;{{ row.resource_name }}&lt;/h6&gt;`\n\t\t\t\t\t\t\t\t\t\t\t\t`&lt;span class=\"bg-primary border-secondary hs-accordion__item-icon\"&gt;`\n\t\t\t\t\t\t\t\t\t\t\t\t\t`&lt;span class=\"p bg-primary\"&gt;&lt;/span&gt;`\n\t\t\t\t\t\t\t\t\t\t\t\t\t`&lt;span class=\"b bg-primary\"&gt;&lt;/span&gt;`\n\t\t\t\t\t\t\t\t\t\t\t\t`&lt;/span&gt;`\n\t\t\t\t\t\t\t\t\t\t\t`&lt;/div&gt;`\n\t\t\t\t\t\t\t\t\t\t\t`&lt;div class=\"accordion_content {% if module.accordion_text_color != 'auto' %}text-{{ module.accordion_text_color }}{% endif %}\"&gt;`\n\t\t\t\t\t\t\t\t\t\t\t\t`{{ row.resource_description }}&lt;br /&gt;`\n                        `{% if row.image.src %} &lt;img src=\"{{ row.image.src }}\" width=\"25%\" alt=\"{{ row.resource_name }}\" /&gt;{% endif %}`\n                        `&lt;hr /&gt;`\n                       `&lt;a href=\"{{ row.resource_website }}\" target=\"_blank\"&gt;Visit the website&lt;/a&gt; | {{ row.contact_phone }}`\n                        `&lt;hr /&gt;`\n                        `Hours: {{ row.resource_hours }}`\n                        `&lt;hr /&gt;`\n                        `&lt;p&gt;`\n\n                          `Tags: {% for cat in row.resource_category %}`\n                                  `{% if loop.last != 'true' %}`\n                                    `{{ cat.name + \", \" }}`\n                                  `{% endif %}`\n                                  `{% if loop.last %}`\n                                     `{{ cat.name }}`\n                                  `{% endif %}`\n                                `{% endfor %}`\n                                `{% for cat in row.second_level_category %}`\n                                  `{% set string_to_split = cat.name %}`\n                                  `{% set cat = string_to_split|split(' - ') %}`\n                                  `{% if loop.first and loop.length &gt;1 %}`\n                                    `{{ \", \" + cat[1] + \", \" }}`\n                                  `{% elif loop.first and loop.length ==1 %}`\n                                    `{{ \", \" + cat[1] }}`\n                                  `{% endif %}`\n                                  `{% if loop.first != 'true' and loop.last != 'true' and loop.length &gt;1 %}`\n                                    `{{ cat[1] + \", \" }}`\n                                  `{% endif %}`\n                                  `{% if loop.last and loop.length &gt;1 %}`\n                                    `{{ cat[1] }}`\n                                  `{% endif %}`\n                                `{% endfor %}`\n                        `&lt;/p&gt;`\n\t\t\t\t\t\t\t\t\t\t\t`&lt;/div&gt;`\n\t\t\t\t\t\t\t\t\t\t`&lt;/div&gt;`\n\t\t\t\t\t\t\t\t\t`&lt;/div&gt;`\n\n                  `{% endfor %}`\n                  `{% endif %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2021-08-11 08:28:23",
+    "text": "What kind of column is the offender?"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2021-08-11 09:55:05",
+    "text": "Are you saying that `{{ row.resource_description }}`  isnt working but `{{ row.image.src }}` is working? If this is the case and resource_description is a rich text I would double check that it’s all spelled correctly, that the internal name hasnt changed , and that there is actually content still in those fields."
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2021-08-11 10:01:11",
+    "text": "For troubleshooting hubdb its always useful to print your row call just to see what data is coming through and how it’s labelled. `{{row|pprint}}`  Will output whatever row is and print it on the front end. Easy to help debug process. If it’s a live site and your worried about people seeing the output you can always hide it behind a query param using an if statement\n```{% if request.query_dict.test == 1 %}\n{{row|pprint}}\n{% endif %}```\nThen go to the desired url with the ?test=1 query and it will only render that there"
+  },
+  {
+    "poster": {
+      "poster_name": "Sue Fisher",
+      "poster_handle": "suefisherfl"
+    },
+    "time_stamp": "2021-08-11 10:21:09",
+    "text": "Hi all!  I am building a module for a membership page for contacts, so behind login. It should display the contacts files they uploaded via a form (stored on their contact record). I can get to the forms via API but is there a way to get it through hubl? Just display the url that is clickable?  Thanks for any ideas!"
+  },
+  {
+    "poster": {
+      "poster_name": "Ken Westfall",
+      "poster_handle": "ken.westfall"
+    },
+    "time_stamp": "2021-08-11 11:05:57",
+    "text": "Thank you <@UQWGKUEN7>! I will look into this and respond soon. I appreciate it."
+  },
+  {
+    "poster": {
+      "poster_name": "Ken Westfall",
+      "poster_handle": "ken.westfall"
+    },
+    "time_stamp": "2021-08-11 11:07:46",
+    "text": "<@U38EZFVFE> Tagging you here to answer your question. The `{{ row.resource_hours }}` is calling a rich text column. It is not working, but the `{{ row.resource_description }}` column, which is also rich text, is working, and is in the same loop."
+  },
+  {
+    "poster": {
+      "poster_name": "Cory Park",
+      "poster_handle": "cory"
+    },
+    "time_stamp": "2021-08-11 15:46:17",
+    "text": "Can I make a template that DOESN’T include &lt;html&gt; and &lt;head&gt;….?\n\nJust the raw code coming out of the template…possible?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2021-08-11 17:40:01",
+    "text": "You can make a template partial that doesn't include &lt;html&gt; and &lt;head&gt; but not a template. I think the requirement for any template is that it contains `standard_header_includes` which needs to go the &lt;head&gt;",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2021-08-11 19:26:30"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Cory Park",
+      "poster_handle": "cory"
+    },
+    "time_stamp": "2021-08-11 19:26:30",
+    "text": "I have that content commented out... but there's still the head and htm and body tags....etc. I just want the pure code."
+  }
+]

@@ -1,0 +1,113 @@
+[
+  {
+    "poster": {
+      "poster_name": "Anthony Casson",
+      "poster_handle": "anthonyc"
+    },
+    "time_stamp": "2024-10-03 09:54:24",
+    "text": "Hello! I'm looking to migrate an existing react component from a production application into HubSpot as a module. My hope was to build the module within the same app repository, and upload the project to HubSpot - that way I can still use the component for our production page until the HubSpot site is ready. But for some reason when I import dependencies out of the HubSpot project, they cannot be resolved when running `hs project upload`. Even react-boostrap, which is installed and in node_modules, doesn't get resolved. Is there a build scope for HubSpot modules?",
+    "reply_count": 9,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-10-03 09:55:47"
+      },
+      {
+        "time_stamp": "2024-10-03 09:56:18"
+      },
+      {
+        "time_stamp": "2024-10-03 10:02:13"
+      },
+      {
+        "time_stamp": "2024-10-03 10:02:36"
+      },
+      {
+        "time_stamp": "2024-10-03 10:03:23"
+      },
+      {
+        "time_stamp": "2024-10-03 10:03:48"
+      },
+      {
+        "time_stamp": "2024-10-03 11:32:14"
+      },
+      {
+        "time_stamp": "2024-10-03 11:45:13"
+      },
+      {
+        "time_stamp": "2024-10-03 11:50:06"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-10-03 09:55:47",
+    "text": "You will not be able to resolve ES modules outside of the project root that is being uploaded."
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-10-03 09:56:18",
+    "text": "`react-bootstrap` would need to be a proper of dep in the `package.json` in your HubSpot React project."
+  },
+  {
+    "poster": {
+      "poster_name": "Anthony Casson",
+      "poster_handle": "anthonyc"
+    },
+    "time_stamp": "2024-10-03 10:02:13",
+    "text": "I see, and is the project root considered wherever the HubSpot config and cms-assets.json exists?"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-10-03 10:02:36",
+    "text": "`cms-assets.json` :yesyes:"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-10-03 10:03:23",
+    "text": "When you upload the project, we only have the directory to install deps into (from package.json) and find imported files"
+  },
+  {
+    "poster": {
+      "poster_name": "Anthony Casson",
+      "poster_handle": "anthonyc"
+    },
+    "time_stamp": "2024-10-03 10:03:48",
+    "text": "Okay, thank you! That's helpful"
+  },
+  {
+    "poster": {
+      "poster_name": "Anthony Casson",
+      "poster_handle": "anthonyc"
+    },
+    "time_stamp": "2024-10-03 11:32:14",
+    "text": "<@UAYBXDG4U> Is it then possible to make my entire react app part of the HubSpot project so that I can use code I already have? Basically initialize HubSpot at the root of the app where the package.json exists, and create modules within my existing src/components directory?\n\nOtherwise I'm having to recreate the wheel and port over a lot of files just to support a new module in HubSpot, which seems odd if it's that restricted."
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-10-03 11:45:13",
+    "text": "I get where you are coming from. I think that another approach would be to ship and publish the building blocks you have as a package, though I understand that it may not be in state to do something like that.\n\nYou _could_ have all of your React App inside of the project. We build from the presence of Modules and Partials in directories by convention, and so would just ignore everything else that isn't that or imported from a Module or Partial. Potential downside there is just latency around uploading over the ire more than you need ... but again _should_ be ok.\n\nTrying to think of other creative ways to bundle the specific files ... potentially some local script or tooling which copies the code/files you want into the project root before the upload command is run, and then cleans up afterword"
+  },
+  {
+    "poster": {
+      "poster_name": "Anthony Casson",
+      "poster_handle": "anthonyc"
+    },
+    "time_stamp": "2024-10-03 11:50:06",
+    "text": "Nice, I appreciate the ideas - I'll give the first, bulky idea a try just to prove I can do it. Not ideal but maybe good enough to move the needle a bit. Definitely wish it was in a position to publish things as a package and install/import, alas early days and pretty rough :slightly_smiling_face: Thanks for the tips"
+  }
+]

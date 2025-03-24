@@ -1,0 +1,287 @@
+[
+  null,
+  null,
+  null,
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2018-10-05 07:52:44",
+    "text": "just an fyi, i changed from using the form widget in a module and instead used the embed and then put my code in the onFormReady parameter and it works"
+  },
+  {
+    "poster": {
+      "poster_name": "Rachel McBee",
+      "poster_handle": "rmcbee"
+    },
+    "time_stamp": "2018-10-05 08:53:07",
+    "text": "Happy Friday! I created a search results page for one blog (not the whole site), and it works great. However--does anyone see a way to search for the words *within* the search term, rather than the *entire* string? If someone searches for \"Add asset\", nothing shows up. But there are absolutely posts that talk about \"adding assets\"."
+  },
+  {
+    "poster": {
+      "poster_name": "Rachel McBee",
+      "poster_handle": "rmcbee"
+    },
+    "time_stamp": "2018-10-05 08:53:18",
+    "text": "Here's the code:\n\n{% set recent_posts = blog_recent_posts('default', 200) %}\n{% set searchQuery = request.query_dict['query'] %}\n\n{% for recent_post in recent_posts %}\n  {% if searchQuery and searchQuery|lower in recent_post.post_summary|lower %}\n    &lt;div class=\"post-title\"&gt;&lt;a href=\"{{ recent_post.absolute_url }}\" style=\"font-weight:500; color: #2a87c8;\"&gt;{{ recent_post.name }}&lt;/a&gt;&lt;/div&gt;\n    &lt;div class=\"post-body\"&gt;{{ recent_post.post_summary }}&lt;/div&gt;\n&lt;hr&gt;\n  {% endif %}\n{% endfor %}",
+    "reply_count": 22,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2018-10-05 08:57:34"
+      },
+      {
+        "time_stamp": "2018-10-05 09:00:10"
+      },
+      {
+        "time_stamp": "2018-10-05 09:03:16"
+      },
+      {
+        "time_stamp": "2018-10-05 09:03:19"
+      },
+      {
+        "time_stamp": "2018-10-05 09:03:58"
+      },
+      {
+        "time_stamp": "2018-10-05 09:04:04"
+      },
+      {
+        "time_stamp": "2018-10-05 09:04:58"
+      },
+      {
+        "time_stamp": "2018-10-05 09:05:26"
+      },
+      {
+        "time_stamp": "2018-10-05 09:07:34"
+      },
+      {
+        "time_stamp": "2018-10-05 09:13:43"
+      },
+      {
+        "time_stamp": "2018-10-05 09:28:59"
+      },
+      {
+        "time_stamp": "2018-10-05 09:29:15"
+      },
+      {
+        "time_stamp": "2018-10-05 09:29:31"
+      },
+      {
+        "time_stamp": "2018-10-05 09:29:33"
+      },
+      {
+        "time_stamp": "2018-10-05 09:52:36"
+      },
+      {
+        "time_stamp": "2018-10-05 10:05:18"
+      },
+      {
+        "time_stamp": "2018-10-05 10:05:49"
+      },
+      {
+        "time_stamp": "2018-10-05 10:09:05"
+      },
+      {
+        "time_stamp": "2018-10-05 10:46:08"
+      },
+      {
+        "time_stamp": "2018-10-05 10:50:16"
+      },
+      {
+        "time_stamp": "2018-10-05 11:32:32"
+      },
+      {
+        "time_stamp": "2018-10-05 11:55:56"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Rachel McBee",
+      "poster_handle": "rmcbee"
+    },
+    "time_stamp": "2018-10-05 08:54:15",
+    "text": "I tried making  {% if searchQuery and searchQuery|lower in recent_post.post_summary|lower %} to instead say  {% if recent_post.post_summary|lower contains searchQuery or searchQuery|lower %}, but it did *not* like that. hahahaha"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-10-05 08:57:34",
+    "text": "posting a potential solution shortly"
+  },
+  {
+    "poster": {
+      "poster_name": "Rachel McBee",
+      "poster_handle": "rmcbee"
+    },
+    "time_stamp": "2018-10-05 09:00:10",
+    "text": "Woo! thanks!!"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-10-05 09:03:16",
+    "text": "```{% set recent_posts = blog_recent_posts('default', 200) %}\n{% set searchQuery = request.query_dict['query'] %}\n{% set searchThreshold = 2 %}\n\n{% for recent_post in recent_posts %}\n\t{% if searchQuery %}\n\t\t{% set resultValue = 0 %}\n\t\t{% for searchWord in searchQuery|split(' ')|map('lower') %}\n\t\t\t{% if recent_post.post_summary|striptags|lower is string_containing searchWord  %}\n\t\t\t   {% resultValue = resultValue|add(1) %}\n\t\t \t{% endif %}\n\t\t \t{% if loop.last &amp;&amp; resultValue &lt;= searchThreshold %}\n\t\t \t\t&lt;div class=\"post-title\"&gt;&lt;a href=\"{{ recent_post.absolute_url }}\" style=\"font-weight:500; color: #2a87c8 ;\"&gt;{{ recent_post.name }}&lt;/a&gt;&lt;/div&gt;\n\t\t\t   \t&lt;div class=\"post-body\"&gt;{{ recent_post.post_summary }}&lt;/div&gt;\n\t\t\t\t&lt;hr&gt;\n\t\t \t{% endif %}\n\t\t{% endfor %}\n\t{% else %}\n\t\tNo Results\n  \t{% endif %}\n{% endfor %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-10-05 09:03:19",
+    "text": "try something like this"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-10-05 09:03:58",
+    "text": "there’s a few reasons what you were doing wasn’t working, primarily that the searchQuery in recent_post|post_summary wasn’t going to ever work"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-10-05 09:04:04",
+    "text": "in checks against an array"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-10-05 09:04:58",
+    "text": "If you want a SIMPLE SIMPLE version of this that just fixes what you did - try this: ```{% set recent_posts = blog_recent_posts('default', 200) %}\n{% set searchQuery = request.query_dict['query'] %}\n\n{% for recent_post in recent_posts %}\n {% if searchQuery and recent_post.post_summary|lower is string_containing searchQuery|lower %}\n   &lt;div class=\"post-title\"&gt;&lt;a href=\"{{ recent_post.absolute_url }}\" style=\"font-weight:500; color: #2a87c8;\"&gt;{{ recent_post.name }}&lt;/a&gt;&lt;/div&gt;\n   &lt;div class=\"post-body\"&gt;{{ recent_post.post_summary }}&lt;/div&gt;\n&lt;hr&gt;\n {% endif %}\n{% endfor %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-10-05 09:05:26",
+    "text": "note: grains of salt required - haven’t tested any of what I just built"
+  },
+  {
+    "poster": {
+      "poster_name": "Rachel McBee",
+      "poster_handle": "rmcbee"
+    },
+    "time_stamp": "2018-10-05 09:07:34",
+    "text": "hmm... it's throwing an error starting at \"is\" on this line:  {% if searchQuery and recent_post.post_summary|lower is string_containing searchQuery|lower %}"
+  },
+  {
+    "poster": {
+      "poster_name": "Rachel McBee",
+      "poster_handle": "rmcbee"
+    },
+    "time_stamp": "2018-10-05 09:13:43",
+    "text": "that's the issue I was running into. weird..."
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-10-05 09:28:59",
+    "text": "Ah - one per line you need to bump the searchQuery {% if %} out of the same place as the expression test (i think)"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-10-05 09:29:15",
+    "edited": {
+      "time_stamp": "2018-10-05 09:29:20"
+    },
+    "text": "so ``` {% if searchQuery %}{% if  recent_post.post_summary|lower is string_containing searchQuery|lower %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-10-05 09:29:31",
+    "text": "then close it with another `{% endif %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-10-05 09:29:33",
+    "text": "later on"
+  },
+  {
+    "poster": {
+      "poster_name": "Rachel McBee",
+      "poster_handle": "rmcbee"
+    },
+    "time_stamp": "2018-10-05 09:52:36",
+    "text": "hmm...it's not calling anything now. weird"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-10-05 10:05:18",
+    "text": "set a |default(‘’) on your searchQuery {% set %} up top"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-10-05 10:05:49",
+    "text": "then change your {% if searchQuery %} to {% if searchQuery != ‘’ %}"
+  },
+  {
+    "poster": {
+      "poster_name": "Rachel McBee",
+      "poster_handle": "rmcbee"
+    },
+    "time_stamp": "2018-10-05 10:09:05",
+    "text": "oof, you've lost me. I'm sorry :disappointed:"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-10-05 10:46:08",
+    "text": "```{% set recent_posts = blog_recent_posts('default', 200) %}\n{% set searchQuery = request.query_dict['query']|default('') %}\n\n{% for recent_post in recent_posts %}\n {% if searchQuery != '' %}\n\t {% if recent_post.post_summary|lower is string_containing searchQuery|lower %}\n\t   &lt;div class=\"post-title\"&gt;&lt;a href=\"{{ recent_post.absolute_url }}\" style=\"font-weight:500; color: #2a87c8;\"&gt;{{ recent_post.name }}&lt;/a&gt;&lt;/div&gt;\n\t   &lt;div class=\"post-body\"&gt;{{ recent_post.post_summary }}&lt;/div&gt;\n\t&lt;hr&gt;\n\t {% endif %}\n {% endif %}\n{% endfor %}``` try this"
+  },
+  {
+    "poster": {
+      "poster_name": "Rachel McBee",
+      "poster_handle": "rmcbee"
+    },
+    "time_stamp": "2018-10-05 10:50:16",
+    "text": "dang! I'm sorry, it's still coming up blank. thanks for your help, you don't have to keep plugging away at it :slightly_smiling_face: I appreciate it though! I at least have it searching for exact terms with the original code so I'm not totally stuck :slightly_smiling_face:"
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-10-05 11:32:32",
+    "text": "No problem - I’m losing my touch i guess :disappointed: Hopefully it gives you some ideas at least - good luck!"
+  },
+  {
+    "poster": {
+      "poster_name": "Rachel McBee",
+      "poster_handle": "rmcbee"
+    },
+    "time_stamp": "2018-10-05 11:55:56",
+    "text": "thanks again!"
+  }
+]

@@ -1,0 +1,48 @@
+[
+  {
+    "poster": {
+      "poster_name": "Enrico Bollen",
+      "poster_handle": "e.bollen"
+    },
+    "time_stamp": "2023-10-12 06:18:46",
+    "text": "Hello,\ni’m building a custom workflow action with an input field which supported value is OBJECT_PROPERTY.\nOn the serverside, i get all STATIC_VALUE input fields in my request as stated in the documentation like `{… inputFields: {…}}`, but not the OBJECT_PROPERTY input. Which is always empty/not present in the request from HubSpot.\nWhat am i misssing, or is it some kind of bug?\nHere is my definition:\n```    {\n      \"typeDefinition\": {\n        \"name\": \"propertyName\",\n        \"type\": \"string\"\n      },\n      \"supportedValueTypes\": [\n        \"OBJECT_PROPERTY\"\n      ],\n      \"isRequired\": false\n    }```\nso i expect that HubSpot sents me something like this:\n```{…\n\"inputFields\":{\n\"propertyName\": \"xxxxx\"\n}\n}```",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-10-17 14:59:49"
+      }
+    ]
+  },
+  {
+    "text": "If you use the “Create Record” action, it returns the created object. Maybe you can get the id out of it.\nHere is an example:",
+    "time_stamp": "2023-10-12 06:58:59"
+  },
+  {
+    "poster": {
+      "poster_name": "Erlend Mongstad",
+      "poster_handle": "erlend.mongstad"
+    },
+    "time_stamp": "2023-10-12 07:03:05",
+    "text": "But how can I use the ID from there? I haven't found a way to do that without creating custom code - which is not very user friendly:smile: I'm missing a way to use the actual properties from the create record action further down the flow, so that I can use them in ie. \"Copy property\" action or If/Else action etc."
+  },
+  {
+    "poster": {
+      "poster_name": "Enrico Bollen",
+      "poster_handle": "e.bollen"
+    },
+    "time_stamp": "2023-10-12 07:34:35",
+    "text": "All other properties are known, because you set them in the “create record” action already, aren’t they?\nBut for the Id, i also haven’t figured out a way to get the id out of it :confused:\n\nI also think that “the created object” as an output name is not very fitting, because, what does it mean? Is it a json? is it just the id? It’s a string, so text, but it says its the whole object…\n\nmaybe you can add a second workflow, which picks up newly created objects?"
+  },
+  {
+    "poster": {
+      "poster_name": "Erlend Mongstad",
+      "poster_handle": "erlend.mongstad"
+    },
+    "time_stamp": "2023-10-12 07:39:24",
+    "edited": {
+      "time_stamp": "2023-10-12 07:40:10"
+    },
+    "text": "I need the id of the newly created object to set up associations to other objects, which is an unnecessary amount of work to just handle associations. The other properties are mostly, as you mention, available already. Anyway, getting the object as an output is fine, as long as it is possible to get the properties from it in other actions (like the records _id_)?"
+  }
+]

@@ -1,0 +1,985 @@
+[
+  {
+    "poster": {
+      "poster_name": "Chris Lukes",
+      "poster_handle": "clukes"
+    },
+    "time_stamp": "2019-02-22 06:09:32",
+    "text": "Hey <@UFBNA9K9A> (or anyone else that is knowledgeable!) - following up on our conversation yesterday about triggering analytics events via API, my questions yesterday were resolved (thank you!), but I’m noticing something else:"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Lukes",
+      "poster_handle": "clukes"
+    },
+    "time_stamp": "2019-02-22 06:12:24",
+    "edited": {
+      "time_stamp": "2019-02-22 06:15:07"
+    },
+    "text": "If I pass an email address along with the event in order to associate the event to a contact, a new contact is created if not yet existing — however, in my testing it appears *if the email provided is associated to a previously-deleted contact, the contact is not created again, (although the event does trigger a “completion” _not_ associated to a contact).",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2019-02-22 06:16:00"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Lukes",
+      "poster_handle": "clukes"
+    },
+    "time_stamp": "2019-02-22 06:13:43",
+    "text": "Is this expected functionality, that the API call to trigger an event will not create a contact if their email address was associated to a previously-deleted contact?"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Lukes",
+      "poster_handle": "clukes"
+    },
+    "time_stamp": "2019-02-22 06:16:00",
+    "text": "Nevermind about the event not triggering a completion - the new event showed up before the completion registered (updated above comment accordingly), but the contact still is not created it seems"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 06:48:29",
+    "text": "Hey <@UDQ77R8AC> Yes, this is the intended behavior.  Events will not re-create contacts.  That was an intentional design decision in part to protect large SaaS providers from a large HubSpot bill.  For freemium providers, there will be a lot of usage in a platform that you’d want to measure with Events but will likely never lead to a purchase, so those contacts aren’t super valuable in HubSpot. Since HubSpot charges for Contacts, it makes sense to delete them, however they are still using the platform so the Events will continue to roll in but HubSpot won’t recreate them since we’ve gotten a signal (via deleting the Contacts) that they aren’t valuable",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-02-22 06:51:33"
+      },
+      {
+        "time_stamp": "2019-02-22 06:54:57"
+      },
+      {
+        "time_stamp": "2019-02-22 06:58:10"
+      },
+      {
+        "time_stamp": "2019-02-22 07:13:16"
+      },
+      {
+        "time_stamp": "2019-02-22 08:15:42"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Lukes",
+      "poster_handle": "clukes"
+    },
+    "time_stamp": "2019-02-22 06:51:33",
+    "text": "Is there a workaround to allow creation, besides making a separate call to create a contact, then subsequently add an event?"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 06:54:57",
+    "text": "Right now the only way is to make separate call as we will need an explicit signal that the Contact is valuable.  Why are these contacts being deleted in the first place though?"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Lukes",
+      "poster_handle": "clukes"
+    },
+    "time_stamp": "2019-02-22 06:58:10",
+    "text": "In this case, the contacts would have been deleted for just that reason — to keep the contact count low for billing purposes, after they go “dormant” for a while — but not because they might not be valuable, just because they don’t need to be in HubSpot until relevant future activity.  The events would indicate activity related to orders/quoting-related info syncing over from an external ERP, so definitely important contacts at that point"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 07:13:16",
+    "text": "Gotcha, I’ll certainly request `anBackIfDeleted` flag on Events but for now, you’ll need to make an explicit call for that to happen. You should also post this to <https://community.HubSpot.com/t5/custom/page/page-id/ideaslandingpage>  our PMs source that for ideas regularly"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Lukes",
+      "poster_handle": "clukes"
+    },
+    "time_stamp": "2019-02-22 08:15:42",
+    "text": "thanks"
+  },
+  {
+    "text": "",
+    "time_stamp": "2019-02-22 09:48:31"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 09:50:07",
+    "text": "^^ Hi guys, diving into API's and unfortunately having a problem getting into em. I've got experience in PHP, jQuery, Java, JS, etc, so I'm comfortable with coding, but I'm striking out on getting this form to communicate with HubSpot and pass the info using the forms API"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 09:50:15",
+    "text": "Any help is greatly appreciated.",
+    "reply_count": 81,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2019-02-22 09:52:20"
+      },
+      {
+        "time_stamp": "2019-02-22 10:05:11"
+      },
+      {
+        "time_stamp": "2019-02-22 10:08:44"
+      },
+      {
+        "time_stamp": "2019-02-22 10:12:37"
+      },
+      {
+        "time_stamp": "2019-02-22 10:13:52"
+      },
+      {
+        "time_stamp": "2019-02-22 11:08:28"
+      },
+      {
+        "time_stamp": "2019-02-22 11:09:16"
+      },
+      {
+        "time_stamp": "2019-02-22 11:09:44"
+      },
+      {
+        "time_stamp": "2019-02-22 11:17:03"
+      },
+      {
+        "time_stamp": "2019-02-22 11:32:34"
+      },
+      {
+        "time_stamp": "2019-02-22 11:33:12"
+      },
+      {
+        "time_stamp": "2019-02-22 11:33:51"
+      },
+      {
+        "time_stamp": "2019-02-22 11:34:06"
+      },
+      {
+        "time_stamp": "2019-02-22 12:01:30"
+      },
+      {
+        "time_stamp": "2019-02-22 12:02:23"
+      },
+      {
+        "time_stamp": "2019-02-22 12:03:01"
+      },
+      {
+        "time_stamp": "2019-02-22 12:03:23"
+      },
+      {
+        "time_stamp": "2019-02-22 12:04:54"
+      },
+      {
+        "time_stamp": "2019-02-22 12:22:17"
+      },
+      {
+        "time_stamp": "2019-02-22 12:22:18"
+      },
+      {
+        "time_stamp": "2019-02-22 12:22:45"
+      },
+      {
+        "time_stamp": "2019-02-22 12:56:57"
+      },
+      {
+        "time_stamp": "2019-02-22 13:05:57"
+      },
+      {
+        "time_stamp": "2019-02-22 13:06:23"
+      },
+      {
+        "time_stamp": "2019-02-22 13:44:50"
+      },
+      {
+        "time_stamp": "2019-02-22 13:52:04"
+      },
+      {
+        "time_stamp": "2019-02-22 14:00:04"
+      },
+      {
+        "time_stamp": "2019-02-22 14:09:07"
+      },
+      {
+        "time_stamp": "2019-02-22 14:09:42"
+      },
+      {
+        "time_stamp": "2019-02-22 14:10:37"
+      },
+      {
+        "time_stamp": "2019-02-22 14:11:28"
+      },
+      {
+        "time_stamp": "2019-02-22 14:11:28"
+      },
+      {
+        "time_stamp": "2019-02-22 14:12:28"
+      },
+      {
+        "time_stamp": "2019-02-22 14:15:02"
+      },
+      {
+        "time_stamp": "2019-02-22 14:15:17"
+      },
+      {
+        "time_stamp": "2019-02-22 14:16:21"
+      },
+      {
+        "time_stamp": "2019-02-22 14:18:12"
+      },
+      {
+        "time_stamp": "2019-02-22 14:18:36"
+      },
+      {
+        "time_stamp": "2019-02-22 14:18:42"
+      },
+      {
+        "time_stamp": "2019-02-22 14:19:00"
+      },
+      {
+        "time_stamp": "2019-02-22 14:19:02"
+      },
+      {
+        "time_stamp": "2019-02-22 14:22:17"
+      },
+      {
+        "time_stamp": "2019-02-22 14:22:40"
+      },
+      {
+        "time_stamp": "2019-02-22 14:23:07"
+      },
+      {
+        "time_stamp": "2019-02-22 14:28:27"
+      },
+      {
+        "time_stamp": "2019-02-22 14:30:49"
+      },
+      {
+        "time_stamp": "2019-02-22 14:31:47"
+      },
+      {
+        "time_stamp": "2019-02-22 14:49:13"
+      },
+      {
+        "time_stamp": "2019-02-22 14:51:55"
+      },
+      {
+        "time_stamp": "2019-02-22 14:55:16"
+      },
+      {
+        "time_stamp": "2019-02-22 15:02:00"
+      },
+      {
+        "time_stamp": "2019-02-22 15:02:51"
+      },
+      {
+        "time_stamp": "2019-02-22 15:03:34"
+      },
+      {
+        "time_stamp": "2019-02-22 15:05:08"
+      },
+      {
+        "time_stamp": "2019-02-22 15:05:54"
+      },
+      {
+        "time_stamp": "2019-02-22 15:09:28"
+      },
+      {
+        "time_stamp": "2019-02-22 15:09:49"
+      },
+      {
+        "time_stamp": "2019-02-22 15:16:40"
+      },
+      {
+        "time_stamp": "2019-02-22 15:16:52"
+      },
+      {
+        "time_stamp": "2019-02-22 15:17:14"
+      },
+      {
+        "time_stamp": "2019-02-22 15:20:08"
+      },
+      {
+        "time_stamp": "2019-02-22 15:20:24"
+      },
+      {
+        "time_stamp": "2019-02-22 15:20:34"
+      },
+      {
+        "time_stamp": "2019-02-22 15:20:55"
+      },
+      {
+        "time_stamp": "2019-02-22 15:21:15"
+      },
+      {
+        "time_stamp": "2019-02-22 15:21:35"
+      },
+      {
+        "time_stamp": "2019-02-22 15:25:07"
+      },
+      {
+        "time_stamp": "2019-02-22 15:25:22"
+      },
+      {
+        "time_stamp": "2019-02-22 15:27:01"
+      },
+      {
+        "time_stamp": "2019-02-22 15:31:30"
+      },
+      {
+        "time_stamp": "2019-02-22 15:32:13"
+      },
+      {
+        "time_stamp": "2019-02-22 15:33:08"
+      },
+      {
+        "time_stamp": "2019-02-22 16:44:27"
+      },
+      {
+        "time_stamp": "2019-02-25 08:34:30"
+      },
+      {
+        "time_stamp": "2019-02-25 08:40:45"
+      },
+      {
+        "time_stamp": "2019-02-25 08:56:31"
+      },
+      {
+        "time_stamp": "2019-02-25 08:56:54"
+      },
+      {
+        "time_stamp": "2019-02-25 15:25:12"
+      },
+      {
+        "time_stamp": "2019-02-25 15:25:39"
+      },
+      {
+        "time_stamp": "2019-02-25 15:25:49"
+      },
+      {
+        "time_stamp": "2019-02-25 15:25:54"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 09:52:20",
+    "text": "Hey <@UGE7APANP> The Key here is that you don’t want the HubSpot form url to be the submission action.  You’ll want to send the data about this form submission using this endpoint <https://developers.HubSpot.com/docs/methods/forms/submit_form_v3>.  The `data-action` can be your server"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 10:05:11",
+    "text": "I'm giving this a try now, appreciate the help!"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 10:08:44",
+    "text": "i took this \"<https://api.hsforms.com/submissions/v3/integration/submit/:portalId/:form>\" and substituted the form GUID and the Portal ID for our account, and Im receiving the \"Request Forbidden\" error"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 10:12:37",
+    "text": "I understand this means the connection is not successful, but to my knowledge Im not missing anything."
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 10:13:52",
+    "text": "&lt;form method=\"post\" accept-charset=\"UTF-8\" enctype=\"application/x-www-form-urlencoded\" class=\"form-signin\" data-action=\"<https://api.hsforms.com/submissions/v3/integration/submit/507xxx/6a2d5b22-cb27-4775-bea0-e9b839edbxxx>\"&gt;"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 11:08:28",
+    "text": "Sorry, stepped away from my computer for lunch.  You aren’t supposed to use the form submit action.  You need to make an AJAX call from a submit handler function in js"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 11:09:16",
+    "text": "For example if you were doing this with JQuery it would go something like this:\n```\n$('.form-signin').onClick( sendFormInfoToHS())\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 11:09:44",
+    "text": "where the function `sendFormInfoToHS` makes a POST to the endpoint in the documentation"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 11:17:03",
+    "text": "okay, thats a big help. Trying this now"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 11:32:34",
+    "text": "and so within the function I'll have something similar to: xhttp.open(\"GET\", \"demo_get2.asp?fname=Henry&amp;lname=Ford\", true);\nxhttp.send();"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 11:33:12",
+    "text": "Except it will be POST request rather than a GET"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 11:33:51",
+    "text": "got it, and the \"demo_get2.asp\", I can replace that with the endpoint?"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 11:34:06",
+    "text": "Exactly"
+  },
+  {
+    "text": "<https://HubSpotdev.slack.com/files/UGE7APANP/FGFHUT0BZ/-.js>",
+    "time_stamp": "2019-02-22 12:01:30"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 12:02:23",
+    "text": "I expect this to add a contact with name Test, and email <mailto:test@test.com|test@test.com>, however the contact is not created in HubSpot"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 12:03:01",
+    "text": "i double checked the endpoint, which is correct. The AJAX Post example is jQuery's example, but im not getting that contact"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 12:03:23",
+    "edited": {
+      "time_stamp": "2019-02-22 12:04:03"
+    },
+    "text": "the body should look like\n```\n{\nfields:[\n{name: \"firstname\",\nvalue:\"test\"},\n{name:\"email\",\nvalue:\"<mailto:test@test.com|test@test.com>\"}\n]\n}\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 12:04:54",
+    "text": "Here is the example from the docs\n```\n\"fields\": [\n    {\n      \"name\": \"email\",\n      \"value\": \"<mailto:example@example.com|example@example.com>\"\n    },\n    {\n      \"name\": \"firstname\",\n      \"value\": \"Jeff\"\n    }\n  ],\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 12:22:17",
+    "text": "I see, i appreciate your help, i know i gotta be close on this."
+  },
+  {
+    "text": "<https://HubSpotdev.slack.com/files/UGE7APANP/FGFJJ7BGX/-.js>",
+    "time_stamp": "2019-02-22 12:22:18"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 12:22:45",
+    "text": "That's what im working with, on this test page - <https://www.contourmortgage.com/testpagenow>"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 12:56:57",
+    "text": "Awesome, is that working for you?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 13:05:57",
+    "text": "unfortunately not"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 13:06:23",
+    "text": "there's nothing i see thats off, so im still working through it"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 13:44:50",
+    "text": "ok, it might be helpful to log the response that you are getting from HubSpot API, there is usally helpful information in the body of the response <@UGE7APANP>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 13:52:04",
+    "text": "checking it out now, do you have experience with Postman? or do you use anything else to test API connections?"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 14:00:04",
+    "text": "Postman is my preferred way to testing APIs"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 14:09:07",
+    "text": "i've tested it in Postman using x-www-form-urlencoded type and it adds the contact, but if I try to take the generated code from that and use it as raw code, it doesn't work"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 14:09:42",
+    "text": "that ednpoint is expecting the content type to be json"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 14:10:37",
+    "text": "and that JSON can be sent with the jQuery function, like I had before, right?"
+  },
+  {
+    "text": "",
+    "time_stamp": "2019-02-22 14:11:28"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 14:11:28",
+    "text": "this is what Postman should look like"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 14:12:28",
+    "text": "I can’t remember if JQuery will automatically stringily that JSON or if you have to call `JSON.stringify()` but yeah JQuery can send that infor no problem"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 14:15:02",
+    "text": "okay, thats what I got in there, but I get a 415(unsupported media type)"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 14:15:17",
+    "text": "and i have the content-type set to application/json"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 14:16:21",
+    "text": "hmm that should be working, can you share  screenshot or snippet?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 14:18:12",
+    "text": "ahh wait, I had v2 in that version, this does go through"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 14:18:36",
+    "text": "that makes sense, the v2 endpoint expects form encoded data"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 14:18:42",
+    "text": "alright, so now I know its going through, I'm gonna transfer it to HS and give it a shot. once again, appreciate the help a wholee lot"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 14:19:00",
+    "text": "okay, yea, makes sense"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 14:19:02",
+    "text": "yeah of course"
+  },
+  {
+    "text": "<https://HubSpotdev.slack.com/files/UGE7APANP/FGEJV79BN/-.js>",
+    "time_stamp": "2019-02-22 14:22:17"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 14:22:40",
+    "text": "That doesnt work right now, so I'll look into using stringify"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 14:23:07",
+    "text": "It looks like there is an extra level of brackets that doesn’t need to be there"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 14:28:27",
+    "text": "i think they match, double checked."
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 14:30:49",
+    "text": "there are two open brackets in front of `fields` in the snippet you just posted"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 14:31:47",
+    "text": "the second argument in the `post()` funtion should start `{\"fields\":[….` where you have `{{\"fields\":[….`"
+  },
+  {
+    "text": "<https://HubSpotdev.slack.com/files/UGE7APANP/FGE40A0MP/-.js>",
+    "time_stamp": "2019-02-22 14:49:13"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 14:51:55",
+    "text": "the stringify doesnt seem to be working, do you normally use JQUERY to send the JSON code or do you use an alternate method?"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 14:55:16",
+    "text": "I’m not sure you can do that variable declaration in the middle of a function call like that.  This should work:\n```var myData =\n  '{\"fields\":[{ \"name\": \"email\", \"value\": \"<mailto:roger@example.com|roger@example.com>\" }, {  \"name\": \"firstname\",  \"value\": \"Adrian\"  },  ] }'\nvar myJSON = JSON.stringify(myData)\n$(\"#submit\").click(function() {\n  $.post(\n    \"<https://api.hsforms.com/submissions/v3/integration/submit/507673/6a2d5b22-cb27-4775-bea0-e9b839edbd4c>\",\n    myJSON\n  )\n})```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 15:02:00",
+    "text": "no dice, im checking the console"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 15:02:51",
+    "text": "just realized `myData` shouldn’t be wrapped in quotes"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 15:03:34",
+    "text": "in the stringify function?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 15:05:08",
+    "text": "gave this javascript a try in Postman with no luck"
+  },
+  {
+    "poster": {
+      "poster_name": "Roque",
+      "poster_handle": "aroque"
+    },
+    "time_stamp": "2019-02-22 15:05:23",
+    "text": "Hello, I need your help.\n\nHow can I get the Deal of a contact through the HubSpot API and then update the Deal of that contact?\n\nthrough the api I am updating the information of a contact and one of the data that I need to change the Deal of the contact.\n\nAny help is really appreciated.",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-02-22 15:22:39"
+      },
+      {
+        "time_stamp": "2019-02-22 15:31:26"
+      },
+      {
+        "time_stamp": "2019-02-25 08:52:52"
+      },
+      {
+        "time_stamp": "2019-02-26 09:37:50"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 15:05:54",
+    "text": "instead of what I posted try:\n```\nvar myData =\n {\"fields\":[{ \"name\": \"email\", \"value\": \"<mailto:roger@example.com|roger@example.com>\" }, {  \"name\": \"firstname\",  \"value\": \"Adrian\"  },  ] }\nvar myJSON = JSON.stringify(myData)\n$(\"#submit\").click(function() {\n  $.post(\n    \"<https://api.hsforms.com/submissions/v3/integration/submit/507673/6a2d5b22-cb27-4775-bea0-e9b839edbd4c>\",\n    myJSON\n  )\n})\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 15:09:28",
+    "text": "nothing unfortunately"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 15:09:49",
+    "text": "there's no attributes i need in the form tag right?"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 15:16:40",
+    "text": "nope, we aren’t looking at the form at all"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 15:16:52",
+    "text": "are you getting any kind of response from HubSpot"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 15:17:14",
+    "text": "what happens if you `console.log()` `myJSON`"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 15:20:08",
+    "text": "myJSON is not defined"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 15:20:24",
+    "text": "well that would be an issue haha"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 15:20:34",
+    "text": "yea, definitely"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 15:20:55",
+    "text": "so this is the page its on - <https://www.contourmortgage.com/testpagenow>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 15:21:15",
+    "text": "and i don't even see any GETS or POSTS in the network tab when submitting the form"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 15:21:35",
+    "text": "this form is built as a module"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 15:22:39",
+    "text": "There is a`associations` array int he Contact API response that will show you all the DealIDs that the contact is associated with"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 15:25:07",
+    "text": "the form is making a GET request so it’s leaving the page before our request can go off"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 15:25:22",
+    "text": "can you do a `event.preventDefault()` on the form submit?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 15:27:01",
+    "text": "doing that now"
+  },
+  {
+    "poster": {
+      "poster_name": "Roque",
+      "poster_handle": "aroque"
+    },
+    "time_stamp": "2019-02-22 15:31:26",
+    "text": "Yes, I just do not see the deal on the Array so it has not been like"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 15:31:30",
+    "text": "i see what you're saying, still not seeing myJSON"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Stringfellow",
+      "poster_handle": "jstringfellow"
+    },
+    "time_stamp": "2019-02-22 15:32:13",
+    "text": "i have to get to the kids, but i appreciate the help a WHOLE lot, i will be back on this on Monday, if you're still able to give it a look. Again, appreciate it a lot!"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-02-22 15:33:08",
+    "text": "Have a great weekend!"
+  },
+  {
+    "poster": {
+      "poster_name": "Luke Summerfield",
+      "poster_handle": "lukesummerfield"
+    },
+    "time_stamp": "2019-02-22 16:44:27",
+    "text": "WOWZA, what a thread! Thanks so much for helping <@UFBNA9K9A>!!!!"
+  }
+]

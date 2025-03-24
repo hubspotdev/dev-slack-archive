@@ -1,0 +1,303 @@
+[
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-05-10 06:58:41",
+    "text": "This is in addition to `hublData` as a conduit?"
+  },
+  {
+    "poster": {
+      "poster_name": "Goran",
+      "poster_handle": "goran.berggren"
+    },
+    "time_stamp": "2024-05-10 07:11:08",
+    "text": "Is there a way to build component that is equivalent to `blog_recent_posts` or `blog_recent_tag_posts` when building React?\n\nI wanna build a module that fetches 3 latest blog posts from either a Blog och Blog Tag, but I can't find anyway to do it in React.\n\nI wanna use BlogField and TagField but I dunno how to go from there.",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-10 07:22:19"
+      },
+      {
+        "time_stamp": "2024-05-10 07:26:20"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-05-10 07:22:19",
+    "text": "If I understand your use case correctly you may be able to use to pass blog posts via HubL to your React module\n\n\n\n<https://github.HubSpot.com/cms-react/reference/js-modules.html#hubldatatemplate>\n\n\nGraphQL is also available for blog posts to pass data to your React module\n\n<https://github.HubSpot.com/cms-react/reference/js-modules.html#graphql>"
+  },
+  {
+    "poster": {
+      "poster_name": "Goran",
+      "poster_handle": "goran.berggren"
+    },
+    "time_stamp": "2024-05-10 07:26:20",
+    "text": "Gonna have a look, thnx"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2024-05-10 07:49:36",
+    "text": "yes. I feel like it lines up with the same reasoning as the getHubID() getter – the cms-react vision calls for less hubl and a better experience for react devs. Also, data in site_settings is something every front end dev needs to access"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2024-05-10 09:58:21",
+    "text": "Currently the <https://github.HubSpot.com/cms-react/reference/js-modules.html#graphql|cms react graphql documentation> doesn’t provide examples of what an inline query looks like, or what a graphql file should look like (my data.graphql file has hubl in it and it throws errors. Is that expected, or do i have something wrong?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jesse Maltese",
+      "poster_handle": "jmaltese"
+    },
+    "time_stamp": "2024-05-10 10:26:06",
+    "edited": {
+      "time_stamp": "2024-05-10 10:26:32"
+    },
+    "text": "Yes, it does. Unfortunately, it does not (yet) support custom fields objects inside of the main fields object, so if you rewrite your fields object to\n\n``` <ModuleFields>\n    <RepeatedFieldGroup\n      label=\"Project Cards\"\n      name=\"project\"\n      occurrence={{ min: 1, default: 10 }}\n      default={defaultProjects}>\n      <TextField\n        label=\"Header\" \n        name=\"header\"\n        required \n        default=\"Project\"\n      />\n      <ColorField\n        label=\"Background Color\"\n        name=\"background_color\"\n        default={{ hex: \"#ele4ef\" }}\n        showOpacity={false}\n      />\n    </RepeatedFieldGroup>\n  </ModuleFields>```\nyou should get the correct types"
+  },
+  {
+    "poster": {
+      "poster_name": "Jesse Maltese",
+      "poster_handle": "jmaltese"
+    },
+    "time_stamp": "2024-05-10 10:27:13",
+    "text": "Something like this should be generated:\n```type modulesFieldsType = DefaultValues&lt;{\n    project: Array&lt;Record&lt;\"_repeater\", {\n        header: Required&lt;TextFieldType&gt;;\n        background_color: Required&lt;ColorFieldType&gt;;\n    }&gt;&gt;;\n}&gt;;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Josh GH",
+      "poster_handle": "joshgh"
+    },
+    "time_stamp": "2024-05-10 10:31:24",
+    "text": "Correct. That’s how I managed the workaround. Unfortunately, when I uploaded with the simplified ModuleFields, it removed the module that I had in production an created a new module. Effectively, the module instance that I already have on the page dissapears. In our prod environment we’re already using this module &amp; can’t afford to wipe it and start a new instace."
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2024-05-10 11:40:27",
+    "text": "Another question – how do we clear cached local graphql queries? `Using cached GraphQL Query`",
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-05-10 11:41:13"
+      },
+      {
+        "time_stamp": "2024-05-10 11:41:48"
+      },
+      {
+        "time_stamp": "2024-05-10 11:42:13"
+      },
+      {
+        "time_stamp": "2024-05-10 11:44:58"
+      },
+      {
+        "time_stamp": "2024-05-10 11:45:25"
+      },
+      {
+        "time_stamp": "2024-05-15 04:11:31"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-05-10 11:41:13",
+    "text": "`?hsLocalQueryKey=123`"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-05-10 11:41:48",
+    "text": "The caching is protect against GraphQL rate limits being smashed by local dev in an unexpected way"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-05-10 11:42:13",
+    "text": "the cache key is that query param plus the query shape itself"
+  },
+  {
+    "text": "amazing <@UAYBXDG4U> thank you.\n\nDo you by chance know if these docs are incorrect in importing an external `myQuery.graphql` file? I can never get it to work when I have the query in a graphql file",
+    "time_stamp": "2024-05-10 11:44:58"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2024-05-10 11:45:25",
+    "text": "always have to put the query in a template literal"
+  },
+  {
+    "poster": {
+      "poster_name": "Josh GH",
+      "poster_handle": "joshgh"
+    },
+    "time_stamp": "2024-05-10 15:20:51",
+    "text": "<@U03KUBBCK2N>, any idea what could be causing the module duplication/removal problem?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jesse Maltese",
+      "poster_handle": "jmaltese"
+    },
+    "time_stamp": "2024-05-10 15:22:04",
+    "edited": {
+      "time_stamp": "2024-05-10 15:22:16"
+    },
+    "text": "Nothing immediately comes to mind for me. There was no other reorganization/renaming of your file structure beyond inlining the variables of your fields object, right?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jesse Maltese",
+      "poster_handle": "jmaltese"
+    },
+    "time_stamp": "2024-05-10 15:22:56",
+    "text": "It definitely sounds like a bug though. If you have a method to reproduce the error, that would be super helpful."
+  },
+  {
+    "poster": {
+      "poster_name": "Josh GH",
+      "poster_handle": "joshgh"
+    },
+    "time_stamp": "2024-05-10 15:25:35",
+    "text": "Correct, only the usage of the newly generated types in the modules.\nI’ll keep trying to reproduce it &amp; share how, it’s seemed to be very inconsistent so far."
+  },
+  {
+    "poster": {
+      "poster_name": "Jesse Maltese",
+      "poster_handle": "jmaltese"
+    },
+    "time_stamp": "2024-05-10 15:26:36",
+    "edited": {
+      "time_stamp": "2024-05-10 15:26:39"
+    },
+    "text": "Thanks. I did try to reproduce it as well on my portal, but wasn’t able to. Let us know if you find a consistent method. I’m about to sign off, but I’ll do a bit more digging next week and get back to you if I can figure out a fix."
+  },
+  {
+    "poster": {
+      "poster_name": "Josh GH",
+      "poster_handle": "joshgh"
+    },
+    "time_stamp": "2024-05-10 15:58:28",
+    "text": "Is there a proper way to make a field wrapper?\nWe’re using a more reusable `&lt;RichTextFieldWrapper/&gt;` that returns a `&lt;RichTextField/&gt;` with standardized enabledFeatures. A pretty common react pattern. &amp; It works exactly as expected when uploaded, but the field type generator doesn’t recognize it at all. Is this a bug or is there something we can do differently?",
+    "reply_count": 27,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-10 15:59:09"
+      },
+      {
+        "time_stamp": "2024-05-13 11:32:38"
+      },
+      {
+        "time_stamp": "2024-05-14 12:21:39"
+      },
+      {
+        "time_stamp": "2024-05-14 12:24:03"
+      },
+      {
+        "time_stamp": "2024-05-14 12:25:10"
+      },
+      {
+        "time_stamp": "2024-05-14 13:05:26"
+      },
+      {
+        "time_stamp": "2024-05-14 13:08:05"
+      },
+      {
+        "time_stamp": "2024-05-14 13:08:27"
+      },
+      {
+        "time_stamp": "2024-05-14 13:51:56"
+      },
+      {
+        "time_stamp": "2024-05-14 14:57:51"
+      },
+      {
+        "time_stamp": "2024-05-14 15:07:52"
+      },
+      {
+        "time_stamp": "2024-05-14 15:09:38"
+      },
+      {
+        "time_stamp": "2024-05-14 15:20:25"
+      },
+      {
+        "time_stamp": "2024-05-14 15:25:56"
+      },
+      {
+        "time_stamp": "2024-05-14 15:35:57"
+      },
+      {
+        "time_stamp": "2024-05-15 10:44:43"
+      },
+      {
+        "time_stamp": "2024-05-15 11:13:49"
+      },
+      {
+        "time_stamp": "2024-05-15 12:19:58"
+      },
+      {
+        "time_stamp": "2024-05-15 15:06:50"
+      },
+      {
+        "time_stamp": "2024-05-15 15:08:05"
+      },
+      {
+        "time_stamp": "2024-05-15 15:13:07"
+      },
+      {
+        "time_stamp": "2024-05-15 15:14:27"
+      },
+      {
+        "time_stamp": "2024-05-15 15:16:22"
+      },
+      {
+        "time_stamp": "2024-05-15 15:18:03"
+      },
+      {
+        "time_stamp": "2024-05-15 15:20:12"
+      },
+      {
+        "time_stamp": "2024-05-15 15:23:10"
+      },
+      {
+        "time_stamp": "2024-05-15 15:24:22"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Josh GH",
+      "poster_handle": "joshgh"
+    },
+    "time_stamp": "2024-05-10 15:59:09",
+    "edited": {
+      "time_stamp": "2024-05-14 13:00:38"
+    },
+    "text": "```// RichTextFieldWrapper.tsx\n\nexport default function RichTextFieldWrapper(\n  props: React.ComponentPropsWithoutRef<typeof RichTextField>,\n): ReturnType<typeof RichTextField> {\n  return <RichTextField enabledFeatures={enabledFeatures} {...props} />\n}```\n```//fields.tsx\nimport RichTextFieldWrapper from '../../fields/RichTextFieldWrapper'\n\nexport const fields = (\n  <ModuleFields>\n    <RepeatedFieldGroup\n      label=\"People\"\n      name=\"people\"\n      occurrence={{ min: 1, max: 2, default: 2 }}\n      default={defaultPeople}\n    >\n      <TextField label=\"X (twitter) ID\" name=\"x_id\" />\n      <RichTextFieldWrapper\n        label=\"Description\"\n        name=\"description\"\n        default=\"<p>In his industry and consulting career, ...\"\n        enabledFeatures={enabledFeatures}\n        inlineHelpText={inlineHelpText}\n      />\n    </RepeatedFieldGroup>\n  </ModuleFields>\n)```\n```// Generated type\nimport { type DefaultValues, type TextFieldType, type GroupFieldType,\n} from '@HubSpot/cms-components/fields'\ntype PeopleFieldsType = DefaultValues<{\n  people: Array<\n    Record<\n      '_repeater',\n      {\n        x_id: TextFieldType\n        // MISSING: description should be typed here\n      }\n    >\n  >\n}>\nexport default PeopleFieldsType```"
+  }
+]

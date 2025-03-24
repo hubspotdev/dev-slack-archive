@@ -1,0 +1,81 @@
+[
+  {
+    "poster": {
+      "poster_name": "Vincent Van Minnebruggen",
+      "poster_handle": "vincent.vanminnebrugg"
+    },
+    "time_stamp": "2022-06-24 04:12:34",
+    "edited": {
+      "time_stamp": "2022-06-24 04:13:38"
+    },
+    "text": "Hi all! I got a language switcher in my theme, but I would like to change the labels for the languages. I would like to see the current language (in this example: English - United Kingdom) as “en”, and the labels in the dropdown menu should be “English”, “Nederlands”, “Français”. Is there a way to change this? My language switcher code below, visual in the next message.\n```&lt;div class=\"header__language-switcher\"&gt;\n    &lt;div class=\"header__language-switcher-label\"&gt;\n      {% if viewport == \"mobile\" %}\n        {% language_switcher \"language_switcher_mobile\"\n          display_mode=\"{{ module.language_switcher.display_mode }}\",\n          overrideable=false\n        %}\n      {% else %}\n        {% language_switcher \"language_switcher\"\n          display_mode=\"{{ module.language_switcher.display_mode }}\",\n          overrideable=false\n        %}\n      {% endif %}\n      &lt;div class=\"header__language-switcher-current-label\"&gt;\n        &lt;span&gt;{{ locale_name(locale) }}&lt;/span&gt;\n        &lt;button class=\"header__language-switcher-child-toggle no-button\" aria-expanded=\"false\"&gt;\n          &lt;span class=\"show-for-sr\"&gt;Show submenu for translations&lt;/span&gt;\n            {% icon\n              name=\"chevron-down\",\n              no_wrapper=True\n              purpose=\"decorative\",\n              style=\"SOLID\"\n            %}\n        &lt;/button&gt;\n      &lt;/div&gt;\n    &lt;/div&gt;\n  &lt;/div&gt;```",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-06-24 08:38:52"
+      },
+      {
+        "time_stamp": "2022-06-24 08:40:01"
+      },
+      {
+        "time_stamp": "2022-06-24 10:10:02"
+      }
+    ]
+  },
+  {
+    "text": "This is a visual of the language switcher :slightly_smiling_face:",
+    "time_stamp": "2022-06-24 04:13:14",
+    "edited": {
+      "time_stamp": "2022-06-24 04:13:51"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Michelle Tabor",
+      "poster_handle": "michelle376"
+    },
+    "time_stamp": "2022-06-24 06:44:47",
+    "text": "<@U03AKL6Q1B2> You make a great point. I’ll check that too"
+  },
+  {
+    "poster": {
+      "poster_name": "Jennifer Nixon",
+      "poster_handle": "jnixon"
+    },
+    "time_stamp": "2022-06-24 07:12:07",
+    "text": "<@U01L6S710JD> hope it helps! I know how frustrating it can be! Also, if this is the case, you can request HubSpot to delete the fields.json so you don't have to do that every time there is an update."
+  },
+  {
+    "poster": {
+      "poster_name": "Carson Williford",
+      "poster_handle": "cwilliford"
+    },
+    "time_stamp": "2022-06-24 08:34:26",
+    "text": "Hey <@U01L6S710JD>, I’m looking into your case internally. About to DM you for some more details"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephanie O'Gay Garcia",
+      "poster_handle": "stephanie"
+    },
+    "time_stamp": "2022-06-24 08:38:52",
+    "text": "I usually do this using JavaScript:\n```// Change language switcher text (e.g. from \"English\" to \"EN\")\nvar langLinks = document.querySelectorAll(\".lang_switcher_link\");\nfor (i = 0; i &lt; langLinks.length; i++) {\n  var langLink = langLinks[i],\n      language = langLink.dataset.language.toUpperCase();\n  langLink.text = language;\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephanie O'Gay Garcia",
+      "poster_handle": "stephanie"
+    },
+    "time_stamp": "2022-06-24 08:40:01",
+    "text": "But since you have them with the countries, it'll probably be EN-UK... etc. I'm sure you can refine the JavaScript for that though and cut off everything after the dash."
+  },
+  {
+    "poster": {
+      "poster_name": "Vincent Van Minnebruggen",
+      "poster_handle": "vincent.vanminnebrugg"
+    },
+    "time_stamp": "2022-06-24 10:10:02",
+    "text": "Thank you Stephanie! I modified your code a little and now it looks great. The first part will have to be edited if there are more languages, but I’m good for now :slightly_smiling_face:\n```// Change current language text (e.g. from \"English - United Kingdom\" to \"EN\")\nvar currentLangs = document.querySelectorAll('.header__language-switcher-current-label &gt; span');\nfor (i = 0; i &lt; currentLangs.length; i++) {\n  var currentLang = currentLangs[i],\n      language = '';\n  \n  if (currentLang.innerHTML.includes('English')) {\n    language = 'EN';\n  } else if (currentLang.innerHTML.includes('Nederlands')) {\n    language = 'NL';\n  } else if (currentLang.innerHTML.includes('Français')) {\n    language = 'FR';\n  } else {\n    language = currentLang;\n  }\n  currentLang.innerHTML = language;\n}\n\n// Remove country from languages in dropdown\nvar langLinks = document.querySelectorAll(\".lang_switcher_link\");\nfor (i = 0; i &lt; langLinks.length; i++) {\n  var langLink = langLinks[i],\n      language = langLink.innerHTML.substring(0, langLink.innerHTML.indexOf('-'));\n  langLink.text = language;\n}```"
+  }
+]

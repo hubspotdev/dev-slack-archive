@@ -1,0 +1,106 @@
+[
+  {
+    "poster": {
+      "poster_name": "Lukas Kahwe Smith",
+      "poster_handle": "lukas.smith"
+    },
+    "time_stamp": "2024-01-17 03:14:47",
+    "text": "I am trying to set an attribute on an object but it doesn't seem to do anything. Do I need to do something special to set an object attribute?\n```{% set row['translation_' + language][0].example_image = row['translation_' + otherLanguage][0].example_image %}```",
+    "reply_count": 5,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-01-17 03:20:30"
+      },
+      {
+        "time_stamp": "2024-01-17 03:39:26"
+      },
+      {
+        "time_stamp": "2024-01-17 03:42:56"
+      },
+      {
+        "time_stamp": "2024-01-17 03:49:23"
+      },
+      {
+        "time_stamp": "2024-01-17 04:11:33"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Kahwe Smith",
+      "poster_handle": "lukas.smith"
+    },
+    "time_stamp": "2024-01-17 03:20:30",
+    "text": "hmm this also does not seem to work\n```{% do row['translation_' + language][0].update({\"example_image\": row['translation_' + otherLanguage][0].example_image}) %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Kahwe Smith",
+      "poster_handle": "lukas.smith"
+    },
+    "time_stamp": "2024-01-17 03:39:26",
+    "edited": {
+      "time_stamp": "2024-01-17 03:40:53"
+    },
+    "text": "<https://developers.HubSpot.com/docs/cms/hubl#do-tag>"
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Kahwe Smith",
+      "poster_handle": "lukas.smith"
+    },
+    "time_stamp": "2024-01-17 03:42:56",
+    "text": "ah .. it seems like row instance work a bit different internally .."
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Kahwe Smith",
+      "poster_handle": "lukas.smith"
+    },
+    "time_stamp": "2024-01-17 03:49:23",
+    "edited": {
+      "time_stamp": "2024-01-17 03:50:12"
+    },
+    "text": "now trying to just create a separate `images` variable that I can use for lookup but it seems like it just doesn't like me using a variable as the attribute name\n```{% do images.update({row['translation_' + language][0].hs_name: row['translation_' + otherLanguage][0].example_image}) %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Kahwe Smith",
+      "poster_handle": "lukas.smith"
+    },
+    "time_stamp": "2024-01-17 04:11:33",
+    "text": "ok .. hacked something together:\n```              {% do images_by_id.append(row['translation_' + language][0].hs_id) %}\n              {% do images.append({\n                'example_image': row['translation_' + imageLanguage][0].example_image,\n                'example_image_advanced': row['translation_' + imageLanguage][0].example_image_advanced\n              }) %}```\nand then when I need to do the look up later I do:\n```{% set image_id = images_by_id.index(row['translation_' + imageLanguage][0].hs_id) %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2024-01-17 10:25:26",
+    "text": "Anyone know if a HubSpot video poster image is accessible via hubl?"
+  },
+  {
+    "poster": {
+      "poster_name": "Amit Das",
+      "poster_handle": "adas"
+    },
+    "time_stamp": "2024-01-17 13:25:23",
+    "text": "Hi everyone, I have a module (used in emails) using HubL to pull a row.column (column=localize) from HubDB. The cell contains Hola {{ contact.firstname }}\n• If I run my code below it pulls the correct HubDB cell and renders it as \"Hola\" but does not display contact.firstname\n• If I hardcode my query like {% set _query = \"name=\"~_emailname~\"&amp;language=Spanish\"~\"&amp;type=\"~_emailtype %} then it displays \"Hola Adam\"\n• I printed {{ _language }} as well and it shows Spanish\nWhat causes this issue?\n\n```{% set _emailname = module.email_name %}\n{% set _emailtype = module.email_type %}\n{% set _emailsubject = content.subject %}\n{% set _language = 'English' %}\n{% set _localizationtable = \"13241356\" %}\n\n{% if contact.hs_language != '' %}\n\t{% set _language = contact.hs_language %}\n{% endif %}\n\n{% set _query = \"name=\"~_emailname~\"&amp;language=\"~_language~\"&amp;type=\"~_emailtype %}\n\n&lt;br/&gt;\n{% set translation_rows = hubdb_table_rows(_localizationtable, _query) %}\n{{ translation_rows[0].localize|safe }}```",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-01-17 14:28:32"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Amit Das",
+      "poster_handle": "adas"
+    },
+    "time_stamp": "2024-01-17 14:28:32",
+    "text": "Resolved this by adding a variable {% set _contact_firstname = contact.firstname %} and using  Hola {{ _contact_firstname }} in my hubdb table."
+  }
+]

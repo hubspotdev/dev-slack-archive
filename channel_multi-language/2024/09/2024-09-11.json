@@ -1,0 +1,34 @@
+[
+  {
+    "poster": {
+      "poster_name": "I Made Sariyanta",
+      "poster_handle": "desar.sariyanta"
+    },
+    "time_stamp": "2024-09-11 01:31:59",
+    "text": "Hallo good people, I need help in translating the search result module / template.\nIs there a documentation on translating default HS modules and system template?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-09-11 06:17:21"
+      },
+      {
+        "time_stamp": "2024-09-13 01:09:02"
+      },
+      {
+        "time_stamp": "2024-09-18 02:50:09"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2024-09-11 06:17:21",
+    "edited": {
+      "time_stamp": "2024-09-11 06:17:46"
+    },
+    "text": "Hey <@U02DYFPJH4J>,\nthe only proven options for translating those modules/pages are:\n1. Clone the default module and add the translations\n2. Create your own templates and add a variables file per language. There was a documentation for this at some point in the past but seems liek it was removed. \n\nAs for the second option, it's quite easy :slightly_smiling_face: just follow following steps:\n1. create a folder in your theme like \"_locales\"\n2. create subfolders like \"de\", \"en\"... (this is optional)\n3. create an html file for each language like \"de_translations.html\"(name doesn't really matters)\n4. put all of your tranlations in each file like this: \nen_translations.html:\n```{% set headline_text = \"hello world\" %}\n{% set subline_text = \"this is an english subline\" %}\n...```\nde_translations.html:\n```{% set headline_text = \"Hallo Welt\" %}\n{% set subline_text = \"Das ist eine deutsche Unterschrift\" %}\n...```\nadd following statement to your template:\n```{% if content.slug is string_containing \"/en\" %}\n{% include \"PATH-TO-ENGLISH-TRANSLATIONS-FILE %}\n{% elif content.slug is string_containing \"/de\" %}\n{% include \"PATH-TO-GERMAN-TRANSLATIONS-FILE %}\n{% else %}\n{# set a fall back here #}\n{% endif %}```\nIn your template simply replace any \"hard-coded\" elements with the variable names from the translation files. It should look something like this:\n\n```...\n<h1>{{ headline_text }}</h1>\n<span class=\"subline\">{{ subline_text }} </span>\n...```"
+  }
+]

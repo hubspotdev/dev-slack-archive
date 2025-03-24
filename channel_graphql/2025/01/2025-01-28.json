@@ -1,0 +1,232 @@
+[
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2025-01-28 08:13:43",
+    "text": "so dumb question but you want the first OR to OR with the second OR?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2025-01-28 08:13:54",
+    "text": "why not just OR all of them together?\n```{\n  country_eq: \"United States\",\n  state_eq: \"\",\n  business_status_in: [\"Registered\",\"Pending\"],\n  OR: [\n    {business_code_active_in: [\"123456\"]},\n    {business_code_expired_in: [\"123456\"]},\n    {non_profit_eq: true},\n    {education_institution_eq: true}\n  ]\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2025-01-28 08:14:25",
+    "text": "I could totally be reading this wrong"
+  },
+  {
+    "poster": {
+      "poster_name": "Evaldas",
+      "poster_handle": "evaldas.skucas"
+    },
+    "time_stamp": "2025-01-28 08:16:37",
+    "text": "No that is a fair question. So the logic I am going for here is:\n\nCountry\nAND\nState\nAND\n(Business status active OR Business status expired)\nAND\n(Nonprofit OR Education institution)"
+  },
+  {
+    "poster": {
+      "poster_name": "Evaldas",
+      "poster_handle": "evaldas.skucas"
+    },
+    "time_stamp": "2025-01-28 08:18:38",
+    "text": "If we OR all of them together, then if someones searches for a business code that does not exist, it will still return results"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2025-01-28 08:18:55",
+    "text": "haven't tested this but off the top of my head it might be like this.\n\n```{\n  AND: [\n    { country_eq: \"United States\" },\n    { state_eq: \"\" },\n    { OR: [\n        { business_code_active_in: [\"123456\"] },\n        { business_code_expired_in: [\"123456\"] }\n      ]\n    },\n    { OR: [\n        { non_profit_eq: true },\n        { education_institution_eq: true }\n      ]\n    }\n  ]\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2025-01-28 08:19:07",
+    "text": "Can you have nested ORs in ANDS?"
+  },
+  {
+    "poster": {
+      "poster_name": "Evaldas",
+      "poster_handle": "evaldas.skucas"
+    },
+    "time_stamp": "2025-01-28 08:20:01",
+    "text": "I will give it a try now"
+  },
+  {
+    "poster": {
+      "poster_name": "Evaldas",
+      "poster_handle": "evaldas.skucas"
+    },
+    "time_stamp": "2025-01-28 08:25:12",
+    "edited": {
+      "time_stamp": "2025-01-28 08:28:49"
+    },
+    "text": "The error messages seem to imply that AND cannot be used?\n\n`Validation error of type WrongType: argument 'filter' with value 'ObjectValue{objectFields=[ObjectField{name='AND' ....... contains a field not in 'crm_p_suppliers_filter': 'AND'`"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2025-01-28 08:25:44",
+    "text": "gotcha, yeah let me pull up a test for this on my end"
+  },
+  {
+    "text": "So I think your first query might have been right",
+    "time_stamp": "2025-01-28 08:43:38"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2025-01-28 08:43:41",
+    "text": "here's what I'm doing"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2025-01-28 08:43:59",
+    "text": "The logic seems to be working through correctly"
+  },
+  {
+    "poster": {
+      "poster_name": "Evaldas",
+      "poster_handle": "evaldas.skucas"
+    },
+    "time_stamp": "2025-01-28 08:52:33",
+    "text": "Does it still return results for you if you were to change *email__eq* to \"<mailto:carter@HubSpot.com|carter@HubSpot.com>\" and *company__eq* to \"HubSpot\" ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2025-01-28 08:58:04",
+    "text": "No it doesn't because I don't match on either HubSpot or <http://HubSpot.com|HubSpot.com>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2025-01-28 08:58:23",
+    "text": "You want all the ORs to OR together?"
+  },
+  {
+    "text": "This works for example",
+    "time_stamp": "2025-01-28 08:58:45"
+  },
+  {
+    "text": "But this doesn't because neither the email or company match",
+    "time_stamp": "2025-01-28 08:59:21"
+  },
+  {
+    "poster": {
+      "poster_name": "Evaldas",
+      "poster_handle": "evaldas.skucas"
+    },
+    "time_stamp": "2025-01-28 09:00:59",
+    "text": "Based on this example, I would be going for this:\n\n(firstname: Cater OR lastname: McKay)\nAND\n(company: HubSpot OR email: <mailto:carter@HubSpot.com|carter@HubSpot.com>)\n\nSo I want to get a contact who matches either the first name or last name AND works at HubSpot"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2025-01-28 09:01:38",
+    "text": "Yeah yeah yeah"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2025-01-28 09:01:42",
+    "text": "sorry I don't work at HubSpot"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2025-01-28 09:01:52",
+    "text": "so this is working like you want it to"
+  },
+  {
+    "text": "So first name is carter but not Nerd, and email is <mailto:carter@pivitengineering.com|carter@pivitengineering.com> and company isn't HubSpot will still pull something",
+    "time_stamp": "2025-01-28 09:02:56"
+  },
+  {
+    "text": "Okay, so I tried your example with the contact object and it seems to work fine.\n\nFor some reason that same logic fails when it is a custom object",
+    "time_stamp": "2025-01-28 10:23:09"
+  },
+  {
+    "poster": {
+      "poster_name": "Evaldas",
+      "poster_handle": "evaldas.skucas"
+    },
+    "time_stamp": "2025-01-28 10:36:02",
+    "text": "Oh.... I was just able to replicate with the contact object.\n\n```query MyQuery {\nCRM {\ncontact_collection(\n\tfilter: {\n\t\tcountry__eq: \"United States\", state__eq: \"OR\",\n\t\tOR: [{firstname__eq: \"Jake\"}, {lastname__eq: \"Witherspoon\"}]\n\t\tOR: [{jobtitle__eq: \"<mailto:carter@pivitengineering.com|carter@pivitengineering.com>\"}, {company__eq: \"HubSpot\"}] \n  }\n\t) { \n   \t items {\n\t\t\t\tfirstname lastname email country state\n\t\t\t} \n  \t}\n\t}\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Evaldas",
+      "poster_handle": "evaldas.skucas"
+    },
+    "time_stamp": "2025-01-28 10:37:16",
+    "text": "This query produces results, even though neither the *firstname* nor *lastname* matches the record"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2025-01-28 10:53:19",
+    "edited": {
+      "time_stamp": "2025-01-28 10:53:22"
+    },
+    "text": "Ok strangely enough this only affects the first OR"
+  },
+  {
+    "text": "This doesn't return anything",
+    "time_stamp": "2025-01-28 10:53:41"
+  },
+  {
+    "poster": {
+      "poster_name": "Evaldas",
+      "poster_handle": "evaldas.skucas"
+    },
+    "time_stamp": "2025-01-28 10:55:35",
+    "text": "Yes, it feels like the second OR becomes an OR condition between two ORs"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2025-01-28 10:55:47",
+    "text": "yeah that's super strange bro"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2025-01-28 10:55:51",
+    "text": "I'm still looking into it"
+  }
+]

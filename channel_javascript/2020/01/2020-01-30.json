@@ -1,0 +1,307 @@
+[
+  {
+    "poster": {
+      "poster_name": "Robert Gonzalez",
+      "poster_handle": "robert"
+    },
+    "time_stamp": "2020-01-30 13:43:25",
+    "edited": {
+      "time_stamp": "2020-01-30 13:43:51"
+    },
+    "text": "Hello Everyone! I am having trouble with a jQuery hover event on submit buttons on HubSpot forms. On this simple test page....\n\n<https://www.novusagency.org/?hs_preview=QaIjmVIo-25064911123&amp;hsCacheBuster=812>\n\n....you will find a form and a paragraph of text. If you hover over the links in the paragraph, you should see the cursor fill in. I am attempting to do the same with the form submit button but nothing I do works. I also cannot recreate this problem outside of HubSpot. Here is the code I am using to try and accomplish this effect:\n\nJS\n```$(document).mousemove(function(e) {\n  $(\".pointer\").css({left:e.clientX, top:e.clientY});  \n});\n\n$(\"a, .hs-cta-wrapper, input[type='submit']\").hover(\n  function (){\n    $(\".pointer\").addClass(\"active\");\n  }, function (){     \n    $(\".pointer\").removeClass(\"active\");  \n});```\nCSS\n```body:hover .pointer {\n  position: fixed;\n  z-index: 9999999;\n  transform: translate(-43%, -43%);\n  width: 40px;\n  height: 40px;\n  background: rgba(23, 160, 91, 0);\n  border: 1.5px solid #17A05B;\n  border-radius: 50%;\n  pointer-events: none;\n  transition: height 0.2s ease, width 0.2s ease, background 0.2s ease, border 0.2s ease;\n}\n\nbody:hover .pointer.active {\n  width: 60px;\n  height: 60px;\n  background: rgba(23, 160, 91, 0.5);\n  border: 0px solid #17A05B;\n  transition: height 0.2s ease, width 0.2s ease, background 0.2s ease, border 0.2s ease;\n}```\nHTML\n```&lt;!-- This is the green circle that follows the cursor --&gt;\n&lt;div class=\"pointer\"&gt;&lt;/div&gt;```\nI have been working on this for hours with no success so any help you all can provide would be super appreciated!!"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2020-01-30 13:43:53",
+    "text": "when are you calling your JS function?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2020-01-30 13:44:33",
+    "text": "I’ve run into problems with forms before when I’m loading stuff on `document.ready`"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2020-01-30 13:45:04",
+    "text": "but looking at this again… nothing obvious standing out to me"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Gonzalez",
+      "poster_handle": "robert"
+    },
+    "time_stamp": "2020-01-30 13:45:21",
+    "text": "The JS file the function is in, is being loaded just before the closing body tag"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Gonzalez",
+      "poster_handle": "robert"
+    },
+    "time_stamp": "2020-01-30 13:45:46",
+    "text": "Nothing is being loaded on document.ready"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Gonzalez",
+      "poster_handle": "robert"
+    },
+    "time_stamp": "2020-01-30 13:45:51",
+    "text": "but could be worht a try"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Gonzalez",
+      "poster_handle": "robert"
+    },
+    "time_stamp": "2020-01-30 13:46:55",
+    "text": "Nothing changed"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Gonzalez",
+      "poster_handle": "robert"
+    },
+    "time_stamp": "2020-01-30 13:47:48",
+    "text": "I even tried dleteing all the code in the inspector, inserting basically just the code above (and a form), and it still didnt work"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2020-01-30 13:47:49",
+    "text": "I wonder about this:\n```\n$(\"a, .hs-cta-wrapper, input[type='submit']\").hover(\n  function (){\n    $(\".pointer\").addClass(\"active\");\n  }, function (){     \n    $(\".pointer\").removeClass(\"active\");  \n});```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2020-01-30 13:48:00",
+    "text": "I’m wondering if you should be using <https://api.jquery.com/mouseleave/>"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2020-01-30 13:48:14",
+    "text": "<https://api.jquery.com/mouseenter/>"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Gonzalez",
+      "poster_handle": "robert"
+    },
+    "time_stamp": "2020-01-30 13:51:50",
+    "text": "I tried this code before and then it stopped working all together:"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Gonzalez",
+      "poster_handle": "robert"
+    },
+    "time_stamp": "2020-01-30 13:51:54",
+    "text": "```$(\"a, .hs-cta-wrapper, input[type='submit']\").on('mouseenter mouseleave', function() {\n  if ($('.pointer').hasClass('active')) {\n    $('.pointer').removeClass('active');\n  } else {\n    $('.pointer').addClass('active');\n  }\n});```"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Gonzalez",
+      "poster_handle": "robert"
+    },
+    "time_stamp": "2020-01-30 13:51:59",
+    "text": "Is that correct?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2020-01-30 13:53:12",
+    "text": "That does look right.  But I might try debugging it piece by piece.  Seems to be working fine when hovering over `a`"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Gonzalez",
+      "poster_handle": "robert"
+    },
+    "time_stamp": "2020-01-30 13:53:41",
+    "text": "Yup, thats the weird part"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Gonzalez",
+      "poster_handle": "robert"
+    },
+    "time_stamp": "2020-01-30 13:54:31",
+    "text": "I've tried simplifying it so it is only affecting submit buttons, I tried slowly dleting everything on the DOM to see if anything was affecting, and still nothing"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Gonzalez",
+      "poster_handle": "robert"
+    },
+    "time_stamp": "2020-01-30 13:54:39",
+    "text": "i can only get it to work outside of HubSpot"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Gonzalez",
+      "poster_handle": "robert"
+    },
+    "time_stamp": "2020-01-30 13:57:00",
+    "edited": {
+      "time_stamp": "2020-01-30 13:57:21"
+    },
+    "text": "This codepen is literally just a copy of the DOM of the page I linked to:"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Gonzalez",
+      "poster_handle": "robert"
+    },
+    "time_stamp": "2020-01-30 13:57:01",
+    "text": "<https://codepen.io/robertDD/pen/WNbqRrg>"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Gonzalez",
+      "poster_handle": "robert"
+    },
+    "time_stamp": "2020-01-30 13:57:05",
+    "text": "works fine"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2020-01-30 13:57:30",
+    "text": "I think I figured it out"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2020-01-30 13:57:43",
+    "text": "I think it’s an issue with code being called before the form is loaded."
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2020-01-30 13:57:48",
+    "text": "```\n$(\"a, .hs-cta-wrapper, input[type='submit']\").hover(\n  function (){\n    $(\".pointer\").addClass(\"active\");\n  }, function (){     \n    $(\".pointer\").removeClass(\"active\");  \n});```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2020-01-30 13:57:55",
+    "text": "Put that in your console and everything works"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2020-01-30 13:58:30",
+    "text": "So that leads me to think if you call your JS on `window.load` everything should work great"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Gonzalez",
+      "poster_handle": "robert"
+    },
+    "time_stamp": "2020-01-30 13:58:38",
+    "text": "So wrapping in a load event listener might do the trick"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Gonzalez",
+      "poster_handle": "robert"
+    },
+    "time_stamp": "2020-01-30 13:58:42",
+    "text": "haha, ah"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2020-01-30 13:59:09",
+    "text": "I’ve spent literally days stuck on issues with forms"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2020-01-30 13:59:41",
+    "text": "just remembered that the first time I figured this out, I eventually just put my jquery in the console and it all worked great"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Gonzalez",
+      "poster_handle": "robert"
+    },
+    "time_stamp": "2020-01-30 14:00:00",
+    "text": "3+ hours solved by a window.load hahaha"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Gonzalez",
+      "poster_handle": "robert"
+    },
+    "time_stamp": "2020-01-30 14:00:05",
+    "text": "Youre a life saver!"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Gonzalez",
+      "poster_handle": "robert"
+    },
+    "time_stamp": "2020-01-30 14:00:13",
+    "text": "Thanks for the help and advice!"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Gonzalez",
+      "poster_handle": "robert"
+    },
+    "time_stamp": "2020-01-30 14:00:23",
+    "text": "I'll be sure to test in the console more often haha"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2020-01-30 14:02:58",
+    "text": "Glad I could help!"
+  },
+  {
+    "poster": {
+      "poster_name": "Cory Dymond",
+      "poster_handle": "cory218"
+    },
+    "time_stamp": "2020-01-30 15:22:52",
+    "edited": {
+      "time_stamp": "2020-01-30 15:23:00"
+    },
+    "text": "<@UDJMFTHAS> `window.load` may be dangerous because it waits for everything on the page to finish loading, including all resources. If your form is near the top, it could delay things or if a resource like an image or video is really large, you could miss that function entirely on slower connections, or at least be significantly delayed. To be safe, you can use this to run once your form is actually ready, regardless of whether the window is fully loaded.\n```window.addEventListener(\"message\", e=&gt;{\n  if (e.data.eventName === \"onFormReady\") {\n    // code goes here\n  }\n});```\nIt's an event that HS pops once the form is loaded. You can also call this inside of JS if you are loading forms that way, but I'm assuming you aren't. (here is a quick example of that: <https://developers.HubSpot.com/manipulating-forms-with-jquery>)."
+  }
+]

@@ -1,0 +1,145 @@
+[
+  {
+    "text": "Does anyone have any idea why this code could be adding an extra 2 pages to the pagination of this HubDB table? There are 28 results for city_and_state=5 and this should be producing 5 pages, but the \"Next\" is showing up to produce a page 6 &amp; 7 that are blank. Module is on this page - <https://www.alignex.com/test-page-hubdb>",
+    "time_stamp": "2019-08-26 10:31:19",
+    "reply_count": 12,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-08-26 13:07:35"
+      },
+      {
+        "time_stamp": "2019-08-26 13:21:28"
+      },
+      {
+        "time_stamp": "2019-08-26 13:26:36"
+      },
+      {
+        "time_stamp": "2019-08-26 13:56:23"
+      },
+      {
+        "time_stamp": "2019-08-26 13:56:56"
+      },
+      {
+        "time_stamp": "2019-08-26 13:57:40"
+      },
+      {
+        "time_stamp": "2019-08-26 13:58:14"
+      },
+      {
+        "time_stamp": "2019-08-26 13:59:20"
+      },
+      {
+        "time_stamp": "2019-08-26 13:59:43"
+      },
+      {
+        "time_stamp": "2019-08-26 14:01:57"
+      },
+      {
+        "time_stamp": "2019-08-26 14:03:12"
+      },
+      {
+        "time_stamp": "2019-08-26 14:03:48"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2019-08-26 13:07:35",
+    "text": "There's an additional filter on the second `hubdb_table_rows` call. Are you sure there aren't a bunch of results that are in the first one but not the second?"
+  },
+  {
+    "poster": {
+      "poster_name": "Lara Eckerman",
+      "poster_handle": "lara.eckerman"
+    },
+    "time_stamp": "2019-08-26 13:21:28",
+    "text": "Do I need to combine them somehow? I think it's ignoring the \"city_and_state=5\" parameter. I think the total page count is being calculated for ALL rows, not just the rows with city_and_state=5."
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2019-08-26 13:26:36",
+    "text": "What's the result if you just directly print `hubdb_table_rows(xxxxxx, '&amp;city_and_state=5')|length`?"
+  },
+  {
+    "poster": {
+      "poster_name": "Lara Eckerman",
+      "poster_handle": "lara.eckerman"
+    },
+    "time_stamp": "2019-08-26 13:56:23",
+    "text": "Remove the code that follows length for setting the total_pages? \"/ per_page|round(0,'ceil')|int\" ... I get a ton of blank pagination results (6-38 no results) until the \"Next\" disappears."
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2019-08-26 13:56:56",
+    "edited": {
+      "time_stamp": "2019-08-26 13:57:12"
+    },
+    "text": "No I mean just add `{{ hubdb_table_rows(xxxxxx, '&amp;city_and_state=5')|length }}` somewhere in the template. What prints then?"
+  },
+  {
+    "poster": {
+      "poster_name": "Lara Eckerman",
+      "poster_handle": "lara.eckerman"
+    },
+    "time_stamp": "2019-08-26 13:57:40",
+    "text": "38?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2019-08-26 13:58:14",
+    "text": "Which works out to 7 pages"
+  },
+  {
+    "poster": {
+      "poster_name": "Lara Eckerman",
+      "poster_handle": "lara.eckerman"
+    },
+    "time_stamp": "2019-08-26 13:59:20",
+    "text": "So the &amp;city_and_state parameter is being ignored... I only want those 28 results."
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2019-08-26 13:59:43",
+    "text": "That'd most likely be because of the `date_and_time_start__gt=0s` that's added to the second filter; there are 10 items in your table that don't match that filter"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2019-08-26 14:01:57",
+    "text": "What I would suggest is setting your base filter (something like `city_and_state=5&amp;date_and_time_start__gt=0s`) to a variable, and then you can add on the offset and limit after you do the first `hubdb_table_rows` call. That way you can be sure that your query matches in both cases"
+  },
+  {
+    "poster": {
+      "poster_name": "Lara Eckerman",
+      "poster_handle": "lara.eckerman"
+    },
+    "time_stamp": "2019-08-26 14:03:12",
+    "text": "That worked!! Thank you for your help and patience!"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2019-08-26 14:03:48",
+    "text": "No problem :slightly_smiling_face:"
+  }
+]

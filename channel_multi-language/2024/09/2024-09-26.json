@@ -1,0 +1,25 @@
+[
+  {
+    "poster": {
+      "poster_name": "I Made Sariyanta",
+      "poster_handle": "desar.sariyanta"
+    },
+    "time_stamp": "2024-09-26 09:15:45",
+    "text": "I'm trying to load_translations like this, but the template_translations is always null on the live environment, but the same code works on the sandbox.\n\n```{% set lang = request.query_dict.lflang %}\n{% if lang %}\n\t{% set template_translations = load_translations(\"../_locales/\", lang, \"nl\") %}\n{% endif %}```\nWhat could be the problem?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-09-26 09:25:47"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Sébastien Rochon",
+      "poster_handle": "srochon"
+    },
+    "time_stamp": "2024-09-26 09:25:47",
+    "text": "Here is how we dealt with the translation :\n```{%- if request.query_dict.language %}\n    {%- set html_lang = request.query_dict.language %}\n{%- elif request.query_dict.hsLang %}\n    {%- set html_lang = request.query_dict.hsLang %}\n{%- elif (request.path|split(\"/\")) is containing \"en\" %}\n    {%- set html_lang = \"en\" %}\n{%- elif (request.path|split(\"/\")) is containing \"fr\" %}\n    {%- set html_lang = \"fr\" %}\n{%- else %}\n    {%- set html_lang = ROOTLANG %}\n{%- endif %}\n\n\n{%- set i18nLang = html_lang|split(\"-\") %}\n{%- set i18nPath = \"./i18n/\" ~ i18nLang[0] ~ \".html\" %}\n{% import i18nPath as i18n %}```"
+  }
+]

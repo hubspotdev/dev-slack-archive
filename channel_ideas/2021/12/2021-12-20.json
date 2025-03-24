@@ -1,0 +1,75 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-12-20 07:32:47",
+    "text": "the latter is a simplified ternary operator.\n\n<https://developers.HubSpot.com/docs/cms/hubl/if-statements#ternary-operators>\n\nI have not yet had a chance to test what you were saying about the and though I suspect the types you are testing may be the issue as you are not using the truthy expression test. <https://developers.HubSpot.com/docs/cms/hubl/operators-and-expression-tests#truthy>"
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2021-12-20 08:26:27",
+    "edited": {
+      "time_stamp": "2021-12-20 08:39:19"
+    },
+    "text": "&gt;  the latter is a simplified ternary operator.\nI’m not sure I would call it a ternary, since ternary requires ? and : to be used. Same result with a shorter syntax maybe, but not ternary. Ternary literally by definition means “composed of three parts.” Either way, I feel like that would be a good thing to add to the documentation, because that’s a special syntax. Ordinarily you can’t break ternary apart, and sure enough, `pie ? cake` and `pie : cake` give an error. `cake if pie` also behaves in the opposite logic that ternary would.\n\nI also don’t really see the point of the `truthy` expression. In the example there, `{% if widget_data.check_box.value is truthy %}` should always be equivalent to the shorter `{% if widget_data.check_box.value %}` as far as I know. And you still need to use an if statement with it, so it doesn’t really help with the &amp;&amp; short-circuit evaluation thing, whose purpose is brevity and clarity. `cake if pie` meets the brevity part, but the logic is backwards.\n\n&gt; I suspect the types you are testing may be the issue as you are not using the truthy expression test\nNo, the types are not the issue. `pie = true` `pie = 1` and `pie = 'okay'` used with `pie &amp;&amp; 'yum'` will all return `true`, even though pie is “truthy” in all 3, as you can see if you do `pie || 'yum'` which will return `true`, `1`, and `okay` respectively. In JS, `pie &amp;&amp; 'yum'` would return `yum` in each of those cases. And using `pie || 'yum'` would return `true`, `1`, and `okay` as you would expect and as it does in HubL."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-12-20 09:07:24",
+    "text": "Regardless I will look into this. I may not have an answer for a bit due to folks being out for the holidays. If indeed there is a bug in this behavior it may take a bit to work out a safe way to resolve it, since any fix would affect live websites."
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2021-12-20 09:08:21",
+    "text": "Yeah, I understand, thanks for looking into it though."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-12-20 09:12:34",
+    "text": "Could you elaborate on what you’re envisioning as far as disabling module fields.\n\nWhat would be the expected difference in functionality from hidden fields?"
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2021-12-20 09:23:27",
+    "edited": {
+      "time_stamp": "2021-12-20 09:25:22"
+    },
+    "text": "Well, to me, I think it would often-times be more confusing to hide a field completely based on another setting. I can’t think of a specific case I would like to spell out, but sometimes it makes sense to hide a field completely, other times I would imagine a marketer would be confused or disappointed as to why a setting is missing --- in those times, it seems like it would make more sense to disable the field so the user knows of its existence, and provide help text on what the user can do to unlock that setting. That isn’t to say I think disabling is always the better choice, I just think there are some times where it would make more sense to disable a setting (so the user can still see its existence), and other times to hide it completely. Otherwise, the user may simply think the option doesn’t exist in the module, where it may but it’s just hidden by another setting."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-12-20 10:29:46",
+    "edited": {
+      "time_stamp": "2021-12-20 10:30:05"
+    },
+    "text": "Makes sense. Appreciate you taking the time to explain. I’ll pass this feedback along to the teams involved.\n\nI could see a potential need to communicate why something is disabled. *Do you feel the existing helptext options for fields and groups would sufficiently solve that need or do you think we’d need an alternative way to communicate why a field is disabled?*\n\nI ask because translating the rules used to disable to a more common language readable form may not be feasible, or may not sufficiently explain for certain use-cases ."
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2021-12-20 11:16:31",
+    "text": "Yeah, I feel like existing help text options would be sufficient for me and most people. I pretty rarely need to use both help text options, and even if you need to use the tooltip text to explain something else, you would probably have room to add some text as an addendum at the end, “Enabling x will disable this setting,” or something along those lines, which is probably what I would do anyway."
+  }
+]

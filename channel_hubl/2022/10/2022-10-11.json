@@ -1,0 +1,36 @@
+[
+  {
+    "poster": {
+      "poster_name": "RJ Hallin",
+      "poster_handle": "robert.hallinjr"
+    },
+    "time_stamp": "2022-10-11 14:37:27",
+    "text": "Hey everyone!\nI have a custom module that references a HubDB table of ~75 items that I'd like to display in batches. I currently have the table items pulled in by batches of 7. I'd like for the 8th card to be a recent blog post, and have a different recent blog post shown for each of the batches.\n```{% set table = hubdb_table_rows(TABLE_ID) %}\n{% for row in table|batch(7) %}\n                \n{% for cell in row %}\n&lt;div class=\"card-item\"&gt;\nCARD CONTENT\n&lt;/div&gt;\n{% endfor %}\n\n{% set posts = blog_recent_posts(\"default\", 1) %}\n{% for post in posts %}\n&lt;div class=\"card-item blog-card\"&gt;\nBLOG CARD CONTENT\n&lt;/div&gt;\n{% endfor %}\n\n{% endfor %}```\nThe code above is only displaying the same recent blog post in each batch of table items.\nIs this sort of functionality possible with this method? Is there a better method I could be using?\n\nThanks in advance!",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-10-11 17:49:05"
+      },
+      {
+        "time_stamp": "2022-10-12 07:36:05"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Dan Walsh",
+      "poster_handle": "dawalsh"
+    },
+    "time_stamp": "2022-10-11 17:49:05",
+    "text": "I think the issue is that each loop the posts will be set to the first recent posts since you’re going to call blog_recent_posts each loo, so it’ll always be that first most recent posts. Maybe initialize it outside of the loop and use the loop.index0. Would something like\n```{% set posts = blog_recent_posts(\"default\", 12) %}\n{% set table = hubdb_table_rows(TABLE_ID) %}\n{% for row in table|batch(7) %}\n                \n{% for cell in row %}\n&lt;div class=\"card-item\"&gt;\nCARD CONTENT\n&lt;/div&gt;\n{% endfor %}\n\n\n&lt;div class=\"card-item blog-card\"&gt;\n//use posts[loop.index0] to get content here?\n&lt;/div&gt;\n{% endfor %}\n\n{% endfor %}```\nWork for you?"
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Gubaton",
+      "poster_handle": "christian310"
+    },
+    "time_stamp": "2022-10-11 21:30:46",
+    "text": "it was part of a blog post for future events"
+  }
+]

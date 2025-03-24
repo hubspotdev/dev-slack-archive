@@ -1,0 +1,314 @@
+[
+  {
+    "poster": {
+      "poster_name": "Larissa Schulte",
+      "poster_handle": "lschulte"
+    },
+    "time_stamp": "2022-04-19 01:26:51",
+    "text": "Hi folks, does anyone know, if we can use the subscription API to subscribe a contact to an *inactive* subscription type?"
+  },
+  {
+    "poster": {
+      "poster_name": "Art Hryhorian",
+      "poster_handle": "art.hryhorian"
+    },
+    "time_stamp": "2022-04-19 04:31:22",
+    "text": "hi Community! I wasn't able to find anything on my own, so you guys are my last hope..\nI'm developing an application for a single company-user with a primary action. a problem that I'm facing - that all the data comes via the body but not with parameters to my endpoint. (example: _\"body\": \"field1=value1&amp;field2=vlaue2p1%40value2p2\"_)\nI want to avoid additional parsing, so if anyone knows how to force HubSpot to send data to endpoint via parametrs would help me a lot!",
+    "reply_count": 21,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2022-04-19 06:38:41"
+      },
+      {
+        "time_stamp": "2022-04-19 06:46:05"
+      },
+      {
+        "time_stamp": "2022-04-19 06:47:14"
+      },
+      {
+        "time_stamp": "2022-04-19 06:49:07"
+      },
+      {
+        "time_stamp": "2022-04-19 06:51:15"
+      },
+      {
+        "time_stamp": "2022-04-19 06:52:43"
+      },
+      {
+        "time_stamp": "2022-04-19 06:52:43"
+      },
+      {
+        "time_stamp": "2022-04-19 06:53:20"
+      },
+      {
+        "time_stamp": "2022-04-19 06:54:24"
+      },
+      {
+        "time_stamp": "2022-04-19 06:58:59"
+      },
+      {
+        "time_stamp": "2022-04-19 07:02:05"
+      },
+      {
+        "time_stamp": "2022-04-19 07:02:10"
+      },
+      {
+        "time_stamp": "2022-04-19 07:04:45"
+      },
+      {
+        "time_stamp": "2022-04-19 07:05:48"
+      },
+      {
+        "time_stamp": "2022-04-19 07:08:00"
+      },
+      {
+        "time_stamp": "2022-04-19 07:08:28"
+      },
+      {
+        "time_stamp": "2022-04-19 07:09:54"
+      },
+      {
+        "time_stamp": "2022-04-19 07:10:58"
+      },
+      {
+        "time_stamp": "2022-04-19 07:26:12"
+      },
+      {
+        "time_stamp": "2022-04-19 08:11:05"
+      },
+      {
+        "time_stamp": "2022-04-19 13:06:50"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2022-04-19 06:38:41",
+    "text": "what language/client/library are you using to interact with the api? Maybe you need to send an <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept|accept header> in your request like `Accept: application/json`  ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Art Hryhorian",
+      "poster_handle": "art.hryhorian"
+    },
+    "time_stamp": "2022-04-19 06:46:05",
+    "text": "hi <@U02CUFSCXHQ>! I'm using cURL\nI'm not sure how I could include headers..\nfor primaryAction in custom cards, there is a limited parameters I could provide, like: httpMethod and uri\n\nalso, cannot see where I could enable headers on the Developer account of the application"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2022-04-19 06:47:14",
+    "text": "do you mind sharing your cURL command here (without private info like ids and api key/auth tokens?)"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2022-04-19 06:47:54",
+    "text": "<@U26BLKGE4> here’s an update: i noticed that the `after` param was being recognized in v4 but not in v3, which makes me think there is a bug in v3. I solved my problem by doing the following:\n1. rewrote the custom code in python cause i find it simpler to use the requests library over dealing with promises in node\n2. used the v4 List associations endpoint to get back all associated deals for a given contact (the limit of 1000 items before pagination made the pagination issue moot)\n3. used the v3 Read batch deals endpoint to get the details I needed for the associated deals in order to accomplish my task since there isn’t a v4 version of the deals api listed in the docs yet. I didn’t run into any pagination issues, and while the max items isn’t listed in the docs, it accomplishes what I need.\nI do hope that in v4 of the docs, it is more clear how to use the after param in requests, especially with the clients. It took a lot of guesswork on my part, especially when I wasn’t getting back the expected data in v3."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2022-04-19 06:49:07",
+    "edited": {
+      "time_stamp": "2022-04-19 06:49:22"
+    },
+    "text": "or a link to the docs for the endpoint you’re trying to use might suffice as well. i haven’t had to work with custom cards yet."
+  },
+  {
+    "poster": {
+      "poster_name": "Art Hryhorian",
+      "poster_handle": "art.hryhorian"
+    },
+    "time_stamp": "2022-04-19 06:51:15",
+    "text": "ah sure,\n\n```{\n        \"objectId\": {{$.steps.webhook-1.params.associatedObjectId}},\n        \"title\": \"some title\",\n        \"primaryAction\": {\n            \"type\": \"CONFIRMATION_ACTION_HOOK\",\n            \"confirmationMessage\": \"Confirm some action\",\n            \"confirmButtonText\": \"Yes\",\n            \"cancelButtonText\": \"No\",\n            \"httpMethod\": \"PUT\",\n            \"uri\": \"<https://example.link/>\",\n            \"label\": \"Create something\",\n            \"associatedObjectProperties\": [\"dealname\",\"dealstage\",\"pipeline\",\"HubSpot_owner_id\"]\n        }\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2022-04-19 06:52:43",
+    "text": "are you making a request to HubSpot? If so, what url are you using? or is this a webhook response?"
+  },
+  {
+    "poster": {
+      "poster_name": "Art Hryhorian",
+      "poster_handle": "art.hryhorian"
+    },
+    "time_stamp": "2022-04-19 06:52:43",
+    "text": "and for this all associatedObjectProperties I gets in the body which I wish to get via parameters\nfunny think that I have another application and those actions comes via parameters as expected, which makes even more confusion for me"
+  },
+  {
+    "poster": {
+      "poster_name": "Art Hryhorian",
+      "poster_handle": "art.hryhorian"
+    },
+    "time_stamp": "2022-04-19 06:53:20",
+    "text": "it's a webhook response"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2022-04-19 06:54:24",
+    "text": "ah i see. what you’ve pasted above is json, and without knowing much about how the webhooks work, my guess is that this is the only format the data is sent in as it is the standard format for exchanging data via API. When you say the other actions come via parameters, what does that look like exactly? I’m not sure what that means."
+  },
+  {
+    "poster": {
+      "poster_name": "Art Hryhorian",
+      "poster_handle": "art.hryhorian"
+    },
+    "time_stamp": "2022-04-19 06:58:59",
+    "text": "parameters is when endpoint extended (like v3 of HubSpot API) when you add the property to get from some object you specifiyng it in the url parameters like: /contacts?properties=firstname&amp;properties=lastname\n\nand my issue with body is when all those data you get via the body of request but not parameters:\n{\"body\": \"properties=firstname&amp;properties=lastname\"}"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2022-04-19 07:01:15",
+    "text": "I’ve run into similar situations myself regarding undocumented differences between API versions. <@U7SL518D6> <@U2H3TT8F2> might be worth looking into in case the docs could be improved here.\n\nGlad you got things working <@U02CUFSCXHQ>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2022-04-19 07:02:05",
+    "edited": {
+      "time_stamp": "2022-04-19 07:02:35"
+    },
+    "text": "ah ok i see. to be honest, i haven’t seen parameters in a response. I’ve only sent them in a request url and haven’t had to parse them out of a response, but I also haven’t worked with these webhooks before. Typically, I would only expect the data to come from a webhook via json.\n\nInterestingly, I did just find this in <https://developers.HubSpot.com/docs/api/crm/extensions/custom-cards|the HubSpot docs>:\n```associatedObjectProperties: A list of properties on the associated contact, company, deal, or ticket. If httpMethod is GET or DELETE, these property values will be appended to the URI of the request as query parameters. Otherwise, they'll be sent as a JSON request body.```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2022-04-19 07:02:10",
+    "text": "perhaps that answers your question?"
+  },
+  {
+    "poster": {
+      "poster_name": "Art Hryhorian",
+      "poster_handle": "art.hryhorian"
+    },
+    "time_stamp": "2022-04-19 07:04:45",
+    "text": "in new documentation Custom Card isn't fuly described, I prefer legacy docs:\n<https://legacydocs.HubSpot.com/docs/methods/crm-extensions/crm-extensions-overview#:~:text=GET%20https%3A//example.com/demo%2Dtickets%3FuserId%3D12345%26userEmail%3Dtestuser%40example.com%26associatedObjectId%3D78912%26associatedObjectType%3DCOMPANY%26portalId%3D9999999%26domain%3Dtestcompany.com|https://legacydocs.HubSpot.com/docs/methods/crm-extensions/crm-extensions-overview#:~:text=GET%20https%3A//example[…]9999%26domain%3Dtestcompany.com>"
+  },
+  {
+    "poster": {
+      "poster_name": "Art Hryhorian",
+      "poster_handle": "art.hryhorian"
+    },
+    "time_stamp": "2022-04-19 07:05:48",
+    "text": "but yea, this is exactly what I using and where I have an issue, as even in the documentation example link includes data in parameters.."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2022-04-19 07:08:00",
+    "text": "i think this is because PUT and POST are for updating and creating objects respectively, so you need the full body of data for those operations."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2022-04-19 07:08:28",
+    "text": "the example link that I see is showing a DELETE operation, but the values are appended as query params in the cases of DELETE and GET"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2022-04-19 07:09:54",
+    "text": "so it sounds like your app needs to be able to handle either params or a request body. I imagine the issue here is that the http spec does not allow request bodies in GET and DELETE requests"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2022-04-19 07:10:58",
+    "text": "of course, the api designers could have chosen to make all requests POST requests that consistently have a request body in json, but that’s none of my business… haha"
+  },
+  {
+    "poster": {
+      "poster_name": "Art Hryhorian",
+      "poster_handle": "art.hryhorian"
+    },
+    "time_stamp": "2022-04-19 07:26:12",
+    "text": "<@U02CUFSCXHQ> you are so right! 4 days of research are finished :tada:\nthank you so much!!!\nDELETE method resolved that issue, doesn't make sense thb for me but still, as you said \"none of my business\" :smile:\nwierdest think here, that with POST and PUT requests even so all the data moved to body - it's not even in JSON format.."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2022-04-19 08:11:05",
+    "text": "&gt; wierdest think here, that with POST and PUT requests even so all the data moved to body - it’s not even in JSON format..\nthat may have more to do with whatever tool you’re using to take in the data. I would be surprised if the data isn’t coming from HS in JSON. It’s more likely being converted on your end.\n\nAnyway, I’m glad I could help! I’ve been trying to answer more questions when I can on here because I see way more questions than responses in this slack."
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Kraus",
+      "poster_handle": "tom.kraus"
+    },
+    "time_stamp": "2022-04-19 08:57:53",
+    "text": "Hello,\nthe HubSpot support could not help me.. you are my last hope... :)\nI have a problem with a form. On my website there is a form that submits its data via API to a HubSpot form. The HubSpot form feeds the CRM system of HubSpot.\n\nI receive after submitting the form a mail in which the new properties are displayed. One of these properties is \"Address your contact\" (mandatory field).\nIn 25% of the submissions I receive via this form, this property is listed and named in the mail (for example \"product/technologies\"), but it is not listed in the CRM system. So this property is not assigned to the customer in HubSpot. However, because I use this property in a workflow, I absolutely need it.\nThe mail I receive is from HubSpot. So I conclude that HubSpot has this information available.\n\nI don't recognize any scheme when it is transferred to the crm-sytem and when it is not.... Can you guys help me?\n\nKind regards,\nTom Kraus"
+  },
+  {
+    "text": "Hi all, fairly new to HubSpot API and looking for tips on extracting information for activity by contact (with date). Attached a snapshot of what I'm looking to extract --  I've had limited success based on filtering by activity type but ideally would like all activity data (for all customers). The documentation I've used to get this off the ground: <https://developers.HubSpot.com/docs/api/crm/contacts>",
+    "time_stamp": "2022-04-19 11:55:20",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-04-19 13:21:57"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Artem Hryhorian",
+      "poster_handle": "artem.hryhorian"
+    },
+    "time_stamp": "2022-04-19 13:06:50",
+    "text": "True that:sweat_smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Art Hryhorian",
+      "poster_handle": "art.hryhorian"
+    },
+    "time_stamp": "2022-04-19 13:12:23",
+    "text": "upvoting that question! also, looking for ways to upload/fetch gravatars of companies and contacts"
+  },
+  {
+    "poster": {
+      "poster_name": "Art Hryhorian",
+      "poster_handle": "art.hryhorian"
+    },
+    "time_stamp": "2022-04-19 13:18:44",
+    "text": "hi Spencer,\ninteresting question\njust tested that endpoint:\n```<https://api.hubapi.com/crm/v4/associations/companies/companies/batch/read>```\nI don't think it's documented, so I just tried and it works!\nI was able to see all child companies for some parent company\nmethod: POST\nbody:\n```{\n  \"inputs\": [\n    {\n      \"id\": \"2763842850\"\n    }\n  ]\n}```\nyou may include into that request up to 100 companies"
+  },
+  {
+    "text": "hi Brian,\nidk about all activities (page views, form submitions) but everything else (notes,emails,calls,meeting) you can get using related endpoints from here: <https://developers.HubSpot.com/docs/api/crm/calls>",
+    "time_stamp": "2022-04-19 13:21:57"
+  }
+]

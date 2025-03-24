@@ -1,0 +1,207 @@
+[
+  {
+    "poster": {
+      "poster_name": "LOIC BURDET",
+      "poster_handle": "loic_burdet"
+    },
+    "time_stamp": "2019-01-17 02:31:15",
+    "text": "Is it possible to use API to get posts from a topic using /content/api/v2/blog-posts\nbecause I don't see a topic parameter ...\nThanks all",
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2019-01-17 03:08:33"
+      },
+      {
+        "time_stamp": "2019-01-17 07:26:30"
+      },
+      {
+        "time_stamp": "2019-01-17 21:53:55"
+      },
+      {
+        "time_stamp": "2019-01-18 12:55:18"
+      },
+      {
+        "time_stamp": "2019-01-20 09:17:41"
+      },
+      {
+        "time_stamp": "2019-01-20 22:08:52"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Umakant - MakeWebBetter",
+      "poster_handle": "umakantsharma"
+    },
+    "time_stamp": "2019-01-17 03:08:33",
+    "edited": {
+      "time_stamp": "2019-01-17 03:09:08"
+    },
+    "text": "<@U3TR96G84> when we get the title, we have an field for `associatedBlogIds` that has to contain blog post ids associated with and then we can get those blog posts <https://screenshots.firefox.com/cchMeH2XGsaCzVk5/developers.HubSpot.com>"
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "Joe",
+      "poster_handle": "joe"
+    },
+    "time_stamp": "2019-01-17 07:02:18",
+    "edited": {
+      "time_stamp": "2019-01-17 07:02:35"
+    },
+    "text": "<@U6GNQ7JBU>\nThanks for the additional input.\nWhen i try to use that endpoint, i'm getting a `415: Unsupported Media Type` response error.\nthis is the call i'm running:\n```\naxios({\n      method: 'put',\n      url: `<https://api.hubapi.com/hubdb/api/v2/tables/${table_id}/publish?hapikey=${api_key}>`,\n    })\n      .then((res) =&gt; console.log(res.data))\n      .catch((err) =&gt; console.log(err.response));\n```\nhowever, if I try this endpoint call instead:\n```\naxios({\n      method: 'put',\n      url: `<https://api.hubapi.com/hubdb/api/v2/tables/${table_id}?hapikey=${api_key}>`,\n      data: { \n        \"publishedAt\": Date.now(),\n        \"useForPages\": true\n      }\n    })\n      .then((res) =&gt; console.log('Table published: '+res.data.id))\n      .catch((err) =&gt; console.log(err));\n```\nI get a success response, and can see the table as `published` in the HubDB tables page. However, trying to get the rows of this \"published\" table still gives a\n```\n{ status: 'error',\n  message: 'table ${table_id} does not exist in portal ${portal_id},\n}\n```"
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "William Spiro",
+      "poster_handle": "wspiro"
+    },
+    "time_stamp": "2019-01-17 07:26:30",
+    "text": "Yea you can query the api by topic like with a query string, like `topic_id=&lt;topic ID&gt;`"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-01-17 08:19:52",
+    "text": "That is a mistake in the API as you shouldn’t be able to set the the published field on the draft table."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-01-17 08:20:11",
+    "text": "Using your `axios` library can you explicitly set the media-type"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-01-17 08:20:22",
+    "text": "I wouldn’t think it would matter since you shouldn’t be sending any data"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-01-17 08:20:34",
+    "text": "<https://developers.HubSpot.com/docs/methods/hubdb/v2/publish-draft-table>"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe",
+      "poster_handle": "joe"
+    },
+    "time_stamp": "2019-01-17 08:38:35",
+    "edited": {
+      "time_stamp": "2019-01-17 08:38:54"
+    },
+    "text": "My thoughts exactly with that api endpoint, and even my `PUT` request has no data attached to it.\nBit confusing is all. Any thoughts of what else might need to be included to get a success response for?\n```\naxios({\n      method: 'put',\n      url: `<https://api.hubapi.com/hubdb/api/v2/tables/${table_id}/publish?hapikey=${api_key}>`,\n    })\n      .then((res) =&gt; console.log(res.data))\n      .catch((err) =&gt; console.log(err.response));\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-01-17 08:45:38",
+    "text": "I am pretty sure I know what is going on"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-01-17 08:48:37",
+    "text": "Planning on fixing, the underlying issue is that the table API requires you to send a Content-Type `application/json` even on endpoints that don’t require JSON"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-01-17 08:50:02",
+    "text": "Fixing that now"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-01-17 08:58:53",
+    "text": "Change should be out soon"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe",
+      "poster_handle": "joe"
+    },
+    "time_stamp": "2019-01-17 09:01:08",
+    "edited": {
+      "time_stamp": "2019-01-17 09:03:09"
+    },
+    "text": "Awesome. I can try including that as part of the headers for now to see if that works. Looking forward to seeing the fix in action."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-01-17 09:03:28",
+    "text": "Yea I am guessing your API defaults to something like `text` when you don’t specify any body"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe",
+      "poster_handle": "joe"
+    },
+    "time_stamp": "2019-01-17 09:09:51",
+    "text": "yeah, looks like for `PUT` requests in axios, the `data` element needs to be defined. From the `axios` library:\n```\n// `data` is the data to be sent as the request body\n  // Only applicable for request methods 'PUT', 'POST', and 'PATCH'\n  // When no `transformRequest` is set, must be of one of the following types:\n  // - string, plain object, ArrayBuffer, ArrayBufferView, URLSearchParams\n  // - Browser only: FormData, File, Blob\n  // - Node only: Stream, Buffer\n  data: {\n    firstName: 'Fred'\n  },\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-01-17 09:10:57",
+    "text": ":+1: the updates have been deployed"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe",
+      "poster_handle": "joe"
+    },
+    "time_stamp": "2019-01-17 09:20:05",
+    "text": "getting a success response now from that `/hubdb/api/v2/tables/:tableId/publish` endpoint woo!\nand my get rows of that published table are also returning the rows!"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe",
+      "poster_handle": "joe"
+    },
+    "time_stamp": "2019-01-17 09:21:09",
+    "text": "<@U6GNQ7JBU>\n<https://media.giphy.com/media/3o7TKoWACSy9jjwjni/giphy.gif>"
+  },
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  {
+    "poster": {
+      "poster_name": "Umakant - MakeWebBetter",
+      "poster_handle": "umakantsharma"
+    },
+    "time_stamp": "2019-01-17 21:53:55",
+    "text": "<@U6W3H6YN8> does it means our documentation is not complete, and the accepted parameters can be more then the listed once ?"
+  },
+  null
+]

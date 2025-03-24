@@ -1,0 +1,275 @@
+[
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2024-06-04 07:02:36",
+    "text": "Can anyone else replicate this? I’m having trouble with required `Int!` variables in graphql queries. Code in :thread:\nerror:\n```{\n  \"message\": \"Variable 'count' has coerced Null value for NonNull type 'Int!'\",\n  \"locations\": [\n    {\n      \"line\": 5,\n      \"column\": 40,\n      \"sourceName\": null\n    }\n  ],\n  \"path\": null,\n  \"extensions\": null,\n  \"errorType\": \"ValidationError\"\n}```",
+    "reply_count": 15,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-06-04 07:02:59"
+      },
+      {
+        "time_stamp": "2024-06-04 07:04:33"
+      },
+      {
+        "time_stamp": "2024-06-04 08:32:42"
+      },
+      {
+        "time_stamp": "2024-06-04 08:44:29"
+      },
+      {
+        "time_stamp": "2024-06-04 08:51:44"
+      },
+      {
+        "time_stamp": "2024-06-04 08:56:27"
+      },
+      {
+        "time_stamp": "2024-06-04 09:12:40"
+      },
+      {
+        "time_stamp": "2024-06-04 09:34:44"
+      },
+      {
+        "time_stamp": "2024-06-04 09:41:31"
+      },
+      {
+        "time_stamp": "2024-06-04 10:24:09"
+      },
+      {
+        "time_stamp": "2024-06-04 10:24:34"
+      },
+      {
+        "time_stamp": "2024-06-04 12:04:07"
+      },
+      {
+        "time_stamp": "2024-06-04 12:55:04"
+      },
+      {
+        "time_stamp": "2024-06-04 12:56:07"
+      },
+      {
+        "time_stamp": "2024-06-04 12:56:38"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2024-06-04 07:02:59",
+    "text": "query:\n```export const query = `\n# $count: 2\n# $categories: {{ request.query_dict.categories || '' }}\n\nquery Podcasts($categories: [HS_Enum], $count: Int!) {\n  HUBDB {\n    podcasts_collection(\n      limit: $count\n      offset: 0\n      orderBy: published_date__desc\n      filter: { categories__in: $categories }\n    ) {\n      total\n      hasMore\n      limit\n      offset\n      items {\n        hs_id\n        hs_path\n        name\n        featured_image\n        published_date\n        duration\n        episode\n        categories\n        description\n      }\n    }\n  }\n}\n`;```"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2024-06-04 07:04:33",
+    "text": "I originally had a module number field value, then tried `$count: {{ module.count || 3 }}` but got the same error. So i just tried it with a number (above) and it still is not working"
+  },
+  {
+    "text": "I even tried this on the example storybook repo. The number doesn’t work here either. So I must be doing it wrong, or there is some sort of bug?",
+    "time_stamp": "2024-06-04 08:32:42"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-06-04 08:44:29",
+    "text": "Have you tried setting the default in JS instead of HubL?\n```const defaultCount = 3;\nconst query = `\n  query Podcasts($categories: [HS_Enum], $count: Int!) {\n    HUBDB {\n      podcasts_collection(\n        limit: $count\n        offset: 0\n        orderBy: published_date__desc\n        filter: { categories__in: $categories }\n      ) {\n        total\n        hasMore\n        limit\n        offset\n        items { \n          hs_id \n          hs_path \n          name \n          featured_image \n          published_date \n          duration \n          episode \n          categories \n          description \n        }\n      }\n    }\n  }`;\n\n// Your function that executes the query\nconst executeQuery = (variables) =&gt; {\n  const vars = {\n    count: variables.count || defaultCount,\n    categories: variables.categories || [],\n  };\n  // Perform the query with correctly set variables\n  return graphqlClient.query({ query, variables: vars });\n};```\nsomething like this?"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2024-06-04 08:51:44",
+    "text": "but the thing is I ultimately need hubl values from the module fields (`module.count`)…"
+  },
+  {
+    "poster": {
+      "poster_name": "Rich McNeary",
+      "poster_handle": "rich960"
+    },
+    "time_stamp": "2024-06-04 08:51:44",
+    "text": "I think I saw this error when the component passed to the `Island` wasn’t imported with `?island`? I’ve seen the error and solved it just having a hard time remembering how…"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-06-04 08:56:27",
+    "text": "You should still be able to do that in JS with the fields prop, <https://github.com/HubSpot/cms-react/tree/main/examples/hello-world/hello-world-project/hello-world-app/components/modules/TodoList>"
+  },
+  {
+    "poster": {
+      "poster_name": "Rich McNeary",
+      "poster_handle": "rich960"
+    },
+    "time_stamp": "2024-06-04 08:59:12",
+    "text": "A practice I’ve adopted to try and simplify working with islands + modules is to have the module be a HOC that just passes props to the component that is passed to the island, that might help debug,\n\n```// components/modules/Module.tsx\nimport Component from \"../react-components/component?island\";\n\nexport function Module({fieldValues as props}) {\n  return &lt;Island module={Component} {...props} /&gt;\n} ```"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2024-06-04 09:12:40",
+    "text": "But we should be able to use hubl in graphql queries according to the <https://github.com/HubSpot/cms-react/blob/main/examples/contact-profile/contact-profile-project/contact-profile-app/components/modules/ContactWithAssociations/index.jsx#L77|contact example>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jesse Maltese",
+      "poster_handle": "jmaltese"
+    },
+    "time_stamp": "2024-06-04 09:25:55",
+    "text": ":wave: Hi all, sorry for the wait here, but these changes should all be in the next cms-components/cms-dev-server release!"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-06-04 09:34:44",
+    "text": "Yeah I mean you aren't wrong but if it's not working I always try to do something that should at least in theory work"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2024-06-04 09:41:31",
+    "edited": {
+      "time_stamp": "2024-06-04 09:41:52"
+    },
+    "text": "Yeah. How do you access the component’s field values inside the query call? Async await magic? Or make the query call from the `Component` ? Haven’t tried any of these thoughts yet"
+  },
+  {
+    "poster": {
+      "poster_name": "Dennis K",
+      "poster_handle": "dennis579"
+    },
+    "time_stamp": "2024-06-04 10:12:21",
+    "text": "How does anyone here make there Footers and Headers? Make a Footer and Header global partial in Hubl and insert JS modules for settings the menu and footer menu blocks? Bit lost on that part"
+  },
+  {
+    "poster": {
+      "poster_name": "Dennis K",
+      "poster_handle": "dennis579"
+    },
+    "time_stamp": "2024-06-04 10:18:11",
+    "text": "RichText component is not working btw. Opened an issue on Github"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-06-04 10:24:09",
+    "text": "Does `# $count: \"2\"` work for you?\n\nIt worked for me"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-06-04 10:24:34",
+    "text": "So in the case of\n`$count: {{ module.count || 3 }}`\n\nI think you'd want:\n\n`$count: \"{{ module.count || 3 }}\"`"
+  },
+  {
+    "poster": {
+      "poster_name": "Dennis K",
+      "poster_handle": "dennis579"
+    },
+    "time_stamp": "2024-06-04 10:50:12",
+    "edited": {
+      "time_stamp": "2024-06-04 10:54:38"
+    },
+    "text": "For anyone who wants to work with Tailwind in both React and Hubl, here are my scripts. If anyone has a better way, please tell me. But I installed Tailwind in both directories since I couldn’t compile Tailwind used in my .hubl files, using the Tailwind config in the React dir…\n\n\n```  \"scripts\": {\n    \"start\": \"cd wiertz-project/wiertz-app && yarpm start\",\n    \"storybook\": \"cd wiertz-project/wiertz-app && yarpm run storybook\",\n    \"postinstall\": \"cd wiertz-project/wiertz-app && yarpm install\",\n    \"lint:js\": \"eslint . --ext .js,.jsx\",\n    \"prettier\": \"prettier . --check\",\n    \"watch\": \"npm-run-all -s watch:*\",\n    \"watch:css\": \"cd wiertz-theme && npx tailwindcss -i ./input.css -o ./dist/output.css --watch\",\n    \"watch:hubl\": \" hs watch wiertz-theme wiertz-theme --remove\",\n    \"upload\": \"npm-run-all -s upload:*\",\n    \"upload:compile\": \"cd wiertz-theme && npx tailwindcss -i ./input.css -o ./dist/output.css\",\n    \"upload:hubl\": \"hs upload wiertz-theme wiertz-theme\",\n    \"deploy\": \"hs project upload wiertz-project\"\n  },```\nSo during deployment of the React project it is compiling the CSS there and for everything I do in Hubl, I’ll compile during upload. It’s not ideal and I hate it to be honest since you will have duplicate styles and it’s a mess maintaining shared classes.. I loved the React direction they went into, but the current workflow is a DX nightmare.\n\nA monorepo setup where you have a package for the shared styles, could be interesting. No time to set that up though since there is a deadline coming up haha"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-06-04 12:03:35",
+    "edited": {
+      "time_stamp": "2024-06-04 12:03:42"
+    },
+    "text": ":wave: - this is long overdue, but island hydration logging has been moved behind `hsDebug=true`"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2024-06-04 12:04:07",
+    "text": "<@U04DLJH3W94> that didn’t work for me, but I am in local dev server. You think that could be it?\n\nI did notice the note on <https://github.com/HubSpot/cms-react/blob/main/examples/contact-profile/contact-profile-project/contact-profile-app/components/modules/ContactWithAssociations/index.jsx#L78|the github contacts example> that said\n&gt; There are scenarios in which these predefined variables are undefined,\n&gt; to account for this the query sets a fallaback. In this case the fallback\n&gt; is “<mailto:bh@HubSpot.com|bh@HubSpot.com>”."
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-06-04 12:55:04",
+    "text": "&gt; local dev server\nThat could be it, I don't believe the local dev server supports HubL variables at the moment\n\nBut a deployed page should"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2024-06-04 12:56:07",
+    "text": "<@U04DLJH3W94> <@U01QVR44MEY> it’s been a long day, but y’all made it better! thank y’all!!!"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-06-04 12:56:38",
+    "text": "of course! not a problem man"
+  },
+  {
+    "poster": {
+      "poster_name": "Josh GH",
+      "poster_handle": "joshgh"
+    },
+    "time_stamp": "2024-06-04 13:49:42",
+    "text": "Love it! Is there any plan to add type-checks to islands? For example in the following, there’s no type validation for the `fieldValues` being passed to the `&lt;Island /&gt;` .\nWe’ve passed the wrong props multiple times &amp; spent a hot minute trying to figure out how the island was broken :laughing:\n```import YouTubeWithTimesteps from '@shared/YouTubeWithTimesteps/YouTubeWithTimesteps?island'\n\nexport default function YouTube(\n  props: ModuleProps&lt;YouTubeFieldsType&gt;,\n): React.ReactElement {\n  const { fieldValues } = props\n\n  return (\n    &lt;div className=\"bitovi-module-wrapper\"&gt;\n      &lt;Island module={YouTubeWithTimesteps} {...fieldValues} /&gt;\n    &lt;/div&gt;\n  )\n} ```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Jesse Maltese",
+      "poster_handle": "jmaltese"
+    },
+    "time_stamp": "2024-06-04 14:01:49",
+    "edited": {
+      "time_stamp": "2024-06-04 14:02:15"
+    },
+    "text": "Hmm just thinking quickly here but could you do something like this?\n\n```function TypedIsland<T>(props: React.ComponentProps<typeof Island> & T) {\n  return <Island {...props} />;\n}\n\nexport const Component = ({\n  fieldValues,\n}: ModuleProps<MyModuleFieldTypes>) => {\n  return (\n    <div className=\"myComponent\">\n      <TypedIsland<MyModuleFieldTypes> module={MyIsland} {...fieldValues} />\n    </div>\n  );\n};```\nIt’s not pretty, but assuming you pass the right generic to the TypedIsland, it  should give you some validation"
+  },
+  {
+    "poster": {
+      "poster_name": "Josh GH",
+      "poster_handle": "joshgh"
+    },
+    "time_stamp": "2024-06-04 14:08:08",
+    "text": "Ooooh, I’ll look into that. That’s actually a pretty great idea for now. Still feels a bit counter-intuitive to me that Island doesn’t do any validation, but definitely should be doable.\nCan I still put in a feature request for adding it to the Island itself, pretty please? :pleading_face: :laughing:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jesse Maltese",
+      "poster_handle": "jmaltese"
+    },
+    "time_stamp": "2024-06-04 14:09:15",
+    "text": "Yep, I will look into it :+1:"
+  }
+]

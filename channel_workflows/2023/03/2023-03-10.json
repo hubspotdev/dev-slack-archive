@@ -1,0 +1,213 @@
+[
+  {
+    "poster": {
+      "poster_name": "Fed",
+      "poster_handle": "fed"
+    },
+    "time_stamp": "2023-03-10 06:37:39",
+    "text": "Hello everyone,\n\nI have an issue with custom code and rate limiting.\nWe run into an issue where a workflow isn't triggering again even though the error says the rate limit has been reached.\nI've read on this page that the workflow is supposed to restart some minutes later when there is a rate limiting error : <https://developers.HubSpot.com/docs/api/error-handling> (at the very end)\n\nMy issue is that it isn't triggering again after failing from a rate limit error. We create many tickets, and a workflow is supposed to trigger on these tickets. Only few go through the process. The remaining ones are stuck with a single instance of the workflow ran, blocked by rate limiting. We waited hours and it didn't retrigger for those with a failing status.\n\nMy workflow looks like this :\n```const HubSpot = require(\"@HubSpot/api-client\");\n\nexports.main = async (event, callback) =&gt; {\n  try {\n    const HubSpotClient = new HubSpot.Client({\n      accessToken: process.env.Custom_code,\n    });\n\n    const ticket = await HubSpotClient.crm.tickets.basicApi.getById(\n      event.object.objectId,\n      [\"email\", \"phone_number\", \"last_name\", \"first_name\", \"ticket_type\"]\n    );\n    \n    // Code inbetween deleted for clarity\n      \n    const searchContactByEmail =\n      await HubSpotClient.crm.contacts.searchApi.doSearch({\n        filterGroups: [{ filters: filtersContactByEmail }],\n        properties,\n        limit,\n        after,\n      });\n    \n    // Code inbetween deleted for clarity\n\n    await HubSpotClient.crm.contacts.associationsApi.create(\n      associationObjectRequest.contactId,\n      associationObjectRequest.toObjectType,\n      associationObjectRequest.toObjectId,\n      associationObjectRequest.AssociationSpec\n    );\n\n    callback({ outputFields: {} });\n  } catch (e) {\n    console.error(e);\n    throw e;\n  }\n};```\nHere are one of the failing log :\n```WARNING: The logs for this function have exceeded the 4KB limit.\n...\n604800}\",\"server\":\"cloudflare\",\"strict-transport-security\":\"max-age=31536000; includeSubDomains; preload\",\"vary\":\"origin, Accept-Encoding\",\"x-HubSpot-correlation-id\":\"aeebd1d4-80fa-4187-b5db-1ea1417508e5\",\"x-HubSpot-ratelimit-daily\":\"500000\",\"x-HubSpot-ratelimit-daily-remaining\":\"480771\",\"x-trace\":\"2BDA6943F47E8B3CA51DB4DD974A8D9BC1D5297EFA000000000000000000\"},\"stack\":[\"Error: HTTP-Code: 429\",\"Message: An error occurred.\",\"Body: {\\\"status\\\":\\\"error\\\",\\\"message\\\":\\\"You have reached your secondly limit.\\\",\\\"correlationId\\\":\\\"aeebd1d4-80fa-4187-b5db-1ea1417508e5\\\",\\\"category\\\":\\\"RATE_LIMITS\\\"}\",\"Headers: {\\\"access-control-allow-credentials\\\":\\\"false\\\",\\\"alt-svc\\\":\\\"h3=\\\\\\\":443\\\\\\\"; ma=86400, h3-29=\\\\\\\":443\\\\\\\"; ma=86400\\\",\\\"cf-cache-status\\\":\\\"DYNAMIC\\\",\\\"cf-ray\\\":\\\"7a54b54e7c4590fe-FRA\\\",\\\"connection\\\":\\\"close\\\",\\\"content-length\\\":\\\"148\\\",\\\"content-type\\\":\\\"application/json;charset=utf-8\\\",\\\"date\\\":\\\"Thu, 09 Mar 2023 16:31:26 GMT\\\",\\\"nel\\\":\\\"{\\\\\\\"success_fraction\\\\\\\":0.01,\\\\\\\"report_to\\\\\\\":\\\\\\\"cf-nel\\\\\\\",\\\\\\\"max_age\\\\\\\":604800}\\\",\\\"report-to\\\":\\\"{\\\\\\\"endpoints\\\\\\\":[{\\\\\\\"url\\\\\\\":\\\\\\\"https:\\\\\\\\/\\\\\\\\/a.nel.cloudflare.com\\\\\\\\/report\\\\\\\\/v3?s=A1c3CKIXmKdYNLIK8sLU7YHf%2B5XrFXf47mg9ohiNz15fgflkuG6d14e5j%2FItxqnlAeB8DYkIpquIWWTfbNioAnEFrdvatc92REDENR%2FDFfzBhnH4HaoOPPcIgyZ%2BaezI\\\\\\\"}],\\\\\\\"group\\\\\\\":\\\\\\\"cf-nel\\\\\\\",\\\\\\\"max_age\\\\\\\":604800}\\\",\\\"server\\\":\\\"cloudflare\\\",\\\"strict-transport-security\\\":\\\"max-age=31536000; includeSubDomains; preload\\\",\\\"vary\\\":\\\"origin, Accept-Encoding\\\",\\\"x-HubSpot-correlation-id\\\":\\\"aeebd1d4-80fa-4187-b5db-1ea1417508e5\\\",\\\"x-HubSpot-ratelimit-daily\\\":\\\"500000\\\",\\\"x-HubSpot-ratelimit-daily-remaining\\\":\\\"480771\\\",\\\"x-trace\\\":\\\"2BDA6943F47E8B3CA51DB4DD974A8D9BC1D5297EFA000000000000000000\\\"}\",\"    at SearchApiResponseProcessor.&lt;anonymous&gt; (/opt/nodejs/node_modules/@HubSpot/api-client/lib/codegen/crm/contacts/apis/SearchApi.js:63:23)\",\"    at Generator.next (&lt;anonymous&gt;)\",\"    at fulfilled (/opt/nodejs/node_modules/@HubSpot/api-client/lib/codegen/crm/contacts/apis/SearchApi.js:5:58)\",\"    at processTicksAndRejections (node:internal/process/task_queues:96:5)\"]},\"promise\":{},\"stack\":[\"Runtime.UnhandledPromiseRejection: Error: HTTP-Code: 429\",\"Message: An error occurred.\",\"Body: {\\\"status\\\":\\\"error\\\",\\\"message\\\":\\\"You have reached your secondly limit.\\\",\\\"correlationId\\\":\\\"aeebd1d4-80fa-4187-b5db-1ea1417508e5\\\",\\\"category\\\":\\\"RATE_LIMITS\\\"}\",\"Headers: {\\\"access-control-allow-credentials\\\":\\\"false\\\",\\\"alt-svc\\\":\\\"h3=\\\\\\\":443\\\\\\\"; ma=86400, h3-29=\\\\\\\":443\\\\\\\"; ma=86400\\\",\\\"cf-cache-status\\\":\\\"DYNAMIC\\\",\\\"cf-ray\\\":\\\"7a54b54e7c4590fe-FRA\\\",\\\"connection\\\":\\\"close\\\",\\\"content-length\\\":\\\"148\\\",\\\"content-type\\\":\\\"application/json;charset=utf-8\\\",\\\"date\\\":\\\"Thu, 09 Mar 2023 16:31:26 GMT\\\",\\\"nel\\\":\\\"{\\\\\\\"success_fraction\\\\\\\":0.01,\\\\\\\"report_to\\\\\\\":\\\\\\\"cf-nel\\\\\\\",\\\\\\\"max_age\\\\\\\":604800}\\\",\\\"report-to\\\":\\\"{\\\\\\\"endpoints\\\\\\\":[{\\\\\\\"url\\\\\\\":\\\\\\\"https:\\\\\\\\/\\\\\\\\/a.nel.cloudflare.com\\\\\\\\/report\\\\\\\\/v3?s=A1c3CKIXmKdYNLIK8sLU7YHf%2B5XrFXf47mg9ohiNz15fgflkuG6d14e5j%2FItxqnlAeB8DYkIpquIWWTfbNioAnEFrdvatc92REDENR%2FDFfzBhnH4HaoOPPcIgyZ%2BaezI\\\\\\\"}],\\\\\\\"group\\\\\\\":\\\\\\\"cf-nel\\\\\\\",\\\\\\\"max_age\\\\\\\":604800}\\\",\\\"server\\\":\\\"cloudflare\\\",\\\"strict-transport-security\\\":\\\"max-age=31536000; includeSubDomains; preload\\\",\\\"vary\\\":\\\"origin, Accept-Encoding\\\",\\\"x-HubSpot-correlation-id\\\":\\\"aeebd1d4-80fa-4187-b5db-1ea1417508e5\\\",\\\"x-HubSpot-ratelimit-daily\\\":\\\"500000\\\",\\\"x-HubSpot-ratelimit-daily-remaining\\\":\\\"480771\\\",\\\"x-trace\\\":\\\"2BDA6943F47E8B3CA51DB4DD974A8D9BC1D5297EFA000000000000000000\\\"}\",\"    at process.&lt;anonymous&gt; (file:///var/runtime/index.mjs:1188:17)\",\"    at process.emit (node:events:513:28)\",\"    at emit (node:internal/process/promises:140:20)\",\"    at processPromiseRejections (node:internal/process/promises:274:27)\",\"    at processTicksAndRejections (node:internal/process/task_queues:97:32)\"]}\nUnknown application error occurred\nRuntime.Unknown\n\nMemory: 29/128 MB\nRuntime: 2110.49 ms```\nIs there something I missed ?\n\nThanks for any light on this",
+    "reply_count": 13,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2023-03-10 11:08:43"
+      },
+      {
+        "time_stamp": "2023-03-10 11:09:06"
+      },
+      {
+        "time_stamp": "2023-03-10 11:32:39"
+      },
+      {
+        "time_stamp": "2023-03-10 12:39:08"
+      },
+      {
+        "time_stamp": "2023-03-10 12:43:05"
+      },
+      {
+        "time_stamp": "2023-03-10 12:43:22"
+      },
+      {
+        "time_stamp": "2023-03-10 12:46:04"
+      },
+      {
+        "time_stamp": "2023-03-10 12:46:14"
+      },
+      {
+        "time_stamp": "2023-03-10 12:53:28"
+      },
+      {
+        "time_stamp": "2023-03-10 13:18:37"
+      },
+      {
+        "time_stamp": "2023-03-13 08:19:11"
+      },
+      {
+        "time_stamp": "2023-03-13 08:19:25"
+      },
+      {
+        "time_stamp": "2023-03-13 08:20:35"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2023-03-10 06:49:32",
+    "text": "This sounds like it’s maybe an issue with the CCA or with how we render tokens in general. Would you be able to have your customer rep open a support ticket? Neither Angus or myself own much of that code so it’d be great to route it to the right team (officially)"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-10 06:56:44",
+    "text": "I can reach out to ours"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2023-03-10 06:57:32",
+    "text": "Perfect. Reason I’m asking for that, btw, is that it could take engineering time to fix the issue and we need to record it whenever possible"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2023-03-10 06:57:44",
+    "text": "and this way we can delegate to our other engineers :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-10 06:58:09",
+    "text": "gotcha okie ty"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-10 09:40:41",
+    "text": "we are just going to handle it interanlly instead of dealing with HubSpot support"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2023-03-10 10:48:37",
+    "text": "I’m alerting the team just in case, I’m worried this could be cropping up for others as well"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-10 10:55:57",
+    "text": "okie dokie yeah we already ahve a bunch of other emergency tickets out to our rep so don't want to be mean lol"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-10 10:56:35",
+    "text": "if you need me to show you / whoever in detail our situation I can just can't do it in a public forum cuz of nda-ed data"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2023-03-10 11:00:15",
+    "text": "I would actually appreciate that, if you could DM me more information so that we can reproduce it, I can open an engineering ticket"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-10 11:08:43",
+    "text": "it'll only retry if you throw a certain kind of error - its insanely frustrating. <@U01QVR44MEY> is the man and remembers the certain errors off hand"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-10 11:09:06",
+    "text": "I got around this by doing a very obnoxious handful of workflows that basically trick the system into infinite loops until X is met"
+  },
+  {
+    "poster": {
+      "poster_name": "Patrick Merlino",
+      "poster_handle": "pmerlino"
+    },
+    "time_stamp": "2023-03-10 11:32:39",
+    "text": "<@U0157R7AQ84> tagging you for your insight"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-10 12:39:08",
+    "text": "429 is the error you want to throw"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-10 12:43:05",
+    "text": "This might be the SDK acting up, I would suggest using Axios for all API calls in CCAs"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-10 12:43:22",
+    "text": "the endpoints are just much more reliable than the sdk"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-10 12:46:04",
+    "text": "You also have multiple calls running in the same try so that's definitely not helping you"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-10 12:46:14",
+    "text": "let me convert this code for you"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-10 12:53:28",
+    "text": "do you have the complete code? Looks like parts are missing"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-10 13:18:37",
+    "text": "You code when converted to use axios and setup with a catch for each api call would look like this:\n\n```const axios = require('axios');\n\nexports.main = async (event, callback) =&gt; {\n  \n  var email;\n\n  var config = {\n    method: 'get',\n    url: '<https://api.hubapi.com/crm/v3/objects/tickets/>' + event.object.objectId + '?properties=email,phone_number,last_name,first_name,ticket_type',\n    headers: {\n      'Authorization': 'Bearer ' + process.env.graphqlkey\n    }\n  }\n\n  const ticket = await axios(config)\n    .then(function (response) {\n      console.log(JSON.stringify(response.data));\n      email = response.data.properties.email\n    }) // added closing curly brace\n    .catch(function (error) {\n      console.log(error);\n      throw error;\n    }) // removed extra closing parenthesis\n  \n   var contactid;\n\n   var data = JSON.stringify({\n      \"filterGroups\": [\n        {\n          \"filters\": [\n            {\n              \"propertyName\": \"email\",\n              \"operator\": \"EQ\",\n              \"value\": email\n            }\n          ]\n        }\n      ],\n      \"properties\": [\n        \"email\",\n        \"phone_number\",\n        \"last_name\",\n        \"first_name\"\n      ],\n      \"limit\": 1,\n      \"after\": 0\n    });\n\n\n  var config1 = {\n    method: 'post',\n    data: data,\n    url: '<https://api.hubapi.com/crm/v3/objects/contacts/search>',\n    headers: {\n      'Content-Type': 'application/json',\n      'Authorization': 'Bearer ' + process.env.graphqlkey\n    }\n  }\n  const searchContactByEmail = await axios(config1)\n    .then(function (response) {\n      console.log(JSON.stringify(response.data));\n      contactid=response.data.results[0].id\n    }) // added closing curly brace\n    .catch(function (error) {\n      console.log(error);\n      throw error;\n    }) // removed extra closing parenthesis\n\n  callback({\n    outputFields: {\n      \"contact_id\": contactid,\n      \"ticket_id\": event.object.objectId,\n      \"email\": email\n    }\n  });\n\n\n}```\n"
+  }
+]

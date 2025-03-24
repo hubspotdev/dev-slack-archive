@@ -1,0 +1,21 @@
+[
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2022-09-13 08:27:10",
+    "text": "<@UK9BKNBD5> I would be interested to see what you did to get the tabs and overall UI of this."
+  },
+  {
+    "poster": {
+      "poster_name": "Mitja Lewin",
+      "poster_handle": "m.lewin"
+    },
+    "time_stamp": "2022-09-13 10:01:50",
+    "edited": {
+      "time_stamp": "2022-09-13 10:03:11"
+    },
+    "text": "<@U38EZFVFE> Actually it's just Stylesheets and most of it change the color. The tabs are still there, just not recognizable from the design. The logo is a CSS _background-image_. And the original Icons are hidden, but with _:before_ and _content_ new one are added. And I needed a lot of _!important_ statements, to overwrite the HubSpot _!important_ and inline Styles. So in the end some tricky parts to get the design working. But the magic happen with this line:\n\n```{% require_js %}\n  &lt;style type=\"text/css\"&gt;\n    {% from '../consent_design.css' import consent_design %}\n    {{ consent_design() }}\n  &lt;/style&gt;\n{% end_require_js %}```\nIt's include the Stylesheets (macro from consent_design.css), but with _require_js_ at the bottom of the page, where the JavaScript parts normally goes. It's because HubSpot inject their consent manager styles right after the body starts and not as part of the _default_header_includes_ like asspected. Normally style tags in body are not w3c valid, but the browser support this widely. I don't know why HubSpot did that, but it's okay, as long as those styles are not visible from the beginning; it's a browser redraw thing.\n\nIn the end, it used round about 600 Line of CSS Code and a rainy day with nothing better to do. If you also want to create your own design, I prefer you copy the DOM of the banner and manager from your browser into separate HTML files and import them into a blank test page; it makes the development a lot faster and easier."
+  }
+]

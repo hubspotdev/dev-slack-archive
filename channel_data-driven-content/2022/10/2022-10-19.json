@@ -1,0 +1,45 @@
+[
+  {
+    "poster": {
+      "poster_name": "Stef Leitch",
+      "poster_handle": "sleitch"
+    },
+    "time_stamp": "2022-10-19 06:26:46",
+    "text": "Hi Carter, this field seems to be working on my end... Are you certain there is actually data populated in that property for the object returned?\n\nIt's my understanding (though I'm not 100% sure so don't quote me on this :stuck_out_tongue:) that `hs_activity_type` contains custom types set up in your HubSpot account, see documentation for <https://developers.HubSpot.com/docs/api/crm/calls|Calls> and <https://developers.HubSpot.com/docs/api/crm/meetings|Meetings> where it describes that property under the `Create a...` sections in those articles.\n\nIf you're looking generally for the type of engagement (`CALL`, `MEETING`, etc.), that seems to be available under `hs_engagement_type`"
+  },
+  {
+    "poster": {
+      "poster_name": "Stef Leitch",
+      "poster_handle": "sleitch"
+    },
+    "time_stamp": "2022-10-19 06:27:52",
+    "text": "For example, in my portal:\n\n```query MyQuery {\n  CRM {\n    ticket_collection {\n      items {\n        associations {\n          engagement_collection__ticket_to_engagement {\n            items {\n              hs_activity_type\n              hs_body_preview\n              hs_engagement_type\n            }\n          }\n        }\n      }\n    }\n  }\n}```\nreturns\n\n```\"data\": {\n    \"CRM\": {\n      \"ticket_collection\": {\n        \"items\": [\n          {\n            \"associations\": {\n              \"engagement_collection__ticket_to_engagement\": {\n                \"items\": [\n                  {\n                    \"hs_activity_type\": null,\n                    \"hs_body_preview\": \"There was an e-mail.\",\n                    \"hs_engagement_type\": {\n                      \"label\": \"Email sent to contact\",\n                      \"value\": \"EMAIL\"\n                    }\n                  },\n                  {\n                    \"hs_activity_type\": {\n                      \"label\": \"A custom type\",\n                      \"value\": \"A custom type\"\n                    },\n                    \"hs_body_preview\": \"Busy.\",\n                    \"hs_engagement_type\": {\n                      \"label\": \"Call\",\n                      \"value\": \"CALL\"\n                    }\n                  }\n                ]\n              }\n            }\n          }\n        ]\n      }\n    }```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-10-19 06:38:24",
+    "text": "<@U024L8W0MB6> I knew you would be the person to figure this out! You are completely right I was confusing engagement_type for activity_type"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-10-19 06:38:36",
+    "edited": {
+      "time_stamp": "2022-10-19 06:38:39"
+    },
+    "text": "It's working fine now, thanks again"
+  },
+  {
+    "poster": {
+      "poster_name": "Stef Leitch",
+      "poster_handle": "sleitch"
+    },
+    "time_stamp": "2022-10-19 06:39:26",
+    "text": "No problem! Glad I could help!"
+  }
+]

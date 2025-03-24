@@ -1,0 +1,91 @@
+[
+  {
+    "poster": {
+      "poster_name": "Ville Pekkarinen",
+      "poster_handle": "ville"
+    },
+    "time_stamp": "2022-03-17 03:09:46",
+    "edited": {
+      "time_stamp": "2022-03-17 03:11:06"
+    },
+    "text": "We're working on an integration using workflow actions, where contacts/deals/etc get enrolled and we post the data elsewhere using custom actions, hopefully receive the other end's object so we can enrich the data with eg. the other end's ID, and it's good going so far. The other end posts contacts/deals to default API endpoints, triggering the workflow, and we identify the contact as coming from an outside source and do stuff accordingly.\n\nWhere it gets interesting is when especially deals get updated in the other end. In theory they could store the dealId and PATCH the deal, but then they would also need to know the dealstage id's, and stuff is prone to change, so to me that's not ideal (eg. someone changes the dealstages and they need to notify development and development needs to notify the third party and blech), so I thought maybe they could just POST a new deal / contact / whatever, then we can do whatever logic to ID that this deal already exists in HubSpot end, map the other_end_status to the dealstage, update existing deal, and delete the \"new\" one. (We don't update the deals at HubSpot CRM end at all manually, the business happens elsewhere, and HS just keeps track of things for, IDK, marketing reasons?)\n\nSadly (well, duh) deleting/archiving the deal being processed results in the workflow giving out errors, obvs we could just ignore those but it's hardly ideal. Maybe we could instead delete the old deal and replace it with the new one, but I'm not 100% sure if that would lead to some other problems – it's more a CRM/sales thing and I'm just a simple developer.\n\nWe could of course build a NodeJS or whatever service to act as a mediator between the two parties, mangling the data etc. but budgets and such, also interesting to try and leverage workflow actions for this.\n\nAny ideas and input would be welcome, thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt",
+      "poster_handle": "mtunney"
+    },
+    "time_stamp": "2022-03-17 05:52:42",
+    "text": "Hi\n\nHas anyone done any accessibility work with HubSpot form embeds?\nI’d like to be able to declare aria-labels for form elements",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-03-17 06:14:58"
+      },
+      {
+        "time_stamp": "2022-03-17 06:17:12"
+      },
+      {
+        "time_stamp": "2022-03-17 06:18:02"
+      },
+      {
+        "time_stamp": "2022-03-17 06:29:51"
+      },
+      {
+        "time_stamp": "2022-03-17 06:30:49"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ville Pekkarinen",
+      "poster_handle": "ville"
+    },
+    "time_stamp": "2022-03-17 06:14:58",
+    "edited": {
+      "time_stamp": "2022-03-17 06:15:26"
+    },
+    "text": "IIRC the forms get rendered via javascript so you'd need to add a listener for the formready event (or whatever it was) and then add the aria-labels via JS as well"
+  },
+  {
+    "poster": {
+      "poster_name": "Ville Pekkarinen",
+      "poster_handle": "ville"
+    },
+    "time_stamp": "2022-03-17 06:17:12",
+    "text": "```window.addEventListener(\"message\", (event) =&gt; {\n  if (\n    event.data.type === \"hsFormCallback\" &amp;&amp;\n    event.data.eventName === \"onFormReady\"\n  ) {\n    /* stuffs */\n  }\n});```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Ville Pekkarinen",
+      "poster_handle": "ville"
+    },
+    "time_stamp": "2022-03-17 06:18:02",
+    "text": "Disclaimer, I took this off some old project and there might be a sensible-r way of doing this"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt",
+      "poster_handle": "mtunney"
+    },
+    "time_stamp": "2022-03-17 06:29:51",
+    "text": "That’s helpful thank you\nI have this implementation already in place for updating form field values\n\nThanks :+1:"
+  },
+  {
+    "poster": {
+      "poster_name": "Ville Pekkarinen",
+      "poster_handle": "ville"
+    },
+    "time_stamp": "2022-03-17 06:30:49",
+    "text": "np, np. I think we did this somewhere too where the designer wanted the labels to be placeholders for the inputs or some such nonsense"
+  },
+  {
+    "poster": {
+      "poster_name": "Artem Dikmarov",
+      "poster_handle": "dikmarov"
+    },
+    "time_stamp": "2022-03-17 23:11:57",
+    "text": "Hello, everyone!\n\nWho has written automated tests (e2e) with HubSpot?\n\nWe are currently experiencing a problem that HubSpot asks for a code from the mail when trying to Login.\n\nIs there any way around this?"
+  }
+]

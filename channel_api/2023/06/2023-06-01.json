@@ -1,0 +1,138 @@
+[
+  {
+    "poster": {
+      "poster_name": "Derek Knostman",
+      "poster_handle": "dknostman"
+    },
+    "time_stamp": "2023-06-01 08:48:02",
+    "text": "I'm having trouble with the format of the data returned from the HubSpot API.  Using this python script, data is returned - and it looks like JSON: from HubSpot import HubSpot\nimport json\nimport csv\nimport pandas\nfrom pandas import DataFrame\n\napi_client = HubSpot(access_token=\"XXXXXX\")\n\nall_contacts = api_client.crm.contacts.get_all(properties=[\"email\",\"firstname\",\"lastname\",\"adpoint_sync_adpoint_id\"])\n\nprint(all_contacts)But, I can't work with the data.  I've tried dumping it into a JSON file, and I get errors.  I've tried converting it to a string and then to JSON, but can't really work with it.  I've tried dictionaries, data frames, etc.  I either get an error, or I get text output I cannot work with.  Does anyone know what I need to do to use the output?  I'd like to get the properties into a CSV format to insert into a database.",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-06-01 09:00:41"
+      },
+      {
+        "time_stamp": "2023-06-01 09:20:46"
+      },
+      {
+        "time_stamp": "2023-06-01 09:38:34"
+      },
+      {
+        "time_stamp": "2023-06-02 00:33:34"
+      },
+      {
+        "time_stamp": "2023-06-06 08:59:45"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Michele Cristiano",
+      "poster_handle": "mct"
+    },
+    "time_stamp": "2023-06-01 09:00:41",
+    "text": "Hi <@U05AHR0NC6N>, here is a ready to use python function to get all contacts and convert it into a pandas dataframe (note that you should insert the properties you want in the dict)\n\ndef get_all_contacts():\n\n    url = “<https://api.hubapi.com/crm/v3/objects/contacts>”\n\n\n    parameters = {\n    “limit”: “100”,\n    “properties”: “email”\n    }\n\n    try:\n        response = requests.get(url, headers=headers, params=parameters)\n        response.raise_for_status()\n        response = response.json()\n\n\n        #create a dataframe\n        df = pd.json_normalize(response[‘results’])\n\n        if ‘paging’ in response:\n            next_page = response[‘paging’][‘next’][‘after’]\n            keep_request = True\n        else:\n            keep_request = False\n\n        #Loop through subsequent contact pages\n        while keep_request:\n\n            parameters[‘after’] = next_page\n\n            response = requests.get(url, headers=headers, params=parameters)\n            response = response.json()\n            next_data = response[‘results’]\n\n\n            #append new chunk of dataframe\n            next_df = pd.json_normalize(next_data)\n            df = pd.concat([df, next_df])\n\n            #check if there’s a following page and stop the loop if not\n            if ‘paging’ in response:\n                next_page = response[‘paging’][‘next’][‘after’]\n\n            else:\n                keep_request = False\n\n    except requests.exceptions.HTTPError as e:\n        print(f”Exception when calling HubSpot API: {e}“)\n\n    return df"
+  },
+  {
+    "poster": {
+      "poster_name": "Philipp Balasch",
+      "poster_handle": "philipp.balasch"
+    },
+    "time_stamp": "2023-06-01 09:15:59",
+    "edited": {
+      "time_stamp": "2023-06-01 10:15:02"
+    },
+    "text": "Hi, I am trying to integrate HubSpot with #SAP Open Connectors. For this, I have created a free developer account with HubSpot. The authentication with OAuth2 and defining the scope works fine, I think, because of the trial and error steps I went through following the instruction of this blog: <https://blogs.sap.com/2022/05/12/end-to-end-cloud-integration-using-open-connectors/>\n\nNevertheless, when I try to connect, I get this error message: *Couldn’t complete the connection*\n*The account you selected 1234567890 is a developer account. This app can't be installed on a developer account.* \n\n\n\nSales support told me that the free developer account may be restricted, and I should try the developer community. To me, either I'm missing a small step or this is kind of a chicken and egg problem: a developer account that is so restricted that one cannot try out the API integration. Any ideas? Please help! Thanks!",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-06-05 05:39:33"
+      },
+      {
+        "time_stamp": "2023-06-05 06:59:44"
+      },
+      {
+        "time_stamp": "2023-06-05 07:06:33"
+      },
+      {
+        "time_stamp": "2023-06-05 07:52:26"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Derek Knostman",
+      "poster_handle": "dknostman"
+    },
+    "time_stamp": "2023-06-01 09:20:46",
+    "text": "Thank you Michele.  I'll give it a go."
+  },
+  {
+    "poster": {
+      "poster_name": "Derek Knostman",
+      "poster_handle": "dknostman"
+    },
+    "time_stamp": "2023-06-01 09:38:34",
+    "text": "Michele - how do I add my access token/private app to this?  Do I need to add the headers?  headers = {\n    'accept': \"application/json\",\n    'content-type': \"application/json\",\n    'authorization': \"Bearer YOUR_ACCESS_TOKEN\"\n    }"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-06-01 10:16:21"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-06-01 10:34:30",
+    "text": "hahaha, <@U024HBLKPBK> been a minute. Of course bro"
+  },
+  {
+    "poster": {
+      "poster_name": "Derek Knostman",
+      "poster_handle": "dknostman"
+    },
+    "time_stamp": "2023-06-01 10:43:43",
+    "text": "If I create a report in HubSpot (e.g. a CSV report with Contact data), can I pull that report via the API?  Is there an endpoint I can use to POST and GET a specific report ID?"
+  },
+  {
+    "text": "Hi all, I’m logging an email via API and want the sales rep to be able to then reply to that email from the HubSpot UI. However I’m getting an error. Any ideas on what’s going on here?\n\nIt simply says:\n\n`An error occurred while trying to send this email. Please try again.`",
+    "time_stamp": "2023-06-01 10:57:35",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-06-01 11:09:06"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Harris Kenny (Intro CRM)",
+      "poster_handle": "harris"
+    },
+    "time_stamp": "2023-06-01 11:09:06",
+    "text": "nevermind this is resolved!"
+  },
+  {
+    "poster": {
+      "poster_name": "Mariana Forteza",
+      "poster_handle": "mariana"
+    },
+    "time_stamp": "2023-06-01 16:34:49",
+    "text": "Hello everyone.\nI noticed that the “offset” parameter was removed from the hubdb api in v3, and we only have an option of “paging”\nIs there any other way to get back the functionality of offset? I dont want to have to loop through “paging” multiple times in order to get a numbered pagination. It doesn’t make sense."
+  },
+  {
+    "poster": {
+      "poster_name": "Michele Cristiano",
+      "poster_handle": "mct"
+    },
+    "time_stamp": "2023-06-02 00:33:34",
+    "edited": {
+      "time_stamp": "2023-06-02 00:34:48"
+    },
+    "text": "you should add this right after opening the function (in my case is outside):\n\naccess_token = “YOUR_ACCESS_TOKEN”\nheaders = {\n    “Authorization”: f”Bearer {access_token}“,\n    “Content-Type”: “application/json”\n}"
+  }
+]

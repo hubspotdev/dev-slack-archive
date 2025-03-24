@@ -1,0 +1,50 @@
+[
+  {
+    "poster": {
+      "poster_name": "Andrew Melbourne",
+      "poster_handle": "andrewmelbourne111"
+    },
+    "time_stamp": "2023-02-18 12:01:27",
+    "text": "Im declaring something in the wrong order as my callback field keeps saying Not defined in code - what do I need to update please?\n\n```\nvar axios = require('axios');\nexports.main = async (event,callback) =&gt; {\nlet owner2;\nvar config = {\n  method: 'get',\n  url: '<http://api.hubapi.com/crm/v3/owners/'+event.fields.HubSpot_owner_id>,\n  headers: { \n    'Authorization': 'Bearer '+process.env.pAppKey\n  }\n};\n\naxios(config)\n.then(function (response) {\n owner2 = response.data.teams[0].id,\nconsole.log(\"owner2: \" + owner2)\n  }   \n)\n.catch(function (error) {\n  console.log(error);\n});\n  \n  callback({\n    outputFields: {\n     owner2 : owner2\n    }\n  });  \n\n}```\n",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-02-18 13:01:26"
+      },
+      {
+        "time_stamp": "2023-02-18 13:07:26"
+      },
+      {
+        "time_stamp": "2023-02-18 13:07:34"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-18 13:01:26",
+    "edited": {
+      "time_stamp": "2023-02-18 13:01:38"
+    },
+    "text": "Yeah so it just in a little it of the wrong order, here's the right version:\n```var axios = require('axios');\nexports.main = async (event,callback) =&gt; {\nlet owner2;\nvar config = {\n  method: 'get',\n  url: '<http://api.hubapi.com/crm/v3/owners/'+event.fields.HubSpot_owner_id>,\n  headers: { \n    'Authorization': 'Bearer '+process.env.pAppKey\n  }\n};\n\naxios(config)\n.then(function (response) {\n owner2 = response.data.teams[0].id,\nconsole.log(\"owner2: \" + owner2)\ncallback({\n    outputFields: {\n     owner2 : owner2\n    }\n  }); \n  }   \n)\n.catch(function (error) {\n  console.log(error);\n});\n  \n   \n\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrew Melbourne",
+      "poster_handle": "andrewmelbourne111"
+    },
+    "time_stamp": "2023-02-18 13:07:26",
+    "text": "Thanks man"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-18 13:07:34",
+    "text": "of course"
+  }
+]

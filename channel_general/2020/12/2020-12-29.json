@@ -1,0 +1,313 @@
+[
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2020-12-29 01:15:03",
+    "text": "Hi guys\nI am currently developing a theme\nBut one of my main issues with the drag and drop areas is the lack of control for responsive sizes\nHow do you tackle this?\nI can not get iPad to look good without using css in the module to adjust the width and grid for each breakpoint"
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2020-12-29 02:08:59",
+    "text": "Has anyone been able to combine sass with Hubl?",
+    "reply_count": 20,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2020-12-29 07:02:22"
+      },
+      {
+        "time_stamp": "2020-12-29 07:24:08"
+      },
+      {
+        "time_stamp": "2020-12-29 07:32:07"
+      },
+      {
+        "time_stamp": "2020-12-29 07:43:57"
+      },
+      {
+        "time_stamp": "2020-12-29 07:45:16"
+      },
+      {
+        "time_stamp": "2020-12-29 07:47:05"
+      },
+      {
+        "time_stamp": "2020-12-29 07:51:19"
+      },
+      {
+        "time_stamp": "2020-12-29 07:51:32"
+      },
+      {
+        "time_stamp": "2020-12-29 07:55:40"
+      },
+      {
+        "time_stamp": "2020-12-29 07:58:32"
+      },
+      {
+        "time_stamp": "2020-12-29 08:00:22"
+      },
+      {
+        "time_stamp": "2020-12-29 08:01:33"
+      },
+      {
+        "time_stamp": "2020-12-29 08:02:31"
+      },
+      {
+        "time_stamp": "2020-12-29 08:05:05"
+      },
+      {
+        "time_stamp": "2020-12-29 08:05:16"
+      },
+      {
+        "time_stamp": "2020-12-29 08:16:49"
+      },
+      {
+        "time_stamp": "2020-12-29 08:18:53"
+      },
+      {
+        "time_stamp": "2020-12-29 08:23:36"
+      },
+      {
+        "time_stamp": "2020-12-30 12:21:07"
+      },
+      {
+        "time_stamp": "2020-12-30 12:25:04"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2020-12-29 02:09:16",
+    "text": "I really would like to use theme variables and sass together"
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2020-12-29 02:31:27",
+    "text": "Other question, performance wise, is it better to have one minified css file or use the module.css (minified)?",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-12-29 06:30:56"
+      },
+      {
+        "time_stamp": "2020-12-29 06:59:28"
+      },
+      {
+        "time_stamp": "2020-12-29 07:05:44"
+      },
+      {
+        "time_stamp": "2020-12-29 07:19:20"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2020-12-29 06:30:56",
+    "edited": {
+      "time_stamp": "2020-12-29 07:09:08"
+    },
+    "text": "Generally speaking thanks to HTTP2 its better to have separate CSS files. The biggest benefit to separating the css files comes from caching.\n\nSay you have 10 different modules on your home page and 11 different modules on an interior page.\nA site visitor hits your homepage downloads 10 small css files. They go to the interior page and only need to load 1 small css file because the first 10 were on your homepage. Additionally say you update one of your modules CSS, you now only invalidate 1 small css file rather than all of the css for a page.\n\nThis ensures only code actually used on the page is loaded, and subsequent loads are dramatically faster because most of the files are already cached.\n\nTheoretically there should be an upper limit at which point you have too many files that you incur a slight speed reduction. In practice though, ive never actually seen this happen.\n\nMy advice for handling CSS is this:\n• If you have modules in your header and footer. Consider putting their CSS in 1 combined file and require it from the modules. This could also be combined with your template/theme styles.\n• All other modules use module.css.\nThe logic is that you’re loading all of those header/footer and theme-wide assets on every page(with likely exception for landing pages) so the performance benefit of separating the files is trivial.\n\nThis reduces the css files in a way that makes sense while preserving the efficiency gained by separate files for other modules."
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2020-12-29 06:59:28",
+    "edited": {
+      "time_stamp": "2020-12-29 07:00:40"
+    },
+    "text": "<@U7SL518D6> Thanks for the great explanation. I’ll rewrite my gulp config so I get minified css files in the module.css instead of using one big main.css. We use sass, so I have to add some extra steps here."
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2020-12-29 07:02:22",
+    "text": "Going to use native css vars with a polyfill and then use those variables in sass. What do you think <@U7SL518D6>?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2020-12-29 07:05:44",
+    "text": "If you're open to open sourcing how you set up your sass that way folks likely would appreciate seeing that. I understand though that its hard to separate that from say your actual theme boilerplate code you use for clients"
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2020-12-29 07:19:20",
+    "text": "Yeah! I will definitely share my setup for sass if I get it up and running."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2020-12-29 07:24:08",
+    "edited": {
+      "time_stamp": "2020-12-29 07:25:34"
+    },
+    "text": "in general I encourage using modern CSS (custom properties) as much as possible. While we want people to fully be able to use any tools they want to use. In practice the main big benefit I see to sass right now is the way you can nest css selectors. Otherwise everything else can be done in HubL+CSS.\n\nCSS custom properties have a lot of nifty advantages - they can be updated using JavaScript, and they are also slightly more efficient than declaring hard-coded values for repeated properties.\n\nTo answer your main question I don’t think SASS has like a `{%raw%}` equivalent.\n\nSomething I’ve seen others suggest is\n```$inc: '*/{% include \"mystyles.css\" %}/*';\n/*#{$inc}*/```\nwhich should output:\n```/**/{% include \"mystyles.css\" %}/**/```\nobviously you would put any HubL you want in there.\nIt’s not the cleanest but it should work.\n\nYou could turn that into a mixin\n```@mixin raw ($string) {\n  $string: '*/#{$string}/*';\n  /*#{$string}*/\n}\n\n@include raw('{% set tomoato = \"potato\" %}');```\n\nOtherwise if that’s too big of a pain to do it that way you could have a separate css file a “Theme-overrides.css” that is the only file that your theme settings actually map to, then the rest of your css is all sass. So you’d just be overriding the base styles basically with theme settings."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2020-12-29 07:32:07",
+    "text": "actually re-reading your message. There’s another way that theoretically should work and it may be actually what you were meaning.\n\nYou could have a CSS file that is just declaring custom properties with your theme settings/hubl.\n\nThen after loading that CSS file, have sass files that use the custom properties."
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2020-12-29 07:43:57",
+    "text": "<https://HubSpotdev.slack.com/archives/CSFGKSHT7/p1601562263042900>"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2020-12-29 07:45:16",
+    "text": "because a lot of enterprise websites require IE11 support, sometimes its best to stay away from custom properties. Also, SASS is portable to other projects outside of HubSpot"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2020-12-29 07:47:05",
+    "edited": {
+      "time_stamp": "2020-12-29 07:47:13"
+    },
+    "text": "curious, how often are you still seeing IE11 support actually requested now days?\n\nMicrosoft Edge has a backward compatibility mode that should enable those companies to continue using their legacy software while being significantly more secure."
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2020-12-29 07:51:19",
+    "text": "Not sure of any hard numbers… but its definitely declining"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2020-12-29 07:51:32",
+    "text": "thank the lord"
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2020-12-29 07:55:40",
+    "text": "<@U7SL518D6> That is exactly what I am trying to accomplish. We have a sass file for every module we create. So if we have a ‘hero.module’ we also have a _c-hero.scss file with all styling for that module. For our projects, we add a bunch of default settings to each module (like text-color, background-color etc.) so we can have multiple variations of the same module.\nCause I am currently developing a theme, I would like to combine the theme settings with our sass files without having to add css in the `theme-overrides.css` for every module. So by using css vars, I hope I can keep using our sass files but use the colors (and other settings) set in the theme settings. I then will add an option to each module to ‘override’ these settings if needed."
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2020-12-29 07:58:32",
+    "text": "<@U3T21PDBK> Thanks for sharing Michael’s solution! Will definitely give it a try."
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2020-12-29 08:00:22",
+    "text": "<@U7SL518D6> Can I use the theme settings in the module.css tho? Cause I am also rewriting our code to have a minified module.css instead of having one big main.css."
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2020-12-29 08:01:33",
+    "edited": {
+      "time_stamp": "2020-12-29 08:02:11"
+    },
+    "text": "<@U3T21PDBK> Was giving this ponyfill a try to get css vars working in IE11: <https://jhildenbiddle.github.io/css-vars-ponyfill/#/>"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2020-12-29 08:02:31",
+    "text": "yep. I’ve used it before. For the most part it worked. It was just super slow in IE. But if someone is using IE, then that is the price they pay lol"
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2020-12-29 08:05:05",
+    "text": "Haha gotta agree, we do not support IE11 anymore for most of our websites, but gotta get it working for themes tho"
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2020-12-29 08:05:16",
+    "text": "Will probably use Michael his approach tho"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2020-12-29 08:16:49",
+    "text": "<@UGDF9EBPW> Unfortunately theme settings hubl is not supported in module.css at this time. Its possible it could come at a later date. There is understandable value there.\n\nTaking a step back though i think site agnostic custom modules still have value. In the first video on this page I explain the concept. <https://designers.HubSpot.com/blog/developer-day-2018-videos|https://designers.HubSpot.com/blog/developer-day-2018-videos>\n\nApplied to the current world of themes, modules may still exist as skeleton versions, making them easy to port between sites as self contained assets.\n\nYou would then have your theme-overides.css file override any style selectors on modules that are specific to the theme. That would enable you to fully use theme settings variables to customize module CSS."
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2020-12-29 08:18:53",
+    "text": "<@U7SL518D6> Thanks for taking your time! Will evaluate all the options and see what the best approach will be for theme development."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2020-12-29 08:23:36",
+    "text": "Interested in hearing what method you find works best for your workflow"
+  },
+  {
+    "poster": {
+      "poster_name": "Brock Duncan",
+      "poster_handle": "bduncan"
+    },
+    "time_stamp": "2020-12-29 15:37:13",
+    "text": "I needed to go into theme settings in the admin and click the reset button for each heading. Good job me :clap:"
+  }
+]

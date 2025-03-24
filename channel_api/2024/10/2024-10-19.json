@@ -1,0 +1,97 @@
+[
+  {
+    "poster": {
+      "poster_name": "Travis Longmore",
+      "poster_handle": "travis041"
+    },
+    "time_stamp": "2024-10-19 04:09:34",
+    "text": "Hi everyone,\n\nI’m a bit new to the world of APIs and webhooks, and I’m looking for some help or guidance with a project I’m working on that involves automating data import into HubSpot CRM.\n\n*What I’m Trying to Do:*\nI have a system in place where ticketing and purchase information for an event is stored in an AWS S3 bucket. The data is stored as compressed .gz files, which I believe contain NDJSON (Newline-Delimited JSON) or standard JSON data.\n\nI want to automate the process of:\n\t1.\t*Accessing the S3 bucket* to download and extract the ticketing information (I have the secret key and information needed to access)\n\t2.\t*Processing the data* (like extracting customer information and ticket purchase details).\n\t3.\t*Uploading this data to HubSpot CRM* to create or update contacts.\n\n\nCurrently I have been manually downloading the files, uncompressing them, combining them into a csv and uploading that to HubSpot. It’s hell.\n\nWould anyone be able to direct me to the best approach or what I should do at this point? We’ve previously engaged with an external agency for similar projects but they’ve been a nightmare and we’ve never had a good experience or even really had the projects completed.\n\nAny help or direction would be AMAZING!",
+    "reply_count": 7,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2024-10-19 06:19:15"
+      },
+      {
+        "time_stamp": "2024-10-19 07:51:38"
+      },
+      {
+        "time_stamp": "2024-10-19 07:52:01"
+      },
+      {
+        "time_stamp": "2024-10-19 07:57:21"
+      },
+      {
+        "time_stamp": "2024-10-19 08:01:43"
+      },
+      {
+        "time_stamp": "2024-10-19 08:10:23"
+      },
+      {
+        "time_stamp": "2024-10-19 21:47:44"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Vinayak Jhunjhunwala",
+      "poster_handle": "vinayak"
+    },
+    "time_stamp": "2024-10-19 06:19:15",
+    "edited": {
+      "time_stamp": "2024-10-19 06:23:15"
+    },
+    "text": "Hey Travis you can easily do this using HubSpot 2-Way Sync. There are connectors like <https://www.superjoin.ai/integrations/HubSpot|Superjoin>, which help you do this on a google sheet and schedule an upload to HS.\n\nThis could be a great way to automate the entire process.\n\nExtraction of data from S3, transform with formulas, and push it back to HubSpot"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-10-19 07:51:38",
+    "text": "<@U071MV78SGZ> - Does Superjoin help with the extraction from AWS or will this require custom solution to fetch, extract, parse the data to the GoogleSheet?"
+  },
+  {
+    "poster": {
+      "poster_name": "Vinayak Jhunjhunwala",
+      "poster_handle": "vinayak"
+    },
+    "time_stamp": "2024-10-19 07:52:01",
+    "edited": {
+      "time_stamp": "2024-10-19 07:52:41"
+    },
+    "text": "It connects with AWS."
+  },
+  {
+    "poster": {
+      "poster_name": "joe conery",
+      "poster_handle": "joe277"
+    },
+    "time_stamp": "2024-10-19 07:57:21",
+    "text": "i think it would be pretty easy to use the awscli inside a python script (you could use boto but really it's so easy to run a shell command line which would execute awscli) download the file to a directory, parse it with the python script and use the auth token in python to push the data into a HubSpot table"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-10-19 08:01:43",
+    "text": "I agree with Joe and skip the need for GoogleSheet and third-party app"
+  },
+  {
+    "poster": {
+      "poster_name": "joe conery",
+      "poster_handle": "joe277"
+    },
+    "time_stamp": "2024-10-19 08:10:23",
+    "text": "```import json\nimport requests\nimport subprocess\n\n\ndef put_in_hs(the_table, some_data):\n    # requests.put(...)\n\ndef process(contents):\n    # do the etl here\n    # if its json then create a dict of it\n    c_dict = json.loads(contents)\n    # grab what you want...\n    for key, value in c_dict.items():\n        put_in_hs('table_name', value)\n\n\ntarget_file = 'test.json'\nsubprocess.Popen(f'aws s3 cp <s3://mybucket/{target_file}> {target_file}', shell=True)\n\nwith open(f'{target_file}', 'r') as f:\n    contents = f.read()\n    process_me(contents)```"
+  },
+  {
+    "poster": {
+      "poster_name": "Travis Longmore",
+      "poster_handle": "travis041"
+    },
+    "time_stamp": "2024-10-19 21:47:44",
+    "text": "Far out. I go to bed and wake up to this! This is amazing. I’m definitely keen to avoid any third-party apps so this sounds like the best approach. Seems super easy but this is still early days for me with this stuff. Thanks again! Will report back on how I go :)"
+  }
+]

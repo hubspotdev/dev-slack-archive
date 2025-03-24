@@ -1,0 +1,132 @@
+[
+  {
+    "poster": {
+      "poster_name": "Parth Chaudhary",
+      "poster_handle": "parth.1996.ce"
+    },
+    "time_stamp": "2022-08-03 01:51:53",
+    "text": "I think you can use a comma, something like\n\n\"Type=Webinar, Event\"",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-08-03 07:51:32"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Julius Santoro",
+      "poster_handle": "j.santoro"
+    },
+    "time_stamp": "2022-08-03 04:44:39",
+    "text": "Hello Guys, Does anyone know how to get a tag from a blog post so it can show the related posts? I can only set tags by hand but it has to depend on the current blog post."
+  },
+  {
+    "poster": {
+      "poster_name": "Julius Santoro",
+      "poster_handle": "j.santoro"
+    },
+    "time_stamp": "2022-08-03 04:47:59",
+    "text": "`{% set related_posts = blog_recent_tag_posts(\"default\", content.tag_list[0].slug, 2) %}` Tried this, but it takes the tag out of the tags list not from the current blog",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-08-03 04:49:25"
+      },
+      {
+        "time_stamp": "2022-08-03 04:49:29"
+      },
+      {
+        "time_stamp": "2022-08-03 05:00:37"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Wessolly",
+      "poster_handle": "webdesign"
+    },
+    "time_stamp": "2022-08-03 04:49:25",
+    "text": "have you tried setting \"blog_post_override\" ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Wessolly",
+      "poster_handle": "webdesign"
+    },
+    "time_stamp": "2022-08-03 04:49:29",
+    "text": "<https://developers.HubSpot.com/docs/cms/hubl/tags#blog-related-posts>"
+  },
+  {
+    "poster": {
+      "poster_name": "Julius Santoro",
+      "poster_handle": "j.santoro"
+    },
+    "time_stamp": "2022-08-03 05:00:37",
+    "text": "No but thats only giving out ID`s isnt it?"
+  },
+  {
+    "poster": {
+      "poster_name": "Joshua Todd",
+      "poster_handle": "josh290"
+    },
+    "time_stamp": "2022-08-03 07:51:32",
+    "text": "You can do this if you are using a MULTISELECT, but then it only filters by events that have BOTH properties."
+  },
+  {
+    "text": "<@U01B10S09FU> Or filtering is not supported in hubDB queries. You have to roll that yourself if you want it.  <https://legacydocs.HubSpot.com/docs/methods/hubdb/v2/get_table_rows>",
+    "time_stamp": "2022-08-03 08:08:45"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas558"
+    },
+    "time_stamp": "2022-08-03 18:09:21",
+    "text": "Is there a way to grab the name of a item associated with a for loop item in HubL?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-08-04 11:19:55"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nich Mueller",
+      "poster_handle": "nich"
+    },
+    "time_stamp": "2022-08-03 18:45:25",
+    "edited": {
+      "time_stamp": "2022-08-03 20:10:17"
+    },
+    "text": "Hello there, I am working on a blog listing that needs to filter for two tags, i.e. that lists posts that have tag 1 AND tag 2 and working pagination. I have already setup a custom listing template that has working query params for each of the tag filters, along with custom pagination (also in the query params) that is dependent on the number of posts returned by `blog_recent_tag_posts()`.\n\nI found <https://www.stephanieogaygarcia.com/HubSpot-website-development/get-HubSpot-posts-that-contain-all-tags|Stephanie's solution>, but by printing the post content within the for loop, it will just list straight down the page without pagination.\n\nSo I'm trying to use <https://developers.HubSpot.com/docs/cms/hubl/functions#pop|pop> within that for loop to remove blog posts that don't match both filters from the collection. And then run the updated collection through a for loop, which will keep my pagination working.\n\nHere's the relevant modified code:\n\n```{% if category_filter and industry_filter %}\n  {% set tags_to_filter = [category_filter, industry_filter] %}\n  {% set all_posts = blog_recent_tag_posts(group.id, tags_to_filter, 200) %}\n  {% for post in all_posts %}\n    {% set matched_tags = 0 %}\n    {% set post_index = loop.index0 %}\n    {% for tag in post.tagList %}\n    {% if tag in tags_to_filter %}\n      {% set matched_tags = matched_tags + 1 %}\n    {% endif %}\n    {% if loop.last %}\n      {% if matched_tags != tags_to_filter|length %}\n        {% do all_posts.pop(post_index) %}\n      {% endif %}      \n    {% endif %}\n  {% endfor %} \n{% endfor %}\n{% endif %}```\nThe only part that doesn't seem to work is pop() on the blog posts collection. HubL seems to be simply ignoring that code. But other list functions like <https://developers.HubSpot.com/docs/cms/hubl/functions#clear|clear> works on the blog collection. Does pop not? And if not, any suggestions on how to remove items from `all_posts`?\n\nAny guidance would be greatly appreciated :pray:",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-08-03 20:09:42"
+      },
+      {
+        "time_stamp": "2022-08-04 11:20:52"
+      },
+      {
+        "time_stamp": "2022-08-04 11:49:53"
+      },
+      {
+        "time_stamp": "2022-08-04 11:50:51"
+      }
+    ]
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2022-08-03 20:09:42",
+    "edited": {
+      "time_stamp": "2022-08-03 20:24:13"
+    },
+    "text": "Gahh... I discovered a solution. For anyone interested, the for loops are not needed and I found that I could use <https://developers.HubSpot.com/docs/cms/hubl/filters#intersect|intersect> to compare the two lists and set all_posts in this way:\n\n```{% if category_filter and industry_filter %}\n  {% set category_posts = blog_recent_tag_posts(group.id, category_filter, 200) %}\n  {% set industry_posts = blog_recent_tag_posts(group.id, industry_filter, 200) %}\n  {% set all_posts = category_posts|intersect(industry_posts) %}\n{% endif %}```"
+  }
+]

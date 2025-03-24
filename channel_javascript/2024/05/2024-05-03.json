@@ -1,0 +1,452 @@
+[
+  {
+    "poster": {
+      "poster_name": "José Díaz Rodríguez",
+      "poster_handle": "jose.diaz382"
+    },
+    "time_stamp": "2024-05-03 07:03:35",
+    "text": ":wave: Hola, equipo."
+  },
+  {
+    "poster": {
+      "poster_name": "José Díaz Rodríguez",
+      "poster_handle": "jose.diaz382"
+    },
+    "time_stamp": "2024-05-03 07:04:51",
+    "text": "I am new to this space. I'm trying to get all phone numbers, in case they don't have a country prefix, to add one, depending on the country of the person (for this, previously each contact has a country value assigned in the property). I have this code, but I don't know what I can be failing, I don't know if it is some secret or something in the beginning of the code. I hope you can help me. Thank you very much. Regards\n\n```const HubSpot = require('@HubSpot/api-client');\n\nexports.main = (event) =&gt; {\n  const HubSpotClient = new HubSpot.Client({\n    accessToken: process.env.secretName\n  });\n\n  // ID of the contact\n  const id = event.object.objectId\n\n  // GET the Mobile, Phone and Country Property from Contact\n  HubSpotClient.crm.contacts.basicApi.getById(id, ['mobilephone', 'phone', 'country'])\n    .then(contactPropertiesResults =&gt; {\n      // Set variables and trim any white spaces\n      const mobile = contactPropertiesResults.body.properties.mobilephone.replace(/\\s+/g, '');\n      const phone = contactPropertiesResults.body.properties.phone.replace(/\\s+/g, '');\n      const country = contactPropertiesResults.body.properties.country;\n\n      console.log(`Found mobile=${mobile}, phone=${phone}, country=${country}`);\n\n      // If mobile or phone starts with a 0 and the country value is known, update contact phone numbers to the intl prefix using the formatToIntl method\n      if (mobile.startsWith('0') &amp;&amp; country) {\n        let intlMobile = formatToIntl(mobile, country);\n        HubSpotClient.crm.contacts.basicApi.update(id, {\n          properties: {\n            mobilephone: intlMobile,\n          }\n        });\n      }\n      if (phone.startsWith('0') &amp;&amp; country) {\n        let intlPhone = formatToIntl(phone, country);\n        HubSpotClient.crm.contacts.basicApi.update(id, {\n          properties: {\n            phone: intlPhone,\n          }\n        });\n      }\n    });\n\n  // Function takes 2 arguments - number and country. Looks up the Intl Code from\n  // the Country Codes JSON and returns a correctly formatted number.\n  const formatToIntl = (number, country) =&gt; {\n    if (country) {\n      for (let countryInfo of countryCodes) {\n        if (\n          countryInfo.name.toLowerCase().replace(/\\s+/g, '') ==\n          country.toLowerCase().replace(/\\s+/g, '')\n        ) {\n          number = number.replace('0', countryInfo.dial_code)\n          console.log(`Country name=${countryInfo.name} dialCode=${countryInfo.dial_code}`);\n          console.log(`Formatted number: ${number}`);\n        }\n      }\n    } else {\n      console.log(`Country not found for number=${number} country=${country}`);\n    }\n\n    return number;\n  }\n\n  // Countries and Dial Codes Lookup JSON\n  const countryCodes = [{\n    \"name\": \"Afghanistan\",\n    \"dial_code\": \"+93\",\n    \"code\": \"AF\"\n  },\n  {\n    \"name\": \"Aland Islands\",\n    \"dial_code\": \"+358\",\n    \"code\": \"AX\"\n  },\n  {\n    \"name\": \"Albania\",\n    \"dial_code\": \"+355\",\n    \"code\": \"AL\"\n  },\n  {\n    \"name\": \"Algeria\",\n    \"dial_code\": \"+213\",\n    \"code\": \"DZ\"\n  },\n  {\n    \"name\": \"AmericanSamoa\",\n    \"dial_code\": \"+1 684\",\n    \"code\": \"AS\"\n  },\n\n  {\n    \"name\": \"Zambia\",\n    \"dial_code\": \"+260\",\n    \"code\": \"ZM\"\n  },\n  {\n    \"name\": \"Zimbabwe\",\n    \"dial_code\": \"+263\",\n    \"code\": \"ZW\"\n  }\n  ]\n\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "José Díaz Rodríguez",
+      "poster_handle": "jose.diaz382"
+    },
+    "time_stamp": "2024-05-03 07:06:16",
+    "text": "I have not added all the countries because I was not allowed so many characters, but the rest of the countries go the same way. Thank you very much. Regards"
+  },
+  {
+    "text": "I make a screenshot of the error that appears. Thank you very much. Regards",
+    "time_stamp": "2024-05-03 07:12:06",
+    "reply_count": 8,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-03 13:33:09"
+      },
+      {
+        "time_stamp": "2024-05-04 03:55:11"
+      },
+      {
+        "time_stamp": "2024-05-05 19:30:33"
+      },
+      {
+        "time_stamp": "2024-05-05 19:31:33"
+      },
+      {
+        "time_stamp": "2024-05-06 09:06:54"
+      },
+      {
+        "time_stamp": "2024-05-06 17:10:41"
+      },
+      {
+        "time_stamp": "2024-05-07 01:25:38"
+      },
+      {
+        "time_stamp": "2024-05-07 01:27:22"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Goran Ilievski",
+      "poster_handle": "goran308"
+    },
+    "time_stamp": "2024-05-03 13:33:09",
+    "text": "Hola <@U071VPHRPL3> \n\nI think the issue might be because the name of your secret is \"ACCESS_TOKEN\" and in the code it is \"secretName\". Change it to \"ACCESS_TOKEN\" in the code but make sure to test it with a few contacts before turning on the workflow :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-05-03 13:37:09",
+    "edited": {
+      "time_stamp": "2024-05-03 13:38:32"
+    },
+    "text": "onFormSubmit: Called at the start of form submission, but before submission has been persisted. Please use `onBeforeFormSubmit` instead."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-05-03 13:37:26",
+    "edited": {
+      "time_stamp": "2024-05-03 13:38:44"
+    },
+    "text": "onFormSubmitted\nCalled after the form has been submitted and the submission has been persisted."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-05-03 13:38:03",
+    "text": "<https://legacydocs.HubSpot.com/global-form-events>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-05-03 13:38:18",
+    "text": "You are using the wrong event for your trigger"
+  },
+  {
+    "text": "please help\nOn HubSpot cms platform  I am building a website and blog pages, I am trying to make sure the blog has the same root domain as the pages but to no avail\n\nthe pages have this url structure <http://seattlenad.com/about|seattlenad.com/about>, <http://seattlenad.com/services|seattlenad.com/services> etc but the blog pages have all different domains eg <http://433323.com/|433323.com/>\n\nhow can i make the blog post have url structures like this: <http://seattlenad.com/blog/why-we-are|seattlenad.com/blog/why-we-are>.....................",
+    "time_stamp": "2024-05-03 13:38:22",
+    "reply_count": 31,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-03 13:39:54"
+      },
+      {
+        "time_stamp": "2024-05-03 13:41:16"
+      },
+      {
+        "time_stamp": "2024-05-03 13:42:25"
+      },
+      {
+        "time_stamp": "2024-05-03 13:43:25"
+      },
+      {
+        "time_stamp": "2024-05-03 13:44:00"
+      },
+      {
+        "time_stamp": "2024-05-03 13:44:05"
+      },
+      {
+        "time_stamp": "2024-05-03 13:47:21"
+      },
+      {
+        "time_stamp": "2024-05-03 13:47:22"
+      },
+      {
+        "time_stamp": "2024-05-03 13:47:38"
+      },
+      {
+        "time_stamp": "2024-05-03 13:47:47"
+      },
+      {
+        "time_stamp": "2024-05-03 13:48:05"
+      },
+      {
+        "time_stamp": "2024-05-03 13:48:08"
+      },
+      {
+        "time_stamp": "2024-05-03 13:48:18"
+      },
+      {
+        "time_stamp": "2024-05-03 13:49:40"
+      },
+      {
+        "time_stamp": "2024-05-03 13:50:15"
+      },
+      {
+        "time_stamp": "2024-05-03 13:51:18"
+      },
+      {
+        "time_stamp": "2024-05-03 13:51:22"
+      },
+      {
+        "time_stamp": "2024-05-03 13:51:38"
+      },
+      {
+        "time_stamp": "2024-05-03 13:51:43"
+      },
+      {
+        "time_stamp": "2024-05-03 13:54:37"
+      },
+      {
+        "time_stamp": "2024-05-03 14:01:12"
+      },
+      {
+        "time_stamp": "2024-05-03 14:01:38"
+      },
+      {
+        "time_stamp": "2024-05-03 14:01:59"
+      },
+      {
+        "time_stamp": "2024-05-03 14:05:10"
+      },
+      {
+        "time_stamp": "2024-05-03 14:05:14"
+      },
+      {
+        "time_stamp": "2024-05-03 14:07:16"
+      },
+      {
+        "time_stamp": "2024-05-03 14:12:07"
+      },
+      {
+        "time_stamp": "2024-05-03 14:17:35"
+      },
+      {
+        "time_stamp": "2024-05-03 14:17:39"
+      },
+      {
+        "time_stamp": "2024-05-03 14:18:31"
+      },
+      {
+        "time_stamp": "2024-05-03 14:29:57"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-05-03 13:39:54",
+    "text": "you need to go into your settings, then goto domains, make sure you have the blog set up on teh same domain\n\nor go into blog settings and make sure the domain is set up"
+  },
+  {
+    "poster": {
+      "poster_name": "Opadoyin MICAH",
+      "poster_handle": "opadoyinmicah3690"
+    },
+    "time_stamp": "2024-05-03 13:41:16",
+    "edited": {
+      "time_stamp": "2024-05-03 13:41:52"
+    },
+    "text": "that the thing\nthe blog doesn't give the option to set it up on that domain"
+  },
+  {
+    "poster": {
+      "poster_name": "Opadoyin MICAH",
+      "poster_handle": "opadoyinmicah3690"
+    },
+    "time_stamp": "2024-05-03 13:42:25",
+    "text": "thanks for your prompt reply, I didn't expect a reply so fast\nI appreciate"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-05-03 13:43:25",
+    "text": "<https://share.zight.com/Wnu8wdgq>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-05-03 13:44:00",
+    "text": "Settings &gt; Tools, Content &gt; Domain &amp; URLS"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-05-03 13:44:05",
+    "text": "Do you have a blog domain set up?"
+  },
+  {
+    "text": "just website pages show as option",
+    "time_stamp": "2024-05-03 13:47:21"
+  },
+  {
+    "poster": {
+      "poster_name": "Opadoyin MICAH",
+      "poster_handle": "opadoyinmicah3690"
+    },
+    "time_stamp": "2024-05-03 13:47:22",
+    "text": "no blog or landing page"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-05-03 13:47:38",
+    "text": "Go to connect a domain"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-05-03 13:47:47",
+    "text": "pick primary"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-05-03 13:48:05",
+    "text": "then get to the part and add blog and landing pages"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-05-03 13:48:08",
+    "text": "that way it is all done"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-05-03 13:48:18",
+    "text": "once that is compltee you should be able to put the blog on the domain"
+  },
+  {
+    "text": "here currently",
+    "time_stamp": "2024-05-03 13:49:40"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-05-03 13:50:15",
+    "text": "ugh"
+  },
+  {
+    "text": "after clicking on connect a domain it brought me here",
+    "time_stamp": "2024-05-03 13:51:18"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-05-03 13:51:22",
+    "text": "I’m not sure what is going on there, can you send me the screenshot of all your doamins from that page?"
+  },
+  {
+    "text": "",
+    "time_stamp": "2024-05-03 13:51:38"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-05-03 13:51:43",
+    "text": "do you have anythign else other than that on the screen?"
+  },
+  {
+    "text": "this is all that is there",
+    "time_stamp": "2024-05-03 13:54:37"
+  },
+  {
+    "poster": {
+      "poster_name": "Opadoyin MICAH",
+      "poster_handle": "opadoyinmicah3690"
+    },
+    "time_stamp": "2024-05-03 14:01:12",
+    "text": "seen?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-05-03 14:01:38",
+    "text": "can I send you a meeting url in like 10 minuites?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-05-03 14:01:59",
+    "text": "I’m in a call but It hink it would be easiwer if you just screenshare"
+  },
+  {
+    "poster": {
+      "poster_name": "Opadoyin MICAH",
+      "poster_handle": "opadoyinmicah3690"
+    },
+    "time_stamp": "2024-05-03 14:02:16",
+    "text": "ok"
+  },
+  {
+    "poster": {
+      "poster_name": "Opadoyin MICAH",
+      "poster_handle": "opadoyinmicah3690"
+    },
+    "time_stamp": "2024-05-03 14:02:19",
+    "text": "really appreciate"
+  },
+  {
+    "poster": {
+      "poster_name": "Opadoyin MICAH",
+      "poster_handle": "opadoyinmicah3690"
+    },
+    "time_stamp": "2024-05-03 14:05:10",
+    "text": "yes"
+  },
+  {
+    "poster": {
+      "poster_name": "Opadoyin MICAH",
+      "poster_handle": "opadoyinmicah3690"
+    },
+    "time_stamp": "2024-05-03 14:05:14",
+    "text": "please do"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-05-03 14:07:16",
+    "text": "<https://us06web.zoom.us/j/8371910336> (Passcode: jZyE6p)"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-05-03 14:12:07",
+    "text": "<@U0710J1TZ39> <https://us06web.zoom.us/j/8371910336> (Passcode: jZyE6p)"
+  },
+  {
+    "poster": {
+      "poster_name": "Opadoyin MICAH",
+      "poster_handle": "opadoyinmicah3690"
+    },
+    "time_stamp": "2024-05-03 14:17:35",
+    "text": "says incorrect"
+  },
+  {
+    "poster": {
+      "poster_name": "Opadoyin MICAH",
+      "poster_handle": "opadoyinmicah3690"
+    },
+    "time_stamp": "2024-05-03 14:17:39",
+    "text": "trying again"
+  },
+  {
+    "poster": {
+      "poster_name": "Opadoyin MICAH",
+      "poster_handle": "opadoyinmicah3690"
+    },
+    "time_stamp": "2024-05-03 14:18:31",
+    "text": "in"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-05-03 14:29:57",
+    "text": "<https://share.zight.com/6quo00lD> this is what I see"
+  }
+]

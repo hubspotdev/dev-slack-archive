@@ -1,0 +1,62 @@
+[
+  {
+    "poster": {
+      "poster_name": "Simon Lafis",
+      "poster_handle": "simon"
+    },
+    "time_stamp": "2022-05-16 04:28:15",
+    "text": "Does anyone know if there is a similar function to `{{ blog_authors(\"default\", 250) }}`  and `{{ blog_tags(\"default\", 250) }}` that return months and years in a list instead?\n\nI know that this tag exists `{% post_filter %}` but I need to get the result in a list and not a html element.",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-05-17 05:43:20"
+      },
+      {
+        "time_stamp": "2022-05-17 05:47:12"
+      },
+      {
+        "time_stamp": "2022-05-19 01:48:33"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Anthony Perez",
+      "poster_handle": "anthony249"
+    },
+    "time_stamp": "2022-05-16 06:26:59",
+    "text": "Hi guys, I'm adjusting a HubSpot blogpost filter to fit the needs of a german client, they want to filter blogs on their tags but they use ü and ë etc in their tags which results in the url to return something like `k%C3%BCnstliche-intelligenz` rather than `künstliche-intelligenz` , this breaks the small hubl code that sets the filter's active state on the current tag. I tried using the hubl filter urldecode on it but to no avail.\n```&lt;option {% if currentURL == blog_tag_url(group.id, item.slug)|urldecode|regex_replace('^(http|https):', '')|replace(' ','-') %}selected=\"selected\"{% endif %} value=\"{{ blog_tag_url(group.id, item.slug) }}\"&gt;{{ item }}&lt;/option&gt;```\nany idea to why its not returning the decoded url?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin Ordener",
+      "poster_handle": "k.ordener.dev"
+    },
+    "time_stamp": "2022-05-16 15:25:31",
+    "text": "That actually simplifies it quite a bit.. You just need to hard code those images in. Which means that you don't need to loop through the column names for the header, only for the data in the second half. This should get you there.\n```{% set table = ( module.hubdb_table) %}\n{% set table_data = hubdb_table(table) %}\n{% set table_rows = hubdb_table_rows(table) %}\n\n&lt;div class=\"Comparison__Table\"&gt;\n  &lt;h4 class=\"HLabel\"&gt;Features&lt;/h4&gt;\n  &lt;img src=\"{{ url }}\"&gt;\n  &lt;img src=\"{{ url }}\"&gt;\n&lt;/div&gt;\n  {% for row in table_rows %}\n    {% for column in table_data.columns %}\n      {% if column.type == 'IMAGE' %}\n        {% set source = row|attr(column.name) %}\n        &lt;img src=\"{{ source.url }}\"&gt;\n      {% else %}\n        &lt;div&gt; {{ row|attr(column.name) }}&lt;/div&gt;\n      {% endif %}\n    {% endfor %}\n  {% endfor %}\n&lt;/div&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Lerner",
+      "poster_handle": "mark595"
+    },
+    "time_stamp": "2022-05-16 19:12:00",
+    "text": "Got it working! Thank you so much."
+  },
+  {
+    "poster": {
+      "poster_name": "Danel October",
+      "poster_handle": "doctober"
+    },
+    "time_stamp": "2022-05-16 22:34:43",
+    "text": "Where can we send feature requests?..",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-05-17 09:10:15"
+      }
+    ]
+  }
+]

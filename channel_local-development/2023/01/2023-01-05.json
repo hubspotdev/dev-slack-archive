@@ -1,0 +1,202 @@
+[
+  {
+    "text": "Hey,\nI feel like I've missed some documentation that explains how we use `module.js` for the `module.html` :thinking_face:\nWhen inserting the js functionality inside &lt;script&gt; tags in the `module.html` it works fine, but when trying to move the js code to the actual `module.js` file the html file no longer recognize it (Uncaught ReferenceError: myfunction is not defined).\n\nBeen trying these two approaches + not including anything and hoping that it would magically HubSpot-work :)",
+    "time_stamp": "2023-01-05 05:36:54",
+    "reply_count": 17,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-01-05 07:08:53"
+      },
+      {
+        "time_stamp": "2023-01-05 07:10:53"
+      },
+      {
+        "time_stamp": "2023-01-05 07:11:56"
+      },
+      {
+        "time_stamp": "2023-01-05 07:14:29"
+      },
+      {
+        "time_stamp": "2023-01-05 07:20:06"
+      },
+      {
+        "time_stamp": "2023-01-05 07:24:59"
+      },
+      {
+        "time_stamp": "2023-01-05 07:27:43"
+      },
+      {
+        "time_stamp": "2023-01-05 07:29:01"
+      },
+      {
+        "time_stamp": "2023-01-05 07:30:18"
+      },
+      {
+        "time_stamp": "2023-01-05 07:31:01"
+      },
+      {
+        "time_stamp": "2023-01-05 07:31:46"
+      },
+      {
+        "time_stamp": "2023-01-05 07:33:30"
+      },
+      {
+        "time_stamp": "2023-01-05 07:34:22"
+      },
+      {
+        "time_stamp": "2023-01-05 07:37:35"
+      },
+      {
+        "time_stamp": "2023-01-05 07:40:47"
+      },
+      {
+        "time_stamp": "2023-01-05 07:42:33"
+      },
+      {
+        "time_stamp": "2023-01-05 07:42:57"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2023-01-05 07:08:53",
+    "text": "you dont need to include module's JavaScript. It added automatically"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonas R",
+      "poster_handle": "jonas.rolstad"
+    },
+    "time_stamp": "2023-01-05 07:10:53",
+    "text": "That was my expectation, but I'm not able to reach any js variables or functions from the .js"
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2023-01-05 07:11:56",
+    "text": "Where are you trying to reach the JS?"
+  },
+  {
+    "text": "Just trying to do something as simple:\nmodule.js to the left, module.html to the right",
+    "time_stamp": "2023-01-05 07:14:29",
+    "edited": {
+      "time_stamp": "2023-01-05 07:14:57"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2023-01-05 07:20:06",
+    "edited": {
+      "time_stamp": "2023-01-05 07:24:37"
+    },
+    "text": "Because your html is loaded before the JavaScript. So you cant reference the myFunction function\n\ntry putting this in your JS instead. On remove the `onclick` from the element\n\n```function myFunction() {\n  document.querySelector(\"#demo\").innerHTML = \"hello\";\n}\n\ndocument.querySelector(\"#demo\").addEventListener(\"click\", myFunction);```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonas R",
+      "poster_handle": "jonas.rolstad"
+    },
+    "time_stamp": "2023-01-05 07:24:59",
+    "text": "Hmm, no luck.\nI don't see why it works when the js is added in the `module.html` file, inside script tags, but doesn't work when placed in this js file - in my head it's just another way of code placement. Is there some HubSpot-magic going on behind the scenes that makes it behave different then?"
+  },
+  {
+    "text": "When you write inline JS you can access it. But when its in the JS pane in a modules it load AFTER the HTML. Nothing to do with HubSpot, is a JS thing&gt;\n\nthis works",
+    "time_stamp": "2023-01-05 07:27:43"
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2023-01-05 07:29:01",
+    "text": "if the external JS file was loaded ABOVE the modules.html it would work"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonas R",
+      "poster_handle": "jonas.rolstad"
+    },
+    "time_stamp": "2023-01-05 07:30:18",
+    "text": "Alright! And how do we go about making sure we load the js above the .html? If we're not suppose to use require_js etc"
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2023-01-05 07:31:01",
+    "text": "You really dont want to load JS first. It bad practice for page speed"
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2023-01-05 07:31:46",
+    "text": "Typically JS should be loaded LAST"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonas R",
+      "poster_handle": "jonas.rolstad"
+    },
+    "time_stamp": "2023-01-05 07:33:30",
+    "text": "What I want to do is that I have a group/repeater of some accordion texts. And I'd want to do some operations on them (on the list/array) in order to create a filter etc"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonas R",
+      "poster_handle": "jonas.rolstad"
+    },
+    "time_stamp": "2023-01-05 07:34:22",
+    "text": "It's been a minute since I worked with vanilla js :-1:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonas R",
+      "poster_handle": "jonas.rolstad"
+    },
+    "time_stamp": "2023-01-05 07:37:35",
+    "text": "I'm used to have control of the backend, and do the operations server-side. But now it's harded to do operations on an array/list before presentating"
+  },
+  {
+    "text": "Here a basic example on how to use JS to interact with an array of elements",
+    "time_stamp": "2023-01-05 07:40:47"
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2023-01-05 07:42:33",
+    "edited": {
+      "time_stamp": "2023-01-05 07:42:52"
+    },
+    "text": "```&lt;div class=\"modulename\"&gt;\n\t{% for item in module.field_group %}\n\t\t&lt;div class='accordion'&gt;\n\t\t\t{{ item.title }}\n\t\t\t&lt;div class=\"description\"&gt;\n\t\t\t\t{{ item.text_field }} \n\t\t\t&lt;/div&gt;\n\t\t&lt;/div&gt;\n\t{% endfor %}\n&lt;/div&gt;\n\n\n.accordion:not(.expand) .description {\n\tdisplay: none\n}\n\n\ndocument.querySelectorAll('.modulename .accordion').forEach((el) =&gt; {\n\tel.addEventListener('click', function() {\n\t\tel.classList.toggle('expand');\n\t});\n});```"
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2023-01-05 07:42:57",
+    "text": "hope that helps"
+  },
+  {
+    "poster": {
+      "poster_name": "Derick Beauregard",
+      "poster_handle": "derick.beauregard"
+    },
+    "time_stamp": "2023-01-05 18:43:27",
+    "text": "<@U02FZCR06CE> did you ever find a solution for this.  I’m running into the same thing.  The watch functions correctly but it is concerning."
+  }
+]

@@ -1,0 +1,92 @@
+[
+  {
+    "poster": {
+      "poster_name": "Harun Kumar Siva",
+      "poster_handle": "harun"
+    },
+    "time_stamp": "2023-07-31 01:28:23",
+    "text": "You need the <https://developers.HubSpot.com/docs/api/working-with-oauth#:~:text=This%20includes%20workflows|automation scope>. And the product tier should be Marketing Hub Professional or Enterprise."
+  },
+  {
+    "poster": {
+      "poster_name": "yuval mor",
+      "poster_handle": "yuval552"
+    },
+    "time_stamp": "2023-07-31 02:39:19",
+    "text": "hi, when changing 2 or more properties at the same time i get only one webhook (with only one of the fields). in the webhooks logs i see a log for all of the webhooks that were supposed to be sent but in my controller i get only one, is there a solution for this ?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-07-31 02:54:42"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Harun Kumar Siva",
+      "poster_handle": "harun"
+    },
+    "time_stamp": "2023-07-31 02:54:42",
+    "text": "1. if multiple properties are updated simultenously \n2. and if you have set up individual property change subscriptions for each property (ensure they are active and not paused)\nyou would have <https://developers.HubSpot.com/docs/api/webhooks#:~:text=The%20response%20will%20be%20an%20array%20of%20objects%20representing%20your%20subscriptions|an array of events in your Webhook payload> corresponding to each of the subscriptions.\n\nThe events could all be in a single payload or could potentially get split up into more than 1 payload in case of large number of subscriptions or multiple records being updated.\nThe events in a single payload may belong to multiple records.\nYour webhook handling code should account for these scenarios."
+  },
+  {
+    "poster": {
+      "poster_name": "Bashir",
+      "poster_handle": "ayo_idan"
+    },
+    "time_stamp": "2023-07-31 04:33:35",
+    "text": "Use the association label api endpoint to see the association type Id between two objects I.e company to deals and vice versa. The endpoint will also return the category. \n\nThe to Id is the object you are associating with. Eg\n\nSay I want to associate a deal with newly created line items or notes. When creating the line items or notes, I’ll add this association property. The to Id will be the deal I want to associate with. When done, the line items or notes will be created and attached to the Deal. "
+  },
+  {
+    "poster": {
+      "poster_name": "Luke",
+      "poster_handle": "luke547"
+    },
+    "time_stamp": "2023-07-31 06:43:04",
+    "text": "I post also here: <https://HubSpotdev.slack.com/archives/C019VT42R8X/p1690803943451279>"
+  },
+  {
+    "poster": {
+      "poster_name": "Valentina Varela Alzate",
+      "poster_handle": "valentina.varela"
+    },
+    "time_stamp": "2023-07-31 08:21:58",
+    "text": "<@U04B32JHTUZ> Looks great !! thank you"
+  },
+  {
+    "text": "Hi All,\nI'm trying to create a quote through HubSpot sdk for node v.9 and need to assign a countersigner to the quote.\n\n(through postman)\nFirst off, im sending a post request to {{baseUrl}}/crm/v3/objects/quotes\n```{\n  \"properties\": {\n    \"hs_title\": \"newNiceQuote2\",\n    \"hs_expiration_date\": \"2023-08-22\",\n    \"HubSpot_owner_id\": \"681670393\",\n    \"hs_status\": \"APPROVED\",\n    \"hs_template_type\": \"CUSTOMIZABLE_QUOTE_TEMPLATE\",\n    \"hs_language\": \"en\",\n    \"hs_slug\": \"some_slu10\",\n    \"hs_domain\": \"<http://26845465.hs-sites-eu1.com|26845465.hs-sites-eu1.com>\",\n    \"hs_quote_total_preference\": \"TOTAL_FIRST_PAYMENT\"\n  },\n  \"associations\": [\n    { //quotes\n      \"to\": {\"id\":\"76031759802\"},\n      \"types\": [{\"associationCategory\": \"HubSpot_DEFINED\", \"associationTypeId\": 286}]\n    },\n    { //deals\n      \"to\": {\"id\":\"8446414815\"},\n      \"types\": [{\"associationCategory\": \"HubSpot_DEFINED\", \"associationTypeId\": 64}]\n    },\n    { //line items\n      \"to\": {\"id\":\"5465706984\"},\n      \"types\": [{\"associationCategory\": \"HubSpot_DEFINED\", \"associationTypeId\": 67}]\n    },\n    { //contact\n      \"to\": {\"id\": \"3769551\"},\n      \"types\": [{\"associationCategory\": \"HubSpot_DEFINED\", \"associationTypeId\": 69}]\n    },\n    { //company\n      \"to\": {\"id\": \"8164782550\"},\n      \"types\": [{\"associationCategory\": \"HubSpot_DEFINED\", \"associationTypeId\": 71}]\n    }\n  ]\n}```\nThen I'm making an update to the quote where I'm not sure if all the below props are necessary\n```{\n  \"properties\": {\n    \"hs_expiration_date\": \"2023-08-22\",\n    \"hs_status\": \"DRAFT\",\n    \"hs_template_type\": \"CUSTOMIZABLE_QUOTE_TEMPLATE\",\n    \"hs_quote_total_preference\": \"TOTAL_FIRST_PAYMENT\",\n    \"hs_sender_company_name\": \"Gaga Inc\",\n    \"hs_sender_firstname\": \"Firstname\",\n    \"hs_sender_company_domain\": \"<http://TestAccount-dev-1234.com|TestAccount-dev-1234.com>\",\n    \"hs_sender_lastname\": \"B\",\n    \"hs_sender_company_address\": \"Vej 23\",\n    \"hs_sender_email\": \"<mailto:firstname@gaga.com|firstname@gaga.com>\",\n    \"hs_sender_phone\": \"+45645654654\",\n    \"hs_sender_company_city\": \"Cityt\",\n    \"hs_sender_jobtitle\": \"PEP\",\n    \"hs_sender_company_state\": \"Stateless\",\n    \"hs_sender_company_zip\": \"1234\",\n    \"hs_sender_company_country\": \"Spain\",\n    \"hs_esign_enabled\":true\n  }\n}```\nand then a quote is created.\nBut this does not have a \"countersigner\" assigned (see picture). And also it does not set the contact as \"Required Signatures\" So, how can I amend my above requests to accommodate this?\nThanks for your help :pray:",
+    "time_stamp": "2023-07-31 10:56:10",
+    "edited": {
+      "time_stamp": "2023-07-31 10:57:13"
+    },
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-08-01 08:31:01"
+      },
+      {
+        "time_stamp": "2023-08-01 08:33:01"
+      },
+      {
+        "time_stamp": "2023-08-01 09:45:38"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Cristóbal Parraguez",
+      "poster_handle": "cparraguez"
+    },
+    "time_stamp": "2023-07-31 11:27:16",
+    "text": "HS form + workflow should be able to do all that"
+  },
+  {
+    "text": "Any ideas why this endpoint fails in SFDC Integrated accounts? There is 0 info in the docs :upsidedown-think: - POST*`/crm/v3/objects/companies/merge`*",
+    "time_stamp": "2023-07-31 11:37:06",
+    "edited": {
+      "time_stamp": "2023-07-31 11:37:33"
+    }
+  }
+]

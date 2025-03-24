@@ -1,0 +1,13 @@
+[
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2021-10-24 05:54:22",
+    "edited": {
+      "time_stamp": "2021-10-24 12:56:23"
+    },
+    "text": "for Pythoners!\nI have created a tiny script that will read your `fields.json` file and will output a file with the field props and variants ready to copy&amp;paste like this:\n```{{ theme.colors.primary.color }}\n{{ theme.colors.primary.opacity }}\n{{ theme.colors.secondary.color }}\n{{ theme.colors.secondary.opacity }}\n{{ theme.typography.title_fonts.size }}\n{{ theme.typography.title_fonts.size_unit }}\n{{ theme.typography.title_fonts.color }}\n{{ theme.typography.title_fonts.styles.variant }}\n{{ theme.typography.title_fonts.styles.font_weight }}```\nHere is the script:\n```import json\nfields_file = \"./src/fields.json\"\noutput_file = \"field_references.txt\"\n\nfile = open(fields_file, \"r\")\ndata = file.read()\nfile.close()\ndata = json.loads(data)\n\n#print(data)\n\ndef is_group(f):\n    if f[\"type\"] == \"group\":\n        return True\n    return False\ndef get_val(f):\n    return f[\"name\"]\n\ndef get_properties(f):\n    props = []\n    if f[\"type\"] == \"boolean\" or f[\"type\"] == \"choice\":\n        pass\n    elif f[\"type\"] == \"color\":\n        props = [\"color\",\"opacity\"]\n    elif f[\"type\"] == \"font\":\n        #if f.has_attr(\"hidden_subfields\"):\n\n        props = [\"size\", \"size_unit\",\"color\",\"styles.variant\",\"styles.font_weight\"]\n    return props\ndef loop(d,parent):\n    global fields\n    for f in d:\n        if is_group(f):\n            if parent:\n                p = parent + \".\" + f[\"name\"]\n            else:\n                p = f[\"name\"]\n            loop(f[\"children\"], p)\n        else:\n            fields.append(parent + \".\" + get_val(f))\n            props = get_properties(f)\n            if len(props):\n                for prop in props:\n                    full_fields.append(parent + \".\" + get_val(f) + \".\" + prop)\n            else:\n                full_fields.append(parent + \".\" + get_val(f))\nfull_fields = []\nfields = []\n\nloop(data,\"theme\")\n#print(f\"\\n\".join(fields))\nprint(f\"\\n\".join(full_fields))\nfile = open(output_file, \"w\")\nn = file.write(\"{{ \" + (\" }}\" + f\"\\n\" + \"{{ \").join(full_fields) + \"}}\")\nfile.close()```\nIf you want to read about it I made a post on my blog:\n<https://www.gonzalotorreras.com/blog/generate-refence-for-HubSpot-theme-settings>"
+  }
+]

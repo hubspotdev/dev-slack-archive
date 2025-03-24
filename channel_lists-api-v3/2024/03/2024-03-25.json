@@ -1,0 +1,111 @@
+[
+  {
+    "poster": {
+      "poster_name": "Dorian McFarland",
+      "poster_handle": "dorian475"
+    },
+    "time_stamp": "2024-03-25 10:39:58",
+    "text": "Hi everyone! My first post here :slightly_smiling_face::\n\nI'm having trouble creating a DYNAMIC list using the API. I can create a manual list without issue using the same `name`, `objectTypeId`, and `listFolderId` , so I know that the permissions set in the Private App are ok. I have also created a similar list using the portal and then copied the filter definition into my dynamic list definition, but to no avail. If I mess around with the filter definition then it tells when something is wrong, so I'm reasonably sure that's not the issue.\n\nI'm using the Node JS npm package HubSpot/api-client v11.1. The error I get in the response is not very helpful :disappointed:.\n\nIs there anything further I can do with a `correlationId` in this situation to find out what's wrong?\n\nHere's my payload for create:\n```{\n  name: 'Stat og kommune',\n  objectTypeId: '0-2',\n  processingType: 'DYNAMIC',\n  listFolderId: '73601753',\n  filterBranch: {\n    filterBranchType: 'OR',\n    filterBranchOperator: 'OR',\n    filterBranches: [\n      {\n        filterBranchType: 'AND',\n        filterBranchOperator: 'AND',\n        filters: [\n          {\n            filterType: 'PROPERTY',\n            property: 'brreg_organisasjonsform_kode',\n            operation: {\n              operator: 'IS_EQUAL_TO',\n              includeObjectsWithNoValueSet: false,\n              values: [\n                'ADOS', 'FKF',\n                'FYLK', 'IKS',\n                'KF',   'KIRK',\n                'KOMM', 'SF',\n                'STAT', 'SÆR'\n              ],\n              operationType: 'MULTISTRING'\n            }\n          }\n        ]\n      }\n    ]\n  }\n}```\nFrom the app logs I get the following:\n\nRequest:\n```{\"objectTypeId\":\"0-2\",\"processingType\":\"DYNAMIC\",\"listFolderId\":\"73601753\",\"name\":\"Stat og kommune\",\"filterBranch\":{\"filterBranchType\":\"OR\",\"filterBranches\":[{\"filterBranchType\":\"AND\",\"filters\":[{\"filterType\":\"PROPERTY\",\"property\":\"brreg_organisasjonsform_kode\",\"operation\":{\"operationType\":\"MULTISTRING\",\"operator\":\"IS_EQUAL_TO\",\"includeObjectsWithNoValueSet\":false,\"values\":[\"ADOS\",\"FKF\",\"FYLK\",\"IKS\",\"KF\",\"KIRK\",\"KOMM\",\"SF\",\"STAT\",\"SÆR\"]}}],\"filterBranchOperator\":\"AND\"}],\"filterBranchOperator\":\"OR\"}}```\nResponse:\n```{\"status\":\"error\",\"message\":\"There was a problem with the request.\",\"correlationId\":\"3cd44aec-2476-41ae-bfda-1f9532887b7e\"}```",
+    "reply_count": 8,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-03-25 13:26:13"
+      },
+      {
+        "time_stamp": "2024-03-25 13:50:00"
+      },
+      {
+        "time_stamp": "2024-03-25 14:09:08"
+      },
+      {
+        "time_stamp": "2024-03-25 14:17:57"
+      },
+      {
+        "time_stamp": "2024-03-25 14:20:30"
+      },
+      {
+        "time_stamp": "2024-03-25 14:22:40"
+      },
+      {
+        "time_stamp": "2024-03-25 15:07:46"
+      },
+      {
+        "time_stamp": "2024-03-25 15:11:16"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Vinayak Rao",
+      "poster_handle": "vrao"
+    },
+    "time_stamp": "2024-03-25 13:26:13",
+    "text": "I'll look."
+  },
+  {
+    "poster": {
+      "poster_name": "Dorian McFarland",
+      "poster_handle": "dorian475"
+    },
+    "time_stamp": "2024-03-25 13:50:00",
+    "edited": {
+      "time_stamp": "2024-03-25 13:50:23"
+    },
+    "text": "<@U06QPPCBXU2> thanks! I get the same with a standard POST request, and with a PUT to update the filter definition.\nLet me know if you need any more correlation Ids."
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Bevolo",
+      "poster_handle": "jbevolo"
+    },
+    "time_stamp": "2024-03-25 14:09:08",
+    "text": "Hi Dorian - Can you take a look at the auth settings for your private app and make sure that it has `crm.objects.companies.write` and `crm.objects.companies.read` ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Dorian McFarland",
+      "poster_handle": "dorian475"
+    },
+    "time_stamp": "2024-03-25 14:17:57",
+    "edited": {
+      "time_stamp": "2024-03-25 14:18:07"
+    },
+    "text": "<@U05Q2R4ESCA> aha! that fixed it :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Dorian McFarland",
+      "poster_handle": "dorian475"
+    },
+    "time_stamp": "2024-03-25 14:20:30",
+    "edited": {
+      "time_stamp": "2024-03-25 14:20:50"
+    },
+    "text": "I'm guessing that if I make a contact-based  list I'll need contact read and write permissions too?\nAnd thanks both!"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Bevolo",
+      "poster_handle": "jbevolo"
+    },
+    "time_stamp": "2024-03-25 14:22:40",
+    "text": "Perfect, glad that fixed the issue. Yes, your private app will need the necessary read/write scopes for the object type of the list you are wanting to create.\n\nWe will look into making this error message more friendly, thanks for bringing it to our attention!"
+  },
+  {
+    "poster": {
+      "poster_name": "Dorian McFarland",
+      "poster_handle": "dorian475"
+    },
+    "time_stamp": "2024-03-25 15:07:46",
+    "text": "<@U05Q2R4ESCA> Not sure if this is the right place but I also found that the lists endpoint documentation for Node specifies: `HubSpotClient.crm.lists.listAppApi.create`  whereas the actual Node SDK path is `HubSpotClient.crm.lists.listsApi.create`\nLost a bit of time on that one too :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Bevolo",
+      "poster_handle": "jbevolo"
+    },
+    "time_stamp": "2024-03-25 15:11:16",
+    "text": "Interesting, we can look into that as well. Thanks for the heads up. cc <@U06QPPCBXU2> / <@U06JAU847HP>"
+  }
+]

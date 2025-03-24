@@ -1,0 +1,59 @@
+[
+  {
+    "poster": {
+      "poster_name": "Aleksandar Perisic",
+      "poster_handle": "fizikaneri"
+    },
+    "time_stamp": "2025-01-15 06:25:40",
+    "text": "As not a lot is happening,  from local LCP it looks like the main image is a problem,\n• not sure will it help but anyway as it is above the fold can `prefetch` the main image\n• dont need to lazy load images if they are above the fold \nQuestions:\n• Lighthouse settings is set to \"Mobile\"? \n    ◦ for me on DevTool I see Load Delay 10% for main image (so prefetch it)"
+  },
+  {
+    "poster": {
+      "poster_name": "Aleksandar Perisic",
+      "poster_handle": "fizikaneri"
+    },
+    "time_stamp": "2025-01-15 06:27:06",
+    "text": "for main (hero) section (text+image)\n•  I see `.col` is `100%` so help the browser faster to calculate things setting `cols` that needs to be `50%` , value in CSS to be `50%` "
+  },
+  {
+    "poster": {
+      "poster_name": "Aleksandar Perisic",
+      "poster_handle": "fizikaneri"
+    },
+    "time_stamp": "2025-01-15 06:28:15",
+    "edited": {
+      "time_stamp": "2025-01-15 08:16:39"
+    },
+    "text": "In cases when you are not sure, you have two options:\n• User *performance* tab in Dev Tools\n• Remove header section from page then check Lightscore ~(manual way of figuring out that exactly part is making biggest issue)~"
+  },
+  {
+    "poster": {
+      "poster_name": "Aleksandar Perisic",
+      "poster_handle": "fizikaneri"
+    },
+    "time_stamp": "2025-01-15 06:34:26",
+    "edited": {
+      "time_stamp": "2025-01-15 06:42:24"
+    },
+    "text": "Prefetch in header (base.html) , best way would be to add it to module\n```<link rel=\"preload\" as=\"image\" href=\"<https://website.tld/image1.jpg>\">\n<link rel=\"prefetch\" href=\"<https://website.tld/image1.png>\">```\ninside the module you could write this (add a top of the module.html):\n• this will append it to head part of the website where it should be placed from inside the module\n```{% require_head %}\n      <link rel=\"prefetch\" href=\"<https://46341312.fs1.HubSpotusercontent-na1.net/hub/46341312/hubfs/dog-img-lab.webp?width=838&height=612&name=dog-img-lab.webp>\">\n{% end_require_head %} ```"
+  },
+  {
+    "poster": {
+      "poster_name": "Aleksandar Perisic",
+      "poster_handle": "fizikaneri"
+    },
+    "time_stamp": "2025-01-15 06:39:36",
+    "text": "to see will the aspect ratio give any better results\n```.team-member-repeater .column {\n     aspect-ratio: 540 / 395;\n     min-height: 395px;\n}```\ndirectly on main image\n```&lt;img \n    fetchpriority=\"high\" \n    src=\"dog-img-lab.webp\"\n    ... dont remove eager attr etc...\n&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Aleksandar Perisic",
+      "poster_handle": "fizikaneri"
+    },
+    "time_stamp": "2025-01-15 06:40:04",
+    "edited": {
+      "time_stamp": "2025-01-15 06:40:29"
+    },
+    "text": "what else can be added to header\n```<link rel=\"dns-prefetch\" href=\"//46341312.fs1.HubSpotusercontent-na1.net\">\n<link rel=\"preconnect\" href=\"//46341312.fs1.HubSpotusercontent-na1.net\">\n<link rel=\"preconnect\" href=\"<https://static.hsappstatic.net>\">```"
+  }
+]

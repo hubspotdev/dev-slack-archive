@@ -1,0 +1,86 @@
+[
+  {
+    "poster": {
+      "poster_name": "Mark Lerner",
+      "poster_handle": "mark595"
+    },
+    "time_stamp": "2022-04-13 08:12:35",
+    "text": "I've created a dropdown menu which works great, but I am having trouble getting the dropdown :after to align with its parent. For every menu item, the dropdown appears in the same spot. Any ideas without having to reconstruct this entire thing? <https://www.loom.com/share/b16b645e0ed94006a47eba476bd1c3c5>",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-04-13 08:14:01"
+      },
+      {
+        "time_stamp": "2022-04-13 08:14:28"
+      },
+      {
+        "time_stamp": "2022-04-13 11:33:26"
+      },
+      {
+        "time_stamp": "2022-04-13 12:55:20"
+      },
+      {
+        "time_stamp": "2022-04-13 13:56:50"
+      },
+      {
+        "time_stamp": "2022-04-13 13:57:38"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Lerner",
+      "poster_handle": "mark595"
+    },
+    "time_stamp": "2022-04-13 08:14:01",
+    "text": "``` &lt;div class=\"Nav__Desktop-Menu-Items-Wrapper\"&gt;\n          {% for item in module.navigation_options %}\n           {% if item.item_type == \"dropdown\" %}\n          &lt;div class=\"Dropdown_Action Menu-Item\"&gt;\n            &lt;div class=\"dropdown dropdown-has-anchor\" role=\"button\" id=\"dropdown-selector\"&gt;\n              &lt;i class=\"caret down icon arrow-down\" aria-hidden=\"true\"&gt;&lt;/i&gt;\n              &lt;div class=\"Nav__Desktop-Dropdown-Menu-Text\"&gt;{{ item.menu_item }}&lt;/div&gt;\n              &lt;ul class=\"dropdown__menu\" data-dropdown=\"#dropdown-selector\"&gt;\n                &lt;div class=\"popup-menu\"&gt;\n                 {% for item2 in item.dropdown_items %}\n                  &lt;div class=\"popup-content-wrapper\"&gt;\n              &lt;a href=\"{{ item2.dropdown_item_link.href }}\"&gt;\n                &lt;img src=\"{{ item2.dropdown_item_icon.src }}\" class=\"popup-image\"/&gt;\n                &lt;p class=\"Nav__Desktop-Dropdown-Menu-Item-Title\"&gt;{{ item2.dropdown_title }}&lt;/p&gt;\n                &lt;p class=\"Nav__Desktop-Dropdown-Item-Subtitle\"&gt;{{ item2.dropdown_description }}&lt;/p&gt;\n                    &lt;/a&gt;\n                  &lt;/div&gt;\n                   {% endfor %}\n                &lt;/div&gt;\n              &lt;/ul&gt;\n            &lt;/div&gt;\n          &lt;/div&gt;\n          \n          {% endif %}\n          {% if item.item_type == \"link\" %}\n          &lt;a href=\"{{ item.nav_item_link.href }}\" class=\"Nav__Desktop-Dropdown-Menu-Text Nav__Desktop-Link Menu-Item\"&gt;{{ item.menu_item }}&lt;/a&gt;\n          {% endif %}\n          {% endfor %}\n              &lt;/div&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Lerner",
+      "poster_handle": "mark595"
+    },
+    "time_stamp": "2022-04-13 08:14:28",
+    "text": "```\n.dropdown:after {\n    content: \"\";\n    position: absolute;\n    z-index: 200;\n    border: 0;\n    border-left: 10px solid transparent;\n    border-right: 10px solid transparent;\n    margin-left: -10px;\n    left: 40%;\n    border-bottom: 10px solid #fff;\n    top: 54%;\n    transition: 280ms all 120ms ease-out;\n    opacity: 0;\n    will-change: opacity;\n    margin-top: 0.75rem;\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Melinda Green",
+      "poster_handle": "melinda.green"
+    },
+    "time_stamp": "2022-04-13 11:33:26",
+    "edited": {
+      "time_stamp": "2022-04-13 11:33:39"
+    },
+    "text": "does your .dropdown class have position:relative assigned? it looks like the after is taking its absolute position from a higher-up element"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Lerner",
+      "poster_handle": "mark595"
+    },
+    "time_stamp": "2022-04-13 12:55:20",
+    "text": "Holy smokes, that worked. Like magic!"
+  },
+  {
+    "poster": {
+      "poster_name": "Melinda Green",
+      "poster_handle": "melinda.green"
+    },
+    "time_stamp": "2022-04-13 13:56:50",
+    "text": "it’s such an easy thing to miss"
+  },
+  {
+    "poster": {
+      "poster_name": "Melinda Green",
+      "poster_handle": "melinda.green"
+    },
+    "time_stamp": "2022-04-13 13:57:38",
+    "edited": {
+      "time_stamp": "2022-04-13 13:58:41"
+    },
+    "text": "absolute position works with the nearest relative or absolute positioned ancestor. it ignores static and fixed elements. even pseudoelements."
+  }
+]

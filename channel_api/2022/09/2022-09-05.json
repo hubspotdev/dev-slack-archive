@@ -1,0 +1,81 @@
+[
+  {
+    "poster": {
+      "poster_name": "Luka Birsa",
+      "poster_handle": "luka.birsa"
+    },
+    "time_stamp": "2022-09-05 02:10:37",
+    "text": "Is there a way to export prospect data for analysis? Especially if I could export every first time traffic acquisition channel for a specific domain (so visit no.1)? Is there any way to export prospect data on a per domain basis?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-09-08 22:44:24"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Daniel Lemesh",
+      "poster_handle": "daniel392"
+    },
+    "time_stamp": "2022-09-05 02:49:06",
+    "text": "I think I’m on to it!\nsupport didn’t respond yet, but I think I got it.\nI’ll try to explain in writing:\n\nwidget does not respect the `inlineEmbedSelector`.\nactually, the widget does not respect `hsConversationsSettings` , meaning it doesn’t “see” the settings object when the SDK initializes.\n\nthis led me to understand there’s a race condition between the time when the SDK initializes and the declaration of `hsConversationsSettings`.\n\nin React, effects (`useEffect`) run after the initial render, so the `init` effect runs after the app has rendered.\nmeantime, in the background, *HubSpot* script is fetched and parsed, and when it’s ready it initializes the SDK.\nso, if it’s ready before the `init` effect ran, it doesn’t “see” the `hsConversationsSettings` .\nthen it loads the chat widget and renders it as-if I didn’t tell it to *not* load immediately and render *inside* my selector.\n\nsometimes it’s ready before the effect ran, and sometimes it doesn’t :slightly_smiling_face:\nhope I managed to explain it.\n\nmy current solution is to place the `hsConversationsSettings` in the `index.html` :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-09-05 05:54:03",
+    "text": "Okay this makes the most amount of sense then for what is going on! I suspected something along those lines, you explained it perfectly"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-09-05 05:54:44",
+    "text": "Nice work figuring out the lifeceycle and making the adjustment. "
+  },
+  {
+    "poster": {
+      "poster_name": "Daniel Lemesh",
+      "poster_handle": "daniel392"
+    },
+    "time_stamp": "2022-09-05 05:58:25",
+    "text": "it was you who made me look into the internals\nthanks :muscle:"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-09-05 07:12:28",
+    "text": "Gotta say I was a bit puzzled abotu UseEffect — that wasn’t something I’ve seen before — my react development experience is on a pretty basic level, so I just had to think about it away from react"
+  },
+  {
+    "poster": {
+      "poster_name": "Shmuel Goldfarb",
+      "poster_handle": "shmuel"
+    },
+    "time_stamp": "2022-09-06 00:37:34",
+    "text": "Hi All\n\nHaving a little trouble with the subscription preferences API while adding a subscriber.\nI have posted on the forum with more details - <https://community.HubSpot.com/t5/APIs-Integrations/Error-500-on-creating-a-subscription-using-Marketing-API/m-p/689335/highlight/true#M56635|link>.\nDoes anyone have idea what might cause this `500` error?\n\nThanks",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-09-08 22:46:00"
+      },
+      {
+        "time_stamp": "2022-09-08 22:48:48"
+      },
+      {
+        "time_stamp": "2022-09-08 22:49:25"
+      },
+      {
+        "time_stamp": "2022-09-12 01:12:23"
+      }
+    ]
+  }
+]

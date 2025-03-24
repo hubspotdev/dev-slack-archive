@@ -1,0 +1,65 @@
+[
+  {
+    "poster": {
+      "poster_name": "Kris Bradbury",
+      "poster_handle": "kris.bradbury"
+    },
+    "time_stamp": "2024-08-20 09:23:10",
+    "edited": {
+      "time_stamp": "2024-08-20 09:24:00"
+    },
+    "text": "Hi all! just wondering if anyone has come across this before... Im creating an app which uses Auth0 SSO to only allow logged in users to view certain pages. Im using `hublDataTemplate` to get the logged in user so I can then use their contact ID to query data from hubDB as well as external services. Ive got an issue where on one component this is working fine but on another the hublData prop is null. The code for the two components is pretty much exactly the same bar the module prop on on the Island component. Whats strange is on one page when i view it everything is working ok, can see the data totally fine however on the other page it only shows if i click preview from the page editor in content hub. Is there a reason for this, is there something that I am doing wrong or has anyone else come across this? Everything else I need to do is working fine, however this is the one thing that will stop us using CMS-React for this project (which we really want to use).\n\nThis is the working component:\n```import { Island } from \"@HubSpot/cms-components\";\nimport OrderList from \"../../islands/orderList.jsx?island\";\nimport { Layout } from \"../../layout/layout.jsx\";\n\nexport function Component({ hublData }) {\n  return (\n    <Layout>\n      <Island module={OrderList} hublData={hublData} />\n    </Layout>\n  );\n}\n\nexport { fields } from \"./orderListFields\";\nexport { meta } from \"./orderListMeta.js\";\n\nexport const hublDataTemplate = `\n  {% set contact = crm_object('contact', request.contact.contact_vid, 'firstname,lastname,email') %}\n  {% set hublData = {\n    \"text\": \"test text\",\n    \"contact\": contact\n  } %}\n`;```\nThis is the none working one:\n```import { Island } from \"@HubSpot/cms-components\";\nimport OrderForm from \"../../islands/orderForm.jsx?island\";\nimport { Layout } from \"../../layout/layout.jsx\";\n\nexport function Component({ hublData }) {\n  return (\n    <Layout>\n      <Island module={OrderForm} hublData={hublData} />\n    </Layout>\n  );\n}\n\nexport { fields } from \"./orderFormFields\";\nexport { meta } from \"./orderFormMeta.js\";\n\nexport const hublDataTemplate = `\n  {% set contact = crm_object('contact', request.contact.contact_vid, 'firstname,lastname,email') %}\n  {% set hublData = {\n    \"text\": \"test text\",\n    \"contact\": contact\n  } %}\n`;```",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-08-20 09:36:59"
+      },
+      {
+        "time_stamp": "2024-08-20 09:38:48"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kris Bradbury",
+      "poster_handle": "kris.bradbury"
+    },
+    "time_stamp": "2024-08-20 09:24:16",
+    "text": "Any help would be super appreciated!"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-08-20 09:36:59",
+    "text": "Hey Kris, I can try to help here\n\nI'll DM you for portal information"
+  },
+  {
+    "poster": {
+      "poster_name": "Kris Bradbury",
+      "poster_handle": "kris.bradbury"
+    },
+    "time_stamp": "2024-08-20 09:38:48",
+    "text": "<@U04DLJH3W94> awesome thank you so much!"
+  },
+  {
+    "text": "Excuse my super noob-ness. I'm just starting looking into building some modules with React.   Struggling to figure out how to implement styles that would typically be handled with HubL\n\nExample of HubL\n```myClass {\n   background-color: {{ module.styles.background_color.css }};\n}```\nI tied implement styled-components and styled-jsx from the <https://github.HubSpot.com/cms-react/reference/styling.html#styled-components|docs>. But I'm struggling\n\nAny tips are appreciated :pray::skin-tone-2:",
+    "time_stamp": "2024-08-20 10:19:16",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-08-20 10:55:52"
+      }
+    ]
+  },
+  {
+    "text": "Ahhh I figurred it out. I needed to import StyledJSXRegistry and wrap it.\n\nIs this the \"best practice\" way?",
+    "time_stamp": "2024-08-20 10:55:52",
+    "edited": {
+      "time_stamp": "2024-08-20 11:00:29"
+    }
+  }
+]

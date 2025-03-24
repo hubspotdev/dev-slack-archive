@@ -1,0 +1,63 @@
+[
+  {
+    "poster": {
+      "poster_name": "Josh GH",
+      "poster_handle": "joshgh"
+    },
+    "time_stamp": "2024-06-28 10:38:59",
+    "text": "We decided to globally style the HubSpot “sections” with a responsive padding, and default to no spacing for modules themselves. Users can still override the section padding in the section settings. This accounts for most of our use-cases where there’s only one module per section.\n\nHowever, each module does also have a custom field to add `bottom_spacing` for when it’s in the same section as another module, and needs spacing between the modules themselves."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-06-28 10:40:46",
+    "text": "can someone comfortable with typescript help explain how these types work:\n```(alias) type LocationIconGridProps = {\n    eyebrow?: string | undefined;\n    title?: string | undefined;\n    rows: DefaultValues&lt;{\n        offset_right?: BooleanFieldType | undefined;\n        offset_left?: BooleanFieldType | undefined;\n        features: RepeaterGroup&lt;{\n            icon?: ImageFieldType;\n            heading?: TextFieldType;\n            description?: TextFieldType;\n        }&gt;;\n    }&gt;[];\n}```\neyebrow and title make sense\n\nbut when I get to rows for example, they are typed as DefaultValue but used as essentially an array. That different makes it unclear to me how to type parameters when I pass them through to other components",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-06-28 13:26:42"
+      },
+      {
+        "time_stamp": "2024-06-28 13:44:22"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-06-28 10:41:34",
+    "text": "for something like this:\n```{rows.map((row) =&gt; (\n  &lt;Row row={row} /&gt;\n))}```\nI can't seem to define the types in a way that makes the typescript compiler happy"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-06-28 13:10:59",
+    "text": "<@U26AKMZ19> it's weird that that only works in production and not over proxy. Is that a bug or expected behavior?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jesse Maltese",
+      "poster_handle": "jmaltese"
+    },
+    "time_stamp": "2024-06-28 13:26:42",
+    "edited": {
+      "time_stamp": "2024-06-28 13:27:23"
+    },
+    "text": "`DefaultValues` pulls out the correct type from each of the internal field types (`BooleanFieldType` => boolean, `TextFieldType` => string). In your type, the `rows` field is an array of those.\n\nIf you wanted to type the `row` prop in your `Row` component, I would just use the `rows` property in your type, but remove the `[]` at the end to make it into a single object rather than an array of row objects."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-06-28 13:44:22",
+    "text": "thanks for the info. I need to mess around with it more to really understand (and maybe take a typescript + react course). I ended up spreading the props and then using the same generated type definition for now (I ended up needing all the props)"
+  }
+]

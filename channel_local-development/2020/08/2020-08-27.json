@@ -1,0 +1,184 @@
+[
+  {
+    "poster": {
+      "poster_name": "Vesa Poikajärvi",
+      "poster_handle": "vesa.poikajarvi"
+    },
+    "time_stamp": "2020-08-27 08:32:27",
+    "edited": {
+      "time_stamp": "2020-08-27 08:33:09"
+    },
+    "text": "Is there a problem with HubSpot at the moment? My uploads started to fail just a little while ago with a claim that some files (shared css, all external JS libs) are not synced. Output shows they're uploaded and can be seen in the Design Tools:\n\n```Uploaded file \"/path/dist/css/style.css\" to \"theme-in-HubSpot/css/style.css\"\n...\n[ERROR] Uploading file \"/path/dist/modules/my-module.module/meta.json\" to \"theme-in-HubSpot/modules/my-module.module/meta.json\" failed\n[ERROR] No asset exists at path /theme-in-HubSpot/css/style.css. Has the file been synced```"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2020-08-27 08:33:53",
+    "text": "are you uploading to the file manager? or DM?"
+  },
+  {
+    "poster": {
+      "poster_name": "Vesa Poikajärvi",
+      "poster_handle": "vesa.poikajarvi"
+    },
+    "time_stamp": "2020-08-27 08:34:26",
+    "text": "design manager: `npx hs upload dist theme-in-HubSpot`"
+  },
+  {
+    "poster": {
+      "poster_name": "Vesa Poikajärvi",
+      "poster_handle": "vesa.poikajarvi"
+    },
+    "time_stamp": "2020-08-27 08:34:32",
+    "text": "has worked well for three months"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2020-08-27 08:34:50",
+    "text": "yeah. i havent check today. but sounds like a job for <@U7SL518D6>"
+  },
+  {
+    "poster": {
+      "poster_name": "Vesa Poikajärvi",
+      "poster_handle": "vesa.poikajarvi"
+    },
+    "time_stamp": "2020-08-27 08:39:00",
+    "text": "the reference are relative in the `meta.json` files like this: `\"css_assets\": [{ \"path\": \"../../css/style.css\" }]`"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2020-08-27 08:39:20",
+    "text": "?"
+  },
+  {
+    "poster": {
+      "poster_name": "Vesa Poikajärvi",
+      "poster_handle": "vesa.poikajarvi"
+    },
+    "time_stamp": "2020-08-27 08:43:03",
+    "text": "just FYI if it matters if using relative or absolute paths in `meta.json` (the complaints above are that `meta.json` could not be uploaded because it refers to a file supposedly not synced), but tried already with absolute paths and didn't help"
+  },
+  {
+    "poster": {
+      "poster_name": "Vesa Poikajärvi",
+      "poster_handle": "vesa.poikajarvi"
+    },
+    "time_stamp": "2020-08-27 09:03:22",
+    "text": "actually checking from our build pipeline those errors started to appear two days ago, but in the end the CLI says success and builds don't fail.  seems too that the changes deployed in those builds are there too, but the meta.json files of which the upload complains are not. happens on our other sandboxes too.",
+    "reply_count": 4,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2020-08-27 09:13:06"
+      },
+      {
+        "time_stamp": "2020-08-27 09:17:11"
+      },
+      {
+        "time_stamp": "2020-08-27 09:28:17"
+      },
+      {
+        "time_stamp": "2020-08-27 10:59:49"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Vesa Poikajärvi",
+      "poster_handle": "vesa.poikajarvi"
+    },
+    "time_stamp": "2020-08-27 09:13:06",
+    "text": "this shows up like that the module whose meta.json is not uploaded is there and works, but in the page editor the module name is the folder name instead of the label given in meta.json"
+  },
+  {
+    "poster": {
+      "poster_name": "Vesa Poikajärvi",
+      "poster_handle": "vesa.poikajarvi"
+    },
+    "time_stamp": "2020-08-27 09:17:11",
+    "text": "and it's every `meta.json` that has `js_assets` that is not uploading. if I remove the entry from `js_assets` but leave it empty then the upload works but naturally the asset reference is missing"
+  },
+  {
+    "poster": {
+      "poster_name": "Vesa Poikajärvi",
+      "poster_handle": "vesa.poikajarvi"
+    },
+    "time_stamp": "2020-08-27 09:28:17",
+    "text": "and this is definitely not changes in our sources - the master branch has not been touched in six days and then it did upload correctly, now it doesnt."
+  },
+  {
+    "poster": {
+      "poster_name": "Vesa Poikajärvi",
+      "poster_handle": "vesa.poikajarvi"
+    },
+    "time_stamp": "2020-08-27 10:59:49",
+    "edited": {
+      "time_stamp": "2020-08-27 11:00:38"
+    },
+    "text": "this does not happen on the production portal, at least yet but happens on every developers' sandbox + the one we use as a staging portal"
+  },
+  {
+    "poster": {
+      "poster_name": "Mitchell Katz",
+      "poster_handle": "mkatz"
+    },
+    "time_stamp": "2020-08-27 11:44:05",
+    "text": "Hey <@U0149PQC0HK> looking at this now",
+    "reply_count": 4,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2020-08-27 11:49:43"
+      },
+      {
+        "time_stamp": "2020-08-27 11:50:41"
+      },
+      {
+        "time_stamp": "2020-08-27 15:10:49"
+      },
+      {
+        "time_stamp": "2020-08-27 15:10:55"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Vesa Poikajärvi",
+      "poster_handle": "vesa.poikajarvi"
+    },
+    "time_stamp": "2020-08-27 11:49:43",
+    "text": "apparently it was enought that you just looked at it because now the upload works again :tada: :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Mitchell Katz",
+      "poster_handle": "mkatz"
+    },
+    "time_stamp": "2020-08-27 11:50:41",
+    "text": "Hah I was just about to come back and ask if it fixed. Just reverted a change. Sorry for the issues here"
+  },
+  {
+    "poster": {
+      "poster_name": "Jurjen Sytsma",
+      "poster_handle": "jurjen"
+    },
+    "time_stamp": "2020-08-27 15:10:49",
+    "text": "man I thought I was getting crazy… had I only looked here earlier, as only now I find out it wasn’t something I did :wink:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jurjen Sytsma",
+      "poster_handle": "jurjen"
+    },
+    "time_stamp": "2020-08-27 15:10:55",
+    "text": "thanks for the fix!"
+  }
+]

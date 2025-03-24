@@ -1,0 +1,32 @@
+[
+  {
+    "poster": {
+      "poster_name": "Caitlin Kuiper",
+      "poster_handle": "ckuiper"
+    },
+    "time_stamp": "2022-12-15 13:35:36",
+    "text": "Hi! I have a before/after image module where you click a \"before\" button to see one image, and an \"after\" button to see the other image. When I have multiple instances of the module on my page, the second instance of the module breaks — the images don't display and the module buttons instead trigger the first instance of the module. Any recommendations on how to fix this?\n\n```\n&lt;div class=\"after-slider\"&gt;\n\n  &lt;div class=\"after-slider__slide fade\"&gt;\n    &lt;img src=\"{{ module.before_img.src }}\" alt=\"{{ module.before_img.alt }}\" {{ loadingAttr }} {{ sizeAttrs }}&gt;\n  &lt;/div&gt;\n\n  &lt;div class=\"after-slider__slide fade\"&gt;\n    &lt;img src=\"{{ module.after_img.src }}\" alt=\"{{ module.after_img.alt }}\" {{ loadingAttr }} {{ sizeAttrs }}&gt;\n  &lt;/div&gt;\n\n  &lt;div class=slide-buttons&gt;\n    &lt;span class=\"slide-button\" onclick=\"currentSlide(1)\"&gt;Before&lt;/span&gt; \n    &lt;span class=\"slide-button\" onclick=\"currentSlide(2)\"&gt;After&lt;/span&gt; \n  &lt;/div&gt;\n\n&lt;/div&gt;\n\n{% require_js %}\n&lt;script&gt;\nlet slideIndex = 1;\nshowSlides(slideIndex);\n\nfunction plusSlides(n) {\n  showSlides(slideIndex += n);\n}\n\nfunction currentSlide(n) {\n  showSlides(slideIndex = n);\n}\n\nfunction showSlides(n) {\n  let i;\n  let slides = document.getElementsByClassName(\"after-slider__slide\");\n  let slideButton = document.getElementsByClassName(\"slide-button\");\n  if (n &gt; slides.length) {slideIndex = 1}    \n  if (n &lt; 1) {slideIndex = slides.length}\n  for (i = 0; i &lt; slides.length; i++) {\n    slides[i].style.display = \"none\";  \n  }\n  for (i = 0; i &lt; slideButton.length; i++) {\n    slideButton[i].className = slideButton[i].className.replace(\" active\", \"\");\n  }\n  slides[slideIndex-1].style.display = \"block\";  \n  slideButton[slideIndex-1].className += \" active\";\n}\n&lt;/script&gt;\n{% end_require_js %}```",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-12-15 14:30:05"
+      },
+      {
+        "time_stamp": "2022-12-15 14:35:04"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Alberto Zordan",
+      "poster_handle": "alberto.zordan"
+    },
+    "time_stamp": "2022-12-15 14:30:05",
+    "text": "Check this out\n<https://community.HubSpot.com/t5/CMS-Development/JavaScript-affecting-multiple-instances-of-a-module-on-landing/m-p/268251>\nThe accepted solution hints at this workaround you may find useful\n<https://community.HubSpot.com/t5/APIs-Integrations/How-to-access-to-the-ID-of-the-current-Custom-Module/m-p/224424#post_4>"
+  },
+  {
+    "text": "By the looks of it, your script for controlling the active slide doesn’t indicate which slider it should be targeting. There’s a few ways to handle this — the simplest would be to add the module instance’s unique ID to the outer wrapper and target that, but that’d leave you with duplicitous scripts for each instance of the module.\n\nThe way I’d recommend doing this would be to pass the parent slider to your “Show Slide” function, so it can be aware of which slider it’s supposed to be targeting. I’ve attached a snippet with an annotated example of what that might look like. _(fair warning: I haven’t tested this and it very may well not work as written — it’s just a demonstration of how you might structure a solution)_",
+    "time_stamp": "2022-12-15 14:35:04"
+  }
+]

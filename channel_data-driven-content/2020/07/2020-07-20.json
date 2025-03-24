@@ -1,0 +1,61 @@
+[
+  {
+    "poster": {
+      "poster_name": "Vesa Poikajärvi",
+      "poster_handle": "vesa.poikajarvi"
+    },
+    "time_stamp": "2020-07-20 01:48:40",
+    "text": "Just needed to group items by a mapped property (in your case, release_date mapped to a month) but didn’t find any way it would be possible with HubL/Jinja filters so I ended up grouping things manually to a dictionary and then displaying that. Something like this\n\n```{# Group things by release month in this dict %}\n{% set grouped_items = {} %}\n\n{% for item in table %}\n  {% set month = item.release_date|datetimeformat('%B') %}\n\n  {# Add empty array to dict if there is no entry for the month yet #}\n  {% if grouped_items[month] == null %}\n    {% set _ = grouped_items.put(month, []) %}\n  {% endif %}\n  \n  {# Add the item to the list of the month #}\n  {%- set _ = grouped_items[month].append(item) %}\n{% endfor %}\n\n{% for month, items in grouped_items %}\n  &lt;li&gt;{{ month }}\n    &lt;ul&gt;\n      {% for item in items %}\n        &lt;li&gt;{{ item.name }}&lt;/li&gt;\n      {% endfor %}\n    &lt;/ul&gt;\n  &lt;/li&gt;\n{% endfor %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Mitchell",
+      "poster_handle": "tom.mitchell"
+    },
+    "time_stamp": "2020-07-20 02:30:37",
+    "text": "Thanks so much for this <@U0149PQC0HK>. I'm trying it out but not currently managing to get it render anything, I'll keep having a fiddle with it. Much appreciated."
+  },
+  {
+    "poster": {
+      "poster_name": "Vesa Poikajärvi",
+      "poster_handle": "vesa.poikajarvi"
+    },
+    "time_stamp": "2020-07-20 07:22:48",
+    "text": "yeah I didn’t test this, but now that I look at my actual implementation I think the problem is the latter loop should contain `.items()`, ie. `{% for month, items in grouped_items.items() %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Vesa Poikajärvi",
+      "poster_handle": "vesa.poikajarvi"
+    },
+    "time_stamp": "2020-07-20 07:26:31",
+    "text": "I learned some things about HubL while working on this, listing them here just in case because they were new to me:\n• HubL does not have the `do` extension of Jinja, thus in order to perform a side effect need to use a temp variable. that is why there are those `{% set _ = doSomething() %}`\n• HubSpot has documentation in <https://javadoc.io/doc/com.HubSpot.jinjava/jinjava/latest/index.html|javadoc.io> , there you can find eg. the methods available for dictionaries and lists (`com.HubSpot.jinjava.objects.collections` -&gt; `PyList` and `PyMap` )"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Mitchell",
+      "poster_handle": "tom.mitchell"
+    },
+    "time_stamp": "2020-07-20 07:37:51",
+    "text": "Amazing - got it working. Massively appreciate your help <@U0149PQC0HK>"
+  },
+  {
+    "poster": {
+      "poster_name": "Vesa Poikajärvi",
+      "poster_handle": "vesa.poikajarvi"
+    },
+    "time_stamp": "2020-07-20 07:38:41",
+    "edited": {
+      "time_stamp": "2020-07-20 07:39:01"
+    },
+    "text": "you’re welcome. I wish HubSpot documentation contained more advanced examples instead of everyone needing to learn on their own from different sources :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Mitchell",
+      "poster_handle": "tom.mitchell"
+    },
+    "time_stamp": "2020-07-20 07:39:45",
+    "text": "Haha it would certainly be helpful for people who aren't so hot on some of the specific the coding methodologies like myself. Great that there are communities like this though."
+  }
+]

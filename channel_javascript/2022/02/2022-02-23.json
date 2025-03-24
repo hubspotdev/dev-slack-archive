@@ -1,0 +1,71 @@
+[
+  {
+    "poster": {
+      "poster_name": "Nathan Gifford",
+      "poster_handle": "ngifford182"
+    },
+    "time_stamp": "2022-02-23 04:51:16",
+    "text": "Hey! I’m trying to add a class name to radio button labels when clicked, but none of the normal routes to take for this sort of thing are working for me within HubSpot. Has anyone else had luck with this or have some helpful input?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-02-23 07:01:56"
+      },
+      {
+        "time_stamp": "2022-02-23 10:12:15"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Rodrigo",
+      "poster_handle": "rodrigo.castro"
+    },
+    "time_stamp": "2022-02-23 06:12:25",
+    "text": "<https://developers.HubSpot.com/docs/cms/building-blocks/modules/files#require-js-block> in here they give you an example. I’d include it at the beginning of the module in the html"
+  },
+  {
+    "poster": {
+      "poster_name": "Rodrigo",
+      "poster_handle": "rodrigo.castro"
+    },
+    "time_stamp": "2022-02-23 06:12:55",
+    "text": "Another option is adding it on the meta.json of the module"
+  },
+  {
+    "poster": {
+      "poster_name": "Rodrigo",
+      "poster_handle": "rodrigo.castro"
+    },
+    "time_stamp": "2022-02-23 06:14:03",
+    "text": "```{\n  \"global\" : false,\n  \"host_template_types\" : [ \"PAGE\" ],\n  \"module_id\" : **********,\n  \"css_assets\" : [ {\n    \"url\" : \"<https://unpkg.com/swiper/swiper-bundle.min.css>\",\n    \"autoload\" : true,\n    \"name\" : \"swiper-bundle.min.css\"\n  } ],\n  \"js_assets\" : [ {\n    \"url\" : \"<https://unpkg.com/swiper/swiper-bundle.min.js>\",\n    \"autoload\" : true,\n    \"name\" : \"swiper-bundle.min.js\"\n  } ],\n  \"is_available_for_new_content\" : true\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Rodrigo",
+      "poster_handle": "rodrigo.castro"
+    },
+    "time_stamp": "2022-02-23 06:14:06",
+    "text": "like so"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2022-02-23 07:01:56",
+    "edited": {
+      "time_stamp": "2022-02-23 07:07:24"
+    },
+    "text": "Hey Nathan, manipulating HS forms via JS has historically been tricky because technically every HS form is a tiny react application. Here are a few common issues you may be running into:\n\n1. Forms load slightly after the page loads (use <https://legacydocs.HubSpot.com/global-form-events|global form events> to listen for forms to be ready before manipulating them)\n2. Dealing with form inputs (because these forms have their own state management system that we can not directly access, sometimes form inputs do not behave as expected. I’ve found using code similar to `input.dispatchEvent(new Event(\"change\"));` can sometimes manually re-sync the forms state with the expected state on the page\n3. HS Form Validation can also throw in some unexpected behavior."
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan Gifford",
+      "poster_handle": "ngifford182"
+    },
+    "time_stamp": "2022-02-23 10:12:15",
+    "text": "Thanks Mark. Yeah, definitely not a normal form to manipulate. :slightly_smiling_face: Didn’t know if someone had uncovered some magic solution somewhere that I hadn’t come across yet. haha"
+  }
+]

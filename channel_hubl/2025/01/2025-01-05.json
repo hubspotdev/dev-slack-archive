@@ -1,0 +1,13 @@
+[
+  {
+    "poster": {
+      "poster_name": "Aaron Marsden",
+      "poster_handle": "aaron866"
+    },
+    "time_stamp": "2025-01-05 02:54:01",
+    "edited": {
+      "time_stamp": "2025-01-05 02:54:24"
+    },
+    "text": "Hi all,\n\nI've noticed recently that the HubDB queries for our blog and experiments blog appear to load very slowly.\n\nIn some instances we're waiting for 3-4 seconds before the page loads. There aren't many render-blocking scripts on the page that would cause this, so I'm curious if something in the implementation is off.\n\nHere's an example of our HubDB query for a blog page:\n\n```# $search: \"{{ request.query_dict.search  || ''}}\"\n# $topics: \"{{ request.query_dict.topics  || ''}}\"\n# $offset: \"{{ request.query_dict.page ? (request.query_dict.page - 1) * 10 : 0}}\"\n# $blogGroup: \"{{ content.content_group_id  || ''}}\"\n# $authorPage: \"{{ blog_author.id || ''}}\"\n# $tagPage: \"{{ tag || ''}}\"\n\nquery blogPosts($topics: [Number], $search: String, $offset: Int, $blogGroup: [String], $authorPage: [String], $tagPage: [String]) {\n  BLOG {\n    post_collection(\n      limit: 10\n      offset: $offset\n      orderBy: publish_date__desc\n      filter: {\n        name__icontains: $search\n        tag_ids__in: $topics\n        state__eq: \"Published\"\n        content_group_id__in: $blogGroup\n        blog_author_id__in: $authorPage\n        post_tag_slug__in: $tagPage\n      }\n    ) {\n      items {\n        blog_author {\n          display_name\n          bio\n        }\n        blog_tags {\n          name\n          slug\n        }\n        featured_image\n        featured_image_alt_text\n        post_summary\n        url\n        name\n        publish_date\n        tag_ids\n      }\n      total\n      hasMore\n    }\n  }\n}```\nWe are using query_dict for filtering on different tags, but we had been using that for a while and weren't noticing any huge issues.\n\nAny insights here would be much appreciated!"
+  }
+]

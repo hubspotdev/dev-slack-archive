@@ -1,0 +1,187 @@
+[
+  {
+    "poster": {
+      "poster_name": "Danica Corpuz",
+      "poster_handle": "danicac"
+    },
+    "time_stamp": "2022-04-12 02:16:07",
+    "text": "+1 here, experiencing the same if the fields is inside a group of a group that group will not show"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2022-04-12 04:38:37",
+    "text": "<@U2H3TT8F2> <@U7SL518D6> FYI"
+  },
+  {
+    "poster": {
+      "poster_name": "James Wilson",
+      "poster_handle": "james.wilson"
+    },
+    "time_stamp": "2022-04-12 06:03:43",
+    "text": "I'm having the same issue as posted in the link. I have tried the suggested solution to point to `theme.font.styles.css` but that returns nothing, and if I try `theme.font.styles.css.font-style` it also returns `0`\n\n<https://community.HubSpot.com/t5/CMS-Development/How-to-output-font-styles/td-p/599372>",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-04-12 07:24:51"
+      },
+      {
+        "time_stamp": "2022-04-12 07:31:04"
+      },
+      {
+        "time_stamp": "2022-04-12 07:36:25"
+      },
+      {
+        "time_stamp": "2022-04-12 07:46:04"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Rosa",
+      "poster_handle": "jasonrosa"
+    },
+    "time_stamp": "2022-04-12 07:23:36",
+    "edited": {
+      "time_stamp": "2022-04-12 07:32:38"
+    },
+    "text": "Hey everyone - this issue is being looked into. Can report an update here after it is fixed (sorry about change in my message)"
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2022-04-12 07:24:51",
+    "text": "The solution was to use the entire CSS object. So instead of\n\n`theme.[field-name].styles.font-style`\n\nI used\n`theme.[field-name].css`\n\nwhich returns\n\n```font-family: 'Arial';\nfont-style: bold;```\nso then you can do this:\n\n```h1, h2, h3, h4, h5, h6 {\n  {{theme.[field-name].css}}\n}```\nto output this:\n```h1, h2, h3, h4, h5, h6 {\n  font-family: 'Arial';\n  font-style: bold;\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Bernardo Salazar",
+      "poster_handle": "bernardo"
+    },
+    "time_stamp": "2022-04-12 07:31:04",
+    "text": "Hi <@U03A0GUGY5A>,\n\nYou would share the fields.json part and also the css extract where you use it.\n\nMaybe i can help you, thanks."
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2022-04-12 07:36:25",
+    "text": "Thanks <@UE5D6CXPA>, I have solved the issue. These are my working snippets:\n\n*fields.json*\n\n```[{\n    \"name\" : \"font\",\n    \"label\" : \"Font\",\n    \"required\" : false,\n    \"locked\" : false,\n    \"load_external_fonts\" : true,\n    \"type\" : \"font\",\n    \"default\" : {\n      \"font\":\"Newsreader\",\n      \"font_set\":\"GOOGLE\"\n    },\n    \"visibility\" : {\n      \"hidden_subfields\" : {\n        \"size\": true,\n        \"color\": true,\n        \"underline\": true\n      }\n    }\n  }]```\n*theme-overrides.css*\n\n```{% set heading_styles = theme.font.css %}\n\nh1,\nh2,\nh3,\nh4,\nh5,\nh6 {\n    {{ heading_styles }}\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Bernardo Salazar",
+      "poster_handle": "bernardo"
+    },
+    "time_stamp": "2022-04-12 07:46:04",
+    "text": "Try with:\n\n*fields.json*\n```[{\n    \"name\" : \"font\",\n    \"label\" : \"Font\",\n    \"required\" : false,\n    \"locked\" : false,\n    \"load_external_fonts\" : true,\n    \"type\" : \"font\",\n    \"default\" : {\n      \"fallback\": \"sans-serif\",\n      \"font\":\"Newsreader\",\n      \"font_set\":\"GOOGLE\"\n      \"variant\": \"700\"\n    },\n    \"visibility\" : {\n      \"hidden_subfields\" : {\n        \"size\": true,\n        \"color\": true,\n        \"underline\": true\n      }\n    }\n  }]```\n*theme-overrides.css*\n```{% set heading_styles = theme.font %}\n\nh1,\nh2,\nh3,\nh4,\nh5,\nh6 {\n    {{ heading_styles.style }}\n}```\n"
+  },
+  {
+    "text": "Anyone have an idea why suddenly my Styles TAB is empty for certain custom modules?\n<https://www.loom.com/share/94e2853415bc473db777a841afb582e3>",
+    "time_stamp": "2022-04-12 08:27:46",
+    "reply_count": 3,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2022-04-12 08:28:20"
+      },
+      {
+        "time_stamp": "2022-04-12 08:29:59"
+      },
+      {
+        "time_stamp": "2022-04-12 11:06:42"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2022-04-12 08:28:20",
+    "text": "Currently being looked into: <https://HubSpotdev.slack.com/archives/CSFGKSHT7/p1649769816110419?thread_ts=1649704258.785829&amp;cid=CSFGKSHT7>"
+  },
+  {
+    "poster": {
+      "poster_name": "David Roma",
+      "poster_handle": "droma"
+    },
+    "time_stamp": "2022-04-12 08:29:59",
+    "text": "<@U26BLKGE4> <@U26AKMZ19> you must have just broken the record for fastest replies ever :laughing: thank you, team!"
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Rosa",
+      "poster_handle": "jasonrosa"
+    },
+    "time_stamp": "2022-04-12 11:06:29",
+    "text": "Hey all this should be fixed up now! Let me know if you're still having any issues."
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Rosa",
+      "poster_handle": "jasonrosa"
+    },
+    "time_stamp": "2022-04-12 11:06:42",
+    "text": "This should be fixed up now! Let me know if you're still seeing any issues."
+  },
+  {
+    "poster": {
+      "poster_name": "Bernardo Salazar",
+      "poster_handle": "bernardo"
+    },
+    "time_stamp": "2022-04-12 12:04:30",
+    "text": "Hi <@U26AKMZ19>, All correct... thanks."
+  },
+  {
+    "poster": {
+      "poster_name": "Bernardo Salazar",
+      "poster_handle": "bernardo"
+    },
+    "time_stamp": "2022-04-12 14:08:18",
+    "text": "<@U26AKMZ19> the issues back. Again the style options are not shown in more than one group."
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Rosa",
+      "poster_handle": "jasonrosa"
+    },
+    "time_stamp": "2022-04-12 14:37:55",
+    "text": "Hey Bernardo - is this happening in any particular place (e.g. the page editor, blog editor, global content editor) or are you seeing it everywhere?"
+  },
+  {
+    "poster": {
+      "poster_name": "Alyssa Wilie",
+      "poster_handle": "amwilie"
+    },
+    "time_stamp": "2022-04-12 14:45:13",
+    "text": "I'm currently seeing this problem in page editor and module preview (haven't looked at anywhere else). In Styles tab any group that contains a group is not visible."
+  },
+  {
+    "poster": {
+      "poster_name": "Bernardo Salazar",
+      "poster_handle": "bernardo"
+    },
+    "time_stamp": "2022-04-12 14:56:56",
+    "text": "Hey Jason: page editor and design manager."
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Rosa",
+      "poster_handle": "jasonrosa"
+    },
+    "time_stamp": "2022-04-12 15:13:35",
+    "text": "Thank you both! This should be fixed up again now. Sorry about that. Let me know if you're still seeing any issues!"
+  },
+  {
+    "poster": {
+      "poster_name": "Muskaan",
+      "poster_handle": "muskaantayal"
+    },
+    "time_stamp": "2022-04-12 22:50:30",
+    "edited": {
+      "time_stamp": "2022-04-13 02:29:29"
+    },
+    "text": "Hey, <@U26AKMZ19> I think there is still some issue. The style options (a group inside a group) of the custom modules are visible in the page editor but not in the module preview."
+  }
+]

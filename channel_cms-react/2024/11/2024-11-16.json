@@ -1,0 +1,18 @@
+[
+  {
+    "poster": {
+      "poster_name": "I Made Sariyanta",
+      "poster_handle": "desar.sariyanta"
+    },
+    "time_stamp": "2024-11-16 06:08:04",
+    "text": "This doesn't work yet here. It does work when i test it with the hello-world-project example.\n\nWith the new way:\nI got this error:\n```Error: Secrets haven't been initialized```\nWhen trying to use it like this:\n```\n// ModuleDir/Component.tsx\nconst Component = ({ serverSideProps }) =&gt; {\n  const envar = serverSideProps.envar;\n  return &lt;div data-envar={envar}&gt;{envar}&lt;/div&gt;;\n};\n\nexport { Component };```\n```// ModuleDir/server.ts\nimport {\n  getSecret,\n  ModulePropsWithoutSSP,\n  withModuleProps,\n} from '@HubSpot/cms-components';\n\nconst fetchData = async (props: ModulePropsWithoutSSP) =&gt; {\n  const someEnvVar = getSecret('SOME_ENV_VAR');\n  return {\n    serverSideProps: {\n      envar: someEnvVar,\n    },\n    caching: {\n      cacheControl: {\n        maxAge: 60,\n      },\n    },\n  };\n};\n\nexport const getServerSideProps = withModuleProps(fetchData);```\n```// index.tsx\nexport { Component } from './Component.tsx';\nexport { fields } from './fields.tsx';\nexport { meta } from './meta.ts';\nexport { getServerSideProps } from './server.ts';```\n```{\n  \"label\": \"LF Woningzoeker\",\n  \"secret_names\": [\n    \"SOME_ENV_VAR\"\n  ]\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "I Made Sariyanta",
+      "poster_handle": "desar.sariyanta"
+    },
+    "time_stamp": "2024-11-16 08:01:20",
+    "text": "After more attempts, it's seems that `getSecret` couldn't be used in serverSideProps. Am I correct?"
+  }
+]

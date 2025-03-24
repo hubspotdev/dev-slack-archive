@@ -1,0 +1,28 @@
+[
+  {
+    "poster": {
+      "poster_name": "Josef Gisis",
+      "poster_handle": "josefgisis"
+    },
+    "time_stamp": "2025-01-26 11:32:40",
+    "text": "Hey everyone! I am having trouble setting up a provider for CMS-React. I am trying to find some information on where I need to set up providers (do they need to be within an island?) and how I can consume the context. I am using a third-party provider to display a pricing table and all I get is either this error\n&gt; server render fail/waiting for island-10ed8aR0 (separate island render, inside)\nor if I set \"clientOnly\" to true, all content disappears.\n\nI see that this subject has been discussed in here already, but I am looking for some general guidelines on what I can do to get context working.",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2025-01-26 11:43:01"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Josef Gisis",
+      "poster_handle": "josefgisis"
+    },
+    "time_stamp": "2025-01-26 11:43:01",
+    "edited": {
+      "time_stamp": "2025-01-26 11:45:25"
+    },
+    "text": "For example: I am using Stigg's React SDK.\n\nI attempted to add the <StiggProvider> to a partial and then consume the context in an island. No luck. It either gives me the error mentioned above or all content disappears. If I only use the provider within the island, I get the same issue.\n\nThe closest I got to getting context working is by creating a simple counter example and created the provider in a shared file\n`import React, { createContext, useState, useContext, ReactNode } from 'react'`\n\n`const CountContext = createContext(undefined)`\n\n`export const CountProvider = ({ children }) => {`\n    `const [count, setCount] = useState(0)`\n\n    `const increment = () => setCount(count + 1)`\n\n    `const reset = () => setCount(0)`\n\n    `return <CountContext.Provider value={{ count, increment, reset }}>{children}</CountContext.Provider>`\n`}`\n\n`export const useCount = () => {`\n    `const context = useContext(CountContext)`\n    `if (!context) {`\n        `throw new Error('useCount must be used within a CountProvider')`\n    `}`\n    `return context`\n`}`\nI then added this provider to a layout.jsx file and wrapped my module with it. I also wrapped the counter and counter increment button with a layout (I know that defeats the purpose, but I was trying to get some response), even then it was very finnicky. It would only let me display the count and not the count increment as they would both disappear."
+  }
+]

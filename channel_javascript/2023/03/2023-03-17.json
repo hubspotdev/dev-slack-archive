@@ -1,0 +1,48 @@
+[
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin.perolio"
+    },
+    "time_stamp": "2023-03-17 06:31:59",
+    "edited": {
+      "time_stamp": "2023-03-17 06:35:28"
+    },
+    "text": "Thanks much <@U01QVR44MEY> and <@UJJ239SC9>! I used a combination of both of your efforts. It turns out the value was always dunefined because I was using `input` instead of `change`, as you said, Robert. In my defense, <https://legacydocs.HubSpot.com/docs/methods/forms/advanced_form_options|the docs> say to use `input`. Unfortunately, setting the values in the `onFormSubmit` is still not working though, I imagine because that’s too late to set the values, the form submits before it has time, but I’m almost certain I’ve done it before… So I utilized that with Carter’s idea and created a custom event for my dialog opening (which is where the form resides) and set the field values upon the dialog opening. Thanks again, this was pain."
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Ainslie",
+      "poster_handle": "rainslie"
+    },
+    "time_stamp": "2023-03-17 07:17:31",
+    "text": "For  `onFormSubmit` - pretty sure that hook doesn't update any values about the submission, it's meant for something like firing a conversion pixel, or you could set localStorage with the field values. So, your approach of setting the field values prior to submission is what you should do.\n\nAnd the custom event sounds good, assuming that the opening dialog causes the form to build (and the form's not just hidden in the background of the page prior to dialog). Otherwise, you could set the values after page finishes loading."
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin.perolio"
+    },
+    "time_stamp": "2023-03-17 07:50:00",
+    "edited": {
+      "time_stamp": "2023-03-17 07:50:38"
+    },
+    "text": "&gt; And the custom event sounds good, assuming that the opening dialog causes the form to build (and the form’s not just hidden in the background of the page prior to dialog). Otherwise, you could set the values after page finishes loading.\nThe form and dialog are both hidden in the background of the page. :x But yeah, it’s for a calculator, and the values we’re trying to inject depend on the user’s input, so we can’t set them on load, unfortunately."
+  },
+  {
+    "poster": {
+      "poster_name": "Anders Jürisoo",
+      "poster_handle": "anders.jurisoo"
+    },
+    "time_stamp": "2023-03-17 08:42:47",
+    "text": "Hey <@U01QVR44MEY>!! Thanks for always having our backs.\n\nDid not find the solution but did a workaround instead:\n\n```await HubSpot.cms.blogs.blogPosts.blogPostsApi.schedule({\n    id: blogPostId,\n    // one minut after now\n    publishDate: new Date(new Date().getTime() + 60000)\n});```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-17 08:43:51",
+    "text": "Hey <@U0406EK7092>, of course always. Glad you got it solved, Nice work!"
+  }
+]

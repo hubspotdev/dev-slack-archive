@@ -1,0 +1,54 @@
+[
+  {
+    "poster": {
+      "poster_name": "Aviv Kasuto",
+      "poster_handle": "aviv211"
+    },
+    "time_stamp": "2023-05-07 09:35:03",
+    "text": "Does anyone know if theres an endpoint to pull all the Custom Behavioral Events?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-05-07 20:04:47"
+      },
+      {
+        "time_stamp": "2023-05-08 15:24:40"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Taea Lambert",
+      "poster_handle": "taea.lambert"
+    },
+    "time_stamp": "2023-05-07 17:43:46",
+    "edited": {
+      "time_stamp": "2023-05-07 17:49:07"
+    },
+    "text": "Hey I would use the Search API for this\n<https://developers.HubSpot.com/docs/api/crm/search>\n\nAny internal property names in the 'properties' array will be returned to you\n\n`<https://api.hubapi.com/crm/v3/objects/notes/search>`\n```{\n  \"properties\": [\n    \"hs_attachment_ids\"\n  ],\n  \"filterGroups\": [\n    {\n      \"filters\": [\n        {\n          \"propertyName\": \"associations.ticket\",\n          \"operator\": \"EQ\",\n          \"value\": \"&lt;ticket_id&gt;\"\n        }\n      ]\n    }\n  ]\n}```\nExample Response of Notes found on my Ticket:\n```{\n  \"total\": 1,\n  \"results\": [\n    {\n      \"id\": \"**********\",\n      \"properties\": {\n        \"hs_attachment_ids\": \"********;********\",\n        \"hs_createdate\": \"2023-05-07T23:40:35.947Z\",\n        \"hs_lastmodifieddate\": \"2023-05-07T23:40:35.947Z\",\n        \"hs_object_id\": \"**********\"\n      },\n      \"createdAt\": \"2023-05-07T23:40:35.947Z\",\n      \"updatedAt\": \"2023-05-07T23:40:35.947Z\",\n      \"archived\": false\n    }\n  ]\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Taea Lambert",
+      "poster_handle": "taea.lambert"
+    },
+    "time_stamp": "2023-05-07 17:46:06",
+    "edited": {
+      "time_stamp": "2023-05-07 17:46:49"
+    },
+    "text": "If you have access to GraphQL I would use that  instead though\n<https://developers.HubSpot.com/docs/cms/data/query-HubSpot-data-using-graphql>\n<https://app.HubSpot.com/graphiql/>&lt;portal_id&gt;\n```query MyQuery {\n  CRM {\n    ticket_collection {\n      items {\n        associations {\n          note_collection__ticket_to_note {\n            items {\n              hs_attachment_ids\n            }\n          }\n        }\n      }\n    }\n  }\n}```"
+  },
+  {
+    "text": "Hey guys,\n\nI am trying to sort with -createdAt here and it is giving me an error even tho the docs state that you can sort with “-createdAt”",
+    "time_stamp": "2023-05-07 20:03:12"
+  },
+  {
+    "poster": {
+      "poster_name": "Kobe Kapoor",
+      "poster_handle": "kobe"
+    },
+    "time_stamp": "2023-05-07 20:04:47",
+    "text": "Have you tried…\n<https://legacydocs.HubSpot.com/docs/methods/events/get_events?_ga=2.109034562.1974878888.1683504182-1128612514.1683200508&amp;_gl=1*ewnv8f*_ga*MTEyODYxMjUxNC4xNjgzMjAwNTA4*_ga_LXTM6CQ0XK*MTY4MzUwODIyNS4yLjEuMTY4MzUxMTQ0My4wLjAuMA>"
+  }
+]

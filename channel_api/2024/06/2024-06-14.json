@@ -1,0 +1,245 @@
+[
+  {
+    "poster": {
+      "poster_name": "Bharat Geleda",
+      "poster_handle": "bgeleda"
+    },
+    "time_stamp": "2024-06-14 04:41:15",
+    "edited": {
+      "time_stamp": "2024-06-14 04:42:35"
+    },
+    "text": "Hello everyone,\nI am looking into using the imports API in an upsert mode and wondering if there is a way to get the `hs_object_id` of the updated records and created records mapped with email for contacts object.\n\n1 way I found to do this would be that after the import is completed : Use the createListFromImport flag, I would fetch the contacts that got added to the list. First, make a GET request to `/crm/v3/lists/{listId}/memberships/join-order` to get the record IDs of the list members. Then, make a POST request to `/crm/v3/objects/{object}/search` for the specific objectTypeId and include the record IDs in the values parameter. I am guessing the search API would still be batched so would have to do multiple throttled calls to the search API.\n\nIs there any other way to get the `hs_object_id` of what records has the imports API updated and what new records has it created?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-06-14 05:54:10"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Johan Hennius",
+      "poster_handle": "johan.hennius"
+    },
+    "time_stamp": "2024-06-14 05:46:48",
+    "edited": {
+      "time_stamp": "2024-06-14 05:48:17"
+    },
+    "text": "Hi Everyone\nJunior web dev here.\n\nIm looking to batch create tags for blog posts and subsequently update >100 posts using the API.\nI've found two possible solutions - 1 from the docs and 1 from the community.\nBut i still have a couple of questions:\n1. Batch create tags - Do i need to include all the parameters in my tag objects or can i just include the name of the tag, tag id, and date created? (see below)\n{\n  \"deletedAt\": \"2024-06-14T11:41:38.455Z\",\n  \"created\": \"2024-06-14T11:41:38.455Z\",\n  \"name\": \"string\",\n  \"language\": \"af\",\n  \"id\": \"string\",\n  \"translatedFromId\": 0,\n  \"updated\": \"2024-06-14T11:41:38.455Z\"\n}\n\n2. Update blog posts with new tags - Is this the best method? (see below)\n```import requests\nimport json\n\n# Set up authentication credentials\napi_key = 'YOUR_API_KEY'\nheaders = {'Authorization': 'Bearer ' + api_key}\n\n# Set up data for API call\npost_id_list = [123, 456, 789]  # list of blog post IDs to update tags for\ntag_list = ['tag1', 'tag2', 'tag3']  # list of tags to add to blog posts\n\n# Loop through blog post IDs and add tags\nfor post_id in post_id_list:\n    url = f'<https://api.hubapi.com/blogs/v3/blog-posts/{post_id}/tags>'\n    data = {'tags': tag_list}\n    response = requests.put(url, headers=headers, json=data)\n    if response.status_code == 200:\n        print(f'Successfully updated tags for blog post {post_id}')\n    else:\n        print(f'Error updating tags for blog post {post_id}: {response.text}')```\nPlease let me know if you have any tips or documentation which could help in my understanding.",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-06-14 06:14:57"
+      },
+      {
+        "time_stamp": "2024-06-14 06:16:07"
+      },
+      {
+        "time_stamp": "2024-06-14 06:49:15"
+      },
+      {
+        "time_stamp": "2024-06-14 07:19:44"
+      },
+      {
+        "time_stamp": "2024-06-14 08:06:17"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-06-14 05:54:10",
+    "text": "Hmmm - just thinking out load here because I have never used the imports API - but it looks to me like the Import endpoint (/crm/v3/imports/) gives you back both an id value for the import and a ListId value for a list it creates?  Yes?  Then there are a couple API calls you could make - one to see the status of the import (/crm/v3/imports/{importId}) and one to see the list of objects (/crm/v3/lists/{listId}) -- again I have never used this API so I could be totally off-base here.  But that's what it looks like on the surface to me."
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-06-14 06:14:57",
+    "text": "Hmmm... I think you look like you know what you want to do and how to accomplish it.  If you haven't already, I would suggest you create a developer account where you can then set up a test portal to create a private app and safely test your api calls.  <https://developers.HubSpot.com/get-started>"
+  },
+  {
+    "poster": {
+      "poster_name": "Johan Hennius",
+      "poster_handle": "johan.hennius"
+    },
+    "time_stamp": "2024-06-14 06:16:07",
+    "text": "Cool okay - ill give it a go\nCheers, Scott :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Johan Hennius",
+      "poster_handle": "johan.hennius"
+    },
+    "time_stamp": "2024-06-14 06:49:15",
+    "text": "This app im going to be creating will be a private app.\nWhen i created a developer account, none of the company's blog posts are being shown.\nDo you know if there is a safe way to test a private app or is it best practice to create a few test blog posts on a developer account to then test the blog tag app?"
+  },
+  {
+    "poster": {
+      "poster_name": "Johan Hennius",
+      "poster_handle": "johan.hennius"
+    },
+    "time_stamp": "2024-06-14 07:19:44",
+    "text": "Solution to test private app: Create a sandbox account which will allow you to test functionalities without impacting main HubSpot account."
+  },
+  {
+    "text": "Good morning,\nI am wondering if anyone could point me in the right direction, provide resources or give a basic overview on the following.  I am not a developer but have a decent understanding of APIs, scripts, integrations, etc.\n\nWe recently spun up a new business unit in HubSpot and need to pull in data for reporting. I was provided a postman json file, with what looks to be various items.\n\nMy question is how do I utilize this json file to connect data to this new business unit and what are next steps to leverage this new data for reporting?",
+    "time_stamp": "2024-06-14 07:53:22"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-06-14 08:06:17",
+    "edited": {
+      "time_stamp": "2024-06-14 08:07:11"
+    },
+    "text": "in your developer account go to the test accounts section and create a test account.  That will give you a test portal to work in.  You won't be able to see your blog posts but you can add you own test blog and make some test posts in your new test portal and create the private app.  You can also create a sandbox account as well where you can work if you choose.  There are multiple ways to work - choose what works for you."
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Barras",
+      "poster_handle": "tirabc"
+    },
+    "time_stamp": "2024-06-14 09:07:22",
+    "text": "Hi there :wave:\n\nI’m creating a sync app between HubSpot and external apps and FTP/CSV.\n\nI have an issue regarding the update/create endpoints for custom objects. I receive a 403 error:\n```{\"status\":\"error\",\"message\":\"This app hasn't been granted all required scopes to make this call. Read more about required scopes here: <https://developers.HubSpot.com/scopes>.\",\"correlationId\":\"fd77bb79-24a4-4baf-a464-0e5a3e7edd63\",\"errors\":[{\"message\":\"One or more of the following scopes are required.\",\"context\":{\"requiredScopes\":[\"crm.objects.custom.write\"]}}],\"links\":{\"scopes\":\"<https://developers.HubSpot.com/scopes>\"},\"category\":\"MISSING_SCOPES\"}```\nbut I ask the correct scopes on oauth url:\n```<https://app-eu1.HubSpot.com/oauth/authorize?client_id=***&amp;redirect_uri=https://front.tunnelto.dev/auth/HubSpot/callback&amp;scope=oauth%20crm.objects.contacts.write%20crm.schemas.custom.read%20crm.objects.custom.read%20crm.objects.custom.write%20crm.objects.companies.write%20crm.objects.companies.read%20crm.objects.deals.read%20crm.objects.deals.write%20crm.objects.contacts.read>```\nI have no error during the auth process, i create the token correctly but then when I make a request to update or create custom objects i have this error.\nIs it a HubSpot internal error/bug or do I make a mistake ?\n<@U03FJQPSC0Y> <@U01QVR44MEY>",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-06-14 09:12:27"
+      },
+      {
+        "time_stamp": "2024-06-14 09:12:56"
+      },
+      {
+        "time_stamp": "2024-06-14 09:22:10"
+      },
+      {
+        "time_stamp": "2024-06-14 09:23:45"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-06-14 09:12:27",
+    "text": "I think you need to put the custom objects scopes in the optional scope field"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-06-14 09:12:56",
+    "text": "<https://arc.net/l/quote/upjcgmpx>"
+  },
+  {
+    "text": "oh yes it’s clear :facepalm:\n\nThank you very much <@U01QVR44MEY>",
+    "time_stamp": "2024-06-14 09:22:10"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-06-14 09:23:45",
+    "text": "Of course, no problem. Let me know if you have any other questions or issues"
+  },
+  {
+    "poster": {
+      "poster_name": "Edward Wong",
+      "poster_handle": "edward322"
+    },
+    "time_stamp": "2024-06-14 10:13:05",
+    "text": "Hi friends,\n\nI am currently trying test the Custom Objects API endpoints by reading a batch of Custom Objects. I have a custom object called \"Product Purchase\" with an internal name of \"product_purchases\" and have tried calling the api using OAuth 2.0 bearer authentication with the private app token to this URI <https://api.hubapi.com/crm/v3/objects/product_purchases/batch/read?archived=false>.\n\nHowever it returns an error:\n\n{\n    \"status\": \"error\",\n    \"message\": \"Unable to infer object type from: product_purchases\",\n    \"correlationId\": \"b6649ec2-d58f-4e68-8603-5f600c520307\"\n}\n\nI have also tried using the objectTypeId to refer to custom object type and get this response:\n\n{\n    \"status\": \"COMPLETE\",\n    \"results\": [],\n    \"startedAt\": \"2024-06-14T16:12:00.335Z\",\n    \"completedAt\": \"2024-06-14T16:12:00.335Z\"\n}\n\nthere are no results despite there being custom objects of this type on HubSpot. any ideas what the problem could be?",
+    "reply_count": 4,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-06-14 13:06:03"
+      },
+      {
+        "time_stamp": "2024-06-14 13:06:39"
+      },
+      {
+        "time_stamp": "2024-06-14 16:55:23"
+      },
+      {
+        "time_stamp": "2024-06-15 07:05:14"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2024-06-14 13:06:03",
+    "text": "You have to use the object id"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2024-06-14 13:06:39",
+    "text": "Like 2-81726385"
+  },
+  {
+    "poster": {
+      "poster_name": "Ethan Patrick",
+      "poster_handle": "ethan.patrick"
+    },
+    "time_stamp": "2024-06-14 14:44:53",
+    "text": "Hey team, I've been working with the Conversations inbox and messaging API to send some emails to a thread. One thing I've noticed is if you try to send from an Actor that has a deactivated user, you get an error. However, I can't figure out a way to determine if an actor is active or archived using the Get Actor endpoint. Is there a way to do this I'm missing? In the event that I am trying to respond to an older thread where the sender might have left the company and been deactivated, I want to just substitute the Actor ID to one that I know is active."
+  },
+  {
+    "poster": {
+      "poster_name": "Sindhu Ganugapati",
+      "poster_handle": "sindhu"
+    },
+    "time_stamp": "2024-06-14 16:27:31",
+    "text": "Hello, We are trying to push External data to HubSpot Deals. We have custom fields created in Deals. Can someone please help what API should we use to Push the data to specific fields?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-06-15 13:02:29"
+      },
+      {
+        "time_stamp": "2024-06-17 12:15:40"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Paul Maxwell",
+      "poster_handle": "paul235"
+    },
+    "time_stamp": "2024-06-14 16:55:23",
+    "text": "You want to call the “List” function, not the “Batch Read” function: `GET /crm/v3/objects/{objectType}` "
+  },
+  {
+    "text": "Does anyone know if it’s possible to get file usage info through the Files API? That would be really useful to bulk-find and remove all files that are no longer being used. I tried using the file stat API and the file search API but neither of them return any usage data.",
+    "time_stamp": "2024-06-14 18:24:55",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-06-15 13:04:45"
+      },
+      {
+        "time_stamp": "2024-06-17 18:39:33"
+      }
+    ]
+  }
+]

@@ -1,0 +1,247 @@
+[
+  {
+    "poster": {
+      "poster_name": "Karin S",
+      "poster_handle": "karin.soutberg"
+    },
+    "time_stamp": "2025-02-13 03:51:31",
+    "text": "Thanks guys!"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2025-02-13 05:02:08",
+    "text": "Is it something the upsert api would help with?\nIt’s a batch api but you can just do 1 company,\nThis creates or updates a company depending on if it exists\n<https://developers.HubSpot.com/docs/reference/api/crm/objects/companies#post-%2Fcrm%2Fv3%2Fobjects%2Fcompanies%2Fbatch%2Fupsert>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2025-02-13 05:04:25",
+    "text": "I have found in the past it can take up to 5mins in some cases for the API to get the newly added information"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2025-02-13 05:06:26",
+    "text": "Just thought, I’m not sure if you can specify domain as the idProperty as it’s not a unique property so this may not work"
+  },
+  {
+    "poster": {
+      "poster_name": "Oliver Morgan",
+      "poster_handle": "oliver069"
+    },
+    "time_stamp": "2025-02-13 06:30:43",
+    "text": "Thank you both for your response.\n\n<@U08AVAYCZ63> Is there a way I can get specific properties (e.g. the name) of the associated properties? In my example, I want to get a list of all *contacts* and when they have an associated *membership*, it will get the _name_ of that *membership*"
+  },
+  {
+    "text": "Hi Everyone!\nI'm having trouble in finding out how to use private-app based authorization in custom channels api (since we want a Client Credentials Grant based auth instead of auth token grant based)\nCreated a public app first in my dev account then installed that app in my domain based account(where private app can be created)\nSince we want to implement the Private app based auth in custom channel integration with our byoc, having trouble in figure out/implement it.\ntried to hit the publish message endpoint with the access token from the private app created in domain based account got the following response\n\"This app hasn't been granted all required scopes\"\n\nAny help to this matter will be highly appreciated. /\\",
+    "time_stamp": "2025-02-13 08:27:27",
+    "edited": {
+      "time_stamp": "2025-02-13 08:27:45"
+    },
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-02-13 13:55:07"
+      },
+      {
+        "time_stamp": "2025-02-14 03:54:38"
+      },
+      {
+        "time_stamp": "2025-02-14 07:52:58"
+      },
+      {
+        "time_stamp": "2025-02-17 01:00:30"
+      },
+      {
+        "time_stamp": "2025-02-17 08:49:37"
+      },
+      {
+        "time_stamp": "2025-02-18 21:44:14"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Harris Kenny",
+      "poster_handle": "harris187"
+    },
+    "time_stamp": "2025-02-13 08:58:00",
+    "text": "Wow thank you so much for replying, I wasn't sure anyone would! I'm going to discuss with our team and let you know"
+  },
+  {
+    "poster": {
+      "poster_name": "Fabien",
+      "poster_handle": "fabien609"
+    },
+    "time_stamp": "2025-02-13 11:10:05",
+    "text": "Hi, I'm still trying to understand bits of how HubSpot works. What I am aiming to do is retrieve a list of orders with the default properties  and also the line items and it's default properties. I can see the orders endpoint gives me the order information I need but not line items.\n\nIf someone could point me in the right direction of the API to achieve this I'd be grateful. Thank you"
+  },
+  {
+    "poster": {
+      "poster_name": "Collin Schindler",
+      "poster_handle": "collin_schindler"
+    },
+    "time_stamp": "2025-02-13 11:40:55",
+    "edited": {
+      "time_stamp": "2025-02-13 11:42:26"
+    },
+    "text": "Sure! I don't see a way to do all of this in a single API request (maybe someone else knows how to do this with older API versions), so you'll need to make multiple requests to do this for each contact.\n\nI'd start with a general GET call to the contacts API to get all my contactIDs `crm/v3/objects/contacts`. (Assuming you are dealing with more than 10 contacts, you'll need to play with the `limit` and `after` parameters to get all of your contacts. It looks like 100 contacts returned is the upper limit for this request).\n\nThen I'd use the Associations API  I mentioned above to figure out what company/companies they are associated with using the POST API call to pull all of the companyIDs. I don't know off hand what the limit for `inputs` is, I want to say it's either 50 or 100 entries, but I can't find a source to confirm that right now.\n\nThen I would finish the request chain off with a POST request to the companies API to pull all the company data that I was looking for `crm/v3/objects/companies/batch/read` . In this POST request, you'll be using the same json body as above to add in all the IDs for the companies you found in the associations, and you can also specify parameters about the companies to pull. This request will have the same limit of inputs of 50 or 100 probably.\nEx.\n```{\n   \"inputs\": [\n      { \"id\": \"<companyID>\" },\n      ...\n   ],\n   \"properites\": [\n      \"name\",\"annualrevenue\",\"city\",etc.\n   ]\n}```\nHopefully this answers your question. There are other API calls you could use to get similar results, but this is the route that seems to keep your API calls to a minimum."
+  },
+  {
+    "text": "Some APIs are free to all tiers. Attached is a snapshot from the Companies API:\n\nYou can check each individual API endpoint in the docs to see which subscription tiers have access to each endpoint - <https://developers.HubSpot.com/docs/reference/api>",
+    "time_stamp": "2025-02-13 11:49:36"
+  },
+  {
+    "text": "~I added an `items` object within the collection, and this got rid of that error for me (screenshot attached). I was getting a similar error before adding this. Hopefully this helps!~\n\nI see you have that `items` object now... Whoops! I didn't look far enough down",
+    "time_stamp": "2025-02-13 12:30:48",
+    "edited": {
+      "time_stamp": "2025-02-13 12:32:35"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Collin Schindler",
+      "poster_handle": "collin_schindler"
+    },
+    "time_stamp": "2025-02-13 12:34:24",
+    "edited": {
+      "time_stamp": "2025-02-13 12:37:45"
+    },
+    "text": "~Are any of those fields `total`, `limit`, `offset`, `hasMore` needed in the body of the association since you have them defined when you create the collection (offset and limit are within the parenthesis above, but total/hasMore are not)?~\n\nJust tried those too and mine works... I'm out of ideas! (Sorry, I don't use GraphQL, but figured I would try to help anyways)"
+  },
+  {
+    "poster": {
+      "poster_name": "Collin Schindler",
+      "poster_handle": "collin_schindler"
+    },
+    "time_stamp": "2025-02-13 12:40:01",
+    "text": "The last idea that I can come up with based on the error is that the label doesn't exist in the account you are attempting to connect to? Maybe this is a sandbox environment that doesn't have the label?"
+  },
+  {
+    "poster": {
+      "poster_name": "Collin Schindler",
+      "poster_handle": "collin_schindler"
+    },
+    "time_stamp": "2025-02-13 12:47:27",
+    "text": "It appears that Client Secrets cannot be rotated (at least by the app creator) - <https://community.HubSpot.com/t5/APIs-Integrations/Rotating-our-client-secret/m-p/835709/highlight/true#M66522>\n\nIt appears that internal resources within HubSpot may have the ability to do this after reading the linked post within the answer above."
+  },
+  {
+    "poster": {
+      "poster_name": "Collin Schindler",
+      "poster_handle": "collin_schindler"
+    },
+    "time_stamp": "2025-02-13 13:08:00",
+    "text": "I just created a new form and received the same error message. It doesn't appear to let you do that on v3"
+  },
+  {
+    "poster": {
+      "poster_name": "Francisc Balint",
+      "poster_handle": "francisc.balint"
+    },
+    "time_stamp": "2025-02-13 13:08:14",
+    "edited": {
+      "time_stamp": "2025-02-13 13:10:13"
+    },
+    "text": "Hi everyone, could anyone offer an example creating an email entry(to/from/cc)  for a contact via api? its not important what tech you use, any example is much appreciated (curl,php,go anything).\n\nthe docs are not very helpful: <https://developers.HubSpot.com/docs/reference/api/crm/engagements/email#post-%2Fcrm%2Fv3%2Fobjects%2Femails>"
+  },
+  {
+    "poster": {
+      "poster_name": "Leandro Michelena",
+      "poster_handle": "leandro.michelena"
+    },
+    "time_stamp": "2025-02-13 13:10:05",
+    "text": "Thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Romero",
+      "poster_handle": "federico232"
+    },
+    "time_stamp": "2025-02-13 13:23:49",
+    "text": "Hi everyone! Does anyone know how to link meetings created by the API to a Google Calendar? I have already gotten my account connected to Google Calendar, and the meeting is getting created without any issue but it's not syncing to the Google Calendar. Has anyone been able to solve this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Collin Schindler",
+      "poster_handle": "collin_schindler"
+    },
+    "time_stamp": "2025-02-13 13:36:54",
+    "edited": {
+      "time_stamp": "2025-02-13 13:41:59"
+    },
+    "text": "Using the CRM Properties API, I was able to uncover some additional properties that look like they contain that data. (GET request to `crm/v3/properties/goal_targets` )\n```hs_kpi_value                    - Current progress \nhs_kpi_progress_percent         - Percentage of target the kpi value is at\nhs_kpi_value_last_calculated_at - Timestamp of last calculated kpi in HubSpot```\n~I'm still waiting to see if it shows multiple deals combined or not. Right now it's only showing one of two that I just created. There is certainly a delay as to when this field gets updated.~\nUpdate: It does combine all deals.  Even though my goal amounts updated in HubSpot immediately, the API It took a little over 5 minutes to update this field, but it did update eventually.\n\nGood luck!"
+  },
+  {
+    "text": "Since you are getting the \"scopes\" error, it sounds like your app is correctly configured for authentication. You would receive an error like this if it wasn't authenticating properly:\n```{\n    \"status\": \"error\",\n    \"message\": \"Authentication credentials not found. This API supports OAuth 2.0 authentication and you can find more details at <https://developers.HubSpot.com/docs/methods/auth/oauth-overview>\",\n    \"correlationId\": \"d8c52304-c323-4d1e-bee0-69a1f100ea74\",\n    \"category\": \"INVALID_AUTHENTICATION\"\n}```\nAfter you authenticate, the app will check for scopes when making your API calls. Each object can require slightly different scopes based on what you are trying to do. You can see required scopes next to each API endpoint (attached image example) (and link to API documentation: <https://developers.HubSpot.com/docs/reference/api>).\n\nYou would need to go into your private app -> Click \"Edit app\" (upper-right corner of page) -> Click \"Scopes\" (upper-middle of page) -> and add any required scopes for the API you are trying to call. Also, make sure you \"Commit Changes\", or else it won't apply the scope changes.\n\nHope that helps!",
+    "time_stamp": "2025-02-13 13:55:07",
+    "edited": {
+      "time_stamp": "2025-02-13 13:56:06"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Leandro Michelena",
+      "poster_handle": "leandro.michelena"
+    },
+    "time_stamp": "2025-02-13 14:47:04",
+    "text": "Hi everyone! We noticed a strange behavior in the batch create object API function today.\n<https://api.hubapi.com/crm/v3/objects/{objectType}/batch/create>\nThis function used to return a response with the IDs of the objects *created in the input order.*\n\n:alert:  Today we received a complaint from users where some objects were associated with the wrong object (both new records).\nTurns out the API response was not sent in the input order, not always at least.\n\n*We believe that this is a bug* and it hasn't always been like this way. Can someone else confirm it?\nThank you in advance!",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2025-02-13 15:14:38"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Leandro Michelena",
+      "poster_handle": "leandro.michelena"
+    },
+    "time_stamp": "2025-02-13 15:14:38",
+    "text": "Does anyone here enforce a match between records on batch object creation by using `objectWriteTraceId` on their input array?"
+  },
+  {
+    "poster": {
+      "poster_name": "Juan Manuel",
+      "poster_handle": "sayroback"
+    },
+    "time_stamp": "2025-02-13 16:06:06",
+    "text": "Hi everyone! So I've got this weird issue - the 'Get a single thread' endpoint is sending me back an {associatedContactId} that doesn't exist in my contacts list. Anyone know what's going on here? Like, it's totally throwing me for a loop."
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Gray",
+      "poster_handle": "dustin.gray"
+    },
+    "time_stamp": "2025-02-13 20:28:55",
+    "edited": {
+      "time_stamp": "2025-02-13 20:30:46"
+    },
+    "text": "<@U05R380MLMC> the suggestion works, im now returning 10,630 results.\n\nI've cut out the relevant snippets from two different private methods to show you. Hopefully you can understand the context.\n\n$limit = 100; // number of records per page\n        $allResults = [];\n        $lastHsId = 0;\n\n        do {\n            // Fetch the next batch by filtering for hs_object_id > $lastHsId and sorting in ASC order.\n            $batch = $this->fetchResultsFromHubSpot($lastHsId, $limit);\n            if (!empty($batch)) {\n                foreach ($batch as $record) {\n                    $props = $record['properties'] ?? [];\n                    //......\n                    }\n                }\n                // Update lastHsId to the id of the last record in the batch.\n                $lastRecord = end($batch);\n                $lastHsId = $lastRecord['id'];\n            } else {\n                break;\n            }\n        } while (count($batch) === $limit);\n\n$filters[] = new Filter([\n            'property_name' => 'hs_object_id',\n            'operator'      => 'GT',\n            'value'         => $lastHsId\n        ]);\n\n        $filterGroup = new FilterGroup([\n            'filters' => $filters\n        ]);\n\n        // Define sorting by hs_object_id in ascending order.\n        $sorts = [\n            [\n                'propertyName' => 'hs_object_id',\n                'direction'    => 'ASCENDING'\n            ]\n        ];\n\n        $searchRequest = new PublicObjectSearchRequest([\n            'limit'         => $limit,\n            'properties'    => $props,\n            'filter_groups' => [$filterGroup],\n            'sorts'         => $sorts\n        ]);\n\n        $collected = [];\n        $response = $this->HubSpot_api->doSearch($objectType, $searchRequest);"
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Gray",
+      "poster_handle": "dustin.gray"
+    },
+    "time_stamp": "2025-02-13 21:35:31",
+    "text": "*Summary*\n• *Pagination Strategy:*\n• The code uses a *do-while loop* to iterate through pages of results, using the last record's ID as a pointer for the next batch. This ensures that each subsequent API call only fetches new records.\n• *Dynamic Filtering &amp; Sorting:*\n• By continuously updating the filter (`hs_object_id &gt; $lastHsId`) and sorting the results in ascending order, the code maintains a reliable way to page through all available records without missing or duplicating any.\n• *Building &amp; Executing Requests:*\n• After processing the paginated results, a final search request is built with the same filtering and sorting logic and then executed against the HubSpot API.\nThis approach is effective when working with large datasets from an API that doesn’t support traditional offset-based pagination, and it leverages the unique, sequential IDs to keep track of the progress."
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2025-02-13 22:22:33",
+    "text": ":raised_hands:"
+  }
+]

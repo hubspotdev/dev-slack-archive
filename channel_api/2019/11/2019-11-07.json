@@ -1,0 +1,156 @@
+[
+  {
+    "poster": {
+      "poster_name": "Florian Goerig",
+      "poster_handle": "florian.goerig"
+    },
+    "time_stamp": "2019-11-07 11:36:04",
+    "edited": {
+      "time_stamp": "2019-11-07 11:36:56"
+    },
+    "text": "hi there, as I assume this has to be done via API I'll post this question here. In order to be GDPR complinat (we have several group policies in place (non HubSpot)  I kind of managed our rules based on several lists but now I need something like a cron-job that manages the deletion of this lists contacts at defined, recurring dates via API. How can this be done or is there another nice way to mass delete (gdpr compliant) automatically? I really appreciate your help..",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2019-11-08 01:10:43"
+      },
+      {
+        "time_stamp": "2019-11-08 01:13:18"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jonathan Stanis",
+      "poster_handle": "jstanis"
+    },
+    "time_stamp": "2019-11-07 13:41:32",
+    "text": "I am attempting to get all contacts in a list and I have having trouble with looping when there are more than the limit of 100 contacts. The JSON.parse returns has-more=true but when I attempt to set it to true using the results it becomes undefined. Where am I going wrong?",
+    "reply_count": 10,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-11-07 13:44:31"
+      },
+      {
+        "time_stamp": "2019-11-07 13:45:24"
+      },
+      {
+        "time_stamp": "2019-11-07 13:45:45"
+      },
+      {
+        "time_stamp": "2019-11-07 13:46:10"
+      },
+      {
+        "time_stamp": "2019-11-07 13:46:31"
+      },
+      {
+        "time_stamp": "2019-11-07 13:47:00"
+      },
+      {
+        "time_stamp": "2019-11-07 13:51:10"
+      },
+      {
+        "time_stamp": "2019-11-07 14:00:20"
+      },
+      {
+        "time_stamp": "2019-11-07 14:00:57"
+      },
+      {
+        "time_stamp": "2019-11-07 14:01:09"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jonathan Stanis",
+      "poster_handle": "jstanis"
+    },
+    "time_stamp": "2019-11-07 13:42:12",
+    "text": "```// get contact information\nfunction getContacts() {\n  var service = getService();\n  var headers = {headers: {'Authorization': 'Bearer ' + service.getAccessToken()}};\n  \n   // Prepare pagination\n   // HubSpot lets you take max 100 contacts per request.\n   // We need to make multiple request until we get all the deals.\n   var keep_going = true;\n   var offset = 0;\n   var contacts = Array();\n   while(keep_going) {\n      // We'll take four properties from the contactrs\n      var url = API_URL + \"/contacts/v1/lists/716/contacts/all?property=hs_lifecyclestage_marketingqualifiedlead_date&amp;property=hs_lifecyclestage_salesqualifiedlead_date&amp;property=hs_lifecyclestage_customer_date&amp;property=hs_lifecyclestage_lead_date&amp;&amp;count=100&amp;vidOffset=\"+offset;\n      var response = UrlFetchApp.fetch(url, headers);\n      var result = JSON.parse(response.getContentText());\n      // Are there any more results, should we stop the pagination\n      keep_going = result.hasMore;\n      offset = result.offset;\n      // For each deal, we take the stageId, source &amp; amount\n      result.contacts.forEach(function(contact) {\n         var MQLDate = (contact.properties.hasOwnProperty(\"hs_lifecyclestage_marketingqualifiedlead_date\")) ? contact.properties.hs_lifecyclestage_marketingqualifiedlead_date.value : \"\";\n         var SQLDate = (contact.properties.hasOwnProperty(\"hs_lifecyclestage_salesqualifiedlead_date\")) ? contact.properties.hs_lifecyclestage_salesqualifiedlead_date.value : \"\";\n         var LeadDate = (contact.properties.hasOwnProperty(\"hs_lifecyclestage_lead_date\")) ? contact.properties.hs_lifecyclestage_lead_date.value : \"\";\n         var CustomerDate = (contact.properties.hasOwnProperty(\"hs_lifecyclestage_customer_date\")) ? contact.properties.hs_lifecyclestage_customer_date.value : \"\";\n         contacts.push([LeadDate,MQLDate,SQLDate,CustomerDate]);\n      });\n   }\n   return contacts;\n\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-11-07 13:44:31",
+    "text": "Hey <@UDPA7JFHA> The property is `has-more` not `hasMore` That’s why it was being unedefined"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonathan Stanis",
+      "poster_handle": "jstanis"
+    },
+    "time_stamp": "2019-11-07 13:45:24",
+    "text": "When I change it to has-more then the code will not run at all. It says that “more” is not defined."
+  },
+  {
+    "poster": {
+      "poster_name": "Jonathan Stanis",
+      "poster_handle": "jstanis"
+    },
+    "time_stamp": "2019-11-07 13:45:45",
+    "text": "It must be trying to do math on it."
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-11-07 13:46:10",
+    "edited": {
+      "time_stamp": "2019-11-07 13:47:10"
+    },
+    "text": "yup, you need `result[\"has-more\"]` instead of `result.has-more`"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-11-07 13:46:31",
+    "text": "same with the vid-offset btw"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-11-07 13:47:00",
+    "text": "that will be at `result[\"vid-offset\"]`"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonathan Stanis",
+      "poster_handle": "jstanis"
+    },
+    "time_stamp": "2019-11-07 13:51:10",
+    "text": "Gotcha! Still learning this stuff. It is running now. Looks like it is taking a bit so I think it is looping."
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-11-07 14:00:20",
+    "text": "awesome, yeah Javascript doesn’t liek having the `-` character if it’s not doing math so you have to put it in strings which means you can’t use the dot notation.  We have taken this into account as we are designing the next version of our APIs"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonathan Stanis",
+      "poster_handle": "jstanis"
+    },
+    "time_stamp": "2019-11-07 14:00:57",
+    "text": "It runs great! Thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-11-07 14:01:09",
+    "text": "Awesome"
+  }
+]

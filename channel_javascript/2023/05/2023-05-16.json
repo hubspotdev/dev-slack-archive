@@ -1,0 +1,55 @@
+[
+  {
+    "poster": {
+      "poster_name": "Fernando Souza",
+      "poster_handle": "fernando.souza"
+    },
+    "time_stamp": "2023-05-16 07:45:43",
+    "text": "I`m using the following code to identify a user and then load Hubpost script. This code is on a Landing Page i created by myself and hosted by me.\n\nProblem is, first time this code runs(My landing page open), HubSpot survery feedbacks do not show up. Users needs to refresh the page to see it.\n\nHow can i make it works at first time?\n\n```&lt;script&gt;\n    var _hsq = window._hsq = window._hsq || [];\n    _hsq.push([\"identify\",{\n        email: '<mailto:my@email.com|my@email.com>',\n    }]);\n  &lt;/script&gt;\n\n  &lt;!-- Start of HubSpot Embed Code --&gt;\n  &lt;script type=\"text/javascript\" id=\"hs-script-loader\" async defer src=\"//js.hs-scripts.com/XXXXXXX.js\"&gt;&lt;/script&gt;```",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-11-28 02:49:00"
+      }
+    ]
+  },
+  {
+    "text": "<@UDHT6N5SM> According to the documentation quote: \"*If a table is set to be `allowed for public access`, you can access the published version of the table and rows without any authentication by specifying the portal id via the query parameter `portalId`*\", end quote. There are a few examples how you can do this. However, I usually just try error lol you can just make your own example following <https://developers.HubSpot.com/docs/api/cms/hubdb>. Basically what I did was I made a dummy HubDB table and made sure it was publicly accessible in the tables settings and I created a serverless function so I could get the data from the table using HubDB API. After that used axios to make a get request to get some data from the HubDB API related to my table, super easy check it out.\n\n```// Require axios library to make API requests\n  const axios = require('axios');\n\n  // This function is executed when a request is made to the endpoint associated with this file in the serverless.json file\n  exports.main = ({ accountId }, sendResponse) =&gt; {\n    \n   // table id    \n    const tableIdOrName = 'your table id here';\n    \n    // Use axios to make a GET request to HubDB API\n    axios\n      .get(`<https://api.hubapi.com/cms/v3/hubdb/tables/${tableIdOrName}/rows>`, {\n        params: {\n          portalId: accountId,\n        },\n      })\n      .then(function(response) {\n        // Handle success\n\n        // The console.log statement will appear in the terminal when you run the hs logs CMS CLI command\n        // For full documentation, see: <http://developers.HubSpot.com/docs/cms/developer-reference/local-development-cms-cli#logs|developers.HubSpot.com/docs/cms/developer-reference/local-development-cms-cli#logs>\n        console.log('Data received from the HubDB API:', response.data);\n\n        // sendResponse is what you will send back to services hitting your serverless function\n        sendResponse({ body: { response: response.data }, statusCode: 200 });\n      })\n      .catch(function(error) {\n        // Handle error\n\n        // This is a simple example; error handling typically will be more complicated.\n        // For more information on error handling with axios, see: <https://github.com/axios/axios#handling-errors>\n        sendResponse({ body: { error: error.message }, statusCode: 500 });\n      });\n  };```",
+    "time_stamp": "2023-05-16 11:15:10",
+    "edited": {
+      "time_stamp": "2023-05-16 11:24:27"
+    }
+  },
+  {
+    "text": "Here is the response I get using postman to hit my serverless function. As you can see I am getting some info about my table rows. I quickly created a total of 3 dummy rows lol",
+    "time_stamp": "2023-05-16 11:18:13",
+    "edited": {
+      "time_stamp": "2023-05-16 11:25:55"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Alejandro Rodriguez",
+      "poster_handle": "alerodriguezlarosa"
+    },
+    "time_stamp": "2023-05-16 11:19:57",
+    "text": "you can do all kinds of crazy using the HubDB API hehe. Let me know if you want me to make a video explaining better, I'll be happy to friend!"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-05-16 11:27:32",
+    "text": "thanks <@U0572Q18XLG> that's really helpful and clear. Much appreciated!"
+  },
+  {
+    "poster": {
+      "poster_name": "Alejandro Rodriguez",
+      "poster_handle": "alerodriguezlarosa"
+    },
+    "time_stamp": "2023-05-16 11:27:59",
+    "text": "Of course no problem happy to help"
+  }
+]

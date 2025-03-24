@@ -1,0 +1,141 @@
+[
+  {
+    "poster": {
+      "poster_name": "Dennis K",
+      "poster_handle": "dennis579"
+    },
+    "time_stamp": "2022-07-25 10:22:35",
+    "text": "inside a blog post template I am using one modules multiple times (custom rich text module) like this:\n\n```{% module \"module_16576356153292\"\n    path=\"/website/modules/common/Rich Text - Blog Content\",\n    label=\"Rich Text - Blog Content\" %}\n\n  {% module \"module_16576356153292\"\n    path=\"/website/modules/common/Rich Text - Blog Content\",\n    label=\"Rich Text - Blog Content\" %}\n  {% module \"module_16587657824364\"\n    path=\"/website/modules/common/Image - Carousel\",\n    label=\"Image - Carousel\" %}\n  {% module \"module_16576356153292\"\n    path=\"/website/modules/common/Rich Text - Blog Content\",\n    label=\"Rich Text - Blog Content\" %}```\nBut this does not work like expected since I can only the first module but all the others are not editable. How can I make sure that HubSpot sees them as separate modules?",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-07-25 10:31:15"
+      },
+      {
+        "time_stamp": "2022-07-25 10:32:51"
+      },
+      {
+        "time_stamp": "2022-07-25 10:32:53"
+      },
+      {
+        "time_stamp": "2022-07-25 10:35:17"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-07-25 10:31:15",
+    "text": "Hey Dennis — they all need unique ID’s --&gt;  module_16576356153292 — you can change that to anything - it just needs to not be the same."
+  },
+  {
+    "poster": {
+      "poster_name": "Dennis K",
+      "poster_handle": "dennis579"
+    },
+    "time_stamp": "2022-07-25 10:32:51",
+    "text": "Ahwww, great! Was also my idea to set an id, but I thought the module_*** was the module identifier which could not be changed."
+  },
+  {
+    "poster": {
+      "poster_name": "Dennis K",
+      "poster_handle": "dennis579"
+    },
+    "time_stamp": "2022-07-25 10:32:53",
+    "text": "Thank you"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-07-25 10:35:17",
+    "text": "No worries, Yea the path is how the module is found."
+  },
+  {
+    "poster": {
+      "poster_name": "Max Slabyak",
+      "poster_handle": "max.slabyak"
+    },
+    "time_stamp": "2022-07-25 11:40:33",
+    "text": "hi fam. working on a module. decided to include some utility function() methods in module.js, but doesn't look like I am able to call them from module.html. is there a scope isolation between those 2?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-07-26 15:50:56"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Max Slabyak",
+      "poster_handle": "max.slabyak"
+    },
+    "time_stamp": "2022-07-25 11:41:50",
+    "text": "module.js has\n```function myMethod(a,b,c) { };```\nmodule.html attempts\n```&lt;script&gt;myMethod(a,b,c);&lt;/script&gt;```\n and gets a reference error"
+  },
+  {
+    "poster": {
+      "poster_name": "imad khan",
+      "poster_handle": "imad"
+    },
+    "time_stamp": "2022-07-25 16:07:30",
+    "text": "I have these 2 modules\nthe CTA Block which just renders an image with text\n```{% macro renderImage() %}\n\t{% if module.image.src %}\n\t\t&lt;img src=\"{{module.image.src}}\" alt=\"{{module.title|safe|striptags}}\" class=\"cta-block-img\" /&gt;\n\t{% else %}\n\t\t&lt;img src=\"<https://place-hold.it/660x656>\" alt=\"{{module.title|striptags}}\"  class=\"cta-block-img\" /&gt;\n\t{% endif %}\n{% endmacro %}\n  \n{% macro renderContent() %}\n\t&lt;h2&gt;{{module.title}}&lt;/h2&gt;\n\t&lt;p&gt;{{module.description}}&lt;/p&gt;\n\n\t&lt;a href=\"{{content_by_id(module.link.url.content_id).absolute_url}}\" class=\"btn\"&gt;{{module.link_text}}&lt;/a&gt;\n{% endmacro %}\n  \n\t&lt;div class=\"cta-block\"&gt;\n    &lt;div class=\"container\"&gt;\n      {% if module.alignment == 'image_right' %}\n\n        &lt;div class=\"row mobile-flip-lg\"&gt;\n          &lt;div class=\"col-4 col-lg-12 col-md-12\"&gt;\n            &lt;div class=\"cta-block-content\"&gt;\n\t\t\t\t\t\t\t{{renderContent()}}\n            &lt;/div&gt;\n          &lt;/div&gt;\n          &lt;div class=\"col-6 push-2 col-lg-12 push-lg-hide col-md-12\"&gt;\n\t\t\t\t\t\t{{renderImage()}}\n          &lt;/div&gt;\n        &lt;/div&gt;\n\n      {% else %}\n          &lt;div class=\"row \"&gt;\n            &lt;div class=\"col-6 col-lg-12\"&gt;\n\t\t\t\t\t\t\t{{renderImage()}}\n            &lt;/div&gt;\n            &lt;div class=\"col-4 push-1 col-lg-12 push-lg-hide col-md-12\"&gt;\n              &lt;div class=\"cta-block-content\"&gt;\n\t\t\t\t\t\t\t\t{{renderContent()}}\n              &lt;/div&gt;\n            &lt;/div&gt;\n          &lt;/div&gt;\n        {% endif %}\n    &lt;/div&gt;\n&lt;/div&gt;```\nAnd a BlogPost component where you can select up to 3 specific blog posts to display on the page\n```{% macro createPost(post) %}\n\t{% set content = content_by_id(<http://post.post|post.post>) %}\n\t&lt;div class=\"insights-card {{isFeat}}\"&gt;\n\t\t{{renderTag(content,post)}}\n    &lt;a class=\"insights-card-img-link\" href=\"{{content.slug}}\"&gt;\n       &lt;div class=\"insights-card-img {{isFeat}}\" style=\"background-image:url({{content.featured_image}})\"&gt;&lt;/div&gt;\n\t\t    &lt;p&gt;{{content.title}}&lt;/p&gt;\n    &lt;/a&gt;\n\t\t{{renderButton(content,post)}}\n\t&lt;/div&gt;\n{% endmacro %}\n\n{% macro renderButton(content, post) %}\n\t{% set linkText = post.custom_link_text ? post.link.link_text : 'Read Now' %}\n\t{% set getLinkClass = post.custom_link_text &amp;&amp; post.link.link_style ? post.link.link_style : '' %}\n\t{% set linkClass = getLinkClass == 'pill' ? 'btn' : '' %}\n  &lt;a href=\"{{content.slug}}\" class=\"{{linkClass}}\"&gt;{{linkText}}&lt;/a&gt;\n{% endmacro %}\n\n\n{% macro renderTag(content) %} \n\t&lt;p class=\"mono\"&gt;{{post.category}}&lt;/p&gt;\n{% endmacro %}\n\n\n&lt;div class=\"insights\"&gt;\n  &lt;div class=\"container\"&gt;\n    &lt;div class=\"row\"&gt;\n      &lt;div class=\"col-12\"&gt;\n        &lt;div class=\"insights-title\"&gt;\n          &lt;h2&gt;{{module.title}}&lt;/h2&gt;\n        &lt;/div&gt;\n      &lt;/div&gt;\n    &lt;/div&gt;\n    &lt;div class=\"row\"&gt;\n      {% for post in <http://module.post|module.post> %}\n      &lt;div class=\"{{ loop.index == 1 ? \"col-6\" : \"col-3 col-lg-6\"}} col-lg-12 \"&gt;\n        {{createPost(post)}}\n      &lt;/div&gt;\n\n      {% endfor %}\n    &lt;/div&gt;\n  &lt;/div&gt;\n&lt;/div&gt;```\nThe issue I am having is that the BlogPost component doesn’t load a post depending on how many  CTA Blocks are above it  but works perfectly fine if i remove the CTA Blocks or move the blogpost component above the Cta Block. Does anyone have any idea on why that would happen?",
+    "reply_count": 16,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-07-26 15:51:21"
+      },
+      {
+        "time_stamp": "2022-07-26 16:14:05"
+      },
+      {
+        "time_stamp": "2022-07-26 16:14:15"
+      },
+      {
+        "time_stamp": "2022-07-26 16:15:27"
+      },
+      {
+        "time_stamp": "2022-07-26 16:16:12"
+      },
+      {
+        "time_stamp": "2022-07-26 16:16:26"
+      },
+      {
+        "time_stamp": "2022-07-26 16:17:04"
+      },
+      {
+        "time_stamp": "2022-07-26 16:17:09"
+      },
+      {
+        "time_stamp": "2022-07-26 16:17:17"
+      },
+      {
+        "time_stamp": "2022-07-26 16:17:25"
+      },
+      {
+        "time_stamp": "2022-07-26 16:17:47"
+      },
+      {
+        "time_stamp": "2022-07-26 16:17:55"
+      },
+      {
+        "time_stamp": "2022-07-26 16:18:05"
+      },
+      {
+        "time_stamp": "2022-07-26 16:18:22"
+      },
+      {
+        "time_stamp": "2022-07-26 16:18:44"
+      },
+      {
+        "time_stamp": "2022-07-26 16:18:50"
+      }
+    ]
+  }
+]

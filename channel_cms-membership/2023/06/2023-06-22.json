@@ -1,0 +1,61 @@
+[
+  {
+    "poster": {
+      "poster_name": "Robby Morgan",
+      "poster_handle": "robby286"
+    },
+    "time_stamp": "2023-06-22 07:51:50",
+    "text": "Not that I know of.  I asked a similar question at <https://HubSpotdev.slack.com/archives/C2YH119N2/p1684254707793069>, and the requirement was to call a serverless function from the page using javascript."
+  },
+  {
+    "poster": {
+      "poster_name": "Robby Morgan",
+      "poster_handle": "robby286"
+    },
+    "time_stamp": "2023-06-22 07:52:32",
+    "text": "You should submit an idea at <https://community.HubSpot.com/t5/Ideas/ct-p/ideas>, and let me know and I'll be happy to vote for it."
+  },
+  {
+    "poster": {
+      "poster_name": "Robby Morgan",
+      "poster_handle": "robby286"
+    },
+    "time_stamp": "2023-06-22 07:53:10",
+    "text": "My use case was more of a curiosity than a true need, but it's bizarre that this functionality is not available."
+  },
+  {
+    "poster": {
+      "poster_name": "Robby Morgan",
+      "poster_handle": "robby286"
+    },
+    "time_stamp": "2023-06-22 08:07:08",
+    "text": "<@U02MAK4ADNG> It sounds like the user's browser thinks the original page in its cache is still valid.  The typical solution in cases like this is to use the `Cache-Control: max-age=0` or `Cache-Control: no-cache` headers to instruct the browser to avoid reusing the cached page without revalidating it from the server.  You may also want to use `Vary: Cookie` to further inform the browser and intermediate caches that the response depends on the state of the `Cookie` request header.\n\nNow, the question is whether it is possible to control the `Cache-Control` header for a HubSpot CMS page.  That's not entirely obvious to me, although one possible solution (assuming browsers still honor it) is to use &lt;meta&gt; tags:\n```{% if request_content.is_logged_in %}\n  {% require_head %}\n    &lt;meta http-equiv=\"Cache-Control\" content=\"no-cache\" /&gt;\n    &lt;meta http-equiv=\"Vary\" content=\"Cookie\" /&gt;\n  {% end_require_head %}\n{% endif %}```\nIn theory this should work (assuming I got the HubL syntax correct)."
+  },
+  {
+    "poster": {
+      "poster_name": "Robby Morgan",
+      "poster_handle": "robby286"
+    },
+    "time_stamp": "2023-06-22 08:09:01",
+    "text": "For pages whose access is private to members, it looks like HubSpot already sends `Cache-Control: no-store, no-cache, must-revalidate` to deal with this issue."
+  },
+  {
+    "poster": {
+      "poster_name": "Robby Morgan",
+      "poster_handle": "robby286"
+    },
+    "time_stamp": "2023-06-22 08:16:08",
+    "text": "The login state is stored in the `__hsmem` cookie on the HubSpot domain.  The only solution I could see is if the gaming dashboard page loaded some page on the HubSpot domain into an iframe that used `window.postMessage` to communicate the login state with the parent gaming dashboard page.\n\nIf the two pages share the same TLD (e.g. <http://HubSpot.example.com|HubSpot.example.com> and <http://gaming.example.com|gaming.example.com>), then they are considered the \"same site\", so this will probably work.  If they use different TLDs, then you've entered the turbulent realm of third-party cookies, where the likelihood of success is very dependent on the browser in use, its tracking protection behavior (see <https://www.cookiestatus.com/>), and user interaction with the two sites."
+  },
+  {
+    "poster": {
+      "poster_name": "Robby Morgan",
+      "poster_handle": "robby286"
+    },
+    "time_stamp": "2023-06-22 08:18:10",
+    "edited": {
+      "time_stamp": "2023-06-22 08:18:49"
+    },
+    "text": "HubSpot's membership login functionality is fairly limited to the use case of protecting private content, and therefore isn't designed to act like an <https://en.wikipedia.org/wiki/Identity_provider|IdP> for other domains.\n\nIt does support SSO login, if you have some other IdP, but it sounds like you are wanting the login page itself to be hosted in HubSpot."
+  }
+]

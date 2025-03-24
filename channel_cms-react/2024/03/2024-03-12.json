@@ -1,0 +1,180 @@
+[
+  {
+    "poster": {
+      "poster_name": "George Grigorita",
+      "poster_handle": "george.grigorita"
+    },
+    "time_stamp": "2024-03-12 02:31:19",
+    "text": "Hi John, sure, the project I was working on is on hold for now but as soon as it gets unblocked I'll test and reply here. Thank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Bartoli",
+      "poster_handle": "federico.bartoli"
+    },
+    "time_stamp": "2024-03-12 07:36:51",
+    "text": "Hi guys, when will we have access to calls outside of HubSpot to print data in server-side-rendering? Thank you."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-12 07:46:12",
+    "edited": {
+      "time_stamp": "2024-03-12 08:43:31"
+    },
+    "text": "is it safe to do this:\n```    const liveUrl = window.location.href;\n    const baseUrl = getBaseUrl(liveUrl);```\nor is there a special HubSpot version of those?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-12 08:43:51",
+    "edited": {
+      "time_stamp": "2024-03-12 08:43:59"
+    },
+    "text": "the url is inside of a function that is only run on the client"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-12 08:49:50",
+    "edited": {
+      "time_stamp": "2024-03-12 09:16:22"
+    },
+    "text": "it might be irrational but I'm worried about deploying changes and having something not work with the urls"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-12 08:50:11",
+    "text": "it works with those urls over proxy, so I assume it will work with those urls live—is there any way to be more sure?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-12 08:50:37",
+    "text": "```  function getBaseUrl(fullUrl) {\n    const urlObject = new URL(fullUrl);\n    return urlObject.origin + urlObject.pathname;\n  }```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-12 09:03:09",
+    "text": "same thing with `history.pushState({}, \"\", finalUrl);` is this always safe client side?",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-03-12 09:05:06"
+      },
+      {
+        "time_stamp": "2024-03-12 09:05:25"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-12 09:05:06",
+    "text": "looks like `pushHistoryState` is available in cms-components"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-12 09:05:25",
+    "text": "what's the difference?\n```history.pushState({}, \"\", finalUrl);\n\npushHistoryState({}, finalUrl);```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-12 09:09:45",
+    "text": "^ I ended up going with\n```  const url = usePageUrl();```\nand\n```pushHistoryState({}, finalUrl);```\nbut I'd love to understand why I should use these HubSpot provided values instead of the regular ones. Would it break otherwise? is it to never use window except for in a specific way? Can anyone help explain please",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-03-12 09:32:09"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-12 09:32:09",
+    "text": "```usePageUrl\n( ) =&gt; URL\n\nReturns the current page URL. Works on server and is reactive to changes to the URL on client. This can be useful when components need to react to URL changes, such as query params, while also supporting server rendering. To programmatically trigger non-navigation URL changes, use pushHistoryState() which is identical to window.history.pushState() but integrates with usePageUrl() to ensure it receives change events.```\nthis explains it pretty well but in my case I'm not sure the server comes into play or that my components need to react to url changes outside of what I do manually. In any case, seems like it always make sense to use them just in case"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-12 09:35:40",
+    "text": "I'm getting `[ERROR] The request in account xxxxxx failed due to a server error. Please try again or visit <https://help.HubSpot.com/> to submit a ticket or contact HubSpot Support if the issue persists.` when I try to deploy",
+    "reply_count": 5,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2024-03-12 09:36:29"
+      },
+      {
+        "time_stamp": "2024-03-12 09:45:09"
+      },
+      {
+        "time_stamp": "2024-03-12 10:02:54"
+      },
+      {
+        "time_stamp": "2024-03-12 10:03:41"
+      },
+      {
+        "time_stamp": "2024-03-13 06:53:43"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-03-12 09:36:29",
+    "text": "This is likely connected to a larger HubSpot outage."
+  },
+  {
+    "poster": {
+      "poster_name": "George Grigorita",
+      "poster_handle": "george.grigorita"
+    },
+    "time_stamp": "2024-03-12 09:45:09",
+    "text": "<https://status.HubSpot.com/>"
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2024-03-12 10:02:54",
+    "text": "Our team is actively working on this outage <https://status.HubSpot.com/>"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-12 10:03:41",
+    "text": "^ I probably caused this by using the wrong `usePageUrl()` — my bad!"
+  }
+]

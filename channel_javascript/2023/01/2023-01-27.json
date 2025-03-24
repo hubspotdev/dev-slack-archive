@@ -1,0 +1,134 @@
+[
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2023-01-27 08:53:38",
+    "text": "Have you tried removing the module from the theme and testing it separately with a very minimal core? That would help test if it was outside items affecting this"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2023-01-27 08:53:49",
+    "text": "Maybe even in a code pen?"
+  },
+  {
+    "poster": {
+      "poster_name": "Amanda McIntosh",
+      "poster_handle": "am.mcintosh1"
+    },
+    "time_stamp": "2023-01-27 09:07:31",
+    "text": "How quickly are you clicking that link to text? Are you sure it's not positioning incorrectly because assets haven't had time to load?"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-01-27 09:09:45"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Louden",
+      "poster_handle": "matt562"
+    },
+    "time_stamp": "2023-01-27 09:09:54",
+    "text": "Right now we have a solution in place but its not ideal. We are basically overwriting whatever natural smooth scrolling is happening on the page. What we found out is that the page increases in size by almost 1100px as the user scrolls down the page. The timeline section in particular grows for some reason. We even removed all animation from the page and it still has issues."
+  },
+  {
+    "poster": {
+      "poster_name": "Amanda McIntosh",
+      "poster_handle": "am.mcintosh1"
+    },
+    "time_stamp": "2023-01-27 09:10:47",
+    "text": "How are you listening for scroll movement? Are using a throttle with that?"
+  },
+  {
+    "poster": {
+      "poster_name": "Amanda McIntosh",
+      "poster_handle": "am.mcintosh1"
+    },
+    "time_stamp": "2023-01-27 09:11:38",
+    "text": "Scroll listeners can get pretty big pretty quick"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Louden",
+      "poster_handle": "matt562"
+    },
+    "time_stamp": "2023-01-27 09:14:40",
+    "text": "We are only using the scroll listener to try and debug the problem that was there before. It seems the problem still isn't working for you. Like I said the page increases in height which causes the anchor to mess up on the first click. Second and future clicks work normally because the page height is already established."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Louden",
+      "poster_handle": "matt562"
+    },
+    "time_stamp": "2023-01-27 09:16:55",
+    "text": "I updated the page to include the code that we consider fixes the problem, but like I said, if you look at the console log you can see the page height increase as you scroll"
+  },
+  {
+    "poster": {
+      "poster_name": "Nich Mueller",
+      "poster_handle": "nich"
+    },
+    "time_stamp": "2023-01-27 09:19:39",
+    "text": "It seems like you've found the source of the problem: certain sections aren't rendering full height until page has been scrolled to a certain amount.\n\nSo I would look into how to render those sections on page load, rather than on scroll?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Louden",
+      "poster_handle": "matt562"
+    },
+    "time_stamp": "2023-01-27 09:20:18",
+    "text": "Well those sections aren't supposed to grow thats the weird thing about it."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Louden",
+      "poster_handle": "matt562"
+    },
+    "time_stamp": "2023-01-27 09:20:52",
+    "text": "Remove the animation for the entire page and for some reason the page grows regardless."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Louden",
+      "poster_handle": "matt562"
+    },
+    "time_stamp": "2023-01-27 09:21:13",
+    "text": "Remove the timeline section and the page works correctly. Something odd about the timeline module"
+  },
+  {
+    "poster": {
+      "poster_name": "Amanda McIntosh",
+      "poster_handle": "am.mcintosh1"
+    },
+    "time_stamp": "2023-01-27 09:25:20",
+    "text": "What happens if you set that timeline section to be a fixed height in pixels?"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-01-27 12:16:42",
+    "text": "Hmm, this is a curious one. I don’t think it’s any HubSpot-specific behavior causing this.\n\nJumping to those anchors by navigating the browser to them works just fine — puts you in the right place, as you’d expect. So, the issue is the definitely coming from the script that’s overriding the default link behavior. I’m assuming that’s the one you referenced not being able to find?\n\nPoking around in the debugger, it explicitly references the `.timeline--section` class: that’s definitely coming from somewhere in your theme, or the timeline module itself. The script is also inlined, so that implies it lives in a `{% require_js %}` tag within an HTML+HubL file. That could be your page template, base template,  header partial, or in the markup of the timeline or nav menu modules."
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-01-27 12:17:34",
+    "text": "If you can’t track it down, there’s one ugly workaround you can resort to: replace the anchors with buttons that fire a script to navigate the window."
+  },
+  {
+    "poster": {
+      "poster_name": "Amanda McIntosh",
+      "poster_handle": "am.mcintosh1"
+    },
+    "time_stamp": "2023-01-27 12:32:05",
+    "text": "Yeah, I saw that on some stack overflow questions on similar issues. Has the advantage of being precise, if maybe a little hacky"
+  }
+]

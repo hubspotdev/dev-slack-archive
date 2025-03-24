@@ -1,0 +1,50 @@
+[
+  {
+    "text": "<@UQWGKUEN7> I did not manage to solve it. I created an isolated module using the following `TestModule.tsx`:\n```import { ModuleFields, TextField, FieldGroup, RepeatedFieldGroup, } from '<@UDA553DRD>/cms-components/fields';\nimport { ModuleProps } from '<@UDA553DRD>/cms-components';\nimport TestModuleTypes from './TestModule.fields.types.js';\n\nconst MainFields = () =&gt; (\n  &lt;FieldGroup name=\"main\" label=\"Main\"&gt;\n    &lt;RepeatedFieldGroup\n      label=\"Items\"\n      name=\"items\"\n      occurrence={{\n        min: 3,\n        max: 3,\n        default: 3,\n      }}\n      default={[\n        { title: 'Title 1', description: 'Description 1'},\n        { title: 'Title 2', description: 'Description 2'},\n        { title: 'Title 3', description: 'Description 3'},\n      ]}\n    &gt;\n      &lt;TextField\n        label=\"Title\"\n        name=\"title\"\n      /&gt;\n      &lt;TextField\n        label=\"Description\"\n        name=\"description\"\n      /&gt;\n    &lt;/RepeatedFieldGroup&gt;\n  &lt;/FieldGroup&gt;\n);\n\nexport const fields = (\n  &lt;ModuleFields&gt;\n    &lt;MainFields /&gt;\n  &lt;/ModuleFields&gt;\n)\n\nexport const meta = {\n  label: 'Test module',\n};\n\nexport const Component = ({\n  fieldValues\n}: ModuleProps&lt;TestModuleTypes&gt;) =&gt; {\n  const main = fieldValues.main;\n\n  return (\n    &lt;div&gt;\n      {main.items.map((item, index) =&gt; (\n        &lt;div key={index}&gt;\n          &lt;h3&gt;{item.title}&lt;/h3&gt;\n          &lt;p&gt;{item.description}&lt;/p&gt;\n        &lt;/div&gt;\n      ))}\n    &lt;/div&gt;\n  );\n};```\nAnd it does the not work as your video (see mi GIF attached):",
+    "time_stamp": "2024-11-25 04:32:06"
+  },
+  {
+    "poster": {
+      "poster_name": "Aitor",
+      "poster_handle": "aitor.tomas"
+    },
+    "time_stamp": "2024-11-25 04:34:07",
+    "text": "You cannot see it in the GIF but once it removes the content, it literally removes the pre-existing items (there were 3 and it ends up with one with title `a`)"
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2024-11-25 08:08:09",
+    "text": "Is there an update on this? I seem to be running into the same issue.\n\nMy finding is that if you restart the development server the secrets will work.\n\nBut after I deployed this on my portal, the first few requests worked fine, after I get the same error again.\n\nI’m using the `getSecret()` in export const getServerSideProps = async (props) =&gt; {"
+  },
+  {
+    "poster": {
+      "poster_name": "I Made Sariyanta",
+      "poster_handle": "desar.sariyanta"
+    },
+    "time_stamp": "2024-11-25 08:28:46",
+    "text": "<@UAYBXDG4U> "
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-11-25 09:24:10",
+    "edited": {
+      "time_stamp": "2024-11-25 15:39:49"
+    },
+    "text": "<@U03SJKGPCV7> are you seeing this issue again in the dev server or in live renders of the page?"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2024-11-25 12:11:23",
+    "text": "Ahhh yea OK so the issue here is that a repeater group is already a group and then it’s nested inside of another group. Which is totally fine. However you then need to specify the default for that top level group too. Which is not the most intuitive. I was able to get this working as expected by using the following field structure.\n\n(same thing you had just adding a default to the `main` field group)\n\n```const MainFields = () =&gt; (\n  &lt;FieldGroup\n    name='main'\n    label='Main'\n    default={{\n      items: [\n        { title: 'Title 1', description: 'Description 1' },\n        { title: 'Title 2', description: 'Description 2' },\n        { title: 'Title 3', description: 'Description 3' },\n      ],\n    }}\n  &gt;\n    &lt;RepeatedFieldGroup\n      label='Items'\n      name='items'\n      occurrence={{\n        min: 3,\n        max: 3,\n        default: 3,\n      }}\n      default={[\n        { title: 'Title 1', description: 'Description 1' },\n        { title: 'Title 2', description: 'Description 2' },\n        { title: 'Title 3', description: 'Description 3' },\n      ]}\n    &gt;\n      &lt;TextField\n        label='Title'\n        name='title'\n      /&gt;\n      &lt;TextField\n        label='Description'\n        name='description'\n      /&gt;\n    &lt;/RepeatedFieldGroup&gt;\n  &lt;/FieldGroup&gt;\n);```"
+  },
+  {
+    "text": "<@UAYBXDG4U> Both. However re-starting the server will clear the error for a while.\n\nI also noticed that the live page works in the preview, but not in the actual live page anymore.",
+    "time_stamp": "2024-11-26 00:53:38"
+  }
+]

@@ -1,0 +1,17 @@
+[
+  {
+    "poster": {
+      "poster_name": "Yumiko Atae",
+      "poster_handle": "yumiko"
+    },
+    "time_stamp": "2024-11-28 07:29:50",
+    "text": "Hello everyone!\n\nI need urgent help creating a dynamic page that displays deals associated with a specific contact. The workflow I have in mind is as follows:\n1. The contact logs in using their credentials.\n2. After login, the page dynamically shows only the deals associated with that contact, based on their Contact ID.\nI followed these two pieces of documentation (insert links if possible) but couldn’t get it to work. Here’s what I’ve done so far:\n1. I created a dynamic page using the membership feature, setting the slug to the Contact ID.\n2. I added the following code to both the module and the page template, but it still didn’t work as expected.\n3. \nDoes anyone know how I can achieve this functionality? Any guidance or suggestions would be greatly appreciated.\n\n```    {% block body %}\n        {% if current_user %}\n            &lt;p&gt;Welcome, {{ current_user.firstName }}!&lt;/p&gt;\n        {% else %}\n            &lt;p&gt;You are not logged in. Please log in to view this page.&lt;/p&gt;\n        {% endif %}\n\n        {% if dynamic_page_crm_object %}\n            {% set contact = dynamic_page_crm_object %}\n            &lt;h2&gt;Contact Information&lt;/h2&gt;\n            &lt;p&gt;&lt;strong&gt;Email:&lt;/strong&gt; {{ contact.email }}&lt;/p&gt;\n            &lt;p&gt;&lt;strong&gt;Contact ID:&lt;/strong&gt; {{ contact.hs_object_id }}&lt;/p&gt;\n\n            &lt;h3&gt;Associated Deals:&lt;/h3&gt;\n            {% set associated_deals = crm_associations(contact.hs_object_id, \"deal\", 3) %}\n\n            {% if associated_deals.results is not empty %}\n                &lt;ul&gt;\n                    {% for deal in associated_deals.results %}\n                        &lt;li&gt;\n                            &lt;strong&gt;Deal Name:&lt;/strong&gt; {{ deal.properties.dealname }}&lt;br&gt;\n                            &lt;strong&gt;Amount:&lt;/strong&gt; {{ deal.properties.amount | format_currency(\"en-US\") }}&lt;br&gt;\n                            &lt;strong&gt;Status:&lt;/strong&gt; {{ deal.properties.dealstage }}\n                        &lt;/li&gt;\n                    {% endfor %}\n                &lt;/ul&gt;\n            {% else %}\n                &lt;p&gt;No deals associated with this contact.&lt;/p&gt;\n            {% endif %}\n        {% else %}\n            &lt;p&gt;No dynamic CRM object found. Ensure the page is linked to a Contact object.&lt;/p&gt;\n        {% endif %}\n\n        &lt;!-- Drag-and-Drop Area --&gt;\n        {% dnd_area \"body_dnd_area\", class='body_dnd_area' label=\"Main Content\" %}\n        {% end_dnd_area %}\n    {% endblock body %}```",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-11-30 08:30:41"
+      }
+    ]
+  }
+]

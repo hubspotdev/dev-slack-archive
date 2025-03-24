@@ -1,0 +1,774 @@
+[
+  {
+    "poster": {
+      "poster_name": "Miquel Gines Borras",
+      "poster_handle": "miquel.gines"
+    },
+    "time_stamp": "2023-03-29 04:31:41",
+    "text": "<@U01QVR44MEY> Thanks for your response! I've checked the `objects/ticket/{ticketId}/associations/conversation` endpoint, it returns a set of items from which I can retrieve their messages using `conversations/threads/{thread}/messages` and it's working fine. But the first endpoint also returns some IDs that when I try to retrieve its messages it says _*Resource thread not found*_, and I see that this is happening for a ticket that shows *2* conversations on the HS page, but the first API endpoint returns *4* items."
+  },
+  {
+    "poster": {
+      "poster_name": "Garik Kyarunts",
+      "poster_handle": "kyaruntsg"
+    },
+    "time_stamp": "2023-03-29 05:17:50",
+    "text": "Hey! I try to create a note for my private app’s deal. Like want to create a note and associate it with an existing deal. Using postman and sending request to that endpoint appropriately associates note with the deal, but using code approach, @HubSpot/api-client package for Node.js,  it doesn’t do the association. How could you help me?",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-03-29 05:19:21"
+      },
+      {
+        "time_stamp": "2023-03-29 08:08:37"
+      },
+      {
+        "time_stamp": "2023-03-29 08:08:55"
+      },
+      {
+        "time_stamp": "2023-03-29 08:09:27"
+      },
+      {
+        "time_stamp": "2023-03-29 08:09:30"
+      },
+      {
+        "time_stamp": "2023-03-29 08:10:22"
+      },
+      {
+        "time_stamp": "2023-03-29 08:10:35"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Garik Kyarunts",
+      "poster_handle": "kyaruntsg"
+    },
+    "time_stamp": "2023-03-29 05:19:21",
+    "text": "```const properties = {\n        hs_note_body: note.content,\n        hs_timestamp: new Date().toISOString(),\n      };\n      const SimplePublicObjectInputForCreate = {\n        properties,\n        associations: [\n          {\n            to: {\n              id: '12761399410',\n            },\n            types: [\n              {\n                associationCategory: 'HubSpot_DEFINED',\n                associationTypeId: 214,\n              },\n            ],\n          },\n        ],\n      };\n      console.log(\n        await HubSpotClient.crm.objects.notes.basicApi.create(\n          SimplePublicObjectInputForCreate,\n        ),\n      );```\nthis is my code snippet"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeppe Wienziers Stenbæk",
+      "poster_handle": "jeppe.stenbaek"
+    },
+    "time_stamp": "2023-03-29 05:40:08",
+    "text": "Hi All, don’t know what the right channel is so now I am trying here :slightly_smiling_face: we are having a problem with connecting Zoom to HubSpot as HubSpot import all recording into HubSpot including Board meeting, hiring interviews etc.\n\nWe would therefore like to build some logic that could remove calls, Ideal a workflow where we could set the criteria’s for what call to delete, however it is not possible to trigger workflows on calls. (some calls will not be associated)\n\nwe are therefore looking into alternative solutions like a microservice or like, do anyone of you have a good suggestion how to build / or buy this ?\n\nIdeally something out of the box.",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-03-29 08:18:32"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Fillipe Montenegro",
+      "poster_handle": "fillipe"
+    },
+    "time_stamp": "2023-03-29 05:52:17",
+    "text": "Hello again,\n\nI'm having some trouble understanding what those instructions mean.\n\nThe get by Id code is\n```[...]\n\nconst contactId = \"contactId\";\nconst properties = undefined;\nconst propertiesWithHistory = undefined;\nconst associations = undefined;\nconst archived = false;\n\n[...]\n\nHubSpotClient.crm.contacts.basicApi.getById(contactId, properties, propertiesWithHistory, associations, archived);```\n\"set the idProperty\" as \"email\". What \"idProperty\"?\n\nI'm assuming the \"contactId\" const will receive the value of my email, but I can't understand where do I tell the endpoint that I want to search by email.\n\nSo...\n\n```[...]\n\nconst contactId = \"<mailto:my@email.com|my@email.com>\";\nconst properties = undefined;\nconst propertiesWithHistory = undefined;\nconst associations = undefined;\nconst archived = false;\n\n[...]\n\nHubSpotClient.crm.contacts.basicApi.getById(contactId, properties, propertiesWithHistory, associations, archived);```\nIn case you mean that on the CRM I need to set the email to be it's unique identifier, that's not what I meant. We still use id number, I just would like to get by email despite having an id number."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 07:35:46",
+    "text": "Here's an example with searching by id:\n```const objectType = \"0-1\";\nconst objectId = \"<mailto:nerds@gmail.com|nerds@gmail.com>\";\nconst properties = \"email,firstname,lastname\";\nconst propertiesWithHistory = undefined;\nconst associations = \"companies\";\nconst archived = false;\nconst idProperty = \"email\";\n\ntry {\n  const apiResponse = await HubSpotClient.crm.objects.basicApi.getById(objectType, objectId, properties, propertiesWithHistory, associations, archived, idProperty);```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 07:43:35",
+    "text": "what's the association typeid for the ids that say Resource Thread not found?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 08:08:37",
+    "text": "I would definitely advice that you use the endpoints directly instead of the node package"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 08:08:55",
+    "text": "I've found that it's just isn't predictable"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 08:09:27",
+    "text": "Postman will show you all the axios code that you need to use just click on the &lt;/&gt; button"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-03-29 08:09:30"
+  },
+  {
+    "poster": {
+      "poster_name": "Garik Kyarunts",
+      "poster_handle": "kyaruntsg"
+    },
+    "time_stamp": "2023-03-29 08:10:22",
+    "text": "Hah that’s cool <@U01QVR44MEY>, thanks very much, right, I tried with endpoints already and works in the predictable way! That’s cool, thanks very much!"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 08:10:35",
+    "text": "yes of course"
+  },
+  {
+    "poster": {
+      "poster_name": "Aditya Naik",
+      "poster_handle": "anaik"
+    },
+    "time_stamp": "2023-03-29 08:16:12",
+    "text": "Is there an API to clone forms?",
+    "reply_count": 4,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-03-29 08:18:00"
+      },
+      {
+        "time_stamp": "2023-03-29 08:18:06"
+      },
+      {
+        "time_stamp": "2023-03-29 08:18:18"
+      },
+      {
+        "time_stamp": "2023-03-29 08:18:19"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 08:18:00",
+    "text": "There's an api to get a form and an api to create a form if you combine them you can clone forms"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-03-29 08:18:06"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 08:18:18",
+    "text": "<https://developers.HubSpot.com/docs/api/marketing/forms>"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-03-29 08:18:19"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 08:18:32",
+    "text": "<https://HubSpotdev.slack.com/archives/C22PU4LV8/p1680076760792249>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 08:27:56",
+    "text": "Yes that's for emails sent from the CRM or sent and logged to the CRM with the BCC address"
+  },
+  {
+    "poster": {
+      "poster_name": "Pascal Kremp",
+      "poster_handle": "pascal558"
+    },
+    "time_stamp": "2023-03-29 08:31:17",
+    "edited": {
+      "time_stamp": "2023-03-29 08:36:08"
+    },
+    "text": "Hey all,\n\n<https://developers.HubSpot.com/docs/api/crm/notes|Create API for Notes> has an example with PHP.\n\n```use HubSpot\\Client\\Crm\\Objects\\Notes\\Model\\PublicObjectId;```\nThis `PublicObjectId` Class is used but not available <https://github.com/HubSpot/HubSpot-api-php/tree/master/codegen/Crm/Objects/Notes/Model|here>.\n\nIs anyone having an explanation of how to understand which Classes to use? :smile:\n\nAnd if I do check the JSON for CURL, it is pretty easy and straight forward. But with PHP they go super crazy with using theses classes. Why? o.O",
+    "reply_count": 10,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-03-29 08:36:12"
+      },
+      {
+        "time_stamp": "2023-03-29 08:36:29"
+      },
+      {
+        "time_stamp": "2023-03-29 08:36:34"
+      },
+      {
+        "time_stamp": "2023-03-29 08:37:04"
+      },
+      {
+        "time_stamp": "2023-03-29 08:37:18"
+      },
+      {
+        "time_stamp": "2023-03-29 08:37:32"
+      },
+      {
+        "time_stamp": "2023-03-29 08:41:16"
+      },
+      {
+        "time_stamp": "2023-03-29 08:42:45"
+      },
+      {
+        "time_stamp": "2023-03-29 08:43:08"
+      },
+      {
+        "time_stamp": "2023-03-29 08:43:37"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 08:36:12",
+    "text": "Would doing it through guzzle be a better option?\n\n```&lt;?php\n$client = new Client();\n$headers = [\n  'Authorization' =&gt; 'Bearer pat-na1-xxxxxx',\n  'Content-Type' =&gt; 'application/json'\n];\n$body = '{\n  \"properties\": {\n    \"hs_timestamp\": \"2019-10-30T03:30:17.883Z\",\n    \"hs_note_body\": \"Spoke with decision maker john\",\n    \"HubSpot_owner_id\": \"11349275740\"\n  },\n  \"associations\": [\n    {\n      \"to\": {\n        \"id\": \"101\"\n      },\n      \"types\": [\n        {\n          \"associationCategory\": \"HubSpot_DEFINED\",\n          \"associationTypeId\": 2\n        }\n      ]\n    }\n  ]\n}';\n$request = new Request('POST', '<https://api.hubapi.com/crm/v3/objects/notes>', $headers, $body);\n$res = $client-&gt;sendAsync($request)-&gt;wait();\necho $res-&gt;getBody();```"
+  },
+  {
+    "poster": {
+      "poster_name": "Pascal Kremp",
+      "poster_handle": "pascal558"
+    },
+    "time_stamp": "2023-03-29 08:36:29",
+    "edited": {
+      "time_stamp": "2023-03-29 08:36:55"
+    },
+    "text": "Yes\n\n&gt; And if I do check the JSON for CURL, it is pretty easy and straight forward. But with PHP they go super crazy with using theses classes. Why? o.O"
+  },
+  {
+    "poster": {
+      "poster_name": "Pascal Kremp",
+      "poster_handle": "pascal558"
+    },
+    "time_stamp": "2023-03-29 08:36:34",
+    "text": "I added this to my post."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 08:37:04",
+    "text": "Yeah it adds a ton of unnecessary complexity"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 08:37:18",
+    "text": "I honestly don't know why anyone would use any of the SDKs"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 08:37:32",
+    "text": "they just aren't super reliable or well documented"
+  },
+  {
+    "poster": {
+      "poster_name": "Pascal Kremp",
+      "poster_handle": "pascal558"
+    },
+    "time_stamp": "2023-03-29 08:41:16",
+    "text": "Ok. Thanks. I thought the same."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 08:42:45",
+    "text": "of course, sorry it's not really the answer you were probably looking for"
+  },
+  {
+    "poster": {
+      "poster_name": "Pascal Kremp",
+      "poster_handle": "pascal558"
+    },
+    "time_stamp": "2023-03-29 08:43:08",
+    "text": "I thought I would level up my game If I understand this crazy Classception…"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 08:43:37",
+    "text": "trust me it would only hurt you"
+  },
+  {
+    "poster": {
+      "poster_name": "Fillipe Montenegro",
+      "poster_handle": "fillipe"
+    },
+    "time_stamp": "2023-03-29 08:48:09",
+    "text": "Thank you very much! I will be trying this later today."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 08:50:00",
+    "text": "of course"
+  },
+  {
+    "poster": {
+      "poster_name": "Avery Yip",
+      "poster_handle": "avery529"
+    },
+    "time_stamp": "2023-03-29 10:59:28",
+    "edited": {
+      "time_stamp": "2023-03-29 10:59:37"
+    },
+    "text": "Thanks for your help! <@U01QVR44MEY> But if the recipient is another HubSpot user, it should be an `INCOMING_EMAIL`  right?"
+  },
+  {
+    "poster": {
+      "poster_name": "Luke",
+      "poster_handle": "luke547"
+    },
+    "time_stamp": "2023-03-29 12:09:55",
+    "text": "Hi, is it good channel to ask about `HubSpot-api-python`?",
+    "reply_count": 16,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-03-29 12:10:01"
+      },
+      {
+        "time_stamp": "2023-03-29 12:10:57"
+      },
+      {
+        "time_stamp": "2023-03-29 12:12:43"
+      },
+      {
+        "time_stamp": "2023-03-29 12:12:59"
+      },
+      {
+        "time_stamp": "2023-03-29 12:13:34"
+      },
+      {
+        "time_stamp": "2023-03-29 12:14:58"
+      },
+      {
+        "time_stamp": "2023-03-29 12:15:17"
+      },
+      {
+        "time_stamp": "2023-03-29 12:17:44"
+      },
+      {
+        "time_stamp": "2023-03-29 12:18:41"
+      },
+      {
+        "time_stamp": "2023-03-29 12:19:58"
+      },
+      {
+        "time_stamp": "2023-03-29 12:20:30"
+      },
+      {
+        "time_stamp": "2023-03-29 12:20:40"
+      },
+      {
+        "time_stamp": "2023-03-29 12:21:11"
+      },
+      {
+        "time_stamp": "2023-03-29 12:21:20"
+      },
+      {
+        "time_stamp": "2023-03-29 12:22:01"
+      },
+      {
+        "time_stamp": "2023-03-29 13:07:18"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 12:10:01",
+    "text": "sure"
+  },
+  {
+    "poster": {
+      "poster_name": "Luke",
+      "poster_handle": "luke547"
+    },
+    "time_stamp": "2023-03-29 12:10:57",
+    "text": "I want to use HubSpot-api-python in my Django project to get, update and create: Properties, Forms, Lists, Workflows, Email templates, Pipelines and Deals.\n\n```from HubSpot import HubSpot\napi_client = HubSpot(access_token=TOKEN)```\nIt works:\n```api_client.crm.contacts.get_all()\napi_client.crm.deals.get_all()```\nBut e.g.\n```api_client.crm.pipelines.get_all()\napi_client.marketing.forms.get_all()```\ndoesn't work.\nI have an error: `AttributeError: 'Discovery' object has no attribute 'get_all'.`\n\nHow can I get this data? And further create/update?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 12:12:43",
+    "text": "Well pipelines are specific to an object"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 12:12:59",
+    "text": "example deals and tickets have different pipelines"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 12:13:34",
+    "text": "so this should work:\n```client.crm.pipelines.pipelines_api.get_all(object_type=\"0-3\")```\nto get the deal pipelines"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 12:14:58",
+    "text": "and for forms. it doesn't appear that there is a method so you'll have to get the forms using request instead.\n\n```import requests\n\nurl = \"<https://api.hubapi.com/marketing/v3/forms/>\"\n\nheaders = {\n    'accept': \"application/json\",\n    'authorization': \"Bearer YOUR_ACCESS_TOKEN\"\n    }\n\nresponse = requests.request(\"GET\", url, headers=headers)\n\nprint(response.text)```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 12:15:17",
+    "text": "This is because the forms api is still in beta"
+  },
+  {
+    "poster": {
+      "poster_name": "Luke",
+      "poster_handle": "luke547"
+    },
+    "time_stamp": "2023-03-29 12:17:44",
+    "text": "So, in that case it is better not to use `HubSpot-api-python` but to `use response = requests.request(\"GET\", url, headers=headers)` for everything..."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 12:18:41",
+    "text": "In the event that a particular api isn't accessible through the SDK then yes you'll need to use requests instead"
+  },
+  {
+    "poster": {
+      "poster_name": "Luke",
+      "poster_handle": "luke547"
+    },
+    "time_stamp": "2023-03-29 12:19:58",
+    "text": "So it's better to use `request` everywhere, so as not to mix up. Thanks for help!"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 12:20:30",
+    "text": "Yeah honestly I really don't use the SDKs for anything they aren't super reliable and aren't predictable"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 12:20:40",
+    "text": "If I'm using python I only use request"
+  },
+  {
+    "poster": {
+      "poster_name": "Luke",
+      "poster_handle": "luke547"
+    },
+    "time_stamp": "2023-03-29 12:21:11",
+    "text": "and it's better documentation..."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 12:21:20",
+    "text": "yes exactly"
+  },
+  {
+    "poster": {
+      "poster_name": "Luke",
+      "poster_handle": "luke547"
+    },
+    "time_stamp": "2023-03-29 12:22:01",
+    "text": "Thanks! Have a great rest of your day!"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 13:07:18",
+    "text": "of course, you too"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Fiori",
+      "poster_handle": "ericf"
+    },
+    "time_stamp": "2023-03-29 13:10:35",
+    "text": "Regarding dealstages - some of our dealstages have an internal id that is an integer, but some have string values, is it possible to set the internal id of a dealstage to a string?",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-03-29 13:24:01"
+      },
+      {
+        "time_stamp": "2023-03-29 13:26:13"
+      },
+      {
+        "time_stamp": "2023-03-29 13:26:55"
+      },
+      {
+        "time_stamp": "2023-03-29 13:26:57"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 13:24:01",
+    "text": "Yeah all HubSpot default stages have string ids (this is the only place where HubSpot uses string ids) but all custom stages will have numerical ones and you can't change this"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Fiori",
+      "poster_handle": "ericf"
+    },
+    "time_stamp": "2023-03-29 13:26:13",
+    "text": "thanks, what would I query to get the text version of a deal stage?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 13:26:55",
+    "text": "<https://developers.HubSpot.com/docs/api/crm/pipelines>"
+  },
+  {
+    "text": "You can use the pipeline stages api:",
+    "time_stamp": "2023-03-29 13:26:57"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Lund",
+      "poster_handle": "webmaster470"
+    },
+    "time_stamp": "2023-03-29 13:41:33",
+    "text": "Lacking any documentation for the api-client package, I came across in the code the fact that the ‘from’ element cannot be a simple record ID, but must be an instance of the PublicObjectId object! Pity that HubSpot hasn’t been able to produce a reference doc that specifies these details!",
+    "reply_count": 10,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-03-29 13:43:29"
+      },
+      {
+        "time_stamp": "2023-03-29 13:43:50"
+      },
+      {
+        "time_stamp": "2023-03-29 13:44:05"
+      },
+      {
+        "time_stamp": "2023-03-29 17:43:40"
+      },
+      {
+        "time_stamp": "2023-03-29 19:47:28"
+      },
+      {
+        "time_stamp": "2023-03-29 19:48:53"
+      },
+      {
+        "time_stamp": "2023-03-29 19:50:06"
+      },
+      {
+        "time_stamp": "2023-03-29 19:51:00"
+      },
+      {
+        "time_stamp": "2023-03-29 19:51:55"
+      },
+      {
+        "time_stamp": "2023-03-29 19:53:01"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 13:43:29",
+    "text": "Yeah that's why you use the endpoints directly, highly suggest not using any of the SDKs"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 13:43:50",
+    "text": "the endpoints are much more reliable and predictable"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 13:44:05",
+    "text": "very easy to understand and tell it what you want to do"
+  },
+  {
+    "poster": {
+      "poster_name": "Mari Hop",
+      "poster_handle": "marius.hopf0610"
+    },
+    "time_stamp": "2023-03-29 15:27:17",
+    "text": "Hi all. I need to get the properties of a contact when it is created in an account. What would be the best way to do that?",
+    "reply_count": 3,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-03-29 16:31:30"
+      },
+      {
+        "time_stamp": "2023-03-29 19:54:40"
+      },
+      {
+        "time_stamp": "2023-03-30 05:14:30"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2023-03-29 16:31:30",
+    "text": "I would use an App, setup a webhook notification on contact - created, then call the contacts API and get all the properties for that contact record."
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Lund",
+      "poster_handle": "webmaster470"
+    },
+    "time_stamp": "2023-03-29 17:43:40",
+    "text": "This is pretty awful news! When dealing with other firms' APIs (FedEx, UPS, USPS, MailChimp), api software packages are made available and work. Are you saying the HubSpot api-client has been found to be unreliable and/or unpredictable? Or just not documented?"
+  },
+  {
+    "text": "HubSpot has a world class API, it's awesome and the docs are awesome. Each endpoint has the request in cUrl, node, php, python, ruby, and c# (using the SDKs).",
+    "time_stamp": "2023-03-29 19:47:28",
+    "edited": {
+      "time_stamp": "2023-03-29 19:53:23"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 19:48:53",
+    "text": "The issue with the SDKs though is that they aren't always as up to date as the endpoints themselves (for example using a v4 endpoint when available instead of the v3 one)"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 19:50:06",
+    "text": "Also the Ruby and C# SDK are community maintained (to my knowledge, there's probably a HubSpotter that makes changes when needed and reviews pull requests but most it's community driven)"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 19:51:00",
+    "text": "Another thing is like the PHP SDK specifically uses a lot of classes to do things (takes like 40 lines to run 1 api request instead of 5 lines to it the endpoint it self)"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 19:51:55",
+    "text": "Last thing the SDKs will rarely ever have beta apis setup, so you'll have to hit the endpoint directly"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 19:53:01",
+    "text": "This is a long winded way of saying, why would you even want to use the SDK the endpoints will always be up to date, have every possible endpoint, you know exactly how to request the info, and it's entirely HubSpot maintained."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 19:54:40",
+    "text": "if you have ops hub pro or enterprise you could use webhooks to send all the property info to a endpoint of your choosing. Good amount easier than setting up an app and oauth but again you need ops pro or enterprise to run it"
+  },
+  {
+    "text": "Hi All, When I called deal search API (<https://api.hubapi.com/crm/v3/objects/deals/search>),  It returns dropdown property internal value not label name. Please check the attached images for your reference, Pls help me how to fetch label name?{\n    \"total\": 743,\n    \"results\": [\n        {\n            \"id\": \"11191171136\",\n            \"properties\": {\n                \"amount\": \"265.9\",\n                \"closedate\": \"2022-11-30T05:00:00Z\",\n                \"dealstage\": \"45850373\",\n                \"hs_lastmodifieddate\": \"2023-03-08T15:42:29.105Z\",\n                \"hs_object_id\": \"11191171136\",\n                *\"pipeline\": \"18374722\"*\n            },",
+    "time_stamp": "2023-03-30 00:38:17",
+    "edited": {
+      "time_stamp": "2023-03-30 00:44:20"
+    },
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-03-30 03:12:22"
+      },
+      {
+        "time_stamp": "2023-03-30 04:09:37"
+      },
+      {
+        "time_stamp": "2023-03-30 05:12:59"
+      },
+      {
+        "time_stamp": "2023-03-30 07:09:36"
+      }
+    ]
+  }
+]

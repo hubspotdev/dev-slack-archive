@@ -1,0 +1,54 @@
+[
+  {
+    "poster": {
+      "poster_name": "Hein Haraldson Berg",
+      "poster_handle": "hein"
+    },
+    "time_stamp": "2021-09-14 03:50:10",
+    "text": "Anyone ever experienced this and have a solution?",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-09-14 16:24:35"
+      },
+      {
+        "time_stamp": "2021-09-14 16:25:37"
+      },
+      {
+        "time_stamp": "2021-09-14 17:26:49"
+      },
+      {
+        "time_stamp": "2021-09-14 17:54:37"
+      }
+    ]
+  },
+  {
+    "text": "Hello Hein, I'm not able to reproduce this.\n\nThe identify call doesn't actually transmit the data of the tracker to HubSpot, it has to be accompanied by another 'trackEvent' call or 'trackPageView' or 'trackCustomBehavioralEvent' call.\n\nWhen those are fired, it transmits an HTTP request to HubSpot where all the data is carried as a query string and it URI encodes any special characters or UTF characters.\n\nYou can see this in these screenshots.\n\nI also ran a test where I pre-encoded the character, and one where I didn't pre-encode using `encodeURIcomponent()`. It worked properly without pre-encoding.\n\nThis leads me to ask: how are you firing the call to HubSpot so that the data is transferred from the tracker to HubSpot in the resulting HTTP request.",
+    "time_stamp": "2021-09-14 16:24:35"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Ainslie",
+      "poster_handle": "rainslie"
+    },
+    "time_stamp": "2021-09-14 16:25:37",
+    "text": "So, my question primarily is: what's the rest of the surrounding code or full solution, since my theory is there might be something else that's garbling the character encoding"
+  },
+  {
+    "poster": {
+      "poster_name": "Hein Haraldson Berg",
+      "poster_handle": "hein"
+    },
+    "time_stamp": "2021-09-14 17:26:49",
+    "text": "Thanks for getting back to me! The `identify` information is ‘submitted’ using a `trackPageView` just like in your example, which makes this seem even weirder to me!"
+  },
+  {
+    "poster": {
+      "poster_name": "Hein Haraldson Berg",
+      "poster_handle": "hein"
+    },
+    "time_stamp": "2021-09-14 17:54:37",
+    "text": "I made some possible progress – my current theory is that third-party auth providers could relay such personal information weirdly encoded (something-something along the lines of making extra sure data will survive being encoded as a JWT, perhaps)"
+  }
+]

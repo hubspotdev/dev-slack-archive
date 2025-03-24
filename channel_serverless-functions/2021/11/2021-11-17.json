@@ -1,0 +1,58 @@
+[
+  {
+    "poster": {
+      "poster_name": "Doug Osborne",
+      "poster_handle": "doug.osborne"
+    },
+    "time_stamp": "2021-11-17 11:31:18",
+    "text": "When interfacing with an API that requires OAuth2.0 authentication, is it possible to persist the token until it expires, or is the best practice to request a new token for each serverless API request? (We're in the middle of writing a serverless function to an API that has suddenly started requiring OAuth)",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-11-17 11:45:12"
+      },
+      {
+        "time_stamp": "2021-11-17 11:49:45"
+      },
+      {
+        "time_stamp": "2021-11-17 12:12:40"
+      },
+      {
+        "time_stamp": "2021-11-17 12:59:50"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2021-11-17 11:45:12",
+    "text": "If you save the variable outside the `exports.main` function those can (not necessarily always) be persisted across pages of the function so it’s not a perfect solution but ti can help you. The “proper” solution is to set up a DB and connect to that to get oAuth Token info but that’s more infrastructure you have to set up."
+  },
+  {
+    "poster": {
+      "poster_name": "Doug Osborne",
+      "poster_handle": "doug.osborne"
+    },
+    "time_stamp": "2021-11-17 11:49:45",
+    "text": "Ah ok interesting... would HubDB be an appropriate solution for that?"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2021-11-17 12:12:40",
+    "text": "It _might_ work but there are a couple of things you’ll want to watch our for\n• Access control - if someone has access to any hubdb table, they’ll have access to the one that has auth credentials, potentially leading to accidental or malicious usage or removal of creds\n• No locking - HubDB doesn’t really have a way making sure a transaction is done before the next read. For most use cases it’s not a problem but at high volumes this can cause issues. This something built into most DBs"
+  },
+  {
+    "poster": {
+      "poster_name": "Doug Osborne",
+      "poster_handle": "doug.osborne"
+    },
+    "time_stamp": "2021-11-17 12:59:50",
+    "text": "Good to know... thanks a million <@UFBNA9K9A>!"
+  }
+]

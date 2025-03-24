@@ -1,0 +1,111 @@
+[
+  {
+    "poster": {
+      "poster_name": "Giovanni Zuanon",
+      "poster_handle": "giovanni.zuanon"
+    },
+    "time_stamp": "2020-07-21 06:19:15",
+    "edited": {
+      "time_stamp": "2020-07-21 06:20:45"
+    },
+    "text": "HI all,\nJust to warn you that on this page *<https://developers.HubSpot.com/docs/cms/guides/add-theme-features-to-existing-sites|How to add theme capabilities to an existing HubSpot CMS website>* the link Code Alerts points to a 404 error page. The right link should be this <https://developers.HubSpot.com/docs/cms/developer-reference/debugging-and-errors/code-alerts>",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2020-07-21 07:23:28"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2020-07-21 07:23:28",
+    "text": "Hey Kieran thank you for pointing this out. I will get this corrected."
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Abplanalp",
+      "poster_handle": "cabplanalp"
+    },
+    "time_stamp": "2020-07-21 07:55:35",
+    "text": "<@U26BLKGE4>, so is there any way to prevent HubSpot from creating redirects for all the posts for the blog url that is changed. I asked because we are trying to do a swap for blogs, so our original plan:\n1. Create a new temp blog url"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Abplanalp",
+      "poster_handle": "cabplanalp"
+    },
+    "time_stamp": "2020-07-21 07:58:00",
+    "text": "2. merge two blogs into that new blog\n3. the new blog will eventually need one of the currently used blog urls\n4. change current blog url to “/blog-2”\n5. rename temp blog name to “/blog”\n\nDoes that mean everything that is republished would just redirect to “/blog-2”, and “/blog” will never be reached?"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2020-07-21 07:58:03",
+    "text": "Not sure off the top of my head, but there may be a toggle in the HS Settings under redirects. Also, you can always manually delete those redirects, or potentially manage them via API"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2020-07-21 08:02:52",
+    "text": "Not sure how you're planning to merge the blogs now, but if it were me I'd use the CMS APIs for this project. Take all the posts in the two old blogs and create new post objects in a new \"staging\" blog. Make sure all your post and meta data comes across clean, then change all your urls at the blog settings level instead of the post level. Then do a URL redirect audit, and adjust your robots.txt to prevent any duplicate content errors.\n\nBasically, to simplify the process, create new post \"objects\" in the new blog, instead of trying to manage moving existing posts between blogs."
+  },
+  {
+    "poster": {
+      "poster_name": "Josh Saunders",
+      "poster_handle": "jsaunders"
+    },
+    "time_stamp": "2020-07-21 11:29:47",
+    "edited": {
+      "time_stamp": "2020-07-21 11:38:27"
+    },
+    "text": "I'm so glad I found this thread!!! I've posted several things recently about performance and I never get any useful responses. I've tried working with regular HubSpot support and they are completely useless on this topic. I would love a broader discussion of performance, best practices, tips, things HubSpot does now or is considering in the future, etc...\n\n<@U7SL518D6> You mention native lazy loading above as well as in Andrey's community post, but I'm confused on implementation. The image module is a native HubSpot module, so you can't add in a lazy html attribute. Are you suggesting creating custom image modules to use everywhere (as I've seen that suggestion a couple times on the web)?\n\nI also was unaware of the HubSpot optimizing CMS guide and blog post at <https://developers.HubSpot.com/blog/how-we-improved-page-speed-on-HubSpot.com> so thanks for that. However, that doesn't address the biggest performance issue we have on our site which is all related to the JS files that HubSpot loads. I can't figure out how to async or defer the HubSpot JS files and Facebook JS file that presumably is loaded by HubSpot because our FB account is connected.\n\nThe biggest performance hit we have from JS is from <http://connect.facebook.net|connect.facebook.net> because most of the Javascript in the file is unused (113/132KiB)\n\nEven with almost all our images optimized, I'm having trouble getting our mobile score above the 40's for many pages due to render blocking and unused JS. Having some place to discuss these topics would be great."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2020-07-21 11:54:13",
+    "text": "Hi Josh happy to have you join this conversation. You are correct regarding lazy loading img elements. right now the default HubSpot module does not support lazy loading, within custom modules though you can use lazy loading.\n\nWe are actively thinking about how we could enhance the default HubSpot Image module to support native lazy loading, in a way that doesn’t pose a performance risk. (Example: a content creator that assigns eager to everything on a page, would nuke the page’s performance)"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2020-07-21 11:59:35",
+    "text": "<@UEZ3125LL> as for the JS files HubSpot loads, you can disable jQuery all together. HubSpot loaded javascript files (aside from the default for jQuery) should be loaded in your site footer, making `defer` effectively useless.\n\nIf you could DM me a page from your site experiencing these issues. I’d be happy to take a quick look."
+  },
+  {
+    "poster": {
+      "poster_name": "Josh Saunders",
+      "poster_handle": "jsaunders"
+    },
+    "time_stamp": "2020-07-21 12:00:32",
+    "text": "Thanks Jon. Dm'ing you."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2020-07-21 18:10:39",
+    "text": "<@UEZ3125LL> Please let me know if you figure anything out with Jon about those files. I have the same kinds of issues with that extra facebook file and related form, chat, analytics files."
+  },
+  {
+    "poster": {
+      "poster_name": "Josh Saunders",
+      "poster_handle": "jsaunders"
+    },
+    "time_stamp": "2020-07-21 18:59:13",
+    "text": "Jon gave me some other tips, but nothing about the Facebook or HubSpot JS files you mentioned."
+  }
+]

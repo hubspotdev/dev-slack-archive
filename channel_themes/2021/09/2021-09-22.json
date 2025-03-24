@@ -1,0 +1,147 @@
+[
+  {
+    "poster": {
+      "poster_name": "jessebeginbound",
+      "poster_handle": "jessebeginbound"
+    },
+    "time_stamp": "2021-09-22 08:37:29",
+    "text": "Has anyone had issues lately with relative paths to images not working or rendering at all on your default theme pages? I’ve previewed, published to staging, etc, and none of the images will show. They’re all uploaded to the theme folder and the path is right (EX: “../images/mypic.jpg”) but I can’t figure out why they won’t show up.",
+    "reply_count": 14,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2021-09-22 15:17:36"
+      },
+      {
+        "time_stamp": "2021-09-22 15:19:21"
+      },
+      {
+        "time_stamp": "2021-09-22 15:20:26"
+      },
+      {
+        "time_stamp": "2021-09-22 15:23:46"
+      },
+      {
+        "time_stamp": "2021-09-22 15:25:32"
+      },
+      {
+        "time_stamp": "2021-09-22 15:30:21"
+      },
+      {
+        "time_stamp": "2021-09-22 15:32:12"
+      },
+      {
+        "time_stamp": "2021-09-22 15:34:39"
+      },
+      {
+        "time_stamp": "2021-09-22 15:34:45"
+      },
+      {
+        "time_stamp": "2021-09-22 15:35:39"
+      },
+      {
+        "time_stamp": "2021-09-22 15:39:12"
+      },
+      {
+        "time_stamp": "2021-09-24 08:08:15"
+      },
+      {
+        "time_stamp": "2021-09-24 09:45:37"
+      },
+      {
+        "time_stamp": "2021-09-24 10:00:16"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2021-09-22 15:17:36",
+    "text": "<@U25C6PU56> If youre keeping them in the theme folder then you need to make sure youre using `{{get_asset_url('../rel/path/to/file.jpg')}}`"
+  },
+  {
+    "poster": {
+      "poster_name": "jessebeginbound",
+      "poster_handle": "jessebeginbound"
+    },
+    "time_stamp": "2021-09-22 15:19:21",
+    "text": "<@UQWGKUEN7> Thanks but does that also work inside the “src” parameter when adding a module with default fields inside a dnd template/area? I’m not sure it does. "
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2021-09-22 15:20:26",
+    "text": "<@U25C6PU56> can you send a code snippet over?"
+  },
+  {
+    "poster": {
+      "poster_name": "jessebeginbound",
+      "poster_handle": "jessebeginbound"
+    },
+    "time_stamp": "2021-09-22 15:23:46",
+    "edited": {
+      "time_stamp": "2021-09-22 15:24:41"
+    },
+    "text": "<@UQWGKUEN7> Sure:\n    `{% dnd_area \"dnd_main_section\" , label='Main section' %}`\n\n        `{# Product - single #}`\n        `{% dnd_section %}`\n            `{% dnd_module path='../modules/Product - single' label='Product - single'`\n                `product_name=\"Sell Your Product on HubSpot\",`\n                `product_image=[`\n                    *`{ 'src': '../images/product-1.jpg', 'alt': 'image' },`*\n                    *`{ 'src': '../images/product-2.jpg', 'alt': 'image' },`*\n                    *`{ 'src': '../images/product-3.jpg', 'alt': 'image' },`*\n                    *`{ 'src': '../images/product-4.jpg', 'alt': 'image' },`*\n                    *`{ 'src': '../images/product-5.jpg', 'alt': 'image' },`*\n                    *`{ 'src': '../images/product-6.jpg', 'alt': 'image' }`*\n                `],`\n                `product_price = \"$25\",`\n                `form_title = \"PLEASE NOTE: An additional plugin or integration is required to take payments in a HubSpot Form.&lt;br&gt;&lt;br&gt;\"`\n                `form_field = { 'form_id' : '3331882c-6e59-4084-8ea4-9f18ebda1082' },`\n                `enable_content = true ,`\n                `content = '&lt;h5&gt;FREE EBOOK&lt;/h5&gt;&lt;h2&gt;Sample ebook name&lt;/h2&gt;&lt;p&gt;Lorem ipsum dolor sit amet.&lt;/p&gt;'`\n            `%} {% end_dnd_module %}`\n        `{% end_dnd_section %}`\n\n    `{% end_dnd_area %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "jessebeginbound",
+      "poster_handle": "jessebeginbound"
+    },
+    "time_stamp": "2021-09-22 15:25:32",
+    "text": "The way you source images inside dnd modules for default content does not seem to support get asset unless I missed something or it changed"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2021-09-22 15:30:21",
+    "text": "```{ \"src\": \"{{get_asset_url('../images/product-1.jpg\")}}\", 'alt': 'image' }```\nShould work"
+  },
+  {
+    "poster": {
+      "poster_name": "jessebeginbound",
+      "poster_handle": "jessebeginbound"
+    },
+    "time_stamp": "2021-09-22 15:32:12",
+    "text": "Ok I’ll give it a try. Thanks"
+  },
+  {
+    "poster": {
+      "poster_name": "jessebeginbound",
+      "poster_handle": "jessebeginbound"
+    },
+    "time_stamp": "2021-09-22 15:34:39",
+    "text": "Yep, that did it. I had to play with the quotations to avoid syntax errors, but this worked: `{{get_asset_url(\"../images/product-1.jpg\")}}`"
+  },
+  {
+    "poster": {
+      "poster_name": "jessebeginbound",
+      "poster_handle": "jessebeginbound"
+    },
+    "time_stamp": "2021-09-22 15:34:45",
+    "text": "Thanks <@UQWGKUEN7>!"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2021-09-22 15:35:39",
+    "text": "Ahh yea I had a misplaced a single quote in my example. Whoops!"
+  },
+  {
+    "poster": {
+      "poster_name": "jessebeginbound",
+      "poster_handle": "jessebeginbound"
+    },
+    "time_stamp": "2021-09-22 15:39:12",
+    "text": "No problem!"
+  }
+]

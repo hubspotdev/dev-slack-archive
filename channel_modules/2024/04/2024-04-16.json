@@ -1,0 +1,22 @@
+[
+  {
+    "text": "*here is a working example of the issue above:*\n1. Create a HubSpot form with any fields (set as raw html)\n2. Embed on page using the code below\n3. Submit the form and you will see that the input that we created using JS with name “question*__*what_is_your_favourite_colour_” gets returned in the email notification as “question*_*what_is_your_favourite_colour_” (notice the missing underscore after the word ‘question’)\n```&lt;script charset=\"utf-8\" type=\"text/javascript\" src=\"//js.hsforms.net/forms/embed/v2.js\"&gt;&lt;/script&gt;\n&lt;script&gt;\n hbspt.forms.create({\n region: \"eu1\",\n portalId: \"xxx\",\n formId: \"xxx\",\n onBeforeFormSubmit: function($form, data){\n const form = document.querySelector(\"form\");\n\n function createHiddenInput(name, value) {\n     const input = document.createElement(\"input\");\n     input.setAttribute(\"type\", \"hidden\");\n     input.setAttribute(\"name\", name);\n     input.setAttribute(\"value\", value);\n     return input;\n }\n \n form.appendChild(createHiddenInput(\"question__what_is_your_favourite_colour_[]\", \"red\"));\n \n }\n });\n&lt;/script&gt;```",
+    "time_stamp": "2024-04-16 04:47:31"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan Gifford",
+      "poster_handle": "ngifford949"
+    },
+    "time_stamp": "2024-04-16 16:29:36",
+    "text": "Hey, I have a module where I have updated some of the fields to now be grouped. I am updating the JSON to use aliases_mapping, which I've used before, but it's not working. Here's the code:\n\n`\"aliases_mapping\" : {`\n   `\"property_aliases_paths\" : {`\n      `\"item_title\" : [ \"item_title\" ]`\n   `}`\n`}`\n\nThe \"item_title\" field name hasn't changed... only the structure and hierarchy of the fields. Previously, \"item_title\" was in a group already like \"parent_group\", so in the HTML it was parent_group.item_title. Now it is part of a new child group so it is parent_group.child_group.item_title. Everything works for a new module instance, but pre-existing instances of the module are not displaying the data from fields that were moved to the new child group.\n\nWhat am I missing??"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan Gifford",
+      "poster_handle": "ngifford949"
+    },
+    "time_stamp": "2024-04-16 16:33:39",
+    "text": "You should keep all of that in the separate files except for elements pulling from something like a module style field. For example, if you have a style field \"module.styles.font_color.color\", you won't be able to use {{ module.styles.font_color.color }} in the CSS file. You have to load that in the HTML file using require_css and scope_css."
+  }
+]

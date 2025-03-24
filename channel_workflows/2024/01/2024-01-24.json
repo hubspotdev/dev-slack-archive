@@ -1,0 +1,285 @@
+[
+  {
+    "poster": {
+      "poster_name": "Peter Roed",
+      "poster_handle": "peter.roed"
+    },
+    "time_stamp": "2024-01-24 03:33:58",
+    "text": "Have anyone of you experienced that workflows suddenly stops enrollment?\n\nWe have a case in our sandbox account, where newly created custom objects gets enrolled in Workflow A.\nWhen the object(s) finish Workflow A, they go to Workflow B.\nWhen the object(s) finish Workflow B, they go to either Workflow C / Workflow D.\n\nHubSpot explicitly mentioned we have a daily 100k object enrollment limit, across all workflows.\nWe don't hit that limit with 20k new objects, yet we still face the issue, that the workflows just stops - and then at a random point of time (could be hours later), it continues.\n\nDo any of you, have any idea of what happens - and possibly, how to circumvent it? HubSpot haven't really provided any insight to this.\nIt's not related to API rate limits, as we're safeguarded in that case.",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-01-31 07:39:53"
+      },
+      {
+        "time_stamp": "2024-02-01 00:21:50"
+      },
+      {
+        "time_stamp": "2024-02-01 00:24:22"
+      },
+      {
+        "time_stamp": "2024-02-01 00:31:08"
+      },
+      {
+        "time_stamp": "2024-02-01 00:34:24"
+      },
+      {
+        "time_stamp": "2024-02-01 00:35:33"
+      },
+      {
+        "time_stamp": "2024-02-01 00:35:37"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Aqsa Qayyum",
+      "poster_handle": "aqsa"
+    },
+    "time_stamp": "2024-01-24 09:49:01",
+    "edited": {
+      "time_stamp": "2024-01-24 09:49:15"
+    },
+    "text": "Hi <@U01QVR44MEY>,\nHope you are doing good.\n\nI want to define a select input which fetch the data from my get api\n\n```{\n                    typeDefinition: {\n                        name: \"select Template\",\n                        label : \"Select Template\",\n                        type:\"enumeration\",\n                        fieldType: \"select\",\n                        optionsUrl: '<https://myurl/api/v1/templates>',\n                        dynamicOptions: true\n                    },\n                    supportedValueTypes:[\n                        \"STATIC_VALUE\"\n                    ],\n                    isRequired: true\n                }```\nNo I am curious how can I pass the *authToken* which is required for the authentication of my api and \"*pagination*\" in the optionsUrl?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-01-24 09:51:06",
+    "text": "The paging is sent in the body of the request"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-01-24 09:51:11",
+    "text": "<https://developers.HubSpot.com/docs/api/automation/custom-workflow-actions#using-external-data>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-01-24 09:51:54",
+    "text": "you can use the pre-fetch-options function to configure the request and put in the auth if you need it: <https://developers.HubSpot.com/docs/api/automation/custom-workflow-actions#pre-fetch-options>"
+  },
+  {
+    "poster": {
+      "poster_name": "Aqsa Qayyum",
+      "poster_handle": "aqsa"
+    },
+    "time_stamp": "2024-01-24 09:55:54",
+    "text": "<@U01QVR44MEY> pagination in the body of the request like folowing ??\n\n*optionsUrl : 'url',*\n*body : {*\n    *\"page\":0;*\n   *\"pageSize\":10;*\n*}*\n\n```{\n                    typeDefinition: {\n                        name: \"select Template\",\n                        label : \"Select Template\",\n                        type:\"enumeration\",\n                        fieldType: \"select\",\n                        optionsUrl: '<https://myurl/api/v1/templates>',\n                        body: {\n                         \"page\"=0;\n                         \"pageSize\"=10\n                             }\n                        dynamicOptions: true\n                    },\n                    supportedValueTypes:[\n                        \"STATIC_VALUE\"\n                    ],\n                    isRequired: true\n                }\n{\n                    typeDefinition: {\n                        name: \"select Template\",\n                        label : \"Select Template\",\n                        type:\"enumeration\",\n                        fieldType: \"select\",\n                        optionsUrl: '<https://myurl/api/v1/templates>',\n                        dynamicOptions: true\n                    },\n                    supportedValueTypes:[\n                        \"STATIC_VALUE\"\n                    ],\n                    isRequired: true\n                }```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-01-24 09:56:40",
+    "text": "It's sent like this to your endpoint:\n```{\n  \"origin\": {\n    // The customer's portal ID\n    \"portalId\": 1,\n\n    // Your custom action definition ID\n    \"actionDefinitionId\": 2,\n\n    // Your custom action definition version\n    \"actionDefinitionVersion\": 3\n  },\n\n   // The input field you are fetching options for \n  \"inputFieldName\": \"optionsInput\",\n\n  // Your configured external data field webhook URL\n  \"webhookUrl\": \"<https://myapi.com/HubSpot/widget-sizes>\",\n\n   // The values for the fields that have already been filled out by the workflow user\n  \"inputFields\": {\n    \"widgetName\": {\n      \"type\": \"OBJECT_PROPERTY\",\n      \"propertyName\": \"widget_name\"\n    },\n    \"widgetColor\": {\n      \"type\": \"STATIC_VALUE\",\n      \"value\": \"blue\"\n    },\n    \n    \"fetchOptions\": {\n      // The search query provided by the user. This should be used to filter the returned\n      // options. This will only be included if the previous option fetch returned\n      // `searchable: true` and the user has entered a search query.\n      \"q\": \"option label\",\n\n      // The pagination cursor. This will be the same pagination cursor that was returned by\n      // the previous option fetch; it can be used to keep track of which options have already\n      // been fetched.\n      \"after\": \"1234=\"\n    }\n  }\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Aqsa Qayyum",
+      "poster_handle": "aqsa"
+    },
+    "time_stamp": "2024-01-24 10:13:59",
+    "text": "<@U01QVR44MEY> means input code  it would be like\nfollowing ?\nname: \"select Template\",\nlabel : \"Select Template\",\n type:\"enumeration\",\n fieldType: \"select\",\n*optionsUrl : {*\n\"webhookUrl\": \"<https://myapi.com/fetchTemplates>\",\n  \"fetchOptions\": {\n                \"after\": \"page=\"\n              }\n*}*"
+  },
+  {
+    "poster": {
+      "poster_name": "Aqsa Qayyum",
+      "poster_handle": "aqsa"
+    },
+    "time_stamp": "2024-01-24 10:16:45",
+    "text": "<@U01QVR44MEY> can you please update my input code like how can I pass the accessToken and pagination in select input above ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-01-24 10:20:54",
+    "text": "The field it's self just needs to look this\n``` {\n      \"typeDefinition\": {\n        \"name\": \"widgetSize\",\n        \"type\": \"enumeration\",\n        \"fieldType\": \"select\",\n        \"optionsUrl\": \"<https://api.example.com/v1/widget-sizes>\"\n      },\n      \"supportedValueTypes\": [\"STATIC_VALUE\"]\n    },```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-01-24 10:21:09",
+    "text": "Paging will be sent to the optionsUrl in the body of the request"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-01-24 10:21:31",
+    "text": "if you want to also pass in authentication you can write a pre_fetch function to do this"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-01-24 10:22:00",
+    "text": "Example number 3 in the docs explains how to do all this"
+  },
+  {
+    "poster": {
+      "poster_name": "Aqsa Qayyum",
+      "poster_handle": "aqsa"
+    },
+    "time_stamp": "2024-01-24 10:23:59",
+    "text": "as you mentioned *\"Paging will be sent to the optionsUrl in the body of the request\".*\nas per this I am assuming to send paginaation like following\n``` \"optionsUrl\": \"<https://api.example.com/v1/widget-sizes?page=0&amp;pageSize=10>\"```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-01-24 10:27:59",
+    "edited": {
+      "time_stamp": "2024-01-24 10:28:09"
+    },
+    "text": "nope. paging will be automatically sent, you don't have to do anything"
+  },
+  {
+    "poster": {
+      "poster_name": "Aqsa Qayyum",
+      "poster_handle": "aqsa"
+    },
+    "time_stamp": "2024-01-24 10:49:23",
+    "text": "<@U01QVR44MEY> is it fine now\n```/////preFetch options\n\n<http://app.post|app.post>('/preFetchOptions', (req, res) =&gt; {\n    try {\n      const { origin, inputFieldName, inputFields } = req.body;\n  \n      // Customize this logic to retrieve the authentication token based on inputFields or other criteria\n    //   const customAuthToken = 'your_custom_authentication_token';\n  \n      // Prepare the response for pre-fetch options\n      const preFetchOptionsResponse = {\n        webhookUrl: '<https://stageapi.openletterconnect.com/api/v1/templates>',\n        body: JSON.stringify(inputFields),\n        httpHeaders: {\n          Authorization: `Bearer ${olcAuthToken}`,\n        },\n        contentType: 'application/json',\n        accept: 'application/json',\n        httpMethod: 'POST',\n      };\n  \n      res.json(preFetchOptionsResponse);\n    } catch (error) {\n      console.error('Error handling pre-fetch options:', error.message);\n      res.status(500).send('Error handling pre-fetch options');\n    }\n  });```\n//////fetchTemplates\n```  app.get('/fetchTemplates', async (req, res) =&gt; {\n    try {\n      const { after } = req.query; // Pagination cursor\n  \n      // Call your API to fetch templates with pagination\n      const response = await axios.get(`<https://stageapi.openletterconnect.com/api/v1/templates/?after=${after}>`, {\n        headers: {\n          Authorization: `Bearer ${authToken}`,\n        },\n      });\n  \n      res.json(response.data);\n    } catch (error) {\n      console.error('Error fetching templates:', error.message);\n      res.status(500).send('Error fetching templates');\n    }\n  })```\n```{\n                    \"typeDefinition\": {\n                      \"name\": \"optionsInput\",\n                      \"type\": \"enumeration\",\n                      \"fieldType\": \"select\",\n                        // \"optionsUrl\": \"<https://stageapi.openletterconnect.com/api/v1/templates>\"\n                        \"optionsUrl\": \"<http://localhost:4000/fetchTemplates>\"\n                    },\n                    \"supportedValueTypes\": [\"STATIC_VALUE\"],\n                    \"functions\": [\n                      {\n                        \"functionType\": \"PRE_FETCH_OPTIONS\",\n                        \"functionSource\": \"exports.main = (event, callback) =&gt; {\\n  callback({\\n    webhookUrl: '<http://localhost:4000/preFetchOptions>',\\n    httpMethod: 'POST',\\n    contentType: 'application/json',\\n    accept: 'application/json'\\n  });\\n}\"\n                      }\n                    ]\n                },```"
+  },
+  {
+    "poster": {
+      "poster_name": "Aqsa Qayyum",
+      "poster_handle": "aqsa"
+    },
+    "time_stamp": "2024-01-24 11:00:37",
+    "text": "Hi,\n\n*I have some user defined custom fields. Which I want to show them as dynamic inputs in the action.*\n\nI have coded like following :\n/////////\n```const fetchCustomFields = async () =&gt; {\nlet response = {};\ntry {\nresponse = await axios.get('<https://url/api/v1/custom-fields>', {\nheaders: {\n'Content-Type': 'application/json',\n'Authorization': `Bearer ${olcAuthToken}`\n},\n});\n} catch (error) {\nthrow error;\n}\nreturn response?.data?.data;\n}```\nMy  Action Code\n////////////////\n```<http://app.post|app.post>('/action', async (req, res) =&gt; {\nconst inputFields = [];\ntry {\nconst customFields = await fetchCustomFields();\ncustomFields?.forEach(field =&gt; {\ninputFields.push(\n{\ntypeDefinition: {\nname: field.key,\nlabel: field.value,\ntype: 'string',\nfieldType: 'text'\n \n},\n\"supportedValueTypes\": [\"STATIC_VALUE\"],\nisRequired: true\n});\n});\nconst requestData =\n{\n\"actionUrl\": \"<https://webhook.site/ad466c7-b126-4ce1-bc7d->\",\n\"published\":true,\n\"objectTypes\": [\n\"CONTACT\"\n],\n\"inputFields\": [\n\n...inputFields,\n\n\n],\n\"labels\": {\n\"en\": {\n\"inputFieldLabels\": {\n\"staticInput\": \"Static Input\",\n\"objectInput\": \"Object Property Input\",\n\"optionsInput\": \"External Options Input\"\n},\n\"actionName\": \"Send PostCard3\" + '_' + Math.floor(Math.random() * 0.3184),\n\"actionDescription\": \"My Extension Description\",\n\"appDisplayName\": \"My App Display Name\",\n\"actionCardContent\": \"My Action Card Content\"\n}\n},\n\"functions\": [\n{\n\"functionType\": \"POST_ACTION_EXECUTION\",\n\"functionSource\": \"exports.main = (event, callback) =&gt; {\\r\\n callback({\\r\\n outputFields: {\\r\\n myOutput: \\\"example output value\\\"\\r\\n }\\r\\n });\\r\\n}\"\n},\n{\n\"functionType\": \"POST_FETCH_OPTIONS\",\n\"functionSource\": \"exports.main = (event, callback) =&gt; {\\r\\n callback({\\r\\n \\\"options\\\": [{\\r\\n \\\"label\\\": \\\"Big Widget\\\",\\r\\n \\\"description\\\": \\\"Big Widget\\\",\\r\\n \\\"value\\\": \\\"10\\\"\\r\\n },\\r\\n {\\r\\n \\\"label\\\": \\\"Small Widget\\\",\\r\\n \\\"description\\\": \\\"Small Widget\\\",\\r\\n \\\"value\\\": \\\"1\\\"\\r\\n }\\r\\n ]\\r\\n });\\r\\n}\"\n}\n]```\n*Now the issue I am facing above code is not fetching the latest custom fields added by user after the action is published. How can I show the latest custom fields as inputs in the action, even after my action is published.*"
+  },
+  {
+    "poster": {
+      "poster_name": "Aqsa Qayyum",
+      "poster_handle": "aqsa"
+    },
+    "time_stamp": "2024-01-24 13:25:36",
+    "text": "hey <@U01QVR44MEY>,\n can you please check my above code and let me know if I am doing mistake anywhere ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Daniel Mariscal",
+      "poster_handle": "daniel666"
+    },
+    "time_stamp": "2024-01-24 17:18:26",
+    "text": "Hello, I would like to see if you can help me, I am working on a project where we have a master/detail page, with the information from two HUbDB Tables, one contains a list of all courses offered by a university and the other the details of each course. You can see the pages here:\n\nList: <https://aprendizajepermanente.udem.edu.mx/>\nDetail: <https://aprendizajepermanente.udem.edu.mx/detalle?u=diplomado-en-analisis-de-datos-e-inteligencia-de-negocios-dain&amp;row_id=153691433582>\n\nIn the example I only have 4 courses, but in total there are 220. Initially I tried to do it with dynamic pages, but it only allowed me up to 10 pages, according to the documentation, more than that suggest to use parameters and that is why there is the url of the detail of that manner.\n\nThe problem is that using parameters in the URL I cannot find a way to measure the conversions of each course, because in the options I have in the workflows the slug parameter is not detected, and it does not give me any other option for this purpose.\n\nIs there any way you suggest to track the conversions that I can apply or configure?",
+    "reply_count": 32,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-02-01 09:36:46"
+      },
+      {
+        "time_stamp": "2024-02-01 10:16:12"
+      },
+      {
+        "time_stamp": "2024-02-01 10:16:44"
+      },
+      {
+        "time_stamp": "2024-02-01 10:17:58"
+      },
+      {
+        "time_stamp": "2024-02-01 10:18:22"
+      },
+      {
+        "time_stamp": "2024-02-01 10:19:21"
+      },
+      {
+        "time_stamp": "2024-02-01 10:21:16"
+      },
+      {
+        "time_stamp": "2024-02-01 10:23:42"
+      },
+      {
+        "time_stamp": "2024-02-01 10:25:07"
+      },
+      {
+        "time_stamp": "2024-02-01 10:25:12"
+      },
+      {
+        "time_stamp": "2024-02-01 10:25:53"
+      },
+      {
+        "time_stamp": "2024-02-01 10:26:12"
+      },
+      {
+        "time_stamp": "2024-02-01 10:26:33"
+      },
+      {
+        "time_stamp": "2024-02-01 10:27:06"
+      },
+      {
+        "time_stamp": "2024-02-01 10:34:08"
+      },
+      {
+        "time_stamp": "2024-02-01 10:35:06"
+      },
+      {
+        "time_stamp": "2024-02-01 10:37:59"
+      },
+      {
+        "time_stamp": "2024-02-01 10:38:23"
+      },
+      {
+        "time_stamp": "2024-02-01 10:41:15"
+      },
+      {
+        "time_stamp": "2024-02-01 10:41:34"
+      },
+      {
+        "time_stamp": "2024-02-01 10:42:13"
+      },
+      {
+        "time_stamp": "2024-02-01 10:44:04"
+      },
+      {
+        "time_stamp": "2024-02-01 10:44:48"
+      },
+      {
+        "time_stamp": "2024-02-01 10:45:59"
+      },
+      {
+        "time_stamp": "2024-02-01 10:46:10"
+      },
+      {
+        "time_stamp": "2024-02-01 10:48:13"
+      },
+      {
+        "time_stamp": "2024-02-01 10:53:56"
+      },
+      {
+        "time_stamp": "2024-02-01 10:54:14"
+      },
+      {
+        "time_stamp": "2024-02-01 17:21:55"
+      },
+      {
+        "time_stamp": "2024-02-02 07:33:45"
+      },
+      {
+        "time_stamp": "2024-02-02 08:39:38"
+      },
+      {
+        "time_stamp": "2024-02-02 08:41:42"
+      }
+    ]
+  }
+]

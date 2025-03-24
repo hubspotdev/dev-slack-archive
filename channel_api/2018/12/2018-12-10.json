@@ -1,0 +1,119 @@
+[
+  null,
+  null,
+  {
+    "poster": {
+      "poster_name": "jdlayden",
+      "poster_handle": "jdlayden"
+    },
+    "time_stamp": "2018-12-10 08:03:34",
+    "text": "Hi all.  Im looking for some advice on using the HubDB API along with the Blog Posts API to batch create/publish 152 blog entries.  Currently my HubDB data is being used by a custom module."
+  },
+  {
+    "poster": {
+      "poster_name": "jdlayden",
+      "poster_handle": "jdlayden"
+    },
+    "time_stamp": "2018-12-10 08:03:39",
+    "text": "```def get_single_row(table_id):\n    \"\"\"Get table by row\n    GET /hubdb/api/v2/tables/:tableId/rows\n    \"\"\"\n    xurl = \"/hubdb/api/v2/tables/\" + str(table_id) + \"/rows?portalId=\" + str(PORTAL_ID)\n    url = HS_API_URL + xurl\n    response = urlopen(url).read()\n    table_data = json.loads(response)\n    i=0\n    print(table_data)\n    for key, value in table_data.items():\n        blog_author_id = value[i][\"values\"][\"2\"]\n        campaign = value[i][\"values\"][\"3\"]\n        campaign_name = value[i][\"values\"][\"4\"]\n        content_group_id = value[i][\"values\"][\"5\"]\n        featured_image = value[i][\"values\"][\"6\"]\n        post_body = value[i][\"values\"][\"10\"]\n        slug = value[i][\"values\"][\"14\"]\n        meta_description = value[i][\"values\"][\"18\"]\n        year = value[i][\"values\"][\"19\"]\n        quarter = value[i][\"values\"][\"20\"]\n        state_name = value[i][\"values\"][\"21\"]\n        market_name = value[i][\"values\"][\"22\"]\n        i+=1\n\n        POST = {\n          \"blog_author_id\": blog_author_id,\n          \"campaign\": campaign,\n          \"campaign_name\": campaign_name,\n          \"content_group_id\": content_group_id,\n          \"featured_image\": featured_image,\n          \"topic_ids\": [year, quarter, market_name, state_name],\n          \"meta_description\": meta_description,\n          \"name\": meta_description,\n          \"post_body\": post_body,\n          \"publish_date\": 1543520639,\n          \"publish_immediately\": False,\n          \"slug\": slug,\n          \"use_featured_image\": True\n        }\n        # print(POST)\n        xurl = \"/content/api/v2/blog-posts\"\n        url = HS_API_URL + xurl + APIKEY\n        headers = { \"content-type\" : \"application/json\" }\n        response = <http://requests.post|requests.post>(url, headers=headers, data=json.dumps(POST))\n        print(response.status_code, response.content, response)```"
+  },
+  {
+    "poster": {
+      "poster_name": "jdlayden",
+      "poster_handle": "jdlayden"
+    },
+    "time_stamp": "2018-12-10 08:04:36",
+    "text": "I am not able to loop through each row in the table and return the data.  Currently, I retrieve the first row and then receive a TypeError stating that i is not an iterable integer..."
+  },
+  {
+    "poster": {
+      "poster_name": "jdlayden",
+      "poster_handle": "jdlayden"
+    },
+    "time_stamp": "2018-12-10 08:05:04",
+    "text": "Any ideas?  I am open to new approaches."
+  },
+  {
+    "poster": {
+      "poster_name": "jdlayden",
+      "poster_handle": "jdlayden"
+    },
+    "time_stamp": "2018-12-10 08:26:28",
+    "text": "```Traceback (most recent call last):\n  File \"get_tables.py\", line 72, in &lt;module&gt;\n    get_single_row(MEOS1)\n  File \"get_tables.py\", line 35, in get_single_row\n    blog_author_id = value[i][\"values\"][\"2\"]\nTypeError: 'int' object is not subscriptable```"
+  },
+  {
+    "poster": {
+      "poster_name": "jdlayden",
+      "poster_handle": "jdlayden"
+    },
+    "time_stamp": "2018-12-10 08:33:41",
+    "text": "The error is above"
+  },
+  {
+    "poster": {
+      "poster_name": "jdlayden",
+      "poster_handle": "jdlayden"
+    },
+    "time_stamp": "2018-12-10 10:44:51",
+    "text": "I am trying to return all of the objects values for a blog post using the function below.  It is only returning a portion of the table data however.",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2018-12-10 10:47:32"
+      },
+      {
+        "time_stamp": "2018-12-10 10:47:50"
+      },
+      {
+        "time_stamp": "2018-12-10 11:13:56"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "jdlayden",
+      "poster_handle": "jdlayden"
+    },
+    "time_stamp": "2018-12-10 10:45:24",
+    "text": "```def get_table_rows(table_id):\n    \"\"\"Get table by row\n    GET /hubdb/api/v2/tables/:tableId/rows\n    \"\"\"\n    xurl = \"/hubdb/api/v2/tables/\" + str(table_id) + \"/rows?portalId=\" + str(PORTAL_ID)\n    url = HS_API_URL + xurl\n    response = urlopen(url).read()\n    table_data = json.loads(response)\n    # return(table_data)\n    print(table_data)```"
+  },
+  {
+    "poster": {
+      "poster_name": "jdlayden",
+      "poster_handle": "jdlayden"
+    },
+    "time_stamp": "2018-12-10 10:46:00",
+    "text": "Only 12 of 20 columns are returned"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-12-10 10:47:32",
+    "text": "You can DM me an example table and I can check"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-12-10 10:47:50",
+    "text": "Along with an API query"
+  },
+  {
+    "poster": {
+      "poster_name": "jdlayden",
+      "poster_handle": "jdlayden"
+    },
+    "time_stamp": "2018-12-10 11:13:56",
+    "text": "<https://integrate.HubSpot.com/t/hubdb-api-along-with-the-blog-posts-api-to-batch-create-publish-152-blog-entries/14695>"
+  },
+  null,
+  null,
+  null,
+  null,
+  null,
+  null
+]

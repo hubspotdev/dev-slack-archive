@@ -1,0 +1,133 @@
+[
+  {
+    "poster": {
+      "poster_name": "Patrick O'Neal",
+      "poster_handle": "poneal"
+    },
+    "time_stamp": "2017-06-29 08:03:10",
+    "text": "Has anyone figured out pagination for a hubdb listing? I’m struggling to implement one. I appreciate anything anyone’s discovered."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2017-06-29 09:04:21",
+    "text": "<@U2E6FUEEP> <https://www.square2marketing.com/resources> I created one, but I load up all of my hubdb items in json"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2017-06-29 09:04:27",
+    "text": "So it will be slightly different"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2017-06-29 09:07:33",
+    "text": "I used this plugin: <https://github.com/kapilkashyap/jquery-filter-json-plugin>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2017-06-29 09:08:09",
+    "text": "It allowed all the resources to come up very quickly and not have to load another page, and no need for ajax."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2017-06-29 09:12:30",
+    "text": "After putting all of my hubdb items like that, I was able to paginate them using some javascript that is a little messy. I'd like to clean it up a little bit"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2017-06-29 09:12:40",
+    "text": "but I can share it with you"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2017-06-29 10:20:19",
+    "text": "<https://www.lyntonweb.com/resources> Here's one I made"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2017-06-29 10:20:36",
+    "text": "Here's the part that's relevant to pagination\n```{# Get all resources without paging so we can figure out how many total there should be #}\n{% set all_resources = hubdb_table_rows(resource_table_id, filter) %}\n\n{# Get our paginated resources with our filters #}\n{% set per_page = 10000 if view_all else 9 %}\n{% set max_pages = (all_resources|count / per_page)|round(0, 'ceil') %}\n{% set limit = '&amp;limit=' ~ per_page %}\n{% set page_number = request.query_dict.page|int or 1 %}\n{% if page_number &gt; max_pages %}\n    {% set page_number = max_pages %}\n{% endif %}\n{% if page_number &gt; 1 %}\n    {% set limit = limit ~ '&amp;offset=' ~ ((page_number - 1) * per_page) %}\n{% endif %}\n{% set resources = hubdb_table_rows(resource_table_id, limit ~ filter) %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2017-06-29 10:22:24",
+    "text": "`filter` and `resources_table_id` are defined earlier and are basically what you'd expect"
+  },
+  {
+    "poster": {
+      "poster_name": "Patrick O'Neal",
+      "poster_handle": "poneal"
+    },
+    "time_stamp": "2017-06-29 10:23:30",
+    "text": "Thanks so much! Mine’s straight HubL for now, so I’m going to work with this one. You guys are both awesome."
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2017-06-29 10:24:50",
+    "text": "Basically it just take the total items in the db and divides that by how many you want per page to get the number of pages"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2017-06-29 10:25:53",
+    "text": "Then you get the page number and you can calculate the `offset` in your query based on that that"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2017-06-29 10:26:53",
+    "edited": {
+      "time_stamp": "2017-06-29 10:27:30"
+    },
+    "text": "```&lt;nav class=\"resources-listing__nav listing-nav\"&gt;\n    {% if page_number &gt; 1 %}\n        &lt;a href=\"{{ base_url }}&amp;page={{ page_number - 1 }}\" class=\"listing-nav__item listing-nav__item--prev\"&gt;Previous&lt;/a&gt;\n    {% endif %}\n    {% if view_all %}\n        &lt;a href=\"{{ base_url|replace('&amp;all=true', '') }}\" class=\"listing-nav__item listing-nav__item--all\"&gt;View Paginated&lt;/a&gt;\n    {% else %}\n        &lt;a href=\"{{ content.absolute_url }}?all=true\" class=\"listing-nav__item listing-nav__item--all\"&gt;View All&lt;/a&gt;\n    {% endif %}\n    {% if page_number &lt; max_pages %}\n        &lt;a href=\"{{ base_url }}&amp;page={{ page_number + 1 }}\" class=\"listing-nav__item listing-nav__item--next\"&gt;Next&lt;/a&gt;\n    {% endif %}\n&lt;/nav&gt;```\nThen the actual buttons are something like this"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2017-06-29 10:45:37",
+    "text": "Yeah, my scripting is a lot more messy than that."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2017-06-29 10:45:40",
+    "text": "Nice job"
+  }
+]

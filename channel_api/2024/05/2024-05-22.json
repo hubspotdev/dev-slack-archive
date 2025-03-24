@@ -1,0 +1,347 @@
+[
+  {
+    "poster": {
+      "poster_name": "Camille Markentive",
+      "poster_handle": "camille.saute"
+    },
+    "time_stamp": "2024-05-22 01:00:24",
+    "text": "The data in the column containing the association label"
+  },
+  {
+    "poster": {
+      "poster_name": "Omar Tanti",
+      "poster_handle": "omar.tanti"
+    },
+    "time_stamp": "2024-05-22 01:58:08",
+    "text": "<@U05R380MLMC> we had implemented an AWS Lambda function which integrates with Files API. Not sure if this helps but I am giving parts of it maybe you can figure out when comparing our with yours..if you have missing pieces let me now (cause I tried to remove some irrelevant parts and might have broken something but at least you get the gist of it) :\n\n```def render_image_upload_form(deal_id, error_msg = \"\"):\n    dealToken = generate_token(deal_id)\n    # Render image upload form\n    form_html = f\"\"\"\n        &lt;script&gt;\n        var UPLOAD_FILE_SIZE_LIMIT = {UPLOAD_FILE_SIZE_LIMIT};  // Define JavaScript variable with Python constant value\n        function checkFileSize(fileInput) {{\n            // Get the selected file\n            var file = fileInput.files[0];\n        \n            // Check if a file is selected\n            if (file) {{\n                // Check if the file size is less than 4MB (in bytes)\n                if (file.size &gt; UPLOAD_FILE_SIZE_LIMIT * 1024 * 1024) {{\n                    alert(\"File size exceeds the limit of \" + UPLOAD_FILE_SIZE_LIMIT + \"MB.\");\n                    fileInput.value = ''; // Clear the file input\n                }}\n            }}\n        }}\n        &lt;/script&gt;\n        &lt;style&gt;\n        body{{\n            max-width: 100%;\n            margin: 0;\n        }}\n        .input_container {{\n          border: 1px solid #e5e5e5;\n        }}\n        \n        input[type=file]::file-selector-button {{\n          background-color: #fff;\n          color: #000;\n          border: 0px;\n          border-right: 1px solid #e5e5e5;\n          padding: 10px 15px;\n          margin-right: 20px;\n          transition: .5s;\n        }}\n        \n        input[type=file]::file-selector-button:hover {{\n          background-color: #eee;\n          border: 0px;\n          border-right: 1px solid #e5e5e5;\n        }}\n        \n        .error_msg{{\n            color: #ed4337\n        }}\n        input[type=submit]{{\n            background: #58264a;\n            color: #fff;\n            font-family: Montserrat,Helvetica,Arial,sans-serif;\n            width: 100%;\n            border: none;\n            font-size: 14px;\n            font-weight: 500;\n            height: auto;\n            line-height: 16px;\n            min-height: 50px;\n            padding-left: 18px;\n            padding-right: 18px;\n            transition: all .15s ease-out;\n            margin-top: 10px;\n            border-radius: 3px;\n            cursor: pointer;\n        }}\n        &lt;/style&gt;\n        &lt;div class=\"error_msg\"&gt;{error_msg}&lt;/div&gt;\n        &lt;form action=\"/?deal_id={deal_id}&amp;token={dealToken}\" method=\"post\" enctype=\"multipart/form-data\"&gt;\n            &lt;div class=\"input_container\"&gt;\n                &lt;input type=\"file\" name=\"image\" accept=\"image/png, image/jpeg, image/webp\" onchange=\"checkFileSize(this)\" required &gt;\n            &lt;/div&gt;\n            &lt;input type=\"submit\" value=\"Upload\"&gt;\n        &lt;/form&gt;\n    \"\"\"\n\n    return {\n        'statusCode': 200,\n        'headers': {\n            'Content-Type': 'text/html',\n        },\n        'body': form_html\n    }\n\ndef upload_file_to_HubSpot(deal_id, decoded_image):\n    file_extension = get_file_extension_from_base64(decoded_image)\n    \n    if file_extension is None:\n        return render_image_upload_form(deal_id, 'Accepted formats are: PNG, JPG and WEBP')\n    \n    # Create a BytesIO object to hold the image data\n    image_data_stream = io.BytesIO(decoded_image)\n    \n    \n    url = \"<https://api.hubapi.com/files/v3/files>\"\n    payload = {\n        'fileName': f'company-stamp-{deal_id}.{file_extension}',\n        'options': '{\"access\":\"PRIVATE\"}',\n        'folderPath': '/QuotesCompanyStamps'\n    }\n    \n    files=[\n      ('file', (f'company-stamp-{deal_id}.{file_extension}', image_data_stream, 'image/png'))\n    ]\n    \n    headers = {\n      'Authorization': f'Bearer {HubSpot_API_KEY}',\n    }\n\n    \n    response = requests.request(\"POST\", url, headers=headers, data=payload, files=files)\n    \n    return response\n\ndef get_file_extension_from_base64(decoded_data):\n    \n    print(decoded_data)\n    \n    # Define magic numbers for common file types\n    magic_numbers = {\n        b'\\x89PNG': 'png',\n        b'\\xFF\\xD8\\xFF': 'jpg',\n        b'\\x52\\x49\\x46\\x46': 'webp',\n    }\n    \n    # Check if the decoded data starts with any of the known magic numbers\n    for magic, ext in magic_numbers.items():\n        if decoded_data.startswith(magic):\n            return ext\n    \n    # If no magic number matches, return None\n    return None\n        \ndef extract_image_data(decoded_data):\n    # Define the pattern to search for the image data\n    pattern = rb'Content-Type: image\\/(webp|png|jpe?g)\\r\\n\\r\\n(.*?)\\r\\n------'\n    \n    # Search for the pattern in the decoded data\n    match = re.search(pattern, decoded_data, re.DOTALL)\n    \n    if match:\n        # Extract and return the image data\n        image_data = match.group(2)\n        return image_data\n    else:\n        print(\"Image data not found in the decoded data.\")\n        return None\n        \ndef is_valid_image_size(image_data):\n    # Calculate the size of the image data in bytes\n    image_size_bytes = len(image_data)\n    # Convert to megabytes\n    image_size_mb = image_size_bytes / (1024 * 1024)\n    # Check if the image size is less than 4MB\n    return image_size_mb &lt; UPLOAD_FILE_SIZE_LIMIT\n\ndef lambda_handler(event, context):\n    \n\n    # HubSpot API endpoint and authentication details\n    HubSpot_deals_api_url = f'<https://api.hubapi.com/crm/v3/objects/deals/{deal_id}>'\n    files_api_url = '<https://api.hubapi.com/filemanager/api/v3/files/upload>'\n    headers = {\n        'Authorization': f'Bearer {HubSpot_API_KEY}',\n        'Content-Type': 'application/json'\n    }\n    if http_method == 'POST' and event.get('isBase64Encoded') == True:\n        print(event)\n        # Handle file upload\n        body_encoded = event['body']\n        image_file = extract_image_data(b64decode(body_encoded))\n        if image_file is None:\n            print('Rendering Image Upload Forn')\n            return render_image_upload_form(deal_id, 'Accepted formats are: PNG, JPG and WEBP')\n            \n        if not is_valid_image_size(image_file):\n            return render_image_upload_form(deal_id, f'Stamp must be less than {UPLOAD_FILE_SIZE_LIMIT}MB')\n            \n        file_upload_response = upload_file_to_HubSpot(deal_id, image_file)\n        if file_upload_response.status_code // 100 == 2:  # Any 2xx status code\n            file_upload_response = file_upload_response.json()\n            file_id = file_upload_response.get('id')\n            # Update Deal with New File ID:\n            new_deal_data = json.dumps({\n              \"properties\": {\n                \"quote_company_stamp_url\": f\"{file_id}\"\n              }\n            })\n            deal_update_response = requests.patch(HubSpot_deals_api_url, headers=headers, data=new_deal_data)\n            return render_image_upload_form(deal_id)\n                \n    #As a fallback we always show the upload image form \n    return render_image_upload_form(deal_id)```\n"
+  },
+  {
+    "text": "Hi all!\n\nI'm looking to find Tickets based on their associated emails' body content. I've been trying to search for emails through this endpoint `/crm/v3/objects/emails/search`, however, it doesn't seem to support querying on the email body, only the subject.\n\nDoes anyone know how to search for emails by their body content? Any other endpoints or property names to look into?",
+    "time_stamp": "2024-05-22 02:39:08"
+  },
+  {
+    "poster": {
+      "poster_name": "Pete Nicholls (HubDo)",
+      "poster_handle": "pete970"
+    },
+    "time_stamp": "2024-05-22 03:02:46",
+    "text": "FYI: since Thursday last week there has been an issue with the *Currency API*.\nRates can no longer be updated using the <https://developers.HubSpot.com/beta-docs/guides/api/settings/currencies#add-account-currencies-and-set-exchange-rates|/create endpoint> combined with a timestamp. The API now returns an error\ncategory”: “OBJECT_ALREADY_EXISTS”,\n    “subCategory”: “CurrencyError.CREATE_EXCHANGE_RATE_DUPLICATE_KEY”\nThe /update endpoint still works, but this overwrites the existing rate so does not retain exchange rate history. I have a ticket open on this issue it you need to refer to it. #15305269\nIt affects our DoCurrencies free app so I am updating status here <https://help.hubdo.com/docurrencies/status>"
+  },
+  {
+    "poster": {
+      "poster_name": "Val Kotlarov",
+      "poster_handle": "val.kotlarov"
+    },
+    "time_stamp": "2024-05-22 05:32:09",
+    "text": "Hi developers!\n\nIn my private app that sends data to my server, how to verify that the request is authentic from HS to prevent unauthorized access?\nI found the following way using `X-HubSpot-Signature` but (`HubSpot_signature` `!=`  `computed_signature` )\n```HubSpot_signature = request.headers['X-HubSpot-Signature']\ncomputed_signature = OpenSSL::HMAC.hexdigest('sha256', HubSpot_SECRET, request.raw_post)```\nDo you know why?",
+    "reply_count": 22,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-05-22 06:19:58"
+      },
+      {
+        "time_stamp": "2024-05-22 06:55:38"
+      },
+      {
+        "time_stamp": "2024-05-23 01:04:19"
+      },
+      {
+        "time_stamp": "2024-05-23 01:32:18"
+      },
+      {
+        "time_stamp": "2024-05-23 01:32:44"
+      },
+      {
+        "time_stamp": "2024-05-23 02:09:15"
+      },
+      {
+        "time_stamp": "2024-05-23 04:33:32"
+      },
+      {
+        "time_stamp": "2024-05-23 07:15:02"
+      },
+      {
+        "time_stamp": "2024-05-27 04:52:55"
+      },
+      {
+        "time_stamp": "2024-05-27 05:38:48"
+      },
+      {
+        "time_stamp": "2024-05-27 05:41:49"
+      },
+      {
+        "time_stamp": "2024-05-27 05:44:08"
+      },
+      {
+        "time_stamp": "2024-05-27 05:53:41"
+      },
+      {
+        "time_stamp": "2024-05-27 05:57:01"
+      },
+      {
+        "time_stamp": "2024-05-27 06:16:05"
+      },
+      {
+        "time_stamp": "2024-05-27 07:56:55"
+      },
+      {
+        "time_stamp": "2024-05-27 07:57:48"
+      },
+      {
+        "time_stamp": "2024-05-27 08:11:33"
+      },
+      {
+        "time_stamp": "2024-05-27 08:16:05"
+      },
+      {
+        "time_stamp": "2024-05-27 08:57:20"
+      },
+      {
+        "time_stamp": "2024-06-04 09:01:43"
+      },
+      {
+        "time_stamp": "2024-06-04 14:41:29"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Omar Tanti",
+      "poster_handle": "omar.tanti"
+    },
+    "time_stamp": "2024-05-22 06:19:58",
+    "edited": {
+      "time_stamp": "2024-05-22 06:20:06"
+    },
+    "text": "what language are you using on your server to verify token <@U06SDFMD947>?"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "lchausse"
+    },
+    "time_stamp": "2024-05-22 06:24:37",
+    "text": "this is really good news"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "lchausse"
+    },
+    "time_stamp": "2024-05-22 06:25:45",
+    "text": "I have a huge workflow audit to do (about 900 workflows) and would love to leverage the api instead of doing it manually"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "lchausse"
+    },
+    "time_stamp": "2024-05-22 06:26:29",
+    "text": "v3 will cover all objects, right?"
+  },
+  {
+    "poster": {
+      "poster_name": "Casper Kraken (HubDo)",
+      "poster_handle": "casper928"
+    },
+    "time_stamp": "2024-05-22 06:55:38",
+    "text": "Also the way to compute the signature differs depending which X-HubSpot-Signature-Version is being sent."
+  },
+  {
+    "text": "A custom property within a custom object titled “website” will be clickable as long as it is single line or rich text, but this feature isn’t available for properties with any other name from what I can tell. The image shows an example of a website property and a cloned property that have differing clickabilities. Does anyone know a way to edit a property in the API to make it clickable?",
+    "time_stamp": "2024-05-22 08:22:01"
+  },
+  {
+    "poster": {
+      "poster_name": "Christopher Barnwell",
+      "poster_handle": "christopher.barnwell"
+    },
+    "time_stamp": "2024-05-22 08:56:33",
+    "text": "Getting this error despite clearing my cache, verifying my test account permissions, modifying my code to include the `business-intelligence` scope and changing my application scope to require the `business-intelligence` scope for this API. <https://developers.HubSpot.com/docs/api/events/event-analytics>\n```{\"message\":\"Your app doesn't the have scopes needed to make this call. Do you have access to the 'business-intelligence' scope?  Missing auth details: event-detail-read,web-analytics-api-access\"}```\n",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-22 14:05:20"
+      },
+      {
+        "time_stamp": "2024-05-22 14:08:42"
+      },
+      {
+        "time_stamp": "2024-05-22 14:11:12"
+      },
+      {
+        "time_stamp": "2024-05-22 14:11:36"
+      },
+      {
+        "time_stamp": "2024-05-22 14:39:02"
+      },
+      {
+        "time_stamp": "2024-05-22 14:39:23"
+      },
+      {
+        "time_stamp": "2024-05-30 09:35:34"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Gaertner",
+      "poster_handle": "lukas.gaertner"
+    },
+    "time_stamp": "2024-05-22 08:56:42",
+    "edited": {
+      "time_stamp": "2024-05-22 08:57:14"
+    },
+    "text": "Hello,\nin the set-up of our HubSpot account something was set wrong, now I should archive or delete part of our data (12 Mio deals and 1 Mio contacts).\nWhat is the most efficient way to do this?"
+  },
+  {
+    "text": "Has anyone noticed today that the developer API docs page is not showing links to all objects all of a sudden?  No Line Items, Products, etc.  The new Beta docs is showing all the links so we can still get there but still....  <@U03PJER6S8P>",
+    "time_stamp": "2024-05-22 09:01:39",
+    "edited": {
+      "time_stamp": "2024-05-22 09:04:07"
+    },
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-05-23 12:06:55"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Niederberger",
+      "poster_handle": "thomas.niederberger"
+    },
+    "time_stamp": "2024-05-22 10:05:12",
+    "text": "Did you ever figure it out?"
+  },
+  {
+    "text": "I am trying to figure out what API to use to insert and update messages into conversations from a 3rd party source.\nThe 3rd party has messaging capability but we need to sync those messages into HubSpot.\n\nI see a \"Send a message to a thread\" endpoing, but i didn't see a way to create the initial thread\n<@U04B32JHTUZ> any insights?",
+    "time_stamp": "2024-05-22 10:47:03",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-22 10:55:48"
+      },
+      {
+        "time_stamp": "2024-05-24 12:22:10"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Hirsh",
+      "poster_handle": "ehirsh"
+    },
+    "time_stamp": "2024-05-22 10:55:48",
+    "edited": {
+      "time_stamp": "2024-05-22 10:57:20"
+    },
+    "text": "Great timing. The reason we haven't added a 'create thread' endpoint to the Conversations API is that we've been building an entirely separate solution, the Custom Channels API, for integrating real-time text-based two-way messaging with HubSpot's Inbox and Help Desk workspaces. This is only recently in a very limited private beta which is why you haven't read much about it yet."
+  },
+  {
+    "poster": {
+      "poster_name": "Marcio Oliveira",
+      "poster_handle": "marcio.oliveira"
+    },
+    "time_stamp": "2024-05-22 11:03:43",
+    "text": "someone could help me with this issue please."
+  },
+  {
+    "poster": {
+      "poster_name": "Lior Mechlovich",
+      "poster_handle": "lior"
+    },
+    "time_stamp": "2024-05-22 11:21:53",
+    "text": "hi! anyone knows if theres a webhook i can subscribe to, where i can get an event each time a form is submitted?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-22 11:36:01"
+      },
+      {
+        "time_stamp": "2024-05-22 16:05:19"
+      },
+      {
+        "time_stamp": "2024-05-22 16:06:29"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Popelka",
+      "poster_handle": "eric.popelka"
+    },
+    "time_stamp": "2024-05-22 11:36:01",
+    "text": "I don't think there's a webhook for that, but forms support custom JS code so you could do an ajax call in the form script to post to somewhere"
+  },
+  {
+    "poster": {
+      "poster_name": "Austin Pilz",
+      "poster_handle": "apilz"
+    },
+    "time_stamp": "2024-05-22 14:05:20",
+    "text": "That's definitely the right scope to use. As long as you're including the scope in your oauth token request (<https://developers.HubSpot.com/docs/api/working-with-oauth|docs>), it should be included. If the portal didn't have access to the scope, the oauth token request would fail.\n\n&gt;  Additionally, users will get an error if they try to install your app on an account that doesn't have access to an included scope."
+  },
+  {
+    "text": "yeah, the scope is in my oauth request.\nfrom your understanding, would it matter if i was using a free account?\nI see here, albeit not very clearly, that a free account may not have access to this API. I think it's possible the latter OAuth claims may hint at that.",
+    "time_stamp": "2024-05-22 14:08:42"
+  },
+  {
+    "text": "I _think_ those parenthesis apply to the \"CRM records of any type\" - which is confusing how it's worded. On the Oauth page, under scopes, business-intelligence should be available to any account",
+    "time_stamp": "2024-05-22 14:11:12"
+  },
+  {
+    "poster": {
+      "poster_name": "Austin Pilz",
+      "poster_handle": "apilz"
+    },
+    "time_stamp": "2024-05-22 14:11:36",
+    "text": "I would expect your API call to obtain/refresh your oauth token to fail if you your account did not have access to the scope"
+  },
+  {
+    "poster": {
+      "poster_name": "Christopher Barnwell",
+      "poster_handle": "christopher.barnwell"
+    },
+    "time_stamp": "2024-05-22 14:39:02",
+    "text": "```{\"token\":\"&lt;my-token&gt;\",\"user\":\"&lt;my-email&gt;\",\"hub_domain\":\"App test account 1-dev-&lt;my_hub_id&gt;.com\",\"scopes\":[\"crm.objects.contacts.write\",\"crm.schemas.contacts.write\",\"content\",\"business-intelligence\",\"oauth\",\"crm.lists.write\",\"crm.lists.read\",\"crm.schemas.contacts.read\",\"crm.objects.contacts.read\"],\"hub_id\":&lt;my_hub_id&gt;,\"client_id\":\"&lt;my_client_id&gt;\",\"user_id\":&lt;my_user_id&gt;,\"token_type\":\"refresh\"}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Christopher Barnwell",
+      "poster_handle": "christopher.barnwell"
+    },
+    "time_stamp": "2024-05-22 14:39:23",
+    "text": "my refresh token has the correct scopes interestingly enough when i inspect"
+  },
+  {
+    "poster": {
+      "poster_name": "Lior Mechlovich",
+      "poster_handle": "lior"
+    },
+    "time_stamp": "2024-05-22 16:05:19",
+    "text": "thanks <@UP7PDCSNL>! i see zapier has this realtime event “*New Form Submission” in HubSpot* so i am guessing there should be a way to do this in HubSpot through a webhook of sort"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Popelka",
+      "poster_handle": "eric.popelka"
+    },
+    "time_stamp": "2024-05-22 16:06:29",
+    "text": "Interesting. Another thing you could do is have a HubSpot workflow run when forms are submitted and tell the workflow to call a webhook"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-05-22 16:15:49",
+    "text": "Thank you for taking the time <@U06KP87QUJW>\n\nHere was our missing piece....\n\n```const dataURItoBlob = (dataURI) =&gt; {\n  // convert base64 to raw binary data held in a string\n  // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this\n  var byteString = atob(dataURI.split(\",\")[1]);\n\n  // write the bytes of the string to an ArrayBuffer\n  var ab = new ArrayBuffer(byteString.length);\n  var ia = new Uint8Array(ab);\n  for (var i = 0; i &lt; byteString.length; i++) {\n    ia[i] = byteString.charCodeAt(i);\n  }\n\n  // write the ArrayBuffer to a blob, and you're done\n  var bb = new Blob([ab]);\n  return bb;\n};```"
+  }
+]

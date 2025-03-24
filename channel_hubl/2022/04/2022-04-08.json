@@ -1,0 +1,125 @@
+[
+  {
+    "poster": {
+      "poster_name": "Martin Carlin",
+      "poster_handle": "martin264"
+    },
+    "time_stamp": "2022-04-08 04:42:47",
+    "edited": {
+      "time_stamp": "2022-04-08 04:44:50"
+    },
+    "text": "hello, is it possible to combine `img_src` with `get_asset_url`?\n\ne.g. I had\n\n```&lt;img src=\"{{ get_asset_url('../images/my-image.png') }}\"&gt;```\nTo make it editable I have changed the template to use\n\n```&lt;img src=\"{% image_src 'header_image' src='<https://www.my-domain.co.uk/hubfs/raw_assets/public/theme-name/src/images/my-image.png>', no_wrapper=True %}\"&gt;```\nbut it feels a bit messy having to open the image in a new tab to grab the existing url and paste it in to the template, just wondering if both tags can be used together?",
+    "reply_count": 5,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2022-04-08 08:07:15"
+      },
+      {
+        "time_stamp": "2022-04-08 08:10:53"
+      },
+      {
+        "time_stamp": "2022-04-08 08:13:12"
+      },
+      {
+        "time_stamp": "2022-04-08 08:15:58"
+      },
+      {
+        "time_stamp": "2022-04-08 08:47:33"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2022-04-08 07:14:03",
+    "text": "`multiselect_col_name__contains=1,3,5`"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2022-04-08 07:14:36",
+    "text": "<https://legacydocs.HubSpot.com/docs/methods/hubdb/v2/get_table_rows#filters>"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2022-04-08 07:17:25",
+    "text": "<https://developers.HubSpot.com/docs/api/cms/hubdb#filter-returned-rows|oh here’s the content in the newer docs>"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2022-04-08 08:07:15",
+    "text": "<@U02U3GHA0CW> is this in a module or an HTML template?"
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Carlin",
+      "poster_handle": "martin264"
+    },
+    "time_stamp": "2022-04-08 08:10:53",
+    "text": "Hi Mark, it's in an html template"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2022-04-08 08:13:12",
+    "edited": {
+      "time_stamp": "2022-04-08 08:13:53"
+    },
+    "text": "The only time I’ve used the `image_src` tag has been in conjunction with the `export_to_template_context=True` attribute, but that was years ago and I believe would only be editable via content sidebar menu rather than in the page. Is there a reason you’re avoiding the `image` tag?\n\nAlso, for your question of setting a default within the function, I believe you could do this via something like:\n\n```&lt;img src=\"{% image_src 'header_image' src={{ get_asset_url('../images/my-image.png') }}, no_wrapper=True %}\"&gt;\n\n// OR\n\n&lt;img src=\"{% image_src 'header_image' src=get_asset_url('../images/my-image.png'), no_wrapper=True %}\"&gt;\n\n// OR\n\n{% set example_image_source = get_asset_url('../images/my-image.png') %}\n&lt;img src=\"{% image_src 'header_image' src=example_image_source, no_wrapper=True %}\"&gt;```\nBut for me, I would just use <https://developers.HubSpot.com/docs/cms/hubl/tags#image|image>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2022-04-08 08:15:58",
+    "text": "``` {% module_block image_src 'image_src' %}\n    {% module_attribute 'src' %}\n    {{ get_asset_url('../images/my-image.png') }}\n    {% end_module_attribute %}\n    {% end_module_block %}```\nModule blocks can be helpful if you want to use complex values for your module attributes <https://developers.HubSpot.com/en/docs/cms/building-blocks/modules/using-modules-in-templates#block-syntax>\nIn this specific case though, Mark has great suggestions"
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Carlin",
+      "poster_handle": "martin264"
+    },
+    "time_stamp": "2022-04-08 08:47:33",
+    "text": "Thanks both, will have a look at these!"
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Cunningham",
+      "poster_handle": "jack270"
+    },
+    "time_stamp": "2022-04-08 09:00:10",
+    "edited": {
+      "time_stamp": "2022-04-08 09:06:32"
+    },
+    "text": "Hi newb question, how do I add a hubl+html  (global partial) to a template?\nI was hoping to 'Add' it to the template in the visual template editor along with all the other modules but it doesn't show up in the list on the right.",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-04-08 09:32:48"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2022-04-08 09:32:48",
+    "text": "Hey Jack, it needs to be added to the template itself. You can view the template from the page editor by going to settings &gt; advanced &gt; template and clicking “edit template.”\n\nDepending on the template type, you may need developer support to actually install the global area. This article is a good starting point: <https://knowledge.HubSpot.com/design-manager/use-global-content-across-multiple-templates>"
+  }
+]

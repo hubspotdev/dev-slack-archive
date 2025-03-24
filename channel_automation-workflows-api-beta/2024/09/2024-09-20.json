@@ -1,0 +1,107 @@
+[
+  {
+    "poster": {
+      "poster_name": "Leandro Michelena",
+      "poster_handle": "leandro.michelena"
+    },
+    "time_stamp": "2024-09-20 14:39:28",
+    "text": "Hi everyone! I'm having a weird issue trying to create a workflow through the API. I tested the _exact same_ POST request that worked yesterday (changing just the name of the workflow) and this time it failed. My authorization key is working, because I'm able to fetch existing workflows.\n\nThis is the response from <https://api.hubapi.com/automation/v4/flows> (POST):\n```{\n    \"status\": \"error\",\n    \"message\": \"Invalid request to flow creation\",\n    \"correlationId\": \"5bfdce20-ae9e-4155-b318-4122506c5bb2\",\n    \"category\": \"BAD_REQUEST\",\n    \"subCategory\": \"FlowApiStandardFriendlyError.FLOW_CREATION_BAD_REQUEST\"\n}```\nI really appreciate any help or direction :smile:",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-09-20 14:43:06"
+      },
+      {
+        "time_stamp": "2024-09-20 14:45:44"
+      },
+      {
+        "time_stamp": "2024-09-20 14:47:04"
+      },
+      {
+        "time_stamp": "2024-09-20 14:50:06"
+      },
+      {
+        "time_stamp": "2024-09-20 15:37:48"
+      },
+      {
+        "time_stamp": "2024-09-20 15:42:04"
+      },
+      {
+        "time_stamp": "2024-09-20 15:44:04"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan Johnson",
+      "poster_handle": "njohnson"
+    },
+    "time_stamp": "2024-09-20 14:43:06",
+    "text": "Well that doesn't look tremendously helpful. Let me see what I can find."
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan Johnson",
+      "poster_handle": "njohnson"
+    },
+    "time_stamp": "2024-09-20 14:45:44",
+    "text": "It looks like maybe you changed something elsewhere in your portal - I'm seeing \"248974987 is not a valid pipeline stage ID\" in the logs."
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan Johnson",
+      "poster_handle": "njohnson"
+    },
+    "time_stamp": "2024-09-20 14:47:04",
+    "text": "It looks like it's part of actionId 4 that you're trying to create."
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan Johnson",
+      "poster_handle": "njohnson"
+    },
+    "time_stamp": "2024-09-20 14:50:06",
+    "text": "If that doesn't help you, please ping me here again and I'll look deeper into what's going on."
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan Johnson",
+      "poster_handle": "njohnson"
+    },
+    "time_stamp": "2024-09-20 15:01:33",
+    "text": "We know that it is a pain point that the legacy Workflows API only supports manual enrollment for contact-based workflows and there is no equivalent for other object types.\nYes, this is definitely on our radar for the new API, but I'm not sure what the current priority of it is related to other endpoints. I can ask. I do know it's not the top of the list."
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan Johnson",
+      "poster_handle": "njohnson"
+    },
+    "time_stamp": "2024-09-20 15:03:15",
+    "text": "<@U05E77XEY4V> do you have a rough idea as to where an enrollment endpoint might fall in the priority list?"
+  },
+  {
+    "poster": {
+      "poster_name": "Leandro Michelena",
+      "poster_handle": "leandro.michelena"
+    },
+    "time_stamp": "2024-09-20 15:37:48",
+    "text": "Yes, thank you! That is what I was missing.\nAlso, on the other API call we were making, the property type was wrong on the other call.\n\nI figured I should use:\n```                        \"targetProperty\": \"my_date_property\",\n                        \"value\": {\n                            \"type\": \"FIELD_DATA\",\n                            \"actionId\": \"2\",\n                            \"dataKey\": \"due_date\"\n                        }```"
+  },
+  {
+    "poster": {
+      "poster_name": "Leandro Michelena",
+      "poster_handle": "leandro.michelena"
+    },
+    "time_stamp": "2024-09-20 15:42:04",
+    "text": "Thanks a lot, <@U07BL97U14M>. Have a great weekend :yay:"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan Johnson",
+      "poster_handle": "njohnson"
+    },
+    "time_stamp": "2024-09-20 15:44:04",
+    "text": "Glad I could help. Have a nice weekend yourself!"
+  }
+]

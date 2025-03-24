@@ -1,0 +1,141 @@
+[
+  {
+    "poster": {
+      "poster_name": "jai",
+      "poster_handle": "jai"
+    },
+    "time_stamp": "2019-12-03 05:14:46",
+    "text": "i want to add image in hubdb in image column, from fetch image url this api - <https://developers.HubSpot.com/docs/methods/form-integrations/v1/uploaded-files/signed-url-redirect> but not display image in hubdb,  display correct in page view."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-12-03 07:56:36",
+    "text": "I will look into this it may take me a bit to debug and fix as I didn’t write this. Do you have any specific questions I can answer in the mean time?"
+  },
+  {
+    "poster": {
+      "poster_name": "RJ Hallin",
+      "poster_handle": "rjhallin"
+    },
+    "time_stamp": "2019-12-03 09:26:29",
+    "text": "I'm attempting to create a real estate listing with multiple filters using hubdb. I followed the example from the designer docs, but I can only seem to get it to work for a single filter. Does anyone have any tips on adding additional filters for Sq Footage, Price, Number of Bathrooms, etc? Thanks!\n<https://designers.HubSpot.com/docs/tutorials/how-to-build-a-real-estate-listing-with-hubdb>"
+  },
+  {
+    "poster": {
+      "poster_name": "Merel Kennedy",
+      "poster_handle": "merelkennedy"
+    },
+    "time_stamp": "2019-12-03 11:16:17",
+    "edited": {
+      "time_stamp": "2019-12-03 11:22:33"
+    },
+    "text": "I have built one that has two filters instead of the search, and it worked a week ago, but right now I can't even get the example page filter to work. Thinking it's a HubSpot issue...\nNote: you need to change the column type in your database to Select for the listing bedrooms.\n```<!-- set the filter by drop down, search bar, and submit button -->\n\n<div>\n<form id=\"form_id\" method=\"get\">\n   \n    <div>\n        <h4>FILTER BY LISTING TYPE: </h4>\n        <select name=\"type\" form=\"form_id\" onChange=\"this.form.submit()\">\n            <option value=\"show-all\">Show All</option>\n            {% set types = hubdb_table_column({Insert YOUR Table ID}, \"type\").options %}\n            {% for choice in types %}\n                {% set type_list = type_list~choice.id|list%}\n                {% if choice.id == request.query_dict.type%}\n                    <option selected=\"selected\" value=\"{{ choice.id }}\">{{ choice.name }}</option>\n                {% else %}\n                    <option value=\"{{ choice.id }}\">{{ choice.name }}</option>\n                {% endif %}\n            {% endfor %}\n        </select>\n    </div>\n  \n  \n      <div>\n        <h4>FILTER BY NUMBER OF BEDROOMS: </h4>\n        <select name=\"listing_bedrooms\" form=\"form_id\" onChange=\"this.form.submit()\">\n            <option value=\"show-all\">Show All</option>\n            {% set bedrooms = hubdb_table_column({Insert YOUR Table ID}, \"listing_bedrooms\").options %}\n            {% for choice in bedrooms %}\n                {% set bedrooms_list = bedrooms_list~choice.id|list%}\n                {% if choice.id == request.query_dict.listing_bedrooms%}\n                    <option selected=\"selected\" value=\"{{ choice.id }}\">{{ choice.name }}</option>\n                {% else %}\n                    <option value=\"{{ choice.id }}\">{{ choice.name }}</option>\n                {% endif %}\n            {% endfor %}\n        </select>\n    </div>\n  \n    \n</form>\n</div>\n\n{% set queryparam = \"\" %}\n{% if request.query_dict.type in [\"1\", \"2\", \"3\", \"4\"] and request.query_dict.listing_bedrooms == \"show-all\" %}\n    {% set queryparam = queryparam ~ \"&type=\"~request.query_dict.type|urlencode %}\n{% endif %}\n{% if request.query_dict.type in [\"1\", \"2\", \"3\", \"4\"] and request.query_dict.listing_bedrooms != \"show-all\" %}\n    {% set queryparam = queryparam~\"&type=\"~request.query_dict.type|urlencode~\"&listing_bedrooms=\"~request.query_dict.listing_bedrooms|urlencode %}\n{% endif %}\n{% if request.query_dict.type == \"show-all\" and request.query_dict.listing_bedrooms != \"show-all\" %}\n    {% set queryparam = queryparam ~ \"&listing_bedrooms=\"~request.query_dict.listing_bedrooms|urlencode %}\n{% endif %}\n\n\n\n\n{% set table = hubdb_table_rows({Insert YOUR Table ID}, queryparam) %}\n\n{% if table == [] %}\n    <p class='align-center'>Sorry, no listings found for that Search. Try changing your filter and search again.</p>\n{% else %}\n  {% for row in table %}\n<div>\n    <div class=\"{{ row[\"type\"].name }}\">\n        <div><img src=\"{{ row[\"listing_image\"].url}}\"></div>\n            <div>\n              <h2>{{ row[\"listing_price\"] }}</h2>\n              <h3>{{ row[\"listing_address\"] }}</h3>\n              <h4>{{ row[\"type\"].name }}</h4>\n              <div>\n                  <ul>\n                      <li><span>{{ row[\"listing_bedrooms\"].name }}</span><br>bd</li>\n                      <li><span>{{ row[\"listing_baths\"] }}</span><br>ba</li>\n                      <li><span>{{ row[\"listing_sq_ft\"] }}</span><br>sq ft</li>\n                      <li><span>{{ row[\"listing_acres\"] }}</span><br>acres</li>\n                  </ul>\n              </div>\n              <div class=\"button\"><a href=\"{{ row[\"listing_url\"] }}\">Details</a></div>\n            </div>\n    </div>            \n</div>\n  {% endfor %}\n  {% endif %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-12-03 11:18:55",
+    "text": "<@U7DFBQQUS> can you include your code?",
+    "reply_count": 11,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2019-12-03 12:54:22"
+      },
+      {
+        "time_stamp": "2019-12-03 14:57:34"
+      },
+      {
+        "time_stamp": "2019-12-03 15:08:23"
+      },
+      {
+        "time_stamp": "2019-12-03 15:10:37"
+      },
+      {
+        "time_stamp": "2019-12-03 15:10:40"
+      },
+      {
+        "time_stamp": "2019-12-03 15:11:01"
+      },
+      {
+        "time_stamp": "2019-12-06 12:52:39"
+      },
+      {
+        "time_stamp": "2019-12-06 13:05:03"
+      },
+      {
+        "time_stamp": "2019-12-10 13:26:24"
+      },
+      {
+        "time_stamp": "2019-12-10 13:32:45"
+      },
+      {
+        "time_stamp": "2019-12-17 12:00:03"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Merel Kennedy",
+      "poster_handle": "merelkennedy"
+    },
+    "time_stamp": "2019-12-03 11:24:55",
+    "text": "Nothing right now. Just seems weird that all was working a week ago. I would assume it was my error except that the example page isn't working either."
+  },
+  {
+    "poster": {
+      "poster_name": "RJ Hallin",
+      "poster_handle": "rjhallin"
+    },
+    "time_stamp": "2019-12-03 12:54:22",
+    "text": "This is that I have so far, just started off with a second filter to see how it would go.\nApologies in advance if what I pasted is formatted strangely, not really used to pasting code haha\n```&lt;div&gt;\n          &lt;form id=\"form_id\" method=\"get\"&gt;\n            &lt;div&gt;\n              &lt;h4&gt;FILTER BY STARTING PRICE: &lt;/h4&gt;\n              &lt;select name=\"starting_price\" form=\"form_id\"&gt;\n                &lt;option value=\"show-all\"&gt;Show All&lt;/option&gt;\n                {% set prices = hubdb_table_column(2032302, \"starting_price\").options %}\n                {% for choice in prices %}\n                {% set starting_price_list = starting_price_list~choice.id|list%}\n                {% if choice.id == request.query_dict.starting_price%}\n                &lt;option selected=\"selected\" value=\"{{ choice.id }}\"&gt;{{ choice.name }}&lt;/option&gt;\n                {% else %}\n                &lt;option value=\"{{ choice.id }}\"&gt;{{ choice.name }}&lt;/option&gt;\n                {% endif %}\n                {% endfor %}\n              &lt;/select&gt;\n            &lt;/div&gt;\n\n            &lt;div&gt;\n              &lt;h4&gt;FILTER BY NUMBER OF BEDROOMS: &lt;/h4&gt;\n              &lt;select name=\"bedrooms\" form=\"form_id\"&gt;\n                &lt;option value=\"show-all\"&gt;Show All&lt;/option&gt;\n                {% set bedrooms = hubdb_table_column(2032302, \"bedrooms\").options %}\n                {% for choice in bedrooms %}\n                {% set bedrooms_list = bedrooms_list~choice.id|list%}\n                {% if choice.id == request.query_dict.bedrooms%}\n                &lt;option selected=\"selected\" value=\"{{ choice.id }}\"&gt;{{ choice.name }}&lt;/option&gt;\n                {% else %}\n                &lt;option value=\"{{ choice.id }}\"&gt;{{ choice.name }}&lt;/option&gt;\n                {% endif %}\n                {% endfor %}\n              &lt;/select&gt;\n            &lt;/div&gt;\n            &lt;input id=\"submit-button\" type=\"submit\" value=\"search\"&gt;\n          &lt;/form&gt;\n        &lt;/div&gt;\n        &lt;!-- sets the different query parameters using submitted input for hubdb query --&gt;\n        {% set queryparam = \"\" %}\n        {% if request.query_dict.starting_price in [\"1\", \"2\", \"3\", \"4\"] %}\n        {% set queryparam = queryparam ~ \"&amp;starting_price=\"~request.query_dict.starting_price|urlencode %}\n        {% endif %}\n        {% if request.query_dict.starting_price == \"show-all\" %}\n        {% set queryparam = queryparam %}\n        {% endif %}\n\n        &lt;!-- sets the different query parameters using submitted input for hubdb query --&gt;\n        {% set queryparam = \"\" %}\n        {% if request.query_dict.bedrooms in [\"1\", \"2\", \"3\", \"4\"] %}\n        {% set queryparam = queryparam ~ \"&amp;bedrooms=\"~request.query_dict.bedrooms|urlencode %}\n        {% endif %}\n        {% if request.query_dict.bedrooms == \"show-all\" %}\n        {% set queryparam = queryparam %}\n        {% endif %}\n\n        &lt;div class=\"models\"&gt;\n          {% set table = hubdb_table_rows(2032302, queryparam) %}\n\n          {% if table == [] %}\n          &lt;p class='align-center'&gt;Sorry, no listings found for that Search. Try changing your filter and search again.&lt;/p&gt;\n          {% else %}\n          {% for row in table %}\n          &lt;div&gt;\n            &lt;div class=\"{{ row[\"type\"].name }}\"&gt;\n              &lt;div&gt;&lt;img src=\"{{ row[\"listing_image\"].url}}\"&gt;&lt;/div&gt;\n              &lt;div&gt;\n                &lt;h2&gt;{{ row[\"listing_price\"] }}&lt;/h2&gt;\n                &lt;h3&gt;{{ row[\"listing_address\"] }}&lt;/h3&gt;\n                &lt;h4&gt;{{ row[\"type\"].name }}&lt;/h4&gt;\n                &lt;div&gt;\n                  &lt;ul&gt;\n                    &lt;li&gt;&lt;span&gt;{{ row[\"listing_bedrooms\"] }}&lt;/span&gt;&lt;br&gt;bd&lt;/li&gt;\n                    &lt;li&gt;&lt;span&gt;{{ row[\"listing_baths\"] }}&lt;/span&gt;&lt;br&gt;ba&lt;/li&gt;\n                    &lt;li&gt;&lt;span&gt;{{ row[\"listing_sq_ft\"] }}&lt;/span&gt;&lt;br&gt;sq ft&lt;/li&gt;\n                    &lt;li&gt;&lt;span&gt;{{ row[\"listing_acres\"] }}&lt;/span&gt;&lt;br&gt;acres&lt;/li&gt;\n                  &lt;/ul&gt;\n                &lt;/div&gt;\n                &lt;div class=\"button\"&gt;&lt;a href=\"{{ row[\"listing_url\"] }}\"&gt;Details&lt;/a&gt;&lt;/div&gt;\n              &lt;/div&gt;\n            &lt;/div&gt;            \n          &lt;/div&gt;\n          {% endfor %}\n          {% endif %}\n        &lt;/div&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-12-03 14:57:34",
+    "edited": {
+      "time_stamp": "2019-12-03 14:57:42"
+    },
+    "text": "still struggling with this - before i take a look?"
+  },
+  {
+    "poster": {
+      "poster_name": "RJ Hallin",
+      "poster_handle": "rjhallin"
+    },
+    "time_stamp": "2019-12-03 15:08:23",
+    "text": "Unfortunately, yes"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-12-03 15:10:37",
+    "text": "are you able to dm me an export"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-12-03 15:10:40",
+    "text": "of your hubdb"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-12-03 15:11:01",
+    "text": "so i can set it up locally (doesnt need to be real data, just need the structure really)"
+  }
+]

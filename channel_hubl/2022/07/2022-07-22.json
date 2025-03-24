@@ -1,0 +1,372 @@
+[
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2022-07-22 05:25:52",
+    "text": "Seems that when you do a division that yields a floating point number (3.3333) it returns a data type of \"Double\", what does it mean and why it's not a valid number?\n`{{10/3|pprint}}`\n`(Double: 10.666666666666666)`\n\nAs a consequence the following expression gives an error:\n`{{10/3||round(0, \"ceil\")}}`\n\nto get it correct you first need to convert it to string, then to float, and then do the rounding...\n `{{10/3|string|float|round(0, \"ceil\")}}`\n\nHas anyone else had similar issues and what are your workarounds?",
+    "reply_count": 29,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-07-22 06:10:44"
+      },
+      {
+        "time_stamp": "2022-07-22 06:13:28"
+      },
+      {
+        "time_stamp": "2022-07-22 06:18:06"
+      },
+      {
+        "time_stamp": "2022-07-22 06:19:08"
+      },
+      {
+        "time_stamp": "2022-07-22 06:24:11"
+      },
+      {
+        "time_stamp": "2022-07-22 06:25:38"
+      },
+      {
+        "time_stamp": "2022-07-22 06:25:56"
+      },
+      {
+        "time_stamp": "2022-07-22 06:26:27"
+      },
+      {
+        "time_stamp": "2022-07-22 06:32:53"
+      },
+      {
+        "time_stamp": "2022-07-22 06:33:54"
+      },
+      {
+        "time_stamp": "2022-07-22 06:35:52"
+      },
+      {
+        "time_stamp": "2022-07-22 06:36:11"
+      },
+      {
+        "time_stamp": "2022-07-22 06:36:57"
+      },
+      {
+        "time_stamp": "2022-07-22 06:39:44"
+      },
+      {
+        "time_stamp": "2022-07-22 06:53:04"
+      },
+      {
+        "time_stamp": "2022-07-22 06:53:17"
+      },
+      {
+        "time_stamp": "2022-07-22 06:54:21"
+      },
+      {
+        "time_stamp": "2022-07-22 06:55:02"
+      },
+      {
+        "time_stamp": "2022-07-22 06:56:09"
+      },
+      {
+        "time_stamp": "2022-07-22 06:56:34"
+      },
+      {
+        "time_stamp": "2022-07-22 06:56:56"
+      },
+      {
+        "time_stamp": "2022-07-22 06:57:57"
+      },
+      {
+        "time_stamp": "2022-07-22 06:58:44"
+      },
+      {
+        "time_stamp": "2022-07-22 07:00:00"
+      },
+      {
+        "time_stamp": "2022-07-22 07:01:04"
+      },
+      {
+        "time_stamp": "2022-07-22 07:01:13"
+      },
+      {
+        "time_stamp": "2022-07-22 07:01:26"
+      },
+      {
+        "time_stamp": "2022-07-22 07:01:37"
+      },
+      {
+        "time_stamp": "2022-07-22 07:07:11"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2022-07-22 06:10:44",
+    "text": "You have 2 pipes\n`{{ 10/3 || round(0, \"ceil\") }}` throws an error because `round(0, \"ceil\")` on its own isn't a function.\n\nYou want:\n`{{10/3|round(0, \"ceil\")}}` renders `3`\nDouble is a double-precision floating point number"
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2022-07-22 06:13:28",
+    "edited": {
+      "time_stamp": "2022-07-22 06:16:34"
+    },
+    "text": "You probably actually want `{{(10/3)|round(0, \"ceil)}}`, which  renders `4`."
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2022-07-22 06:18:06",
+    "text": "Thanks for the insight <@UCJANAW1Y>! Is this documented anywhere so I can add it to my bookmarks?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2022-07-22 06:19:08",
+    "text": "Is what specifically documented from what I said?"
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2022-07-22 06:24:11",
+    "text": "sorry, since we are getting into this, the initial issue I had is that the two numbers I need to divide are actually variables"
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2022-07-22 06:25:38",
+    "text": "`{{(intOne/intTwo)|round(0, \"ceil\")}}` still gives me an error"
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2022-07-22 06:25:56",
+    "text": "What's the error?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2022-07-22 06:26:27",
+    "text": "```{% set foo = 10 %}\n{% set bar = 3 %}\n{{(foo/bar)|round(0, 'ceil')}}```\nRenders `4` for me"
+  },
+  {
+    "text": "take a look at this, the two variables are indeed integers, what is wrong with this?",
+    "time_stamp": "2022-07-22 06:32:53"
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2022-07-22 06:33:54",
+    "text": "is `speakerOffset` 0?"
+  },
+  {
+    "text": "",
+    "time_stamp": "2022-07-22 06:35:52"
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2022-07-22 06:36:11",
+    "text": "`&lt;h5&gt;Speakers offset value: {{speakers.offset|pprint}}&lt;/h5&gt;`"
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2022-07-22 06:36:57",
+    "text": "this value by the way is retrieved from a dict"
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2022-07-22 06:39:44",
+    "text": "I bet when editing the template though, the value is 0, if it is a paage-specific value. You could do something like:\n``` {{((foo/bar == 'NaN') ? 0 : foo/bar)|round(0, 'ceil')}}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2022-07-22 06:53:04",
+    "text": "whaat?"
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2022-07-22 06:53:17",
+    "text": "it actually worked now"
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2022-07-22 06:54:21",
+    "edited": {
+      "time_stamp": "2022-07-22 06:54:36"
+    },
+    "text": "but the previous message said that the result is 'NaN', it should output 0 but instead it yields the correct value which is 11"
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2022-07-22 06:55:02",
+    "text": "On the page or in the template editor?"
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2022-07-22 06:56:09",
+    "text": "in the editor I no longer have an error :white_check_mark:"
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2022-07-22 06:56:34",
+    "text": "in the page I get the correct value :white_check_mark:"
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2022-07-22 06:56:56",
+    "text": "but based on the previous error, this exepression now should output 0, right?"
+  },
+  {
+    "text": "In the editor, yeah. You can check the editor output by turning this toggle on",
+    "time_stamp": "2022-07-22 06:57:57"
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2022-07-22 06:58:44",
+    "text": "owww"
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2022-07-22 07:00:00",
+    "text": "its because my dict value is not rendered in the editor, right?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2022-07-22 07:01:04",
+    "text": "Yeah"
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2022-07-22 07:01:13",
+    "text": "ow, sooo confusing..."
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2022-07-22 07:01:26",
+    "text": "thanks a lot for this!"
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2022-07-22 07:01:37",
+    "text": "and your time! :wink:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2022-07-22 07:07:11",
+    "text": "No problem"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin",
+      "poster_handle": "justin145"
+    },
+    "time_stamp": "2022-07-22 08:13:35",
+    "text": "I feel like I'm missing something simple can I write an if statement in blog listing template that says \"if the page is not a topic page and not an author page\"? ie: the main blog listing with no \"fiters\" applied?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-07-22 08:14:28"
+      },
+      {
+        "time_stamp": "2022-07-22 08:22:00"
+      },
+      {
+        "time_stamp": "2022-07-22 08:23:07"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Wessolly",
+      "poster_handle": "webdesign"
+    },
+    "time_stamp": "2022-07-22 08:14:28",
+    "text": "yes that should work"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin",
+      "poster_handle": "justin145"
+    },
+    "time_stamp": "2022-07-22 08:22:00",
+    "text": "`{% if !topic &amp;&amp; !blog_author %}` is perfect. Thank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Wessolly",
+      "poster_handle": "webdesign"
+    },
+    "time_stamp": "2022-07-22 08:23:07",
+    "text": "you´re welcome :slightly_smiling_face:"
+  }
+]

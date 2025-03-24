@@ -1,0 +1,89 @@
+[
+  {
+    "poster": {
+      "poster_name": "Erik Rorstrom",
+      "poster_handle": "erik.rorstrom"
+    },
+    "time_stamp": "2024-08-28 02:02:21",
+    "text": "<@U03FJQPSC0Y> any updates on this request? :raised_hands:"
+  },
+  {
+    "poster": {
+      "poster_name": "Erik Rorstrom",
+      "poster_handle": "erik.rorstrom"
+    },
+    "time_stamp": "2024-08-28 02:02:37",
+    "text": "<@U05KNCMAE7N> Any updates on this? :raised_hands:"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Patel",
+      "poster_handle": "ryan.patel"
+    },
+    "time_stamp": "2024-08-28 03:08:24",
+    "text": "Hello, just building out a CRM Project but running in to this error - There was an unexpected error building the extension files. Please try again. Contact HubSpot support if the error keeps happening:  RollupError: Could not resolve \"./components/InformationRequest\" from \"../../tmp/extensions/Example.jsx\"\n\nHowever, if i do hs project dev it works fine.\n\nAny help appreciated",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-09-12 10:07:24"
+      },
+      {
+        "time_stamp": "2024-09-12 10:09:41"
+      },
+      {
+        "time_stamp": "2024-09-12 15:18:16"
+      },
+      {
+        "time_stamp": "2024-09-12 15:18:32"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Aanchal Sheth (HubSpot PM)",
+      "poster_handle": "asheth"
+    },
+    "time_stamp": "2024-08-28 07:59:31",
+    "text": "Nothing yet, sorry about that! We haven't forgotten about this though, we just need to make sure we're solving it in the right way"
+  },
+  {
+    "poster": {
+      "poster_name": "Brad Tollett",
+      "poster_handle": "brad208"
+    },
+    "time_stamp": "2024-08-28 09:37:22",
+    "text": "I have 2 files in my `app.functions` directory. One is my serverless function, and the other is an axios class that I created to use between serverless functions. Here's the setup:\n\nDirectory Structure\n```extension-repo/src/app\n- app.functions/\n-- ersCheckFoldername.js\n-- ers.js```\nCode:\n```ersCheckFoldername.js:\n\nlet ERS = require('ers.js');\n\nexports.main = async (context = {}) =&gt; {\n  const { foldername } = context.parameters;\n  let ers = new ERS();\n  let { data } = ers.checkFoldername(foldername);\n  return data;\n};\n\ners.js:\n\nlet axios = require('axios');\nrequire('process').config();\n\nexport default class ERS {\n\n  constructor(ersApiKey = \"\") {\n    let apiKey = ersApiKey || process.env.ERS_API_KEY;\n    if(!apiKey) throw new Error(\"ERS API Key is required to use the ERS API.\");\n    this.ersApi = axios.create({\n      baseURL: '<https://www.mydomain.com/api/>',\n      headers: {\n        'X-API-Key': apiKey\n      }\n    });\n  }\n\n  checkFoldername(foldername) {\n    let response = this.ersApi.get(`/check_foldername/?foldername=${foldername}`);\n    return response;\n  }```\nWhen I run `hs project upload` I get an error with the following message:\n```\"[runServerlessFunction] The serverless function 'ersCheckFoldername' failed to execute: Cannot find module 'ers.js'\nRequire stack:\n- /var/task/test.js\n- /var/task/HubSpotHandler.js\n- /var/runtime/index.mjs.\"```\nI assume this is related to it being serverless, and from the directions/structure of things it seems like each individual file is used to execute a serverless command which means the second ers.js file isn't in 'context' when it's running. How do I go about doing this where I don't have to repeat my code in each serverless file? I originally wanted ers.js in app.function/api directory but pulled it out to test it this way."
+  },
+  {
+    "text": "I'm also having a second issue when running `hs project dev`  which has been making me run `hs project upload` every time instead. I commented out a majority of my code to make sure it wasn't related to other stuff I'm doing and made a very simple test instead. When I upload the project normally it works just fine, but when I run dev it gives me the error you see in the image showing the card view. It says to check the local development server, but the console says it's running fine and the browser is connected and listening for bundle updates. Am I doing something wrong here? Also, `hs project watch` isn't uploading when I save either, but not sure if that's related. Not too sure how to debug it.",
+    "time_stamp": "2024-08-28 09:59:50",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-08-28 10:58:09"
+      }
+    ]
+  },
+  {
+    "text": "Then just what seems to be a bug I'm running into when tailing the serverless function logs, it looks like limit is being used on a lower level or something. Not too sure why I'm getting this error, but not a huge priority on my end.",
+    "time_stamp": "2024-08-28 10:06:35"
+  },
+  {
+    "poster": {
+      "poster_name": "Brad Tollett",
+      "poster_handle": "brad208"
+    },
+    "time_stamp": "2024-08-28 10:58:09",
+    "text": "I'm using Brave browser by default and this runs fine in Chrome, so I'm good there. I would like to use it in Brave, however, so if someone could comment on what type of protocols need to be enabled in the browser for this to work then I would love to know so I can go in and enable them. Brave is a spinoff of Chrome with a bunch of changes to enhance security/privacy."
+  },
+  {
+    "poster": {
+      "poster_name": "Sejal Parikh (HubSpot PM)",
+      "poster_handle": "sparikh"
+    },
+    "time_stamp": "2024-08-28 11:45:44",
+    "text": "Eric, unfortunately no. But I will check with the right team and see what comes out of it"
+  }
+]

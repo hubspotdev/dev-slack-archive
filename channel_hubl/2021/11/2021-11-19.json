@@ -1,0 +1,79 @@
+[
+  {
+    "poster": {
+      "poster_name": "Mitja Lewin",
+      "poster_handle": "m.lewin"
+    },
+    "time_stamp": "2021-11-19 02:12:52",
+    "text": "<@UQERM7BLY> Here it is without regex:\n```{# Convert Query To Array #}\n{% set query_parts = request.query|split('&amp;', 44) %}\n{% set query_object = {} %}\n\n{# Loop Throw Array #}\n{% for query in query_parts %}\n\n  {# Get Key And Value For Each Query #}\n  {% set key = query|split('=')|first %}\n  {% set val = query|split('=')|last %}\n\n  {# If Key Exist #}\n  {% if key in query_object %}\n\n    {# Extend Existing Array #}\n    {% if query_object[key] and query_object[key] is iterable  %}\n\n        {# Extend The Array #}\n        {% do query_object[key].append( val ) %}\n\n    {# Create New Array For Value #}\n    {% else %} \n        \n        {# Add Existing And Current Value To Array #}\n        {% set obj = ('{\"'~ key ~'\":[\"'~ query_object[key] ~'\",\"'~ val ~'\"]}')|fromjson %}\n        {% do query_object.update( obj ) %}\n  \n    {% endif %}\n\n  {# Else Create A New Entry #}\n  {% else %}\n\n    {# Make Object From String #}\n    {% set obj = ('{\"'~ key ~'\":\"'~ val ~'\"}\"')|fromjson %}\n    {% do query_object.update( obj ) %}\n\n  {% endif %}\n\n{% endfor %}```\nAnd put in in a Macro for better usage: (above - replace `request.query` with `query_string`)\n```{% macro objectFromQuery( query_string ) %}\n  (...)\n  {{ query_object|tojson }}\n{% endmacro %}```\nYou can now call your macro like this: (below - replace `request.query` with your string)\n```{% set query_string = request.query %}\n{% set query_object = objectFromQuery( query_string )|fromjson %}```\nTo inspect yor resault, output or console.log the query_object:\n```&lt;script&gt; console.log( {{ query_object|tojson }} ); &lt;/script&gt;\n{% for key, value in query_object.items() %}\n  {{ loop.index }} | {{ key }} | {{ value }}&lt;br&gt;\n{% endfor %}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Derek Cavaliero",
+      "poster_handle": "derek168"
+    },
+    "time_stamp": "2021-11-19 11:48:07",
+    "text": "Am I going crazy or is there not a way to check if a string contains another string (like a substring check) in HubL?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-11-19 12:07:58"
+      },
+      {
+        "time_stamp": "2021-11-19 12:17:33"
+      },
+      {
+        "time_stamp": "2021-11-19 12:19:02"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ian Hoyte",
+      "poster_handle": "ian135"
+    },
+    "time_stamp": "2021-11-19 12:07:58",
+    "edited": {
+      "time_stamp": "2021-11-19 12:13:26"
+    },
+    "text": "You could try this one-looks like it may do the trick! <https://developers.HubSpot.com/docs/cms/hubl/operators-and-expression-tests#string-containing>"
+  },
+  {
+    "poster": {
+      "poster_name": "Derek Cavaliero",
+      "poster_handle": "derek168"
+    },
+    "time_stamp": "2021-11-19 12:17:33",
+    "text": "Thank you - must have scrolled past that like 10 times and didn't realize."
+  },
+  {
+    "poster": {
+      "poster_name": "Ian Hoyte",
+      "poster_handle": "ian135"
+    },
+    "time_stamp": "2021-11-19 12:19:02",
+    "text": "Haha been there :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter",
+      "poster_handle": "pmarsh"
+    },
+    "time_stamp": "2021-11-19 16:30:42",
+    "edited": {
+      "time_stamp": "2021-11-19 16:30:58"
+    },
+    "text": "Is this the proper way to use the noWrapper statement?  I've been trying to get this to work but the wrapper is still being applied.\n`{% module \"activate-account-button\" path=\"/Modules/TAConnect 3-Col Button\", label=\"TAConnect 3-Col Button\" noWrapper=True %}`",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-11-21 15:38:05"
+      },
+      {
+        "time_stamp": "2021-11-22 10:38:36"
+      }
+    ]
+  }
+]

@@ -1,0 +1,154 @@
+[
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2023-10-05 01:39:08",
+    "text": "Does anyone know how to solve this? I have a contact record with a value for a single line text field that is a comma-separated list of brand names.\nI want to query a custom object for records that have a brand name that is in that comma-separated list that is the contact property. I have the following, but it's not working:\n\n```{% set brandList = contact.machine_brand|split(\",\") %}\n{% set querydt =\"brand__in=\" ~ brandList ~ \"&amp;machine_status=in_stock&amp;limit=3&amp;order=last_in_stock\" %}\n{% set machines = crm_objects(\"machine\", querydt, \"a bunch of fields here\") %}\n\n{% for machine in machines %}\n&lt;my html code for each machine&gt;\n{% endfor %}```\nWhen I pprint the variables I get this:\n\n```contact.machine_brand: (String: Linde,BT,Toyota)\nbrandList: (SizeLimitingPyList: [Linde, BT, Toyota])\nquerydt: (String: brand__in=[Linde, BT, Toyota]&amp;machine_status=in_stock&amp;limit=3&amp;order=last_in_stock)\nevents: (CrmObjectList: {hasMore=false, offset=0, results=[], total=0})```\nSo it looks like it's doing the splitting into a list well enough, but then in the query for the crm_objects function, either `brand__in`  is not working or `[Linde, BT, Toyota]` is not a valid sequence to search through, and it's not finding any results."
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Lett",
+      "poster_handle": "jacoblett"
+    },
+    "time_stamp": "2023-10-05 06:01:36",
+    "text": "Anyone know how to use a macro property in an expression?\n\n{% macro product_object_row(object_name) %}\n  {# how to use object_name in a hubl statement below #}\n  &lt;h2&gt;{{ object_name.name}}&lt;/h2&gt;\n{% endmacro %}",
+    "reply_count": 12,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-10-05 06:04:35"
+      },
+      {
+        "time_stamp": "2023-10-05 06:08:48"
+      },
+      {
+        "time_stamp": "2023-10-05 06:08:50"
+      },
+      {
+        "time_stamp": "2023-10-05 06:08:58"
+      },
+      {
+        "time_stamp": "2023-10-05 06:09:54"
+      },
+      {
+        "time_stamp": "2023-10-05 06:25:12"
+      },
+      {
+        "time_stamp": "2023-10-05 06:25:25"
+      },
+      {
+        "time_stamp": "2023-10-05 06:25:30"
+      },
+      {
+        "time_stamp": "2023-10-05 06:25:37"
+      },
+      {
+        "time_stamp": "2023-10-05 06:25:50"
+      },
+      {
+        "time_stamp": "2023-10-05 06:25:58"
+      },
+      {
+        "time_stamp": "2023-10-05 06:26:01"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Wessolly",
+      "poster_handle": "webdesign"
+    },
+    "time_stamp": "2023-10-05 06:04:35",
+    "text": "Have you tried :\n```{{ macro.product_object_row('object_name') }}```\n?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Lett",
+      "poster_handle": "jacoblett"
+    },
+    "time_stamp": "2023-10-05 06:08:48",
+    "text": "&lt;h2&gt;{{ myproduct.name}}&lt;/h2&gt;\n\n{% macro product_object_row(object_name) %}\n  {# how to use object_name in a hubl statement below #}\n  &lt;h2&gt;{{ object_name.name}}&lt;/h2&gt;\n{% endmacro %}\n{{ product_object_row(\"myproduct\")  }}\n// &lt;h2&gt;My Product Name&lt;/h2&gt;"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Lett",
+      "poster_handle": "jacoblett"
+    },
+    "time_stamp": "2023-10-05 06:08:50",
+    "text": "I tried that and it didn't work for me. Above is what I am trying to do"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Lett",
+      "poster_handle": "jacoblett"
+    },
+    "time_stamp": "2023-10-05 06:08:58",
+    "text": "Hi Andreas. Thanks for trying to help out."
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Lett",
+      "poster_handle": "jacoblett"
+    },
+    "time_stamp": "2023-10-05 06:09:54",
+    "text": "what I have above the macro is where I started. I want to be able to pass an object name into a macro to then build out some HTML for it"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Lett",
+      "poster_handle": "jacoblett"
+    },
+    "time_stamp": "2023-10-05 06:25:12",
+    "text": "figured it out"
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Wessolly",
+      "poster_handle": "webdesign"
+    },
+    "time_stamp": "2023-10-05 06:25:25",
+    "text": "Great"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Lett",
+      "poster_handle": "jacoblett"
+    },
+    "time_stamp": "2023-10-05 06:25:30",
+    "text": "{{ product_object_row(digitalplan)  }}"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Lett",
+      "poster_handle": "jacoblett"
+    },
+    "time_stamp": "2023-10-05 06:25:37",
+    "text": "{{ product_object_row(\"digitalplan\")  }}"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Lett",
+      "poster_handle": "jacoblett"
+    },
+    "time_stamp": "2023-10-05 06:25:50",
+    "text": "I originally had the quotes which was passing a string"
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Wessolly",
+      "poster_handle": "webdesign"
+    },
+    "time_stamp": "2023-10-05 06:25:58",
+    "text": "ah ok"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Lett",
+      "poster_handle": "jacoblett"
+    },
+    "time_stamp": "2023-10-05 06:26:01",
+    "text": ":partypalm:"
+  }
+]

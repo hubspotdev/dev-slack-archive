@@ -1,0 +1,185 @@
+[
+  {
+    "poster": {
+      "poster_name": "Ville Pekkarinen",
+      "poster_handle": "ville"
+    },
+    "time_stamp": "2020-06-23 02:38:52",
+    "text": "Hello,\nIs there a HubL way to detect whether we are in edit mode? I need to hardcode some stuff with exceptions (yeah) but leave the content open for editing.",
+    "reply_count": 9,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2020-06-23 02:42:18"
+      },
+      {
+        "time_stamp": "2020-06-23 02:44:32"
+      },
+      {
+        "time_stamp": "2020-06-23 02:46:01"
+      },
+      {
+        "time_stamp": "2020-06-23 02:46:13"
+      },
+      {
+        "time_stamp": "2020-06-23 03:45:35"
+      },
+      {
+        "time_stamp": "2020-06-23 03:51:19"
+      },
+      {
+        "time_stamp": "2020-06-23 03:52:13"
+      },
+      {
+        "time_stamp": "2020-06-23 03:52:48"
+      },
+      {
+        "time_stamp": "2020-06-23 08:20:45"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2020-06-23 02:42:18",
+    "text": "You should be able to use the request variable."
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2020-06-23 02:44:32",
+    "text": "```{{ request.full_url }}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2020-06-23 02:46:01",
+    "text": "I think a class is also added to &lt;html&gt; too\n```hs-inline-edit```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2020-06-23 02:46:13",
+    "text": "not sure how reliable that is though."
+  },
+  {
+    "poster": {
+      "poster_name": "Ville Pekkarinen",
+      "poster_handle": "ville"
+    },
+    "time_stamp": "2020-06-23 03:45:35",
+    "text": "I'm using request.full_url to detect the page and whether it should be hardcoded, but I'll check if that class exists. If it works for now it's fine, this is kludge upon kludge upon kludge at this point. Thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Ville Pekkarinen",
+      "poster_handle": "ville"
+    },
+    "time_stamp": "2020-06-23 03:51:19",
+    "text": "`builtin_body_classes` prints out the classes applied to the actual page on the front-end so no luck, but nice try"
+  },
+  {
+    "poster": {
+      "poster_name": "Ville Pekkarinen",
+      "poster_handle": "ville"
+    },
+    "time_stamp": "2020-06-23 03:52:13",
+    "text": "Ah, request_full_url would work, I only have a slight logical error here. Thanks again!"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2020-06-23 03:52:48",
+    "text": "no worries! :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephanie O'Gay Garcia",
+      "poster_handle": "stephanie"
+    },
+    "time_stamp": "2020-06-23 08:20:45",
+    "text": "```{{ request.postDict.inpageEditorUI }}```\nreturns true if user is in the editor. returns undefined if user is not in the editor.\nNote this means it will return undefined in preview URLs.\n\nThe above was posted in a thread I saved a few months ago and it's worked for me as a condition (`{% if request.postDict.inpageEditorUI %}{% endif %}`).\n\nI also combine it with the `hs-inline-edit` class to hide elements just to be extra safe."
+  },
+  {
+    "poster": {
+      "poster_name": "Steve Kanter",
+      "poster_handle": "steve.kanter"
+    },
+    "time_stamp": "2020-06-23 09:00:20",
+    "text": "yeah, I figured that out :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Steve Kanter",
+      "poster_handle": "steve.kanter"
+    },
+    "time_stamp": "2020-06-23 09:00:34",
+    "text": "the root issue I had was that my url encoded JSON was an array at the root, not an object"
+  },
+  {
+    "poster": {
+      "poster_name": "Steve Kanter",
+      "poster_handle": "steve.kanter"
+    },
+    "time_stamp": "2020-06-23 09:00:44",
+    "text": "and `fromjson` didn’t like that. /cc <@U6GNQ7JBU> fyi"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2020-06-23 09:02:25",
+    "text": "Yea looks like `<https://github.com/HubSpot/jinjava/blob/master/src/main/java/com/HubSpot/jinjava/lib/filter/FromJsonFilter.java#L33>` only supports hashmap. I can fix"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2020-06-23 09:03:15",
+    "text": "<https://github.com/HubSpot/jinjava/issues/457>"
+  },
+  {
+    "poster": {
+      "poster_name": "Steve Kanter",
+      "poster_handle": "steve.kanter"
+    },
+    "time_stamp": "2020-06-23 09:03:53",
+    "text": ":smile: awesome!"
+  },
+  {
+    "poster": {
+      "poster_name": "Steve Kanter",
+      "poster_handle": "steve.kanter"
+    },
+    "time_stamp": "2020-06-23 09:04:25",
+    "text": "I didn’t realize that hubl === jinjava until a couple of days ago, so if I find other bugs like this, I can just open issues and perhaps even PRs :wink:"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2020-06-23 09:54:45",
+    "text": "PRs are welcome :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2020-06-23 09:55:11",
+    "text": "Yea HubL is really just an extension of Jinjava with custom functions and tags"
+  }
+]

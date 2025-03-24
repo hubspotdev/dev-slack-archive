@@ -1,0 +1,99 @@
+[
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2019-07-04 03:16:06",
+    "text": "So you want to be able to show specific posts on the page?\nI use the URL field as you can select by post/page name and it outputs the post/page ID If you make that a repeater field then they can add multiple\nThis is amended from a far more complicated function so hopefully it works :slightly_smiling_face:\n\n```{% set ids = [] %}\n{% set relatedPosts = false %}\n{% for item in module.URL_REPEATER %}\n\t{% set thisVariableDoesntDoAnything = ids.append(item.content_id) %} {# The .append creates a hubl dictionary of the IDs on the ids variable #}\n{% endfor %}\n{% if ids|first %}\n\t{% set relatedPosts = content_by_ids( ids ) %}\n\t{% for relatedPost in relatedPosts %}\n\t\t{% if relatedPost.currentlyPublished %}\n\t\t\t{{ relatedPost.url }}&lt;br&gt;\n\t\t\t{{ relatedPost.featured_image }}&lt;br&gt;\n\t\t\t{{ relatedPost.featured_image_alt_text }}&lt;br&gt;\n\t\t\t{{ relatedPost.publish_date_localized }}&lt;br&gt;\n\t\t\t{{ relatedPost.name }}&lt;br&gt;\n\t\t\t{{ relatedPost.post_summary|striptags|truncate(140) }}&lt;br&gt;\n\t\t{% endif %}\n\t{% endfor %}\n{% endif %}```\n\n\nIf you just want to change the blog that they are seeing create a Choice field with the Blog names and ID’s as values\n\n```{% set posts = blog_recent_posts(module.CHOICE_FIELD,200) %}\n{% for blog in blogs %}\n\t{{blog}}\n{% endfor %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ashish Bule",
+      "poster_handle": "abule"
+    },
+    "time_stamp": "2019-07-04 05:25:56",
+    "text": "Hello everyone... Can anybody know.. How do I pass jquery veriable into hubsspot."
+  },
+  {
+    "poster": {
+      "poster_name": "Duncan Henderson",
+      "poster_handle": "duncan879"
+    },
+    "time_stamp": "2019-07-04 09:50:44",
+    "text": "Thanks so much! Will take a look"
+  },
+  {
+    "poster": {
+      "poster_name": "Sebastien",
+      "poster_handle": "sdelrue"
+    },
+    "time_stamp": "2019-07-04 11:51:26",
+    "edited": {
+      "time_stamp": "2019-07-04 11:52:23"
+    },
+    "text": "Hi Everyone, how could i do something like this:\n```{% set testimonials = hubdb_table_rows(1041514,\"&amp;ID= {% text \"testimonial_id\" %} &amp;limit=1\") %} ``` ? Calling a text module (who will contain an ID) as a variable inside a DB Query",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-07-04 11:53:18"
+      },
+      {
+        "time_stamp": "2019-07-04 11:53:41"
+      },
+      {
+        "time_stamp": "2019-07-04 12:03:20"
+      },
+      {
+        "time_stamp": "2019-07-04 12:11:31"
+      },
+      {
+        "time_stamp": "2019-07-04 12:11:39"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Diego Valle",
+      "poster_handle": "dvalle"
+    },
+    "time_stamp": "2019-07-04 11:53:18",
+    "text": "you need change your code\n`{% set testimonials = hubdb_table_rows(1041514,\"&amp;ID=\"~testimonial_id~\"&amp;limit=1\") %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Sebastien",
+      "poster_handle": "sdelrue"
+    },
+    "time_stamp": "2019-07-04 11:53:41",
+    "text": "And how testimonial_id would contain the value of {% text “testimonial_id” %} ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Diego Valle",
+      "poster_handle": "dvalle"
+    },
+    "time_stamp": "2019-07-04 12:03:20",
+    "edited": {
+      "time_stamp": "2019-07-04 12:05:01"
+    },
+    "text": "try print *testimonial_id* with `{{ testimonial_id }}` if only print a text use the code up, but if print a object you need use `\"~testimonial_id.*key*~\"`"
+  },
+  {
+    "poster": {
+      "poster_name": "Sebastien",
+      "poster_handle": "sdelrue"
+    },
+    "time_stamp": "2019-07-04 12:11:31",
+    "text": "```{% text \"testimonial_id\", export_to_template_context=True %}\n                    {% set testimonials = hubdb_table_rows(1041514,\"&amp;hs_id=\" ~widget_data.testimonial_id.value|int) %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Sebastien",
+      "poster_handle": "sdelrue"
+    },
+    "time_stamp": "2019-07-04 12:11:39",
+    "text": "That worked with export_to_template_context, thanks!"
+  }
+]

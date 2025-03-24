@@ -1,0 +1,160 @@
+[
+  {
+    "poster": {
+      "poster_name": "Maximilian Holzer",
+      "poster_handle": "maximilian.holzer"
+    },
+    "time_stamp": "2024-02-05 04:00:25",
+    "text": "Hey everyone! In the creation of making a Workflow/Custom Code which associates (companyless) Contacts to their correct Company.\nI am seeking for advice and guidance of the community :slightly_smiling_face: on how to go about this.\nMy first thought would be to use emails and company domain as a base and then maybe have some properties on top as filter (something like most used, latest deal creation etc., bc we got a lot of companies with the same domain name, bc of an old database, etc..)\n\nAnyone got any advice on how to go about this? :slightly_smiling_face: Is there a better way? What to look out for? Has anyone got any experience with the automation setting where it associates companies and contacts automatically? I am not 100% trustful of it bc removing wrong associations is a pain in the ass and not really easy so i am not sure if i should use it + doesnt have any filters to include :disappointed:\nI am thankful for any tip i can get :slightly_smiling_face:",
+    "reply_count": 8,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-02-05 06:28:25"
+      },
+      {
+        "time_stamp": "2024-02-05 06:30:36"
+      },
+      {
+        "time_stamp": "2024-02-05 06:33:01"
+      },
+      {
+        "time_stamp": "2024-02-05 07:00:24"
+      },
+      {
+        "time_stamp": "2024-02-05 07:19:43"
+      },
+      {
+        "time_stamp": "2024-02-05 07:21:05"
+      },
+      {
+        "time_stamp": "2024-02-05 07:21:50"
+      },
+      {
+        "time_stamp": "2024-02-05 07:35:16"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-02-05 06:28:25",
+    "text": "Hmmm... I think I would try to clean up the old company data first, removing or merging duplicates which would make this task easier.  I don't have any advice on the other part but someone here should be able to do that."
+  },
+  {
+    "poster": {
+      "poster_name": "Maximilian Holzer",
+      "poster_handle": "maximilian.holzer"
+    },
+    "time_stamp": "2024-02-05 06:30:36",
+    "text": "<@U01GW2U4WMA> already done :slightly_smiling_face: sadly some duplicate companies have to stay bc of accounting :confused:\n ( i know, but the database of the companies is connected to the Accounting programm &gt;.&lt;)\n\nso thats why i need to workaround that :open_mouth:"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-02-05 06:33:01",
+    "text": "I wonder if you could add a custom property that tells you which one is the main company record - then your process can weed those others out"
+  },
+  {
+    "poster": {
+      "poster_name": "Maximilian Holzer",
+      "poster_handle": "maximilian.holzer"
+    },
+    "time_stamp": "2024-02-05 07:00:24",
+    "text": "<@U01GW2U4WMA> u sure can its pretty easy to do aswell you just need filter criteria and a calc property with points, but its not that easy all the time to say like this is the main and this is not :sweat_smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-02-05 07:19:43",
+    "text": "In the case where you can't I'm afraid you'll simply have to associate all the duplicates with the contact.  You can always delete those associations at a later time when maybe your accounting can be updated.  Your workflow can trigger on all contacts that have no company association and a custom-coded action could add those associations."
+  },
+  {
+    "poster": {
+      "poster_name": "Maximilian Holzer",
+      "poster_handle": "maximilian.holzer"
+    },
+    "time_stamp": "2024-02-05 07:21:05",
+    "text": "<@U01GW2U4WMA> naahh there is always a way so dont say its not possible if you can't think of one :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-02-05 07:21:50",
+    "text": "I can't think of one :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-02-05 07:35:16",
+    "text": "I'd be interested in what tactic you eventually take as your solution"
+  },
+  {
+    "poster": {
+      "poster_name": "Emma Tuzicka",
+      "poster_handle": "etuzicka"
+    },
+    "time_stamp": "2024-02-05 12:16:35",
+    "text": "Can someone share any tips on how to build out a workflow to help manage duplicate contact records? I feel like this is possible but am struggling to get started. :sweat_smile:",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-02-06 13:08:20"
+      },
+      {
+        "time_stamp": "2024-02-07 08:49:19"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2024-02-05 13:10:34",
+    "text": "Hi Clayton, I’ve written a fix for this using Regex"
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2024-02-05 13:10:36",
+    "text": "Here you go"
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2024-02-05 13:11:08",
+    "text": "```const HubSpot = require('@HubSpot/api-client');\nconst HubSpotClient = new HubSpot.Client({\"accessToken\":\"BEARER TOKEN\"});\nconst properties = undefined;\nconst propertiesWithHistory = [\"phone\"];\nconst associations = undefined;\nconst archived = false;\n\nasync function contactAPI(contactId) {\n  try {\n    const apiResponse = await HubSpotClient.crm.contacts.basicApi.getById(contactId, properties, propertiesWithHistory, associations, archived);\n    console.log(JSON.stringify(apiResponse))\n    return apiResponse\n  } catch (e) {\n    e.message === 'HTTP request failed'\n      ? console.error(JSON.stringify(e.response, null, 2))\n      : console.error(e)\n  }\n}\n\nasync function main() {\n    try {\n      let json = await contactAPI(\"YOUR CONTACT ID\");\n      let phoneNumber = json.propertiesWithHistory.phone[0].value\n      console.log(\"Phone Number:\", phoneNumber);\n  \n      let formattedPhoneNumber = (phoneNumber) =&gt; { \n        return phoneNumber.replace(/(\\+1)(\\d{3})(\\d{3})(\\d{4})(\\ ext)(\\d+)?/,\"$1 ($2) $3-$4 $5.$6\");\n      }\n      console.log(\"Formatted Phone Number:\", formattedPhoneNumber(phoneNumber));\n    } catch (e) {\n      console.error(e);\n    }\n  }\n  \n  main();```"
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2024-02-05 13:12:07",
+    "text": "It handles the extension logic using the digit counter."
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2024-02-05 13:14:53",
+    "text": "(Sorry I was at a conference and could not get this done sooner)"
+  }
+]

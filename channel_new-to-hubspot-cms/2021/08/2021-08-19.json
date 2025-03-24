@@ -1,0 +1,165 @@
+[
+  {
+    "poster": {
+      "poster_name": "Evan Grim",
+      "poster_handle": "whiteship1120"
+    },
+    "time_stamp": "2021-08-19 13:20:50",
+    "text": "Why does\n```{%- macro to_rem(px, body) -%}\n  {{ px/body ~ 'rem' }};\n{% endmacro %}\n\n{% set body_text_size = to_rem(body_text.size, body_text.size) %}```\noutput `1rem`\n\nbut\n```/* Convert pixel values to rems */\n{%- macro to_rem(px, body) -%}\n  {{ px/body }};\n{% endmacro %}\n\n{% set body_text_size = to_rem(body_text.size, body_text.size) %}\n{{body_text_size}}```\noutputs\n```1\nrem```\n",
+    "reply_count": 9,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-08-19 13:25:23"
+      },
+      {
+        "time_stamp": "2021-08-19 13:26:07"
+      },
+      {
+        "time_stamp": "2021-08-19 13:26:09"
+      },
+      {
+        "time_stamp": "2021-08-19 13:26:26"
+      },
+      {
+        "time_stamp": "2021-08-19 13:27:47"
+      },
+      {
+        "time_stamp": "2021-08-19 13:27:47"
+      },
+      {
+        "time_stamp": "2021-08-19 13:27:59"
+      },
+      {
+        "time_stamp": "2021-08-19 13:28:17"
+      },
+      {
+        "time_stamp": "2021-08-19 13:28:18"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2021-08-19 13:25:23",
+    "text": "So in the first example they are concatenating the value of `px/body` with `'rem'` by using `~` . So its outputting on the same line as the actual output of that macro.\n\nso you could change that macro to `{{px/body ~ 'fish'}}`and it would output `1fish`"
+  },
+  {
+    "poster": {
+      "poster_name": "Evan Grim",
+      "poster_handle": "whiteship1120"
+    },
+    "time_stamp": "2021-08-19 13:26:07",
+    "text": "I get that, but I'm getting a line break in the output of the macro"
+  },
+  {
+    "text": "",
+    "time_stamp": "2021-08-19 13:26:09"
+  },
+  {
+    "poster": {
+      "poster_name": "Evan Grim",
+      "poster_handle": "whiteship1120"
+    },
+    "time_stamp": "2021-08-19 13:26:26",
+    "text": "And {%- is supposed to suppress whitespace anyway isn't it?"
+  },
+  {
+    "poster": {
+      "poster_name": "Evan Grim",
+      "poster_handle": "whiteship1120"
+    },
+    "time_stamp": "2021-08-19 13:27:47",
+    "text": "so it works if I put the ~ in the macro, but not if I concatenate to the output of the macro (which ends with a line break)"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2021-08-19 13:27:47",
+    "text": "Oh I see what yorue referring to - yea just slap that `-` on your end macro as well."
+  },
+  {
+    "poster": {
+      "poster_name": "Evan Grim",
+      "poster_handle": "whiteship1120"
+    },
+    "time_stamp": "2021-08-19 13:27:59",
+    "text": "oh crud"
+  },
+  {
+    "poster": {
+      "poster_name": "Evan Grim",
+      "poster_handle": "whiteship1120"
+    },
+    "time_stamp": "2021-08-19 13:28:17",
+    "text": "That's kind of cool that you can control leading and trailing whitespace separately"
+  },
+  {
+    "poster": {
+      "poster_name": "Evan Grim",
+      "poster_handle": "whiteship1120"
+    },
+    "time_stamp": "2021-08-19 13:28:18",
+    "text": "thanks"
+  },
+  {
+    "poster": {
+      "poster_name": "Evan Grim",
+      "poster_handle": "whiteship1120"
+    },
+    "time_stamp": "2021-08-19 15:25:24",
+    "edited": {
+      "time_stamp": "2021-08-19 15:25:33"
+    },
+    "text": "Sometimes the design manager *seems to* cache files longer than it should. Working locally, I upload a file, refresh the design manager screen (which I'm using for my newbie debugging), and the file is not updated in the design manager. I even go so far as to delete the file in design manager, upload the new version again, and refresh the screen: design manager still shows the old version of the file!\n\nThis seems to happen when I've made changes to the file from within design manager (for me, typically for experimental/debugging edits, to quickly see the hubl output ).\n\nThe only thing I've found that seems to work is renaming the file (and then naming it back, natch.) Is there a better solution (or prevention)?"
+  },
+  {
+    "poster": {
+      "poster_name": "Evan Grim",
+      "poster_handle": "whiteship1120"
+    },
+    "time_stamp": "2021-08-19 15:29:04",
+    "edited": {
+      "time_stamp": "2021-08-19 15:38:05"
+    },
+    "text": "Another question:\nIs there a way to add arbitrary values to a type (for instance add a Line Height to Font)? It seems this is not allowed by the field definition\n\nThis is what I'm doing (the output of `{{theme.typography.body_text.line_height}}`  is empty -- null or '' or something)\n\n```      {\n        \"label\": \"Body text\",\n        \"name\": \"body_text\",\n        \"type\": \"font\",\n        \"visibility\": {\n          \"hidden_subfields\": {\n            \"styles\": true\n          }\n        },\n        \"load_external_fonts\": true,\n        \"inherited_value\": {\n          \"property_value_paths\": {\n            \"color\": \"theme.global_fonts.primary.color\",\n            \"fallback\": \"theme.global_fonts.primary.fallback\",\n            \"font\": \"theme.global_fonts.primary.font\",\n            \"font_set\": \"theme.global_fonts.primary.font_set\"\n          }\n        },\n        \"default\": {\n          \"size\": 18,\n          \"size_unit\": \"px\"\n        },\n        \"line_height\": 1.22\n      },```\nThis isn't critical for me, but if I were to need it, it seems like the way to do it (if I can't add it to an actual font object) would be to:\n```{\nname typography\ntype group\nchildren [\n  { \n    name h1\n    type group\n    children [\n      font {...},\n      arbitrary_value \"\"\n    ]\n  }\n]\n}```\nIs this necessary?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2021-08-19 17:53:11"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Evan Grim",
+      "poster_handle": "whiteship1120"
+    },
+    "time_stamp": "2021-08-19 17:53:11",
+    "edited": {
+      "time_stamp": "2021-08-19 17:53:37"
+    },
+    "text": "It looks like \"font.styles\" is intended for this"
+  },
+  {
+    "poster": {
+      "poster_name": "Rohan Taneja",
+      "poster_handle": "rohantaneja63"
+    },
+    "time_stamp": "2021-08-19 18:46:08",
+    "text": "Hi all,\nI am an incoming Analyst @Deloitte and I'm willing to explore HubSpot CMS to grow my insights in technology consulting...\nHappy to be a part of the community! :innocent:"
+  },
+  {
+    "poster": {
+      "poster_name": "Evan Grim",
+      "poster_handle": "whiteship1120"
+    },
+    "time_stamp": "2021-08-19 21:19:36",
+    "text": "Welcome Rohan!"
+  }
+]

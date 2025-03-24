@@ -1,0 +1,10 @@
+[
+  {
+    "poster": {
+      "poster_name": "Richard Davies",
+      "poster_handle": "richard512"
+    },
+    "time_stamp": "2024-12-18 09:54:04",
+    "text": "I have done something quite similar to circumvent this problem. I have three apps, one for local, QA, and Production.\n\nI created a React Hook which checks the app ID and returns a base path for the environment, Hard coding the IDs isn’t ideal but could give you some inspiration :slightly_smiling_face:\n```import type { AppContext } from '@HubSpot/ui-extensions/dist/types';\n\nexport function useRoutes(extension: AppContext | undefined) {\n  const getAppUrl = (path: string) =&gt; {\n    if (extension) {\n      let environment: string;\n      switch (extension.appId) {\n        case 123:\n          environment = '<http://localhost:8080/>';\n          break;\n        case 456:\n          environment = '<https://qa.exaample.app/>';\n          break;\n        default:\n          environment = '<https://example.app/>';\n      }\n\n      return environment + path;\n    }\n\n    throw new Error('Failed to generate App URL, extension not defined');\n  };\n\n  return {\n    getAppUrl,\n  };\n} ```\n"
+  }
+]

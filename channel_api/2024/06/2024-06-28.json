@@ -1,0 +1,106 @@
+[
+  {
+    "poster": {
+      "poster_name": "Lalit Patel",
+      "poster_handle": "lalit180"
+    },
+    "time_stamp": "2024-06-28 04:50:47",
+    "text": "Hello\nI am looking for adding email in never log via API. Is it possible? If yes can you please point the documentation for it."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-06-28 07:43:29",
+    "edited": {
+      "time_stamp": "2024-06-28 07:43:40"
+    },
+    "text": "And I explained that isn’t possible and told you the work around is putting the email body inside a note. Does that make sense?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-06-28 07:44:40",
+    "text": "Yes, but you will need to send it thorugh a forms api, not a contact api. The forms api is the only place you can send the hubtpot token"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Elwell",
+      "poster_handle": "matthew.elwell"
+    },
+    "time_stamp": "2024-06-28 07:45:09",
+    "text": "Ok, thanks for the help. I'll look to refactor to use the forms API."
+  },
+  {
+    "poster": {
+      "poster_name": "Kaushik",
+      "poster_handle": "kaushik.abhicenation"
+    },
+    "time_stamp": "2024-06-28 08:01:21",
+    "text": "Hello @all\nI need to check the membership contact list using the email address, via API?\nI want to show only those contact, who is already registered, after Fill input type email."
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Ainslie",
+      "poster_handle": "rainslie"
+    },
+    "time_stamp": "2024-06-28 11:44:00",
+    "edited": {
+      "time_stamp": "2024-06-28 11:44:33"
+    },
+    "text": "You should either use the <https://legacydocs.HubSpot.com/docs/methods/forms/submit_form|Forms API> to submit user submitted data into HubSpot (which doesn't require authentication), or, you need to proxy your request through middleware, like a <https://developers.HubSpot.com/docs/cms/data/serverless-functions|CMS Serverless function> or custom middleware hosted outside of HubSpot if you plan to use CRM object endpoints that require authentication"
+  },
+  {
+    "poster": {
+      "poster_name": "Ivan Dunskiy",
+      "poster_handle": "i.dunskiy"
+    },
+    "time_stamp": "2024-06-28 11:47:06",
+    "text": "Hi All,\n\nI'm stuck with the API call rate limit. I use batch API, and I still need to make many calls to get all my required data.\n\nMy app works using the following flow:\n1. I get the pipelines and deal stages\n2. I get portions of deals with chosen deal stages\n3. I get the company information and all contacts in those companies associated with deals\n4. If there is no attached company to a deal, I get contacts, associated with those deals.\n5. I collect all this information in a batch and update frontend with it\n6. Celery tasks reruns and gets the following batch of deals, and the algorithm continues.\nAnd if there are, let's say, 1000+ deals I want to get contacts from, I face a 429 error: You have reached your second limit.\n\nThe HubSpot API limits calls to 100 per 10 seconds, so I have implemented an algorithm to control the number of calls within this time.\nI save a timestamp every time I make a call, and if there are more than 100 calls, it goes to sleep. I use the backoff exponential algorithm for that.\nThis approach gradually increases the wait time when the rate limit is hit.\n\n```def rate_limited_request(method, url, data=None, user_id=None, **kwargs):\n    backoff_factor = 1\n    max_backoff_time = 60  # Maximum backoff time in seconds\n\n    while True:\n        valid_timestamps = get_request_count(user_id)\n        if len(valid_timestamps) &lt; RATE_LIMIT:\n            break\n\n        earliest_timestamp = min(valid_timestamps)\n        wait_time = RATE_LIMIT_WINDOW - (time.time() - earliest_timestamp)\n        if wait_time &gt; 0:\n            backoff_time = min(wait_time * (2 ** backoff_factor), max_backoff_time)\n            jitter = random.uniform(0, 1)\n            total_wait_time = backoff_time + jitter\n\n            logger.warning(f\"Rate limit exceeded. Waiting for {total_wait_time:.2f} seconds (backoff factor: {backoff_factor})...\")\n            time.sleep(total_wait_time)\n\n            backoff_factor += 1  # Increase backoff factor for exponential backoff\n\n    add_request_timestamp(user_id)\n    response = make_HubSpot_request(method=method, url=url, data=data, user_id=user_id, **kwargs)\n    <http://logger.info|logger.info>(f\"Response from make_HubSpot_request: {response}\")\n    return response```\nBut still, even with this approach, I face 429 errors, and the app doesn't work as I expected.\nMaybe some of you have already faced with this kind of issue and can advise the solution direction."
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2024-06-28 12:19:14",
+    "text": "I'm experiencing a bug :beetle: when POSTing to the CMS HubDB Rest API endpoint *`/cms/v3/hubdb/tables`*\n\nWhen creating multiple (5x) tables in a loop, the request is 201 and response returns correctly. The problem is that one or more tables aren't actually created in my HubSpot instance, so subsequent requests to those missing tables fail. Odder still, if I go directly to the table URL in HubSpot (i.e. `<https://app.HubSpot.com/hubdb/{instanceId}/table/{tableId}>`), it's there, it's just not listed in the Hubdb tables list :thinking:\n\nIs this a known issue? Is there a solution? I'd prefer not to have validate the tables with another request, then re `POST`  for the failed table creation(s).\n\nThanks in advance!"
+  },
+  {
+    "poster": {
+      "poster_name": "John Jamie",
+      "poster_handle": "john526"
+    },
+    "time_stamp": "2024-06-28 16:40:18",
+    "text": "Hi is it possible to update an associated meeting object when a contact field changes?\n• We have set up a one-way sync of the \"meeting outcome\" field to an associated field on the contact (via a workflow with the copy action).  \n• Our use case now is that we want to copy changes from the contact field back to the meeting object, which doesn't seem possible with workflows.\n• I think the steps would be to call the Meeting API and (a) find the most recent meeting for the contact and then (b) update its \"meeting outcome\" field with the value from the contact.\nWould this work?"
+  },
+  {
+    "poster": {
+      "poster_name": "Danielle Urban",
+      "poster_handle": "danielle844"
+    },
+    "time_stamp": "2024-06-28 19:23:37",
+    "edited": {
+      "time_stamp": "2024-06-28 19:26:13"
+    },
+    "text": "If I'm using filters on a date property (NOT datetime) how would I write the javascript to designate I want everything after a specific date?\nI tried ms (1696132800000) and yyyy/mm/dd\n```'filters':[\n           {\n            'propertyName': 'date_became_a_ql_recent',\n            'operator': 'GTE',\n            'values' : '2023/10/01'\n          }]```",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-06-28 19:44:25"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Danielle Urban",
+      "poster_handle": "danielle844"
+    },
+    "time_stamp": "2024-06-28 19:44:25",
+    "text": "got it, I had `values` and needed `value`\n:woman-facepalming:"
+  }
+]

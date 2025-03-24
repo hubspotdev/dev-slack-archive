@@ -1,0 +1,155 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jason Wang",
+      "poster_handle": "alhappyma"
+    },
+    "time_stamp": "2019-06-18 06:58:34",
+    "text": "Hi.\nHow can I get value of mult-select column on HubDB?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Wang",
+      "poster_handle": "alhappyma"
+    },
+    "time_stamp": "2019-06-18 06:58:51",
+    "text": "Thanks"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-06-18 08:02:28",
+    "text": "It was the really complex way i built the module. I was basically trying to hack up a module built for a different purpose and make it be used for another which was not ideal at all. It was an internal project so its all good lol"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe",
+      "poster_handle": "joe"
+    },
+    "time_stamp": "2019-06-18 08:07:21",
+    "text": "I'm attempting something that probably doesn't work, but curious if any one else has tried.\nI have a HubDB table with a TEXT column with some JSON content in it. Something simple like:\n```\n{name: \"something\", desc: \"else\", data_id: 123}\n```\nIn a custom module, i'm trying to work out a way to access that content as if it is JSON. First thought was trying to set the content as a variable, but it's likely just interpreting it as a string:\n```\n{% set rows = hubdb_table_rows(&lt;table_id&gt;) %}\n{% for row in rows %}\n  {{ row.name }} {# default Name column in HubDB, works as expected #}\n  {% set json = row.json %}\n  {{ json.desc }} {# no output, and design manager error: cannot resolve property \"desc\" #}\n{% endfor %}\n```\nNext thought was to try and use the `escapejson` filter on the column data, but either my string is incorrect or i'm not understanding how the `escapejson` filter is supposed to work:\n```\n{% set rows = hubdb_table_rows(&lt;table_id&gt;) %}\n{% for row in rows %}\n  {% set json = row.json|escapejson %}\n  {{ json }} {# outputs: {name:\\\"something\\\",desc:\\\"else\\\",data_id:123} #}\n  {{ json.name }} {# no output, design manager error: cannot resolve property \"name\" #}\n  {{ json|selectattr('name') }} {# no output, cannot resolve property \"name\" #}\n{% endfor %}\n```\nAny advice / insight would be appreciated.",
+    "reply_count": 7,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2019-06-18 08:08:36"
+      },
+      {
+        "time_stamp": "2019-06-18 08:08:52"
+      },
+      {
+        "time_stamp": "2019-06-18 08:08:55"
+      },
+      {
+        "time_stamp": "2019-06-18 08:09:25"
+      },
+      {
+        "time_stamp": "2019-06-18 08:10:38"
+      },
+      {
+        "time_stamp": "2019-06-18 08:14:06"
+      },
+      {
+        "time_stamp": "2019-06-18 08:14:55"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Joe",
+      "poster_handle": "joe"
+    },
+    "time_stamp": "2019-06-18 08:07:59",
+    "text": "<https://designers.HubSpot.com/docs/hubl/hubl-supported-filters#escapejson>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-06-18 08:08:36",
+    "text": "<@U6GNQ7JBU> since we talked about this recently, thought you’d be the right person to tag here"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-06-18 08:08:52",
+    "text": "Not sure why this isn’t documented but you can use `fromjson`"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-06-18 08:08:55",
+    "text": "<https://github.com/HubSpot/jinjava/blob/master/src/main/java/com/HubSpot/jinjava/lib/filter/FromJsonFilter.java>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-06-18 08:09:25",
+    "text": "`{% set obj = row.json|fromjson %}` should convert it to a json object you can then query"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-06-18 08:10:38",
+    "text": "cc <@UBFA10FMF> We should get this documented"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe",
+      "poster_handle": "joe"
+    },
+    "time_stamp": "2019-06-18 08:14:06",
+    "text": "YOU ARE THE F**CKING MAN! THANK YOU!\noh man, this will simplify a hell of a frustrating thing i've been trying to handle (product options / variants)."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-06-18 08:14:55",
+    "text": ":robot_face: :male_mage::skin-tone-2:"
+  },
+  {
+    "poster": {
+      "poster_name": "Remington Begg",
+      "poster_handle": "remingtonbegg"
+    },
+    "time_stamp": "2019-06-18 11:07:27",
+    "text": "We got capped out at 10 for one of our clients because HS began enforcing a max of 10 loops"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-06-18 11:09:41",
+    "text": "This was for a featured speakers module on our site that mimicked the featured bio here:<https://www.wearediagram.com/>"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-06-18 11:10:15",
+    "text": "problem was when i built it, i connected it all to things like authors and such to pull a bunch of info that way from both authors and hubdb"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-06-18 11:10:30",
+    "text": "so it didnt make sense when a featured speaker could be anyone lol"
+  }
+]

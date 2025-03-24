@@ -1,0 +1,239 @@
+[
+  {
+    "poster": {
+      "poster_name": "Joel Goodman",
+      "poster_handle": "joel822"
+    },
+    "time_stamp": "2019-03-27 09:41:22",
+    "text": "Trying to build a module where a user has a repeater field allowing them to choose specific blog topics/tags (i’m assuming these are the same thing but HubSpot seems to have a bit of a taxonomical mishmash of terminology), and then I spit them out into a list of links. I don’t want to list ALL of the blog topics, just specific ones. Like a “featured categories” kind of deal. Is there a way to do this? From the field side of things, it seems like I can only produce a name or an ID and in the docs I’m not seeing a function (or documentation of a function) that shows how to retrieve the topic URL and Name by ID. HALP.",
+    "reply_count": 20,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-03-27 10:02:19"
+      },
+      {
+        "time_stamp": "2019-03-27 10:02:27"
+      },
+      {
+        "time_stamp": "2019-03-27 10:03:15"
+      },
+      {
+        "time_stamp": "2019-03-27 10:03:16"
+      },
+      {
+        "time_stamp": "2019-03-27 10:03:38"
+      },
+      {
+        "time_stamp": "2019-03-27 10:04:56"
+      },
+      {
+        "time_stamp": "2019-03-27 10:05:42"
+      },
+      {
+        "time_stamp": "2019-03-27 10:06:07"
+      },
+      {
+        "time_stamp": "2019-03-27 10:06:56"
+      },
+      {
+        "time_stamp": "2019-03-27 10:07:36"
+      },
+      {
+        "time_stamp": "2019-03-27 10:08:05"
+      },
+      {
+        "time_stamp": "2019-03-27 10:08:08"
+      },
+      {
+        "time_stamp": "2019-03-27 10:08:47"
+      },
+      {
+        "time_stamp": "2019-03-27 10:09:19"
+      },
+      {
+        "time_stamp": "2019-03-27 10:09:30"
+      },
+      {
+        "time_stamp": "2019-03-27 10:15:40"
+      },
+      {
+        "time_stamp": "2019-03-27 10:16:06"
+      },
+      {
+        "time_stamp": "2019-03-27 10:16:57"
+      },
+      {
+        "time_stamp": "2019-03-27 10:16:59"
+      },
+      {
+        "time_stamp": "2019-03-27 10:18:16"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2019-03-27 10:02:19",
+    "text": "You can use the tag fields. and use `{% set topic_posts = blog_recent_topic_posts('default', module.tag, 5) %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2019-03-27 10:02:27",
+    "text": "It should work with name"
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2019-03-27 10:03:15",
+    "text": "You'll have to do that for each tag in your reapeater. and then combine them into one array. Kinda like this <https://designers.HubSpot.com/docs/tutorials/combining-multiple-sets-of-blog-posts-into-a-single-listing>"
+  },
+  {
+    "poster": {
+      "poster_name": "Joel Goodman",
+      "poster_handle": "joel822"
+    },
+    "time_stamp": "2019-03-27 10:03:16",
+    "text": "I’m not looking to get the posts, though, just the URL and Name of the topic page. Creating a Topic Nav"
+  },
+  {
+    "poster": {
+      "poster_name": "Joel Goodman",
+      "poster_handle": "joel822"
+    },
+    "time_stamp": "2019-03-27 10:03:38",
+    "text": "or am I misunderstanding how HS handles topic collections?"
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2019-03-27 10:04:56",
+    "text": "You can just take the name and URL\n\n```\n{% for post in all_posts %}\n\t&lt;li&gt; &lt;a href=\"{{ post.absolute_url }}\"&gt;{{post.name}}&lt;/a&gt;&lt;/li&gt;\n{% endfor %}\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2019-03-27 10:05:42",
+    "edited": {
+      "time_stamp": "2019-03-27 10:05:45"
+    },
+    "text": "or you just wanna list the topics?"
+  },
+  {
+    "poster": {
+      "poster_name": "Joel Goodman",
+      "poster_handle": "joel822"
+    },
+    "time_stamp": "2019-03-27 10:06:07",
+    "text": "Yes. List specific topics linked to their topic posts page (what other CMSes would call an archive page)"
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2019-03-27 10:06:56",
+    "text": "```\n{% set my_topics = blog_topics('default', 250) %}\n&lt;ul&gt;\n{% for item in my_topics %}\n&lt;li&gt;&lt;a href=\"{{ blog_tag_url(group.id, item.slug) }}\"&gt;{{ item }}&lt;/a&gt;&lt;/li&gt;\n{% endfor %}\n&lt;/ul&gt;\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2019-03-27 10:07:36",
+    "text": "That will get all the topics from a specific blog"
+  },
+  {
+    "poster": {
+      "poster_name": "Joel Goodman",
+      "poster_handle": "joel822"
+    },
+    "time_stamp": "2019-03-27 10:08:05",
+    "text": "Right. How do I trim that down to very specific topics a user has identified?"
+  },
+  {
+    "poster": {
+      "poster_name": "Joel Goodman",
+      "poster_handle": "joel822"
+    },
+    "time_stamp": "2019-03-27 10:08:08",
+    "text": "Or is there no way to do that?"
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2019-03-27 10:08:47",
+    "edited": {
+      "time_stamp": "2019-03-27 10:08:50"
+    },
+    "text": "theres always a way :stuck_out_tongue:"
+  },
+  {
+    "poster": {
+      "poster_name": "Joel Goodman",
+      "poster_handle": "joel822"
+    },
+    "time_stamp": "2019-03-27 10:09:19",
+    "text": "I hope so… I don’t want a list of 50 topics, I want a list of 5 topics the user has identified."
+  },
+  {
+    "poster": {
+      "poster_name": "Joel Goodman",
+      "poster_handle": "joel822"
+    },
+    "time_stamp": "2019-03-27 10:09:30",
+    "edited": {
+      "time_stamp": "2019-03-27 10:09:32"
+    },
+    "text": "(or whatever number they choose)"
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2019-03-27 10:15:40",
+    "text": "Just tried. This work\n\n```\n{% for item in module.tags %}\n\t&lt;li&gt;&lt;a href=\"{{ blog_tag_url('default', item) }}\"&gt;{{ item }}&lt;/a&gt;&lt;/li&gt;\n{% endfor %}\n```"
+  },
+  {
+    "text": "",
+    "time_stamp": "2019-03-27 10:16:06"
+  },
+  {
+    "poster": {
+      "poster_name": "Joel Goodman",
+      "poster_handle": "joel822"
+    },
+    "time_stamp": "2019-03-27 10:16:57",
+    "text": "rad. wish the docs said anything about being able to use the tag Name in there."
+  },
+  {
+    "poster": {
+      "poster_name": "Joel Goodman",
+      "poster_handle": "joel822"
+    },
+    "time_stamp": "2019-03-27 10:16:59",
+    "text": "appreciate the help"
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2019-03-27 10:18:16",
+    "text": "NP. aslo may want to use `{{ item|capitalize|replace('-', ' ') }}` to capitalize and remove the dashes"
+  }
+]

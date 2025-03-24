@@ -1,0 +1,98 @@
+[
+  {
+    "poster": {
+      "poster_name": "Maria Matos",
+      "poster_handle": "maria.matos"
+    },
+    "time_stamp": "2024-04-24 02:21:58",
+    "edited": {
+      "time_stamp": "2024-04-24 02:22:12"
+    },
+    "text": "<@U04512YU6GH> yes, here you go:\n\n`const HubSpot = require('@HubSpot/api-client');`\n`const partner_object = \"2-19640396\";`\n\n`exports.main = async (event) => {`\n    `try {`\n        `const HubSpotClient = new HubSpot.Client({ accessToken: process.env.patoken });`\n\n        `// Extracting objectId from event.object`\n        `const companyId = event.object.objectId;`\n\n        `const activitiesResponse = await HubSpotClient.crm.associations.v4.basicApi.getPage(\"company\", companyId, [\"engagement\"]);`\n        `const activities = activitiesResponse.body.results || [];`\n        \n        `const associationsResponse = await HubSpotClient.crm.associations.v4.basicApi.getPage(`\n            `\"company\", companyId, [\"contacts\", \"deals\", \"attachments\"]`\n        `);`\n        `const associations = associationsResponse.body.results || [];`\n\n        `const contactIds = associations.filter(a => a.type === \"contact\").map(a => a.id);`\n        `const dealIds = associations.filter(a => a.type === \"deal\").map(a => a.id);`\n        `const attachmentIds = associations.filter(a => a.type === \"attachment\").map(a => a.id);`\n\n        `const batchRequests = [`\n            `HubSpotClient.crm.associations.batchApi.create(`\n                `partner_object,`\n                `event.object.objectId,`\n                `\"engagement\",`\n                `activities.map(activity => activity.id)`\n            `),`\n            `HubSpotClient.crm.associations.batchApi.createBatch(`\n                `partner_object,`\n                `event.object.objectId,`\n                `\"contact\",`\n                `contactIds`\n            `),`\n            `HubSpotClient.crm.associations.batchApi.createBatch(`\n                `partner_object,`\n                `event.object.objectId,`\n                `\"deal\",`\n                `dealIds`\n            `),`\n            `HubSpotClient.crm.associations.batchApi.createBatch(`\n                `partner_object,`\n                `event.object.objectId,`\n                `\"attachment\",`\n                `attachmentIds`\n            `)`\n        `];`\n\n        `await Promise.all(batchRequests);`\n\n        `console.log(\"Associations created successfully.\");`\n\n        `return { statusCode: 200 };`\n    `} catch (error) {`\n        `console.error(\"Error processing event:\", error);`\n        `return { statusCode: 500 };`\n    `}`\n`};`"
+  },
+  {
+    "poster": {
+      "poster_name": "Tony Koehn",
+      "poster_handle": "tony641"
+    },
+    "time_stamp": "2024-04-24 09:38:31",
+    "text": "What is the behavior of the \"is known\"?  I would think that it just means that if a value exists.  If that's the case then any update to the record would result in a true test."
+  },
+  {
+    "poster": {
+      "poster_name": "Tony Koehn",
+      "poster_handle": "tony641"
+    },
+    "time_stamp": "2024-04-24 11:33:47",
+    "text": "A chat with HubSpot support confirmed that the way I am doing this is the correct way to do it."
+  },
+  {
+    "poster": {
+      "poster_name": "Tony Koehn",
+      "poster_handle": "tony641"
+    },
+    "time_stamp": "2024-04-24 13:38:40",
+    "text": "Another workflow question.   Is it possible to notify the person who just saved a record of an error that may have occurred when processing the workflow?\n\nLets say Bob just saved a custom object record and the workflow sends out a webhook to update another system,  that system returns an error.  How can I tell Bob that an error occurred?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-04-25 00:33:30"
+      },
+      {
+        "time_stamp": "2024-04-25 06:51:39"
+      },
+      {
+        "time_stamp": "2024-04-25 06:58:12"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kenny Buckles",
+      "poster_handle": "kenny962"
+    },
+    "time_stamp": "2024-04-24 14:01:32",
+    "edited": {
+      "time_stamp": "2024-04-24 14:02:05"
+    },
+    "text": "I'm trying to build and test some custom code locally. I have my local environment set up, I am trying to utilize `HubSpotClient.crm.objects.associationsApi`, but IntelliSense is not showing that as an option. I have also tried following the example code here: <https://github.com/HubSpot/sample-workflow-custom-code/blob/main/samples/associate_contact_deals_to_company.js>, and that returns an error `{\"errorType\":\"TypeError\",\"errorMessage\":\"Cannot read properties of undefined (reading 'getAll')\",\"stack\":[\"TypeError: Cannot read properties of undefined (reading 'getAll')\",\"...`\n\nIs there a new way to query for associations and get all associations for a contact or group of contacts?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-04-25 00:29:07"
+      },
+      {
+        "time_stamp": "2024-04-25 11:05:16"
+      },
+      {
+        "time_stamp": "2024-04-25 11:05:39"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Goran Ilievski",
+      "poster_handle": "goran308"
+    },
+    "time_stamp": "2024-04-24 16:59:45",
+    "text": "\"is known\" becomes true every time a property is updated. Check out the answer from Meghan from HubSpot on this post <https://community.HubSpot.com/t5/HubSpot-Ideas/Trigger-a-workflow-when-a-property-value-has-been-changed/idi-p/4697|https://community.HubSpot.com/t5/HubSpot-Ideas/Trigger-a-workflow-when-a-property-value-has-been-changed/idi-p/4697>"
+  },
+  {
+    "poster": {
+      "poster_name": "Christensen Magtoto",
+      "poster_handle": "chris858"
+    },
+    "time_stamp": "2024-04-25 00:29:07",
+    "text": "Hey Kenny, as stated in the error code, you are doing a \"getAll\" to an undefined variable. Check the value of the variable where you are making the \"getAll\" call and make sure that it's not undefined."
+  },
+  {
+    "poster": {
+      "poster_name": "Christensen Magtoto",
+      "poster_handle": "chris858"
+    },
+    "time_stamp": "2024-04-25 00:33:30",
+    "text": "Yes. By creating a webhook (BETA) triggered workflow to receive the webhook from the 3rd party system and check for an error. If an error exist then send an email to the owner/user."
+  }
+]

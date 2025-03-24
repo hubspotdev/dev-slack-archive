@@ -1,0 +1,52 @@
+[
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-12-09 13:06:16",
+    "text": "Hey me again :smile:\nI'm replicating the Real Estate HubDB Tutorial and was wondering how I'd modify this to just search the database only rather than both filter and search?\nThe client's database has approx 5000 rows of data, and I'm reluctant to go in and manually add a select option to each row just to get this example working"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-12-09 13:07:13",
+    "text": "My code is exactly like the example in the tutorial so far, but which bits do I delete in order to just have the search?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-12-09 13:07:46",
+    "text": "```\n&lt;!-- Set the filter by drop down, search bar, and submit button --&gt;\n&lt;div&gt;\n  &lt;form id=\"form_id\" method=\"get\"&gt;\n    &lt;div&gt;\n      &lt;h4&gt;Filter by Listing Type: &lt;/h4&gt;\n      &lt;select name=\"type\" form=\"form_id\" onChange=\"this.form.submit()\"&gt;\n        &lt;option value=\"show-all\"&gt;Show All&lt;/option&gt;\n        {% set types = hubdb_table_column(1029685, \"type\").options %}\n        {% for choice in types %}\n          {% set type_list = type_list~choice.id|list %}\n          {% if choice.id == request.query_dict.type %}\n            &lt;option selected=\"selected\" value=\"{{ choice.id }}\"&gt;{{ choice.name }}&lt;/option&gt;\n          {% else %}\n            &lt;option value=\"{{ choice.id }}\"&gt;{{ choice.name }}&lt;/option&gt;\n          {% endif %}\n        {% endfor %}\n      &lt;/select&gt;\n    &lt;/div&gt;\n    \n    &lt;!-- Search field --&gt;\n    &lt;div&gt;\n      &lt;input name=\"listing_address\" type=\"text\" id=\"search-by\" class=\"autocomplete\" placeholder=\"Search by City or Zip Code...\"&gt;\n    &lt;/div&gt;\n    &lt;input id=\"submit-button\" type=\"submit\" value=\"search\"&gt;\n    \n  &lt;/form&gt;\n&lt;/div&gt;\n\n&lt;!-- Set the different query parameters using submitted input for hubdb query --&gt;\n{% set queryparam = \"\" %}\n{% if request.query_dict.type in [\"1\", \"2\", \"3\", \"4\"] and request.query_dict.listing_address == \"\" %}\n  {% set queryparam = queryparam ~ \"&amp;type=\"~request.query_dict.type|urlencode %}\n{% endif %}\n{% if request.query_dict.type in [\"1\", \"2\", \"3\", \"4\"] and request.query_dict.listing_address != \"\" %}\n  {% set queryparam = queryparam~\"&amp;type=\"~request.query_dict.type|urlencode~\"&amp;listing_address__icontains=\"~request.query_dict.listing_address|urlencode %}\n{% endif %}\n{% if request.query_dict.type == \"show-all\" and request.query_dict.listing_address != \"\" %}\n  {% set queryparam = queryparam~\"&amp;listing_address__icontains=\"~request.query_dict.listing_address|urlencode %}\n{% endif %}\n\n&lt;!-- Render Listing database --&gt;\n{% set table = hubdb_table_rows(1029685, queryparam) %}\n\n{% if table == [] %}\n  &lt;p class='align-center'&gt;Sorry, no listings found for that Search. Try changing your filter and search again.&lt;/p&gt;\n{% else %}\n  {% for row in table %}\n    &lt;div&gt;\n      &lt;div class=\"{{ row[\"type\"].name }}\"&gt;\n        &lt;div&gt;&lt;img src=\"{{ row[\"listing_image\"].url }}\"&gt;&lt;/div&gt;\n        &lt;div&gt;\n          &lt;h2&gt;{{ row[\"listing_price\"] }}&lt;/h2&gt;\n          &lt;h3&gt;{{ row[\"listing_address\"] }}&lt;/h3&gt;\n          &lt;h4&gt;{{ row[\"type\"].name }}&lt;/h4&gt;\n          &lt;div&gt;\n            &lt;ul&gt;\n              &lt;li&gt;&lt;span&gt;{{ row[\"listing_bedrooms\"] }}&lt;/span&gt;&lt;br&gt;bd&lt;/li&gt;\n              &lt;li&gt;&lt;span&gt;{{ row[\"listing_baths\"] }}&lt;/span&gt;&lt;br&gt;ba&lt;/li&gt;\n              &lt;li&gt;&lt;span&gt;{{ row[\"listing_sq_ft\"] }}&lt;/span&gt;&lt;br&gt;sq ft&lt;/li&gt;\n              &lt;li&gt;&lt;span&gt;{{ row[\"listing_acres\"] }}&lt;/span&gt;&lt;br&gt;acres&lt;/li&gt;\n            &lt;/ul&gt;\n          &lt;/div&gt;\n          &lt;div class=\"button\"&gt;&lt;a href=\"{{ row[\"listing_url\"] }}\"&gt;Details&lt;/a&gt;&lt;/div&gt;\n        &lt;/div&gt;\n      &lt;/div&gt;  \n    &lt;/div&gt;\n  {% endfor %}\n{% endif %}\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-12-09 13:08:31",
+    "text": "I'm guessing deleting the `select` html is fine, however, my module returns errors when I try to modify the `queryparam`"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-12-09 13:08:42",
+    "text": "```\n&lt;!-- Set the different query parameters using submitted input for hubdb query --&gt;\n{% set queryparam = \"\" %}\n{% if request.query_dict.type in [\"1\", \"2\", \"3\", \"4\"] and request.query_dict.listing_address == \"\" %}\n  {% set queryparam = queryparam ~ \"&amp;type=\"~request.query_dict.type|urlencode %}\n{% endif %}\n{% if request.query_dict.type in [\"1\", \"2\", \"3\", \"4\"] and request.query_dict.listing_address != \"\" %}\n  {% set queryparam = queryparam~\"&amp;type=\"~request.query_dict.type|urlencode~\"&amp;listing_address__icontains=\"~request.query_dict.listing_address|urlencode %}\n{% endif %}\n{% if request.query_dict.type == \"show-all\" and request.query_dict.listing_address != \"\" %}\n  {% set queryparam = queryparam~\"&amp;listing_address__icontains=\"~request.query_dict.listing_address|urlencode %}\n{% endif %}\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-12-09 13:15:05",
+    "text": "What I attempted:\n```\n&lt;!-- Set the different query parameters using submitted input for hubdb query --&gt;\n{% set queryparam = \"\" %}\n{% if request.query_dict.listing_address != \"\" %}\n  {% set queryparam = queryparam~\"&amp;listing_address__icontains=\"~request.query_dict.listing_address|urlencode %}\n{% endif %}\n```"
+  },
+  null,
+  null
+]

@@ -1,0 +1,232 @@
+[
+  {
+    "poster": {
+      "poster_name": "Paul Crossley",
+      "poster_handle": "paul.crossley"
+    },
+    "time_stamp": "2023-10-20 06:00:05",
+    "edited": {
+      "time_stamp": "2023-10-20 06:07:56"
+    },
+    "text": "Hey guys, apologies if this has been posted before but could someone help me with what the correct layout for the meta.js file is? - I need the module to display in the page editor, however neither of the below seem to be working.\n\nI've tried both\n```export const meta = {\n  \"label\" : \"Switchback\",\n  \"global\" : false,\n  \"host_template_types\" : [ \"PAGE\" ],\n  \"is_available_for_new_content\" : true\n\n}```\n```{\n  label: 'Switchback',\n  global: false,\n  host_template_types: ['PAGE'],\n  is_available_for_new_content: true,\n}```",
+    "reply_count": 18,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-10-20 06:22:21"
+      },
+      {
+        "time_stamp": "2023-10-20 06:23:03"
+      },
+      {
+        "time_stamp": "2023-10-20 06:27:43"
+      },
+      {
+        "time_stamp": "2023-10-20 06:29:05"
+      },
+      {
+        "time_stamp": "2023-10-20 06:29:15"
+      },
+      {
+        "time_stamp": "2023-10-20 06:37:04"
+      },
+      {
+        "time_stamp": "2023-10-20 06:54:31"
+      },
+      {
+        "time_stamp": "2023-10-20 06:54:42"
+      },
+      {
+        "time_stamp": "2023-10-20 07:05:50"
+      },
+      {
+        "time_stamp": "2023-10-20 07:09:08"
+      },
+      {
+        "time_stamp": "2023-10-20 07:09:25"
+      },
+      {
+        "time_stamp": "2023-10-20 07:22:20"
+      },
+      {
+        "time_stamp": "2023-10-20 07:34:59"
+      },
+      {
+        "time_stamp": "2023-10-20 07:35:15"
+      },
+      {
+        "time_stamp": "2023-10-20 07:36:04"
+      },
+      {
+        "time_stamp": "2023-10-20 07:36:16"
+      },
+      {
+        "time_stamp": "2023-10-20 07:37:05"
+      },
+      {
+        "time_stamp": "2023-10-20 07:37:18"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-10-20 06:22:21",
+    "text": "The `meta` module export needs to be exported from the Module `index` i.e. <https://github.com/HubSpot/cms-js-building-block-examples/blob/main/contact-profile/contact-profile-project/contact-profile-app/components/modules/ContactProfile/index.jsx#L111|https://github.com/HubSpot/cms-js-building-block-examples/blob/main/contact-profil[…]contact-profile-app/components/modules/ContactProfile/index.jsx>"
+  },
+  {
+    "poster": {
+      "poster_name": "Paul Crossley",
+      "poster_handle": "paul.crossley"
+    },
+    "time_stamp": "2023-10-20 06:23:03",
+    "edited": {
+      "time_stamp": "2023-10-20 06:23:20"
+    },
+    "text": "Hey Byron, thanks for getting back to me.\n\nit is being exported in the index.js\n\n```\nexport { fields } from \"./switchbackFields.jsx\";\nexport { default as Component } from \"./switchbackComponent.jsx\";\nexport { meta } from \"./switchbackMeta.js\";```"
+  },
+  {
+    "poster": {
+      "poster_name": "Paul Crossley",
+      "poster_handle": "paul.crossley"
+    },
+    "time_stamp": "2023-10-20 06:27:43",
+    "text": "I've also tried adding the meta as specified in the link you sent and it still doesn't appear in the editor"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-10-20 06:29:05",
+    "edited": {
+      "time_stamp": "2023-10-20 06:29:06"
+    },
+    "text": "hmm - and you are building/deploying without issue?"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-10-20 06:29:15",
+    "text": "Can you DM your portal id?"
+  },
+  {
+    "poster": {
+      "poster_name": "Paul Crossley",
+      "poster_handle": "paul.crossley"
+    },
+    "time_stamp": "2023-10-20 06:37:04",
+    "text": "Ah it's failing to deploy due to me using\n```import ReactHtmlParser from 'react-html-parser';```\n (saying it would break at runtime) for parsing the html I had added into the default of a RichTextField\n\n```&lt;RichTextField name=\"content\" label=\"Content\" default=\"&lt;h2&gt;Test Title&lt;/h2&gt;&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc at malesuada purus. Etiam sed turpis eget risus auctor scelerisque. Pellentesque ut libero vel sem feugiat cursus. Aenean aliquet ante augue, eu iaculis orci lobortis non. Donec non augue non leo tempus ullamcorper.&lt;/p&gt;\"/&gt;```\nbut when I call the richtext field it renders out the html as plaintext without the parser, is there another way around this?\n\n```{ReactHtmlParser(fields.content_column.content)}```\nThis works when using the local dev server though,"
+  },
+  {
+    "poster": {
+      "poster_name": "Paul Crossley",
+      "poster_handle": "paul.crossley"
+    },
+    "time_stamp": "2023-10-20 06:54:31",
+    "text": "although saying that when I remove that import I get another build error.\n\n```[ERROR] Building JS Project with error message `Could not resolve \"./switchbackFields.jsx\" from \"customer-package/components/modules/Switchback/index.js\"```"
+  },
+  {
+    "poster": {
+      "poster_name": "Paul Crossley",
+      "poster_handle": "paul.crossley"
+    },
+    "time_stamp": "2023-10-20 06:54:42",
+    "text": "I'm not really sure where the issue is at this point :sweat_smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-10-20 07:05:50",
+    "text": "&gt; but when I call the richtext field it renders out the html as plaintext without the parser, is there another way around this?\nYou can use `dangerouslySetInnerHTML` <https://react.dev/reference/react-dom/components/common#dangerously-setting-the-inner-html>"
+  },
+  {
+    "poster": {
+      "poster_name": "Paul Crossley",
+      "poster_handle": "paul.crossley"
+    },
+    "time_stamp": "2023-10-20 07:09:08",
+    "text": "I saw that but wasn't sure if that was best practice in HS modules, thanks for the confirmation I can use it :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-10-20 07:09:25",
+    "text": "Yeah, for Rich text specifically I think this is the way to go right now."
+  },
+  {
+    "poster": {
+      "poster_name": "Paul Crossley",
+      "poster_handle": "paul.crossley"
+    },
+    "time_stamp": "2023-10-20 07:22:20",
+    "text": "Okay so I've got it built and deployed fine, and is now appearing in the page editor however no fields are displaying in the editor.\n\nIs there a particular setting needed on each field in the fields.jsx file to show it to the editor?"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-10-20 07:34:59",
+    "text": "as long as your `index` is exporting a `fields` export which is a valid react tree...\n\n```// fields.jsx\n\nimport {\n  ModuleFields,\n  TextField,\n  RichTextField,\n} from '@HubSpot/cms-components/fields';\n\nexport const fields = (\n  &lt;ModuleFields&gt;\n    &lt;TextField\n      label=\"Candidates Title\"\n      name=\"candidateTitle\"\n      default=\"Candidates\"\n    /&gt;\n    &lt;RichTextField\n      label=\"Candidates Description\"\n      name=\"candidatesDescription\"\n      default=\"Something short and leading about the collection below—its\n              contents, the creator, etc. Make it short and sweet, but not too\n              short so folks don't simply skip over it entirely.\"\n    /&gt;\n  &lt;/ModuleFields&gt;\n);```"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-10-20 07:35:15",
+    "edited": {
+      "time_stamp": "2023-10-20 07:35:26"
+    },
+    "text": "```// index.js\n\nexport { fields } from './fields.jsx';\nexport { default as Component } from './NewsFeed.jsx';\nexport { meta } from './meta.js';```"
+  },
+  {
+    "poster": {
+      "poster_name": "Paul Crossley",
+      "poster_handle": "paul.crossley"
+    },
+    "time_stamp": "2023-10-20 07:36:04",
+    "text": "```import{\n    ModuleFields,\n    FieldGroup,\n    RichTextField,\n    ImageField,\n    ChoiceField,\n} from '@HubSpot/cms-components/fields';\n\nexport const fields = (\n\n    &lt;ModuleFields&gt;\n        &lt;ChoiceField name=\"layout_choice\" label=\"layout_choice\" choices=\"[Text Left,Text Right]\" display=\"select\" default=\"Text Left\" /&gt;\n        &lt;FieldGroup name = \"content_column\"&gt;\n            &lt;RichTextField name=\"content\" label=\"Content\" default=\"&lt;h2&gt;Test Title&lt;/h2&gt;&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc at malesuada purus. Etiam sed turpis eget risus auctor scelerisque. Pellentesque ut libero vel sem feugiat cursus. Aenean aliquet ante augue, eu iaculis orci lobortis non. Donec non augue non leo tempus ullamcorper.&lt;/p&gt;\"/&gt;\n        &lt;/FieldGroup&gt;\n        &lt;FieldGroup name = \"image_column\"&gt;\n            &lt;ImageField name=\"image\" label=\"image\" default={{ src: \"<https://26918745.fs1.HubSpotusercontent-eu1.net/hubfs/26918745/DALL%C2%B7E%202023-10-19%2013.27.10%20-%20Photo%20of%20a%20human-looking%20robot%20with%20design%20elements%20inspired%20by%20the%20React%20programming%20language.%20The%20robot%20has%20a%20sleek%2c%20modern%20appearance%2c%20with%20a%20blue%20.png>\" }}/&gt;\n        &lt;/FieldGroup&gt;\n    &lt;/ModuleFields&gt;\n);```"
+  },
+  {
+    "poster": {
+      "poster_name": "Paul Crossley",
+      "poster_handle": "paul.crossley"
+    },
+    "time_stamp": "2023-10-20 07:36:16",
+    "text": "```\nexport { fields } from \"./switchbackFields.jsx\";\nexport { default as Component } from \"./switchbackComponent.jsx\";\nexport { meta } from \"./switchbackMeta.js\";```"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-10-20 07:37:05",
+    "text": "what does your meta look like?"
+  },
+  {
+    "poster": {
+      "poster_name": "Paul Crossley",
+      "poster_handle": "paul.crossley"
+    },
+    "time_stamp": "2023-10-20 07:37:18",
+    "text": "```export const meta = {\n  label: 'Switchback',\n  global: false,\n  host_template_types: ['PAGE'],\n  is_available_for_new_content: true,\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2023-10-20 09:52:54",
+    "text": "Working on a fix for this now!"
+  }
+]

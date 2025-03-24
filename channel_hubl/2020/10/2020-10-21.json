@@ -1,0 +1,45 @@
+[
+  {
+    "text": "Hey all,\n\nDo you have a bulletproof solution to store RT content ( HubL ) including a CTA element in a JSON object?\nHow would you escape the special chars 100% so that we see no SyntaxError ?\n\n\n\n\t`var faqs= [`\n\t\t`{% for item in module.items %}`\n\t\t`{`\n\t\t\t`next : \"{{ item.richtext_field|escapejson }}\",`\t\n           `next2 : {{ item.richtext_field|tojson  }}`\n\t\t`}{% if index.last %}{% else %},{% endif %}`\n\t\t`{% endfor %%}`\n\t`]`",
+    "time_stamp": "2020-10-21 02:35:40",
+    "edited": {
+      "time_stamp": "2020-10-21 02:37:10"
+    }
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2020-10-21 05:08:24",
+    "text": "You are correct about the docs. But somehow, this doesn’t work:\n\n```{% macro utils(columns_size) -%}\n{% set desktop_column = columns_size.count.desktop ? columns_size.count.desktop~'--'~columns_size.gap.desktop : '' %}\n{% set tablet_column = columns_size.count.tablet ? columns_size.count.tablet~'-o--'~columns_size.gap.tablet : '' %}\n{% set mobile_column = columns_size.count.mobile ? columns_size.count.mobile~'-o--'~columns_size.gap.mobile : '' %}\n{% set desktop_margin = columns_size.margin.desktop ? 'u-gallery-col-margin--'~columns_size.margin.desktop : '' %}\n{% set tablet_margin = columns_size.margin.tablet ? 'u-gallery-col-margin--'~columns_size.margin.tablet : '' %}\n{% set mobile_margin = columns_size.margin.mobile ? 'u-gallery-col-margin--'~columns_size.margin.mobile : '' %}\n\n{{desktop_column}} {{tablet_column}} {{mobile_column}} {{desktop_margin}} {{tablet_margin}} {{mobile_margin}}\n{% endmacro %}```\nOutputs the following:\n```&lt;div class=\"\n\n\n\n\n\n\ng-1/3@l--l g-1/2@m-o--m g-1/1@s-o--s u-gallery-col-margin--l u-gallery-col-margin--m u-gallery-col-margin--s\n\"&gt;&lt;/div&gt;```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Karpeles",
+      "poster_handle": "stephen254"
+    },
+    "time_stamp": "2020-10-21 11:05:46",
+    "text": "Is there a way to hide code in the DOM if a module field is empty? For example:\n```{% if module.title %}\n  &lt;h1&gt;Title text here&lt;/h1&gt;\n{% else %}\n{% endif %}```\n",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2020-10-21 12:09:02"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2020-10-21 12:09:02",
+    "text": "You do not need the `{% else %}`\n\n```{% if module.title %}\n  &lt;h1&gt;Title text here&lt;/h1&gt;\n{% endif %}```\nshould work"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2020-10-21 19:27:15",
+    "text": "You’ll want to use. it with your sets as well. All whitespace inside of a macro is printed unless stripped."
+  }
+]

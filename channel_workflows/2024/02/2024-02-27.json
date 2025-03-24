@@ -1,0 +1,80 @@
+[
+  {
+    "poster": {
+      "poster_name": "Alex Ratiu",
+      "poster_handle": "alex.ratiu"
+    },
+    "time_stamp": "2024-02-27 12:22:59",
+    "text": "The workflow is company-based, if I create the active list based on company then I filter based on contacts enrolled to that specific workflow will not show, because the workflow was done on the company based."
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2024-02-27 12:41:27",
+    "text": "Create a company based list the and use enrolled in workflow."
+  },
+  {
+    "text": "So our team is wanting to create a workflow that sends marketing emails to a contact after they start a trial of one of our products. What we are needing though, is for the workflow to end if at any point the user has finally purchased a subscription to our product. Our planned approach is as follows:\n• trigger a custom event signifying a contact has started a trial\n• this would enroll them in the workflow\n• then at any point during the trial in which we want to trigger an email, have branch logic that makes an external API call to our system and checks for the contacts active subscriptions.\n• If they have a subscription to our product, end the workflow\n• If they do not have a subscription to our product, continue and send the marketing email\n• and then repeat that branching logic until we are done wanting to send the contact any emails\nDoes this approach seem feasible or would there be another way to go about it? We happened to come across the `Send a webhook` step which allows you to GET info from an external API, so that's what we were planning to leverage to check for a contacts current subscription status.\n\nIf this works, can we create our own reusable building block or step that will make that external API call, so we don't need to configure it over and over again?\n\ncc <@U05R380MLMC> <@U01GW2U4WMA> since you both responded to me",
+    "time_stamp": "2024-02-27 12:51:05"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-02-27 12:58:07",
+    "text": "What HubSpot products are you subscribed to?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-02-27 13:00:52",
+    "edited": {
+      "time_stamp": "2024-02-27 13:06:05"
+    },
+    "text": "My instinct here tells me you are going to want to use the \"unenrollment\" feature built directly into HubSpot workflows.\n\nThis means you would build a simple workflow with delays and then contacts can be unenrolled when they meet certain criteria.\n\nTo do this, you would update the contact from your application that subscription has been purchased.",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-02-28 06:47:53"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-02-27 13:01:31",
+    "text": "My opinion is that the branching logic for the multiple get requests can be elliminated if you can update the contact record and configure an unenrollment trigger."
+  },
+  {
+    "text": "",
+    "time_stamp": "2024-02-27 13:01:41"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-02-27 13:03:07",
+    "text": "This can also work with \"lists\" and you can then have a list of contacts who are \"trialing\" and contacts who have \"purchased\".  That way you can unenroll a contact when they get added to the \"purchased\" list."
+  },
+  {
+    "poster": {
+      "poster_name": "Daryl Thomas",
+      "poster_handle": "dthomas501"
+    },
+    "time_stamp": "2024-02-27 15:02:11",
+    "text": "Got it, that is good to know! Will take a little bit of time to explore unenrollment more. If we don't want to push to HubSpot, is the approach I laid out still feasible?"
+  },
+  {
+    "text": "In theory, yes, your approach would work.\n\nYou would pass either the email or HubSpot_object_id to your service, it would then perform a lookup and return some data that you can branch off of.\n\nYou can use custom coded actions which provides more granular control over the data you send and how to process the response or send a webhook which means you have a service which can receive query parameters and processes the request.\n\nI did a bit more research and while I understand you don't want to push to HubSpot, I just saw a new feature that was released which actually triggers workflows based on webhooks (pretty intriguing if you ask me).\n\nHopefully this gets you going in the right direction and if you need any assistance in setting this up - don't hesitate to send me a DM.",
+    "time_stamp": "2024-02-27 16:58:55"
+  }
+]

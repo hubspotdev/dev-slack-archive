@@ -1,0 +1,49 @@
+[
+  {
+    "text": "<@U9KA594Q3> thank you very much. I've created a custom module with Programmable Email Beta enabled, put this module into a mail and in the module I've placed some test code:\n\n```&lt;!--\n  templateType: \"email\"\n  isAvailableForNewContent: true\n  isEnabledForEmailV3Rendering: true\n--&gt;\n{% set cb = personalization_token('contact.blob') %}\n{% set cd = cb|fromjson %}\n\nThe role is {{ cd.role }} and json is {{ cb }}```\nI created a textfield in Contact named `blob`\nWhen I trigger the mail with this data in `contact.blob` : `\"[{\\\"field1\\\": \\\"test value\\\", \\\"role\\\": \\\"developer\\\"}]\"`\nThe output is like this:",
+    "time_stamp": "2021-11-24 05:56:22",
+    "edited": {
+      "time_stamp": "2021-11-24 05:58:20"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Remco van Arkelen",
+      "poster_handle": "remco.van.arkelen"
+    },
+    "time_stamp": "2021-11-24 05:59:18",
+    "text": "It still looks like I cannot use filters like `fromjson` in programmable modules, see this documentation taken from <https://developers.HubSpot.com/docs/cms/hubl/filters>\n\n```Please note that using filters on any personalization variables (such as but not limited to contacts, company, and deal variables) is not currently supported for email in HubSpot due to how emails are rendered. Filters can be applied to these properties on HubSpot CMS page and blog templates.```"
+  },
+  {
+    "poster": {
+      "poster_name": "Remco van Arkelen",
+      "poster_handle": "remco.van.arkelen"
+    },
+    "time_stamp": "2021-11-24 06:15:56",
+    "text": "<@U9KA594Q3> A second attempt, it feels like I'm so close, but yet so far away :smile:\n\nI've created a variable in my module called `blob` and altered the module like this:\n\n```&lt;!--\n  templateType: \"email\"\n  isAvailableForNewContent: true\n  isEnabledForEmailV3Rendering: true\n--&gt;\n{% set cb = personalization_token(blob) %}\n{% set cd = cb|fromjson %}\n\nThe role is {{ cd.role }} and json is {{ cb }}```\nThen, in the mail template I've tried multiple things to pass a value to blob, but I can't find how to pass in a Contact-variable to the module, is this possible?\nThanks for your time."
+  },
+  {
+    "poster": {
+      "poster_name": "Joe O'Hara",
+      "poster_handle": "johara"
+    },
+    "time_stamp": "2021-11-24 06:31:34",
+    "text": "Try using the contact property directly instead of via personalization_token . so `contact.blob` instead"
+  },
+  {
+    "poster": {
+      "poster_name": "Remco van Arkelen",
+      "poster_handle": "remco.van.arkelen"
+    },
+    "time_stamp": "2021-11-24 06:50:41",
+    "text": "In the module? My code looks like this now:\n\n```&lt;!--\n  templateType: \"email\"\n  isAvailableForNewContent: true\n  isEnabledForEmailV3Rendering: true\n--&gt;\n{% set cb = contact.blob %}\n{% set cd = cb|fromjson %}\n\nThe role is {{ cd.role }} and json is {{ cb }}```\nBut output in mail is:\n\n```The role is and json is```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe O'Hara",
+      "poster_handle": "johara"
+    },
+    "time_stamp": "2021-11-24 06:51:58",
+    "text": "Can you DM me a link to the email/module?"
+  }
+]

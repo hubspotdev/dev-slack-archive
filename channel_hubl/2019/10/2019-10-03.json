@@ -1,0 +1,436 @@
+[
+  {
+    "poster": {
+      "poster_name": "Robert Pupaza",
+      "poster_handle": "robert.pupaza"
+    },
+    "time_stamp": "2019-10-03 04:51:25",
+    "text": "Hi, based on this article `<https://designers.HubSpot.com/docs/hubl/export-to-template-context>`  `export_to_template_context=True is no longer supported in custom modules as the new module framework supports all HubL fields applicable. ` is there a way to pull HubDB data and sent it to the editor? for example - a `choice filed` with all the data under a `multi-select HubDB column` and show it into the editor for the creator to choose the value of that item ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nick Merritt",
+      "poster_handle": "nmerritt"
+    },
+    "time_stamp": "2019-10-03 09:56:33",
+    "text": "Thank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Steven Hambleton",
+      "poster_handle": "steven994"
+    },
+    "time_stamp": "2019-10-03 17:06:15",
+    "edited": {
+      "time_stamp": "2019-10-03 17:06:36"
+    },
+    "text": "Hi all,\n\nI've built a method (based on previous people's work) of allowing clients to choose which modules they'd like to appear when creating an email in HubSpot.\n\nBetween each step, you need to refresh to see the results of your choices appear.\n\nThe steps are -\n• Choose how many modules you need\n• (after refresh, drop downs appear for the number of modules you asked for appear below the above option)\n* Choose a module from each module drop down\n* (after refresh, the modules you chose appear below the above options)\n* Configure each module's options (custom fields etc)\n* Profit\n\nNow the issue is that if you choose the same module twice, it only appears once in the left side list which I suspect is because it uses the same module ID (which I've shortened to module_1 but is normally a longer string of numbers).\n\nIs there any way in the code I posted, to suffix a dynamic number to the end of an id maybe based on the order of the module chosen? So for example, if I chose CTA as option 2 and 5 then it would suffix `_2` and `_5` to the end of the module ID?\n\nHere is the code -\n\n```{% extends \"/Email/Layouts/main.html\" %}\n\n{% set sections = range(1, 5) %}\n{% choice \"sections_field\" label=\"How many content modules?\", value=\"1\", choices=\"{{ sections }}\", export_to_template_context=True %}\n\n{% set layout = '[\n\"Banner\",\n\"Content\",\n\"CTA\"\n]' %}\n{% for section in sections|split(',', widget_data.sections_field.value) %}\n\t\t{% choice \"layout_field\" label=\"Layout for block (Content)\", value=\"\", choices=\"{{ layout }}\", export_to_template_context=True, unique_in_loop=True %}\n{% endfor %}\n\n{% block modules %}\n\t{% for widget in widget_data %}\n\t\t{% if loop.index0 &lt;= widget_data.sections_field.value %}\n\t\t\t\t{% if widget.value == \"Banner\" %}\n\t\t\t\t\t\t{% module \"module_1\" path=\"/Email/Modules/Banner\" label=\"Banner\" no_wrapper='True' %}\n\t\t\t\t{% elif widget.value == \"Content\" %}\n\t\t\t\t\t\t{% module \"module_2\" path=\"/Email/Modules/Content\" label=\"Content\" no_wrapper='True' %}\n\t\t\t\t{% elif widget.value == \"CTA\" %}\n\t\t\t\t\t\t{% module \"module_3\" path=\"/Email/Modules/CTA\" label=\"CTA\" no_wrapper='True' %}\n\t\t\t\t{% endif %}\n\t\t{% endif %}\n  {% endfor %}\n{% endblock %}\n```",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-10-03 17:30:29"
+      },
+      {
+        "time_stamp": "2019-10-03 17:31:25"
+      },
+      {
+        "time_stamp": "2019-10-03 17:34:35"
+      },
+      {
+        "time_stamp": "2019-10-03 19:45:42"
+      },
+      {
+        "time_stamp": "2019-10-03 23:22:32"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2019-10-03 17:30:29",
+    "edited": {
+      "time_stamp": "2019-10-03 17:30:45"
+    },
+    "text": "you can use the `unique_in_loop=\"True\" ` module parameter"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2019-10-03 17:31:25",
+    "text": "my testing shows its very finicky.. u have to do True with capital T and in quotes for it to work"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2019-10-03 17:34:35",
+    "text": "`{% module \"module_1\" path=\"/Email/Modules/Banner\" label=\"Banner\" no_wrapper='True' unique_in_loop=\"True\" %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 19:05:19",
+    "text": "well this is pretty frustrating. To pull in blog posts from a `blog_recent_tag_posts()` you use the category slug. If you use more than one it does a contains 1st tag OR 2nd tag.\n\nSo I thought, lets see if we can determine if a post has both by using something like this `{% if filter1 is within content.topic_list &amp;&amp; filter2 is within content.topic_list %}` but `content.topic_list` is not the tag slug, it is the tag name.\n\nHow can I get access to the blog's tag slugs? I've checked `developer info` and they only have names..not a list of the slugs.",
+    "reply_count": 4,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2019-10-03 19:05:54"
+      },
+      {
+        "time_stamp": "2019-10-03 19:07:01"
+      },
+      {
+        "time_stamp": "2019-10-03 19:08:27"
+      },
+      {
+        "time_stamp": "2019-10-03 19:17:51"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 19:05:54",
+    "text": "If there is a different way to do this I'm all ears. I may be over thinking this"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 19:07:01",
+    "text": "The biggest problem with this is the blog tags are like `ABC, US Word, Canada Word, BIG` where they don't have a normalization."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 19:08:27",
+    "text": "nevermind, I'm dense, I think I can just `map` the `content.topic_list` to match my slugs"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 19:17:51",
+    "text": "Nope, that doesn't work"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 19:18:21",
+    "text": "```{% set text = ['HI', 'TRUE', 'FALSE', 'WORDS' ] %}\n\t&lt;p&gt;\n\t\tnormal: {{ text }}&lt;br&gt;\n\t\tmapped-lower: {{ text|map('lower') }}\n\t&lt;/p&gt;\n\t{% for content in blog_recent_tag_posts(module.blog_switcher_options.target_blog, target_tags, 10) %}\n\t\t&lt;p&gt;\n\t\t  normal: {{ content.topic_list }}&lt;br&gt;\n  \t\tmapped-lower: {{ content.topic_list|map('lower') }}\n\t  &lt;/p&gt;\n\t{% endfor %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 19:18:58",
+    "text": "actual output:"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 19:19:11",
+    "text": "```normal: [HI, TRUE, FALSE, WORDS]\nmapped-lower: [hi, true, false, words]\n\nnormal: [PEO, CEO/Owner, Canada Expansion]\nmapped-lower: [PEO, CEO/Owner, Canada Expansion]\n\nnormal: [Business Expansion, CEO/Owner, Canada Expansion]\nmapped-lower: [Business Expansion, CEO/Owner, Canada Expansion]```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 19:19:47",
+    "text": "So you aren't able to map/filter  `content.topic_list` but when you |pprint it they are both pylist"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2019-10-03 19:34:57",
+    "text": "this should give you the slugs, ```{% for topic in  content.topic_list %}\n            &lt;p&gt;\n              normal : {{ topic.slug }}\n            &lt;/p&gt;\n          {% endfor %}```",
+    "reply_count": 19,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-10-03 20:02:00"
+      },
+      {
+        "time_stamp": "2019-10-03 20:03:03"
+      },
+      {
+        "time_stamp": "2019-10-03 20:10:44"
+      },
+      {
+        "time_stamp": "2019-10-03 20:10:54"
+      },
+      {
+        "time_stamp": "2019-10-03 20:12:37"
+      },
+      {
+        "time_stamp": "2019-10-03 20:13:40"
+      },
+      {
+        "time_stamp": "2019-10-03 20:13:54"
+      },
+      {
+        "time_stamp": "2019-10-03 20:19:39"
+      },
+      {
+        "time_stamp": "2019-10-03 20:19:54"
+      },
+      {
+        "time_stamp": "2019-10-03 20:20:01"
+      },
+      {
+        "time_stamp": "2019-10-03 20:20:06"
+      },
+      {
+        "time_stamp": "2019-10-03 20:20:08"
+      },
+      {
+        "time_stamp": "2019-10-03 20:22:04"
+      },
+      {
+        "time_stamp": "2019-10-03 20:22:07"
+      },
+      {
+        "time_stamp": "2019-10-03 20:22:21"
+      },
+      {
+        "time_stamp": "2019-10-03 20:22:44"
+      },
+      {
+        "time_stamp": "2019-10-03 20:23:37"
+      },
+      {
+        "time_stamp": "2019-10-03 20:36:19"
+      },
+      {
+        "time_stamp": "2019-10-03 20:50:08"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Steven Hambleton",
+      "poster_handle": "steven994"
+    },
+    "time_stamp": "2019-10-03 19:45:42",
+    "text": "Ah that might work thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 20:02:00",
+    "text": "absolutely that works. BUT because of the way loops work with HS, that is super over complicated"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 20:03:03",
+    "text": "I'm creating a JSON Object of blog posts. So here is my setup"
+  },
+  {
+    "text": "",
+    "time_stamp": "2019-10-03 20:10:40"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 20:10:44",
+    "text": "That is how I would need to set that up"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 20:10:54",
+    "text": "so if I need to convert those to loops"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 20:12:37",
+    "text": "I can create a macro I guess that would make that work, but it is still horribly ugly when there is a good item like |map on a list that should work. And in addition to that, why isn't the slugs exposed for the content, and only the names. That seems like an oversight.\n\nIt actually seems like an oversight on both parts.\n\nI feel like not being able to map the topic_list may have a reason why it is protected from that, but I'm not sure"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 20:13:40",
+    "text": "I understand if they want to leave topic_list immutable, but mapping SHOULD create a new array/list"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 20:13:54",
+    "text": "so it doesn't make sense why that part of the language is inaccessible"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 20:15:29",
+    "text": "I ended up modifying the way I send the blog posts to the dom. Instead of iterating through the object 6 times and leaving it at that, I went ahead and modified my JS loop to iterating through the entire object and break out when I had 6 matches"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 20:15:32",
+    "text": "```\tfunction doesPostMatchFilter(post, filter1, filter2) {\n\t\tvar tags = post.tags.toLowerCase();\n\t\tif(tags.indexOf('knowledge base') &gt; -1) {\n\t\t\tconsole.log('matches knowledg bae: ')\n\t\t\treturn true;\n\t\t}\n\t\tif(tags.indexOf(filter1) &gt; -1 &amp;&amp; filter2 == 'false') {\n\t\t\tconsole.log('matches filter1: ' + filter1)\n\t\t\treturn true;\n\t\t}\n\t\tif(tags.indexOf(filter1) &gt; -1 &amp;&amp; tags.indexOf(filter2) &gt; -1) {\n\t\t\tconsole.log('matches filter1: ' + filter1 + ' and 2: ' + filter2)\n\t\t\treturn true;\n\t\t}\n\t\tconsole.log('NOMATCH: ' + tags);\n\t\treturn false;\n\t}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 20:16:57",
+    "text": "looking at this i just realized I could `content.topic_list|join(',')|lower|replace(' ', '-')`"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 20:17:00",
+    "text": "going to try that out"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2019-10-03 20:19:39",
+    "text": "Will this work for u? `{{ content.topic_list|map(attribute='slug')|map('lower')}}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 20:19:54",
+    "text": "wow"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 20:20:01",
+    "text": "why didn't i think of that"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 20:20:06",
+    "text": "lemme try that out that is nice"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2019-10-03 20:20:08",
+    "text": "i think slug is lower so no need for second map"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 20:22:04",
+    "text": "HOOOLD UP"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 20:22:07",
+    "text": "that was a winner"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 20:22:21",
+    "text": "I am super appreciate of that"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 20:22:44",
+    "text": "I didn't dig any deeper than this because it didn't map to lower so I didn't think to try an attribute!"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 20:23:37",
+    "text": "Can I buy you a coffee or a beer or something?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 20:36:19",
+    "text": "hmm thats odd I can't || or OR these items."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-10-03 20:50:08",
+    "text": "I am gonna mess with this more this weekend, thanks for the map attribute"
+  },
+  {
+    "poster": {
+      "poster_name": "Steven Hambleton",
+      "poster_handle": "steven994"
+    },
+    "time_stamp": "2019-10-03 23:22:32",
+    "text": "That did it thank you!!"
+  }
+]

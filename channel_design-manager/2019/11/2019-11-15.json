@@ -1,0 +1,85 @@
+[
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2019-11-15 03:58:24",
+    "text": "I am adding a font to my css file:\n`@import url(\"{{ get_asset_url('/Templates/Custom/Page/css/FONTNAME.css') }}\");`\nThis works fine, but then I wanted to add the font to be used with another style sheet which sometimes will be used together and sometimes not. So I thought if Hubl works let’s just use ‘require CSS’:\n`{{ require_css(get_asset_url(\"/Templates/Custom/Page/css/FONTNAME.css\")) }}`\nBut that doesn’t work in my CSS file, it would make sense to be able to include the font file only if it’s used in the CSS file. Does anyone have any ideas to fix this/better implement?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-15 04:08:00",
+    "edited": {
+      "time_stamp": "2019-11-15 04:09:32"
+    },
+    "text": "I imagine the reason is that require_css enqueues the css file, which is then rendered in standard_header_includes, and I’m guessing this doesn’t work from css"
+  },
+  {
+    "poster": {
+      "poster_name": "Tejas Panchal",
+      "poster_handle": "tejpanchal93"
+    },
+    "time_stamp": "2019-11-15 04:09:29",
+    "text": "{% include \"css path\" %}\nuse this and add below this files\n{% include \"HubSpot/styles/responsive/modules.css\" %}\n{% include \"HubSpot/styles/patches/recommended.css\" %}"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2019-11-15 04:18:26",
+    "text": "I guess that still means i’ll get duplicate CSS it just means it’s not doing an extra request for it",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-11-15 05:19:30"
+      },
+      {
+        "time_stamp": "2019-11-15 05:36:29"
+      },
+      {
+        "time_stamp": "2019-11-15 06:21:06"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-15 04:35:51",
+    "edited": {
+      "time_stamp": "2019-11-15 04:43:47"
+    },
+    "text": "<@UDJV5B73R> Yeah. I guess it depends based on how large your font file is - if it’s tiny, then maybe it’s better to have one less request. Fonts using @font-face are only downloaded when a dom element has a CSS rule which uses the font family (i think there is an issue with IE and eot files.. might be wrong here) so there’s likely to be very little difference in performance with including this font (even on all pages.)"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-11-15 05:19:30",
+    "text": "require_css is intended to be used within templates and modules. That way you can conditionally load it per template or based on if a module is in the page that requires it. CSS added with a require or linked to a module or linked to a dnd template will only load once."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-11-15 05:36:29",
+    "text": "I have not tested yet but i would assume it would not work inside of a CSS file because that file does not include the required standard header code.\n\nRequire CSS is used in the html of the template or a module's html pane, which together gets outputted as a full html page. The require function works at the page level. If you inserted it into a CSS file you're telling it that the CSS file requires a link tag inside of itself."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2019-11-15 06:21:06",
+    "text": "Ah okay I assumed it would just add to the header of the page it’s loaded on but now you’ve explained it, it makes a lot more sense"
+  }
+]

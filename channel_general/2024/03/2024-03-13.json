@@ -1,0 +1,195 @@
+[
+  {
+    "poster": {
+      "poster_name": "Sergio Ponz [Tiralíneas]",
+      "poster_handle": "sergio639"
+    },
+    "time_stamp": "2024-03-13 01:23:21",
+    "text": "Casey, make sure you're not caching the certs. There was a conversation about that in <#C2YHAHB6K|api> a few days ago.  In short: they rolled out new API certs and some environments are caching the old ones."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Freestone",
+      "poster_handle": "matt508"
+    },
+    "time_stamp": "2024-03-13 07:34:01",
+    "text": "Hey developers!\n\nI want to use a DateTime property in a workflow delay, however HubSpot is still asking me to define a 'Time of Day' for my delay.\n\nI obviously don't want to do that, as the DateTime property already has the time I want to delay until.\n\nAnyone seen this before, or know of a workaround?\n\n-- also, anyway an app (private app) can delay a workflow itself, or will it get timed out?",
+    "reply_count": 3,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-04-07 15:26:10"
+      },
+      {
+        "time_stamp": "2024-06-25 21:29:28"
+      },
+      {
+        "time_stamp": "2024-08-16 13:14:28"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Casey Vassios",
+      "poster_handle": "cvassios"
+    },
+    "time_stamp": "2024-03-13 09:01:11",
+    "text": "Hi Sergio, I cleared all the caches I could find, but still getting the issue. Could you please expand more on how to \"make sure you're not caching the certs\""
+  },
+  {
+    "poster": {
+      "poster_name": "Buelent",
+      "poster_handle": "b.duezguen"
+    },
+    "time_stamp": "2024-03-13 09:50:35",
+    "text": "Hey developers, I have a question about my HubSpotDB\nI created a table called \"plz aller fachbetriebe\" in hubDB, means translated \"zips for all companies\".\nnow i want to create a workflow with the hubdb table, the workflow should something like this:\nif a new contact fills the lead formular with the propertie zip, the workflow should check the hubdb table to find an eqaul zio in it.\n If there is a match, the workflow should send an email tenplate of the selcted company to the new contact.\ncan you help me with that?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-03-13 10:55:15"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Buelent",
+      "poster_handle": "b.duezguen"
+    },
+    "time_stamp": "2024-03-13 09:50:54",
+    "text": "thanks for your help and advices"
+  },
+  {
+    "poster": {
+      "poster_name": "Buelent",
+      "poster_handle": "b.duezguen"
+    },
+    "time_stamp": "2024-03-13 09:50:58",
+    "text": "Buelent"
+  },
+  {
+    "subtype": "bot_message",
+    "text": ":HubSpotheart:*Help your fellow HubSpot Developers!*:HubSpotheart:\n\nThis Slack lives and breathes by its community. If you're posting a question, take a moment and click around a few channels to see if there are any questions you can help answer. Instant karma!",
+    "username": "Help the Community",
+    "time_stamp": "2024-03-13 10:55:02"
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-03-13 10:55:15",
+    "text": "I’ve done this before. I used a custom coded action in a workflow with GraphQL  api to get the info I needed in the hubdb table. But you might need enterprise account level.\nWas something like this, I changed the original code, but I had multiple hubdb tables based on the first digit of the zip as there was a cap on rows in a hubdb when I wrote this. I’d redo it for your scenario but maybe this helps:\n```const axios = require('axios')\n\nfunction formatZipCode(zipCode) {\n  // Remove spaces\n  if (zipCode)\n  zipCode = zipCode.replace(/\\s/g, '');\n  // Remove any building numbers from the zip code (if present)\n  zipCode = zipCode.replace(/-\\d+$/, '');\n  // Make sure the zip code consists of 5 digits\n  if (/^\\d{5}$/.test(zipCode)) {\n    return zipCode;\n  } else {\n    return null;\n  }\n}\n\nexports.main = async (event, callback) =&gt; {\n  const zipcode = event.inputFields['zip'];\n  const zip = formatZipCode(zipcode)\n  let companyZip = \"\"\n  let setCompanyZip = \"FALSE\"\n  \n  \n  if (zip) {\n    const zipcodeTable = zip.substring(0, 1)\n    console.log(\"Table Number: \" + zipcodeTable)\n    const queryType = `query getCompanyZip($zipcodeRef: String!) {\n      HUBDB {\n        table_${zipcodeTable}_collection(filter: {zip_code__eq: $zipcodeRef}) {\n          items {\n            hs_id\n            zip_code\n            company_zip\n          }\n        }\n      }\n    }`\n\n    try {\n      const data = JSON.stringify({\n        \"operationName\": \"getCompanyZip\",\n        \"query\": queryType,\n        \"variables\": {\"zipcodeRef\": `${zip}` }\n      })\n      console.log(data)\n      const config = {\n        method: \"post\",\n        url: \"<https://api.hubapi.com/collector/graphql>\",\n        headers: {\n          \"Authorization\": `Bearer ${process.env.access_token}`,\n          \"Content-Type\": \"application/json\"\n        },\n        data: data\n      }\n      const response = await axios(config)\n      console.log(response.data.data.HUBDB[`table_${zipcodeTable}_collection`].items[0].company_zip)\n      companyZip = response.data.data.HUBDB[`table_${zipcodeTable}_collection`].items[0].company_zip\n\n    } catch(e) {\n      console.log(e)\n    }\n\n    console.log(companyZip)\n    if (companyZip) {\n      setCompanyZip = \"TRUE\"\n    }\n  }\n\n  \n  callback({\n    outputFields: {\n      companyZip: companyZip,\n      setCompanyZip: setCompanyZip\n    }\n  });\n\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nick Gehring",
+      "poster_handle": "ngehring"
+    },
+    "time_stamp": "2024-03-13 11:29:54",
+    "edited": {
+      "time_stamp": "2024-03-13 14:30:10"
+    },
+    "text": "Hello all. Have any of you successfully used Cloudflare workers with HubSpot? I'm attempting to put a password-protected pop-up box served from Cloudflare workers in front of our sandbox site. The DNS is setup and the orange cloud is on, but it isn't working. Is this a conflict with HubSpot's own proxy?"
+  },
+  {
+    "poster": {
+      "poster_name": "Roberto Pacheco",
+      "poster_handle": "roberto476"
+    },
+    "time_stamp": "2024-03-13 13:02:11",
+    "text": "has anyone had solved the problem of the system pages with multiple languages? since i can only select one system (404) template, how you solved to show the multiple menus, and footers, based on the language of the user?"
+  },
+  {
+    "poster": {
+      "poster_name": "Sahil Ahluwalia",
+      "poster_handle": "sahilahluwalia3"
+    },
+    "time_stamp": "2024-03-13 13:05:12",
+    "text": "Hello, I am trying to set up HubSpot such that from our platform, if we trigger a \"Forgot Password\" event, we want to send the event to HubSpot. What HubSpot features do I need to accomplish this, and what subscription plan does it require?"
+  },
+  {
+    "text": "Today I was asked a question about HubSpot forms that use the built-in Captcha element.  The site is hosted on Pantheon which provides different environments for the different stages of the deployment process --&gt; \"dev\", \"test\", \"live\" .\n\nThese are all Pantheon domains and the question was regarding the following error.\n\nThere wasn't an obvious way to add/extend the list of allowed domains for a webforms within the webform settings / account settings.\n\nAny ideas on how to approach this so that they can test the webforms across the different environments?",
+    "time_stamp": "2024-03-13 16:28:00"
+  },
+  {
+    "poster": {
+      "poster_name": "Makoy Cameña",
+      "poster_handle": "marcneilc"
+    },
+    "time_stamp": "2024-03-13 18:48:47",
+    "text": "How can I use HubSpot UI extensions on embedded report?",
+    "reply_count": 11,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-03-13 18:49:53"
+      },
+      {
+        "time_stamp": "2024-03-13 18:53:55"
+      },
+      {
+        "time_stamp": "2024-03-13 18:56:16"
+      },
+      {
+        "time_stamp": "2024-03-13 18:59:04"
+      },
+      {
+        "time_stamp": "2024-03-14 20:21:57"
+      },
+      {
+        "time_stamp": "2024-03-14 20:24:15"
+      },
+      {
+        "time_stamp": "2024-03-14 20:24:58"
+      },
+      {
+        "time_stamp": "2024-03-14 20:25:21"
+      },
+      {
+        "time_stamp": "2024-03-14 20:35:17"
+      },
+      {
+        "time_stamp": "2024-03-14 20:36:15"
+      },
+      {
+        "time_stamp": "2024-03-14 21:07:06"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Sejal Parikh (HubSpot PM)",
+      "poster_handle": "sparikh"
+    },
+    "time_stamp": "2024-03-13 18:49:53",
+    "edited": {
+      "time_stamp": "2024-03-13 18:50:09"
+    },
+    "text": "I am PM for extensibility, and I love your question, Makoy. Would you help me with some use cases that you have for this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Makoy Cameña",
+      "poster_handle": "marcneilc"
+    },
+    "time_stamp": "2024-03-13 18:53:55",
+    "text": "In report dashboard, is it possible to use HubSpot UI extension? So that It'll look similar to HubSpot's report"
+  },
+  {
+    "poster": {
+      "poster_name": "Sejal Parikh (HubSpot PM)",
+      "poster_handle": "sparikh"
+    },
+    "time_stamp": "2024-03-13 18:56:16",
+    "text": "It's not possible today, but your use cases help us determine the needs. What sort of content would you want to add to reports dashboard?"
+  },
+  {
+    "poster": {
+      "poster_name": "Makoy Cameña",
+      "poster_handle": "marcneilc"
+    },
+    "time_stamp": "2024-03-13 18:59:04",
+    "text": "Like engagements breakdown, looks bad if it's not similar to HubSpot's design"
+  }
+]

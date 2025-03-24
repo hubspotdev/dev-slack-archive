@@ -1,0 +1,334 @@
+[
+  {
+    "poster": {
+      "poster_name": "Tom Wright",
+      "poster_handle": "tom210"
+    },
+    "time_stamp": "2022-07-18 07:23:34",
+    "text": "So when im creating the module, how would I create it? Would it just be a select once I've built the page?"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Wright",
+      "poster_handle": "tom210"
+    },
+    "time_stamp": "2022-07-18 07:54:55",
+    "text": "Thinking how i could include the dropdown in the page as I wouldn't need the module HTML, CSS or JS, I would just need the dropdown its-self to pass in the value to the filtering?"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-07-18 08:08:20",
+    "text": "Well if you make it a module you would want the module to then be populating the cards itself. If you want to forgo the module and just rely on the template for everyhting you could inline a select field, set the field to `export_to_template_context=true`  and then move all of your filtering logic into the template itself. That would work fine."
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Wright",
+      "poster_handle": "tom210"
+    },
+    "time_stamp": "2022-07-18 08:11:35",
+    "text": "how would that work?"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-07-18 08:17:57",
+    "text": "```{% choice \"filter_option\" value=\"left\", choices=\"[[\\\"\\\", \\\"\\\"], [\\\"option1\\\", \\\"Option 1\\\"], [\\\"option2\\\", \\\"Option 2\\\"], [\\\"option3\\\", \\\"Option 3\\\"]]\", export_to_template_context=True %}\n\n{% set filter = widget_data.filter_option.value %}\n\n{% if filter == \"option1\" %}\n  &lt;do option 1 logic&gt;\n{% else %}\n  &lt;you get the idea&gt;\n{% endif %}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-07-18 08:18:02",
+    "text": "Something like this"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Wright",
+      "poster_handle": "tom210"
+    },
+    "time_stamp": "2022-07-18 08:25:33",
+    "text": "ah nice! thanks BJ! Much appreciated!"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Wright",
+      "poster_handle": "tom210"
+    },
+    "time_stamp": "2022-07-18 09:00:47",
+    "text": "sorry - may be me missing something here, but them I'm trying to get the data from the hubdb table using this but it doesn't seem to be working?\n`{{ hubdb_table_rows(table_id, 'cs_industry='~filter ) }}`"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-07-18 09:02:36",
+    "text": "You’ve got to make sure that `filter` var is formatted correctly for the call."
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Wright",
+      "poster_handle": "tom210"
+    },
+    "time_stamp": "2022-07-18 09:03:05",
+    "text": "filter is formatted as the word with - as the spaces"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Wright",
+      "poster_handle": "tom210"
+    },
+    "time_stamp": "2022-07-18 09:03:17",
+    "text": "eg - Sporting Goods becomes sporting-goods"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-07-18 09:03:50",
+    "text": "Got it got it. If you |pprint filter are you actually getting what you expect to get?"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Wright",
+      "poster_handle": "tom210"
+    },
+    "time_stamp": "2022-07-18 09:04:04",
+    "text": "yeah"
+  },
+  {
+    "text": "",
+    "time_stamp": "2022-07-18 09:04:34"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-07-18 09:05:30",
+    "text": "Try just hard coding the sporting-goods into there and see if it works. instead of using the filter var"
+  },
+  {
+    "text": "doesnt seem to, not sure where im going wrong here?",
+    "time_stamp": "2022-07-18 09:08:54"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-07-18 09:11:17",
+    "text": "Its likely a discrepancy between column names or filter names between what you have here and the hubDB table."
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-07-18 09:11:50",
+    "text": "Sounds like it’s not collecting any rows at all. Which would suggest that its how the filter is formatted"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-07-18 09:12:18",
+    "text": "Worth double checking to make sure that the table is also published with the filters added"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Wright",
+      "poster_handle": "tom210"
+    },
+    "time_stamp": "2022-07-18 09:13:05",
+    "text": "yeah, the filter is used elsewhere on the website"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Wright",
+      "poster_handle": "tom210"
+    },
+    "time_stamp": "2022-07-18 09:13:26",
+    "text": "and that works fine, but they now want them changing to pages rather than a dropdown filter"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-07-18 09:15:15",
+    "text": "Hmm so pprint rows currently is blank correct?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon ODonovan",
+      "poster_handle": "email489"
+    },
+    "time_stamp": "2022-07-18 11:58:56",
+    "edited": {
+      "time_stamp": "2022-07-18 12:02:36"
+    },
+    "text": "Hello, need help with pulling a custom module attribute (I think that's what it's called) field into a html template.\n\nI have a custom module called \"gate-blog-post\" with a rich text field called \"gated_content\" that an editor will put content into.\n\nIn the HTML template (blog_post.html), I have:\n\n{% module \"gate_blog_post\" path=\"PATH\", export_to_template_context=TRUE %}\n{{ widget_data.gate_blog_post.gated_content }}\n\nIf I set a default value for \"gated_content\" that shows, but it's not showing the editor's content.\n\nWhat am I missing? Is there a better solution to pulling module fields into a HTML file? I feel like I've read the docs on modules a few hundred times...",
+    "reply_count": 13,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2022-07-18 13:23:28"
+      },
+      {
+        "time_stamp": "2022-07-18 13:44:33"
+      },
+      {
+        "time_stamp": "2022-07-18 13:50:03"
+      },
+      {
+        "time_stamp": "2022-07-18 13:50:20"
+      },
+      {
+        "time_stamp": "2022-07-18 14:28:24"
+      },
+      {
+        "time_stamp": "2022-07-18 14:42:43"
+      },
+      {
+        "time_stamp": "2022-07-18 14:43:13"
+      },
+      {
+        "time_stamp": "2022-07-18 14:43:43"
+      },
+      {
+        "time_stamp": "2022-07-18 15:03:06"
+      },
+      {
+        "time_stamp": "2022-07-18 15:03:49"
+      },
+      {
+        "time_stamp": "2022-07-18 15:13:48"
+      },
+      {
+        "time_stamp": "2022-07-18 15:23:47"
+      },
+      {
+        "time_stamp": "2022-07-18 15:23:48"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Mitja Lewin",
+      "poster_handle": "m.lewin"
+    },
+    "time_stamp": "2022-07-18 13:23:28",
+    "text": "<@UT0JFFNJW> I guess `body` is missing:\n```{{ widget_data.gate_blog_post.body.gated_content }}```\nAnd `export_to_template_context` only return those content that is different the module defaults. Try to inspect the object in the console:\n\n```&lt;script&gt;console.log({{ widget_data|tojson }});&lt;/script&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon ODonovan",
+      "poster_handle": "email489"
+    },
+    "time_stamp": "2022-07-18 13:44:33",
+    "edited": {
+      "time_stamp": "2022-07-18 13:57:46"
+    },
+    "text": "The console log shows gated_content as an empty string.  But there is content saved there/published for this blog post. "
+  },
+  {
+    "poster": {
+      "poster_name": "Jon ODonovan",
+      "poster_handle": "email489"
+    },
+    "time_stamp": "2022-07-18 13:50:03",
+    "text": "If I remove the export_to… console log is blank "
+  },
+  {
+    "poster": {
+      "poster_name": "Jon ODonovan",
+      "poster_handle": "email489"
+    },
+    "time_stamp": "2022-07-18 13:50:20",
+    "text": "Adding body didn't change anything. "
+  },
+  {
+    "poster": {
+      "poster_name": "Jon ODonovan",
+      "poster_handle": "email489"
+    },
+    "time_stamp": "2022-07-18 14:28:24",
+    "text": "Yea, it's only showing default content, not what the editor has added, doesn't make any sense.  "
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-07-18 14:42:43",
+    "text": "on the page, I would go to the HubSpot icon, click developer info, then cmd/ctrl f for your cotnent that is in the blog post"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-07-18 14:43:13",
+    "edited": {
+      "time_stamp": "2022-07-18 14:43:20"
+    },
+    "text": "so, let’s say your gated content field was saved as “bob”\n\nsearch the developer info for “bob” and then you can work backwards through that json to find what you are looking for"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-07-18 14:43:43",
+    "text": "<https://share.getcloudapp.com/5zurbqQ4>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon ODonovan",
+      "poster_handle": "email489"
+    },
+    "time_stamp": "2022-07-18 15:03:06",
+    "text": "Looks like I got it working, using the dev info, I noticed the module name in the json is using the id name and not a named name… changed that and I'm seeing the copy"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-07-18 15:03:49",
+    "text": "nice"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon ODonovan",
+      "poster_handle": "email489"
+    },
+    "time_stamp": "2022-07-18 15:13:48",
+    "text": "Thank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-07-18 15:23:47",
+    "text": "thank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-07-18 15:23:48",
+    "text": "nice work"
+  }
+]

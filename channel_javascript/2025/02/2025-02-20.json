@@ -1,0 +1,261 @@
+[
+  {
+    "poster": {
+      "poster_name": "Aymar TISSEDRE",
+      "poster_handle": "atissedre"
+    },
+    "time_stamp": "2025-02-20 02:31:19",
+    "text": "Hello there !\n\nWe're having some difficulties applying custom CSS to an embed form. This was working before without any issue.\n\n--&gt; implementation details in thread :thread:",
+    "reply_count": 11,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-02-20 02:32:23"
+      },
+      {
+        "time_stamp": "2025-02-20 02:34:43"
+      },
+      {
+        "time_stamp": "2025-02-20 02:35:45"
+      },
+      {
+        "time_stamp": "2025-02-20 02:44:51"
+      },
+      {
+        "time_stamp": "2025-02-20 04:32:58"
+      },
+      {
+        "time_stamp": "2025-02-20 05:30:46"
+      },
+      {
+        "time_stamp": "2025-02-20 05:35:36"
+      },
+      {
+        "time_stamp": "2025-02-20 05:57:16"
+      },
+      {
+        "time_stamp": "2025-02-20 08:36:33"
+      },
+      {
+        "time_stamp": "2025-02-20 09:25:08"
+      },
+      {
+        "time_stamp": "2025-02-20 09:40:13"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Aymar TISSEDRE",
+      "poster_handle": "atissedre"
+    },
+    "time_stamp": "2025-02-20 02:32:23",
+    "text": "for context, we're using Next.js and loading the HubSpot script like so :\n\n```&lt;Script\n  id=\"HubSpot\"\n  src=\"<https://js-eu1.hsforms.net/forms/embed/v2.js>\"\n  strategy=\"afterInteractive\"\n  onReady={onReady}\n/&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Aymar TISSEDRE",
+      "poster_handle": "atissedre"
+    },
+    "time_stamp": "2025-02-20 02:34:43",
+    "text": "then, when we create the form like so, we used the `cssClass` property which is <https://developers.HubSpot.com/docs/reference/cms/forms|referenced here in the docs> :\n\n```...\nif ('hbspt' in window &amp;&amp; isSegmentIntegrationsLoaded) {\n  (window.hbspt as HubSpotForm).forms.create({\n    region: 'eu1',\n    portalId,\n    formId,\n    cssClass: styles.HubSpotForm,\n    target: `#${targetId}`,\n    onBeforeFormSubmit: () =&gt; {\n      events\n....```\nwe just noticed that the CSS class *is not being applied anymore to the form*, have you changed something on your side ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Aymar TISSEDRE",
+      "poster_handle": "atissedre"
+    },
+    "time_stamp": "2025-02-20 02:35:45",
+    "text": "the syntax of the class above `styles.HubSpotForm` is a CSS module syntax. we have tried with a regular `\"hello\"` for instance, but we don't see it being passed either"
+  },
+  {
+    "poster": {
+      "poster_name": "Aymar TISSEDRE",
+      "poster_handle": "atissedre"
+    },
+    "time_stamp": "2025-02-20 02:44:51",
+    "text": "here is a live example of one of the forms being created :\n\n<https://www.scaleway.com/en/request-demo/>\n\nWe used the `cssClass` to apply custom CSS and overwrite the inputs' background-color, which is not supposed to be white."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-20 04:32:58",
+    "text": "Is this a form using the new form editor? I don’t believe that you can override that stuff. If it is not a new form, is it a possible you don’t have the setting to set it to raw HTML set in the form settings?"
+  },
+  {
+    "text": "i'm not familiar with the HubSpot dashboard (our marketing deployment is responsible for creating those forms)\n\n--&gt; but it this seems to be one of the legacy ones",
+    "time_stamp": "2025-02-20 05:30:46"
+  },
+  {
+    "poster": {
+      "poster_name": "Aymar TISSEDRE",
+      "poster_handle": "atissedre"
+    },
+    "time_stamp": "2025-02-20 05:35:36",
+    "edited": {
+      "time_stamp": "2025-02-20 05:46:19"
+    },
+    "text": "> If it is not a new form, is it a possible you don’t have the setting to set it to raw HTML set in the form settings?\nthat would most likely require us to change our implementation of all current forms in our website, which could somewhat be problematic.\n\nI understand that by doing this, the iframe is removed (that's good for us) but also '<https://knowledge.HubSpot.com/forms/how-can-i-share-a-HubSpot-form-if-im-using-an-external-site|any default HubSpot styling applied to the form will be removed>.'\n\nas far as I know, we're still doing what's shown in the docs here with the `forms.create()` that can accept a cssClass, and this was working even the form was generated inside the iframe.\n\nDo you know if maybe there have been changes on your side that broke this?"
+  },
+  {
+    "text": "just in case <@U25PYL3Q8>, i've made a minimal codepen where i'm able to reproduce the issue :\n\n<https://codepen.io/AymarTissedre/pen/zxYqGOo?editors=1100>\n\n• see the `cssClass: \"test\"` in the `forms.create()` function, that should be passed to the html form.\n• inspect the form : it doesn't have the `test` class \n",
+    "time_stamp": "2025-02-20 05:57:16"
+  },
+  {
+    "text": "Hello everyone!\n\nHas anyone implemented a HS form into a Framer site via code?\n\nI'm trying to create a form like the one in Ripple but I can't seem to connect the email field to the main form here\n\n<https://www.rippling.com/>",
+    "time_stamp": "2025-02-20 07:45:17"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2025-02-20 08:29:41",
+    "edited": {
+      "time_stamp": "2025-02-20 08:40:51"
+    },
+    "text": "if it’s a textarea it’s not `.val()` it’s just `.text()`\n\n```<textarea>just has your value as though it's text in element tags</textarea>\n<input value=\"this is the val attribute that get's updated for inputs\">```\nOnly extra thing is you may need to add `.change()` to your element to force HubSpot to recognise the change"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-20 08:36:33",
+    "text": "<https://21077404.hs-sites.com/form-test-css?hsDebug=true>\n\nOverall you can’t target any css classes in an iframe without javascript to style them (and that is generally only if the server hosting the iframe allows this interaction from your domain) — I spent a bit too much time on building this out so I’m not testing that aspect of it.\n\nSo on this page above I created 5 separate forms so that there was no way that would be an issue and I present exactly how each of them work and what I did.\n\nFrom there I over explained what I was doing by inspecting the embed of an iframe, copying that stuff over to get the HubSpot styling, then doing the html embed."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-20 08:39:59",
+    "text": "oof thanks <@UDJV5B73R> I wasn’t even paying attention, and I even updated his code so it was still wrong :confused:"
+  },
+  {
+    "poster": {
+      "poster_name": "Terry McMillan",
+      "poster_handle": "tmcmillan877"
+    },
+    "time_stamp": "2025-02-20 08:41:10",
+    "text": "Ok, thanks for the clarification on the textarea. I should be able to make the changes this morning and do a new test. Thanks for the assistance!"
+  },
+  {
+    "poster": {
+      "poster_name": "Huy Ngu",
+      "poster_handle": "hngu"
+    },
+    "time_stamp": "2025-02-20 08:45:02",
+    "text": "Hello! I know that forms created with the new form editor doesn't support global form events according to this <https://developers.HubSpot.com/changelog/new-beta-form-editor-and-developer-functionality|blog post> but does it currently support <https://developers.HubSpot.com/docs/reference/cms/forms#embed-code-callbacks|embed code callbacks>? Currently want to do run custom JS when a form is submitted",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-02-20 08:57:48"
+      },
+      {
+        "time_stamp": "2025-02-20 09:23:41"
+      },
+      {
+        "time_stamp": "2025-02-20 09:24:27"
+      },
+      {
+        "time_stamp": "2025-02-20 10:01:03"
+      },
+      {
+        "time_stamp": "2025-02-21 06:57:35"
+      },
+      {
+        "time_stamp": "2025-02-24 08:43:15"
+      },
+      {
+        "time_stamp": "2025-02-24 08:45:15"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2025-02-20 08:52:53",
+    "text": "though saying that I just ran a little test on a non html form and `$('textarea').val('test')` did update a standard textarea not sure if i’m just miss remembering but `$('textarea').text('test')` also works, maybe jquery once didn’t work"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2025-02-20 08:57:48",
+    "edited": {
+      "time_stamp": "2025-02-20 08:57:59"
+    },
+    "text": "I don’t know if anything is documented,\nmaybe do a\n```window.addEventListener('message', (event) => {\nconsole.log(event.data.eventName, event.data);\n});```\nThe check your console when you submit the form to see if there are any events that you can use as your trigger"
+  },
+  {
+    "poster": {
+      "poster_name": "Terry McMillan",
+      "poster_handle": "tmcmillan877"
+    },
+    "time_stamp": "2025-02-20 09:07:39",
+    "text": "Update - converted the form to html, input the suggested code changes and just had a successful test! Btw, I used .val for the textarea. Thank you guys for the help. This was the last piece of the puzzle for this project."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-20 09:17:07",
+    "text": "perfect"
+  },
+  {
+    "poster": {
+      "poster_name": "Huy Ngu",
+      "poster_handle": "hngu"
+    },
+    "time_stamp": "2025-02-20 09:23:41",
+    "text": "That doesn't work. That callback wasn't triggered when I submit the form."
+  },
+  {
+    "poster": {
+      "poster_name": "Huy Ngu",
+      "poster_handle": "hngu"
+    },
+    "time_stamp": "2025-02-20 09:24:27",
+    "text": "That is expected because the blog post I had earlier says the new forms do not support global form events."
+  },
+  {
+    "poster": {
+      "poster_name": "Aymar TISSEDRE",
+      "poster_handle": "atissedre"
+    },
+    "time_stamp": "2025-02-20 09:25:08",
+    "text": "I see, so the iframe is really being the issue there. thank you so much for taking the time, it makes sense.\n\nI guess we will have to toggle the \"raw HTML\" on the forms, so that they're displayed without the iframe.\n\n(i'm really intrigued because it was working before, I remember we could see the class we added, and we *did* manage to remove the background-color of the inputs)\n\nThanks again for the help !"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-20 09:40:13",
+    "text": "good luck on your journey —  def try it out on one form and get that all set up correctly before doing all that jazz.\n\nI’d suggest using one form that has all the possible elements, then digging into the default css inside the iframe and copying that over and stripping out any ID specific or any classes that have IDs in them.\n\nIf I were doing this I’d write in in SCSS, have your custom css class as the parent, then nest all the rest of the css from the iframe into it, modifying it and doing all that, then compiling the scss and testing."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2025-02-20 10:01:03",
+    "text": "That’s annoying, are the forms added in iframes or inline, can you use a mutation observer to check when the form changes?"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Swisher",
+      "poster_handle": "thomas766"
+    },
+    "time_stamp": "2025-02-20 14:20:02",
+    "text": "That is a good idea let me give that a shot."
+  }
+]

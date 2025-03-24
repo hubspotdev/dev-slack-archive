@@ -1,0 +1,177 @@
+[
+  {
+    "poster": {
+      "poster_name": "Milis",
+      "poster_handle": "mahroucha4"
+    },
+    "time_stamp": "2023-09-14 03:08:42",
+    "text": "Hello everyone,\nI'm using a workflow action to customize code. In this code, I have a property containing JSON data that I decode into an array. My question is, how can I use the output of this code in the next action in my workflow, which is to send an email?",
+    "reply_count": 7,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-09-14 07:06:26"
+      },
+      {
+        "time_stamp": "2023-09-14 07:33:39"
+      },
+      {
+        "time_stamp": "2023-09-14 07:42:31"
+      },
+      {
+        "time_stamp": "2023-09-14 07:46:22"
+      },
+      {
+        "time_stamp": "2023-09-14 07:49:06"
+      },
+      {
+        "time_stamp": "2023-09-14 08:27:11"
+      },
+      {
+        "time_stamp": "2023-09-14 08:28:00"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Alex Schwage",
+      "poster_handle": "alex.schwager"
+    },
+    "time_stamp": "2023-09-14 06:55:58",
+    "text": "Hello everyone,\nCan we have API for all HubSpot level of any of the Hub even the free ones ?"
+  },
+  {
+    "text": "<@U05RF59TTEG>: First, you should return the JSON data in the `return callback`\n``` outputFields = {\n            status: association.status,\n            hs_object_id,\n            deal_id,\n            contact_id\n          }\nreturn callback({\n        outputFields: outputFields\n});```\nThen, indicate the fields you want to be available in the next action in the *Data Outputs.* Save it. Once you've done that the fields will be available on the next action as inputs.",
+    "time_stamp": "2023-09-14 07:06:26"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-09-14 07:28:06",
+    "text": "<@UD53A9UUR> ok did some more experimentation...seems like the API auto inserts that HTML if you add a body to a call through the front end - im guessing because it's a rich text field behind the scenes. If you send a value in via API though you don't have to add the HTML"
+  },
+  {
+    "text": "<@U02P3JPAV3Q>Thank you for your response. I applied the provided solution, but I couldn't find the property I was looking for. I have a 'customize_data' property containing JSON data. When I decode it, I get the output (please see the attached screenshot). How can I use this output in my email? I'm unable to find it in the next action",
+    "time_stamp": "2023-09-14 07:33:39"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2023-09-14 07:36:15",
+    "text": "You are correct. We are debating some options and their value.  I am also out of office this week so I am a bit slow and may be behind in the discussion."
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-09-14 07:36:32",
+    "text": "oh sorry, ignore me until you get back!"
+  },
+  {
+    "poster": {
+      "poster_name": "Freymer Sepulveda",
+      "poster_handle": "freymer"
+    },
+    "time_stamp": "2023-09-14 07:38:36",
+    "text": "Hello everyone, I would like to know if someone explains the endpoint to me or how when creating a contact in the CRM I can associate it with a tag, I was looking at the api and I got a little confused hahaha"
+  },
+  {
+    "poster": {
+      "poster_name": "Shanley Rosero",
+      "poster_handle": "shanley.rosero"
+    },
+    "time_stamp": "2023-09-14 07:42:31",
+    "text": "I see. Would you possibly provide a screenshot of your outputFields? in order to properly offer a solution. Is it the `customize_data`?\n\n```{\n customize_data: [marketingPackage: \"Marketing Package\", listingPrice: \"Listing Price\"]\n}```"
+  },
+  {
+    "text": "<@U05RF59TTEG>: Or you can remove your defined data outputs first. Run a test and send me a screenshot of you *Data Outputs results (*_see below)_ so we could better assess it.",
+    "time_stamp": "2023-09-14 07:46:22"
+  },
+  {
+    "poster": {
+      "poster_name": "Milis",
+      "poster_handle": "mahroucha4"
+    },
+    "time_stamp": "2023-09-14 07:49:06",
+    "text": "<@U02P3JPAV3Q> Can I share with you my code ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Supered Steve",
+      "poster_handle": "steve521"
+    },
+    "time_stamp": "2023-09-14 08:27:11",
+    "text": "You need to extract the JSON into individual primitive values. HubSpot will not let you return a deep object from the custom code."
+  },
+  {
+    "text": "These are the values HubSpot supports. Notice they are all primitives vs JSON being an object.\n\nSo map the individual fields to properties and should be good to go.",
+    "time_stamp": "2023-09-14 08:28:00"
+  },
+  {
+    "poster": {
+      "poster_name": "Schuyler Maclay",
+      "poster_handle": "smaclay"
+    },
+    "time_stamp": "2023-09-14 09:32:29",
+    "text": "Hey all, have an interesting question about the CRM Search API. Specifically I am trying to get a list of all contacts with an associated company. I’m POSTing to `<https://api.hubapi.com/crm/v3/objects/contacts/search>`. If I use the following body to search for a contact with a specific associated company everything works as expected and I get a result:\n```{\n    \"filters\": [\n        {\n            \"propertyName\": \"associations.company\",\n            \"operator\": \"EQ\",\n            \"value\": \"8939399016\"\n        }\n    ]\n}```\nHowever, _my goal is to get all contacts with associations_ so I am attempting to use the following body:\n```{\n    \"filters\": [\n        {\n            \"propertyName\": \"associations.company\",\n            \"operator\": \"HAS_PROPERTY\"\n        }\n    ]\n}```\nThis returns a rather cryptic error:\n```{\n    \"status\": \"error\",\n    \"message\": \"There was a problem with the request.\",\n    \"correlationId\": \"1099786d-15af-4c28-a762-57b86ec0bb94\"\n}```\nDoes anyone know what I’m doing wrong? Or is this functionality simply not avaiable? If so does anyone have ideas about how to get this information? I’m ultimate looking to calculate the percentage of the contacts in the portal that have companies associated to them (Contacts with Companies/Total Contacts). Any insights or ideas greatly appreciated.",
+    "reply_count": 5,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-09-14 11:25:24"
+      },
+      {
+        "time_stamp": "2023-09-14 11:41:50"
+      },
+      {
+        "time_stamp": "2023-09-14 20:55:01"
+      },
+      {
+        "time_stamp": "2023-09-15 08:47:48"
+      },
+      {
+        "time_stamp": "2023-09-15 08:49:51"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2023-09-14 11:25:24",
+    "text": "interesting find, I’d think your request would work. Maybe try a not so elegant workaround, trying ‘contains_token’ instead, and inserting a 1 or something?\n\nOr, if you want to search for the companies directly, you could search via the HubSpot default property available on companies: “num_associated_contacts”, label Number of Associated Contacts.\n\nOtherwise, you could set up a calculated property based on count of associated companies on the contact, and continue querying through contacts."
+  },
+  {
+    "poster": {
+      "poster_name": "Schuyler Maclay",
+      "poster_handle": "smaclay"
+    },
+    "time_stamp": "2023-09-14 11:41:50",
+    "text": "<@U039PUBV59N> Thanks for the response! I didn’t have much luck with contains token… it seems to function like EQ, I got a result when I entered an exact match for Company but it if just entered “1” I got no result back, even though I know a company contains a 1. A wildcard (*) simple produced an error. Strange behavior.\nI did find a potential workaround using the `associatedcompanyid` property, which is readonly and maybe deprecated but seems to function just fine. Successful search body:\n```{\n    \"filters\": [\n        {\n            \"propertyName\": \"associatedcompanyid\",\n            \"operator\": \"HAS_PROPERTY\"\n        }\n    ]\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Michelle Tabor",
+      "poster_handle": "michelle376"
+    },
+    "time_stamp": "2023-09-14 20:55:01",
+    "text": "Try approaching this from the company side using the read company endpoint `/crm/v3/objects/companies/{companyId}?associations=contacts` You can pass in what type of associations you want returned. An list of contact ids and association types is returned under the associations node.\nIt will be returned like this\n```{\nassociations:\n{ \n  contacts: [\n    { id: '113511', type: 'company_to_contact' },\n    { id: '8983522', type: 'company_to_contact' },\n    { id: '9821513', type: 'company_to_contact' },\n    { id: '54797524', type: 'company_to_contact' },\n    { id: '203963515', type: 'company_to_contact' },\n    { id: '204988016', type: 'company_to_contact' },\n    { id: '205039017', type: 'company_to_contact' },\n    { id: '1135188', type: 'company_to_contact_unlabeled' },\n    { id: '8983529', type: 'company_to_contact_unlabeled' },\n    { id: '9821510', type: 'company_to_contact_unlabeled' },\n    { id: '54797522', type: 'company_to_contact_unlabeled' },\n    { id: '203963513', type: 'company_to_contact_unlabeled' },\n    { id: '204988014', type: 'company_to_contact_unlabeled' },\n    { id: '205039015', type: 'company_to_contact_unlabeled' },\n    { id: '205039016', type: 'owner' }\n  ]\n}\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Thangaraj M",
+      "poster_handle": "gkthangarajvvp"
+    },
+    "time_stamp": "2023-09-14 22:56:43",
+    "edited": {
+      "time_stamp": "2023-09-14 22:57:18"
+    },
+    "text": "Hello everyone,\nI need to integrate HubSpot with my react custom form.\nCan anyone guide me through.\n\ni have script though and have an account."
+  }
+]

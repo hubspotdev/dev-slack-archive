@@ -1,0 +1,516 @@
+[
+  null,
+  null,
+  {
+    "poster": {
+      "poster_name": "Chandler Ives",
+      "poster_handle": "cives"
+    },
+    "time_stamp": "2018-02-08 09:29:43",
+    "edited": {
+      "time_stamp": "2018-02-08 09:30:01"
+    },
+    "text": "I'm currently using `{{ post.post_summary }}` to display the blogs summary in my latest posts section. I'd instead like to pull content from `{% widget_block rich_text \"blog_summary\" overrideable=True, label=\"Post Summary\" %}` to be used as the posts summary. Is this possible? It is just a rich text block that exists on the blog post template."
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2018-02-08 09:33:36",
+    "edited": {
+      "time_stamp": "2018-02-08 09:33:59"
+    },
+    "text": "Should be {{ post.widgets.blog_summary }}, maybe {{ post.widgets.blog_summary.value }}"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-02-08 09:34:35",
+    "text": "{{ post.widgets.blog_summary.value }} this one &lt;-----"
+  },
+  {
+    "text": "So, <@U26BLKGE4> that looks to be pulling the correct info, but there is also some weirdness.",
+    "time_stamp": "2018-02-08 09:36:01"
+  },
+  {
+    "poster": {
+      "poster_name": "Chandler Ives",
+      "poster_handle": "cives"
+    },
+    "time_stamp": "2018-02-08 09:36:23",
+    "text": "<@U4RP6AGV9> that didn't seem to pull anything"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2018-02-08 09:36:56",
+    "text": "try {{ post.widgets.blog_summary.body.value }}"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-02-08 09:37:05",
+    "text": "Ahh"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-02-08 09:37:06",
+    "text": "Yes"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-02-08 09:37:07",
+    "text": ".body"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-02-08 09:37:11",
+    "text": "that's the missing bit"
+  },
+  {
+    "poster": {
+      "poster_name": "Chandler Ives",
+      "poster_handle": "cives"
+    },
+    "time_stamp": "2018-02-08 09:37:50",
+    "text": "That didn't seem to pull anything either – using {{ post.widgets.blog_summary.body.value }}"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-02-08 09:38:23",
+    "text": "but post.post_summary works?"
+  },
+  {
+    "poster": {
+      "poster_name": "Chandler Ives",
+      "poster_handle": "cives"
+    },
+    "time_stamp": "2018-02-08 09:39:04",
+    "text": "The closest solution was {{ post.widgets.blog_summary }} but it included some CSS (see screenshot)."
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-02-08 09:39:21",
+    "text": "did you wrap the html in the {% widget_attribute \"value\" %} {% end_widget_attribute %} tags?"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2018-02-08 09:39:29",
+    "edited": {
+      "time_stamp": "2018-02-08 09:39:58"
+    },
+    "text": "which block attribute are you extending in your {% widget_block %} method? maybe {{ post.widgets.blog_summary.html.value }} or {{ post.widgets.blog_summary.body.html.value }}"
+  },
+  {
+    "text": "This is the section I am trying to pull from... Sorry I should've originally included this",
+    "time_stamp": "2018-02-08 09:40:21"
+  },
+  {
+    "poster": {
+      "poster_name": "Patrick O'Neal",
+      "poster_handle": "poneal"
+    },
+    "time_stamp": "2018-02-08 09:40:40",
+    "text": "{{ post.widgets.blog_summary.body.html }}"
+  },
+  {
+    "poster": {
+      "poster_name": "Patrick O'Neal",
+      "poster_handle": "poneal"
+    },
+    "time_stamp": "2018-02-08 09:40:48",
+    "text": "Try that."
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-02-08 09:41:17",
+    "text": "yep - since you're defining the \"html\" attribute"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-02-08 09:41:25",
+    "text": "you'd want .html instead of .value (in theory)"
+  },
+  {
+    "poster": {
+      "poster_name": "Chandler Ives",
+      "poster_handle": "cives"
+    },
+    "time_stamp": "2018-02-08 09:41:41",
+    "text": "<@U2E6FUEEP> That did it – anyway to override the inline styling?"
+  },
+  {
+    "poster": {
+      "poster_name": "Chandler Ives",
+      "poster_handle": "cives"
+    },
+    "time_stamp": "2018-02-08 09:41:47",
+    "text": "Thanks guys!"
+  },
+  {
+    "subtype": "file_comment",
+    "text": "<@U4RP6AGV9> commented on <@U795QFHDE>’s file <https://HubSpotdev.slack.com/files/U795QFHDE/F95DX117A/-.html|https://HubSpotdev.slack.com/files/U795QFHDE/F95DX117A/-.html>: Definitely should have included this :wink:",
+    "comment": {
+      "created": 1518108134,
+      "timestamp": 1518108134,
+      "comment": "Definitely should have included this :wink:"
+    },
+    "time_stamp": "2018-02-08 09:42:14"
+  },
+  {
+    "poster": {
+      "poster_name": "Patrick O'Neal",
+      "poster_handle": "poneal"
+    },
+    "time_stamp": "2018-02-08 09:42:36",
+    "text": "Now that I don’t have an immediate answer to. I didn’t have to mess with style. Let me check something."
+  },
+  {
+    "poster": {
+      "poster_name": "Patrick O'Neal",
+      "poster_handle": "poneal"
+    },
+    "time_stamp": "2018-02-08 09:43:33",
+    "edited": {
+      "time_stamp": "2018-02-08 09:46:27"
+    },
+    "text": "No, I just put it in as plain rich text without any html tags. Then I applied the style to the post listing instead."
+  },
+  {
+    "poster": {
+      "poster_name": "Chandler Ives",
+      "poster_handle": "cives"
+    },
+    "time_stamp": "2018-02-08 09:44:45",
+    "text": "Ah, okay. Thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2018-02-08 09:46:28",
+    "text": "Are you wrapping that tag in a &lt;p&gt;&lt;/p&gt;?"
+  },
+  {
+    "poster": {
+      "poster_name": "Patrick O'Neal",
+      "poster_handle": "poneal"
+    },
+    "time_stamp": "2018-02-08 09:46:36",
+    "text": "That’s how I do it."
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2018-02-08 09:47:44",
+    "text": "<@U795QFHDE> Try adding a |striptags filter, should return just the text"
+  },
+  {
+    "poster": {
+      "poster_name": "Patrick O'Neal",
+      "poster_handle": "poneal"
+    },
+    "time_stamp": "2018-02-08 09:48:10",
+    "text": "Oh sweet! I’m going to take advantage of that too. Thanks Mark!"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2018-02-08 09:48:16",
+    "text": ":thumbsup:"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-02-08 09:54:57",
+    "text": "How would you populate a choice field with values from the \"tags\" area? So people can choose from the tags you have on the site in a dropdown chice field"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-02-08 09:56:45",
+    "text": "I always use a macro that spits out the list separated by commas"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-02-08 09:56:52",
+    "text": "Will see if I can find some code"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-02-08 09:57:09",
+    "text": "Other option COULD be to |join the topic_list"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-02-08 09:59:45",
+    "edited": {
+      "time_stamp": "2018-02-08 10:04:58"
+    },
+    "text": "{% choice \"my_choice\" label='Topic Choice', value='default', choices='{{ contents_topics|map('name')|join(\",\") }}' %}",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2018-02-08 10:05:16"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-02-08 09:59:48",
+    "text": "something like that"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2018-02-08 10:01:16",
+    "edited": {
+      "time_stamp": "2018-02-08 10:01:34"
+    },
+    "text": "sorry, just to be clear, blog tags or \"the COS syntax formally known as modules?\""
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-02-08 10:05:16",
+    "text": "had to make some edits - as my original would have only applied to a blog post"
+  },
+  {
+    "text": "This would only output the tags that are already assigned to the blog. I am talking about recreating this.",
+    "time_stamp": "2018-02-08 10:05:22"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2018-02-08 10:08:00",
+    "text": "Haven't done it myself, but if you can loop over them, you can probably use that jinja .append method to add them as choices"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-02-08 10:10:26",
+    "text": "<@U2H3TT8F2> Recreating the tag selector from the blog post edit interface?"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-02-08 10:10:31",
+    "text": "yep"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-02-08 10:11:10",
+    "text": "in what context would it be used? on a landing page? blog (list) or blog (post)?"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-02-08 10:12:10",
+    "text": "blog post, it would be essentially to say \"This is what the blogs primary tag is\" and then have \"it is also tagged in (rest of the tags are show except if tag is same as primary tag)\""
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-02-08 10:13:05",
+    "text": "So you'd want to select the primary tag from the dropdown?"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-02-08 10:13:17",
+    "text": "then exclude it from the remaining list of tags (wherever you use them on the page)"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-02-08 10:14:37",
+    "text": "Yep, they'd select the primary, then in the editor settings area, they would still choose all the tags (including the primary) just in HubL when outputting the tags, it would check to see if it is the same as the primary and if not, it would show it."
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-02-08 10:15:03",
+    "text": "The only way i can think to pull the list of blog tags is using the api but i dont want to expose the api key"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-02-08 10:15:48",
+    "text": "no no"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-02-08 10:15:51",
+    "text": "I'll give you the code"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-02-08 10:15:54",
+    "text": "I've done this before"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-02-08 10:16:00",
+    "text": "you need to use a macro"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-02-08 10:17:59",
+    "edited": {
+      "time_stamp": "2018-02-08 10:19:38"
+    },
+    "text": "i've done something similar with an author list but thats only because you can grab all the authors from `blog_authors` function, it doesnt look like the `blog_topics` one returns all of them. Just the topics on the actual blog that have been used."
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-02-08 10:18:59",
+    "text": "this is true - part of the reason you need a macro... you can grab the topics from multiple blogs (granted you'd have to hard-code all blog ids somewhere in there)"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-02-08 10:19:08",
+    "text": "then |unique them"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-02-08 10:19:19",
+    "text": "let me go find the sample code I had and see if I can get you at least started"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-02-08 10:19:50",
+    "text": "Thanks <@U4RP6AGV9>"
+  },
+  {
+    "text": "<@U4RP6AGV9> uploaded a file: <https://HubSpotdev.slack.com/files/U4RP6AGV9/F970Z4CGN/select_from_all_unique_topics_on_blog_post.txt|Select from All unique topics on Blog post>",
+    "time_stamp": "2018-02-08 10:56:06"
+  },
+  {
+    "subtype": "file_comment",
+    "text": "<@U4RP6AGV9> commented on <@U4RP6AGV9>’s file <https://HubSpotdev.slack.com/files/U4RP6AGV9/F970Z4CGN/Select_from_All_unique_topics_on_Blog_post.txt|https://HubSpotdev.slack.com/files/U4RP6AGV9/F970Z4CGN/Select_from_All_unique_topics_on_Blog_post.txt>: <@U2H3TT8F2> Here you go - remove those comments to shorten it to about 15 lines",
+    "comment": {
+      "created": 1518112594,
+      "timestamp": 1518112594,
+      "comment": "<@U2H3TT8F2> Here you go - remove those comments to shorten it to about 15 lines"
+    },
+    "time_stamp": "2018-02-08 10:56:34"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-02-08 10:56:56",
+    "text": "if you have questions let me know"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-02-08 10:58:52",
+    "text": "I'll let you figure out how to use the results in the context of your \"exclude this topic\" from the page"
+  }
+]

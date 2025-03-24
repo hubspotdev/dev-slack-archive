@@ -1,0 +1,58 @@
+[
+  {
+    "poster": {
+      "poster_name": "Cathryn Brimhall",
+      "poster_handle": "cathryn.brimhall"
+    },
+    "time_stamp": "2024-09-18 02:22:59",
+    "text": "Hi People, Hope everyone is healthy and happy.\n\nI have a question concerning manipulating the DOM of forms in javascript with the onFormReady callback.\n\nWe wanted to push some messages behind the Submit button,\n\nThis was working great until we figured out that if one of the required fields was left empty it caused an error in v2.js and the whole form disappeared.\n\nThe javascript manipulation was being handled in hsFormCallback &amp;&amp; onFormReady callback, oh I said that.\n\n*The validation worked as expected if all the fields contained a value even a blocking value, but if one field was left empty.  Poof the form disappeared on Validation*\n\nHas anyone else experienced this please ?\nPlease help !\n\nPerplexed Cathryn in Paris."
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2024-09-18 02:49:23",
+    "text": "Hello Santiago.\n\nThose errors look very familiar to me.  I'm working on a similar problem. But not with embedded forms.\nJust regular HubSpot forms inserted with hubl code via a module.\nBut we have the same problem.\nI was manipulating the DOM to get the Submit button to go before the GDPR B2B message.\nAnd on testing it was discovered that if one of the fields was left empty. the validation didn't work. The form disappeared. And the console had the same exact error message as you.\nSo I neutralized the script that manipulated the DOM and it works as expected.\nSupport wouldn't give me any more info. I requested a ticket to talk to someone with more Dev info on forms especially this v2.js script. and am waiting.\nSorry I don't have the answer. But hope this helps.\nCathryn"
+  },
+  {
+    "poster": {
+      "poster_name": "Mehdi Louraoui",
+      "poster_handle": "med.louraoui"
+    },
+    "time_stamp": "2024-09-18 08:19:55",
+    "text": "Hello everyone!\n\n I'm currently adding the tracking script to my Next.js application. I've created a hook to handle cookie rejection and acceptance.\nFor rejecting cookies, it's okay. However, I have a doubt about the one for accepting cookies. Is it okay to do it like this?\n\nThank you!\n\n```export const useHubSpot = (): UseHubSpotProps =&gt; {\n  const _hsq = typeof window !== \"undefined\" &amp;&amp; window._hsq ? window._hsq : [];\n\n  [....]\n\n  const declineCookie = () =&gt; {\n    _hsq.push([\"revokeCookieConsent\"]);\n  };\n\n  const acceptCookie = () =&gt; {\n    _hsq.push([\"doNotTrack\", { track: true }]);\n  };\n\n  return {\n    setPathPageView,\n    setTrackPageView,\n    setIdentity,\n    setTrackEvent,\n    declineCookie,\n    acceptCookie,\n  };\n};```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Kesiena Sowho",
+      "poster_handle": "kesiena.sowho"
+    },
+    "time_stamp": "2024-09-18 09:39:49",
+    "edited": {
+      "time_stamp": "2024-09-18 09:41:24"
+    },
+    "text": "Hi <@U028QE2PEPN>\n\nHoping you can help out here. I have a form similar to yours here. But I can't seem to get the redirect urls to open in a new tab. Could you kindly share how you did this?\n\nHere is my embed code with the js on the onFormSubmitted callback. The only issue here is the original page also redirects and opens in a new tab as well:\n\n<script charset=\"utf-8\" type=\"text/javascript\" src=\"<//js.hsforms.net/forms/embed/v2.js>\"></script>\n<script>\n    hbspt.forms.create({\n        region: \"na1\",\n        portalId: \"xxx\",\n        formId: \"xxxx\",\n        onFormSubmitted: function($form, data) {\n            // Check if a redirect URL is provided\n            if (data.redirectUrl) {\n                // Open the redirect URL in a new tab\n                window.open(data.redirectUrl, '_blank');\n            }\n        }\n    });\n</script>\n\nSomeone else also seemed to have the same issue and is doing something similar:\nI have found that I can open a new window with onFormSubmitted, is there anyway to stop the initial window from redirecting? Now I get the target URL in two windows.\n``` onFormSubmit: function($form) {\n    $form.preventDefault();\n    props.setShowLightbox(false);\n  },\n\nonFormSubmitted: function($form, data) {\n    window.open(data.redirectUrl, '_blank');\n    window.stop();\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Kesiena Sowho",
+      "poster_handle": "kesiena.sowho"
+    },
+    "time_stamp": "2024-09-18 09:42:48",
+    "text": "Hi <@U06D36XDM6E> . I am also having the same issue as above. Were you able to figure this out?. My code is also similar to yours. I am also trying to prevent the initial window from redirecting:\n&lt;script charset=\"utf-8\" type=\"text/javascript\" src=\"&lt;//js.hsforms.net/forms/embed/v2.js&gt;\"&gt;&lt;/script&gt;\n&lt;script&gt;\n    hbspt.forms.create({\n        region: \"na1\",\n        portalId: \"xxx\",\n        formId: \"xxxx\",\n        onFormSubmitted: function($form, data) {\n            // Check if a redirect URL is provided\n            if (data.redirectUrl) {\n                // Open the redirect URL in a new tab\n                window.open(data.redirectUrl, '_blank');\n            }\n        }\n    });\n&lt;/script&gt;"
+  },
+  {
+    "poster": {
+      "poster_name": "Santiago Aday",
+      "poster_handle": "saday"
+    },
+    "time_stamp": "2024-09-18 10:18:58",
+    "text": "Since when was this a thing? This code was working for a long time before I randomly noticed that it stopped working. Do you have any alternative to this? manipulating the submit button on my form is pretty much vital to the form itself"
+  },
+  {
+    "poster": {
+      "poster_name": "Cathryn Brimhall",
+      "poster_handle": "cathryn.brimhall"
+    },
+    "time_stamp": "2024-09-18 10:24:49",
+    "text": "Same thing with me. we only noticed for the first time Monday, the script had been installed and \"working\" since October.\nThe 'random\" event I was able to identify in our case was when someone left one of the required properties blank.\n\nI just removed the part of the script manipulating the DOM, and the errors didn't block the form, or remove the form LOL :scream:\n\nSupport came back to me and said exceptionnally I could speak with someone on their Dev team, but I have to submit another ticket.\n\nIn our case, it was nice to have. So sorry I have no work around !\nI'll let you know if I get a talk with HS Dev team."
+  }
+]

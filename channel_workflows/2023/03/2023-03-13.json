@@ -1,0 +1,348 @@
+[
+  {
+    "poster": {
+      "poster_name": "David Roma",
+      "poster_handle": "droma"
+    },
+    "time_stamp": "2023-03-13 04:25:51",
+    "text": "I’m building my first <https://developers.HubSpot.com/docs/api/automation/custom-workflow-actions|Custom Workflow Action> which will run when a Contact is added to an Active List.\nI want to dynamically append the Contact’s email address to the actionUrl so it can be sent to a 3rd party service.\nI’ve had no issue testing with a static URL but I’m not sure exactly how to (or best practice for) dynamically appending the email to the actionUrl - something like this :point_down::skin-tone-3:\n```{\n  \"actionUrl\": \"<https://webhook.site/000-000-000?email={email}>\",\n  \"published\": true,\n  \"objectTypes\":[\n    \"CONTACT\"\n  ],\n...\n}```\nWas thinking maybe I can use the PRE_FETCH_OPTIONS function to append the user’s email to the static URL and return the modified actionURL, but have not been able to get that to work yet.\nAny advice here will be super helpful\nThanks!",
+    "reply_count": 19,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-03-13 06:17:08"
+      },
+      {
+        "time_stamp": "2023-03-13 06:46:06"
+      },
+      {
+        "time_stamp": "2023-03-13 07:05:13"
+      },
+      {
+        "time_stamp": "2023-03-13 07:34:00"
+      },
+      {
+        "time_stamp": "2023-03-13 07:52:22"
+      },
+      {
+        "time_stamp": "2023-03-13 07:53:11"
+      },
+      {
+        "time_stamp": "2023-03-13 07:53:45"
+      },
+      {
+        "time_stamp": "2023-03-13 07:54:00"
+      },
+      {
+        "time_stamp": "2023-03-13 07:55:40"
+      },
+      {
+        "time_stamp": "2023-03-13 07:56:02"
+      },
+      {
+        "time_stamp": "2023-03-13 07:56:06"
+      },
+      {
+        "time_stamp": "2023-03-13 07:56:36"
+      },
+      {
+        "time_stamp": "2023-03-13 07:58:09"
+      },
+      {
+        "time_stamp": "2023-03-13 08:05:17"
+      },
+      {
+        "time_stamp": "2023-03-15 09:02:31"
+      },
+      {
+        "time_stamp": "2023-03-15 09:14:42"
+      },
+      {
+        "time_stamp": "2023-03-15 09:15:17"
+      },
+      {
+        "time_stamp": "2023-03-15 09:16:36"
+      },
+      {
+        "time_stamp": "2023-03-15 09:23:40"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-13 06:17:08",
+    "text": "hey david you'd need to use string interpolation\n\nso you'd do\n\n```{\n\"actionUrl\": `<https://webhook.site/000-000-000?email=${email}>`\n}```"
+  },
+  {
+    "text": "<@U04N6N424MB> this was my original thought as well but I get the following error",
+    "time_stamp": "2023-03-13 06:46:06",
+    "edited": {
+      "time_stamp": "2023-03-13 06:46:41"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-13 07:05:13",
+    "text": "hm weird , how is the email getting in there"
+  },
+  {
+    "text": "Thanks <@U01QVR44MEY> - when I replace ` with \" I get an \"Invalid action definition\" error.\n\nAnd I can't tell if it's complaining about the fact that I'm attempting interpolation in the JSON, or that I'm attempting to get the Contact's email from the prev step in some type of incorrect manner.\n\nThe <https://developers.HubSpot.com/docs/api/automation/custom-workflow-actions|documentation> is pretty basic and there are very few examples of Custom Workflow Actions code around the web (likely because this is a relatively new feature).",
+    "time_stamp": "2023-03-13 07:34:00"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 07:52:22",
+    "text": "are you sending a couple other parameters in the url?"
+  },
+  {
+    "poster": {
+      "poster_name": "David Roma",
+      "poster_handle": "droma"
+    },
+    "time_stamp": "2023-03-13 07:53:11",
+    "text": "Yes but just the API key (?key=xxx)"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 07:53:45",
+    "text": "this would be the second thing I would try:\n```\"<https://webhook.site/000-000-000?email={{email}}>\"```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "David Roma",
+      "poster_handle": "droma"
+    },
+    "time_stamp": "2023-03-13 07:54:00",
+    "text": "yah good call - going to try now"
+  },
+  {
+    "poster": {
+      "poster_name": "David Roma",
+      "poster_handle": "droma"
+    },
+    "time_stamp": "2023-03-13 07:55:40",
+    "text": "same error :sob:"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 07:56:02",
+    "text": "for the {{ one?"
+  },
+  {
+    "poster": {
+      "poster_name": "David Roma",
+      "poster_handle": "droma"
+    },
+    "time_stamp": "2023-03-13 07:56:06",
+    "text": "yeah"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 07:56:36",
+    "text": "That shouldn't throw any errors do you have a small version of your action definition? I can run tests on my end"
+  },
+  {
+    "poster": {
+      "poster_name": "David Roma",
+      "poster_handle": "droma"
+    },
+    "time_stamp": "2023-03-13 07:58:09",
+    "text": "Ohh that would be great - I'll put one together after my next meeting - thanks man!"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-13 08:05:17",
+    "text": "yeah ive never messed with CWA but sorry didn't realize it was straight up JSON,, thought it was compiled down, that explains the interpolation not working"
+  },
+  {
+    "poster": {
+      "poster_name": "Fed",
+      "poster_handle": "fed"
+    },
+    "time_stamp": "2023-03-13 08:19:11",
+    "text": "We did what Carter suggested and the rate limiting retry works !\nMany thanks !"
+  },
+  {
+    "poster": {
+      "poster_name": "Fed",
+      "poster_handle": "fed"
+    },
+    "time_stamp": "2023-03-13 08:19:25",
+    "text": "Much appreciated"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 08:20:35",
+    "text": "Hey <@U04TR3T2G73>, glad I could help"
+  },
+  {
+    "poster": {
+      "poster_name": "Goran Ilievski",
+      "poster_handle": "goran308"
+    },
+    "time_stamp": "2023-03-13 16:36:04",
+    "edited": {
+      "time_stamp": "2023-03-13 16:36:28"
+    },
+    "text": "Hi! In a workflow custom code action, I am trying to associate a new company with a contact that has a named association but also the company to be made Primary. The named association works fine but the company does not become primary if there is another company that the contact has set as Primary. Any pointers would be appreciated.\n\nHere is the bit of the code that should do that:\n``` //Create the Company using Company object above\n           HubSpotClient.crm.companies.basicApi.create(companyObj).then(companyCreateResponse =&gt;{\n             //Associate Company with Contact using the ID returned from the previous request\n             HubSpotClient.crm.companies.associationsApi.create(companyCreateResponse.body.id,'contacts', event.object.objectId,'company_to_contact', {isPrimary: true});\n           });\n           \n         }else{ // MATCH FOUND - ASSOCIATE COMPANY TO CONTACT\n           // console.log(\"COMPANY \" + companyName + \" FOUND: ASSOCIATE RECORDS\"); // - FOR DEBUG\n          //Associate Company with Contact\n           HubSpotClient.crm.companies.associationsApi.create(searchCompanyResponse.body.results[0].id,'contacts', event.object.objectId,'school_champion', {isPrimary: true});\n         }```",
+    "reply_count": 9,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-03-13 16:41:45"
+      },
+      {
+        "time_stamp": "2023-03-13 16:42:33"
+      },
+      {
+        "time_stamp": "2023-03-13 16:47:20"
+      },
+      {
+        "time_stamp": "2023-03-13 16:48:01"
+      },
+      {
+        "time_stamp": "2023-03-13 17:51:29"
+      },
+      {
+        "time_stamp": "2023-03-13 18:00:02"
+      },
+      {
+        "time_stamp": "2023-03-13 18:00:18"
+      },
+      {
+        "time_stamp": "2023-03-14 07:29:45"
+      },
+      {
+        "time_stamp": "2023-03-14 08:04:19"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 16:41:45",
+    "text": "You can only have one primary company"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 16:42:33",
+    "edited": {
+      "time_stamp": "2023-03-13 16:42:42"
+    },
+    "text": "just like you might have a primary point of contact in case of emergency you would only have one primary company. Any other companies would be secondary to the primary one"
+  },
+  {
+    "poster": {
+      "poster_name": "Goran Ilievski",
+      "poster_handle": "goran308"
+    },
+    "time_stamp": "2023-03-13 16:47:20",
+    "text": "Yup I am aware, but I am trying to change the already existing Primary company with a new Primary company."
+  },
+  {
+    "poster": {
+      "poster_name": "Goran Ilievski",
+      "poster_handle": "goran308"
+    },
+    "time_stamp": "2023-03-13 16:48:01",
+    "text": "I assumed that it can happen as you set a new one to be primary the old one stops being primary"
+  },
+  {
+    "poster": {
+      "poster_name": "Cristóbal Parraguez",
+      "poster_handle": "cparraguez"
+    },
+    "time_stamp": "2023-03-13 16:59:30",
+    "text": "Has anyone done any sort of fuzzy string matching in custom coded actions in Python? :thinking_face: It won't let me import fuzzywuzzy"
+  },
+  {
+    "poster": {
+      "poster_name": "Goran Ilievski",
+      "poster_handle": "goran308"
+    },
+    "time_stamp": "2023-03-13 17:51:29",
+    "text": "Thanks <@U01QVR44MEY>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 18:00:02",
+    "text": "Yes if you can the association of the old one the new one could definitely be made the primary one but you just also need to add that association label"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 18:00:18",
+    "text": "primary association is one label and then the custom label that you made is another"
+  },
+  {
+    "poster": {
+      "poster_name": "Conrad",
+      "poster_handle": "conrad.engelbrecht"
+    },
+    "time_stamp": "2023-03-13 18:12:40",
+    "text": "Hi Braintrust. Since log events are now deprecated, how is a person suppose to find new enrolments for a given period? <https://legacydocs.HubSpot.com/docs/methods/workflows/log_events> . I need to find all new enrolments for a given period and while on the subject I need to update the workflow to move onto the next action in the workflow?  I will not be using web hooks. tia",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-03-13 20:06:28"
+      },
+      {
+        "time_stamp": "2023-03-14 01:14:51"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 20:06:28",
+    "edited": {
+      "time_stamp": "2023-03-13 20:06:48"
+    },
+    "text": "You can't really update the workflow live and tell the workflow to move onto a different step, you should just configure your workflow to do this automatically. (Maybe I misunderstand what you're saying). What exactly are you trying to use the events endpoint for? It's possible that the stats endpoint would work for something: <https://legacydocs.HubSpot.com/docs/methods/workflows/get_performance_statistics>"
+  },
+  {
+    "poster": {
+      "poster_name": "Sonu kumar",
+      "poster_handle": "sonukumarkcl"
+    },
+    "time_stamp": "2023-03-14 00:31:13",
+    "text": "Hello Everyone\n\nI am facing the same issues. Please help me\n<https://community.HubSpot.com/t5/Sales-Integrations/the-image-product-does-not-show-in-Marketing-email/td-p/580355>"
+  }
+]

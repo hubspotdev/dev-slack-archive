@@ -1,0 +1,335 @@
+[
+  {
+    "poster": {
+      "poster_name": "Bashir",
+      "poster_handle": "ayo_idan"
+    },
+    "time_stamp": "2024-04-08 10:07:03",
+    "text": "Need help on GraphQL please. \n\nI need to know if it’s possible to filter empty items out of a query result OR if it’s possible to filter an object by its association. HS docs doesn’t cover this. ",
+    "reply_count": 28,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-04-08 10:12:52"
+      },
+      {
+        "time_stamp": "2024-04-08 10:18:31"
+      },
+      {
+        "time_stamp": "2024-04-08 10:19:38"
+      },
+      {
+        "time_stamp": "2024-04-08 10:22:10"
+      },
+      {
+        "time_stamp": "2024-04-08 10:23:00"
+      },
+      {
+        "time_stamp": "2024-04-08 10:23:10"
+      },
+      {
+        "time_stamp": "2024-04-08 10:23:55"
+      },
+      {
+        "time_stamp": "2024-04-08 10:24:03"
+      },
+      {
+        "time_stamp": "2024-04-08 10:28:20"
+      },
+      {
+        "time_stamp": "2024-04-08 10:29:29"
+      },
+      {
+        "time_stamp": "2024-04-08 10:41:09"
+      },
+      {
+        "time_stamp": "2024-04-08 10:42:52"
+      },
+      {
+        "time_stamp": "2024-04-08 10:43:04"
+      },
+      {
+        "time_stamp": "2024-04-08 10:43:54"
+      },
+      {
+        "time_stamp": "2024-04-08 10:44:13"
+      },
+      {
+        "time_stamp": "2024-04-08 10:45:14"
+      },
+      {
+        "time_stamp": "2024-04-08 10:46:09"
+      },
+      {
+        "time_stamp": "2024-04-08 10:46:13"
+      },
+      {
+        "time_stamp": "2024-04-08 10:46:58"
+      },
+      {
+        "time_stamp": "2024-04-08 10:47:36"
+      },
+      {
+        "time_stamp": "2024-04-08 10:47:57"
+      },
+      {
+        "time_stamp": "2024-04-08 10:47:58"
+      },
+      {
+        "time_stamp": "2024-04-08 10:48:50"
+      },
+      {
+        "time_stamp": "2024-04-08 10:49:01"
+      },
+      {
+        "time_stamp": "2024-04-08 10:49:14"
+      },
+      {
+        "time_stamp": "2024-04-08 10:51:43"
+      },
+      {
+        "time_stamp": "2024-04-08 10:51:54"
+      },
+      {
+        "time_stamp": "2024-04-08 10:59:16"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-04-08 10:12:52",
+    "text": "Can you give an example query that you would like to run, EX: I want to get all the contacts that are associated to this particular company"
+  },
+  {
+    "poster": {
+      "poster_name": "Bashir",
+      "poster_handle": "ayo_idan"
+    },
+    "time_stamp": "2024-04-08 10:18:31",
+    "edited": {
+      "time_stamp": "2024-04-08 10:19:32"
+    },
+    "text": "I want to get all calls, in a given day, that are associated with company where property ‘Location’ is ‘xyz’ (not a unique property so multiple companies)\n\nIt isn’t possible to filter with associations, so I currently get calls on a certain day, with associated company filtered for ‘location’ is ‘xyz’…. It returns calls with and without an associated company…,  so I plan to filter those without a company within the query(yes, I can filter after the query is received) \n\nHence ask of either filter out calls without company or use associated company in call filter"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-04-08 10:19:38",
+    "text": "Understood, let me setup this query for you"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-04-08 10:22:10",
+    "text": "```query MyQuery {\n  CRM {\n    company_collection(filter: {name__contains: \"xyz\"}) {\n      items {\n        associations {\n          call_collection__company_to_call(filter: {hs_createdate__gte: \"\", hs_createdate__lte: \"\"}) {\n            items {\n              hs_call_title\n            }\n          }\n        }\n      }\n    }\n  }\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Bashir",
+      "poster_handle": "ayo_idan"
+    },
+    "time_stamp": "2024-04-08 10:23:00",
+    "text": "Run on company collection instead. Got it :+1::skin-tone-5: "
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-04-08 10:23:10",
+    "text": "So here's how it's going to look, walking through it step by step:\nFirst we ask HubSpot to run a search on companies that have xyz in the name, in your case you would replace this with the location field and the eq filter"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-04-08 10:23:55",
+    "text": "next we ask it for the associated calls and filter by createdate is greater than or equal to a particular date, or less than or equal to a greater date"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-04-08 10:24:03",
+    "text": "and finally we ask for the call title"
+  },
+  {
+    "poster": {
+      "poster_name": "Bashir",
+      "poster_handle": "ayo_idan"
+    },
+    "time_stamp": "2024-04-08 10:28:20",
+    "text": ":pray::skin-tone-5:  Thanks. Been wondering how to use the collections. "
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-04-08 10:29:29",
+    "text": "of course, let me know if you run into any issues. Happy to help"
+  },
+  {
+    "poster": {
+      "poster_name": "Bashir",
+      "poster_handle": "ayo_idan"
+    },
+    "time_stamp": "2024-04-08 10:41:09",
+    "text": "This is also returning empty items. It gets all the companies meeting the filter (about 900) and returns empty array if they don’t meet the call filter. (Say about 20 companies meet the call filter)\n\nI’m guessing it’s not possible to filter for only records that meet both filters… (I.e. return the very 20) \n"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-04-08 10:42:52",
+    "text": "Yeah that is correct because HubSpot first has to find all the companies before it can find calls for those companies"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-04-08 10:43:04",
+    "text": "Kinda a chicken before the egg problem"
+  },
+  {
+    "poster": {
+      "poster_name": "Bashir",
+      "poster_handle": "ayo_idan"
+    },
+    "time_stamp": "2024-04-08 10:43:54",
+    "text": "Yeah… \n\nSame thing when I use calls as the base object. \n\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Bashir",
+      "poster_handle": "ayo_idan"
+    },
+    "time_stamp": "2024-04-08 10:44:13",
+    "text": "Anyways, needed to confirm the query couldn’t be optimised further. "
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-04-08 10:45:14",
+    "text": "You could filter out company that don't have any associated calls at all"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-04-08 10:46:09",
+    "text": "but the call filters can't be used there"
+  },
+  {
+    "poster": {
+      "poster_name": "Bashir",
+      "poster_handle": "ayo_idan"
+    },
+    "time_stamp": "2024-04-08 10:46:13",
+    "text": "Within the qraphql query or with the response? "
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-04-08 10:46:58",
+    "text": "You would have to build a score property to check for calls"
+  },
+  {
+    "poster": {
+      "poster_name": "Bashir",
+      "poster_handle": "ayo_idan"
+    },
+    "time_stamp": "2024-04-08 10:47:36",
+    "text": "Filter needs to be within a range… Companies will definitely have a call"
+  },
+  {
+    "text": "",
+    "time_stamp": "2024-04-08 10:47:57"
+  },
+  {
+    "poster": {
+      "poster_name": "Bashir",
+      "poster_handle": "ayo_idan"
+    },
+    "time_stamp": "2024-04-08 10:47:58",
+    "text": "Building a custom report for day to day reports"
+  },
+  {
+    "text": "",
+    "time_stamp": "2024-04-08 10:48:50"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-04-08 10:49:01",
+    "text": "You could say activity is less than 1 day ago"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-04-08 10:49:14",
+    "text": "Then filter where the Has Calls? property is 1"
+  },
+  {
+    "poster": {
+      "poster_name": "Bashir",
+      "poster_handle": "ayo_idan"
+    },
+    "time_stamp": "2024-04-08 10:51:43",
+    "text": "So this property will be zero(or empty) if no call has been made within the last day yeah? \n\nAnd if a call has been made, it will be 1 "
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-04-08 10:51:54",
+    "text": "correct"
+  },
+  {
+    "poster": {
+      "poster_name": "Bashir",
+      "poster_handle": "ayo_idan"
+    },
+    "time_stamp": "2024-04-08 10:59:16",
+    "text": ":+1::skin-tone-5: "
+  },
+  {
+    "poster": {
+      "poster_name": "Mike Bergsma",
+      "poster_handle": "mbergsma"
+    },
+    "time_stamp": "2024-04-08 11:27:14",
+    "text": "Hi! I'm trying to customize Line Items as a new tab on a deal, but when I create a Sandbox/Dev Sandbox, despite having Products and Line Items selected as objects to copy over, none make it to the sandbox - not the list of products, the line item layouts, or any sample line item data. Has anyone managed to make that work? I don't really want to have to re-create a bunch of line items to test for our various edge cases.",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-04-11 11:49:56"
+      },
+      {
+        "time_stamp": "2024-04-11 12:31:01"
+      }
+    ]
+  }
+]

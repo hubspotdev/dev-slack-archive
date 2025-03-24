@@ -1,0 +1,234 @@
+[
+  {
+    "poster": {
+      "poster_name": "Martin Dahlén Jansson",
+      "poster_handle": "martin631"
+    },
+    "time_stamp": "2022-04-13 03:26:23",
+    "text": "Hi!\nI have an issue with the programmable emails beta\nI'm trying to fetch some custom objects to loop over, however it only returns the id. Am i missing something?\n\n```{% if contact.update_investor %}\n    {% set investor = crm_object(\"investors\", \"id=.  {{contact.update_investor}}\", \"is_identified, email, phone_number, had_approved_kyc, all_terms, smart_invest\", false) %}\n{% else %}\n    {% set investor = crm_object(\"investors\", \"contact={{contact.id}}\", \"is_identified, email, phone_number, had_approved_kyc, all_terms, smart_invest\", false) %}\n{% endif %}```\n```{% for key, val in investor.items() %}\n      {{key}} {{val}} //Only displays id and value\n{% endfor %}```",
+    "reply_count": 20,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-04-13 03:35:56"
+      },
+      {
+        "time_stamp": "2022-04-13 03:36:08"
+      },
+      {
+        "time_stamp": "2022-04-13 03:54:10"
+      },
+      {
+        "time_stamp": "2022-04-13 04:54:39"
+      },
+      {
+        "time_stamp": "2022-04-13 04:55:05"
+      },
+      {
+        "time_stamp": "2022-04-13 04:56:12"
+      },
+      {
+        "time_stamp": "2022-04-13 05:20:57"
+      },
+      {
+        "time_stamp": "2022-04-13 05:27:47"
+      },
+      {
+        "time_stamp": "2022-04-13 06:08:46"
+      },
+      {
+        "time_stamp": "2022-04-13 06:12:59"
+      },
+      {
+        "time_stamp": "2022-04-13 06:24:49"
+      },
+      {
+        "time_stamp": "2022-04-13 06:24:51"
+      },
+      {
+        "time_stamp": "2022-04-13 06:29:42"
+      },
+      {
+        "time_stamp": "2022-04-13 06:32:13"
+      },
+      {
+        "time_stamp": "2022-04-13 07:08:25"
+      },
+      {
+        "time_stamp": "2022-04-13 07:08:26"
+      },
+      {
+        "time_stamp": "2022-04-13 07:11:10"
+      },
+      {
+        "time_stamp": "2022-04-13 07:13:09"
+      },
+      {
+        "time_stamp": "2022-04-13 07:20:23"
+      },
+      {
+        "time_stamp": "2022-04-13 07:21:30"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Joe O'Hara",
+      "poster_handle": "johara"
+    },
+    "time_stamp": "2022-04-13 03:35:56",
+    "text": "Can you try remove the spaces between the property names"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe O'Hara",
+      "poster_handle": "johara"
+    },
+    "time_stamp": "2022-04-13 03:36:08",
+    "text": "ie.\n```is_identified,email```"
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Dahlén Jansson",
+      "poster_handle": "martin631"
+    },
+    "time_stamp": "2022-04-13 03:54:10",
+    "text": "Same problem :confused:"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe O'Hara",
+      "poster_handle": "johara"
+    },
+    "time_stamp": "2022-04-13 04:54:39",
+    "text": "Can you try and build your query outside of the function call"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe O'Hara",
+      "poster_handle": "johara"
+    },
+    "time_stamp": "2022-04-13 04:55:05",
+    "text": "So,\n```{% set query = \"contact=\"~{{contact.id}} %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe O'Hara",
+      "poster_handle": "johara"
+    },
+    "time_stamp": "2022-04-13 04:56:12",
+    "text": "and\n```{% set query = \"id=\"~{{contact.update_investor}}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Dahlén Jansson",
+      "poster_handle": "martin631"
+    },
+    "time_stamp": "2022-04-13 05:20:57",
+    "text": "That gives an error\n```Error parsing [ '\"contact=\"~{{contact.id}}' ] syntax error encountered } expected :```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Dahlén Jansson",
+      "poster_handle": "martin631"
+    },
+    "time_stamp": "2022-04-13 05:27:47",
+    "text": "If i run\n```{% set investor = crm_object(\"investors\", \"contact={{contact.id}}\") %}```\nIt also gets the name parameter, but value is the email"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe O'Hara",
+      "poster_handle": "johara"
+    },
+    "time_stamp": "2022-04-13 06:08:46",
+    "text": "Can you share all of what you have at the moment again"
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Dahlén Jansson",
+      "poster_handle": "martin631"
+    },
+    "time_stamp": "2022-04-13 06:12:59",
+    "text": "```{% if contact.update_investor %}\n{% set investor = crm_object(\"investors\", \"id={{contact.update_investor}}\", \"is_identified,email,phone_number,had_approved_kyc,all_terms,smart_invest\", false) %}\n{% else %}\n{% set investor = crm_object(\"investors\", \"contact={{contact.id}}\", \"is_identified,email,phone_number,had_approved_kyc,all_terms,smart_invest\", false) %}\n{% endif %}\n\n{% for key, val in investor.items() %}\n{{key}} {{val}}\n{% endfor %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe O'Hara",
+      "poster_handle": "johara"
+    },
+    "time_stamp": "2022-04-13 06:24:49",
+    "text": "Can you do like I said above."
+  },
+  {
+    "poster": {
+      "poster_name": "Joe O'Hara",
+      "poster_handle": "johara"
+    },
+    "time_stamp": "2022-04-13 06:24:51",
+    "text": "```{% if contact.update_investor %}\n{% set query = \"id=\"~{{contact.update_investor}} %}\n{% set investor = crm_object(\"investors\", query, \"is_identified,email,phone_number,had_approved_kyc,all_terms,smart_invest\", false) %}\n{% else %}\n{% set query = \"contact=\"~{{contact.id}} %}\n{% set investor = crm_object(\"investors\", query, \"is_identified,email,phone_number,had_approved_kyc,all_terms,smart_invest\", false) %}\n{% endif %}\n\n{% for key, val in investor.items() %}\n{{key}} {{val}}\n{% endfor %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Dahlén Jansson",
+      "poster_handle": "martin631"
+    },
+    "time_stamp": "2022-04-13 06:29:42",
+    "text": "If i do that i get an error message as i said above\n```Error parsing [ '\"contact=\"~{{contact.id}}' ] syntax error encountered } expected :```"
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Dahlén Jansson",
+      "poster_handle": "martin631"
+    },
+    "time_stamp": "2022-04-13 06:32:13",
+    "text": "```1.\nError:Cannot resolve property\n2.\nError:5:28Syntax error\n3.\nWarning:6:1An argument is missing```"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe O'Hara",
+      "poster_handle": "johara"
+    },
+    "time_stamp": "2022-04-13 07:08:25",
+    "text": "Sorry, not enough caffeine on my side"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe O'Hara",
+      "poster_handle": "johara"
+    },
+    "time_stamp": "2022-04-13 07:08:26",
+    "text": "```{% if contact.update_investor %}\n{% set query = \"id=\"~contact.update_investor %}\n{% set investor = crm_object(\"investors\", query, \"is_identified,email,phone_number,had_approved_kyc,all_terms,smart_invest\", false) %}\n{% else %}\n{% set query = \"contact=\"~contact.id %}\n{% set investor = crm_object(\"investors\", query, \"is_identified,email,phone_number,had_approved_kyc,all_terms,smart_invest\", false) %}\n{% endif %}\n\n{% for key, val in investor.items() %}\n{{key}} {{val}}\n{% endfor %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Dahlén Jansson",
+      "poster_handle": "martin631"
+    },
+    "time_stamp": "2022-04-13 07:11:10",
+    "text": "Same here i guess, should have spotted that :stuck_out_tongue:\n\nSame output though :confused:"
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Dahlén Jansson",
+      "poster_handle": "martin631"
+    },
+    "time_stamp": "2022-04-13 07:13:09",
+    "text": "It's really strange, as it worked in the same module a couple of weeks ago. I started reworking the design today and noticed it was missing all the custom objects on render."
+  },
+  {
+    "poster": {
+      "poster_name": "Joe O'Hara",
+      "poster_handle": "johara"
+    },
+    "time_stamp": "2022-04-13 07:20:23",
+    "text": "Can you open a support ticket and mention you were talking to me. That way I can take a look in the account in more detail and see if there is some issue"
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Dahlén Jansson",
+      "poster_handle": "martin631"
+    },
+    "time_stamp": "2022-04-13 07:21:30",
+    "text": "Will do :slightly_smiling_face:"
+  }
+]

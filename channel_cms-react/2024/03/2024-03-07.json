@@ -1,0 +1,769 @@
+[
+  {
+    "poster": {
+      "poster_name": "Stefano Chiala",
+      "poster_handle": "stefano599"
+    },
+    "time_stamp": "2024-03-07 05:12:02",
+    "text": "The purpose is yes an A/B test but I need to use an external service to determine if user in A or B. That service is called in home and the decision is stored in a cookie"
+  },
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2024-03-07 06:26:10",
+    "text": "In that case SSR probobly isnr possible you’ll have to handle it on the client"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-03-07 08:16:44",
+    "text": "Assuming you are OK without prerendering there is a way to get cookies (in a slightly roundabout way through `hublDataTemplate` <https://github.HubSpot.com/cms-react/reference/js-modules.html#hubldatatemplate|doc>), but when I was verifying that I noticed a but with some dev server endpoints that were not passing cookies along (preventing things from working in the dev server). Working toward fixing that.\n\n```export const hublDataTemplate = `\n{% set hublData = {\n  \"cookies\": request.cookies\n}\n%}\n`;```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-07 09:38:55",
+    "text": "I'm running into an issue with a `@mui/lab/Masonry`  component. Throws this error when I try to deploy:\n```Building JS Project with error message `(node:215) Warning: To load an ES module, set \"type\": \"module\" in the package.json or use the .mjs extension.\n(Use `node --trace-warnings ...` to show where the warning was created)\n❌ dynamically loaded asset failed healthcheck with unknown error: island3.js (from components/modules/BlogPostsWithFilterAndSearch/index.js)\n/tmp/cms_H5NG6a/cms-js-build/node_modules/@mui/lab/Masonry/index.js:1\nexport { default } from './Masonry';\n^^^^^^\n\nSyntaxError: Unexpected token 'export'\n    at Object.compileFunction (node:vm:360:18)\n    at wrapSafe (node:internal/modules/cjs/loader:1126:15)\n    at Module._compile (node:internal/modules/cjs/loader:1162:27)\n    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1252:10)\n    at Module.load (node:internal/modules/cjs/loader:1076:32)\n    at Function.Module._load (node:internal/modules/cjs/loader:911:12)\n    at ModuleWrap.&lt;anonymous&gt; (node:internal/modules/esm/translators:169:29)\n    at ModuleJob.run (node:internal/modules/esm/module_job:193:25)\n    at async Promise.all (index 0)\n    at async ESMLoader.import (node:internal/modules/esm/loader:530:24)\n` and cause `Build failure`.\n--------------------------------------------------```\n",
+    "reply_count": 12,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-03-07 09:40:05"
+      },
+      {
+        "time_stamp": "2024-03-07 09:41:15"
+      },
+      {
+        "time_stamp": "2024-03-07 09:42:34"
+      },
+      {
+        "time_stamp": "2024-03-07 09:42:51"
+      },
+      {
+        "time_stamp": "2024-03-07 09:43:50"
+      },
+      {
+        "time_stamp": "2024-03-07 09:44:03"
+      },
+      {
+        "time_stamp": "2024-03-07 09:44:08"
+      },
+      {
+        "time_stamp": "2024-03-07 09:44:20"
+      },
+      {
+        "time_stamp": "2024-03-07 09:45:44"
+      },
+      {
+        "time_stamp": "2024-03-07 10:14:22"
+      },
+      {
+        "time_stamp": "2024-03-07 10:15:03"
+      },
+      {
+        "time_stamp": "2024-03-07 10:17:25"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-07 09:40:05",
+    "text": "trying to remember if this is something I can tweak or if it was a HubSpot side fix"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-07 09:41:15",
+    "text": "trying `import { Masonry } from \"@mui/lab\";`"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-07 09:42:34",
+    "text": ":fingerscrossed:"
+  },
+  {
+    "poster": {
+      "poster_name": "Oleh Rabchuck",
+      "poster_handle": "winner.dev.20"
+    },
+    "time_stamp": "2024-03-07 09:42:51",
+    "text": "That issue with the `@mui/lab/Masonry` component due to a mismatch between CommonJS and ES modules. The error message suggests that the module loader is expecting ES module syntax (`export` statement) from a CommonJS module."
+  },
+  {
+    "poster": {
+      "poster_name": "Oleh Rabchuck",
+      "poster_handle": "winner.dev.20"
+    },
+    "time_stamp": "2024-03-07 09:43:50",
+    "text": "`import { Masonry } from \"@mui/lab\";`\nIs not working?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-07 09:44:03",
+    "text": "it works in proxy (so did the other way)"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-07 09:44:08",
+    "text": "trying to deploy now"
+  },
+  {
+    "poster": {
+      "poster_name": "Oleh Rabchuck",
+      "poster_handle": "winner.dev.20"
+    },
+    "time_stamp": "2024-03-07 09:44:20",
+    "text": "great"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-07 09:45:44",
+    "text": "yup, that seems to work. Thanks for your help <@U06NE4F7E9Y>"
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2024-03-07 10:14:22",
+    "text": "BTW, this was an example of our <https://github.HubSpot.com/cms-react/reference/build-healthchecks.html#build-health-checks|build healthchecks> in action and preventing a bad deploy. I highly recommend everyone put this in their `cms-assets.json` to fully enable them to fail builds that have ESM &lt;-&gt; CJS issues (and React partials or modules in your source that are invalid and currently are sliently not uploaded)\n\n```  \"buildConfig\": {\n    \"healthchecks\": {\n      \"enabled\": true,  // default is true\n      \"strict\": true    // default is false (for now)\n    }\n  }```"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-07 10:15:03",
+    "text": "^ yup, definitely avoided a lot of pain"
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2024-03-07 10:17:25",
+    "text": "<@UCY83QS6Q> do you think you can add a check for a working `componentsDir` path to the health check? I've been doing the thing where I comment out a line to support intellisense but have already forgotten and published a local (breaking) path.\n\nfor context:\n```const componentsDir = fileURLToPath(new URL(\"./components\", import.meta.url));\n// let componentsDir = \"./components\";```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 16:04:08",
+    "edited": {
+      "time_stamp": "2024-03-07 16:18:46"
+    },
+    "text": "hi y'all - i wasn't able to find anything specifically on this. i'm building custom modules in react and i am wondering if there is a way to wrap everything in the dnd area in one theme provider? we are using an external library that houses various components and styles, so adding a theme provider to each module/partial or in an island as a wrapper doesn't make sense. is there a way to create a base template that pulls in a theme provider to wrap the dnd area? or are there any best practices for creating a wrapper for the dnd area?",
+    "reply_count": 52,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-03-07 16:22:57"
+      },
+      {
+        "time_stamp": "2024-03-07 16:23:47"
+      },
+      {
+        "time_stamp": "2024-03-07 16:23:57"
+      },
+      {
+        "time_stamp": "2024-03-07 16:24:58"
+      },
+      {
+        "time_stamp": "2024-03-07 16:25:28"
+      },
+      {
+        "time_stamp": "2024-03-07 16:26:57"
+      },
+      {
+        "time_stamp": "2024-03-07 16:27:44"
+      },
+      {
+        "time_stamp": "2024-03-07 16:28:24"
+      },
+      {
+        "time_stamp": "2024-03-07 16:29:15"
+      },
+      {
+        "time_stamp": "2024-03-07 16:29:20"
+      },
+      {
+        "time_stamp": "2024-03-07 16:31:25"
+      },
+      {
+        "time_stamp": "2024-03-07 16:32:37"
+      },
+      {
+        "time_stamp": "2024-03-07 16:35:26"
+      },
+      {
+        "time_stamp": "2024-03-07 16:36:50"
+      },
+      {
+        "time_stamp": "2024-03-07 16:37:06"
+      },
+      {
+        "time_stamp": "2024-03-07 16:37:17"
+      },
+      {
+        "time_stamp": "2024-03-07 16:37:30"
+      },
+      {
+        "time_stamp": "2024-03-07 16:37:45"
+      },
+      {
+        "time_stamp": "2024-03-07 16:38:00"
+      },
+      {
+        "time_stamp": "2024-03-07 16:38:35"
+      },
+      {
+        "time_stamp": "2024-03-07 16:39:15"
+      },
+      {
+        "time_stamp": "2024-03-07 16:39:44"
+      },
+      {
+        "time_stamp": "2024-03-07 16:40:04"
+      },
+      {
+        "time_stamp": "2024-03-07 16:40:13"
+      },
+      {
+        "time_stamp": "2024-03-07 16:41:13"
+      },
+      {
+        "time_stamp": "2024-03-07 16:41:39"
+      },
+      {
+        "time_stamp": "2024-03-07 16:41:48"
+      },
+      {
+        "time_stamp": "2024-03-07 16:43:25"
+      },
+      {
+        "time_stamp": "2024-03-07 16:43:47"
+      },
+      {
+        "time_stamp": "2024-03-07 16:44:08"
+      },
+      {
+        "time_stamp": "2024-03-07 16:46:46"
+      },
+      {
+        "time_stamp": "2024-03-07 16:47:11"
+      },
+      {
+        "time_stamp": "2024-03-07 16:47:18"
+      },
+      {
+        "time_stamp": "2024-03-07 16:47:35"
+      },
+      {
+        "time_stamp": "2024-03-07 16:47:49"
+      },
+      {
+        "time_stamp": "2024-03-07 16:48:48"
+      },
+      {
+        "time_stamp": "2024-03-07 16:49:54"
+      },
+      {
+        "time_stamp": "2024-03-07 16:50:16"
+      },
+      {
+        "time_stamp": "2024-03-07 16:50:30"
+      },
+      {
+        "time_stamp": "2024-03-07 16:51:06"
+      },
+      {
+        "time_stamp": "2024-03-07 16:51:22"
+      },
+      {
+        "time_stamp": "2024-03-07 16:51:34"
+      },
+      {
+        "time_stamp": "2024-03-07 16:51:41"
+      },
+      {
+        "time_stamp": "2024-03-07 16:51:44"
+      },
+      {
+        "time_stamp": "2024-03-07 16:51:47"
+      },
+      {
+        "time_stamp": "2024-03-07 16:51:50"
+      },
+      {
+        "time_stamp": "2024-03-07 16:52:07"
+      },
+      {
+        "time_stamp": "2024-03-07 16:52:26"
+      },
+      {
+        "time_stamp": "2024-03-07 16:54:49"
+      },
+      {
+        "time_stamp": "2024-03-07 17:16:24"
+      },
+      {
+        "time_stamp": "2024-03-07 17:16:27"
+      },
+      {
+        "time_stamp": "2024-03-07 17:16:28"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 16:22:57",
+    "text": "```const Wrapper = ({ children }: WrapperProps) =&gt; (\n  &lt;ThemeProvider&gt;\n    {children}\n  &lt;/ThemeProvider&gt;\n);```"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 16:23:47",
+    "text": "where `{children}` would be\n\n```{% dnd_area \"dnd_area\" class=\"main\" %}\n    {% dnd_section %}\n\n    {% end_dnd_section %}\n  {% end_dnd_area %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 16:23:57",
+    "edited": {
+      "time_stamp": "2024-03-07 16:24:38"
+    },
+    "text": "let me know if i'm making sense!"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-03-07 16:24:58",
+    "text": "I totally understand and this is an unfortunate limitation that these React modules &amp; partials are detached from a theme and any template…."
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-03-07 16:25:28",
+    "text": "(which we are actively working on, just taking longer than we thought)"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-03-07 16:26:57",
+    "edited": {
+      "time_stamp": "2024-03-07 16:27:14"
+    },
+    "text": "I think the best workaround to do for now is to build a higher order component so that in your module definition you can do something like…\n\n```export const Component = withThemeProvider(props => {\n  return ...;\n});```"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-03-07 16:27:44",
+    "text": "Which would still require `withThemeProvider` in every module, but it at least a little less boilerplate."
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-03-07 16:28:24",
+    "text": "Does your `ThemeProvider` require any specific data or is it essentially “static” and doesn’t change?"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 16:29:15",
+    "text": "it has two unchanging props"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 16:29:20",
+    "text": "so its pretty static"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 16:31:25",
+    "edited": {
+      "time_stamp": "2024-03-07 16:31:35"
+    },
+    "text": "the theme provider uses chakra as a base, for context"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 16:32:37",
+    "text": "we ideally will want our content editors to have as much flexibility in building custom landing pages as possible but also need a way to globally inject that provider"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-03-07 16:35:26",
+    "text": "I don’t have a chance to fully test this at the moment, but this is the workaround pattern I’m suggesting:\n\n```// In some util file...\n\nimport { ChakraThemeProvider } from 'where-ever';\n\nfunction SharedThemeProvider({ children }) {\n  return &lt;ChakraThemeProvider some=\"stuff\"&gt;{children}&lt;/ChakraThemeProvider&gt;;\n}\n\nexport function withThemeProvider(Component: ComponentType ) {\n  return (props) =&gt; {\n    return &lt;SharedThemeProvider&gt;&lt;Component {...props} /&gt;&lt;/SharedThemeProvider&gt;;\n  };\n};\n\n\n// In a module\n\nimport { withThemeProvider } from '../someUtils.js';\n\nfunction ModuleComponent(props) {\n  // Normal component stuff\n  return;\n}\n\nexport Component = withThemeProvider(ModuleComponent)```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 16:36:50",
+    "text": "yeah that makes sense -- hmmm. how do you see this working with multiple modules?"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-03-07 16:37:06",
+    "text": "Each module imports and uses `import { withThemeProvider } from '../someUtils.js';`"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 16:37:17",
+    "text": "gotcha"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-03-07 16:37:30",
+    "text": "So it isn’t global, just is replicated"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-03-07 16:37:45",
+    "text": "Does the theme provider have state? Light some button click to go light -&gt; dark mode?"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 16:38:00",
+    "text": "i don't think so"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 16:38:35",
+    "text": "i guess i'm considering the implications of bringing in the provider multiple times and that impact"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-03-07 16:39:15",
+    "text": "Fair question, but in the hybrid-HubL + React world (which I understand is not ideal for your use case)…"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 16:39:44",
+    "edited": {
+      "time_stamp": "2024-03-07 16:42:51"
+    },
+    "text": "we could bring it in once per template and have a more rigid system too"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-03-07 16:40:04",
+    "text": "… each module is rendered entirely separately, so there is no way to have a global thing at all. I.e. on the server each separate module is a separate server render the HTML for _this_ module."
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 16:40:13",
+    "text": "ahhhhhhhh"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-03-07 16:41:13",
+    "edited": {
+      "time_stamp": "2024-03-07 16:41:29"
+    },
+    "text": "The original intention for that was to enable incremental migration from existing webpages/templates/themes to include React modules. _However_ that hybrid approach means we don’t have single “React templates” to tie everything together yet"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 16:41:39",
+    "text": "that makes sense"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 16:41:48",
+    "text": "i see what you're saying"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-03-07 16:43:25",
+    "edited": {
+      "time_stamp": "2024-03-07 16:45:49"
+    },
+    "text": "And to give even more detail, we have <https://github.HubSpot.com/cms-react/reference/cms-components.html#sharedislandstate|things like >`<SharedIslandState>`<https://github.HubSpot.com/cms-react/reference/cms-components.html#sharedislandstate| > which “patch up” those separate islands to be able to act like they share some global state. (But under the covers it is actually separate react trees re-rendering separately on some state stored as a window global changes)"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 16:43:47",
+    "text": "right right"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-03-07 16:44:08",
+    "text": "Excuses, but hopefully excuses that help explain some :shrug:"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 16:46:46",
+    "text": "no it does explain it thank you"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 16:47:11",
+    "text": "so for each module to even display properly in the cms it would require the theme provider"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-03-07 16:47:18",
+    "text": "yup"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 16:47:35",
+    "text": "gotcha"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 16:47:49",
+    "text": "thank you, that's helpful"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-03-07 16:48:48",
+    "text": "And one more complication to mention around this (or similar) `withThemeProvider` approach. Things get a bit more complicated with islands, because they end up being re-rendered in the browser and those browser re-renders need have the theme provider too. So…"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 16:49:54",
+    "text": "would it be better to just bring in a wrapper component around each module?"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 16:50:16",
+    "text": "it's a lot of code duplication but"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-03-07 16:50:30",
+    "text": "I’ll come back to the code duplication bit…"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-03-07 16:51:06",
+    "text": "There are `&lt;Island Wrapper={…}&gt;` props and you can make your own `&lt;ThemedIsland&gt;` which does the wrapper part for you (and you just use `&lt;ThemedIsland&gt;` wherever you would have used `&lt;Island&gt;` before)"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 16:51:22",
+    "text": "i did see that"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-03-07 16:51:34",
+    "text": "That is essentially what our examples using styled components are already doing:\n\n<https://github.com/HubSpot/cms-react/blob/12ba82441cf9a1c3106804fea92fefd918106cfa/examples/styling/styling-project/styling-app/components/StyledJSXIsland.jsx#L5-L9|https://github.com/HubSpot/cms-react/blob/12ba82441cf9a1c3106804fea92fefd918106cfa[…]ling/styling-project/styling-app/components/StyledJSXIsland.jsx>\n<https://github.com/HubSpot/cms-react/blob/12ba82441cf9a1c3106804fea92fefd918106cfa/examples/styling/styling-project/styling-app/components/partials/StyledJSXPartial.jsx#L47|https://github.com/HubSpot/cms-react/blob/12ba82441cf9a1c3106804fea92fefd918106cfa[…]ng-project/styling-app/components/partials/StyledJSXPartial.jsx>"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 16:51:41",
+    "text": "does that seem like the best case scenario?"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 16:51:44",
+    "text": "for now at least"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-03-07 16:51:47",
+    "text": "Yes"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 16:51:50",
+    "text": "okay"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 16:52:07",
+    "text": "that's what i was considering before i asked"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 16:52:26",
+    "text": "but was secretly hoping i missed something that would solve all my problems :saluting_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-03-07 16:54:49",
+    "text": "re code duplication, our build should output shared chunks so that the wrapper/re-used code is only downloaded once in the browser. Sure that will need to be executed X times for every island in the browser, but at least it was only downloaded once (and the server render gets pixels fast to the screen while any of that browser JS needs to download)"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 17:16:24",
+    "text": "nice"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 17:16:27",
+    "text": "okay good to know"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-03-07 17:16:28",
+    "text": "thank you!"
+  }
+]

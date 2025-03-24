@@ -1,0 +1,76 @@
+[
+  {
+    "poster": {
+      "poster_name": "Michal Szymanczyk",
+      "poster_handle": "michal.szymanczyk"
+    },
+    "time_stamp": "2024-10-30 09:14:04",
+    "text": "Hi Everyone!\nI have one problem with tracking contact's web activity before user is identified (using their email).\n\nI'm trying to track user's activity across two domains:\n\n• Users are starting on our main website <http://www.example.com|www.example.com> navigating through various pages.\n• They are then redirected to our subdomain <http://portal.example.com|portal.example.com>, which is SPA where they complete a form to provide their email.\n• When form is submitted I'm identyfing user with following javascript:\n```const _hsq = (window._hsq = window._hsq || []);\n_hsq.push(['identify', { email: contactEmail }]);\n_hsq.push(['setPath', '/path']);\n_hsq.push(['trackPageView']);```\nAfter this, I get new contact created in the CRM but without any website tracking activities, even without that last 'trackPageView' event.\n\nHas anyone had a similar problem? Or maybe have an idea what I'm missing.\n\nThanks in advance!",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-10-30 10:35:35"
+      },
+      {
+        "time_stamp": "2024-10-30 10:35:55"
+      }
+    ]
+  },
+  {
+    "text": "Sounds like everything is broadly correct.\n\nA few thoughts:\n• Are cookies being rejected/not accepted?\n• Are you working on test contacts from your machine and does your machine have an IP address that's excluded/filtered from tracking?\n• Do you have cookies limited to subdomains and/or cross domain tracking turned off? (though, that should only apply when the TLD changes, not the subdomain)",
+    "time_stamp": "2024-10-30 10:35:35"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Ainslie",
+      "poster_handle": "rainslie"
+    },
+    "time_stamp": "2024-10-30 10:35:55",
+    "text": "Feel free to DM me any details (i.e. HubID, screenshots of browser cookies, domains, etc)"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Ainslie",
+      "poster_handle": "rainslie"
+    },
+    "time_stamp": "2024-10-30 10:38:23",
+    "text": "<@U07TGTBL90V> - without knowing the full goal, it's likely that your best option is to use HubSpot global form events - <https://legacydocs.HubSpot.com/global-form-events>\n\n• create an event listener for the 'onFormSubmit' event, fire your code in the event listener"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Ainslie",
+      "poster_handle": "rainslie"
+    },
+    "time_stamp": "2024-10-30 10:39:07",
+    "text": "<https://gist.github.com/derekcavaliero/c27deb0748e07d244a99bd015127289d>"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Ainslie",
+      "poster_handle": "rainslie"
+    },
+    "time_stamp": "2024-10-30 10:39:29",
+    "text": "What type of 'event' are you looking to capture and for what purpose?"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Ainslie",
+      "poster_handle": "rainslie"
+    },
+    "time_stamp": "2024-10-30 10:50:52",
+    "text": "<@U07S0CV1PT7> - did you get this figured out? Not super familiar with Electron other than it's a framework for making desktop apps. Am I correct in assuming that loading the 'index.html' file is something similar to a 'server side render'?\n\nDoes the 'view' that the app loads actually run HTML and JS when it loads in the clients environment? (like a web browser would). If so, the tracking code should be able to load like a normal `&lt;script&gt;` tag would. The tracking code loads a script loader which in turn loads a few other scripts (controlling chat and tracking). Those separate scripts need to be inserted into the DOM and run"
+  },
+  {
+    "poster": {
+      "poster_name": "Leticia Lutt",
+      "poster_handle": "leticia.lutt"
+    },
+    "time_stamp": "2024-10-30 12:55:49",
+    "text": "thank you <@UJJ239SC9> where can I place this code in the platform? I couldn't find it. I need to push an event to the datalayer passing the user's email"
+  },
+  {
+    "text": "This can be run anywhere you can place javascript on a webpage\n• If you have a HubSpot hosted site\n    ◦ <https://knowledge.HubSpot.com/website-pages/add-code-to-the-head-or-footer-html-of-HubSpot-content#add-code-snippets-to-a-specific-page-or-post|You can put this in the footer of a single page>\n    ◦ <https://knowledge.HubSpot.com/website-pages/add-code-to-the-head-or-footer-html-of-HubSpot-content#add-code-snippets-to-all-content-hosted-on-a-specific-domain|You could put this in the global footer of the entire domain/site/template>\n    ◦ You could create a module and put the module on a page or add it to your theme\n• The HubSpot Tracking Code provides ability to include javascript that's shipped along with the tracking code (screenshot) \n• If you're using a tool like Google Tag Manager, you can have GTM inject the HubSpot global form event listener",
+    "time_stamp": "2024-10-30 13:36:18"
+  }
+]

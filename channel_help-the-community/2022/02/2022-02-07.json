@@ -1,0 +1,83 @@
+[
+  {
+    "poster": {
+      "poster_name": "Kyle Bloom",
+      "poster_handle": "kbloom"
+    },
+    "time_stamp": "2022-02-07 10:31:53",
+    "text": "Hey everyone, I've been recently having a problem with passing contact properties between two landing pages. My workflow starts with a HubSpot email that is sent out to a contact with a link with a url that prefills the contact's email in a hidden input field with a form on a landing page that modifies the contact's custom property. Everything works fine up to this point, I can use the contact's properties on this initial landing page from the email. Good. Okay now when the form is submitted the user gets redirected to a second landing page that should render content conditionally. I did this perfectly fine on a testing account, but when taking it to a real account this is where the breakdown happens and the contact properties are not being passed. In the testing account I don't have to pass anything in the URL HubSpot seems to handle it all, but am I missing something? What could the reasons be that the second landing page (that the form redirects to) doesn't have access to the contact's properties? Thanks in advance!",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-02-07 10:56:59"
+      },
+      {
+        "time_stamp": "2022-02-07 12:16:03"
+      },
+      {
+        "time_stamp": "2022-02-07 12:18:45"
+      },
+      {
+        "time_stamp": "2022-02-07 12:29:41"
+      },
+      {
+        "time_stamp": "2022-02-07 12:35:11"
+      },
+      {
+        "time_stamp": "2022-02-07 14:42:55"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2022-02-07 10:56:59",
+    "text": "Hey Kyle, this is a pretty common issue, it’s just not best practice to rely on contact properties from the first form to render on the TYP by default. There are a couple easy ways to get around this, however:\n\n1) Pass the values of the first form to the redirect URL with query parameters and reference them in `request.query_dict`\n2) Store the form values in a cookie or localstorage and reference them with JS on the TYP\n3) add a delay between when the first form is submitted and when the redirect occurs to give HS time to save the new values\n\nI usually go with the first option as I’ve found it to be the most reliable while allowing me to keep my logic in HubL instead of JS."
+  },
+  {
+    "poster": {
+      "poster_name": "Kyle Bloom",
+      "poster_handle": "kbloom"
+    },
+    "time_stamp": "2022-02-07 12:16:03",
+    "text": "Hey Mark you are really on the ball with this slack channel and I appreciate you."
+  },
+  {
+    "poster": {
+      "poster_name": "Kyle Bloom",
+      "poster_handle": "kbloom"
+    },
+    "time_stamp": "2022-02-07 12:18:45",
+    "text": "I've been trying method 1, and when I build the query for my form submission to redirect to the second landing page I'm doing '<http://domain.com/second-landing-page?nps_string_value={{contact.nps_string_value}}|domain.com/second-landing-page?nps_string_value={{contact.nps_string_value}}>' and then referencing that in the second landing page with the request.query_dict, however it's like you said, the property isn't updating in time to pass that nps_string_value in this case to get sent to the second landing page."
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2022-02-07 12:29:41",
+    "text": "so in that case you're requesting a HubL variable on the first page before it's known. You need to assign the query prams on the first page using JS."
+  },
+  {
+    "poster": {
+      "poster_name": "Kyle Bloom",
+      "poster_handle": "kbloom"
+    },
+    "time_stamp": "2022-02-07 12:35:11",
+    "text": "Ah I see, I was beginning to suspect that. In that case is this a matter of putting the JS in the template that the landing page is using? And also creating an event listener for when the HubSpot form is submitted to get the value from the form and do a redirect with it? Something like that?"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2022-02-07 14:42:55",
+    "edited": {
+      "time_stamp": "2022-02-07 14:43:01"
+    },
+    "text": "You’re on the right track; only other thing to keep in mind is that those fields won't be there on the initial page render; forms come in after. So I usually use global form event listeners to listen for forms to be ready, then check against the form ID to make sure it's the one I want, then add a change listener to the input(s) you want to use for params"
+  }
+]

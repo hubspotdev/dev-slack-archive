@@ -1,0 +1,18 @@
+[
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2022-05-23 06:20:00",
+    "text": "the HubSpot onFormSubmit only happens once the data has been submitted, (the onFormSubmitted is actually for when HubSpot has responded) you’ll need to use the onFormReady event instead.\n\nIf you need to only update a field when the form is actually submitted you would have to add a submit button on click event listener inside the onFormReady (even though it’s a click event listener it still registers when the enter key is pressed, I guess it’s been set up a weird way)"
+  },
+  {
+    "poster": {
+      "poster_name": "Sir",
+      "poster_handle": "dataops"
+    },
+    "time_stamp": "2022-05-23 17:43:06",
+    "text": "Hi everyone, I am working on automating pulling my HubSpot data into Google Sheets for visualization in GDS. I have created an app in HubSpot, granted it access and done an authentication. But the part of my code keeps returning the `SyntaxError: Unexpected token &lt; in  JSON position 0` I checked for resources and some said the code wasn't returning JSON hence the error, but I am quite knew to Node.Js and don't quite know how to track the source of the error.\n```function getStages() {\n  // Prepare authentication to HubSpot\n  var service = getService();\n  var headers = {headers: {'Authorization': 'Bearer ' + service.getAccessToken()}};\n  \n  // API request\n  var pipeline_id = \"0\"; \n  var url = API_URL + \"/crm-pipelines/v1/pipelines/deals\";\n  var response = UrlFetchApp.fetch(url, headers);\n  var result = JSON.parse(response.getContentText());\n  var stages = Array();\n  \n  // Looping through the different pipelines you might have in HubSpot\n  result.results.forEach(function(item) {\n    if (item.pipelineId == pipeline_id) {\n      var result_stages = item.stages;\n      // Let's sort the stages by displayOrder\n      result_stages.sort(function(a,b) {\n        return a.displayOrder-b.displayOrder;\n      });\n  \n      result_stages.forEach(function(stage) {\n        stages.push([stage.stageId,stage.label]);  \n      });\n    }\n  });\n  \n  return stages;\n}```\n"
+  }
+]

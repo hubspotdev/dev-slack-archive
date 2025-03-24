@@ -1,0 +1,190 @@
+[
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-08 14:56:02",
+    "text": "hey, can someone please help me figure out this error:\n```\"Validation error of type UndefinedVariable: Undefined variable tags @ 'BLOG/post_collection'\"```\nI'm making a graphql post through a serverless function"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-08 14:56:27",
+    "text": "the query looks like this:\n```  const query = {\n    operationName: \"BlogPostsQuery\",\n    query: `query BlogPostsQuery {\n      BLOG {\n        post_collection(limit: 9, orderBy: updated__desc, filter: {tag_ids__in: $tags}) {\n          items {\n            id\n            featured_image\n            featured_image_alt_text\n            tag_ids\n            widgets\n            url\n            html_title\n            name\n            blog_tags {\n              id\n              name\n            }\n          }\n        }\n      }\n    }`,\n    variables: {\n      tags: tags,\n    },\n  };```\n",
+    "reply_count": 15,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-03-08 15:06:57"
+      },
+      {
+        "time_stamp": "2024-03-08 15:07:39"
+      },
+      {
+        "time_stamp": "2024-03-08 15:07:48"
+      },
+      {
+        "time_stamp": "2024-03-08 15:08:10"
+      },
+      {
+        "time_stamp": "2024-03-08 15:08:11"
+      },
+      {
+        "time_stamp": "2024-03-08 15:08:58"
+      },
+      {
+        "time_stamp": "2024-03-08 15:10:52"
+      },
+      {
+        "time_stamp": "2024-03-08 15:11:37"
+      },
+      {
+        "time_stamp": "2024-03-08 15:37:12"
+      },
+      {
+        "time_stamp": "2024-03-08 15:37:32"
+      },
+      {
+        "time_stamp": "2024-03-08 15:37:48"
+      },
+      {
+        "time_stamp": "2024-03-08 15:38:03"
+      },
+      {
+        "time_stamp": "2024-03-08 15:38:11"
+      },
+      {
+        "time_stamp": "2024-03-08 15:38:18"
+      },
+      {
+        "time_stamp": "2024-03-08 15:38:27"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-08 15:06:57",
+    "text": "Where are you passing $tags into the query?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-08 15:07:39",
+    "text": "in the filter"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-08 15:07:48",
+    "text": "I think it's a data type issue, I was passing an array of strings"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-08 15:08:10",
+    "text": "I think I need just a string"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-08 15:08:11",
+    "text": "not sure"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-08 15:08:58",
+    "text": "Did you fix it?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-08 15:10:52",
+    "text": "not yet, I think it's expecting ``[\"item-id\", item-id\"]``"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-08 15:11:37",
+    "text": "so i'm trying `tags.join(\",\")`"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-08 15:37:12",
+    "text": "ok - yeah - that seems correct"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-08 15:37:32",
+    "text": "The weird issue is that is saying undefined variable"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-08 15:37:48",
+    "text": "I was missing tags here: `query: `query BlogPostsQuery($tags: [Number]) {`"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-08 15:38:03",
+    "text": "Yes - that is what I was trying to point out."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-08 15:38:11",
+    "text": "I have it almost working, it also needed to be [Number]"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-08 15:38:18",
+    "text": "sorry, didn't realize that's what you were saying"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-08 15:38:27",
+    "edited": {
+      "time_stamp": "2024-03-08 15:38:30"
+    },
+    "text": "it's okay"
+  }
+]

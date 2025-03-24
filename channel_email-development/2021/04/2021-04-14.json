@@ -1,0 +1,56 @@
+[
+  {
+    "poster": {
+      "poster_name": "Steven Hambleton",
+      "poster_handle": "steven994"
+    },
+    "time_stamp": "2021-04-14 05:46:01",
+    "edited": {
+      "time_stamp": "2021-04-14 05:49:50"
+    },
+    "text": "Hey all, I’ve found a bug in one of my templates. The template (see below) allows the user to choose a number of modules to display, then choose the modules from the corresponding choice fields, and finally outputs those choices on screen in the order you choose them.\n\nThe issue is that if I choose say 5 modules, populate them, then decide I want 7 modules, it somehow skips a few numbers in the `loop.index` so instead of outputting 1, 2, 3, 4, 5 (I haven’t chosen 6 or 7 yet) - it instead outputs 1,4,5,6,7 (see the `{{ 'Banner ' ~ loop.index0 }}` variable - which means the 6th and 7th choice modules will populate the now vacant 2nd and 3rd place!\n\nThis isn’t good as it means the modules no longer correspond with my choice order - which means broken emails!\n\nHere is my code - can you figure out where I’m going wrong and how I could improve on this? -\n\n```{% set sections = range(1, 9) %}\n{% set layout = '[\"Banner\", \"Highlight Section\", \"Full Width Content\", \"Two Column Content\", \"CTA\"]' %}\n\n{% choice \"sections_field\" label=\"How many content modules?\", value=\"1\", choices=\"{{ sections }}\", export_to_template_context='True' %}\n\n\n{% for section in sections|split(',', widget_data.sections_field.value) %}\n    {% choice \"layout_field\" label=\"{{ 'Module number ' ~ loop.index }}\", value=\"Choose a module\", choices=\"{{ layout }}\", export_to_template_context='True', unique_in_loop=\"True\" %}\n{% endfor %}\n\n\n{% block modules %}\n\n\t{% for widget in widget_data %}\n\t\t{% if loop.index0 &lt;= widget_data.sections_field.value %}\n\t\t\t\t{% if widget.value == \"Banner\" %}\n            {% module \"module_16183972633217\" path=\"/Email/Modules/Banner_2021\", label=\"{{ 'Banner ' ~ loop.index0 }}\" no_wrapper=\"True\" unique_in_loop=\"True\" %}\n        {% elif widget.value == \"Highlight Section\" %}\n            {% module \"module_161839738089114\" path=\"/Email/Modules/Highlight Section_2021\", label=\"{{ 'Highlight Section ' ~ loop.index0 }}\" no_wrapper=\"True\" unique_in_loop=\"True\" %}\n\t\t\t\t{% elif widget.value == \"Full Width Content\" %}\n            {% module \"module_161839740102915\" path=\"/Email/Modules/Full Width Content_2021\", label=\"{{ 'Full Width Content ' ~ loop.index0 }}\" no_wrapper=\"True\" unique_in_loop=\"True\" %}\n\t\t\t\t{% elif widget.value == \"Two Column Content\" %}\n            {% module \"module_161658827143752\" path=\"/Email/Modules/Two Column Content_2021\", label=\"{{ 'Two Column Content ' ~ loop.index0 }}\" no_wrapper=\"True\" unique_in_loop=\"True\" %}\n        {% elif widget.value == \"CTA\" %}\n            {% module \"module_161839735274213\" path=\"/Email/Modules/CTA - Full Width_2021\", label=\"{{ 'CTA ' ~ loop.index0 }}\" no_wrapper=\"True\" unique_in_loop=\"True\" %}\n\t\t\t\t{% endif %}\n\t\t{% endif %}\n  {% endfor %}\n\n{% endblock %}  ```",
+    "reply_count": 5,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2021-04-14 05:59:10"
+      },
+      {
+        "time_stamp": "2021-04-14 19:06:21"
+      },
+      {
+        "time_stamp": "2021-04-16 20:27:41"
+      },
+      {
+        "time_stamp": "2021-04-19 16:41:32"
+      },
+      {
+        "time_stamp": "2021-04-19 17:58:04"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Steven Hambleton",
+      "poster_handle": "steven994"
+    },
+    "time_stamp": "2021-04-14 05:59:10",
+    "text": "I also posted on the HubSpot Community forum -\n<https://community.HubSpot.com/t5/CMS-Development/Looping-choice-bug-when-changing-number-of-choices/m-p/427727#M22461>"
+  },
+  {
+    "poster": {
+      "poster_name": "Steven Hambleton",
+      "poster_handle": "steven994"
+    },
+    "time_stamp": "2021-04-14 19:06:21",
+    "text": "I’ve tried outputting pprint but nothing looks obvious to me."
+  },
+  {
+    "poster": {
+      "poster_name": "Steven Hambleton",
+      "poster_handle": "steven994"
+    },
+    "time_stamp": "2021-04-14 22:51:26",
+    "text": "Maybe I’ve found a bug in Hubl?"
+  }
+]

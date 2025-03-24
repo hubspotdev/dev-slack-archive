@@ -1,0 +1,169 @@
+[
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2021-07-23 06:46:54",
+    "text": "&gt; On your variable add |default(‘0’)\nOh, interesting, good to know. I always just used short-circuiting via `{{ blah or '0' }}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Abplanalp",
+      "poster_handle": "cabplanalp"
+    },
+    "time_stamp": "2021-07-23 09:03:07",
+    "text": "Does anyone know how to get the width and height of a HubDB Image Type column, it used to display the width and height in the URL that was returned output but seems like HubSpot made adjustments to exclude that: `row.brand_logo.url`, the .url used have the width and height appeneded to image url but that is no longer the case. Also SVGs do not get that appended. I am trying to help the CLS getting flagged"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2021-07-23 09:04:10",
+    "text": "`.src, .width, .height, .alt`"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Abplanalp",
+      "poster_handle": "cabplanalp"
+    },
+    "time_stamp": "2021-07-23 09:10:01",
+    "text": "<@U38EZFVFE> thanks for replying so for a hubdb is that row.brand_logo.url.width or row.brand_logo.width?"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2021-07-23 09:10:17",
+    "text": "The second one"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Abplanalp",
+      "poster_handle": "cabplanalp"
+    },
+    "time_stamp": "2021-07-23 09:13:57",
+    "text": "<@U38EZFVFE>, so I am trying to get values like this:\n```    {% do rowObject.update({\"brand_logo\": row.brand_logo.url }) %}\n    {% do rowObject.update({\"brand_logo_width\": row.brand_logo.width }) %}\n    {% do rowObject.update({\"brand_logo_height\": row.brand_logo.height }) %}```"
+  },
+  {
+    "text": "they are coming up as `null`:",
+    "time_stamp": "2021-07-23 09:14:12"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2021-07-23 09:16:57",
+    "text": "Can you output them outside of the do?"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2021-07-23 09:18:41",
+    "edited": {
+      "time_stamp": "2021-07-23 09:18:50"
+    },
+    "text": "{{ row.brand_logo | pprint }}"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Abplanalp",
+      "poster_handle": "cabplanalp"
+    },
+    "time_stamp": "2021-07-23 09:27:33",
+    "text": "ok here is one example that prints outs:\n```row.brand_logo: (Image: {height=null, objectAsEncodedString=<https://cdn2.HubSpot.net/hub/2323601/hubfs/US%20EPSILON/Case%20Studies/Logos/Coach_white.png?width=274&amp;height=106&amp;name=Coach_white.png>, objectMap={url=<https://cdn2.HubSpot.net/hub/2323601/hubfs/US%20EPSILON/Case%20Studies/Logos/Coach_white.png?width=274&amp;height=106&amp;name=Coach_white.png>}, type=image, url=<https://cdn2.HubSpot.net/hub/2323601/hubfs/US%20EPSILON/Case%20Studies/Logos/Coach_white.png?width=274&amp;height=106&amp;name=Coach_white.png>, width=null})```"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Abplanalp",
+      "poster_handle": "cabplanalp"
+    },
+    "time_stamp": "2021-07-23 09:27:42",
+    "text": "seems like width and height are both null"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2021-07-23 09:30:31",
+    "text": "interesting <@U7SL518D6> what the hey yo."
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2021-07-23 09:36:50",
+    "text": "Are you thinking, something along the lines of this?\n```{% set rows = hubdb_table_rows(table_id, params) %}\n{% if rows %}\n&lt;table&gt;\n{% for row in rows %}\n...\n{% endfor %}\n&lt;/table&gt;\n{% else %}\nNo rows found\n{% endif %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Abplanalp",
+      "poster_handle": "cabplanalp"
+    },
+    "time_stamp": "2021-07-23 09:46:36",
+    "text": "<@U38EZFVFE>, ok so I think I found out something, HubSpot must have changed how HubDB render this image field, because when I upload new image those are now set in width and height and the URL no longer has the width and height appended, so when I re-choose the same image in the same image field, and reload page, seems like it sets those fields correct:\n```row.brand_logo: (Image: {height=106, objectAsEncodedString=<https://f.HubSpotusercontent20.net/hubfs/8574721/Imported%20images/Coach_white.png>, objectMap={url=<https://f.HubSpotusercontent20.net/hubfs/8574721/Imported%20images/Coach_white.png>, width=274, height=106}, type=image, url=<https://f.HubSpotusercontent20.net/hubfs/8574721/Imported%20images/Coach_white.png>, width=274})```"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Abplanalp",
+      "poster_handle": "cabplanalp"
+    },
+    "time_stamp": "2021-07-23 09:47:04",
+    "text": "so I guess I have to re-enter all the images in the hubdb"
+  },
+  {
+    "text": "so if u look at this new image upload:",
+    "time_stamp": "2021-07-23 09:49:43"
+  },
+  {
+    "text": "vs an old upload that I have not re-choose:",
+    "time_stamp": "2021-07-23 09:50:02"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2021-07-23 09:50:17",
+    "text": "weird"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2021-07-23 09:50:30",
+    "text": "i knew they had them .. wonder what caused that"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2021-07-23 09:50:52",
+    "text": "great working through it"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Abplanalp",
+      "poster_handle": "cabplanalp"
+    },
+    "time_stamp": "2021-07-23 09:51:06",
+    "text": "thanks for ur help working through this"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Robock",
+      "poster_handle": "crobock"
+    },
+    "time_stamp": "2021-07-23 10:08:47",
+    "text": "I honestly don’t know why I missed the endif.  Thank you.  that’s a mistake I hope not to make again"
+  }
+]

@@ -1,0 +1,79 @@
+[
+  {
+    "poster": {
+      "poster_name": "Clare F.",
+      "poster_handle": "clare"
+    },
+    "time_stamp": "2024-05-08 07:45:36",
+    "edited": {
+      "time_stamp": "2024-05-08 07:46:38"
+    },
+    "text": "Hello! I'm having trouble figuring out how to pass a `const` into a filter group for a Custom Code Action on a Workflow. Any help would be appreciated:\n\n```const HubSpot = require('@HubSpot/api-client');\nconst HubSpotClient = new HubSpot.Client({\"accessToken\": process.env.SECRET_NAME});\n\nexports.main = async (event, callback) => {\n  \nconst bnc = event.inputFields['bill_name_clio'];\n\nconst PublicObjectSearchRequest = { limit: 1, after: \"0\", sorts: [\"string\"], properties: [\"hs_object_id\"], filterGroups: [{\"filters\":[{\"propertyName\":\"bill_name_clio\",\"value\":`${bnc}`,\"operator\":\"EQ\"}]}] };  // It's the value toward the end of this line that I'm having trouble with\n\ntry {\n  const apiResponse = await HubSpotClient.crm.deals.searchApi.doSearch(PublicObjectSearchRequest);\n  \n  let props = apiResponse.results[0]\n  \n      callback({\n        outputFields: {\n           id: props.id\n        }\n    });\n  \n      console.log(JSON.stringify(apiResponse, null));\n  } \n  \n  catch (e) {\n  e.message === 'HTTP request failed'\n    ? console.error(JSON.stringify(e.response, null, 2))\n    : console.error(e)\n  }\n}```",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-08 10:52:18"
+      },
+      {
+        "time_stamp": "2024-05-08 10:52:55"
+      },
+      {
+        "time_stamp": "2024-05-08 10:53:32"
+      },
+      {
+        "time_stamp": "2024-05-08 10:57:20"
+      },
+      {
+        "time_stamp": "2024-05-08 10:57:44"
+      }
+    ]
+  },
+  {
+    "text": "do you have the inputFields included in the Property to include in code section?",
+    "time_stamp": "2024-05-08 10:52:18",
+    "edited": {
+      "time_stamp": "2024-05-08 10:52:25"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Clare F.",
+      "poster_handle": "clare"
+    },
+    "time_stamp": "2024-05-08 10:52:55",
+    "text": "I do, yes :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-05-08 10:53:32",
+    "text": "whats the error you get"
+  },
+  {
+    "poster": {
+      "poster_name": "Clare F.",
+      "poster_handle": "clare"
+    },
+    "time_stamp": "2024-05-08 10:57:20",
+    "text": "Oh, I see now. I was using a property [to include] with a _very_ similar name. Seems to be working now, but THANK YOU for taking a look!"
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-05-08 10:57:44",
+    "text": "Np!"
+  },
+  {
+    "poster": {
+      "poster_name": "Luiz Felipe Dias",
+      "poster_handle": "luiz.dias"
+    },
+    "time_stamp": "2024-05-08 12:41:22",
+    "text": "Good morning, everyone! I'm facing an issue with a workflow, which is as follows: I have a field within a custom object that is a PDF, and I need to send it to a parsing API that extracts information from it via POST. Has anyone encountered this situation before? What was the solution?\n\nI tried using the fs.createReadStream module; however, it only accepts a string, not a PDF directly."
+  }
+]

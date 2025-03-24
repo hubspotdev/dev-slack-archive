@@ -1,0 +1,28 @@
+[
+  {
+    "poster": {
+      "poster_name": "Bobby Makynen",
+      "poster_handle": "bobby605"
+    },
+    "time_stamp": "2023-10-05 09:28:51",
+    "text": "Hello!\n\nWe have a custom object named \"Licenses\" that we are creating a workflow around. While not necessarily important to this issue, a license object will enter the workflow based on its expiration date.\n\nThe basic flow we are looking for is pretty simple:\n1. License enters the workflow\n2. Get the associated contact for that license\n3. Enroll the associated contact in a contact-based workflow\nI am fully aware that we need a custom code action to do this, and I am developing that now. My question is this:\n\nWhat is the best way to get the associated contact ID and email address based on the license object ID?\n\nI'm a little stumped because, if I run the following API request in Postman, I get what I'm expecting:\nRequest: <https://api.hubapi.com/crm/v3/objects/2-18547557/9188812037/associations/contact>\nResponse:\n```{\n    \"results\": [\n        {\n            \"id\": \"52948551\",\n            \"type\": \"licenses_to_contact\"\n        }\n    ]\n}```\nNow, if I do the same thing in the custom code:\nRequest:\n```  const associatedContact = await HubSpotClient.apiRequest({\n    method: \"GET\",\n    path: `/crm/v3/objects/2-18547557/9188812037/associations/contact`\n  });```\nResponse:\n```{\"size\":0,\"timeout\":0}```\nTo be clear, I did initially use variables in the path, but I wanted to hard-code the same request just to see what I'm getting. Any idea what gives here? I don't understand why the same request would produce a different result in custom code.\n\nIs there a better way to do this?\n\nThanks in advance for any pointers or example code.\n\nCheers!",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-10-05 12:37:14"
+      },
+      {
+        "time_stamp": "2023-10-17 15:11:35"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2023-10-05 12:37:14",
+    "text": "Hey there - how are printing that response? Is that the associatedContact variable itself? When you use the HubSpot client in the manner you are here, where you specifically designate the config, the manner in which you access the may change. I’m having issues recalling the details.\n\nI’d recommend trying to access the variable without trying to access via .body. And looking at some code I’ve written in the past with a similar setup, accessing via `associatedContact.json()`  might be the answer.\n\nDue to the differences based on  the v3 vs v8 client and wrapped vs. unwrapped…and the resulting confusion, I tend to use axios for my API work."
+  }
+]

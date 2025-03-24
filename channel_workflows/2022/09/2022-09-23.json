@@ -1,0 +1,98 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jorge Mateos",
+      "poster_handle": "jorge.mateos"
+    },
+    "time_stamp": "2022-09-23 01:14:00",
+    "edited": {
+      "time_stamp": "2022-09-23 01:14:51"
+    },
+    "text": "Hi everyone! I'm trying to create a workflow to enroll companies (or any other object for that matter) that triggers instantly when any property of the record gets updated. The closest that i have been able to find is named after \"Last modified date/updated in last/1 day\", but as you can already imagine, it triggers first after 1 day, wich defeats the whole purpose of the workflow.  Does anyone know how to instantly trigger a workflow when any record gets updated? Thanks in advance guys. :slightly_smiling_face:",
+    "reply_count": 9,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2022-09-23 07:38:17"
+      },
+      {
+        "time_stamp": "2022-09-23 08:23:44"
+      },
+      {
+        "time_stamp": "2022-09-23 08:30:47"
+      },
+      {
+        "time_stamp": "2022-09-23 08:33:36"
+      },
+      {
+        "time_stamp": "2022-09-23 08:35:37"
+      },
+      {
+        "time_stamp": "2023-02-22 15:41:12"
+      },
+      {
+        "time_stamp": "2023-03-09 02:17:45"
+      },
+      {
+        "time_stamp": "2023-03-09 09:20:39"
+      },
+      {
+        "time_stamp": "2023-03-09 11:17:01"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Broeders",
+      "poster_handle": "cgb"
+    },
+    "time_stamp": "2022-09-23 07:21:00",
+    "edited": {
+      "time_stamp": "2022-09-23 07:33:56"
+    },
+    "text": "Hi All, im trying to develop a custom code step that looks at all the associated quotes on a deal, and then do something if the quote is set as published. Now i got some of the way there - it works if there is only 1 quote. However, if i have multiple quotes the quote ID is stored within the same variable and thus gives me an error. Does anyone know how to make it so that it processes each quote individually? i tried using the forEach statement but it still adds the ID of all the quotes in the same variable:\n```const HubSpot = require('@HubSpot/api-client');\n\nexports.main = (event, callback) =&gt; {\n\n    const HubSpotClient = new HubSpot.Client({\n        apiKey: process.env.HAPIKEY\n    });\n    \n    //First, make a call to get quote associations  \n    HubSpotClient.crm.deals.associationsApi.getAll(event.object.objectId, 'quote').then((results) =&gt; {\n\n      results.body.results.forEach(quote =&gt; {                \n         const associatedQuoteIds = results.body.results.map(quote =&gt; quote.id);\n          console.log(`The deals's associated quote IDs are ${associatedQuoteIds}`);    \n        \n      // when i have the quote ID get the quote status\n        \n       HubSpotClient.crm.quotes.basicApi.getById(associatedQuoteIds, ['hs_status'])\n         .then(quotePropertiesResults =&gt; {\n\n        // Set variables to check for quote status\n\n        const Quote_approval_status = quotePropertiesResults.body.properties.hs_status;\n        console.log(Quote_approval_status);\n\n         if(Quote_approval_status){\n           if (Quote_approval_status != \"DRAFT\") {\n             \n\n               // insert my cool code here that does stuff\n             \n           }\n         }\n \t})\n  })\n})\n      .catch((err) =&gt; {\n        console.error(err)\n    })\n      \n}```",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-09-25 20:39:40"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Angus Gibbs",
+      "poster_handle": "agibbs"
+    },
+    "time_stamp": "2022-09-23 07:38:17",
+    "text": "Out of curiosity, what’s your use case for triggering every time any property is modified?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jorge Mateos",
+      "poster_handle": "jorge.mateos"
+    },
+    "time_stamp": "2022-09-23 08:23:44",
+    "text": "I have created a custom \"Status\" field to indentify the NEW and UPDATED records so I can use it as a filter to make API calls without needing the \"GET /companies/v2/companies/recent/modified\" endpoint of HubSpots API."
+  },
+  {
+    "text": "I already managed to make it work using the \"is known\" trigger, wich activates also with updated records, althought i find the name a little unintuitive :sweat_smile:",
+    "time_stamp": "2022-09-23 08:30:47"
+  },
+  {
+    "poster": {
+      "poster_name": "Angus Gibbs",
+      "poster_handle": "agibbs"
+    },
+    "time_stamp": "2022-09-23 08:33:36",
+    "text": "Yeah that “is known” filter with the specific properties that you are interested in was going to be my recommended workaround.\n\nAnd yeah I fully agree that the name is unintuitive :upside_down_face: we’re actually working on some changes that should make this much more clear (it will be labeled as e.g. “company name is updated”)"
+  },
+  {
+    "poster": {
+      "poster_name": "Jorge Mateos",
+      "poster_handle": "jorge.mateos"
+    },
+    "time_stamp": "2022-09-23 08:35:37",
+    "text": "Sounds great, thank you for your time anyway Angus, and have a lovely day."
+  }
+]

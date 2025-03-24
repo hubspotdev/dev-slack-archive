@@ -1,0 +1,50 @@
+[
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2024-08-21 03:06:13",
+    "text": "Jeets way is great. An alternative is: `background-color:{{ module.color_overlay.css }};`"
+  },
+  {
+    "poster": {
+      "poster_name": "Walter",
+      "poster_handle": "art.wado"
+    },
+    "time_stamp": "2024-08-21 07:26:41",
+    "text": "Thank you very much, and how would I make a linear gradient?"
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2024-08-21 07:35:47",
+    "text": "you can use either the gradient fuction or something like this:\n```{%- macro linear_gradient(angle, color_1, position_1, color_2, position_2) -%}\n   background: {{ color_1 }};\n   background: -moz-linear-gradient({{angle}}, {{color_1}} {{position_1}}%, {{color_2}} {{position_2}}%);\n   background: -webkit-linear-gradient({{angle}}, {{color_1}} {{position_1}}%, {{color_2}} {{position_2}}%);\n   background: linear-gradient({{angle}}, {{color_1}} {{position_1}}%, {{color_2}} {{position_2}}%);\n   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=\"{{color_1}}\",endColorstr=\"{{color_2}}\",GradientType=1); \n{%- endmacro -%}```\nTip: Put this macro in a seperate file and include the macro with\n{%- _include_ \"PATH-TO-MACRO.css\" -%} in your module.html doing this will allow you to reuse it through out several modules.\n\n\nmodule.html\n```{% include \"PATH-TO-MACRO.css\"%}\n{% require_css %}\n&lt;style&gt;\n{% scope_css %}\n.myClass{\n{{linear_gradient(module.gradient.deg ~\"deg\", module.gradient.first_color.color, module.gradient.start_position ~\"%\", module.gradient.second_color.color, module.gradient.end_position ~\"%\")}}\n}\n{% end_scope_css %}\n&lt;/style&gt;\n{% end_reqire_css %}\n\n.... \n\n&lt;div class=\"myClass\"&gt;&lt;/div&gt;```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Walter",
+      "poster_handle": "art.wado"
+    },
+    "time_stamp": "2024-08-21 07:51:51",
+    "text": "Thank you very much, I'm just starting and I don't understand. When you say to put the function in a separate file, inside what folder and with what extension?\n\nI did this, it's super basic, but the user will not be able to choose the orientation of the gradient.\n\n`background:linear-gradient(to right, {{ module.color_one.css }},{{ module.color_two.css }});`"
+  },
+  {
+    "poster": {
+      "poster_name": "Twentyninetimes",
+      "poster_handle": "tech817"
+    },
+    "time_stamp": "2024-08-21 08:22:50",
+    "text": "You could just add a choice field for the orientation and output the value if not 0 in your style definition above?"
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2024-08-21 09:03:00",
+    "text": "<@U07CK7UER34>\nIt's up to you.\nWhen I create themes I have several macro files or even folder. Depends on how \"atomized\" you like to work.\nmost times I'm building the structure like this\n• _module-macros\n• css\n    ◦ blog\n    ◦ generic\n    ◦ global\n    ◦ helper\n    ◦ icons\n    ◦ layout\n    ◦ modules\n    ◦ pages\n    ◦ partials\n    ◦ system\n    ◦ _macros.css (this is where I put CSS macros like the one above in)\n    ◦ _variables.css\n    ◦ main.css\n    ◦ theme.css\n• img\n• js\n• modules\n• sections\n• templates\n    ◦ blogs\n    ◦ landing-pages\n    ◦ system\n    ◦ thank-you\n    ◦ website\n• fields.json\n• theme.json\nYou can fork something quite similar from the <#C078WQGGXPB|dhug-community> repo here: <https://github.com/HubSpotdev/DHUG/tree/main/atomic-theme-folder-structure>"
+  }
+]

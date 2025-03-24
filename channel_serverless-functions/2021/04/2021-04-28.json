@@ -1,0 +1,246 @@
+[
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2021-04-28 06:31:42",
+    "edited": {
+      "time_stamp": "2021-04-28 06:31:49"
+    },
+    "text": "If I have an endpoint set up to submit form data and create a contact at say /_hcms/api/blahblah\n\nWhat's stopping someone from seeing that endpoint and submitting data to it?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-04-28 08:02:34"
+      },
+      {
+        "time_stamp": "2021-04-28 08:26:33"
+      },
+      {
+        "time_stamp": "2021-04-28 08:31:31"
+      }
+    ]
+  },
+  {
+    "text": "Separate question. Im using the local serverless beta, and it looks like, 'endpoint' and 'method' aren't included in context. Is that a bug or feature? :stuck_out_tongue:\n\nI'm using method to fire the correct functions",
+    "time_stamp": "2021-04-28 07:00:49",
+    "edited": {
+      "time_stamp": "2021-04-28 07:33:07"
+    },
+    "reply_count": 8,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2021-04-28 07:28:02"
+      },
+      {
+        "time_stamp": "2021-04-28 07:30:53"
+      },
+      {
+        "time_stamp": "2021-04-28 07:35:02"
+      },
+      {
+        "time_stamp": "2021-04-28 07:35:26"
+      },
+      {
+        "time_stamp": "2021-04-28 07:35:41"
+      },
+      {
+        "time_stamp": "2021-04-28 07:36:11"
+      },
+      {
+        "time_stamp": "2021-04-28 10:08:34"
+      },
+      {
+        "time_stamp": "2021-04-29 12:22:22"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Krainer",
+      "poster_handle": "bkrainer"
+    },
+    "time_stamp": "2021-04-28 07:28:02",
+    "text": "is this in the local server or in production? we recently added this to production <https://HubSpotdev.slack.com/archives/C011F74BKQW/p1618491703071100?thread_ts=1617884141.046000&amp;cid=C011F74BKQW> so probably just overlooked in the local server"
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2021-04-28 07:30:53",
+    "text": "local server. method and endpoint work perfectly in production"
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Krainer",
+      "poster_handle": "bkrainer"
+    },
+    "time_stamp": "2021-04-28 07:35:02",
+    "text": "gotcha. we'll need to update the local server code, i'll keep you posted"
+  },
+  {
+    "poster": {
+      "poster_name": "Mike Talley",
+      "poster_handle": "mtalley"
+    },
+    "time_stamp": "2021-04-28 07:35:26",
+    "text": "I’m looking into this now."
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2021-04-28 07:35:41",
+    "text": "Thanks guys"
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2021-04-28 07:36:11",
+    "text": "The query parameter workaround is working for now :thumbsup::skin-tone-2:"
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Krainer",
+      "poster_handle": "bkrainer"
+    },
+    "time_stamp": "2021-04-28 08:02:34",
+    "text": "serverless functions are meant to act as a public API so they can be used from the frontend of a HubSpot site. so hitting `_hcms/api/blahblah` manually is no different than filling out a form and clicking the Submit button.\n\nif you have form validation on the frontend, you may want to perform similar validation in your function to prevent someone from trying to maliciously bypass any validation."
+  },
+  {
+    "poster": {
+      "poster_name": "Russell Benzing",
+      "poster_handle": "rbenzing"
+    },
+    "time_stamp": "2021-04-28 08:26:33",
+    "text": "This would be a great blog article or docs reference on best security practices for Serverless Functions. :upside_down_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Krainer",
+      "poster_handle": "bkrainer"
+    },
+    "time_stamp": "2021-04-28 08:31:31",
+    "text": "cc <@U7SL518D6>"
+  },
+  {
+    "poster": {
+      "poster_name": "Mike Talley",
+      "poster_handle": "mtalley"
+    },
+    "time_stamp": "2021-04-28 10:08:34",
+    "text": "The fix is in code review at the moment <https://github.com/HubSpot/HubSpot-cli/pull/478>"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Bergeron",
+      "poster_handle": "eric.bergeron"
+    },
+    "time_stamp": "2021-04-28 14:30:28",
+    "text": "Has anyone implemented Billflow (a front end customer portal to Stripe, <https://www.billflow.io/>) using a server-less function to encrypt the email or customer ID using HMAC encryption?  This is the code snippet from from Billflow with my edits which their support confirmed is correct.  They also confirmed that they have other customers who have done this successfully, but I thought I’d check here so I don’t reinvent the wheel.  Here’s the code snippet:\n\nconst crypto = require(“crypto”);\nconst *customer_id* = crypto.createHmac(\n   “sha256\",\n   “xxxxxxxxxxxxxxxxxxxxxxx” // SECRET KEY (KEEP SAFE!)\n).update(*cus_JHkOdbbKq0Tbxx*).digest(“hex”) // PASS THIS TO FRONT-END\n\nI also embedded Billflow’s code in a custom module (so I can reuse this), and it works in test mode.  I am not clear how to call the server-less function from the module and then return the result to the browser.",
+    "reply_count": 31,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-05-04 13:09:24"
+      },
+      {
+        "time_stamp": "2021-05-04 13:10:30"
+      },
+      {
+        "time_stamp": "2021-05-04 14:57:29"
+      },
+      {
+        "time_stamp": "2021-05-04 15:00:35"
+      },
+      {
+        "time_stamp": "2021-05-04 15:02:03"
+      },
+      {
+        "time_stamp": "2021-05-04 15:11:28"
+      },
+      {
+        "time_stamp": "2021-05-04 15:11:58"
+      },
+      {
+        "time_stamp": "2021-05-05 07:47:42"
+      },
+      {
+        "time_stamp": "2021-05-05 07:58:58"
+      },
+      {
+        "time_stamp": "2021-05-05 07:59:28"
+      },
+      {
+        "time_stamp": "2021-05-05 08:24:48"
+      },
+      {
+        "time_stamp": "2021-05-05 09:02:16"
+      },
+      {
+        "time_stamp": "2021-05-05 09:03:17"
+      },
+      {
+        "time_stamp": "2021-05-05 09:03:48"
+      },
+      {
+        "time_stamp": "2021-05-05 09:20:01"
+      },
+      {
+        "time_stamp": "2021-05-05 09:27:10"
+      },
+      {
+        "time_stamp": "2021-05-05 09:29:02"
+      },
+      {
+        "time_stamp": "2021-05-05 09:37:24"
+      },
+      {
+        "time_stamp": "2021-05-05 09:40:47"
+      },
+      {
+        "time_stamp": "2021-05-05 09:41:58"
+      },
+      {
+        "time_stamp": "2021-05-05 11:00:21"
+      },
+      {
+        "time_stamp": "2021-05-05 11:00:36"
+      },
+      {
+        "time_stamp": "2021-05-05 11:05:19"
+      },
+      {
+        "time_stamp": "2021-05-05 11:12:06"
+      },
+      {
+        "time_stamp": "2021-05-05 11:13:18"
+      },
+      {
+        "time_stamp": "2021-05-05 11:23:31"
+      },
+      {
+        "time_stamp": "2021-05-05 11:26:30"
+      },
+      {
+        "time_stamp": "2021-05-05 11:28:48"
+      },
+      {
+        "time_stamp": "2021-05-05 14:01:49"
+      },
+      {
+        "time_stamp": "2021-05-05 14:02:53"
+      },
+      {
+        "time_stamp": "2021-05-05 14:08:22"
+      }
+    ]
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "poster": {
+      "poster_name": "Subash Aryal",
+      "poster_handle": "subash.aryal47"
+    },
+    "time_stamp": "2023-09-25 05:54:19",
+    "text": "Hi <@UTUESGAS3>\nThank you for your input, but I don't want to change existing CSS file instead I am looking if I could map your above settings with CSS variables in the existing  HTML template CSS file.\n\nIs this possible?\n\nI want h1 and p rules as it is in the template CSS file:\n```h1{\n\tcolor: var(--primary-color);\n}\np{\n\tcolor: var(--secondary-color);\n}```\nAnd I want to map theme variables with above CSS variables\n```{% set primaryColor = theme.global_colors.primary.color %}\n{% set secondaryColor = theme.global_colors.secondary.color %}```\nIs it possible to make something like below?\n\n:root {\n  --primary-color: theme.global_colors.primary.color, #4285F4;\n  --secondary-color: theme.global_colors.secondary.color, #FF5733;\n}\n\nI want the hex values be default colors if not set in HubSpot theme settings, if user sets new colors in HubSpot theme then those has to be used as (--primary-color) and (--secondary-color).\n\nLooking forward to suggestions from the community, thanks in advance!"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-09-25 15:07:03",
+    "text": "If I’m understanding what you’re asking for, I think you’re looking for something like this:\n```:root {\n    --primary-color: {{ theme.global_colors.primary.color|default(\"#4285F4\") }}\n}```\nThis snippet uses <https://developers.HubSpot.com/docs/cms/hubl/filters#default|the >`default`<https://developers.HubSpot.com/docs/cms/hubl/filters#default| HubL filter>, which does pretty much exactly what you’re looking for.\n\nIf you’d like a bit more flexibility to check against other cases, you could also use an inline ternary operator, like so:\n```:root {\n  --primary-color: {{ theme.global_color.primary.color is truthy and theme.global_color.primary.color is not equal to convert_rgb(\"#BADA55\") ? theme.global_color.primary.color : \"#4285F4\" }}\n}```\nWhether or not you get color values in hex or RGBA format will depend on details of how your theme fields are set up, so I’d recommend <https://developers.HubSpot.com/docs/cms/hubl/filters#convert-rgb|using the >`convert_rgb`<https://developers.HubSpot.com/docs/cms/hubl/filters#convert-rgb| filter> on everything if you plan on doing logical comparisons between colors."
+  },
+  {
+    "poster": {
+      "poster_name": "Subash Aryal",
+      "poster_handle": "subash.aryal47"
+    },
+    "time_stamp": "2023-09-25 21:21:19",
+    "text": "<@U04AQA0QM8E> This is more flexible, this was what I was looking for, thank you!"
+  }
+]

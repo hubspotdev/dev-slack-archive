@@ -1,0 +1,1340 @@
+[
+  {
+    "poster": {
+      "poster_name": "Ihor Dotsenko",
+      "poster_handle": "ihor.dotsenko"
+    },
+    "time_stamp": "2022-08-24 01:05:25",
+    "edited": {
+      "time_stamp": "2022-08-24 01:06:40"
+    },
+    "text": "Hi everybody. I am implementing a data syncer (from HubSpot to a project’s database). It’s happening in background and I am afraid about refresh token race conditions. For example, it’s time to sync, `sync deals` and `sync companies` jobs get started and are running in parallel. Each of them reads an access token from DB that expires in 2 mins and both of them will try to refresh the token. How do you deal with that?",
+    "reply_count": 15,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-08-24 06:42:04"
+      },
+      {
+        "time_stamp": "2022-08-24 08:13:37"
+      },
+      {
+        "time_stamp": "2022-08-24 08:14:25"
+      },
+      {
+        "time_stamp": "2022-08-24 08:16:10"
+      },
+      {
+        "time_stamp": "2022-08-24 08:16:19"
+      },
+      {
+        "time_stamp": "2022-08-24 08:27:13"
+      },
+      {
+        "time_stamp": "2022-08-24 08:28:25"
+      },
+      {
+        "time_stamp": "2022-08-24 08:29:25"
+      },
+      {
+        "time_stamp": "2022-08-24 08:53:43"
+      },
+      {
+        "time_stamp": "2022-08-24 08:54:37"
+      },
+      {
+        "time_stamp": "2022-08-24 08:55:08"
+      },
+      {
+        "time_stamp": "2022-08-24 08:55:34"
+      },
+      {
+        "time_stamp": "2022-08-24 08:56:43"
+      },
+      {
+        "time_stamp": "2022-08-24 08:56:47"
+      },
+      {
+        "time_stamp": "2022-08-24 09:41:15"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Philip Radford",
+      "poster_handle": "philip602"
+    },
+    "time_stamp": "2022-08-24 06:30:43",
+    "edited": {
+      "time_stamp": "2022-08-24 06:32:53"
+    },
+    "text": "Good afternoon. I’ve just joined the slack group after advice from HS support and have a simple API question. I can not for the life of me fathom out how to search by a custom property value against a company and then update another custom property with a new value for that same company. Thanks in advance.",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-08-24 06:47:25"
+      },
+      {
+        "time_stamp": "2022-08-24 07:04:43"
+      },
+      {
+        "time_stamp": "2022-08-24 07:05:03"
+      },
+      {
+        "time_stamp": "2022-08-24 07:06:51"
+      },
+      {
+        "time_stamp": "2022-08-24 07:09:56"
+      },
+      {
+        "time_stamp": "2022-08-24 07:54:05"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 06:42:04",
+    "text": "Is this the HubSpot access token? oauth tokens expire after 30 minutes, use the `expires_in` param returned with tokens to get that figured out.  <https://developers.HubSpot.com/changelog/upcoming-expiration-of-oauth-access-tokens-is-changing#:~:text=Tokens%20currently%20expire%206%20hours,30%20minutes%20after%20being%20generated.|more info>\n\nIf that is still an issue, are you able to move this to a private app? Using a <https://developers.HubSpot.com/changelog/private-apps-are-now-available|private app> might solve this as it is"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 06:47:25",
+    "text": "required reading: <https://developers.HubSpot.com/docs/api/crm/search>\n\nUsing the companies search api *`/crm/v3/objects/companies/search` (post)* you send over a filter / group that does your search params.. right.. so if you are searching for company website is <http://HubSpot.co|HubSpot.co>m you’d build your filter params as\nvalue: <http://HubSpot.com|HubSpot.com>\npropertyName: website\noperator: EQ\n\nInside the results you’ll get an array of objects, that first one should be what you want, and it will be returned with an ID. That is the ID of the company you are looking for.\n\nThen you would update that company with the properties.\n*`/crm/v3/objects/companies/{companyId}` (patch)* and use that ID for the company ID\n\nIf you need some more help let me know and let me know what specifically you are encountering/need assistance with"
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin Prather",
+      "poster_handle": "kprather"
+    },
+    "time_stamp": "2022-08-24 06:56:53",
+    "text": "A silly question I'm sure, but are apps and their functionality generally hosted on their own pages? I'm new to integration with HubSpot and used to different API flow ",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-08-24 06:58:02"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Wessolly",
+      "poster_handle": "webdesign"
+    },
+    "time_stamp": "2022-08-24 06:58:02",
+    "text": "you can host them on a service like heroku or AWS"
+  },
+  {
+    "poster": {
+      "poster_name": "Philip Radford",
+      "poster_handle": "philip602"
+    },
+    "time_stamp": "2022-08-24 07:04:43",
+    "text": "Thank you so much."
+  },
+  {
+    "poster": {
+      "poster_name": "Philip Radford",
+      "poster_handle": "philip602"
+    },
+    "time_stamp": "2022-08-24 07:05:03",
+    "edited": {
+      "time_stamp": "2022-08-24 07:05:14"
+    },
+    "text": "Would this still be the case if the property was a custom property. Not one of the standard ones like name, city, state etc"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 07:06:51",
+    "text": "Yup. \n\nMake sure you are using the internal name for the property. It will be all lowercase and have underscores vs spaces. Apologies if I'm stating known information I try to target my answers to help solve problems in the future when people search for this stuff"
+  },
+  {
+    "poster": {
+      "poster_name": "Philip Radford",
+      "poster_handle": "philip602"
+    },
+    "time_stamp": "2022-08-24 07:09:56",
+    "edited": {
+      "time_stamp": "2022-08-24 07:10:14"
+    },
+    "text": "thats great. thank you. I think my problem is I did not create the property, someone else did so hopefully they will remember what they entered. Thank you again."
+  },
+  {
+    "poster": {
+      "poster_name": "Justine Mignot",
+      "poster_handle": "justine.mignot"
+    },
+    "time_stamp": "2022-08-24 07:26:13",
+    "text": "Hello everyone ! I am not 100% sure I use the right channel here, do not hesitate to tell me if there is one more appropriate for my demand.\nI am a developer using HubSpot service in the product I develop and I need your help with an issue I am facing.\nI use `@HubSpot/api-client` package (<https://github.com/HubSpot/HubSpot-api-nodejs>)\nThe issue I am facing concerns Contacts BasicAPI create function (`client.crm.contacts.basicApi.create`).\nI am receiving the following error type and message: `VALIDATION_ERROR` / `Could not create contact`, whereas I can see that the contact was created in the platform.\nI don’t understand why I keep receiving this error.\nI am not able to reproduce the issue locally, either by calling the API directly with Postman.\nProperties sent:\n```{\n  \"properties\": {\n    \"email\": \"<mailto:justine.mignot@inato.com|justine.mignot@inato.com>\",\n    \"lastname\": \"Justine Mignot\",\n    \"jobtitle\": \"Developer\",\n    \"phone\": \"\",\n    \"marketplace_id\": \"209029bb-78e4-44b6-9e9e-862659c734a0\"\n  }\n}```\nCan someone help me with that issue ? Thanks a lot!",
+    "reply_count": 17,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-08-24 09:03:26"
+      },
+      {
+        "time_stamp": "2022-08-25 02:40:36"
+      },
+      {
+        "time_stamp": "2022-08-25 06:05:40"
+      },
+      {
+        "time_stamp": "2022-08-25 06:08:24"
+      },
+      {
+        "time_stamp": "2022-08-25 06:08:51"
+      },
+      {
+        "time_stamp": "2022-08-25 06:41:37"
+      },
+      {
+        "time_stamp": "2022-08-25 06:52:44"
+      },
+      {
+        "time_stamp": "2022-08-25 06:53:21"
+      },
+      {
+        "time_stamp": "2022-08-25 06:55:18"
+      },
+      {
+        "time_stamp": "2022-08-25 08:02:52"
+      },
+      {
+        "time_stamp": "2022-08-25 08:39:49"
+      },
+      {
+        "time_stamp": "2022-08-25 08:40:12"
+      },
+      {
+        "time_stamp": "2022-08-25 09:36:54"
+      },
+      {
+        "time_stamp": "2022-08-25 09:37:17"
+      },
+      {
+        "time_stamp": "2022-08-29 02:37:05"
+      },
+      {
+        "time_stamp": "2022-08-29 06:37:12"
+      },
+      {
+        "time_stamp": "2022-08-30 02:23:14"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 07:54:05",
+    "text": "good luck"
+  },
+  {
+    "poster": {
+      "poster_name": "Ihor Dotsenko",
+      "poster_handle": "ihor.dotsenko"
+    },
+    "time_stamp": "2022-08-24 08:13:37",
+    "text": "<@U25PYL3Q8> I am using private apps with OAuth 2.0 tokens now"
+  },
+  {
+    "poster": {
+      "poster_name": "Ihor Dotsenko",
+      "poster_handle": "ihor.dotsenko"
+    },
+    "time_stamp": "2022-08-24 08:14:25",
+    "edited": {
+      "time_stamp": "2022-08-24 08:15:12"
+    },
+    "text": "My tokens are being refreshed successfully"
+  },
+  {
+    "poster": {
+      "poster_name": "Ihor Dotsenko",
+      "poster_handle": "ihor.dotsenko"
+    },
+    "time_stamp": "2022-08-24 08:16:10",
+    "text": "And I am wondering what are the best practices for the case when token refreshing can happen from multiple places at the same time"
+  },
+  {
+    "poster": {
+      "poster_name": "Ihor Dotsenko",
+      "poster_handle": "ihor.dotsenko"
+    },
+    "time_stamp": "2022-08-24 08:16:19",
+    "text": "For example, background jobs running in parallel"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 08:27:13",
+    "edited": {
+      "time_stamp": "2022-08-24 08:27:24"
+    },
+    "text": "are you authenticating in multiple places or in one place?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 08:28:25",
+    "text": "not sure what language you are using, but I’ve used this as a guideline in the past <https://github.com/HubSpot/oauth-quickstart-nodejs/blob/master/index.js>"
+  },
+  {
+    "poster": {
+      "poster_name": "Yash Kimtani",
+      "poster_handle": "yash.kimtani"
+    },
+    "time_stamp": "2022-08-24 08:28:48",
+    "text": "<@UFBNA9K9A> Still facing same issue\nString generated by above snippet not matching with hash as the one coming from HubSpot."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 08:29:25",
+    "text": "I’m not sure I understand the idea of running two calls in parallel and having an issue.. maybe I just dont understand the lifecycle of how things are going"
+  },
+  {
+    "poster": {
+      "poster_name": "Yash Kimtani",
+      "poster_handle": "yash.kimtani"
+    },
+    "time_stamp": "2022-08-24 08:29:25",
+    "edited": {
+      "time_stamp": "2022-08-24 08:29:44"
+    },
+    "text": "client secret means app secret right?"
+  },
+  {
+    "text": "",
+    "time_stamp": "2022-08-24 08:29:52"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2022-08-24 08:30:34",
+    "text": "yup, exactly that"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2022-08-24 08:30:51",
+    "text": "Are you adjusting the timestamp when you test?"
+  },
+  {
+    "poster": {
+      "poster_name": "Yash Kimtani",
+      "poster_handle": "yash.kimtani"
+    },
+    "time_stamp": "2022-08-24 08:31:06",
+    "text": "no"
+  },
+  {
+    "poster": {
+      "poster_name": "Yash Kimtani",
+      "poster_handle": "yash.kimtani"
+    },
+    "time_stamp": "2022-08-24 08:31:27",
+    "text": "using timestamp coming in header"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2022-08-24 08:31:28",
+    "text": "well that would be one potential problem, it’s a part of the signature"
+  },
+  {
+    "poster": {
+      "poster_name": "Yash Kimtani",
+      "poster_handle": "yash.kimtani"
+    },
+    "time_stamp": "2022-08-24 08:34:21",
+    "text": "I m simply using  timestamp coming  in header `x-HubSpot-request-timestamp`"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2022-08-24 08:36:19",
+    "text": "Not sure what to tell you, everything is working when I test it in both Python and Node"
+  },
+  {
+    "poster": {
+      "poster_name": "Yash Kimtani",
+      "poster_handle": "yash.kimtani"
+    },
+    "time_stamp": "2022-08-24 08:39:25",
+    "text": "You are using  same timestamp coming in header `x-HubSpot-request-timestamp` right ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ihor Dotsenko",
+      "poster_handle": "ihor.dotsenko"
+    },
+    "time_stamp": "2022-08-24 08:53:43",
+    "text": "this repo is really basic… everything happens in one thread"
+  },
+  {
+    "poster": {
+      "poster_name": "Ihor Dotsenko",
+      "poster_handle": "ihor.dotsenko"
+    },
+    "time_stamp": "2022-08-24 08:54:37",
+    "text": "i have one token and two tasks running in parallel, for example, to sync deals and to sync companies"
+  },
+  {
+    "poster": {
+      "poster_name": "Ihor Dotsenko",
+      "poster_handle": "ihor.dotsenko"
+    },
+    "time_stamp": "2022-08-24 08:55:08",
+    "text": "at some point of time the token gets expired"
+  },
+  {
+    "poster": {
+      "poster_name": "Ihor Dotsenko",
+      "poster_handle": "ihor.dotsenko"
+    },
+    "time_stamp": "2022-08-24 08:55:34",
+    "text": "and both these tasks will send a request to refresh the token, right?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ihor Dotsenko",
+      "poster_handle": "ihor.dotsenko"
+    },
+    "time_stamp": "2022-08-24 08:56:43",
+    "text": "or imagine the `index.js` you posted above running not on one machine but on a cluster"
+  },
+  {
+    "poster": {
+      "poster_name": "Ihor Dotsenko",
+      "poster_handle": "ihor.dotsenko"
+    },
+    "time_stamp": "2022-08-24 08:56:47",
+    "text": "how to be in this case?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 09:03:26",
+    "edited": {
+      "time_stamp": "2022-08-24 09:05:21"
+    },
+    "text": "can you give me your full return?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 09:41:15",
+    "text": "one sending to refresh, verify if the token it has matches current token, if it matches, then refresh token to change\n\nWhen other tasks runs and checks, it will have a non matching token, meaning that it shoudl just use the token and NOT refresh"
+  },
+  {
+    "text": "Hey all\nI’m using batch api to update objects in HubSpot. I have noticed that if one of the IDs is invalid (meaning there is no object with that id) the batch succeeds with informative response if any error occurred. Note that the other updates, those with the valid IDs, are updated successfully which is great. Relying on that behavior I can filter invalid data and handle them according to my needs. However, when I send in the batch a property that doesn’t exist (meaning this field was not created in HubSpot), the WHOLE batch fails. My question is how if there is a similar approach for invalid property, as it is with the invalid HubSpot id.\nthanks!\nIm attaching example of the 2 cases:",
+    "time_stamp": "2022-08-24 09:44:56"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Gonzalez",
+      "poster_handle": "robert"
+    },
+    "time_stamp": "2022-08-24 10:00:26",
+    "edited": {
+      "time_stamp": "2022-08-24 10:00:45"
+    },
+    "text": "Hi all! It is possible to bulk associate Emails created with the engagements API with contact records in HubSpot? I am trying to bulk create Email engagements on a daily basis from another platform but it seems I can only associate an email with a record one at a time which will likely cause me to exceed rate limits if I'm not careful."
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Gonzalez",
+      "poster_handle": "robert"
+    },
+    "time_stamp": "2022-08-24 10:02:37",
+    "edited": {
+      "time_stamp": "2022-08-24 10:03:16"
+    },
+    "text": "Ideally Email messages created would just automatically associate with an existing contact that matches the \"to\" email without then having to use the  associations API but that doesn't seem possible either"
+  },
+  {
+    "text": "Does anyone know if it's possible to use the pageUri value in the context of a HubSpot API form submission to filter people who submitted the form within the UI? I have verified that I am receiving the value in my submission and within HubSpot I can see the page title the form was submitted from as well. However, when I go to create a list and use form submitted on page I get 0 results.",
+    "time_stamp": "2022-08-24 12:48:21"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Graim",
+      "poster_handle": "sam438"
+    },
+    "time_stamp": "2022-08-24 12:48:37",
+    "text": "I posted about this on the community and haven't gotten any responses: <https://community.HubSpot.com/t5/APIs-Integrations/Forms-API-Filter-Contacts-by-Page-URI/td-p/647076>",
+    "reply_count": 74,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-08-24 15:10:54"
+      },
+      {
+        "time_stamp": "2022-08-24 15:11:05"
+      },
+      {
+        "time_stamp": "2022-08-24 15:11:31"
+      },
+      {
+        "time_stamp": "2022-08-24 15:12:30"
+      },
+      {
+        "time_stamp": "2022-08-24 15:13:06"
+      },
+      {
+        "time_stamp": "2022-08-24 15:13:30"
+      },
+      {
+        "time_stamp": "2022-08-24 15:13:34"
+      },
+      {
+        "time_stamp": "2022-08-24 15:13:45"
+      },
+      {
+        "time_stamp": "2022-08-24 15:13:46"
+      },
+      {
+        "time_stamp": "2022-08-24 15:13:48"
+      },
+      {
+        "time_stamp": "2022-08-24 15:14:19"
+      },
+      {
+        "time_stamp": "2022-08-24 15:14:30"
+      },
+      {
+        "time_stamp": "2022-08-24 15:15:48"
+      },
+      {
+        "time_stamp": "2022-08-24 15:16:00"
+      },
+      {
+        "time_stamp": "2022-08-24 15:16:33"
+      },
+      {
+        "time_stamp": "2022-08-24 15:18:37"
+      },
+      {
+        "time_stamp": "2022-08-24 15:18:38"
+      },
+      {
+        "time_stamp": "2022-08-24 15:18:47"
+      },
+      {
+        "time_stamp": "2022-08-24 15:20:28"
+      },
+      {
+        "time_stamp": "2022-08-24 15:20:49"
+      },
+      {
+        "time_stamp": "2022-08-24 15:21:06"
+      },
+      {
+        "time_stamp": "2022-08-24 15:21:40"
+      },
+      {
+        "time_stamp": "2022-08-24 15:21:44"
+      },
+      {
+        "time_stamp": "2022-08-24 15:21:52"
+      },
+      {
+        "time_stamp": "2022-08-24 15:21:53"
+      },
+      {
+        "time_stamp": "2022-08-24 15:21:54"
+      },
+      {
+        "time_stamp": "2022-08-24 15:21:56"
+      },
+      {
+        "time_stamp": "2022-08-24 15:21:57"
+      },
+      {
+        "time_stamp": "2022-08-24 15:22:07"
+      },
+      {
+        "time_stamp": "2022-08-24 15:22:11"
+      },
+      {
+        "time_stamp": "2022-08-24 15:22:12"
+      },
+      {
+        "time_stamp": "2022-08-24 15:22:29"
+      },
+      {
+        "time_stamp": "2022-08-24 15:22:34"
+      },
+      {
+        "time_stamp": "2022-08-24 15:22:36"
+      },
+      {
+        "time_stamp": "2022-08-24 15:22:44"
+      },
+      {
+        "time_stamp": "2022-08-24 15:23:02"
+      },
+      {
+        "time_stamp": "2022-08-24 15:23:38"
+      },
+      {
+        "time_stamp": "2022-08-24 15:23:47"
+      },
+      {
+        "time_stamp": "2022-08-24 15:23:55"
+      },
+      {
+        "time_stamp": "2022-08-24 15:24:07"
+      },
+      {
+        "time_stamp": "2022-08-24 15:24:23"
+      },
+      {
+        "time_stamp": "2022-08-24 15:24:42"
+      },
+      {
+        "time_stamp": "2022-08-24 15:24:45"
+      },
+      {
+        "time_stamp": "2022-08-24 15:24:46"
+      },
+      {
+        "time_stamp": "2022-08-24 15:25:07"
+      },
+      {
+        "time_stamp": "2022-08-24 15:25:11"
+      },
+      {
+        "time_stamp": "2022-08-24 15:25:23"
+      },
+      {
+        "time_stamp": "2022-08-24 15:25:28"
+      },
+      {
+        "time_stamp": "2022-08-24 15:25:31"
+      },
+      {
+        "time_stamp": "2022-08-24 15:25:50"
+      },
+      {
+        "time_stamp": "2022-08-24 15:25:54"
+      },
+      {
+        "time_stamp": "2022-08-24 15:26:03"
+      },
+      {
+        "time_stamp": "2022-08-24 15:26:09"
+      },
+      {
+        "time_stamp": "2022-08-24 15:26:37"
+      },
+      {
+        "time_stamp": "2022-08-24 15:26:38"
+      },
+      {
+        "time_stamp": "2022-08-24 15:26:52"
+      },
+      {
+        "time_stamp": "2022-08-24 15:27:06"
+      },
+      {
+        "time_stamp": "2022-08-24 15:27:14"
+      },
+      {
+        "time_stamp": "2022-08-24 15:27:18"
+      },
+      {
+        "time_stamp": "2022-08-24 15:27:21"
+      },
+      {
+        "time_stamp": "2022-08-24 15:27:58"
+      },
+      {
+        "time_stamp": "2022-08-24 15:28:47"
+      },
+      {
+        "time_stamp": "2022-08-24 15:29:00"
+      },
+      {
+        "time_stamp": "2022-08-24 15:29:32"
+      },
+      {
+        "time_stamp": "2022-08-24 15:29:37"
+      },
+      {
+        "time_stamp": "2022-08-24 15:29:38"
+      },
+      {
+        "time_stamp": "2022-08-24 15:30:13"
+      },
+      {
+        "time_stamp": "2022-08-24 15:30:20"
+      },
+      {
+        "time_stamp": "2022-08-24 15:30:39"
+      },
+      {
+        "time_stamp": "2022-08-24 15:31:03"
+      },
+      {
+        "time_stamp": "2022-08-24 15:31:22"
+      },
+      {
+        "time_stamp": "2022-08-24 15:31:57"
+      },
+      {
+        "time_stamp": "2022-08-24 15:32:37"
+      },
+      {
+        "time_stamp": "2022-08-24 15:34:51"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:10:54",
+    "text": "what happens when you look at the form submission\n\n`<https://app.HubSpot.com/forms/{portalid}/{formguid}/submissions>`"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:11:05",
+    "text": "<https://share.getcloudapp.com/04uWo9m0>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:11:31",
+    "text": "is this from submission api script set up inside a HubSpot hosted page?"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Graim",
+      "poster_handle": "sam438"
+    },
+    "time_stamp": "2022-08-24 15:12:30",
+    "text": "<@U25PYL3Q8> - yes this is from a page hosted in HubSpot"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Graim",
+      "poster_handle": "sam438"
+    },
+    "time_stamp": "2022-08-24 15:13:06",
+    "text": "Let me check the form submission in HubSpot, one moment"
+  },
+  {
+    "text": "",
+    "time_stamp": "2022-08-24 15:13:30"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Graim",
+      "poster_handle": "sam438"
+    },
+    "time_stamp": "2022-08-24 15:13:34",
+    "text": "It does show the conversion page title"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Graim",
+      "poster_handle": "sam438"
+    },
+    "time_stamp": "2022-08-24 15:13:45",
+    "text": "And it takes me to the page when I click on that link"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:13:46",
+    "text": "and if you click on that link it goes to the page?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:13:48",
+    "text": "cool"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:14:19",
+    "text": "WELL IF all of that makes sense, and is set up correctly"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:14:30",
+    "text": "can you screenshot how you are building filter?"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Graim",
+      "poster_handle": "sam438"
+    },
+    "time_stamp": "2022-08-24 15:15:48",
+    "text": "Yea, one moment"
+  },
+  {
+    "text": "",
+    "time_stamp": "2022-08-24 15:16:00"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:16:33",
+    "text": "and that is same page as the yeti cooler?"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Graim",
+      "poster_handle": "sam438"
+    },
+    "time_stamp": "2022-08-24 15:18:37",
+    "text": "Yes"
+  },
+  {
+    "text": "",
+    "time_stamp": "2022-08-24 15:18:38"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Graim",
+      "poster_handle": "sam438"
+    },
+    "time_stamp": "2022-08-24 15:18:47",
+    "text": "There is someone who submitted the form on that page from their contact record history"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:20:28",
+    "text": "<https://share.getcloudapp.com/jkuW7rQv>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:20:49",
+    "text": "so you have to select the page like that, right you are clicking the HubSpot page name with the same URL?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:21:06",
+    "text": "(change any page to your page)"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:21:40",
+    "text": "I feel like that should show up. I know it works with non HubSpot forms, but I haven’t attempted to every try this out"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Graim",
+      "poster_handle": "sam438"
+    },
+    "time_stamp": "2022-08-24 15:21:44",
+    "text": "Correct"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:21:52",
+    "text": "I’d reach out to HubSpot"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Graim",
+      "poster_handle": "sam438"
+    },
+    "time_stamp": "2022-08-24 15:21:53",
+    "text": "Yea, I'm not sure what the deals"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:21:54",
+    "text": "support"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:21:56",
+    "text": "now —"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Graim",
+      "poster_handle": "sam438"
+    },
+    "time_stamp": "2022-08-24 15:21:57",
+    "text": "deal is*"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:22:07",
+    "text": "for a work around, I think you could add another field to your global form"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:22:11",
+    "text": "submit the url in there"
+  },
+  {
+    "text": "If I change it to this it works:",
+    "time_stamp": "2022-08-24 15:22:12"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Graim",
+      "poster_handle": "sam438"
+    },
+    "time_stamp": "2022-08-24 15:22:29",
+    "text": "Like that person I just send the screenshot through of shows up"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:22:34",
+    "text": "as like “form submission url” as a property"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Graim",
+      "poster_handle": "sam438"
+    },
+    "time_stamp": "2022-08-24 15:22:36",
+    "text": "So it's counting the form submission just fine"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Graim",
+      "poster_handle": "sam438"
+    },
+    "time_stamp": "2022-08-24 15:22:44",
+    "text": "Yea, I could do that as well"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Graim",
+      "poster_handle": "sam438"
+    },
+    "time_stamp": "2022-08-24 15:23:02",
+    "text": "I guess it would have to be an additional filter and if they filled out another form that old value would no longer be relevant"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:23:38",
+    "text": "but that wil have the same effect as your utm params"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:23:47",
+    "text": "UMM"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:23:55",
+    "text": "do they have enterprise anything?"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Graim",
+      "poster_handle": "sam438"
+    },
+    "time_stamp": "2022-08-24 15:24:07",
+    "text": "what do you mean?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:24:23",
+    "text": "like do they have marketing hub enterprise or sales hub enterprise"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Graim",
+      "poster_handle": "sam438"
+    },
+    "time_stamp": "2022-08-24 15:24:42",
+    "text": "oh marketing hub enterprise"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:24:45",
+    "text": "if they have an enterprise level subscritpion"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:24:46",
+    "text": "<https://knowledge.HubSpot.com/analytics-tools/create-custom-behavioral-events-with-the-code-wizard>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:25:07",
+    "text": "you could set up a behavorial event for the form submission!"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:25:11",
+    "text": "pass some data into it"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:25:23",
+    "text": "and then can report on that"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Graim",
+      "poster_handle": "sam438"
+    },
+    "time_stamp": "2022-08-24 15:25:28",
+    "text": "hmm interesting"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Graim",
+      "poster_handle": "sam438"
+    },
+    "time_stamp": "2022-08-24 15:25:31",
+    "text": "that still in beta?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:25:50",
+    "text": "not sure why it is “in beta”"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:25:54",
+    "text": "I’ve used it for over a year"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Graim",
+      "poster_handle": "sam438"
+    },
+    "time_stamp": "2022-08-24 15:26:03",
+    "text": "Oh I see it"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Graim",
+      "poster_handle": "sam438"
+    },
+    "time_stamp": "2022-08-24 15:26:09",
+    "text": "Thanks, I'll look into it"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Graim",
+      "poster_handle": "sam438"
+    },
+    "time_stamp": "2022-08-24 15:26:37",
+    "text": "Appreciate you looking at it"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:26:38",
+    "text": "there is also a legacy version that is not beta"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:26:52",
+    "text": "its a bit janky"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Graim",
+      "poster_handle": "sam438"
+    },
+    "time_stamp": "2022-08-24 15:27:06",
+    "text": "It's weird that it doesn't work b/c I feel like I'm following the forms api documentation and the value looks good on the form submission"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Graim",
+      "poster_handle": "sam438"
+    },
+    "time_stamp": "2022-08-24 15:27:14",
+    "text": "And it seems to be logging properly on the contact record"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:27:18",
+    "text": "yeah you look like you are doing it all right"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:27:21",
+    "text": "i think this is a bug."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:27:58",
+    "text": "support sent you to the forum?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:28:47",
+    "text": "I think if you were to follow up wiht some of the new information and walk through and explain that all of the ducks are in a row — look, it is going to this page in the form submissions. Look, this is the page url. Look this is the page name in the page editor."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:29:00",
+    "text": "and give a detailed account"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:29:32",
+    "text": "and say do lists not support forms submitted via the form submission api where they show the location inside submissions, but you can’t filter them in the lists?"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Graim",
+      "poster_handle": "sam438"
+    },
+    "time_stamp": "2022-08-24 15:29:37",
+    "text": "yea, I have a call with HubSpot tomorrow so I'll bring it up"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:29:38",
+    "text": "Or is this a bug"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:30:13",
+    "text": "that is generally how I’ve gotten the most traction with anything. I have to remind myself of that as well when I send support requests like “this doens’t work and its not my code cuz i’m a pro”"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:30:20",
+    "text": "not really what I say lol"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Graim",
+      "poster_handle": "sam438"
+    },
+    "time_stamp": "2022-08-24 15:30:39",
+    "text": "haha"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Graim",
+      "poster_handle": "sam438"
+    },
+    "time_stamp": "2022-08-24 15:31:03",
+    "text": "Can't be my code"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:31:22",
+    "text": "CANNOT BE"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:31:57",
+    "text": "please visit the forums or slack channel\n\numm … I try to answer everyones questions in the hubl and api channels, i’m here beause its really a problem, promise"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 15:32:37",
+    "text": "good luck, if you get some resolution ping me and let me know how it went. I’m always interested in learning how things work or don’t"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Graim",
+      "poster_handle": "sam438"
+    },
+    "time_stamp": "2022-08-24 15:34:51",
+    "text": "Yea, I'll follow-up here and in the forum thread"
+  },
+  {
+    "poster": {
+      "poster_name": "Jhon Patiu",
+      "poster_handle": "jhon732"
+    },
+    "time_stamp": "2022-08-24 20:20:41",
+    "text": "hello, is there a methodical way of getting the `tag names` of blog posts? seems like the HubSpot api only sends out `tag IDs`  <https://developers.HubSpot.com/docs/api/cms/blog-post>\nor at least, is there an easy way to determine the name of the respective tag ID (or vice versa) ?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-08-24 21:46:05"
+      },
+      {
+        "time_stamp": "2022-08-24 22:52:07"
+      }
+    ]
+  },
+  {
+    "text": "Hi there\nI’m having issue when I create engagement notes via API call.\nCurrently I’m using below format to create notes.\n```\"hs_timestamp\": \"$system.current_dateT$system.current_time.000Z\"```\nI’m using variables from our system in the timestamp, where our system’s current date (`$system.current_date` - YYYY-MM-DD) and time (`$system.current_time` - hh:mm:ss) is in Malaysia time (GMT +8) [local time].\n\nSo when I add notes at 10:19am and 10:21am Malaysia time the notes are created as 6:19pm and 6:21pm GMT +8 (Malaysia time) in the UI. See screenshot.\nThe API calls the current date and time as GMT+0, thus the date and time in UI appears as above.\n\nHow I can get the exact current date and time?\nKindly be informed that we can’t use UNIX timeformat as the system already developed with the above format.",
+    "time_stamp": "2022-08-24 21:03:44"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-24 21:46:05",
+    "edited": {
+      "time_stamp": "2022-08-24 21:46:08"
+    },
+    "text": "I think you need to pull the TAG ID, then refernce the blog tags api *`/cms/v3/blogs/tags`*\n\nGet the tags first, setup an array of objects of key value pairs for id then filter through those when you pull your posts is how I’d do it"
+  },
+  {
+    "poster": {
+      "poster_name": "Jhon Patiu",
+      "poster_handle": "jhon732"
+    },
+    "time_stamp": "2022-08-24 22:52:07",
+    "text": "cool i'll try that. thanks!"
+  }
+]

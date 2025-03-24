@@ -1,0 +1,118 @@
+[
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2021-10-25 05:09:16",
+    "text": "Hello, does anyone know a way to avoid the loop within a loop,\nI’ve got a relational hubdb table so the “files” column lists row id’s for my other table\n```{% set rows = hubdb_table_rows(mytableid) %}\n\t\t{% set files = module.package.columns.files %}\n\t\t{% for file in files %}\n\t\t\t{% for row in rows %}\n\t\t\t\t{% if row.hs_id == file.id %}\n\t\t\t\t\t{{row.name}}\n\t\t\t\t\t&lt;br&gt;\n\t\t\t\t\t{{row.file}}\n\t\t\t\t{% endif %}\n\t\t\t{% endfor %}\n\t\t\t&lt;br&gt;&lt;br&gt;\n\t\t{% endfor %}```\nIt works as it is but it seems like there should be a better way to search the id within the other table (I can’t use hubdb_table_row because I sometimes have more than 10 rows I need to fetch)",
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2021-10-25 05:47:49"
+      },
+      {
+        "time_stamp": "2021-10-25 06:23:40"
+      },
+      {
+        "time_stamp": "2021-10-25 07:58:19"
+      },
+      {
+        "time_stamp": "2021-10-25 08:54:36"
+      },
+      {
+        "time_stamp": "2021-10-25 09:02:41"
+      },
+      {
+        "time_stamp": "2021-10-25 09:36:25"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-10-25 05:47:49",
+    "edited": {
+      "time_stamp": "2021-10-25 05:47:57"
+    },
+    "text": "Hey Matt - you could approach this a few ways. One is to have a data processing step and building a new array of objects. or use selectattr to filter to remove one loop:\n```{% set files = rows|selectattr('hs_id', 'equalto', file.id)```"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2021-10-25 06:23:40",
+    "edited": {
+      "time_stamp": "2021-10-25 06:24:47"
+    },
+    "text": "I’m not sure if the selectattr will work, I’ve got multiple files that I want to pick from my table of files\n\nSo I guess essentially I could narrow the problem down to\n\n```//get required file hubdb ids essentially simplified down returns this\n{% set files = [1,2,3,6,8] %}\n\n{% set rows = hubdb_table_rows(mytableid) %}\n\nget the file column value from the rows variable, with the ids in the files array```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2021-10-25 07:58:19",
+    "text": "Maybe\n```{{ rows|selectattr('hs_id', 'in', files) }}```\nis what you are looking for"
+  },
+  {
+    "poster": {
+      "poster_name": "John Young",
+      "poster_handle": "john166"
+    },
+    "time_stamp": "2021-10-25 08:40:39",
+    "text": "Is there any way to create my own custom alias for paths ie:`@templates`  just like the `@hubpost/modules`",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-10-25 09:41:47"
+      },
+      {
+        "time_stamp": "2021-10-26 08:54:00"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2021-10-25 08:54:36",
+    "text": "That is exactly what i’m looking for many thanks :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2021-10-25 09:02:41",
+    "edited": {
+      "time_stamp": "2021-12-08 02:54:55"
+    },
+    "text": "I changed it to a dynamic page but same principle also I used the map function to set the files variable correctly\n```{% set allFiles = hubdb_table_rows(5290120) %}\n{% set files = dynamic_page_hubdb_row.files|map('hs_id') %}\n{% for file in allFiles|selectattr('hs_id','in',files) %}\n\t{{file.file_url}}\n{% endfor %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-10-25 09:36:25",
+    "text": "good bit of pair programming"
+  },
+  {
+    "poster": {
+      "poster_name": "John Young",
+      "poster_handle": "john166"
+    },
+    "time_stamp": "2021-10-25 09:41:47",
+    "edited": {
+      "time_stamp": "2021-10-25 09:42:04"
+    },
+    "text": "`{% global_partial path='@partials/header.html' %}`\n\ninstead of\n\n`{% global_partial path='../partials/header.html' %}`"
+  }
+]

@@ -1,0 +1,183 @@
+[
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2023-02-21 05:18:58",
+    "text": "Don't think so"
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Kahwe Smith",
+      "poster_handle": "lukas.smith"
+    },
+    "time_stamp": "2023-02-21 05:57:09",
+    "text": "bummer"
+  },
+  {
+    "poster": {
+      "poster_name": "Maxime Gourgues",
+      "poster_handle": "maxime"
+    },
+    "time_stamp": "2023-02-21 06:52:37",
+    "text": "Hey! I have a very simple question! Can someone help me with a file path issue please ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Kahwe Smith",
+      "poster_handle": "lukas.smith"
+    },
+    "time_stamp": "2023-02-21 06:59:13",
+    "edited": {
+      "time_stamp": "2023-02-21 06:59:23"
+    },
+    "text": "is there a translation system available in HubL? ie. rather than adding labels etc in a specific language, there should be a way to do something like `{{ __('translation_key') }}`  .. my workaround for now is to create a `trans` variable which is a set in each template containing the key value pairs for each language",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-02-21 07:22:58"
+      },
+      {
+        "time_stamp": "2023-02-21 07:23:24"
+      },
+      {
+        "time_stamp": "2023-02-21 07:24:00"
+      },
+      {
+        "time_stamp": "2023-02-21 07:28:19"
+      },
+      {
+        "time_stamp": "2023-02-21 08:15:07"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Lagerkvist",
+      "poster_handle": "andreas.lagerkvist"
+    },
+    "time_stamp": "2023-02-21 07:22:58",
+    "edited": {
+      "time_stamp": "2023-02-21 07:27:08"
+    },
+    "text": "We've been using a macro for this, in `languages/lang.html`:\n```{# Load language file #}\n{%- if html_lang and get_asset_url(theme_meta.path ~ '/languages/' ~ html_lang  ~ '.html') -%}\n\t{% macro lang() -%}\n\t\t{%- set path = theme_meta.path ~ '/languages/' ~ html_lang  ~ '.html' -%}\n\t\t{%- include path -%}\n\t{%- endmacro %}\n\n\t{% set LANG = lang()|regex_replace('&lt;!--(.*?)--&gt;', '')|fromjson %}\n{%- endif -%}\n\n{# Get string #}\n{%- macro _(string) -%}\n\t{%- set string = LANG[string] ? LANG[string] : string -%}{{ string }}\n{%- endmacro -%}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Lagerkvist",
+      "poster_handle": "andreas.lagerkvist"
+    },
+    "time_stamp": "2023-02-21 07:23:24",
+    "text": "And then we have one file for each language-code `languages/sv.html`:\n```{\n\t\"Read more\": \"Läs mer\",\n\t\"Next\": \"Nästa\",\n\t\"Previous\": \"Föregående\",\n\t\"Check out\": \"Kolla in\",\n\t\"Sorry, nothing was found here.\": \"Ledsen, inget gick att hitta här.\",\n\t\"404 - Page not found\": \"404 - Sidan hittades inte\",\n\t\"Sorry, but the page couldn't be found\": \"Ledsen, men sidan gick inte att hitta\",\n\t\"It seems you arrived directly at this page, maybe it's because of:\": \"Det verkar som att du landade direkt på den här sidan, kanske beror det på:\",\n\t\"An &lt;strong&gt;out-of-date bookmark&lt;/strong&gt;\": \"Ett &lt;strong&gt;gammalt bokmärke&lt;/strong&gt;\",\n\t\"A search engine that has an &lt;strong&gt;out-of-date listing&lt;/strong&gt; for us\": \"En sökmotor som har en &lt;strong&gt;gammal länk&lt;/strong&gt; till oss\",\n\t\"A &lt;strong&gt;miss-typed address&lt;/strong&gt;\": \"En &lt;strong&gt;felstavad adress&lt;/strong&gt;\",\n\t\"Woops! Looks like one of our internal links are out-of-date. &lt;strong&gt;Sincerely sorry&lt;/strong&gt; about that! :)\": \"Hoppsan! Verkar som att en av våra interna länkar är utdaterade. &lt;strong&gt;Riktigt ledsen&lt;/strong&gt; för det! :)\",\n\t\"You did a search on %s, however, their index appears to be out of date.\": \"Du sökte på %s, dessvärre verkar deras index vara utdaterat.\",\n\t\"You were incorrectly referred to this page by %s.\": \"Du blev inkorrekt refererad hit av %s.\",\n\t\"Perhaps you can go back to the &lt;a href=\\\"%s\\\"&gt;home page&lt;/a&gt; and try to navigate your way from there?\": \"Du kan prova navigera till &lt;a href=\\\"%s\\\"&gt;förstasidan&lt;/a&gt; och försöka hitta det du söker därifrån?\",\n\t\"...or try a search?\": \"...eller prova en sökning?\",\n\t\"Find us\": \"Hitta hit\",\n\t\"Contact %s\": \"Kontakta %s\",\n\t\"Your choices\": \"Dina val\"\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Lagerkvist",
+      "poster_handle": "andreas.lagerkvist"
+    },
+    "time_stamp": "2023-02-21 07:24:00",
+    "text": "Then in your template;\n```{% include \".languages/lang.html\" %}\n{{ _('Read more') }}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Lagerkvist",
+      "poster_handle": "andreas.lagerkvist"
+    },
+    "time_stamp": "2023-02-21 07:26:09",
+    "edited": {
+      "time_stamp": "2023-02-22 05:46:50"
+    },
+    "text": "How can I access an array of query parameters with HUBL? Seems like `request.query_dict` only contains the _first_ queryparam? With a URL like `foo=1&amp;foo=2&amp;foo=3` I get `request.query_dict.foo == 1` where I would like it to be an array with `[1, 2, 3]` like how it works in for example PHP",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-02-21 08:16:27"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Lagerkvist",
+      "poster_handle": "andreas.lagerkvist"
+    },
+    "time_stamp": "2023-02-21 07:28:19",
+    "edited": {
+      "time_stamp": "2023-02-21 07:28:28"
+    },
+    "text": "Works with variables too `{{ _('Contact %s')|format(contact.firstname) }}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2023-02-21 07:34:11",
+    "text": "Can you dm me an example?"
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Kahwe Smith",
+      "poster_handle": "lukas.smith"
+    },
+    "time_stamp": "2023-02-21 08:15:07",
+    "text": "cool thx!"
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Lagerkvist",
+      "poster_handle": "andreas.lagerkvist"
+    },
+    "time_stamp": "2023-02-21 08:16:27",
+    "edited": {
+      "time_stamp": "2023-02-22 05:46:39"
+    },
+    "text": "Apparently that isn't supported, ended up building my own `parse_query()`\n```{%- macro parse_query (query) -%}\n\t{%- set params = {} -%}\n\t{%- set parts = query|split('&amp;') -%}\n\t{%- for part in parts -%}\n\t\t{%- set key_val = part|split('=') -%}\n\t\t{%- set key = key_val[0]|urldecode -%}\n\t\t{%- set val = key_val[1]|urldecode -%}\n\t\t{%- if params[key] -%}\n\t\t\t{%- if params[key] is sequence -%}\n\t\t\t\t{%- do params[key].append(val) -%}\n\t\t\t{%- else -%}\n\t\t\t\t{%- do params.put(key, [\n\t\t\t\t\tparams[key],\n\t\t\t\t\tval\n\t\t\t\t]) -%}\n\t\t\t{% endif %}\n\t\t{%- else -%}\n\t\t\t{%- do params.put(key, val) -%}\n\t\t{%- endif -%}\n\t{%- endfor -%}\n\t{{ params|tojson }}\n{%- endmacro -%}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Kahwe Smith",
+      "poster_handle": "lukas.smith"
+    },
+    "time_stamp": "2023-02-21 09:10:31",
+    "text": "what is the most elegant way to turn a multi-select column row value into a comma separated list of ids.  ie. something like\n```[{id=1, name='foo', order=0, label='foo'}, {id=2, name='bar', order=1, label='bar'}]```",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-02-21 15:14:27"
+      },
+      {
+        "time_stamp": "2023-02-21 15:15:05"
+      },
+      {
+        "time_stamp": "2023-02-22 02:08:28"
+      }
+    ]
+  },
+  {
+    "text": "Anyone having issues with the default blog post pagination that HubSpot has on this <https://developers.HubSpot.com/docs/cms/building-blocks/templates/blog#listing-pagination|doc page>? I've used it before several times but it seems to be broken now.  The link for the first page wont work at all. I noticed that they seem to have changed the url path for the blog listing pages. They used to be `domain/blog/2` and now they are `domain/blog/page/2` . I'm wondering if something during that change messed up the logic. I can fix this issue easily with some custom hubl but I'm just curious if anyone else is noticing it. In the images, I'm just copy and pasted the variables that the default pagination uses.",
+    "time_stamp": "2023-02-21 12:21:39",
+    "edited": {
+      "time_stamp": "2023-02-21 12:26:43"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Dewayne Higgs",
+      "poster_handle": "dewayne"
+    },
+    "time_stamp": "2023-02-21 15:14:27",
+    "text": "Maybe this can work:"
+  },
+  {
+    "poster": {
+      "poster_name": "Dewayne Higgs",
+      "poster_handle": "dewayne"
+    },
+    "time_stamp": "2023-02-21 15:15:05",
+    "text": "```the_values|map(\"id\")|join(\",\")```"
+  }
+]

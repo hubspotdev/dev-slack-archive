@@ -1,0 +1,142 @@
+[
+  {
+    "poster": {
+      "poster_name": "Tanisha Agnihotri",
+      "poster_handle": "tanisha.agnihotri"
+    },
+    "time_stamp": "2022-05-12 01:10:20",
+    "text": "I have changed the endpoint from contact to import .It showing 400 error in my HubSpot account. I think they expected for file list and I just send a file. Could you please help me in creating file array to send with endpoint."
+  },
+  {
+    "poster": {
+      "poster_name": "Tanisha Agnihotri",
+      "poster_handle": "tanisha.agnihotri"
+    },
+    "time_stamp": "2022-05-12 01:10:59",
+    "text": "Here is my code:\n[WebMethod]\n    public async Task&lt;object&gt; ImportFile2()\n    {\n      var jsonObj = new\n      {\n        name = \"November Marketing Event Leads\",\n        files = new[]\n        { new{\n            fileName=\"Nov-event-leads.csv\",fileFormat=\"CSV\",dateFormat=\"DAY_MONTH_YEAR\",\n          fileImportPage =new{hasHeader=\"true\",columnMappings=new[]{new{ columnObjectTypeId=\"0-1\",columnName=\"First Name\",propertyName=\"firstname\",idColumnType=\"\"},\n                                       new{ columnObjectTypeId=\"0-1\",columnName=\"Last Name\",propertyName=\"lastname\",idColumnType=\"\"},\n                                       new{ columnObjectTypeId=\"0-1\",columnName=\"Email\",propertyName=\"email\",idColumnType=\"1\"},\n\n          } }\n            } }\n      };\n      var httpClient = new HttpClient();\n      var url = \"<https://api.hubapi.com/crm/v3/imports?hapikey=a6023eac-35fa-4e26-b07f-57885f36384b>\";\n      try\n      {\n        string filePath = \"C:\\\\Users\\\\Unthinkable-lap-0137\\\\Downloads\\\\HubSpot_Test - Sheet1.csv\";\n        var importRequest = JsonConvert.SerializeObject(jsonObj);\n        // we need to send a request with multipart/form-data\n        var multiForm = new MultipartFormDataContent();\n\n        // add file and directly upload it\n        FileStream fs = File.OpenRead(filePath);\n        multiForm.Add(new StreamContent(fs), \"files\", Path.GetFileName(filePath));\n\n        StringContent content = new StringContent(importRequest);\n        content.Headers.ContentType = MediaTypeHeaderValue.Parse(\"application/json\");\n        multiForm.Add(content, \"application/json\");\n\n        var result = await httpClient.PostAsync(url, multiForm);\n        if (result.StatusCode == <http://System.Net|System.Net>.HttpStatusCode.OK)\n        {\n          return new { Success = true, Message = result.Content };\n        }\n\n        return new { Success = false, Message = \"not successful\" };\n      }\n\n\n      catch (Exception ex)\n      {\n        return new { Success = false, Message = ex.Message };\n      }\n\n    }"
+  },
+  {
+    "poster": {
+      "poster_name": "Rodrigo",
+      "poster_handle": "rodrigo.castro"
+    },
+    "time_stamp": "2022-05-12 01:52:25",
+    "text": "Hi everyone! :wave: I was investigating these days a way to automate some data entry in HubDB from an API call. Has anyone done anything similar before? For example, if a video belongs to a playlist in youtube (call to api), create a row in an existing Hubdb with certain data from the object that returns (e.g. name, duration, description and url to the video).\n\nHappy to hear any thoughts related to this or at least point me out in the right direction :slightly_smiling_face: Thanks"
+  },
+  {
+    "poster": {
+      "poster_name": "Frans Hoekstra",
+      "poster_handle": "frans"
+    },
+    "time_stamp": "2022-05-12 02:01:23",
+    "text": "Is there any possibility of running HubSpot headless? As far as i can see there isn't a way to get page content using the API",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-11-21 19:23:58"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "sachin meena",
+      "poster_handle": "sachin"
+    },
+    "time_stamp": "2022-05-12 02:43:34",
+    "text": "Hello, I've created a custom object in HubSpot and I want to map that object in jitterbit but I'm not getting any custom objects in jitterbit, can anyone explain how can I map custom objects in jitterbit?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ghayoor Naqvi",
+      "poster_handle": "ghayoor"
+    },
+    "time_stamp": "2022-05-12 06:57:40",
+    "text": "I think you are missing the column mapping. I’m not sure how you would achieve that in C#, But your request should look something like this\n<https://legacydocs.HubSpot.com/docs/methods/hubdb/v2/import_csv>"
+  },
+  {
+    "poster": {
+      "poster_name": "Katarzyna Meckier",
+      "poster_handle": "meckierkatarzyna"
+    },
+    "time_stamp": "2022-05-12 07:01:58",
+    "edited": {
+      "time_stamp": "2022-05-12 07:49:13"
+    },
+    "text": "Hello, team! Can I use POST /crm/v3/objects/contacts/gdpr-delete method via Api to delete Contact fully to comply with GDPR in 30 days without enabling \"Enable GDPR tools\" checkbox?"
+  },
+  {
+    "poster": {
+      "poster_name": "Mike Thomas",
+      "poster_handle": "mike542"
+    },
+    "time_stamp": "2022-05-12 09:02:42",
+    "text": "Can anyone help me figure out why I can not fetch this deals' associations? It works in the HubSpot's API test call.\n\n```    let deal = undefined;\n    const dealId = event.object.objectId;\n    const properties = ['contract_end_date', 'contract_start_date', 'closedate', 'dealname', 'amount', 'deal_currency_code', 'description', 'hs_analytics_source', 'renewal_type']; \n    const propertiesWithHistory = undefined;\n    const associations = ['company']; //  doesn't seem to work\n    const archived = false;\n    const idProperty = undefined;\n\n    try {\n        deal = await HubSpotClient.crm.deals.basicApi.getById(dealId, properties, propertiesWithHistory, associations, archived, idProperty);\n        console.log(\"FOUND DEAL: \" + JSON.stringify(deal.body));\n        console.log(\"FOUND DEAL WITH ID: \" + deal.body.id);\n        \n    } catch (e) {\n        e.message === 'HTTP request failed'\n            ? console.error(JSON.stringify(e.response, null, 2))\n            : console.error(e)\n    }```\n`deal.body` never has the associations returned. Work fine with the same deal in the HS API test call via the Docs.",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-05-13 09:41:46"
+      },
+      {
+        "time_stamp": "2022-08-05 09:27:33"
+      },
+      {
+        "time_stamp": "2022-08-08 05:42:32"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Santiago Torres",
+      "poster_handle": "storres"
+    },
+    "time_stamp": "2022-05-12 10:27:52",
+    "text": "Hi guys, hope you're doing well! Can you please share with me the right way to update a HubSpot Contact property that is simple text type? i tried this method (var input = $('input[name=\"ps___partnertest_record\"]').val('true').change();) for updating a boolean checkbox before and it worked! And I'm currently trying the same methodology ( var input = $('input[name=\"growsumo_partner_key\"]').val('teststring').change(); ) but I can't see the update being done for the simple text contact property/field type.  Can you please give me a hand here and share the right way to perform this \"simple text contact property update\" action? I appreciate all responses, thanks in advance!"
+  },
+  {
+    "poster": {
+      "poster_name": "Raphael Varieras",
+      "poster_handle": "raphael692"
+    },
+    "time_stamp": "2022-05-12 10:41:40",
+    "text": ":arrow_up: the first parameter is the _type_ id of the custom object"
+  },
+  {
+    "poster": {
+      "poster_name": "Michele Ringelberg",
+      "poster_handle": "michele413"
+    },
+    "time_stamp": "2022-05-12 13:20:27",
+    "text": "Are there developers in here that we can hire to assist with an api integration? integrating etix with HubSpot… if possible\n\nHello! I have a client that is on marketing professional and they are selling tickets to concerts… they use etix… they do have an api. I want to be able to pull in that data to HubSpot so we don’t have to keep uploading lists. Can anyone help me with this? FYI - I am NOT a developer :slightly_smiling_face:  here is etix ap info Here is a link to our API\n<https://api.etix.com/v3/docs/index.html>   and I have a HubSpot api key, but I don’t know what to do from here!",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-05-12 16:35:19"
+      },
+      {
+        "time_stamp": "2022-05-13 05:07:41"
+      },
+      {
+        "time_stamp": "2022-05-13 05:08:17"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Umakant - MakeWebBetter",
+      "poster_handle": "umakantsharma"
+    },
+    "time_stamp": "2022-05-12 16:35:19",
+    "text": "Hi <@U03F8FGGPNE> we are team of experienced HubSpot developers, with apps available in HubSpot marketplace and experience of completing many custom integrations.\n\nWe offers custom integration services and can help you with this integration.\n\nplease reach out to me at <mailto:umakantsharma@makewebbetter.com|umakantsharma@makewebbetter.com>"
+  },
+  {
+    "poster": {
+      "poster_name": "jai",
+      "poster_handle": "jai"
+    },
+    "time_stamp": "2022-05-12 22:17:16",
+    "text": "Hi All\nHow to create automation custom-workflow-actions when someone installs the app using an access token.\n\nCan i create custom workflow action using this, with access token?\n<https://developers.HubSpot.com/docs/api/automation/custom-workflow-actions>"
+  }
+]

@@ -1,0 +1,208 @@
+[
+  {
+    "poster": {
+      "poster_name": "Edmond Deema",
+      "poster_handle": "edmond"
+    },
+    "time_stamp": "2024-07-02 01:45:26",
+    "text": "Hi, I belive you forgot an \",\"( comma) after the email it should look like this : \"to\": \"<mailto:jdoe@HubSpot.com|jdoe@HubSpot.com>\",  let me know if that helped"
+  },
+  {
+    "poster": {
+      "poster_name": "Edmond Deema",
+      "poster_handle": "edmond"
+    },
+    "time_stamp": "2024-07-02 01:59:01",
+    "text": "Hi!\n\nI think I know what's going on here.\n\nIn HubL, when you use double curly braces {{ }} to output a value, it will automatically convert the value to a string. However, if the value is an array, it will be converted to a string representation of the array, which is why you're seeing [0].\n\nThe reason HubL thinks [data-page-contents] is an array is because of the square brackets []. In HubL, square brackets are used to define arrays.\n\nTo output the value as a literal string, you can use the raw filter, like this:\n\ndata-config-target-selector=\"{{ module.target_selector | raw }}\"\n\nThe raw filter tells HubL to output the value as a raw string, without any interpolation or conversion.\n\nAlternatively, you can also use single quotes around the value, like this:\n\ndata-config-target-selector=\"'[data-page-contents]'\"\n\nThis will output the value as a literal string, without any interpolation.\n\nHowever, the issue might not be entirely related to HubL's array conversion or interpolation. The [data-page-contents] syntax is a valid CSS selector, and it's possible that the data-config-target-selector attribute is being processed by the HTML module or underlying JavaScript code in a way that's causing the [0] output.\n\nIf you could provide more context about the HTML module, the JavaScript code that's processing the attribute, and the exact behavior you're observing? This will help me provide a more accurate answer."
+  },
+  {
+    "poster": {
+      "poster_name": "ali qazi",
+      "poster_handle": "aliqazi665"
+    },
+    "time_stamp": "2024-07-02 02:12:44",
+    "text": "no the issue is that its now getting the associative array in the email template"
+  },
+  {
+    "poster": {
+      "poster_name": "ali qazi",
+      "poster_handle": "aliqazi665"
+    },
+    "time_stamp": "2024-07-02 02:13:27",
+    "text": "{% if custom.exampleArray %}\n• {% for item in custom.exampleArray %}\n• {{ item.key }}: {{ item.value }}\n• {% endfor %}\ni am using it like this in the template"
+  },
+  {
+    "poster": {
+      "poster_name": "Edmond Deema",
+      "poster_handle": "edmond"
+    },
+    "time_stamp": "2024-07-02 02:16:24",
+    "text": "Try using it like this:\n{% if custom.exampleArray %}\n  {% for item in custom.exampleArray %}\n    {{ item | attribute: \"firstKey\" }}: {{ item | attribute: \"secondKey\" }}\n  {% endfor %}\n{% endif %}"
+  },
+  {
+    "poster": {
+      "poster_name": "ali qazi",
+      "poster_handle": "aliqazi665"
+    },
+    "time_stamp": "2024-07-02 02:16:51",
+    "text": "ok let me check"
+  },
+  {
+    "poster": {
+      "poster_name": "Edmond Deema",
+      "poster_handle": "edmond"
+    },
+    "time_stamp": "2024-07-02 02:16:52",
+    "text": "When accessing an array of objects in a custom property, you can use the attribute filter to access the properties of each object"
+  },
+  {
+    "poster": {
+      "poster_name": "ali qazi",
+      "poster_handle": "aliqazi665"
+    },
+    "time_stamp": "2024-07-02 02:18:05",
+    "text": "still not working"
+  },
+  {
+    "poster": {
+      "poster_name": "Edmond Deema",
+      "poster_handle": "edmond"
+    },
+    "time_stamp": "2024-07-02 02:20:53",
+    "text": "Hmm, try using this:\n{% if custom.exampleArray %}\n  {% for key, value in custom.exampleArray %}\n    {{ key }}: {{ value }}\n  {% endfor %}\n{% endif %}\n\nIt should output this:\nfirstKey: someValue\nsecondKey: anotherValue\nfirstKey: value1\nsecondKey: value2 \n\nAnd if this doesn't work I may need more info on  your custom property and the data it contains"
+  },
+  {
+    "poster": {
+      "poster_name": "ali qazi",
+      "poster_handle": "aliqazi665"
+    },
+    "time_stamp": "2024-07-02 02:21:19",
+    "text": "exampleArray: [\n        { key: \"firstKey\", value: \"someValue\" },\n        { key: \"secondKey\", value: \"anotherValue\" },\n      ],\nthis is my array"
+  },
+  {
+    "poster": {
+      "poster_name": "Edmond Deema",
+      "poster_handle": "edmond"
+    },
+    "time_stamp": "2024-07-02 02:24:31",
+    "text": "Try this: \n{% if custom.exampleArray %}\n  {% for item in custom.exampleArray %}\n    {{ item.key }}: {{ item.value }}\n  {% endfor %}\n{% endif %}\n\nAnd it should output this\nfirstKey: someValue\nsecondKey: anotherValue\n\nWith this we are trying to use the dot notion,\ncode iterates over the array of objects, and for each object, it accesses the key and value properties using the dot notation (item.key and item.value) hopefully this should make it work"
+  },
+  {
+    "poster": {
+      "poster_name": "Melissa Smith",
+      "poster_handle": "msmith"
+    },
+    "time_stamp": "2024-07-02 07:33:15",
+    "text": "so when i first did this is made me setup a content hub, which i did. but when i looked at the level everything was the free. and if i go back and go through the process it selects that hub but it doesn’t do anything. so what am i missing?"
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2024-07-02 08:38:02",
+    "text": "You can create an API Sandbox and in this create a testing account which is basically an \"almost enterprise\" CMS Sandbox"
+  },
+  {
+    "poster": {
+      "poster_name": "Rolando Carias",
+      "poster_handle": "rolando"
+    },
+    "time_stamp": "2024-07-02 10:37:25",
+    "text": "Thank you <@U06G4DKLZJP>! This is super helpful as I was going nuts trying to understand the root problem"
+  },
+  {
+    "poster": {
+      "poster_name": "Chandler Ives",
+      "poster_handle": "cives727"
+    },
+    "time_stamp": "2024-07-02 12:33:52",
+    "edited": {
+      "time_stamp": "2024-07-02 12:34:38"
+    },
+    "text": "I'm using hubl in a rich text editor in global content to configure a mega menu. It is working perfectly to show a dropdown of upcoming events.\n\nI'm trying to add a filter to only render the date on ones that are upcoming, however I can't get it to work.\n\nMy latest attempt is:\n```<li style=\"padding-bottom: 3px;\">\n<a style=\"color: #171b25; margin: 0 15px; font-weight: 500; font-size: var(--fs-amm-menu-sub);\" href=\"{{ row.event_url }}\"> {{ row.name }} {% if row.start_date__gt=-86400s %} <strong>{{ row.start_date|datetimeformat('%b %d, %Y') }}</strong>{% endif %}</a></li>```",
+    "reply_count": 11,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-07-02 12:35:17"
+      },
+      {
+        "time_stamp": "2024-07-02 23:58:12"
+      },
+      {
+        "time_stamp": "2024-07-03 07:45:04"
+      },
+      {
+        "time_stamp": "2024-07-03 08:14:34"
+      },
+      {
+        "time_stamp": "2024-07-03 08:18:11"
+      },
+      {
+        "time_stamp": "2024-07-03 08:18:43"
+      },
+      {
+        "time_stamp": "2024-07-03 08:20:24"
+      },
+      {
+        "time_stamp": "2024-07-03 08:20:26"
+      },
+      {
+        "time_stamp": "2024-07-03 08:22:48"
+      },
+      {
+        "time_stamp": "2024-07-03 09:00:56"
+      },
+      {
+        "time_stamp": "2024-07-03 09:01:11"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Chandler Ives",
+      "poster_handle": "cives727"
+    },
+    "time_stamp": "2024-07-02 12:35:17",
+    "text": "Any guidance on a filter other than `{% if row.start_date__gt=-86400s %}`"
+  },
+  {
+    "time_stamp": "2024-07-02 13:00:05",
+    "text": "Reminder: Used to PHP and are looking to learn HubL? Here’s a comparison: <https://youtu.be/xKjozJNzWSk>"
+  },
+  {
+    "poster": {
+      "poster_name": "phlp",
+      "poster_handle": "philip.braeunlich"
+    },
+    "time_stamp": "2024-07-02 23:56:32",
+    "text": "Good morning from Germany,\nwe use the `blog_tags(blog.id, 250)`  function to get all the tags. But since a few days, newly added tags don’t appear in the returned list (yes, they have posts attached).\nI see this behaviour in 4 different portals. Using GraphQL all tags are returned. Is the function stuck?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-07-03 00:35:09"
+      },
+      {
+        "time_stamp": "2024-07-03 01:14:11"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "phlp",
+      "poster_handle": "philip.braeunlich"
+    },
+    "time_stamp": "2024-07-02 23:58:12",
+    "text": "Have you tried something like this?\n`date_start__gte=\" + unixtimestamp(today())`"
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2024-07-03 00:35:09",
+    "text": "I have the same error in a portal, support is still not able to give me any type of support except the default \"try asking the developer of the template to check\" wich is me, so no idea how to fix this"
+  }
+]

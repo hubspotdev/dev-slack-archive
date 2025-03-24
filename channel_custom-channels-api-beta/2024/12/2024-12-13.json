@@ -1,0 +1,64 @@
+[
+  {
+    "poster": {
+      "poster_name": "Nick Drane",
+      "poster_handle": "ndrane"
+    },
+    "time_stamp": "2024-12-13 07:15:09",
+    "edited": {
+      "time_stamp": "2024-12-13 07:15:13"
+    },
+    "text": "is this using custom channels?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nick Drane",
+      "poster_handle": "ndrane"
+    },
+    "time_stamp": "2024-12-13 07:15:33",
+    "text": "you should be able to send a message on an existing thread :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Nick Drane",
+      "poster_handle": "ndrane"
+    },
+    "time_stamp": "2024-12-13 07:25:35",
+    "text": "Can you give me an example API request and your portal and I can investigate for you?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nik Patel",
+      "poster_handle": "me1438"
+    },
+    "time_stamp": "2024-12-13 08:58:55",
+    "text": "Hi Nick - It is using custom channels. I created a custom channel --&gt; Associated it with a test account. I am able to send a message that creates  new thread using this.\n\n<https://developers.HubSpot.com/beta-docs/guides/api/conversations/create-custom-channels#incoming-message-schema>\n\nbut now - I want to respond to the same thread. Here is the API call URL\n\n<https://api.hubapi.com/conversations/v3/conversations/threads/{{threadId}}/messages/>\n\nand here is the JSON I am using\n\n```{\n    \"type\": \"MESSAGE\",\n    \"text\": \"Hi HubSpot\",\n    \"senders\": [\n      {\n        \"deliveryIdentifier\": {\n          \"type\": \"HS_PHONE_NUMBER\",\n          \"value\": \"+11234567890\"\n        },\n        \"name\": \"Nik Patel\"\n      }\n    ],\n    \"recipients\": [\n      {\n        \"name\": \"Brian Halligan\",\n        \"deliveryIdentifiers\": [\n          {\n            \"type\": \"HS_EMAIL_ADDRESS\",\n            \"value\": \"<mailto:bh@HubSpot.com|bh@HubSpot.com>\"\n          }\n        ]\n      }\n    ],\n    \"senderActorId\": \"A-853019126\",\n    \"channelId\": \"524425\",\n    \"channelAccountId\": \"906085188\",\n    \"messageDirection\": \"INCOMING\"\n  }```\nI have tried multiple options for senderActorId but not sure what will work or what am I doing wrong."
+  },
+  {
+    "poster": {
+      "poster_name": "Nik Patel",
+      "poster_handle": "me1438"
+    },
+    "time_stamp": "2024-12-13 08:59:27",
+    "text": "Here is the response from current API call.\n\n```\n400 - \"{\\\"status\\\":\\\"error\\\",\\\"message\\\":\\\"Sender actor A-853019126 not found\\\",\\\"correlationId\\\":\\\"1471dbf9-b2e4-4469-92cd-94b36829bce1\\\",\\\"context\\\":{\\\"actorId\\\":[\\\"A-853019126\\\"]},\\\"category\\\":\\\"VALIDATION_ERROR\\\",\\\"subCategory\\\":\\\"ConversationsApiError.SENDER_AGENT_NOT_FOUND\\\"}\"```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nick Drane",
+      "poster_handle": "ndrane"
+    },
+    "time_stamp": "2024-12-13 14:51:29",
+    "edited": {
+      "time_stamp": "2024-12-13 14:51:42"
+    },
+    "text": "Is there any reason you're using the conversations API to send the message instead of the custom channels API `<https://api.hubapi.com/conversations/v3/custom-channels/{channelId}/messages>` ?  <https://api.hubapi.com/conversations/v3/custom-channels/{channelId}/messages>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nik Patel",
+      "poster_handle": "me1438"
+    },
+    "time_stamp": "2024-12-13 14:52:51",
+    "text": "This endpoint creates a new thread everytime. I want to respond to the existing thread. That's why I went back to using Conversation API.\n\nCustom Channel API did not have an endpoint to send a message to existing thread. Or may be I missed it"
+  }
+]

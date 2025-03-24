@@ -1,0 +1,88 @@
+[
+  {
+    "poster": {
+      "poster_name": "Stephen Kvedaras",
+      "poster_handle": "stephen.kvedaras"
+    },
+    "time_stamp": "2021-01-15 04:09:44",
+    "edited": {
+      "time_stamp": "2021-01-15 04:10:05"
+    },
+    "text": "Can confirm this worked:\n\n```{% set month = today|datetimeformat( '%m' ) %}\n    {% if month == \"01\" %}\n      {% set product = \"Winter\" %}\n    {% elif month == \"02\" %}\n      {% set product = \"Winter\" %}\n    {% elif month == \"03\" %}\n      {% set product = \"Spring\" %}\n    {% elif month == \"04\" %}\n      {% set product = \"Spring\" %}\n    {% elif month == \"05\" %}\n      {% set product = \"Spring\" %}\n    {% elif month == \"06\" %}\n      {% set product = \"Summer\" %}\n    {% elif month == \"07\" %}\n      {% set product = \"Summer\" %}\n    {% elif month == \"08\" %}\n      {% set product = \"Summer\" %}\n    {% elif month == \"09\" %}\n      {% set product = \"Autumn\" %}\n    {% elif month == \"10\" %}\n      {% set product = \"Autumn\" %}\n    {% elif month == \"11\" %}\n      {% set product = \"Autumn\" %}\n    {% elif month == \"12\" %}\n      {% set product = \"Winter\" %}\n    {% else %}\n    {% endif %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nate Paul",
+      "poster_handle": "nate.paul"
+    },
+    "time_stamp": "2021-01-15 07:28:01",
+    "text": "I want to display the updated timestamp only when a blog posts has been updated. My code below is giving me the updated timestamp... but its displaying the timestamp even if there's been no update made to the blog post.\n\n```{% set update_time = content.updated %}\n{% set offset = 21600000 %}\n{% set new_time = update_time - offset %}\n\nPosted on {{ content.publish_date_localized }}\n{% if content.update|unixtimestamp &gt; content.publish_date|unixtimestamp %}, updated on {{ new_time|datetimeformat('%B %e, %Y') }}\n{% endif %}```\nHere's what it looks like for a post that has _not_ been updated:\n&gt;  Posted on December 29, 2020, updated on December 29, 2020\n",
+    "reply_count": 8,
+    "reply_users_count": 5,
+    "replies": [
+      {
+        "time_stamp": "2021-01-15 11:19:08"
+      },
+      {
+        "time_stamp": "2021-01-15 11:26:00"
+      },
+      {
+        "time_stamp": "2021-01-15 11:27:38"
+      },
+      {
+        "time_stamp": "2021-01-15 11:39:10"
+      },
+      {
+        "time_stamp": "2021-01-15 14:55:09"
+      },
+      {
+        "time_stamp": "2021-02-05 13:46:40"
+      },
+      {
+        "time_stamp": "2021-02-05 15:45:26"
+      },
+      {
+        "time_stamp": "2021-02-05 15:49:05"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2021-01-15 11:19:08",
+    "text": "displaying the first time stamp or both timestamps? Have you tried reversing the &gt; to &lt; ?"
+  },
+  {
+    "text": "I played around with this a bit on a new post, and it looks like there is a really tiny difference between when a post was posted and when it was \"updated\".  However, I discovered the bigger issue is that your code is currently \"content.update\" vs \"content.updated\" - \"content.update\" is the last time the page was loaded. content.updated with an 'ed' at the end is what you should be using :-)\n\nThen, to account for that extra little bit of mismatch, you can either divide the unix time by 10 and round up (using //),  or you can use the |between_times filter and test for seconds",
+    "time_stamp": "2021-01-15 11:26:00",
+    "edited": {
+      "time_stamp": "2021-01-15 11:31:12"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2021-01-15 11:27:38",
+    "text": "<@UDLS0CYPP> that is really interesting! Nice find.\n\n<@U7SL518D6> Should there be a difference in timestamps like this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-01-15 11:39:10",
+    "text": "`content.updated` is what we have documented on <https://developers.HubSpot.com/docs/cms/hubl/variables>\n\n`content.update` is not documented, I believe based on that it is a variable that is useful behind the scenes for HubSpot engineers, but may not have a use for developers building a site on HubSpot."
+  },
+  {
+    "poster": {
+      "poster_name": "Nate Paul",
+      "poster_handle": "nate.paul"
+    },
+    "time_stamp": "2021-01-15 14:55:09",
+    "text": "<@UDLS0CYPP> That did it! Thanks for the help. Actually, I ended needing to divide by 1000 (instead of 10) to get the right difference between original and updated posts dates. Here's the updated code:\n\n```{% if content.updated|unixtimestamp//1000 &gt; content.publish_date|unixtimestamp//1000 %}\n  Originally posted on {{ content.publish_date_localized }}\n  &lt;br&gt;Last updated on {{ content.updated_date_local_time|datetimeformat('%B %e, %Y') }}\n{% else %}\n  {{ content.publish_date_localized }}\n{% endif %}```"
+  }
+]

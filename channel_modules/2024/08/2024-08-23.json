@@ -1,0 +1,71 @@
+[
+  {
+    "poster": {
+      "poster_name": "Walter",
+      "poster_handle": "art.wado"
+    },
+    "time_stamp": "2024-08-23 10:35:38",
+    "edited": {
+      "time_stamp": "2024-08-23 10:50:17"
+    },
+    "text": "Hello community, I have implemented a card-slider with swipper and apparently it is not picking up the js and css. can someone help me. I attach the code.\n\n```html+HubL\n{% require_css %} {# change the paths to the CSS files#}\n<link rel=\"stylesheet\" href=\"<https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css>\"\n/>\n{% end_require_css %}\n\n<section class=\"slide-container swiper\">\t\n\t<div class=\"slide-content\">\t\n   <div class=\"card-wrapper swiper-wrapper\">\n\n  {% for item in module.field_group %}\n  <div class=\"card swiper-slide\">\n\t\t <div class=\"image-content\">\n       <span class=\"overlay\"></span>\n      <div class=\"card-image\">\n     {% if item.img_slider.src %}\n\t{% set sizeAttrs = 'width=\"{{ item.img_slider.width|escape_attr }}\" height=\"{{ item.img_slider.height|escape_attr }}\"' %}\n\t{% if item.img_slider.size_type == 'auto' %}\n\t\t{% set sizeAttrs = 'width=\"{{ item.img_slider.width|escape_attr }}\" height=\"{{ item.img_slider.height|escape_attr }}\" style=\"max-width: 100%; height: auto;\"' %}\n\t{% elif item.img_slider.size_type == 'auto_custom_max' %}\n\t\t{% set sizeAttrs = 'width=\"{{ item.img_slider.max_width|escape_attr }}\" height=\"{{ item.img_slider.max_height|escape_attr }}\" style=\"max-width: 100%; height: auto;\"' %}\n\t{% endif %}\n\t {% set loadingAttr = item.img_slider.loading != 'disabled' ? 'loading=\"{{ item.img_slider.loading|escape_attr }}\"' : '' %}\n\t<img src=\"{{ item.img_slider.src|escape_url }}\" alt=\"{{item.img_slider.alt|escape_attr }}\" {{ loadingAttr }} {{ sizeAttrs }}>\n{% endif %}\n    </div>\n    </div>\n    \n     <div class=\"card-content\">\n\t\t   <p class=\"title\">{{ item.text_card }}</p>\n       <p class=\"description\">this is a title</p>\n       <button class=\"button\">Ver mas</button>\n\t\t </div>\n  \n</div>\n\t{% endfor %}\n\t\t\n\t\t</div>\n  </div>\n\t\n   <!-- If we need navigation buttons -->\n      <div class=\"swiper-button-next swiper-navBtn\"></div>\n      <div class=\"swiper-button-prev swiper-navBtn\"></div>\n      <!-- If we need pagination -->\n      <div class=\"swiper-pagination\"></div>\n\t\n</section>\n\t\n{% require_js %}\n<script src=\"<https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js>\"></script>\n{% end_require_js %}```\nCSS.\n.slide-container {\n  max-width: 1200px;\n  width: 100%;\n  padding: 40px 0;\n}\n.slide-content {\n  margin: 0 40px;\n  overflow: hidden;\n  border-radius: 25px;\n}\n.card {\n  /* width: 320px; */\n  border-radius: 25px;\n  background-color: #fff;\n}\n.image-content,\n.card-content {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  padding: 10px 14px;\n}\n.image-content {\n  position: relative;\n  row-gap: 5px;\n  padding: 25px 0;\n}\n.overlay {\n  position: absolute;\n  left: 0;\n  top: 0;\n  height: 100%;\n  width: 100%;\n  background-color: #4070F4;\n  border-radius: 25px 25px 0 25px;\n}\n.overlay::before,\n.overlay::after {\n  content: '';\n  position: absolute;\n  right: 0;\n  bottom: -40px;\n  height: 40px;\n  width: 40px;\n  background: #4070F4;\n}\n.overlay::after {\n  border-radius: 0 25px 0 0;\n  background-color: #fff;\n}\n.card-image {\n  position: relative;\n  height: 150px;\n  width: 150px;\n  border-radius: 50%;\n  background: #fff;\n  padding: 3px;\n}\n.card-image .card-img {\n  height: 100%;\n  width: 100%;\n  object-fit: cover;\n  border-radius: 50%;\n  border: 4px solid #4070F4;\n}\n.title {\n  font-size: 18px;\n  font-weight: 500px;\n  color: #333;\n}\n.description {\n  font-size: 14px;\n  color: #707070;\n  text-align: center;\n}\n.button {\n  border: none;\n  font-size: 16px;\n  padding: 8px 16px;\n  background-color: #4070F4;\n  border-radius: 6px;\n  margin: 4px;\n  cursor: pointer;\n  transition: all 0.3 ease;\n  color: #fff;\n}\n.button:hover {\n  background: #265DF2;\n}\n.swiper-navBtn {\n  color: #6E93F7;\n  transition: color 03s ease;\n}\n.swiper-navBtn:hover {\n  color: #4070F4;\n}\n.swiper-navBtn::before,\n.swiper-navBtn::after {\n  font-size: 40px;\n}\n.swiper-button-next {\n  right: 0;\n}\n.swiper-button-prev {\n  left: 0;\n}\n.swiper-pagination-bullet {\n  background-color: #265DF2;\n  opacity: 1;\n}\n.swiper-pagination-bullet-active {\n  background-color: #4070F4;\n  opacity: 1;\n}\n<@U0777JK3WQ3> screen and(max-width:768px) {\n  .slide-content {\n    margin: 0 10px;\n  }\n  .swiper-navBtn {\n    display: none;\n  }\n}\n\n\njs.\nvar swiper = new Swiper('.slide-content', {\n  slidesPerView: 3,\n  spaceBetween: 24,\n  slidesPerGroup: 3,\n  loop: true,\n  centerSlide: 'true',\n  fade: 'true',\n  grabCursor: 'true',\n  loopFillGroupWithBlank: true,\n  pagination: {\n    el: '.swiper-pagination',\n    clickable: true,\n    dynamicBullets: true,\n  },\n  navigation: {\n    nextEl: '.swiper-button-next',\n    prevEl: '.swiper-button-prev',\n  },\n  breakpoints: {\n    0: {\n      slidesPerView: 1,\n    },\n    520: {\n      slidesPerView: 2,\n    },\n    950: {\n      slidesPerView: 3,\n    },\n  },\n});",
+    "reply_count": 9,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-08-23 10:36:46"
+      },
+      {
+        "time_stamp": "2024-08-23 10:38:59"
+      },
+      {
+        "time_stamp": "2024-08-23 12:45:03"
+      },
+      {
+        "time_stamp": "2024-08-26 02:18:50"
+      },
+      {
+        "time_stamp": "2024-08-26 02:20:53"
+      },
+      {
+        "time_stamp": "2024-08-26 02:22:02"
+      },
+      {
+        "time_stamp": "2024-08-26 02:22:06"
+      },
+      {
+        "time_stamp": "2024-08-26 15:40:53"
+      },
+      {
+        "time_stamp": "2024-08-27 02:42:47"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Wessolly",
+      "poster_handle": "webdesign"
+    },
+    "time_stamp": "2024-08-23 10:36:46",
+    "edited": {
+      "time_stamp": "2024-08-23 10:37:01"
+    },
+    "text": "do you have JS to initialize the Slider?"
+  },
+  {
+    "poster": {
+      "poster_name": "Walter",
+      "poster_handle": "art.wado"
+    },
+    "time_stamp": "2024-08-23 10:38:59",
+    "text": "Yes, I already shared the code."
+  },
+  {
+    "poster": {
+      "poster_name": "Walter",
+      "poster_handle": "art.wado"
+    },
+    "time_stamp": "2024-08-23 12:45:03",
+    "text": "I already solved it, I just put the css and js inside HTML-HubL. But I don't understand why it doesn't work separately. Since I am going to use this module many times, what is the way to integrate it? Well I'm using Swiper from CDN"
+  }
+]

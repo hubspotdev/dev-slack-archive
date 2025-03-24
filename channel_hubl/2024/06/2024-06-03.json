@@ -1,0 +1,49 @@
+[
+  {
+    "poster": {
+      "poster_name": "Joe Dee",
+      "poster_handle": "jody2be"
+    },
+    "time_stamp": "2024-06-03 14:53:26",
+    "text": "I'm creating my first custom email module. In this module I am fetching HubDB data. I want to filter this data based on a property value from the CRM Contact table. I am able to grab this value in the template like so: {{ <http://contact.property/|contact.property>_name }} and display this value in the email template when previewing as a contact. However, when I try filtering the data retrieved from HubDB using this value nothing is displaying in the email preview.\nIf I plop the <http://contact.property/|contact.property>_name into the hubdb_table_rows filter directly, it displays error: 'no such foreign row named null in column' in the code. If I set the value ahead, I am able to print the value in the email preview. I believe the fetch from HubDB is empty because somehow this value is null still.\nIs there a order for rendering when it comes to setting the values and fetching from HubDB vs CRM data in the email module or something? I'm trying to understand why this is happening and how to solve it.",
+    "reply_count": 9,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-06-03 16:16:43"
+      },
+      {
+        "time_stamp": "2024-06-04 07:38:38"
+      },
+      {
+        "time_stamp": "2024-06-04 07:46:18"
+      },
+      {
+        "time_stamp": "2024-06-04 10:33:28"
+      },
+      {
+        "time_stamp": "2024-06-04 10:39:39"
+      },
+      {
+        "time_stamp": "2024-06-04 11:06:03"
+      },
+      {
+        "time_stamp": "2024-06-04 13:11:09"
+      },
+      {
+        "time_stamp": "2024-06-04 13:18:19"
+      },
+      {
+        "time_stamp": "2024-06-13 09:08:20"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2024-06-03 16:16:43",
+    "text": "Hey <@U06F7SDRKE3>,\ncongratulations on getting into email development :tada:\nnot sure if I got this right but if you want to display HubDB information based on a CRM property - have you thought of wrapping the HubDB rows function in an if statement like:\n```{% if contact.property_name == \"SOMETHING\" %}\n    {% set filtered_hubdb == hubdb_table_rows(1546258, \"SOME_HUBDB_FILTER\") %}\n{% elif contact.property_name == \"SOMETHING-DIFFERENT\" %}\n    {% set filtered_hubdb == hubdb_table_rows(1546258, \"DIFFERENT_HUBDB_FILTER\") %}\n{% else %} {# Fallback if no property_name matches #}\n{% set filtered_hubdb == hubdb_table_rows(1546258) %}\n{% endif %}\n...\n{ for row in filtered_hubdb %}\n&lt;h2&gt;{{ row.name }}&lt;/h2&gt;\n{% endfor %}```\nJust asking because the HubDB filters are only working with information from the HubDB table and <https://developers.HubSpot.com/docs/api/cms/hubdb#filter-returned-rows|general filters>\n\nMaybe <@U04AQA0QM8E> has some thoughts/insights on this"
+  }
+]

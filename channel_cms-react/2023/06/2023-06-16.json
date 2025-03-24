@@ -1,0 +1,191 @@
+[
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-06-16 09:36:18",
+    "text": "doing this kind of thing inside of a `&lt;script&gt;` tag on a `.html` page after using js-rendering physically hurts:\n```&lt;script&gt;\n      var blog_post_formatter = function(blogposts) {\n    \n        var formatted = \"&lt;div class='flex'&gt;\";\n        for (var i = 0; i &lt; blogposts.length; i++) {\n          var blogpost = blogposts[i];\n          formatted += '&lt;div class=\"related-blog-item\"&gt;';\n          formatted += `&lt;span&gt;Related Post ${i + 1}/${blogposts.length}&lt;/span&gt;&lt;br&gt;`;\n          formatted += `&lt;a class=\"related-blog-title\" href=\"${blogpost.url}\"&gt;&lt;span&gt;${blogpost.name}&lt;/span&gt;&lt;/a&gt;`;\n          formatted += `&lt;div class=\"hs-related-blog-byline\"&gt;by &lt;span class=\"related-blog-author\"&gt;${blogpost.blogAuthor.fullName}&lt;/span&gt;&lt;span class=\"related-blog-posted-at\"&gt; posted on &lt;/span&gt;&lt;span class=\"related-blog-date\"&gt;${new Date(blogpost.publishDate).toLocaleDateString()}&lt;/span&gt;&lt;/div&gt;`;\n          formatted += `&lt;p class=\"related-blog-post-summary\"&gt;${blogpost.postSummary}&lt;a href=\"${blogpost.url}\"&gt;Read more&lt;/a&gt;&lt;/p&gt;`;\n          formatted += '&lt;div class=\"related-blog-tags\"&gt;';\n          if (blogpost.tagList.length &gt; 0) {\n            formatted += `Tags: ${blogpost.tagList.map(tag =&gt; tag.label).join(\", \")}`;\n          }\n          formatted += '&lt;/div&gt;';\n          \n          if (blogpost.featuredImage) {\n            formatted += `&lt;img src=\"${blogpost.featuredImage}\" alt=\"${blogpost.featuredImageAltText}\"&gt;`;\n          }\n          formatted += '&lt;/div&gt;';\n        }\n        formatted += '&lt;/div&gt;';\n        return formatted;\n      }\n    &lt;/script&gt;```\n",
+    "reply_count": 11,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-06-16 09:45:53"
+      },
+      {
+        "time_stamp": "2023-06-16 09:46:26"
+      },
+      {
+        "time_stamp": "2023-06-16 09:46:38"
+      },
+      {
+        "time_stamp": "2023-06-16 09:46:50"
+      },
+      {
+        "time_stamp": "2023-06-16 09:47:05"
+      },
+      {
+        "time_stamp": "2023-06-16 09:47:20"
+      },
+      {
+        "time_stamp": "2023-06-16 10:00:48"
+      },
+      {
+        "time_stamp": "2023-06-16 10:02:08"
+      },
+      {
+        "time_stamp": "2023-06-16 10:03:11"
+      },
+      {
+        "time_stamp": "2023-06-16 10:17:51"
+      },
+      {
+        "time_stamp": "2023-06-16 10:19:52"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-06-16 09:36:57",
+    "text": "any secret mojo I can use?"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-06-16 09:45:53",
+    "text": "You can clean that up a little bit by using a big <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#multi-line_strings|multi-line string> instead of separate `formatted +=` lines."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-06-16 09:46:26",
+    "text": "yea, good idea"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-06-16 09:46:38",
+    "text": "btw, that's the HubSpot provided example"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-06-16 09:46:50",
+    "text": "From where?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-06-16 09:47:05",
+    "text": "from the docs, let me find it"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-06-16 09:47:20",
+    "text": "here: <https://developers.HubSpot.com/docs/cms/guides/creating-a-related-post-listing>"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-06-16 10:00:48",
+    "text": "Would this be better? (Still need to check it is the same thing):\n```  var blogPostFormatter = function(blogposts) {\n    var postsHtml = blogposts.map(function(blogpost, i) {\n      var tagsString = '';\n      var featuredImageString = '';\n\n      if (blogpost.tagList.length &gt; 0) {\n        tagsString += `Tags: ${blogpost.tagList.map(tag =&gt; tag.label).join(\", \")}`;\n      }\n      if (blogpost.featuredImage) {\n        featuredImageString += `&lt;img src=\"${blogpost.featuredImage}\" alt=\"${blogpost.featuredImageAltText}\"&gt;`;\n      }\n\n      var newString = `&lt;div class=\"related-blog-item\"&gt;\n  &lt;span&gt;Related Post ${i + 1}/${blogposts.length}&lt;/span&gt;&lt;br&gt;\n  &lt;a class=\"related-blog-title\" href=\"${blogpost.url}\"&gt;&lt;span&gt;${blogpost.name}&lt;/span&gt;&lt;/a&gt;\n  &lt;div class=\"hs-related-blog-byline\"&gt;by &lt;span class=\"related-blog-author\"&gt;${blogpost.blogAuthor.fullName}&lt;/span&gt;&lt;span class=\"related-blog-posted-at\"&gt; posted on &lt;/span&gt;&lt;span class=\"related-blog-date\"&gt;${new Date(blogpost.publishDate).toLocaleDateString()}&lt;/span&gt;&lt;/div&gt;\n  &lt;p class=\"related-blog-post-summary\"&gt;${blogpost.postSummary}&lt;a href=\"${blogpost.url}\"&gt;Read more&lt;/a&gt;&lt;/p&gt;\n  &lt;div class=\"related-blog-tags\"&gt;${tagString}&lt;/div&gt;\n  ${featuredImageString}\n&lt;/div&gt;\n`;\n    });\n\n    return `&lt;div&gt;\n  ${postsHtml}\n&lt;/div&gt;`;\n  }```"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-06-16 10:02:08",
+    "text": "thanks for that, maybe, I'm trying this chatGPT version too:\n```  const blog_post_formatter = function (blogposts) {\n  let formatted = `\n    &lt;section class='mt-20'&gt;\n      &lt;h2 class=\"heading-1\"&gt;Related content&lt;/h2&gt;\n      &lt;div class=\"flex\"&gt;\n      ${blogposts.map(blogpost =&gt; `\n        &lt;div class=\"related-blog-item\"&gt;\n          ${blogpost.featuredImage ? `&lt;img src=\"${blogpost.featuredImage}\" alt=\"${blogpost.featuredImageAltText}\"&gt;` : ''}\n          &lt;a class=\"related-blog-title\" href=\"${blogpost.url}\"&gt;&lt;span&gt;${blogpost.name}&lt;/span&gt;&lt;/a&gt;\n          &lt;div class=\"hs-related-blog-byline\"&gt;\n            by &lt;span class=\"related-blog-author\"&gt;${blogpost.blogAuthor.fullName}&lt;/span&gt;\n            &lt;span class=\"related-blog-posted-at\"&gt; posted on &lt;/span&gt;\n            &lt;span class=\"related-blog-date\"&gt;${new Date(blogpost.publishDate).toLocaleDateString()}&lt;/span&gt;\n          &lt;/div&gt;\n          &lt;p class=\"related-blog-post-summary\"&gt;${blogpost.postSummary}&lt;a href=\"${blogpost.url}\"&gt;Read more&lt;/a&gt;&lt;/p&gt;\n          &lt;div class=\"related-blog-tags\"&gt;\n            ${blogpost.tagList.length &gt; 0 ? `Tags: ${blogpost.tagList.map(tag =&gt; tag.label).join(\", \")}` : ''}\n          &lt;/div&gt;\n        &lt;/div&gt;\n      `).join('')}\n      &lt;/div&gt;\n    &lt;/section&gt;\n  `;\n  return formatted;```\n(I happen to be making some tweaks too)"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-06-16 10:03:11",
+    "text": "the `join()` at the end through me off at first but that makes sense"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-06-16 10:17:51",
+    "text": "Few little fixes in, I’ll suggest it as a doc change:\n\n```  var blogPostFormatter = function(blogposts) {\n    var postsHtml = blogposts.map(function(blogpost, i) {\n      var tagsString = '';\n      var featuredImageString = '';\n\n      if (blogpost.tagList.length &gt; 0) {\n        tagsString += `Tags: ${blogpost.tagList.map(tag =&gt; tag.label).join(\", \")}`;\n      }\n      if (blogpost.featuredImage) {\n        featuredImageString += `&lt;img src=\"${blogpost.featuredImage}\" alt=\"${blogpost.featuredImageAltText}\"&gt;`;\n      }\n\n      return `&lt;div class=\"related-blog-item\"&gt;\n  &lt;span&gt;Related Post ${i + 1}/${blogposts.length}&lt;/span&gt;&lt;br&gt;\n  &lt;a class=\"related-blog-title\" href=\"${blogpost.url}\"&gt;&lt;span&gt;${blogpost.name}&lt;/span&gt;&lt;/a&gt;\n  &lt;div class=\"hs-related-blog-byline\"&gt;by &lt;span class=\"related-blog-author\"&gt;${blogpost.blogAuthor.fullName}&lt;/span&gt;&lt;span class=\"related-blog-posted-at\"&gt; posted on &lt;/span&gt;&lt;span class=\"related-blog-date\"&gt;${new Date(blogpost.publishDate).toLocaleDateString()}&lt;/span&gt;&lt;/div&gt;\n  &lt;p class=\"related-blog-post-summary\"&gt;${blogpost.postSummary}&lt;a href=\"${blogpost.url}\"&gt;Read more&lt;/a&gt;&lt;/p&gt;\n  &lt;div class=\"related-blog-tags\"&gt;${tagsString}&lt;/div&gt;\n  ${featuredImageString}\n&lt;/div&gt;\n`;\n    });\n\n    return `&lt;div&gt;${postsHtml.join('\\n')}&lt;/div&gt;`;\n  }```"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-06-16 10:19:52",
+    "text": "awesome, thanks"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-06-16 10:47:52",
+    "text": "FYI <@UDHT6N5SM> we now do support passing HubL parameters through a JS module: <https://github.com/HubSpot/cms-js-building-block-examples/pull/14> (not sure if we mentioned that broadly)"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-06-16 10:49:29",
+    "text": "ooooh, love to see it"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-06-16 10:52:33",
+    "text": "I wonder if that means I can copy the url or JSON data from a file in \"design manager\"..."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-06-16 10:52:37",
+    "text": "into my module"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-06-16 10:53:52",
+    "text": "for example, can I pass in this: {{ get_asset_url('/example.json') }}"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-06-16 10:54:32",
+    "text": "probably not...but so close"
+  }
+]

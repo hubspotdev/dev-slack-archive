@@ -1,0 +1,108 @@
+[
+  {
+    "poster": {
+      "poster_name": "Robert Gonzalez",
+      "poster_handle": "robert"
+    },
+    "time_stamp": "2019-07-18 08:09:01",
+    "text": "Hello Everyone! I have a question on updating dicts. I have created a very simple example of what I am trying to do below:\n\n```{% set languageDict = { 'HTML' : 0 } %}\n\n{% set languages = ['CSS', 'Javascript', 'PHP'] %}\n\n{% for language in languages %}\n  {% do languageDict.update({language: loop.index }) %}\n{% endfor %}\n\n{{ languageDict }}```\n\nAs I understand it, the \"update\" method should add a new entry to the dict but instead it just keeps replacing the most recent entry. It does however leave the dict entry I hardcoded in by default. Also, the language variable is not being pulled in as the key. My expected result is this:\n\n`{HTML=0, CSS=1, Javascript=2, PHP=3}`\n\nBut instead I'm getting this:\n\n`{HTML=0, language=3}`\n\nI'm sure I'm missing something obvious but any help would be appreciated!"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2019-07-18 08:10:28",
+    "text": "I'm not sure there's any way to use a variable as a key"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2019-07-18 08:10:39",
+    "text": "I would love to be wrong about that though"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Gonzalez",
+      "poster_handle": "robert"
+    },
+    "time_stamp": "2019-07-18 08:12:29",
+    "text": "Ah, that's too bad. Do you know if my other issue can be solved?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2019-07-18 08:39:01",
+    "text": "Well, they're the same issue"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2019-07-18 08:39:17",
+    "text": "You're not getting a new entry because the key is \"language\" in each loop"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2019-07-18 08:39:56",
+    "text": "If you printed languageDict in each loop, you'd see `{HTML=0, language=1} {HTML=0, language=2} {HTML=0, language=3}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2019-07-18 08:46:24",
+    "text": "```{% set languageList = [{ language: 'HTML', index: 0 }] %}\n{% set languages = ['CSS', 'Javascript', 'PHP'] %}\n\n{% for language in languages %}\n  {% do languageList.append({ language: language, index: loop.index }) %}\n{% endfor %}```\nAs a workaround you could do something like this"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2019-07-18 08:47:31",
+    "text": "Then if you need to select a specific one, you'd do something like `{{ languageList|selectattr('language', 'equalto', 'CSS')[0] }}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Nikan Shahidi",
+      "poster_handle": "nikan"
+    },
+    "time_stamp": "2019-07-18 19:06:54",
+    "text": "Can you build the functionality of a repeater within a coded template without creating a custom module?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2019-07-18 19:20:46"
+      }
+    ]
+  },
+  {
+    "text": "You can do something like this",
+    "time_stamp": "2019-07-18 19:20:46"
+  },
+  {
+    "poster": {
+      "poster_name": "Kaushik Sen",
+      "poster_handle": "kaushik.sen"
+    },
+    "time_stamp": "2019-07-18 21:35:00",
+    "text": "hey - I've been hunting around for this, but is there a hubl variable / function (or another way) to get the current page ID? I'm looking for something like {{ page_id }} ! Apologies if this a dumb question.",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2019-07-19 01:42:53"
+      }
+    ]
+  }
+]

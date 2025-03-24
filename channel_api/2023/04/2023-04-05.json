@@ -1,0 +1,279 @@
+[
+  {
+    "poster": {
+      "poster_name": "Lukas",
+      "poster_handle": "lukas.pichler"
+    },
+    "time_stamp": "2023-04-05 01:27:56",
+    "text": "Alright, that's kinda sad"
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas",
+      "poster_handle": "lukas.pichler"
+    },
+    "time_stamp": "2023-04-05 01:28:13",
+    "text": "Thanks for your input though, appreciate it!"
+  },
+  {
+    "poster": {
+      "poster_name": "Yamine  Moussaoui",
+      "poster_handle": "yamine"
+    },
+    "time_stamp": "2023-04-05 02:58:29",
+    "edited": {
+      "time_stamp": "2023-04-05 03:02:18"
+    },
+    "text": "Hello,\nI'm using the HubSpot Associations API in my custom code to retrieve the custom association type between a \"Deal\" object and a \"Contact\" object, for example \"occupant\", \"owner\" etc. However, I'm facing an issue where instead of returning the custom association type name, the API is simply returning \"deal to contact\".\nI believe this is because the API is not recognizing the custom association type that I have created. Can you please help me resolve this issue and retrieve the custom association type correctly?\n```      // Recherche contacts\n      // solution 1: ne retourne pas les types d'association\n      \n      HubSpot.crm.objects.associationsApi.getAll(toDeal, dealId, [\"contacts\"]).then(results =&gt; {\n          let associations = results.results;\n          let contact_ids = associations.map(a =&gt; a.id);\n          console.log('associations: ',associations, contact_ids);\n          contact_ids.forEach(function (entry) {\n            console.log(entry);\n          })\n      })```\n       Thank you",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-04-05 08:06:24"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2023-04-05 04:53:17",
+    "text": "so <@U04T77CL48Z> are you doing this via a workflow or an external location?\n\nInside HubSpot through workflows, if you throw an error in the workflow, it will be retried later.\n\nI haven’t used the search limiter options that they talk about in the package page.\n\nI haven’t used it because I don’t really originate searches in the same instance — they are being spun up on individual webhook calls or some in app item, so I don’t believe they “ARE CONNECTED” I could be wrong on how that works, but I don’t see how it fits for my usual use cases.\n\nYour initial question is “stop the rate limits from getting hit” — if you are the source of the calls and they aren’t being instanced, then you can put a delay on subsequent calls by like 800ms and that is a good way to make that pass.\n\nThe only other way I could think of is to use a queue to handle your searches.\n\nWhy not on a 429 error, delay and then make the call again, recursive function handles your search\n\n```async function searchAllContacts(searchProperties, searchValues, limit, after, allContacts = []) {\n\n  let searchFlow = []\n  const HubSpotClient = new HubSpot.Client({\n    accessToken: process.env.hsToken\n  });\n\n  const filters = []\n  for(let i = 0; i &lt; searchProperties.length; i++) {\n    const filter = {\n      propertyName: searchProperties[i],\n      operator: 'EQ',\n      value: searchValues[i]\n  \t}\n    filters.push(filter)\n  }\n\n  const filterGroups = [{ filters: filters }]\n  const sort = JSON.stringify({ propertyName: 'email', direction: 'DESCENDING' })\n  const properties = [\"firstname\", \"lastname\", \"email\"]\n  const publicObjectSearchRequest = {\n    filterGroups,\n    sorts: [sort],\n    properties,\n    limit,\n    after\n  }\n\n\n  searchFlow.push(`${limit}:${after}`)\n\n  try {\n    const { results, paging } = await HubSpotClient.crm.contacts.searchApi.doSearch(publicObjectSearchRequest)\n    const contactIds = results.map(obj =&gt; Number(obj.id))\n    allContacts = allContacts.concat(contactIds)\n\n    if (paging &amp;&amp; paging.next) {\n      searchFlow.push('startingAgain')\n      console.log('::::::::::::::::::::::::::::::::::::::::::::::::We are doing this again!!!!')\n      await new Promise(resolve =&gt; setTimeout(resolve, 800))\n      return searchAllContacts(searchProperties, searchValues, limit, paging.next.after, allContacts)\n    }\n    return allContacts\n\n  } catch (err) {\n    console.log(err)\n    console.log(searchFlow)\n    throw err\n  }\n}```\ninside a try catch\n`const contactIds = await searchAllContacts(searchProperties, searchValues, 100)`"
+  },
+  {
+    "poster": {
+      "poster_name": "Hemant Tripathi",
+      "poster_handle": "hemant.tripathi"
+    },
+    "time_stamp": "2023-04-05 07:36:01",
+    "text": "10 seconds"
+  },
+  {
+    "poster": {
+      "poster_name": "Hemant Tripathi",
+      "poster_handle": "hemant.tripathi"
+    },
+    "time_stamp": "2023-04-05 07:39:05",
+    "text": "Do Any one know api to create emails with attachments in BASE64_ENCODED_CONTENT form?\ncan't use <https://api.hubapi.com/email/public/v1/singleEmail/send> because i want to create some old email entries as well."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-05 08:06:24",
+    "text": "<https://HubSpotdev.slack.com/archives/C22PU4LV8/p1680693349806199>"
+  },
+  {
+    "poster": {
+      "poster_name": "Léo Recouvreux",
+      "poster_handle": "leo785"
+    },
+    "time_stamp": "2023-04-05 08:46:57",
+    "text": "Hi guys,\n\nIs some one knows how to GET custom quotes templates,\nI tryied this : /crm/v3/objects/quote_template?properties=hs_name,hs_active\n\nBut got this error\n{\"status\":\"error\",\"message\":\"Unable to infer object type from: quote_templates\",\"correlationId\":\"66cfbd3b-e046-4a10-ae3d-79b2b16f2180\"}%\n\nThanks",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-04-05 08:50:28"
+      },
+      {
+        "time_stamp": "2023-04-05 08:52:36"
+      },
+      {
+        "time_stamp": "2023-04-05 11:13:10"
+      },
+      {
+        "time_stamp": "2023-04-06 02:08:59"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-05 08:50:28",
+    "text": "this worked for me:\n\n```<https://api.hubapi.com/crm/v4/objects/0-64?properties=hs_name,hs_active>```"
+  },
+  {
+    "poster": {
+      "poster_name": "Léo Recouvreux",
+      "poster_handle": "leo785"
+    },
+    "time_stamp": "2023-04-05 08:52:36",
+    "text": "Thanks for you response !!\n\nWhat's the 0-64 in your url ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-05 11:13:10",
+    "text": "the type id for quote templates"
+  },
+  {
+    "poster": {
+      "poster_name": "Amit Das",
+      "poster_handle": "adas"
+    },
+    "time_stamp": "2023-04-05 13:32:36",
+    "text": "Hi everyone, I am using the code below in a custom coded action to associate a newly created line item to a deal. I get the line item created but it is not associating to the deal. If I run this in postman it works fine. What causes the association to fail in the code below?\n\n```const properties = {\n    \"name\": _productname.toString(),\n    \"hs_product_id\": _productId.toString(),\n    \"quantity\": _qty.toString(),\n    \"price\": _amt.toString(),\n    \"external_salesforce_id\": _ext_line.toString()\n  };\n\nconst SimplePublicObjectInputForCreate = { properties, associations: [{\"to\":{\"id\":_dealId.toString()},\"types\":[{\"associationCategory\":\"HubSpot_DEFINED\",\"associationTypeId\":20}]}] };\n\n    try {\n      const apiResponse = await HubSpotClient.crm.lineItems.basicApi.create(SimplePublicObjectInputForCreate);```\nHere is my response from the code above\n\n```INFO\tDeal ID 12850627426\n\nINFO\t{\n  \"id\": \"5164231349\",\n  \"properties\": {\n    \"amount\": \"5000.000\",```",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-04-05 13:33:52"
+      },
+      {
+        "time_stamp": "2023-04-05 13:38:09"
+      },
+      {
+        "time_stamp": "2023-04-05 14:11:13"
+      },
+      {
+        "time_stamp": "2023-04-05 14:14:10"
+      },
+      {
+        "time_stamp": "2023-04-05 14:20:03"
+      },
+      {
+        "time_stamp": "2023-04-05 14:20:28"
+      },
+      {
+        "time_stamp": "2023-04-05 14:20:40"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-05 13:33:52",
+    "text": "What happens when you use axios (you can get the axios for the call using the &lt;/&gt; button in postman)"
+  },
+  {
+    "poster": {
+      "poster_name": "Amit Das",
+      "poster_handle": "adas"
+    },
+    "time_stamp": "2023-04-05 13:38:09",
+    "text": "Let me check the axios route."
+  },
+  {
+    "poster": {
+      "poster_name": "Amit Das",
+      "poster_handle": "adas"
+    },
+    "time_stamp": "2023-04-05 14:11:13",
+    "text": "<@U01QVR44MEY> would you know where I am going wrong in the <http://axios.post|axios.post>? In another workflow I have it working fine but that is an axios.get request. I get the error\n\n```const _createLineItem = \"<https://api.HubSpot.com/crm/v3/objects/line_items>\";\n  \tconst _createLineItemBody = {\n  \"properties\": {\n    \"name\": _productname.toString(),\n    \"hs_product_id\": _productId.toString(),\n    \"quantity\": _qty.toString(),\n    \"price\": _amt.toString(),\n    \"external_salesforce_id\": _ext_line.toString()\n  },\n  \"associations\": [\n    {\n      \"to\": {\n        \"id\": _dealId.toString()\n      },\n      \"types\": [\n        {\n          \"associationCategory\": \"HubSpot_DEFINED\",\n          \"associationTypeId\": 20\n        }\n      ]\n    }\n  ]\n};\n    \n   try {\n        const _response = await <http://axios.post|axios.post>(_createLineItem,  { headers: {\n        \"Authorization\": \"Bearer \" + process.env.Token,\n        \"Content-Type\": \"application/json\",\n      } }, {body: JSON.stringify(_createLineItemBody)} );\n        const data = JSON.stringify(_response.data);\n\n     console.log(\"Data \" + data);\n        \n    } catch(err) {\n        console.error(err);\n    }\n  }```\nError\n\n```status: 'error',\n      message: 'Authentication credentials not found. This API supports both API Key and OAuth 2.0 authentication and you can find more details at <https://developers.HubSpot.com/docs/methods/auth/oauth-overview>',\n      correlationId: 'c20df2cd-e1da-419b-b550-b2c44bd66513',\n      category: 'INVALID_AUTHENTICATION'```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-05 14:14:10",
+    "text": "Here this code should work instead:\n\n```let data = JSON.stringify({\n  \"properties\": {\n    \"name\": _productname.toString(),\n    \"hs_product_id\": _productId.toString(),\n    \"quantity\": _qty.toString(),\n    \"price\": _amt.toString(),\n    \"external_salesforce_id\": _ext_line.toString()\n  },\n  \"associations\": [\n    {\n      \"to\": {\n        \"id\": _dealId.toString()\n      },\n      \"types\": [\n        {\n          \"associationCategory\": \"HubSpot_DEFINED\",\n          \"associationTypeId\": 20\n        }\n      ]\n    }\n  ]\n});\n\nlet config = {\n  method: 'post',\n  maxBodyLength: Infinity,\n  url: '<https://api.HubSpot.com/crm/v3/objects/line_items>',\n  headers: { \n    'Authorization': 'Bearer pat-na1-xxxxxx', \n    'Content-Type': 'application/json'\n  },\n  data : data\n};\n\naxios.request(config)\n.then((response) =&gt; {\n  console.log(JSON.stringify(response.data));\n})\n.catch((error) =&gt; {\n  console.log(error);\n});```"
+  },
+  {
+    "poster": {
+      "poster_name": "Amit Das",
+      "poster_handle": "adas"
+    },
+    "time_stamp": "2023-04-05 14:20:03",
+    "text": "<@U01QVR44MEY> thank you!!! that worked :slightly_smiling_face: first time posting via axios."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-05 14:20:28",
+    "text": "Awesome"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-05 14:20:40",
+    "text": "Yeah it's much easier to use over the SDK"
+  },
+  {
+    "text": "Hello HubSpot Community: I have a need to extract out via API the contact recipients on email campaign. where do I get that? If you can see the attached document the current api does not provide the recipients. How do I pull the contact recipients for an email campaign?",
+    "time_stamp": "2023-04-05 15:33:28"
+  },
+  {
+    "text": "Hey can anyone help me out with this attached problem?",
+    "time_stamp": "2023-04-05 23:28:24",
+    "reply_count": 14,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2023-04-05 23:31:15"
+      },
+      {
+        "time_stamp": "2023-04-05 23:40:49"
+      },
+      {
+        "time_stamp": "2023-04-06 02:17:18"
+      },
+      {
+        "time_stamp": "2023-04-06 02:18:58"
+      },
+      {
+        "time_stamp": "2023-04-06 03:41:37"
+      },
+      {
+        "time_stamp": "2023-04-06 03:42:33"
+      },
+      {
+        "time_stamp": "2023-04-06 03:44:40"
+      },
+      {
+        "time_stamp": "2023-04-06 03:45:38"
+      },
+      {
+        "time_stamp": "2023-04-06 03:46:32"
+      },
+      {
+        "time_stamp": "2023-04-06 03:47:33"
+      },
+      {
+        "time_stamp": "2023-04-06 04:00:39"
+      },
+      {
+        "time_stamp": "2023-04-06 04:06:20"
+      },
+      {
+        "time_stamp": "2023-04-06 04:49:32"
+      },
+      {
+        "time_stamp": "2023-04-06 07:44:57"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Poojan Pahuja",
+      "poster_handle": "poojan.pahuja"
+    },
+    "time_stamp": "2023-04-05 23:28:56",
+    "text": "I am creating a custom object in HubSpot through API in postman."
+  },
+  {
+    "text": "Hello, Poojan.\n\nCan you please check the scope of the Access Key App you're using. It should include the object schemas in order to create new custom object.",
+    "time_stamp": "2023-04-05 23:31:15"
+  },
+  {
+    "poster": {
+      "poster_name": "Poojan Pahuja",
+      "poster_handle": "poojan.pahuja"
+    },
+    "time_stamp": "2023-04-05 23:40:49",
+    "text": "Yes Milan I am using these scopes already."
+  }
+]

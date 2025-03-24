@@ -1,0 +1,101 @@
+[
+  {
+    "poster": {
+      "poster_name": "Bhréin Brannick",
+      "poster_handle": "bhreinb"
+    },
+    "time_stamp": "2021-09-07 05:09:09",
+    "text": "Hi I have up taken the new version of `JinJava` namely `2.5.10` . However I discovered a significant issue with the logic. It dispatches to `com.HubSpot.jinjava.lib.fn.MacroFunction#doEvaluate` first time around however upon exiting the block it wrongly imo throws a `DeferredValueException`\nwhich gets caught in code block `com.HubSpot.jinjava.tree.ExpressionNode#render` thus making it not possible to use the macro subsequently after that unless the `macro` function is updated in the context. I believe it’s marking the `macro` as deferred due to this code block within `com.HubSpot.jinjava.lib.fn.MacroFunction#doEvaluate` line 76\n\n```      if (\n        !interpreter.getContext().isPartialMacroEvaluation() &amp;&amp;\n        (\n          !interpreter.getContext().getDeferredNodes().isEmpty() ||\n          !interpreter.getContext().getEagerTokens().isEmpty()\n        )\n      ) ```\nI don’t think users should be setting `partialMacroEvaluation`  as per discussion in another thread so I think it’s entering the `if` block due to `interpreter.getContext().getDeferredNodes().isEmpty()`  not being empty, which in our case is true however the deferred nodes found here have no relationship to the logic within the macro. I include a debugger screenshot detailing the problem."
+  },
+  {
+    "text": "",
+    "time_stamp": "2021-09-07 05:10:40"
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2021-09-07 08:39:56",
+    "text": "Why do you have deferred nodes?"
+  },
+  {
+    "poster": {
+      "poster_name": "Bhréin Brannick",
+      "poster_handle": "bhreinb"
+    },
+    "time_stamp": "2021-09-07 09:38:23",
+    "text": "Ok so we send web service requests to a web service via postman client…we use api\n\n```new ClasspathResourceLocator().getString(resourcePath, UTF_8, this.interpreter);```\nin order to create the postman collection request string (which is essentially JSON). We defer the resolution of variables `scheme, host and port` per web service request string generated as we wanted that resolved in the postman client layer and for it to remain untouched by JinJava. Postman actually has the exact same syntax style when it comes to variables `{{a_variable}}` hence why we defer items `scheme, host and port`  which is what that code above is detecting. I defer those three variable names with the help of this PR (<https://github.com/HubSpot/jinjava/pull/572>)."
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2021-09-07 09:59:25",
+    "edited": {
+      "time_stamp": "2021-09-07 10:00:12"
+    },
+    "text": "Without partial macro evaluation turned on, the reason it would throw a deferred value exception would be because if you have a macro function that uses some deferred value, and you are requiring the macro function by something else, then it cannot be used. As a simple example, lets say you are deferring `scheme`:\n```{% macro my_macro(my_scheme) -%}\n{%- if my_scheme == 'http' -%}\n1\n{%- else -%}\n2\n{%- endif -%}\n{%- endmacro %}\n{% for i in range(my_macro(scheme)) %}\n{{ i }}\n{% endfor %}```\nWith this example, we cannot evaluate the range function without knowing what the argument is, so we cannot return a value from `my_macro`, so instead we throw an exception"
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2021-09-07 10:03:36",
+    "text": "I suspect you may be using DeferredValue incorrectly, which may be causing the problem for you, but it is difficult to say without knowing exactly how you're using it.\nDeferredValue is used when you don't know what the value is when the jinjava code is evaluated. It is used in HubSpot for pages or emails when we pre-render those. Certain values, such as `contact.firstname` are unknown during a generic pre-render so we defer those values with `DeferredValue` and they will be evaluated during a second pass through the jinjava code"
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2021-09-07 10:08:00",
+    "text": "Depending on what you're doing, you may be able to also use the Eager Execution system that I've been working on"
+  },
+  {
+    "poster": {
+      "poster_name": "Bhréin Brannick",
+      "poster_handle": "bhreinb"
+    },
+    "time_stamp": "2021-09-07 10:08:17",
+    "text": "So the variables `scheme, host and port` are used as part of generating a postman request string…the macros is used in a completely different aspect of the codebase…the only correlation between those two code aspects is the same interpreter context is been used to process both…hence in the screenshot i’m seeing `interpreter.getContext.getDeferredNodes()` is non-empty when it comes to exiting the macro function meaning it throws the `DeferredValueException`"
+  },
+  {
+    "text": "If you see the watch window per the screenshot does it not seem a bit odd that the same `ExpressionNode` is listed twice also?",
+    "time_stamp": "2021-09-07 10:12:55"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-09-07 12:26:34",
+    "text": ""
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2021-09-07 13:24:39",
+    "text": "How are you using the same context to interpret both of them? The macro function evaluation is done inside of a child scope with `try (InterpreterScopeClosable c = interpreter.enterScope()) {`, so it will have it's own separate `deferredNodes` set"
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2021-09-07 13:28:28",
+    "text": "Feel free to dm me and I'll see your messages sooner"
+  },
+  {
+    "poster": {
+      "poster_name": "Bhréin Brannick",
+      "poster_handle": "bhreinb"
+    },
+    "time_stamp": "2021-09-07 16:05:56",
+    "text": "Ah sorry I’ll try and recreate a minimal test to reproduce and reach out to you tomorrow :+1:"
+  }
+]

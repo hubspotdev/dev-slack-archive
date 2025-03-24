@@ -1,0 +1,125 @@
+[
+  {
+    "poster": {
+      "poster_name": "Paul",
+      "poster_handle": "paul.buskovskij"
+    },
+    "time_stamp": "2025-02-14 01:27:13",
+    "text": "<@U01GW2U4WMA> Any updates?"
+  },
+  {
+    "poster": {
+      "poster_name": "Muhammad Huzaifa",
+      "poster_handle": "mhuzaifa.prof"
+    },
+    "time_stamp": "2025-02-14 03:55:27",
+    "text": "I have developed a custom card in HubSpot &amp; added the card in the Central tab via Record Customizations, but it is not visible under Apps section when I tried to add it in Right Sidebar.\nAny Idea how can I add that card in the Right SideBar of Deal ?",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2025-02-14 04:26:38"
+      },
+      {
+        "time_stamp": "2025-02-14 04:27:31"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2025-02-14 04:09:07",
+    "text": "the last I heard was the HS team is at least talking about it and trying to verify if there would be any issues or possible misuse - but at least they are talking.  No ETA so my guess is it's not going to be quick."
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2025-02-14 04:26:38",
+    "edited": {
+      "time_stamp": "2025-02-14 04:29:14"
+    },
+    "text": "in your json for your card you have something like below.  The location describes where you want to show the card.  \"crm.record.tab\" is the center area.  \"crm.record.sidebar\" is for the sidebar.  You can try adding both (I have not tried that) with \"location\": \"crm.record.tab, crm.record.sidebar\"\n```  \"type\": \"crm-card\",\n  \"data\": {\n    \"title\": \"My Card Title\",\n    \"uid\": \"my-card-title-uid\",\n    \"location\": \"crm.record.tab\",\n    \"module\": {\n      \"file\": \"MyCard.jsx\"\n    },\n    \"objectTypes\": [\n      {\n        \"name\": \"contacts\"\n      }\n    ]\n  }\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2025-02-14 04:27:31",
+    "text": "FYI: the <#C05R599UA12|ui-extensions> channel is better for these questions"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 06:44:51",
+    "edited": {
+      "time_stamp": "2025-02-14 07:55:05"
+    },
+    "text": "Have you had problems with the wrong language showing up when you visit the HubSpot community and want to automate this fix because someone sent you a link with `?profile.language=ja` or something else?\n\n<https://gist.github.com/NickDeckerDevs/187203a001d256beaac2e8b789fa5b06>\n\n```// This can be added as a boost in Arc Browsers for the community by adding this JS\n// Non Arc Users can use a chrome extension TamperMonkey\n// I have not ussed this, I only see it show up on stack overflow as solution\n// <https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo>\n// this could also be turned into a chrome extension, but my account is not verfied and I don't know how\n// to get it to work, so lol if you find this useful and you know how to get a extension account\n// figured out, let me know!\n\n(function() {\n    // set your language code here\n    // en, es, pt-br, fr, de, ja\n    let preferredLanguage = \"en\"\n    let numberOfYearsBeforeExpiration = 1\n    let debugMode = false\n\n    function debugLog(...args) {\n        if (debugMode) {\n            console.log(...args)\n        }\n    }\n\n    function getCookie(name) {\n        return document.cookie.split('; ').find(row => row.startsWith(name + '='))?.split('=')[1]\n    }\n\n    let currentLanguage = getCookie('lia.anon.profile.language')\n    debugLog('Current language:', currentLanguage)\n\n    if (currentLanguage === preferredLanguage) {\n        debugLog('Language already set to preferred value:', preferredLanguage)\n        return\n    }\n\n    let date = new Date()\n    date.setFullYear(date.getFullYear() + numberOfYearsBeforeExpiration) \n\n    document.cookie = `lia.anon.profile.language=${preferredLanguage}; path=/; expires=${date.toUTCString()}; Secure; SameSite=None`\n\n    debugLog('Cookie updated to:', preferredLanguage)\n\n    \n    let url = new URL(window.location)\n    if (url.searchParams.has('profile.language')) {\n        url.searchParams.delete('profile.language')\n        window.location.replace(url.toString())\n    } else {\n        location.reload()\n    }\n})()```\nThis is the final updated code.\n\nHubSpot Community Script to force langage to your preferred language, has options for language, number of years before expiration, and a debug mode if you want to log stuff to the console. When someone sends you a link and it is forced language from a url param (or you happen to click on one) this will remove that from the url, and automatically…\n\nIf you are an arc user, you could set this up as a boost, for this domain, so anytime you visit, if your language setting is incorrect, this cookie update will have been set, so just an instant refresh gets you there. You could modify this a bit and verify if the language is already set to your preferred language, and if not, set it and refresh the page.\n\nIf you aren’t an arc user, you might be able to use `Tampermonkey`  as a way to add scripts. I haven’t used it before, I did a quick google and this was on the top in a stack overflow question/answer\n\n<https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo>",
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2025-02-14 06:57:49"
+      },
+      {
+        "time_stamp": "2025-02-14 07:26:53"
+      },
+      {
+        "time_stamp": "2025-02-14 07:55:43"
+      },
+      {
+        "time_stamp": "2025-02-18 06:47:43"
+      },
+      {
+        "time_stamp": "2025-02-18 07:00:05"
+      },
+      {
+        "time_stamp": "2025-02-18 07:23:51"
+      }
+    ]
+  },
+  {
+    "text": "This has happened to me a lot - I don't think it was always there but now you can select the language at the top left and change it back.",
+    "time_stamp": "2025-02-14 06:57:49"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 07:26:53",
+    "text": "I feel in the past I’ve had major issues when it goes to japanese — and maybe that wasn’t up there before and it was burried because I feel like a dunce right now that I’m fixing something and had some friends point out that the language switcher is right there"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 07:55:43",
+    "text": "okay I updated my post to just do all the things I talked about so that it just works out of the box with all the options I can think of, if you think of something else lmk"
+  },
+  {
+    "subtype": "bot_message",
+    "text": ":sparkles:Slack Tips and Best Practices:sparkles:\n\nTo get the most out the HubSpot Developer Slack, follow these best practices:\n\n• Will your post/question potentially help more than one person? Ask in a public channel instead of 1:1 DMs to help as many folks as possible. \n• Thread all replies to keep topics organized and searchable\n• Thread followup questions/comments to your original post\n• Don't post the same question in multiple channels. If you must, link to your original question in new channels.\nMore <https://slack.com/blog/collaboration/etiquette-tips-in-slack|great tips here>. Thanks for making the HubSpot Developer Slack easier to use for everyone!",
+    "username": "Slack Best Practices",
+    "time_stamp": "2025-02-14 12:05:01",
+    "edited": {
+      "time_stamp": "2025-02-14 12:05:05"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Hollyce Brammer",
+      "poster_handle": "hollyce"
+    },
+    "time_stamp": "2025-02-14 14:45:27",
+    "text": "<@U05CVD810GN> Did you ever find a solution for this? I need to edit the CSS for membership login pages as well."
+  }
+]

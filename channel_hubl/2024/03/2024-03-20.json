@@ -1,0 +1,97 @@
+[
+  {
+    "poster": {
+      "poster_name": "Levon Stepanyan",
+      "poster_handle": "levon"
+    },
+    "time_stamp": "2024-03-20 04:13:10",
+    "edited": {
+      "time_stamp": "2024-03-20 04:35:19"
+    },
+    "text": "Hi guys, I looked through the documentations but couldn't find answer to my question about widget-data.  It is used in the header to generate dynamic classes `class=\"header-main__container--{{ widget_data.header_type.value|replace(' ', '-')|lower }}\"`\nSo where is the value \"header_type\" is located and how to modify it?"
+  },
+  {
+    "poster": {
+      "poster_name": "Levon Stepanyan",
+      "poster_handle": "levon"
+    },
+    "time_stamp": "2024-03-20 04:31:42",
+    "text": "You can use GraphQL: check this tutorial -&gt; <https://app.HubSpot.com/academy/4685432/lessons/1155840/47186?language=EN>"
+  },
+  {
+    "poster": {
+      "poster_name": "Levon Stepanyan",
+      "poster_handle": "levon"
+    },
+    "time_stamp": "2024-03-20 04:34:32",
+    "text": "Hi, do you mean  logo?\n<https://knowledge.HubSpot.com/branding/edit-your-logo-favicon-and-brand-colors>"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcel Pirnay",
+      "poster_handle": "pirnay.m"
+    },
+    "time_stamp": "2024-03-20 09:33:27",
+    "text": "Hello, I would like to access variables from a global module in others modules in my templates.\n\nIn this global modules, I’m getting value from a HubDB row like this:\n```{% set formation_date_text =  module.hubdbrow_field.columns.date_text %}```\nIn another module, I want to display this variable like this:\n```{{ formation_date_text }}```\nThis in not working. What is the process to make this happening ?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-03-20 11:12:15"
+      },
+      {
+        "time_stamp": "2024-03-21 03:26:27"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Alberto Zordan",
+      "poster_handle": "alberto.zordan"
+    },
+    "time_stamp": "2024-03-20 11:12:15",
+    "text": "You'll want to inspect the `all_widgets` field from the Developer Info (you can access it via the HubSpot sprocket at the top right corner of the page).\nThere you'll find all the modules listed in that page, read the `custom_widget_name` prop of the module you're interested in and then you can get its object like this:\n```{{ all_widgets | selectattr('custom_widget_name','equalto','name_of_your_module') | tojson }}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Roger Flynn",
+      "poster_handle": "roger477"
+    },
+    "time_stamp": "2024-03-20 11:12:27",
+    "text": "I am struggling with plus_time filter. I am trying to take a field on our deal object: `template_data.quote.associated_objects.deal.contract_start_date` and add a year: `CONTRACTSTART|plus_time(1, \"years\")` but it just returns the `CONTRACTSTART` value - not the value + 1 year. Any ideas?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-03-20 11:17:36"
+      },
+      {
+        "time_stamp": "2024-03-20 11:32:43"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Alberto Zordan",
+      "poster_handle": "alberto.zordan"
+    },
+    "time_stamp": "2024-03-20 11:17:36",
+    "text": "Make sure the date field you're trying to modify is a datetime object.\nOther than that I don't know what could be the issue..."
+  },
+  {
+    "poster": {
+      "poster_name": "Roger Flynn",
+      "poster_handle": "roger477"
+    },
+    "time_stamp": "2024-03-20 11:32:43",
+    "text": "thanks Alberto, it is a date picker as the HubSpot field and I am also setting it as a dateformat in hubl"
+  },
+  {
+    "poster": {
+      "poster_name": "Pankaj Sharma",
+      "poster_handle": "pankaj.sharma346"
+    },
+    "time_stamp": "2024-03-20 14:28:12",
+    "text": "Hi Everyone,\n\nI have created a table using HubDB. But it's not updating the value in the Custom Module that I have created. I have checked the api and everything working fine there. Can anyone tell me what are the issues?\n\nHere is the code I am using to get table data:\n\n{% for row in hubdb_table_rows(dynamic_page_hubdb_table_id, 'all_topics=Customer Stories') %}\n\n                &lt;div class=\"resources_col boxres box_topic all_to_pic all_indus_show res_tech_{{ row.tags_resources.id }}  all_indus_{{row.all_industries.id}}\"&gt;\n                   {% if row.image.url %}\n                    &lt;a href=\"{{row.link}}\"&gt;\n                      &lt;img src=\"{{ row.image.url }}\" width=\"500\" {% if row.image.width &gt; row.image.height %}class=\"landscape\" {% endif %}  alt=\"{{ row.name }} Headshot\"&gt;\n                    &lt;/a&gt;\n                    {% endif %}\n                  &lt;div class=\"locate\"&gt;\n                    &lt;div class=\"l-date\"&gt;\n                      &lt;span&gt;{{ row.tags_resources.name }}&lt;/span&gt;\n                      &lt;h4 class=\"name_search\"&gt;{{row.name}}&lt;/h4&gt;\n                    &lt;/div&gt;\n                    &lt;div class=\"l-date date_published_press\"&gt;\n                      &lt;span&gt;Date&lt;/span&gt;\n                      &lt;div class=\"date-published\"&gt;\n                        {{ row.date|datetimeformat('d/M/yyyy') }}\n                      &lt;/div&gt;\n                    &lt;/div&gt;\n                    &lt;div class=\"reg-btn-list\"&gt;\n                      &lt;a href=\"{{row.link}}\"&gt;Read More &lt;span&gt;&lt;img alt=\"arrow\" src=\"<https://www.flosum.com/hubfs/arrow-red.png>\"&gt;&lt;/span&gt;&lt;/a&gt;\n                    &lt;/div&gt;\n                  &lt;/div&gt;\n                &lt;/div&gt;\n                {% endfor %}"
+  }
+]

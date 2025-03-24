@@ -1,0 +1,77 @@
+[
+  {
+    "poster": {
+      "poster_name": "Lukas Kahwe Smith",
+      "poster_handle": "lukas.smith"
+    },
+    "time_stamp": "2023-01-09 04:16:29",
+    "edited": {
+      "time_stamp": "2023-01-09 05:08:50"
+    },
+    "text": "I am trying to use the HubSpot v3 API via PHP to find companies by domain. I am using similar code to find contacts by email and there the same code works flawlessly. but for companies search it seems to ignore the filter on the `domain` property as it just returns all companies. any reason why it is ignoring the `domain` filter?\n\n```$property = 'domain';\n$value = 'witty.works';\n$properties = [$property];\n\n$api = Factory::createWithAccessToken(config('HubSpot.access_token'));\n$api = $api-&gt;crm()-&gt;companies();\n\n$filter = new Filter();\n$filter\n    -&gt;setOperator('EQ')\n    -&gt;setPropertyName($property)\n    -&gt;setValue($value);\n\n$filterGroup = new FilterGroup();\n$filterGroup-&gt;setFilters([$filter]);\n\n$searchRequest = new PublicObjectSearchRequest();\n$searchRequest-&gt;setFilterGroups([$filterGroup]);\n\nif (!empty($properties)) {\n    $searchRequest-&gt;setProperties($properties);\n}\n\n// @var CollectionResponseWithTotalSimplePublicObject $results\n$results = $api-&gt;searchApi()-&gt;doSearch($searchRequest);\nforeach ($results-&gt;getResults() as $result) {\n    dump($result['properties']['domain']);\n}\ndd($results-&gt;getTotal());```",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-01-09 05:32:44"
+      },
+      {
+        "time_stamp": "2023-01-09 06:12:05"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Kahwe Smith",
+      "poster_handle": "lukas.smith"
+    },
+    "time_stamp": "2023-01-09 05:32:44",
+    "text": "seems to work via CURL\n```curl --request POST \\\n  --url <https://api.hubapi.com/crm/v3/objects/companies/search> \\\n  --header 'authorization: Bearer YOUR_ACCESS_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\n  \"filterGroups\": [\n    {\n      \"filters\": [\n        {\n          \"value\": \"witty.works\",\n          \"propertyName\": \"domain\",\n          \"operator\": \"EQ\"\n        }\n      ]\n    }\n  ],\n  \"properties\": [\n    \"domain\"\n  ]\n}'```"
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Kahwe Smith",
+      "poster_handle": "lukas.smith"
+    },
+    "time_stamp": "2023-01-09 06:12:05",
+    "text": "ah nevermind .. found the issue .. it is with the use statements which are typed by contact vs. company and I was using the contact classes for companies"
+  },
+  {
+    "poster": {
+      "poster_name": "Walther Jarness",
+      "poster_handle": "walther"
+    },
+    "time_stamp": "2023-01-09 11:27:51",
+    "text": "Hi! I am using a bot that collects leads (companies and information about them) and puts it in an excel file. I want the data in the excel file to continously update HubSpots records and properties. Is this possible through API?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-01-09 12:21:23"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-01-09 12:21:23",
+    "text": "Solved this over DM"
+  },
+  {
+    "poster": {
+      "poster_name": "Nancy Olewnik",
+      "poster_handle": "nancy"
+    },
+    "time_stamp": "2023-01-09 14:18:08",
+    "text": "Hi all - Any developers out there looking for some side work? I have a client who uses Firebase for the app and Webflow for the website. Early stage start-up that will be launching in the coming months. We need a simple HubSpot API connection. Although a basic setup, looking for someone with specific HubSpot API experience. THANKS!",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-01-10 01:47:35"
+      }
+    ]
+  }
+]

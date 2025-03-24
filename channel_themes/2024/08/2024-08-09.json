@@ -1,0 +1,29 @@
+[
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2024-08-09 01:17:26",
+    "text": "Hey <@UBNBAAQSH> - unfortunately the \"icon\" function is not supported in the theme fields. If you're thinking about something like the favicon - this should be set in the brand settings.\n\nIf you want to add icons (or other things) on a global level you can\n• create a custom module - if it should be used seperately\n• create a variables file(basically an HTML or CSS file), put your information in, and load the file into every file you want to use the information in this specific module/template\n• create choice fields and put the URL/SVG code(something many don't know) or CSS values as a value"
+  },
+  {
+    "poster": {
+      "poster_name": "Elise Ferguson",
+      "poster_handle": "elise.ferguson"
+    },
+    "time_stamp": "2024-08-09 07:37:15",
+    "text": "Thanks, I was hoping to add an icon field for those little chevron type additions to buttons/links to keep them consistent and let the user choose in one place.  Will have to go with just a set list they can choose from :)"
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2024-08-09 07:53:40",
+    "edited": {
+      "time_stamp": "2024-08-09 07:57:01"
+    },
+    "text": "I see.\nyeah for icons like that I'd go with a something custom. For choosing between left-right I'm doing it like this:\n```{\n                        \"name\": \"icon_position\",\n                        \"label\": \"Icon position\",\n                        \"required\": false,\n                        \"locked\": false,\n                        \"display\": \"radio\",\n                        \"inline_help_text\": \"\",\n                        \"help_text\": \"\",\n                        \"choices\": [\n                            [\"left\", \"Left\"],\n                            [\"right\", \"Right\"]\n                        ],\n                        \"type\": \"choice\",\n                        \"placeholder\": \"\",\n                        \"default\": \"right\"\n                    },```\nand in the module.html like this(it's a macro I'm loading into the module.html)\n```{% macro button(icon_name, icon_position, icon_size, label, aria_label, link, new_tab, rel, class) %}\n    <a href=\"{{ link }}\" class=\"{{ class }} button\" {% if new_tab %}target=\"_blank\"{% endif %}{% if rel %} rel=\"{{ rel }}\"{% endif %}>\n        {% unless icon_name == \"\" %}\n            {% if icon_position == \"left\" %}\n                {{ btn_icon(icon_name, icon_size, icon_position) }}\n                <span class=\"btn-label\">{{ label }}\n                    {{ sr_label(aria_label) }}\n                </span>\n            {% elif icon_position == \"right\" %}\n                <span class=\"btn-label\">{{ label }}\n                    {{ sr_label(aria_label) }}\n                </span>\n                {{ btn_icon(icon_name, icon_size, icon_position) }}\n            {% endif %}\n        {% else %}\n            {{ label }}\n            {{ sr_label(aria_label) }}\n        {% endunless %}\n    </a>\n{% endmacro %}```\nIf you want to use CSS only you could modify the module.html to:\n```<a href=\"{{ module.button_link.url.href }}\" class=\"some-class icon-{{ theme.buttons.icon_position }}\">\n<span class=\"btn-label\">{{ module.button_label }}</span>\n<span class=\"btn-icon\">ICON</span>\n</a>```\nand write it like this in the CSS\n```a.some-class{\ndisplay:inline-flex;\n}\n\na.some-class.icon-left{\nflex-direction:row-reversed\n}\n\na.some-class.icon-right{ {# this one is optional #}\nflex-direction: row\n}```"
+  }
+]

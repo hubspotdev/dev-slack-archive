@@ -1,0 +1,45 @@
+[
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2025-02-24 10:02:57",
+    "text": "`hubdb_table_rows` has a limit of 10 calls per page, is it by the time you reach 10 that it stops working?\n<https://developers.HubSpot.com/docs/reference/cms/hubl/functions#hubdb_table_rows>\n\nYou may have to get all your information int a variable and then loop through it multiple times or use the `|selectattr()` filter to filter the information"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2025-02-24 10:06:19",
+    "edited": {
+      "time_stamp": "2025-02-24 10:06:58"
+    },
+    "text": "Just realised the documentation on selectattr is awful, hopefully this gives you a headstart\n```{% set table_data = hubdb_table_rows(db) %}\n//FOR LOOPS AND STUFF\n  {% set this_table_data = table_data|selectattr('grade', 'EQ', grd_match) %}\n  {% for row in this_table_data %}\n....```"
+  },
+  {
+    "poster": {
+      "poster_name": "Terry McMillan",
+      "poster_handle": "tmcmillan877"
+    },
+    "time_stamp": "2025-02-24 10:13:54",
+    "text": "Thanks Matt! Makes sense now. There are 3 grades and 8 categories which exceeds the limit of 10 calls per page. That would explain why the last category doesn't display. I will look into your suggestions of using table_data and selectattr and rework my code."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2025-02-24 10:19:00",
+    "text": "You should just be able to add the first line to the top\n\nthen replace\n```{% for row in hubdb_table_rows(db, 'grade=' + grd_match ) %}```\nwith\n```{% set this_table_data = table_data|selectattr('grade', 'equalto', grd_match) %}\n{% for row in this_table_data %}```\nI’m not 100% sure on the selectattr but think it should work"
+  },
+  {
+    "poster": {
+      "poster_name": "Terry McMillan",
+      "poster_handle": "tmcmillan877"
+    },
+    "time_stamp": "2025-02-24 10:26:57",
+    "text": "Thanks for the code suggestions. Points me in the right direction on how to change the code to get under the 10 call limit. I'll do some tests and see if I can get it working. I'll post an update after my testing. Also, thanks again on the education of the 10 call limit. It hadn't even occurred to me that would be a possible cause of the issue."
+  }
+]

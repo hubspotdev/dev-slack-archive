@@ -1,0 +1,169 @@
+[
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2023-12-19 03:18:01",
+    "edited": {
+      "time_stamp": "2023-12-19 03:18:29"
+    },
+    "text": "Sorry guys, completely missed this channel.\nI found the same issue this morning, and it’s a new version of the HubSpot-cli that causes it. You can temporarily change the package to `@HubSpot/cli@5.0.2` to circumvent the issue until a fix has been released.\n<https://HubSpotdev.slack.com/archives/CLJJXGTC0/p1702980487750759>\n<https://github.com/HubSpot/HubSpot-cli/issues/970>\n<@U05UUKBBC1M>, <@U04U855KXEK>",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-12-19 12:10:27"
+      },
+      {
+        "time_stamp": "2024-02-04 08:53:43"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "James H",
+      "poster_handle": "jim834"
+    },
+    "time_stamp": "2023-12-19 03:21:17",
+    "edited": {
+      "time_stamp": "2023-12-19 03:22:22"
+    },
+    "text": "<@UCBDLK6SU> Thanks, but the HubSpot-cms-deploy-action is hardcoded to @latest isn't it? I've forked it to my own repo, updated the cli version there, and then used that in my GitHub action as a workaround."
+  },
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2023-12-19 03:26:19",
+    "edited": {
+      "time_stamp": "2023-12-19 03:26:23"
+    },
+    "text": "<@U05UUKBBC1M> Yes, that’s true!\nI don’t use the action, since we’re in Azure DevOps, so I wasn’t aware of this. I digged a little, and can’t find a way to override the underlying version of HubSpot-cli.\nSo you basically have to do exactly what you did, with the fork, until a fix has been released."
+  },
+  {
+    "poster": {
+      "poster_name": "Murali G",
+      "poster_handle": "murali236"
+    },
+    "time_stamp": "2023-12-19 03:50:27",
+    "text": "Where should we update this 5.0.2 in our yml file <@UCBDLK6SU>?\nMy YML looks like this\n\n```name: Project Live\non:\n  push:\n    branches:\n    - kf-master\njobs:\n  deploy:\n    runs-on: ubuntu-latest\n    steps:\n      - name: Checkout\n        uses: actions/checkout@v2.3.3\n      - name: Kissflow Files Deploy Action\n        uses: HubSpot/HubSpot-cms-deploy-action@v1.5\n        with:\n          src_dir: '\"Kissflow Website - 2022\"'\n          dest_dir: '\"Kissflow Website - 2022\"'\n          portal_id: ${{ secrets.HubSpot_live_portal_id }}\n          personal_access_key: XXXXXXXXXX\n      - name: Call Webhook\n        run: |\n          curl -X POST \\\n            -H \"Content-Type: application/json\" \\\n            -d '{\n              \"environment\": \"<http://kissflow.com|kissflow.com>\"\n            }' \\\n            ```",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-12-19 04:08:12"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Hemanth Naik",
+      "poster_handle": "hemanth.naik"
+    },
+    "time_stamp": "2023-12-19 03:50:48",
+    "text": "Hi All,\nI have created an OAuth app and trying to verify my domain. I'm using aws route 53. I have added txt record in dns settings, but the DNS is not getting verified. Can anyone confirm if HubSpot supports Route 53 or not?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2023-12-19 04:08:12",
+    "text": "You can’t do this. The `latest` version is coded in the `HubSpot-cms-deploy-action`. So you’ll either have to wait, or do your own fork of the action and change it, like <https://HubSpotdev.slack.com/archives/CCQ7H31D5/p1702981277889699>"
+  },
+  {
+    "poster": {
+      "poster_name": "Branden Rodgers",
+      "poster_handle": "brodgers"
+    },
+    "time_stamp": "2023-12-19 09:57:30",
+    "text": "Thanks everyone for reporting this so quickly. We are rolling out a new library that will replace <https://github.com/HubSpot/cli-lib/tree/main|cli-lib>, and ran into an issue with dependencies. Apologies for the inconvenience. We just released a fix for this in version 5.1.1. Let me know if you're still seeing issues with it."
+  },
+  {
+    "text": "Hi! I'm looking for a way to access the featured image in my blog template - the one used for open graph settings, not what's set IN the content - THIS one --&gt;",
+    "time_stamp": "2023-12-19 11:17:30",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-12-19 11:18:14"
+      },
+      {
+        "time_stamp": "2023-12-19 12:08:34"
+      },
+      {
+        "time_stamp": "2023-12-19 12:09:21"
+      },
+      {
+        "time_stamp": "2023-12-19 12:09:28"
+      },
+      {
+        "time_stamp": "2023-12-19 12:13:11"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Tourné Torres",
+      "poster_handle": "tourne.torres"
+    },
+    "time_stamp": "2023-12-19 11:18:14",
+    "text": "I'm trying to pull this into the index page for when the blog doesn't actually contain a featured image in the content."
+  },
+  {
+    "poster": {
+      "poster_name": "Nich Mueller",
+      "poster_handle": "nich"
+    },
+    "time_stamp": "2023-12-19 12:08:34",
+    "text": "Hi Tourné, are you looking for `{{ content.featured_image }}` ? In a listing page for each post content in the loop, you should be able to access featured_image with dot notation <https://developers.HubSpot.com/docs/cms/hubl/variables#blog-variables>"
+  },
+  {
+    "poster": {
+      "poster_name": "Tourné Torres",
+      "poster_handle": "tourne.torres"
+    },
+    "time_stamp": "2023-12-19 12:09:21",
+    "text": "No - I am looking for the opengraph image"
+  },
+  {
+    "poster": {
+      "poster_name": "Tourné Torres",
+      "poster_handle": "tourne.torres"
+    },
+    "time_stamp": "2023-12-19 12:09:28",
+    "text": "not the one set IN the content"
+  },
+  {
+    "poster": {
+      "poster_name": "Robbie Boyd",
+      "poster_handle": "robbie.boyd"
+    },
+    "time_stamp": "2023-12-19 12:10:27",
+    "edited": {
+      "time_stamp": "2023-12-19 12:10:56"
+    },
+    "text": "seems they have fixed it as per <https://github.com/HubSpot/HubSpot-cli/issues/970#issuecomment-1863130607>\n\nMy deployments are working again <@U05UUKBBC1M> <@U03KN3RS2NT>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nich Mueller",
+      "poster_handle": "nich"
+    },
+    "time_stamp": "2023-12-19 12:13:11",
+    "edited": {
+      "time_stamp": "2023-12-19 12:14:10"
+    },
+    "text": "It looks like those meta tags with an OG image override would have to be added to the post template manually by some means: <https://community.HubSpot.com/t5/CMS-Development/Usage-of-OpenGraph-image-metatags-in-HubSpot/m-p/182904>\n\nThe way I would normally do that is with a static module added to the blog post template, where OG image can be specified\n\nIf there is a static module on the post template where you can set opengraph image, then you could <https://developers.HubSpot.com/docs/cms/building-blocks/modules/export-to-template-context#:~:text=we%20would%20use-,content.widgets.custom_blog_link.body.value,-.%20While%20the%20widget_data|access in the listing template> with something like: `content.widgets.custom_blog_link.body.value`"
+  },
+  {
+    "poster": {
+      "poster_name": "Manas Purohit",
+      "poster_handle": "manas.purohit"
+    },
+    "time_stamp": "2023-12-19 22:38:22",
+    "text": "Hello developers,\n\nI've created HubSpot app and connected it to my web application. When I create HubSpot ticket, attachments inside it aren't shown.\n\nSometimes in some accounts attachments are visible but sometimes not, WHY SO?\n\nPLEASE ANSWER, AS THIS ISSUE IS FROM HubSpot SIDE !!!"
+  }
+]

@@ -1,0 +1,176 @@
+[
+  {
+    "poster": {
+      "poster_name": "Cristóbal Parraguez",
+      "poster_handle": "cparraguez"
+    },
+    "time_stamp": "2023-09-29 08:51:35",
+    "text": "Would process.env.secretname work to get the secret? it wasn't working for me to get the mapbox_access_token in the example code. I ended up hardcoding the token. Maybe it should be adjusted to process.env[\"secretname\"]?"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Devenney",
+      "poster_handle": "edevenney"
+    },
+    "time_stamp": "2023-09-29 10:12:25",
+    "text": "hey all, happy Friday! thanks for flagging this, and apologies for jumping in a little late. I’ve added the import snippet to the top of each of the three main sections, so you should now see that in the in-app docs as well as the ones on the public site.\n\nin terms of adding the snippet to the top of each code sample, I’d want to make sure that makes sense across the board before starting on that work. it begs the broader question of: what’s the most useful code we can include for each component? if we’re going to update each of these code samples, I’d love to have a better understanding how how folks are currently using them and/or what the ideal might be.\n\nfor example, is it helpful that we currently surround the component code with the other function code? or would it be more helpful for copy/paste to just be showing the component itself?\n\ne.g. this for each component\n```const Extension = () =&gt; {\n  return (\n    &lt;CrmDataHighlight\n      properties={[\n        'createdate',\n        'lifecyclestage',\n        'hs_num_open_deals',\n        'hs_num_child_companies',\n      ]}\n    /&gt;\n  );\n};```\nvs. this\n``` &lt;CrmDataHighlight\n   properties={[\n    'createdate',\n    'lifecyclestage',\n    'hs_num_open_deals',\n    'hs_num_child_companies',\n    ]}\n   /&gt;\n  );\n};```\nanyway, just thinking out loud as the early afternoon coffee kicks in :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Knobling",
+      "poster_handle": "lukas.knobling"
+    },
+    "time_stamp": "2023-09-29 10:36:26",
+    "text": "Hi everyone ...short question, can I have within an app more than one serverless function? and how do i access the second serverless function?",
+    "reply_count": 10,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-09-29 10:36:39"
+      },
+      {
+        "time_stamp": "2023-09-29 10:37:09"
+      },
+      {
+        "time_stamp": "2023-09-29 10:37:42"
+      },
+      {
+        "time_stamp": "2023-09-29 10:38:02"
+      },
+      {
+        "time_stamp": "2023-09-29 10:43:50"
+      },
+      {
+        "time_stamp": "2023-09-29 10:46:17"
+      },
+      {
+        "time_stamp": "2023-09-29 10:46:25"
+      },
+      {
+        "time_stamp": "2023-09-29 10:46:31"
+      },
+      {
+        "time_stamp": "2023-09-29 10:48:25"
+      },
+      {
+        "time_stamp": "2023-09-29 10:56:31"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-09-29 10:36:39",
+    "text": "Yep you can"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-09-29 10:37:09",
+    "text": "Your serverless.json file will look like this:\n\n{\n  \"runtime\": \"nodejs18.x\",\n  \"version\": \"1.0\",\n  \"appFunctions\": {\n    \"updateProperties\": {\n      \"file\": \"update-function.js\",\n      \"secrets\": []\n    },\n    \"getPropertyTypes\": {\n      \"file\": \"get-function.js\",\n      \"secrets\": []\n    }\n  }\n}"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-09-29 10:37:42",
+    "text": "So I have 2 functions get and update, and you access either of them just like you would normally but you just swap out the names"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-09-29 10:38:02",
+    "text": "And you have 2 .js files in your .functions folder"
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Knobling",
+      "poster_handle": "lukas.knobling"
+    },
+    "time_stamp": "2023-09-29 10:43:50",
+    "text": "okay yes that was what I also did but inside my frontend I don't know how to handle this because as I know I do HubSpot.extend like here\n\n```HubSpot.extend(({ context, runServerlessFunction, actions}) =&gt; (\n    &lt;Extension\n        context={context}\n        runServerless={runServerlessFunction}\n        sendAlert={actions.addAlert}\n    /&gt;\n));\n\nconst Extension = ({ runServerless }) =&gt; {\n...\n}\n\nand inside Extension I would like to use both severless functions, but I don't know how :see_no_evil:```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-09-29 10:46:17",
+    "text": "So it would look like this:\n\n runServerless({ name: \"updateProperties\" })"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-09-29 10:46:25",
+    "text": "updateProperties is the name of the function"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-09-29 10:46:31",
+    "text": "(defined in .json)"
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Knobling",
+      "poster_handle": "lukas.knobling"
+    },
+    "time_stamp": "2023-09-29 10:48:25",
+    "text": "ah okay I understand I do not have to do the HubSpot.extend or somthink like this for every serverless function okay that was stupid from my side :see_no_evil:\n\nthank you very much!!! have a nice day!"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-09-29 10:56:31",
+    "text": "of course man, let me know if you run into any other issues"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-09-29 12:35:12",
+    "edited": {
+      "time_stamp": "2023-09-29 12:35:23"
+    },
+    "text": "Does anyone else think that it's annoying that the DateInput component doesn't use epoc milliseconds like every other date value in HubSpot?",
+    "reply_count": 3,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-09-29 14:34:24"
+      },
+      {
+        "time_stamp": "2023-09-29 14:40:43"
+      },
+      {
+        "time_stamp": "2024-02-02 08:14:58"
+      }
+    ]
+  },
+  {
+    "text": "you tell me ........",
+    "time_stamp": "2023-09-29 14:34:24"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-09-29 14:40:43",
+    "text": "LOL"
+  }
+]

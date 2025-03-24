@@ -1,0 +1,74 @@
+[
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2024-06-11 12:35:32",
+    "text": "That’s the boilerplate styling for the “Date Picker” calendar that’s used for Date fields. It seems that HS still ships some amount of styling to ensure bare-minimum functionality for date fields."
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2024-06-11 12:50:04",
+    "text": "Ya figured that, but there’s other layout styles with high level of specificity that’s affecting layout that I’d rather not have :triumph: "
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2024-06-11 13:01:20",
+    "text": "Ah, yeah — I’m familiar with the layout styles, they’ve definitely caused me no small amount of pain in the past.\n\nIt’s a bit of a hack, but I typically override them by using `:not(#null)` on the most ancestral selector to raise the specificity of my rules. A selector like `.hs-form:not(#null) label` will have higher priority than any of the styles bundled with the form without having to fuss around with stuff like stacking class selectors on specific elements to get _just_ the right specificity level."
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2024-06-11 13:03:19",
+    "text": "Ok, so sounds like getting rid of them isn't possible, so hack it is. Thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2024-06-11 13:04:55",
+    "text": "I really just want to reset a lot of their styles to `intial`"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2024-06-11 13:09:54",
+    "text": "Depending on your stomach for it, there is a way that you could pretty reliably strip those style tags. You could use the v2.js API that I <https://HubSpotdev.slack.com/archives/C22PU4LV8/p1716593870505099?thread_ts=1698279161.744019&amp;cid=C22PU4LV8|referenced in this thread> to initialize the forms, then add some logic into the `onFormReady` callback to strip the style tags.\n\nOtherwise, yeah, I’d recommend just using a hack to elevate your selector priority."
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2024-06-11 13:14:08",
+    "text": "Ok, i'll look into the js API! Thanks"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2024-06-11 13:16:55",
+    "text": "I’ll warn that I don’t _believe_ there’s any public documentation on that particular API, as I don’t think it’s intended to be used in this way. There’ll likely be some roadbumps and elbow grease in getting it running correctly."
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2024-06-11 13:22:59",
+    "text": "lol.\n\nSeeing some methods:\n```onBeforeFormInit: ()=&gt;{}\n            ,\n            onFormFailedValidation: ()=&gt;{}\n            ,\n            onBeforeValidationInit: ()=&gt;{}\n            ,\n            onReady: ()=&gt;{}\n            ,\n            onFormReady: ()=&gt;{}\n            ,\n            onBeforeFormSubmit: ()=&gt;{}\n            ,\n            onFormSubmit: ()=&gt;{}\n            ,\n            onFormSubmitted: ()=&gt;{}\n            ,\n            onFormDefinitionFetchSuccess: ()=&gt;{}\n            ,\n            onFormDefinitionFetchError: ()=&gt;{}\n            ,\n            onRenderError: ()=&gt;{}\n            ,\n            onFormError: ()=&gt;{}\n            ,\n            onAnalyticEvent: ()=&gt;{}\n            ,\n            getExtraMetaDataBeforeSubmit: ()=&gt;{}```\nI'll poke around, thanks for the headsup"
+  }
+]

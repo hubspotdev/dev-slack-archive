@@ -1,0 +1,306 @@
+[
+  {
+    "poster": {
+      "poster_name": "Stacey Thomas",
+      "poster_handle": "stacey.thomas"
+    },
+    "time_stamp": "2024-05-14 02:46:47",
+    "edited": {
+      "time_stamp": "2024-05-14 02:47:04"
+    },
+    "text": "Thanks Bashir! Do you know what layout properties can make it look like the CrmPropertyList? I'm using Flex and Box, but it has an outline that I don't particularly like.\n```<Flex\n  direction={'row'}\n  justify={'between'}\n  wrap={'wrap'}\n  gap={'medium'}\n>\n<Box style={{ minWidth: '20%', maxWidth: '25%' }}>\n<tile> tile contents </tile>\n</box>```\nI also can't figure out how to get the dates to display in dd/mm/yyyy format in the same way they do in native properties."
+  },
+  {
+    "poster": {
+      "poster_name": "Stacey Thomas",
+      "poster_handle": "stacey.thomas"
+    },
+    "time_stamp": "2024-05-14 06:13:53",
+    "text": "Nevermind - i got rid of the tile tags and those tile borders disappeared. Just can't figure out the date issue (i've been looking at it for too long and numbers have lost all meaning to me). I know it displays as unix milliseconds but i cannot get a function to reformat that to dd/mm/yyyy format, that works... :disappointed: just returning 'invalid date'"
+  },
+  {
+    "poster": {
+      "poster_name": "Bashir",
+      "poster_handle": "ayo_idan"
+    },
+    "time_stamp": "2024-05-14 07:33:50",
+    "edited": {
+      "time_stamp": "2024-05-14 07:34:38"
+    },
+    "text": "Can you share what value you’re getting? \n\nTry this\n\nLet a = parseInt(milliseconds)\nLet a_date = (new Date(a)).toLocaleDateString()\n\nconsole.log(a_date)\n\nYou are likely getting ‘invalid date’ cos milliseconds comes out as a string. It should be an int value"
+  },
+  {
+    "poster": {
+      "poster_name": "Stacey Thomas",
+      "poster_handle": "stacey.thomas"
+    },
+    "time_stamp": "2024-05-14 07:46:55",
+    "text": "You are so right... I didn't even notice it was showing as a string. Hadn't even considered that!\n\nThat is working for me now. I got lost in the loop of formatting dates and it not working, and didn't go back to basics... Thankyou so much for your help!"
+  },
+  {
+    "poster": {
+      "poster_name": "Bashir",
+      "poster_handle": "ayo_idan"
+    },
+    "time_stamp": "2024-05-14 08:10:52",
+    "text": "It’s nothing. Been in similar case. One just forgets the basics. "
+  },
+  {
+    "poster": {
+      "poster_name": "Ana Paula Ferreira Pessoa",
+      "poster_handle": "ana.pessoa"
+    },
+    "time_stamp": "2024-05-14 08:16:51",
+    "text": "Hey, everyone. I need to set up the HubSpot API in an attempt to track deploys within our platform. I need to know if anyone knows if this is actually solved with the API, if it also logs the event with the date.",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-14 08:20:46"
+      },
+      {
+        "time_stamp": "2024-05-14 08:28:20"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-05-14 08:20:46",
+    "text": "What do you mean \"track deploys\"?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ana Paula Ferreira Pessoa",
+      "poster_handle": "ana.pessoa"
+    },
+    "time_stamp": "2024-05-14 08:28:20",
+    "text": "we're a infra tech business. And the deploy is when a client \"buy\"a server"
+  },
+  {
+    "poster": {
+      "poster_name": "Wayne Hamadi",
+      "poster_handle": "wayne583"
+    },
+    "time_stamp": "2024-05-14 09:55:38",
+    "text": "Folks how to filter contact by import id? I want to do something like this...\nSEE THREAD",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-14 09:55:43"
+      },
+      {
+        "time_stamp": "2024-05-14 09:56:05"
+      },
+      {
+        "time_stamp": "2024-05-14 10:08:31"
+      },
+      {
+        "time_stamp": "2024-05-14 10:32:35"
+      },
+      {
+        "time_stamp": "2024-05-14 10:32:57"
+      },
+      {
+        "time_stamp": "2024-05-14 10:40:46"
+      },
+      {
+        "time_stamp": "2024-05-14 10:40:56"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Wayne Hamadi",
+      "poster_handle": "wayne583"
+    },
+    "time_stamp": "2024-05-14 09:55:43",
+    "text": "```export async function main(importId: string, staticListId: string, HubSpot_access_token: string) {\n  // Step 1: Retrieve contacts imported with the given import ID using the search endpoint\n  let contactVids: string[] = [];\n  let after = 0;\n  let hasMore = true;\n\n  while (hasMore) {\n    const contactsResponse = await fetch(`<https://api.hubapi.com/crm/v3/objects/contacts/search>`, {\n      method: 'POST',\n      headers: {\n        'Authorization': `Bearer ${HubSpot_access_token}`,\n        'Content-Type': 'application/json',\n      },\n      body: JSON.stringify({\n        filterGroups: [\n          {\n            filters: [\n              {\n                propertyName: 'hs_import_id',\n                operator: 'EQ',\n                value: importId,\n              },\n            ],\n          },\n        ],\n        properties: ['hs_object_id'],\n        limit: 100,\n        after: after,\n      }),\n    });\n\n\n    const contactsData = await contactsResponse.json();\n    return contactsData\n    const batchVids = contactsData.results.map((contact: any) =&gt; contact.id);\n    contactVids = [...contactVids, ...batchVids];\n\n    hasMore = contactsData.paging?.next?.after !== undefined;\n    after = contactsData.paging?.next?.after || 0;\n  }\n\n  // Step 2: Add the retrieved contacts to the static list\n  const addContactsResponse = await fetch(`<https://api.hubapi.com/contacts/v1/lists/${staticListId}/add>`, {\n    method: 'POST',\n    headers: {\n      'Authorization': `Bearer ${HubSpot_access_token}`,\n      'Content-Type': 'application/json',\n    },\n    body: JSON.stringify({\n      vids: contactVids,\n    }),\n  });\n\n  if (addContactsResponse.ok) {\n    console.log('Contacts added to the static list successfully.');\n  } else {\n    console.error('Failed to add contacts to the static list.');\n  }\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Wayne Hamadi",
+      "poster_handle": "wayne583"
+    },
+    "time_stamp": "2024-05-14 09:56:05",
+    "text": "{\n                propertyName: 'hs_import_id',\n                operator: 'EQ',\n                value: importId,\n              },\n\nthat's the piece I need to fix"
+  },
+  {
+    "poster": {
+      "poster_name": "Omar Tanti",
+      "poster_handle": "omar.tanti"
+    },
+    "time_stamp": "2024-05-14 10:08:31",
+    "text": "is \"hs_import_id\" a property you created <@U0740EGBYTS>?\n\nHave you tried with HubSpotClient as per below?\n\n```// Import the HubSpot NodeJS Client Library - this will allow us to use the HubSpot APIs\nconst HubSpot = require('@HubSpot/api-client');\n\n// Instantiate a new HubSpot API client using the HAPI key (secret)\nconst HubSpotClient = new HubSpot.Client({\n    accessToken: HubSpot_access_token\n});\n\n// Step 1: Retrieve contacts imported with the given import ID using the search endpoint\nlet contactVids: string[] = [];\nlet after = 0;\nlet hasMore = true;\n\nwhile (hasMore) {\n    const PublicObjectSearchRequest = {\n        limit: 100,\n        after: after,\n        properties: [\"hs_object_id\"],\n        filterGroups: [{\n            \"filters\": [{\n                propertyName: 'hs_import_id',\n                operator: 'EQ',\n                value: importId,\n            }]\n        }]\n    };\n\n    const contactsResponse = await HubSpotClient.crm.contacts.searchApi.doSearch(PublicObjectSearchRequest);\n\n    const contactsData = await contactsResponse.json();\n    return contactsData\n    const batchVids = contactsData.results.map((contact: any) =&gt; contact.id);\n    contactVids = [...contactVids, ...batchVids];\n\n    hasMore = contactsData.paging?.next?.after !== undefined;\n    after = contactsData.paging?.next?.after || 0;\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "James Kupczak",
+      "poster_handle": "jimmykup"
+    },
+    "time_stamp": "2024-05-14 10:20:00",
+    "text": "Anyone know what the limits are around the Marketing Single Send API?\n\nEither total calls per day? Or maybe there’s a limit per hour or per 10 seconds?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-05-14 10:31:35"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "James Kupczak",
+      "poster_handle": "jimmykup"
+    },
+    "time_stamp": "2024-05-14 10:31:35",
+    "text": "And follow-up question, would it be able to send 215,000 emails within a span of 10-15 minutes? Or if not, what would it look like if we attempted to do that."
+  },
+  {
+    "poster": {
+      "poster_name": "Wayne Hamadi",
+      "poster_handle": "wayne583"
+    },
+    "time_stamp": "2024-05-14 10:32:35",
+    "text": "<@U06KP87QUJW> no, I am looking for the correct property"
+  },
+  {
+    "poster": {
+      "poster_name": "Wayne Hamadi",
+      "poster_handle": "wayne583"
+    },
+    "time_stamp": "2024-05-14 10:32:57",
+    "text": "generally speaking, the question is: how do I filter a contact by an import id, name or source"
+  },
+  {
+    "poster": {
+      "poster_name": "Wayne Hamadi",
+      "poster_handle": "wayne583"
+    },
+    "time_stamp": "2024-05-14 10:40:46",
+    "text": "I just found it:\nRecord Source Detail 1\n\nDamn what a pain to find haha"
+  },
+  {
+    "poster": {
+      "poster_name": "Wayne Hamadi",
+      "poster_handle": "wayne583"
+    },
+    "time_stamp": "2024-05-14 10:40:56",
+    "text": "hs_object_source_detail_1"
+  },
+  {
+    "text": "I found another parameter in the companies - list endpoint, which is called \"associations\" so in theory i can retrieve the company associations while getting the company information. So I won't need to make more requests then i am already making.\n\nHaven't tested this yet, but it seems like it would work.\n\nLeaving the documentation here and a screnshot of the parameter if anyone else has this problem:\n\n<https://developers.HubSpot.com/docs/api/crm/companies>",
+    "time_stamp": "2024-05-14 11:37:36"
+  },
+  {
+    "poster": {
+      "poster_name": "yony gomez",
+      "poster_handle": "yony.gomezdelossantos"
+    },
+    "time_stamp": "2024-05-14 11:42:01",
+    "text": "hello guys, Hope you are all good, I notice an issue in the site search, is related to the url parameters, is not taking the properties to filter the results, any idea if there is a workaround?\n<https://www.endava.com/_hcms/v3/site-search/search?portalId=...&amp;type=BLOG_POST&amp;[…]tle&amp;property=title&amp;property=description&amp;analytics=true&amp;q=blog|https://.../_hcms/v3/site-search/search?portalId=...&amp;type=BLOG_POST&amp;[…]tle&amp;property=title&amp;property=description&amp;analytics=true&amp;q=blog>"
+  },
+  {
+    "poster": {
+      "poster_name": "Blazej Kacikowski",
+      "poster_handle": "blazej.kacikowski"
+    },
+    "time_stamp": "2024-05-14 15:31:55",
+    "text": "Hello Guys! I'm a new to the HubSpot (we are migrating the solution from different crm). I can see that contacts can have a file type field/property. Is it possible to upload a file to that property using api?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-05-15 00:06:36"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Juan Felipe Aranguen",
+      "poster_handle": "juan.felipe"
+    },
+    "time_stamp": "2024-05-14 15:39:42",
+    "text": "Hmm in HubSpot side I only saw you could set the auto parsing when going inside a contact’s `mobilephone` field. You’ll see a small message that asks you if you wish to activate the parsing, but I’m not sure if that one acts as a global default tho.\nPerhaps <@U06KP87QUJW> would know? :thinking_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Juan Felipe Aranguen",
+      "poster_handle": "juan.felipe"
+    },
+    "time_stamp": "2024-05-14 15:40:24",
+    "edited": {
+      "time_stamp": "2024-05-14 15:40:34"
+    },
+    "text": "Appreciate the suggestion <@U05CJMDM467> ! Could you please point me to that one endpoint in the docs? Would like to test it out"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2024-05-14 15:48:57",
+    "text": "Check out the contacts API overview tab and do a search for idproperty"
+  },
+  {
+    "poster": {
+      "poster_name": "Alejandro Rivera",
+      "poster_handle": "arivera655"
+    },
+    "time_stamp": "2024-05-14 16:11:35",
+    "text": "Hi everyone, someone know how can i detect the dynamic <http://api.hubapi.com|api.hubapi.com> ip's? it's for my firewall white list"
+  },
+  {
+    "poster": {
+      "poster_name": "Molly Webb",
+      "poster_handle": "molly695"
+    },
+    "time_stamp": "2024-05-14 19:53:44",
+    "text": "What's the best way to avoid hitting the second API rate limit while doing data cleanup via custom code? I have thousands of Leads to delete and will obv hit the rate limit if I just enroll them all at once.",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-15 02:06:13"
+      },
+      {
+        "time_stamp": "2024-05-15 10:55:51"
+      },
+      {
+        "time_stamp": "2024-05-15 11:05:39"
+      },
+      {
+        "time_stamp": "2024-05-15 11:07:20"
+      },
+      {
+        "time_stamp": "2024-05-15 16:02:34"
+      },
+      {
+        "time_stamp": "2024-05-15 16:53:21"
+      }
+    ]
+  },
+  {
+    "text": "<@U070ATQAMJP> for \"My question is: Is there any *free* workflow I could use that would help us remove the blank spaces from the numbers?\" you can create a scheduled workflow to go through all the contacts where mobilephone is known, then add a \"Format Data\" block with `cut([mobilephone], \" \")` and save it in the Mobile Phone Property itself. Ideally before running it in bulk test it on a couple of contacts manually.\n\nNot sure if I understood your query and if that is what you are after.",
+    "time_stamp": "2024-05-14 23:31:59"
+  },
+  {
+    "poster": {
+      "poster_name": "Omar Tanti",
+      "poster_handle": "omar.tanti"
+    },
+    "time_stamp": "2024-05-15 00:03:01",
+    "text": "did you manage <@U0739NRJQPJ>?"
+  },
+  {
+    "poster": {
+      "poster_name": "Omar Tanti",
+      "poster_handle": "omar.tanti"
+    },
+    "time_stamp": "2024-05-15 00:06:36",
+    "text": "<@U074492PBFA> yes you can. You can either add it as attachment to the object or in file property - I think this thread can guide you in the right direction <https://HubSpotdev.slack.com/archives/C2YHAHB6K/p1715082195953869?thread_ts=1715081011.466039&amp;cid=C2YHAHB6K>"
+  }
+]

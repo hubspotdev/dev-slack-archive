@@ -1,0 +1,128 @@
+[
+  {
+    "text": "Hi all,\n\nI've observed an unusual number of failures in our custom code executions today. Before proceeding further, I wanted to confirm if anyone else is experiencing similar issues.\nCould you please check if HubSpot's custom code functionalities are functioning as expected on your end?",
+    "time_stamp": "2024-03-04 01:28:48",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-03-04 05:15:09"
+      },
+      {
+        "time_stamp": "2024-03-05 06:49:28"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-03-04 05:15:09",
+    "text": "I would say these are not failures, they will retry as it states.  I see this when too many instances fire at once and the system can only handle so many at a time.  Monitor this and you should see it fire again and complete normally."
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2024-03-04 06:45:41",
+    "text": "gotcha. Since you’re using the custom code action, wouldn’t you output a boolean value and then use the Value equals branch on that? why does it need to be known/unknown?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jessiemar Pedrosa",
+      "poster_handle": "jessiemarpedrosa"
+    },
+    "time_stamp": "2024-03-04 06:53:53",
+    "text": "In our use case, so that we can distinguish if there's a value on the calculation or if it returns null or empty. Then if its known, go to branch A then move to next workflow and use the variable from previous custom code. If it goes to Branch B on the other hand, just continue whatever the next flow would be."
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2024-03-04 06:58:00",
+    "text": "yup, I get that, but is that known/unknown an output of the custom code action?"
+  },
+  {
+    "poster": {
+      "poster_name": "Stacey Thomas",
+      "poster_handle": "stacey.thomas"
+    },
+    "time_stamp": "2024-03-04 07:46:15",
+    "text": "To add to this - I have the same (which is what i've based my workaround on) where i have custom code with an output which is known or unknown, and then branches based on that.\nFor a really basic example, custom code runs, and it could throw back an error. If the error is known, it creates a task for the user (with said error message) so they can manually intervene. If there is no error, it continues along the branch to the next custom code action and so on.\n\nI also use it for value equals for some outputs where i retrieve a specific set of values and branch based on that, but I frequently use known/unknown with the funky workaround, would LOVE if known/unknown became a usable built in feature."
+  },
+  {
+    "poster": {
+      "poster_name": "Stacey Thomas",
+      "poster_handle": "stacey.thomas"
+    },
+    "time_stamp": "2024-03-04 07:55:54",
+    "text": "<@U06CE7Q3T4Z> Not sure if its helpful but you could also try adding a conditional statement to the values you want to send?\n```  \"endDate\": (nextSundayDate &amp;&amp; nextSundayDate.trim() !== \"\") ? nextSundayDate.substring(0, 10) : (enddate &amp;&amp; enddate.trim() !== \"\" ? enddate.substring(0, 10) : noenddate),```\nThis is a semi-ridiculous snippet i'm using where I am ensuring the date i send is always a sunday. Prior to this I am checking if the existing date is a Sunday, if not i'm creating a new value which is the next sunday, with a backup value of noenddate if both of those values are blank for any reason... then i trim it to the first 10 characters from it as it's saved as a string... and it goes through the options of if the first value is blank, move on to the next as a fallback... and so on.\nSo it goes through my variables as nextSundayDate &gt; enddate &gt; noenddate\n\nYou could always do that if you know what to do based on your value being unknown... if you know what fallback value to use? :)"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2024-03-04 08:06:21",
+    "text": "Since we’re all talking about code here, I want to explain why I’m still pushing for people (in this case) to move away from known/unknown outputs:\n\nThink of the Value equals branch as a SWITCH statement (because it is). For what you’re describing, we’d want the Value equals branch to behave like this:\n\n```switch(myKnownOrUnknownVariable) {\n  case null:\n  case undefined:\n     break;\n  case 'someValue':\n     // do a thing\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2024-03-04 08:07:12",
+    "text": "But my point is that your error variable could be a boolean instead. I would recommend having your CCA set a variable at the top:\n```let error = false```\nAnd in the case that there is an error, set it to `true`.\n\nThen youll always be able to branch on whether there was an error or not."
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2024-03-04 08:08:30",
+    "text": "The problem with known/unknown is that those concepts differ from language to language and it would be difficult to get all the use cases correct. Should an empty string `''` be “unknown”? Should the value `0`? These are all falsey values in some languages, and not in others.\n\nThe safer approach continues to be a boolean output, in the case that this is possible of course"
+  },
+  {
+    "poster": {
+      "poster_name": "Stacey Thomas",
+      "poster_handle": "stacey.thomas"
+    },
+    "time_stamp": "2024-03-04 08:10:06",
+    "text": "Love that <@UHVJJUWFN>, not sure why I hadn't thought of handling the known/unknown problem within the customcode to set a variable to true/false that I can then branch on value from!"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2024-03-04 08:11:59",
+    "text": ":smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2024-03-04 08:12:04",
+    "text": "I’m glad that’s helpful"
+  },
+  {
+    "poster": {
+      "poster_name": "Zac Pollett",
+      "poster_handle": "zacpollett"
+    },
+    "time_stamp": "2024-03-04 14:29:35",
+    "text": "Hello! I’m new to development and trying to create a workflow that conditionally populates a property based on the `changeSource` of the Lifecycle Stage property. Pulling that information into a workflow seems to be possible with some combination of Webhooks, Private Apps, and/or Custom-Coded Actions, but I can’t seem to fit the pieces together. Curious how some of y’all might approach this. Any recommendations on a good starting point, order of operations, or resources to look into would be a massive help! Thank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Jessiemar Pedrosa",
+      "poster_handle": "jessiemarpedrosa"
+    },
+    "time_stamp": "2024-03-04 17:19:51",
+    "text": "Hi <@U06H94JKK1P> and <@UHVJJUWFN>, I think your inputs are very well explained. And I think I understand now how Zeke explains it. And the suggestions you had above is literally the alternative that I can use for. Thanks for giving me that the switch-case idea. :+1:"
+  }
+]

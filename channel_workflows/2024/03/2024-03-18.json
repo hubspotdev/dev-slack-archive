@@ -1,0 +1,186 @@
+[
+  {
+    "poster": {
+      "poster_name": "Johan L",
+      "poster_handle": "bnjl"
+    },
+    "time_stamp": "2024-03-18 03:08:16",
+    "text": "How exact should delays in execution of workflow actions be? I see now that a few tickets in a workflow have been waiting for six hours for execution while it should have been cleared to execute three hours ago. Is it to be expected that it varies several hours?",
+    "reply_count": 3,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-03-18 04:13:47"
+      },
+      {
+        "time_stamp": "2024-03-18 06:13:14"
+      },
+      {
+        "time_stamp": "2024-03-18 07:50:37"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Parameshwaran Palanisamy",
+      "poster_handle": "parameshwaran.palanis"
+    },
+    "time_stamp": "2024-03-18 03:14:25",
+    "text": "Hi Team,\n\nNeed some input here, I am trying associate deals with contacts using custom code\n\nconst HubSpot = require('@HubSpot/api-client');\nexports.main = (event, callback) =&gt; {\n\n  const HubSpotClient = new HubSpot.Client({\n    accessToken: process.env.Oauth\n  });\n\n  // Retrive the currently enrolled contacts \"Record ID\" property\n\n const properties = [\"main_salesforce_contact\", \"hs_object_id\"];\n   HubSpotClient.crm.deals.basicApi.getById(event.object.objectId,[\"hs_object_id\"])\n\n    .then(results =&gt; {\n\t// Get data from the results and store in variables\n\n\tlet RecordIDValue = results.body.properties.hs_object_id;\n\n        //console.log(\"SEARCH TERM: \" + RecordIDValueValue); // - FOR DEBUG\n\t// Create search criteria\n\tconst filter = { propertyName: 'hs_object_id', operator: 'EQ', value: RecordIDValue }\n\tconst filterGroup = { filters:\t[filter] \t}\n        const sort = JSON.stringify({ propertyName: 'hs_object_id', direction: 'DESCENDING'})\n\n        const limit = 1\n        const after = 0\n\n        const searchCriteria = {\n          filterGroups: [filterGroup],\n          sorts: [sort],\n          properties,\n          limit,\n          after\n        }\n\n      // Search the CRM for Deals matching \"RecordIDValue\" variable defined earlier\n      HubSpotClient.crm.contacts.searchApi.doSearch(searchCriteria).then(searchDealResponse =&gt; {\n\n         //console.log(\"RESULTS: \" + searchDealResponse.body.total); // - FOR DEBUG\n\n         // If total equals 0 no results found\n         if(searchDealResponse.body.total == 0){ console.log(\"DEAL WITH Record ID \" + RecordIDValue  + \"NOT FOUND.\") // - FOR DEBUG\n\n         }else{ // MATCH FOUND - ASSOCIATE DEAL TO CONTACT\n           // console.log(\"DEAL \" + MRecord ID + \" FOUND: ASSOCIATE RECORDS\"); // - FOR DEBUG\n          //Associate Deal with Contact\n           HubSpotClient.crm.deals.associationsApi.create(searchDealResponse.body.results[0].id,'contacts', event.object.objectId,'hs_object_id');\n         }\n      });\n\n      callback({outputFields: {}});\n\n    })\n    .catch(err =&gt; {\n      console.error(err);\n    });\n}\n\n\n\n\n\nfor some reason I am getting this below which I couldn't fix-\n```ERROR\tTypeError: Cannot read properties of undefined (reading 'properties')\n    at /var/task/file.js:16:35\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)```\nAnyone can shed some light on this?",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-03-18 06:56:39"
+      },
+      {
+        "time_stamp": "2024-03-18 09:17:09"
+      },
+      {
+        "time_stamp": "2024-03-18 09:27:39"
+      },
+      {
+        "time_stamp": "2024-03-19 09:40:59"
+      },
+      {
+        "time_stamp": "2024-03-19 13:11:39"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andrew Smeallie",
+      "poster_handle": "andrew431"
+    },
+    "time_stamp": "2024-03-18 04:13:47",
+    "text": "It should be exact, this is not expected."
+  },
+  {
+    "poster": {
+      "poster_name": "Johan L",
+      "poster_handle": "bnjl"
+    },
+    "time_stamp": "2024-03-18 06:13:14",
+    "text": "Thanks <@U064QG589CY> I'll open a support ticket to get it sorted."
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-03-18 06:56:39",
+    "text": "Try using results.properties.hs_object_id (remove the body part)"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2024-03-18 07:50:37",
+    "text": "not exact, but within a few minutes for sure. A 3 hour delay is either a bug or, more often than not, you’re being throttled for a high number of executions"
+  },
+  {
+    "poster": {
+      "poster_name": "Rens Bekkers",
+      "poster_handle": "rens927"
+    },
+    "time_stamp": "2024-03-18 08:58:33",
+    "text": "Hi Everyone, I have setup a trigger in HubSpot workflows that listens for completed tasks. It happens as a deal based trigger. The trigger works as exptected. However When I try to create actions from the task I cannot add a data source as task. I want to create multiple custom code actions when the task is completed that trigger other API's and workflows. However I cannot know which Task record ID was completed  which  triggered the workflow. Any thoughts from the community?",
+    "reply_count": 12,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-03-18 09:00:23"
+      },
+      {
+        "time_stamp": "2024-03-18 09:02:49"
+      },
+      {
+        "time_stamp": "2024-03-18 09:02:54"
+      },
+      {
+        "time_stamp": "2024-03-18 09:04:42"
+      },
+      {
+        "time_stamp": "2024-03-19 00:48:14"
+      },
+      {
+        "time_stamp": "2024-03-19 01:01:39"
+      },
+      {
+        "time_stamp": "2024-03-19 07:22:24"
+      },
+      {
+        "time_stamp": "2024-03-19 08:31:22"
+      },
+      {
+        "time_stamp": "2024-03-19 08:32:26"
+      },
+      {
+        "time_stamp": "2024-03-19 13:52:28"
+      },
+      {
+        "time_stamp": "2024-03-21 01:41:47"
+      },
+      {
+        "time_stamp": "2024-03-21 18:04:58"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2024-03-18 09:00:23",
+    "text": "Hi Rens, Zeke here from one of our Workflows engineer teams. While not a solution to your problem today, know that we are adding event data as a data source in the coming months. You should be able to pick up on properties of the “triggered event” using the Data panel in the future"
+  },
+  {
+    "poster": {
+      "poster_name": "Rens Bekkers",
+      "poster_handle": "rens927"
+    },
+    "time_stamp": "2024-03-18 09:02:49",
+    "text": "Hi Zeke, thanks for the quick reply. Is there any clearer ETA of this feature? I would need it relatively soon. So will be looking for workarounds otherwise."
+  },
+  {
+    "poster": {
+      "poster_name": "Rens Bekkers",
+      "poster_handle": "rens927"
+    },
+    "time_stamp": "2024-03-18 09:02:54",
+    "text": "Any idea for a workaround?"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2024-03-18 09:04:42",
+    "text": "Yeah I hear you. I would look for a workaround for now as I can’t get you a better timeline than “a few months”. But I can let you know once it’s ready"
+  },
+  {
+    "poster": {
+      "poster_name": "Parameshwaran Palanisamy",
+      "poster_handle": "parameshwaran.palanis"
+    },
+    "time_stamp": "2024-03-18 09:17:09",
+    "text": "<@U01GW2U4WMA> Thank you! it worked."
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-03-18 09:27:39",
+    "text": "Glad to hear!"
+  },
+  {
+    "poster": {
+      "poster_name": "Rens Bekkers",
+      "poster_handle": "rens927"
+    },
+    "time_stamp": "2024-03-19 00:48:14",
+    "text": "Hi Zeke, I have build a workflow with 4 custom codes to find the latest task that was completed and verify if it was actually associated to the deal that was triggered. This seems to work.\n\nNow I run into the problem that I cannot trigger the workflow when the task is completed. Very odd, I have tried many different triggers"
+  }
+]

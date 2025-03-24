@@ -1,0 +1,124 @@
+[
+  {
+    "poster": {
+      "poster_name": "Vitalii Dobroshtan",
+      "poster_handle": "vitaliy.dobroshtan"
+    },
+    "time_stamp": "2023-06-06 02:51:29",
+    "edited": {
+      "time_stamp": "2023-06-06 02:53:35"
+    },
+    "text": "Hi everyone!\nI have spent two days trying to make custom module to work. Need to filter line items by expiration date (send email to customers with the list of line items which are expired or about to expire). cbm_expiration_date is datepicker property . The only progress I could get it to filter everything by quantity ==1 in the if statement as an experiment but that is not exactly what I need… (Attached screenshot is an example of that module where this line {% if line_item.cbm_expiration_date &lt; now() %} were replaced by this one {% if line_item.quantity == 1 %}\n\n<https://drive.google.com/file/d/1463Tk47ILuYe2bSN90NJ4_TFb6dfXIY5/view?usp=sharing>\n```{% set objects = crm_associations(deal.hs_object_id,\"HubSpot_DEFINED\", 19, \"limit=200\" , \n      \"name, hs_url, price, amount, description, quantity, hs_images, cbm_expiration_date\n      \") %} \n&lt;div class='cbm-module order-items'&gt;\n   &lt;table class='items-cbm'&gt;\n    &lt;tbody&gt;\n      {% for line_item in objects.results %}\n       {% if line_item.cbm_expiration_date &lt; now() %}   \n          &lt;tr&gt;\n           \n            &lt;td class='item-product-image'&gt;\n              &lt;img src=\"{{line_item.hs_images}}\" width='130'&gt;\n            &lt;/td&gt;\n            &lt;td class='item-product-name'&gt;\n              {{line_item.name}}\n            &lt;/td&gt;\n            &lt;td class='item-cost'&gt;\n              Qty: {{line_item.quantity | int}}\n            &lt;/td&gt;\n            &lt;td class='item-cost'&gt;\n              {{line_item.cbm_expiration_date}} \n            &lt;/td&gt;\n          &lt;/tr&gt;\n        {% endif %}\n       {% endfor %}\n\n    &lt;/tbody&gt;\n  &lt;/table&gt;\n&lt;/div&gt;```",
+    "reply_count": 7,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-06-06 07:53:07"
+      },
+      {
+        "time_stamp": "2023-06-06 07:59:04"
+      },
+      {
+        "time_stamp": "2023-06-06 08:00:14"
+      },
+      {
+        "time_stamp": "2023-06-06 08:01:49"
+      },
+      {
+        "time_stamp": "2023-06-06 08:02:30"
+      },
+      {
+        "time_stamp": "2023-06-07 07:33:23"
+      },
+      {
+        "time_stamp": "2023-06-07 07:34:18"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "I Made Sariyanta",
+      "poster_handle": "desar.sariyanta"
+    },
+    "time_stamp": "2023-06-06 06:27:03",
+    "text": "Perhaps this has been asked before, but is there a way to create an email module where other module can be inserted?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-06-06 07:27:50"
+      },
+      {
+        "time_stamp": "2023-06-06 08:02:02"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2023-06-06 07:27:50",
+    "text": "no, you can't nest modules sadly"
+  },
+  {
+    "poster": {
+      "poster_name": "Courtney Fantinato",
+      "poster_handle": "courtneyfantinato"
+    },
+    "time_stamp": "2023-06-06 07:53:07",
+    "text": "Is `cbm_expiration_date` a date field in a custom module? Usually the code snippet would be something like `module.cbm_expiration_date`"
+  },
+  {
+    "poster": {
+      "poster_name": "Vitalii Dobroshtan",
+      "poster_handle": "vitaliy.dobroshtan"
+    },
+    "time_stamp": "2023-06-06 07:59:04",
+    "text": "in my case it is line items added to deal so the property name is `line_item.cbm_expiration_date`"
+  },
+  {
+    "poster": {
+      "poster_name": "Courtney Fantinato",
+      "poster_handle": "courtneyfantinato"
+    },
+    "time_stamp": "2023-06-06 08:00:14",
+    "text": "Does `line_item.cbm_expiration_date` spit out a value?"
+  },
+  {
+    "poster": {
+      "poster_name": "Courtney Fantinato",
+      "poster_handle": "courtneyfantinato"
+    },
+    "time_stamp": "2023-06-06 08:01:49",
+    "text": "I also don’t see a `now()` function, but there is `today()`  <https://developers.HubSpot.com/docs/cms/hubl/functions>"
+  },
+  {
+    "poster": {
+      "poster_name": "I Made Sariyanta",
+      "poster_handle": "desar.sariyanta"
+    },
+    "time_stamp": "2023-06-06 08:02:02",
+    "text": "Thanks Federico! Appreciate it!"
+  },
+  {
+    "poster": {
+      "poster_name": "Vitalii Dobroshtan",
+      "poster_handle": "vitaliy.dobroshtan"
+    },
+    "time_stamp": "2023-06-06 08:02:30",
+    "text": "yes, on this screenshot you can see that `line_item.cbm_expiration_date` returns date for two products <https://drive.google.com/file/d/1463Tk47ILuYe2bSN90NJ4_TFb6dfXIY5/view>"
+  },
+  {
+    "text": "An update for anyone that's interested. I was able to use smart rules (if contact is a member of a specific list) to determine what image is shown in the email. However, the only way I can still find to grab a contact property that contains a URL to link the image to was to use hubl in the module backend and it's STILL rendering this hubl in the email editor. The functionality works but it doesn't look great in the email editor due to the rendered hubl.",
+    "time_stamp": "2023-06-06 11:31:25"
+  },
+  {
+    "poster": {
+      "poster_name": "Steven Hambleton",
+      "poster_handle": "steven994"
+    },
+    "time_stamp": "2023-06-06 18:29:10",
+    "text": "I added to the forum -\n\nThings I’d like to see -\n\n• The ability to duplicate a module\n• Create module groups\n• Choose module variants (image left or image right etc)\nLastly, please remove all drag and drop code cruft when sending the email."
+  }
+]

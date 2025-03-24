@@ -1,0 +1,26 @@
+[
+  {
+    "poster": {
+      "poster_name": "Doug Osborne",
+      "poster_handle": "doug.osborne"
+    },
+    "time_stamp": "2020-12-02 08:27:34",
+    "text": "Hey Mark, we’re using React but I think it’s the same answer… standard react props pass your field data into the component strictly as a string and won’t parse it into dom elements. To do that, you have to use React’s `dangerouslySetInnerHTML` which will insert the contents as raw html… I think the Vue equivalent might be `V-html`? Two notes about using this… 1, it has a scary name (in React) for a reason, if you use this in the wrong way (i.e. open it up to user input), it can leave your site susceptible to xss attacks. In your case, piping in field data from a module should be fine. 2, it doesn’t take advantage of React/Vue’s DOM management, so you want to avoid using this for things that are regularly re-rendered."
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2020-12-02 09:02:42",
+    "text": "Hey Doug, thanks for the note. The issue here wasn't _rendering_ the markup from my app's state, but actually feeding the module data as a JSON object into state in the first place (the handlebar syntax there is HubL, not Vue templating, confusing I know lol). I ended up getting around it with a really convoluted `|replace` filter on the module object to remove the `{{cta('example-cta-id')}}` function embedded in the rich text field's value (if present) and replace it with a `&lt;span data-cta=\"example-cta-id\"&gt;&lt;/span&gt;` and then created a method in Vue to essentially rebuild the CTA embed code with the same ID on mount. A good amount of extra work, but ended up getting the job done, and my marketers can still use the CTA embed in rich text."
+  },
+  {
+    "poster": {
+      "poster_name": "Doug Osborne",
+      "poster_handle": "doug.osborne"
+    },
+    "time_stamp": "2020-12-02 09:13:44",
+    "text": "Ahhh, I see! That’s good to know, I will keep your solution in mind because I’m sure we’re also going to run into that soon."
+  }
+]

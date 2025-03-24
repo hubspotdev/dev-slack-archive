@@ -1,0 +1,35 @@
+[
+  {
+    "poster": {
+      "poster_name": "Tuomas Malinen",
+      "poster_handle": "tuomas.malinen"
+    },
+    "time_stamp": "2021-02-19 00:52:14",
+    "text": "Hello,\n\nI would like to filter two different results from HubDB table, either from location to destination (ex. Finland -&gt; Sweden) or location to all destinations (Finland -&gt; to all countries listed in hubdb select column). At the moment i can create them working separately, but dont´t know how to combine logic.\n\nMy code at the moment:\n\n&lt;div&gt;\n\t&lt;form id=“form_id” method=“get”&gt;\n\t\t\t&lt;div&gt;\n\t\t\t\t&lt;h4&gt;Location&lt;/h4&gt;\n\t\t\t\t\t&lt;select name=“warehouse_location” form=“form_id”&gt;\n\t\t\t\t\t\t\t{% set warehouses = hubdb_table_column(3415518, “warehouse_location”).options %}\n\t\t\t\t\t\t\t{% for choice in warehouses %}\n\t\t\t\t\t\t\t\t\t{% set warehouse_list = warehouse_list~choice.id|list %}\n\t\t\t\t\t\t\t\t\t{% if choice.id == request.query_dict.warehouse_location %}\n\t\t\t\t\t\t\t\t\t\t\t&lt;option selected=“selected” value=“{{ choice.id }}“&gt;{{ choice.name }}&lt;/option&gt;\n\t\t\t\t\t\t\t\t\t{% else %}\n\t\t\t\t\t\t\t\t\t\t\t&lt;option value=“{{ choice.id }}“&gt;{{ choice.name }}&lt;/option&gt;\n\t\t\t\t\t\t\t\t\t{% endif %}\n\t\t\t\t\t\t\t{% endfor %}\n\t\t\t\t\t&lt;/select&gt;\n\t\t\t&lt;/div&gt;\n\t\t  &lt;div&gt;\n\t\t\t\t&lt;h4&gt;Destination&lt;/h4&gt;\n\t\t\t\t\t&lt;select name=“destination_country” form=“form_id”&gt;\n\t\t\t\t\t\t\t&lt;option value=“show-all-destinations”&gt;Show All destinations&lt;/option&gt;\n\t\t\t\t\t\t\t{% set destination = hubdb_table_column(3415518, “destination_country”).options %}\n\t\t\t\t\t\t\t{% for choice in destination %}\n\t\t\t\t\t\t\t\t\t{% set destination_list = destination_list~choice.id|list %}\n\t\t\t\t\t\t\t\t\t{% if choice.id == request.query_dict.destination_country %}\n\t\t\t\t\t\t\t\t\t\t\t&lt;option selected=“selected” value=“{{ choice.id }}“&gt;{{ choice.name }}&lt;/option&gt;\n\t\t\t\t\t\t\t\t\t{% else %}\n\t\t\t\t\t\t\t\t\t\t\t&lt;option value=“{{ choice.id }}“&gt;{{ choice.name }}&lt;/option&gt;\n\t\t\t\t\t\t\t\t\t{% endif %}\n\t\t\t\t\t\t\t{% endfor %}\n\t\t\t\t\t&lt;/select&gt;\n\t\t\t&lt;/div&gt;\n\t\t  &lt;input id=“submit-button” type=“submit” value=“submit”&gt;\n\t&lt;/form&gt;\n&lt;/div&gt;\n\n{% set queryparam = “” %}\n\n{% if request.query_dict.warehouse_location in [“1”, “2\", “3”, “4\", “5”, “6\", “7”] and request.query_dict.destination_country ==“show-all-destinations” %}\n    {% set queryparam = queryparam ~ “&amp;warehouse_location=“~request.query_dict.warehouse_location|urlencode %}\n{% endif %}\n{% if request.query_dict.warehouse_location in [“1”, “2\", “3”, “4\", “5”, “6\", “7”] and request.query_dict.destination_country !=“” %}\n    {% set queryparam = queryparam ~ “&amp;warehouse_location=“~request.query_dict.warehouse_location|urlencode~“&amp;destination_country=“~request.query_dict.destination_country|urlencode %}\n{% endif %}\n\nand sandbox page: <http://9433952.hs-sites.com/>\n\nThanks for your help!",
+    "reply_count": 7,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2021-02-19 02:28:38"
+      },
+      {
+        "time_stamp": "2021-02-19 02:30:10"
+      },
+      {
+        "time_stamp": "2021-02-19 02:54:54"
+      },
+      {
+        "time_stamp": "2021-02-19 03:40:24"
+      },
+      {
+        "time_stamp": "2021-02-19 03:58:26"
+      },
+      {
+        "time_stamp": "2021-02-24 03:23:04"
+      },
+      {
+        "time_stamp": "2021-02-24 03:49:39"
+      }
+    ]
+  }
+]

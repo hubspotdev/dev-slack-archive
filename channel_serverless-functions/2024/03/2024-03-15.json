@@ -1,0 +1,128 @@
+[
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-15 09:52:10",
+    "text": "is there an \"optimized\" way to know how many posts exist for any given tag? I can imagine looping through a filtered graphql query but that seems slow/inefficient",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-03-15 10:03:41"
+      },
+      {
+        "time_stamp": "2024-03-15 10:04:18"
+      },
+      {
+        "time_stamp": "2024-03-15 10:04:32"
+      },
+      {
+        "time_stamp": "2024-03-15 10:07:11"
+      },
+      {
+        "time_stamp": "2024-03-15 10:09:01"
+      },
+      {
+        "time_stamp": "2024-03-15 10:11:24"
+      },
+      {
+        "time_stamp": "2024-03-15 10:11:45"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "George Grigorita",
+      "poster_handle": "george.grigorita"
+    },
+    "time_stamp": "2024-03-15 10:03:41",
+    "text": "I think you can get the total posts count by doing a query on the post_collection and total tag. Something like this:\n\n```query MyQuery {\n  BLOG {\n    post_collection(filter: {tag_ids__in: \"12345\"}) {\n      total\n    }\n  }\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-15 10:04:18",
+    "text": "<@U02CS2Q38QG> can I \"loop\" that query if I need to get all tags?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-15 10:04:32",
+    "text": "I know I can from the serverless function side, but is that a reasonable thing to do?"
+  },
+  {
+    "poster": {
+      "poster_name": "George Grigorita",
+      "poster_handle": "george.grigorita"
+    },
+    "time_stamp": "2024-03-15 10:07:11",
+    "text": "I think you could do it for a few tags? It's pretty \"costly\". In my case this was the output just for one tag:\n`\"query_complexity\": { \"max_points\": 30000, \"used_points\": 900 }`"
+  },
+  {
+    "poster": {
+      "poster_name": "George Grigorita",
+      "poster_handle": "george.grigorita"
+    },
+    "time_stamp": "2024-03-15 10:09:01",
+    "edited": {
+      "time_stamp": "2024-03-15 10:09:20"
+    },
+    "text": "I used to get all the data I needed from the GraphQL query and then do the sorting and filtering I needed. Probably not the most efficient way."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-15 10:11:24",
+    "text": "yea, I can imagine that, in my case it would be something like querying for all posts, and then locally grouping into tags and counting..."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-15 10:11:45",
+    "text": "I'm surprised HubSpot doesn't provide a count through the tags API"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-15 10:34:25",
+    "text": "does HubSpot support cron jobs in any way?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-03-15 13:09:16"
+      },
+      {
+        "time_stamp": "2024-03-15 13:44:34"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Stone",
+      "poster_handle": "chris.stone603"
+    },
+    "time_stamp": "2024-03-15 13:09:16",
+    "text": "I'm not aware of a way that it's supported directly, but I have implemented a hacky workaround using workflows. If that sounds like it might work for you, I'll add more detail"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-03-15 13:44:34",
+    "text": "<@U055N3S0WPP> I spoke with Jon McLaren who was able to provide me with some details/examples. Thank you though. I really appreciate the reply"
+  }
+]

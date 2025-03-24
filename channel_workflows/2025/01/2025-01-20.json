@@ -1,0 +1,118 @@
+[
+  {
+    "poster": {
+      "poster_name": "Alex Woodbridge",
+      "poster_handle": "alex.woodbridge"
+    },
+    "time_stamp": "2025-01-20 02:53:52",
+    "text": "Ahhh okay, in that case this script will work:\n\n```exports.main = async (event, callback) =&gt; {\n  const now = new Date();\n  const maxDays = 30;\n  const randomDays = Math.floor(Math.random() * maxDays) + 1;\n  const futureDate = new Date(now.getTime() + randomDays * 24 * 60 * 60 * 1000);\n  \n  callback({\n    outputFields: {\n      randomDate: futureDate.getTime()\n    }\n  });\n};```\nThis converts the date into milliseconds and should then be applicable to a datetime property"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryo Nishizaki",
+      "poster_handle": "rn.383.b2fz"
+    },
+    "time_stamp": "2025-01-20 03:09:54",
+    "edited": {
+      "time_stamp": "2025-01-20 03:12:37"
+    },
+    "text": "I want to add the related LEAD of DEAL with a custom code.\nWhat is different about the following codes?\nassociations.lead?\n```deal_update = SimplePublicObjectInput(properties={\"associations.lead\": 555})\nHubSpot.crm.objects.basic_api.update(\"deals\", 123, deal_update)```",
+    "reply_count": 3,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2025-01-20 03:21:57"
+      },
+      {
+        "time_stamp": "2025-01-20 07:40:15"
+      },
+      {
+        "time_stamp": "2025-01-20 07:57:50"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ryo Nishizaki",
+      "poster_handle": "rn.383.b2fz"
+    },
+    "time_stamp": "2025-01-20 03:21:57",
+    "text": "It appears that \"associations.lead\" is wrong, since the update succeeds when other properties are specified.\nIf I want to add a LEAD associated with a DEAL, what property name should I use?"
+  },
+  {
+    "poster": {
+      "poster_name": "Aviv Kasuto",
+      "poster_handle": "aviv211"
+    },
+    "time_stamp": "2025-01-20 04:39:47",
+    "edited": {
+      "time_stamp": "2025-01-20 05:16:56"
+    },
+    "text": "heres too"
+  },
+  {
+    "text": "Anyone else experiencing issues with empty body for webhook actions with \"Include all contact properties\"?",
+    "time_stamp": "2025-01-20 04:51:59",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-01-20 06:20:30"
+      },
+      {
+        "time_stamp": "2025-01-20 06:29:20"
+      },
+      {
+        "time_stamp": "2025-01-20 07:22:21"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2025-01-20 06:20:30",
+    "text": "YES, this is a major issues, a lot of our integrations stopped working"
+  },
+  {
+    "poster": {
+      "poster_name": "Aviv Kasuto",
+      "poster_handle": "aviv211"
+    },
+    "time_stamp": "2025-01-20 06:29:20",
+    "text": "Alerted the support team an hour ago, they are working on it"
+  },
+  {
+    "poster": {
+      "poster_name": "Aviv Kasuto",
+      "poster_handle": "aviv211"
+    },
+    "time_stamp": "2025-01-20 07:22:21",
+    "text": "seems like its now working when the webhook is being called by the execution, but not when testing manually"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryo Nishizaki",
+      "poster_handle": "rn.383.b2fz"
+    },
+    "time_stamp": "2025-01-20 07:40:15",
+    "text": "```create_association(HubSpot, deal_id, latest_lead_id, \"deal\", \"lead\")\n        \ndef create_association(HubSpot, object_id1, object_id2, object_type1, object_type2):\n    batch_input_public_association = BatchInputPublicAssociation(inputs=[{\n        \"from\": { \"id\": object_id1 },\n        \"to\": { \"id\": object_id2 },\n        \"type\": \"deal_to_lead\"\n    }])\n    api_response = HubSpot.crm.associations.batch_api.create(\n        from_object_type=object_type1,\n        to_object_type=object_type2,\n        batch_input_public_association=batch_input_public_association\n    )\n    return api_response```\nThat 「\"type\": \"deal_to_lead\"」 is wrong."
+  },
+  {
+    "poster": {
+      "poster_name": "Ryo Nishizaki",
+      "poster_handle": "rn.383.b2fz"
+    },
+    "time_stamp": "2025-01-20 07:57:50",
+    "text": "`'message': 'deal_to_lead is not a valid association type between '`"
+  },
+  {
+    "poster": {
+      "poster_name": "Camilo Castellanos",
+      "poster_handle": "camilo"
+    },
+    "time_stamp": "2025-01-20 11:49:45",
+    "text": "Hola buenas tardes, alguien me puede ayudar referente a una duda que tengo.\n\nResulta que estoy utilizando la propiedad acumulativa donde me funciono hasta cierto requerimiento el cual necesitaba sumar el valor de los deal que estuvieron en la etapa aprobado hasta hay funciona perfectamente, pero ahora requiero agregarle otra variable la cual es la etapa y otra propiedad que tengo que es personalizada como el tipo de venta, pero al momento de realizarlo la propiedad acumulativa no permite generar doble condición.\n\nLa pregunta es si por medio de WF puedo utilizar algún nodo que me sume propiedades. el ejemplo es el siguiente\n\nse tiene 3 deal los cuales se ven así:\n\nDeal 1\nEtapa: Aprobado\nTipo de venta: Carne\nValor carne $500\nTipo de venta: Pollo\nValor pollo $300\n\nDeal 2\nEtapa: Aprobado\nTipo de venta: Carne\nValor carne $300\n\nDeal 2\nEtapa: Aprobado\nTipo de venta: Pollo\nValor Pollo $300\n\nEn contacto se creara un campo el cual sumara estos valores en este ejemplo debe pasar lo siguiente:\n\nValor total carne: $500 + $300 = $800 (este es el valor que debe salir) si llega otro deal con otro valor debe seguir sumando\n\nValor total pollo: $300 + $300 = $600 (este es el valor que debe salir) si llega otro deal con otro valor debe seguir sumando\n\nNo se si alguien me puede despejar la duda si existe algún nodo en el WF que me pueda hacer esto o si tendría que realizar por medio de código personalizado en un  JS?"
+  }
+]

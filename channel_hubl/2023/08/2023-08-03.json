@@ -1,0 +1,90 @@
+[
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2023-08-03 02:20:04",
+    "text": "Finally solved this, if anyone comes across this. The code had double &amp;&amp;-signs which was tripping up the parsing engine. Strangely enough it only did so in one of the queries, not the rest. Once I replaced them with single &amp;'s, the whole thing worked :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Sullivan",
+      "poster_handle": "ssullivan"
+    },
+    "time_stamp": "2023-08-03 06:54:16",
+    "text": "Anyone else having issues where HubL statements and expressions with filters just aren't working at all in their email templates? Expressions on their own display just fine, but a simple if statement just won't work. Same for if I have an expression with a `|round(2)` filter, for example. It's just a blank output, but the expression on its own displays just fine.",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-08-03 07:13:31"
+      },
+      {
+        "time_stamp": "2023-08-03 11:24:01"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Sullivan",
+      "poster_handle": "ssullivan"
+    },
+    "time_stamp": "2023-08-03 07:13:31",
+    "edited": {
+      "time_stamp": "2023-08-03 07:14:48"
+    },
+    "text": "Actually, just figured it out. We needed to enable the module for programmable email. Once we enabled that, and saved what was needed, everything came through correctly. Edit: <https://knowledge.HubSpot.com/email/create-programmable-emails>"
+  },
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2023-08-03 07:22:43",
+    "edited": {
+      "time_stamp": "2023-08-03 07:23:31"
+    },
+    "text": "<@U01QVR44MEY> necrobump here... does this work for all of those operators? I have a query like so:\n\n{% set machine_brands = contact.machine_array_test|split(',') %}\n{% set querydt = \"*brand__in*=\" ~ machine_brands|trim|escape ~ \"&amp;limit=1\" %}\n{% set machines = crm_objects(\"machine\", querydt, \"bunch-of-fields-here\") %}\n\nmachine_array_test is a multiselect contact property. So I want to basically fetch all machines where the brand matches one of the brands on the contact property. I tried the above but it doesn't seem to work."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-08-03 07:43:27",
+    "text": "Woah strange, Nice work <@U05BC4T17T4>"
+  },
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2023-08-03 07:46:24",
+    "text": "Specifically here's some more code and the pprint it returns:\n\n```{% set machine_brands = contact.machine_array_test|split(',') %}\n{% set machine_brands_string = machine_brands|join(',') %}\n{% set querydt = \"brand__in=\" ~ machine_brands_string|trim|escape ~ \"&amp;limit=1\" %}\n\n{{ querydt|pprint }} {# Print the query string for debugging #}\n\n{% set machines = crm_objects(\"machine\", querydt, \"winback_machine,model,brand,discount,discounted_price,machine_name,machine_status,capacity,hours,catalog_price,engine_type,year_of_manufacture,usp_1,usp_2,usp_3,image_url__for_marketing_email_,machine_url\") %}\n\n{{ machines|pprint }} {# Print the results for debugging #}```\nQueryDT returns: (String: brand__in=Linde,Bugatti,BT&amp;limit=1)\nMachines returns: (CrmObjectList: {hasMore=false, offset=0, results=[], total=0})"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-08-03 08:18:10",
+    "text": "interesting, let me set this same code up later today"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-08-03 11:24:01",
+    "text": "Just a follow-up note, there are some places where the Fully Programmable Emails beta will solve issues of filters and functions not working, but there are some limitations to be aware of.\n\nParticularly, you can’t use filters or functions with personalization tokens (like contact properties). To my knowledge, this is because filters and functions will be processed _before_ the personalization tokens have their values assigned. I believe this is also true for global variables."
+  },
+  {
+    "poster": {
+      "poster_name": "Fillipe Montenegro",
+      "poster_handle": "fillipe"
+    },
+    "time_stamp": "2023-08-03 11:53:44",
+    "text": "Thank you Bradley! I will try that"
+  }
+]

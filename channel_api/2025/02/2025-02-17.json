@@ -1,0 +1,307 @@
+[
+  {
+    "text": "Hey Collin, thanks for the response — the reasoning seems valid.\n\n I just wanted to confirm and ask you to correct me if I'm wrong.\nTo use the Private App authentication mechanism, what I'm doing is creating a public app, adding all the required scopes, then installing it in my (domain-based) account, and subsequently using the access token for the API calls (which aligns more with the Client Credentials-based authentication mentioned in the Private App auth).\nThe issue I encountered, as mentioned in my previous message, is related to the scopes.\nIs this the correct way of using Private App authentication in this case, or is there another approach I should be considering?\ncouldn't find proper docs way of using private app mechanism in this case since in custom channels documentation it says create public app initially (shown in second screenshot)\n<https://developers.HubSpot.com/docs/guides/api/conversations/create-custom-channels#create-a-public-app>\n\nprivate app access token link docs: <https://developers.HubSpot.com/docs/guides/apps/authentication/intro-to-auth#private-app-access-tokens>\n\nThanks in advance!",
+    "time_stamp": "2025-02-17 01:00:30"
+  },
+  {
+    "poster": {
+      "poster_name": "Aritz Bello",
+      "poster_handle": "aritz"
+    },
+    "time_stamp": "2025-02-17 02:11:44",
+    "text": "Thanks for the details <@U037ZPYEGAF>, I wrote the callback by hand because we process it in our client, but in the real response it is written as “BLOCK”, we test and I'll give feedback asap. Thank you all very much :)"
+  },
+  {
+    "poster": {
+      "poster_name": "Nikhil Agrawal",
+      "poster_handle": "nikhil.agrawal"
+    },
+    "time_stamp": "2025-02-17 03:35:00",
+    "text": "Heyy <#C2YHAHB6K|api> :dizzy:\n\nThe HubSpot API is returning the hs_note_body property in HTML format, which is deeply nested and difficult to clean for analysis. This field is critical for our data ingestion process into the data warehouse, and the current HTML format makes it impossible to use effectively without extensive cleaning.\n\nCurrent API Call:\n<https://api.hubapi.com/crm/v3/objects/notes?limit=100&amp;properties=hs_note_body&amp;properties=hs_created_by&amp;properties=hs_created_by_user_id&amp;properties=hs_follow_up_action&amp;properties=hs_object_id&amp;properties=hs_timestamp&amp;properties=HubSpot_owner_id&amp;properties=HubSpot_team_id>\n\nProblem:\nThe hs_note_body field contains HTML tags and nested structures.\nWe do not have the ability to clean this data externally (e.g., using Python or Node.js) before ingestion.\nThe data is clean and readable in the HubSpot UI, but the API returns it in HTML format.\n\nDoes any of you have faced similar issue? And if yes then is there a solution to it ?",
+    "reply_count": 12,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-02-17 07:52:27"
+      },
+      {
+        "time_stamp": "2025-02-17 07:55:50"
+      },
+      {
+        "time_stamp": "2025-02-17 10:45:33"
+      },
+      {
+        "time_stamp": "2025-02-17 10:46:43"
+      },
+      {
+        "time_stamp": "2025-02-17 10:48:16"
+      },
+      {
+        "time_stamp": "2025-02-17 10:48:32"
+      },
+      {
+        "time_stamp": "2025-02-17 10:49:21"
+      },
+      {
+        "time_stamp": "2025-02-17 22:02:08"
+      },
+      {
+        "time_stamp": "2025-02-17 22:02:38"
+      },
+      {
+        "time_stamp": "2025-02-17 22:03:12"
+      },
+      {
+        "time_stamp": "2025-02-17 22:04:02"
+      },
+      {
+        "time_stamp": "2025-02-18 22:19:29"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Aritz Bello",
+      "poster_handle": "aritz"
+    },
+    "time_stamp": "2025-02-17 06:41:14",
+    "edited": {
+      "time_stamp": "2025-02-17 06:42:23"
+    },
+    "text": "Okay, I've been spending some time today and I've managed to send custom error messages through the corresponding endpoint. Regarding the original JSON I have changed a few things, I find the HubSpot documentation a bit confusing about this topic and I miss a complete example so I'll leave mine for anyone who might need it.\n\n`POST` - `automation/v4/actions/{appId}?hapiKey={OUR-HAPI-KEY}`\n```{\n    \"actionUrl\": \"<https://ourapiurl.com/api/workflows/workflowhandler>\",\n    \"published\": true,\n    \"inputFields\": [\n        {\n            \"typeDefinition\": {\n                \"name\": \"prop1\",\n                \"type\": \"string\",\n                \"fieldType\": \"text\",\n                \"options\": [],\n                \"optionsUrl\": null,\n                \"referencedObjectType\": null,\n                \"externalOptions\": false,\n                \"externalOptionsReferenceType\": null\n            },\n            \"supportedValueTypes\": [\n                \"OBJECT_PROPERTY\"\n            ],\n            \"isRequired\": true,\n            \"includeEmptyIfValueAbsent\": false,\n            \"automationFieldType\": null,\n            \"allowedObjectTypes\": null\n        },\n        {\n            \"typeDefinition\": {\n                \"name\": \"prop2\",\n                \"type\": \"string\",\n                \"fieldType\": \"text\",\n                \"options\": [],\n                \"optionsUrl\": null,\n                \"referencedObjectType\": null,\n                \"externalOptions\": false,\n                \"externalOptionsReferenceType\": null\n            },\n            \"supportedValueTypes\": [\n                \"STATIC_VALUE\"\n            ],\n            \"isRequired\": true,\n            \"includeEmptyIfValueAbsent\": false,\n            \"automationFieldType\": null,\n            \"allowedObjectTypes\": null\n        },\n        {\n            \"typeDefinition\": {\n                \"name\": \"prop3\",\n                \"type\": \"string\",\n                \"fieldType\": \"text\",\n                \"options\": [],\n                \"optionsUrl\": null,\n                \"referencedObjectType\": null,\n                \"externalOptions\": false,\n                \"externalOptionsReferenceType\": null\n            },\n            \"supportedValueTypes\": [\n                \"STATIC_VALUE\"\n            ],\n            \"isRequired\": false,\n            \"includeEmptyIfValueAbsent\": false,\n            \"automationFieldType\": null,\n            \"allowedObjectTypes\": null\n        },\n        {\n            \"typeDefinition\": {\n                \"name\": \"prop4\",\n                \"type\": \"string\",\n                \"fieldType\": \"text\",\n                \"options\": [],\n                \"optionsUrl\": null,\n                \"referencedObjectType\": null,\n                \"externalOptions\": false,\n                \"externalOptionsReferenceType\": null\n            },\n            \"supportedValueTypes\": [\n                \"STATIC_VALUE\"\n            ],\n            \"isRequired\": false,\n            \"includeEmptyIfValueAbsent\": false,\n            \"automationFieldType\": null,\n            \"allowedObjectTypes\": null\n        },\n        {\n            \"typeDefinition\": {\n                \"name\": \"prop5\",\n                \"type\": \"string\",\n                \"fieldType\": \"text\",\n                \"options\": [],\n                \"optionsUrl\": null,\n                \"referencedObjectType\": null,\n                \"externalOptions\": false,\n                \"externalOptionsReferenceType\": null\n            },\n            \"supportedValueTypes\": [\n                \"STATIC_VALUE\"\n            ],\n            \"isRequired\": false,\n            \"includeEmptyIfValueAbsent\": false,\n            \"automationFieldType\": null,\n            \"allowedObjectTypes\": null\n        }\n    ],\n    \"objectRequestOptions\": {\n        \"properties\": []\n    },\n    \"labels\": {\n        \"en\": {\n            \"inputFieldLabels\": {\n                \"prop1\": \"prop1 label\",\n                \"prop2\": \"prop2 label\",\n                \"prop3\": \"prop3 label\",\n                \"prop4\": \"prop4 label\",\n                \"prop5\": \"prop5 label\"\n            },\n            \"inputFieldDescriptions\": {\n                \"prop1\": \"prop1 desc\",\n                \"prop2\": \"prop2 desc\",\n                \"prop3\": \"prop3 desc\",\n                \"prop4\": \"prop4 desc\",\n                \"prop5\": \"prop5 desc\"\n            },\n            \"actionName\": \"Custom Workflow Action\",\n            \"actionDescription\": \"Makes super cool things, trust me\",\n            \"actionCardContent\": \"Makes super cool things, trust me\",\n            \"executionRules\": {\n                \"errorOccurred\": \"Unexpected error occurred.\",\n                \"notSupported\": \"Not supported.\"\n            }\n        },\n        \"es\": {\n            \"inputFieldLabels\": {\n                \"prop1\": \"prop1 label\",\n                \"prop2\": \"prop2 label\",\n                \"prop3\": \"prop3 label\",\n                \"prop4\": \"prop4 label\",\n                \"prop5\": \"prop5 label\"\n            },\n            \"inputFieldDescriptions\": {\n                \"prop1\": \"prop1 desc\",\n                \"prop2\": \"prop2 desc\",\n                \"prop3\": \"prop3 desc\",\n                \"prop4\": \"prop4 desc\",\n                \"prop5\": \"prop5 desc\"\n            },\n            \"actionName\": \"Acción Workflow Personalizad\",\n            \"actionDescription\": \"Hace cosas guapísimas, confía en mí\",\n            \"actionCardContent\": \"Hace cosas guapísimas, confía en mí\",\n            \"executionRules\": {\n                \"errorOccurred\": \"Se ha producido un error inesperado.\",\n                \"notSupported\": \"No soportado.\"\n            }\n        }\n    },\n    \"objectTypes\": [\n        \"0-1\",\n        \"0-2\",\n        \"0-3\"\n    ],\n    \"executionRules\": [\n        {\n            \"labelName\": \"errorOccurred\",\n            \"conditions\": {\n                \"errorCode\": \"ERROR_OCCURRED\"\n            }\n        },\n        {\n            \"labelName\": \"notSupported\",\n            \"conditions\": {\n                \"errorCode\": \"NOT_SUPPORTED\"\n            }\n        }\n    ],\n}```\nSo things work as follows:\n• Contact enrolls in the workflow.\n• HubSpot sends a request to our API.\n• We return a callback where we block the request for 20 minutes: \n```{\n    \"outputFields\": {\n        \"hs_execution_state\": \"BLOCK\",\n        \"hs_expiration_duration\": \"PT20M\"\n    }\n}```\n• We save the process in a queue and process it asynchronously.\n• Once the request is processed we return a callback via `POST`  - `<https://api.hubapi.com/automation/v4/actions/callbacks/complete>`\nIf successful we call the endpoint without a body (for the moment), although you can include outputFields.\nIf an error occurs:\n```{\n    \"outputFields\": {\n        \"hs_execution_state\":\"FAIL_CONTINUE\",\n        \"errorCode\":\"NOT_SUPPORTED\"\n    }\n}```\nI hope I haven't left anything out and if so I will be happy to help solve any related questions as much as I can. Thank you all very much :love-parrot:"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2025-02-17 07:52:27",
+    "text": "Interesting problem.  Do you have ops hub?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2025-02-17 07:55:50",
+    "text": "Which data where are you sending it to?"
+  },
+  {
+    "poster": {
+      "poster_name": "Collin Schindler",
+      "poster_handle": "collin_schindler"
+    },
+    "time_stamp": "2025-02-17 08:35:13",
+    "text": "I sent a query to `/crm/v3/properties/line_items` and was able to find these properties:\n```hs_pre_discount_amount - Original amount of the line item in the quote\nhs_discount_percentage - percent discount applied to ONE specific line item in your quote\namount                 - Final price of the line item after discounts are applied.```\nIt doesn't sound like you were looking for a full Quote discount - but for the sake of covering it just in case - Discounts are their own object with their own endpoint. You'll need to query this endpoint `/crm/v3/objects/discounts` to find any of these pieces of data. The associated fields you'll probably look for on these are:\n```hs_label    - The name of the discount or discount code\nhs_value    - The percent discount applied with this label/code.```\nI hope this helps! Good luck!"
+  },
+  {
+    "poster": {
+      "poster_name": "Collin Schindler",
+      "poster_handle": "collin_schindler"
+    },
+    "time_stamp": "2025-02-17 08:49:37",
+    "edited": {
+      "time_stamp": "2025-02-18 13:55:18"
+    },
+    "text": "Okay, if I'm following you correctly, it sounds like you might be mixing and matching authentication methods? HubSpot appears to only allow you to use _OAuth_ for public apps and _Access tokens_ for Private apps (<https://developers.HubSpot.com/docs/guides/apps/authentication/intro-to-auth>) So maybe this is why the scope error is showing up? (I'm happy to be wrong here too. Maybe someone else knows more about authentication than I do). You shouldn't need to create a public app to support a private app, or vice-versa. They should be independent."
+  },
+  {
+    "poster": {
+      "poster_name": "Nikhil Agrawal",
+      "poster_handle": "nikhil.agrawal"
+    },
+    "time_stamp": "2025-02-17 10:45:33",
+    "text": "Hey <@U05R380MLMC>,\nThanks for responding, Basically I am using this endpoint to get the notes data using the Azure Data Factory and store it in SQL server and then we use it in our reporting Dashboards."
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2025-02-17 10:46:43",
+    "text": "How  you intend to report on note body content in a dashboard?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nikhil Agrawal",
+      "poster_handle": "nikhil.agrawal"
+    },
+    "time_stamp": "2025-02-17 10:48:16",
+    "text": "So We have the deals info in HubSpot for Bussiness team. And they add note for each deal as a update and progress."
+  },
+  {
+    "poster": {
+      "poster_name": "Nikhil Agrawal",
+      "poster_handle": "nikhil.agrawal"
+    },
+    "time_stamp": "2025-02-17 10:48:32",
+    "text": "These notes are connected to Deals."
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2025-02-17 10:49:21",
+    "text": "Any chance do you have ops hub?"
+  },
+  {
+    "text": "Hi,\nI have a recurring error that seems to come from HubSpot's servers, but I'm not sure, because the error doesn't seem to be handled by the code on HubSpot's side and I don't receive any additional information.\nI tried a lot of changes in my code, but nothing works. I also stuck to the most basic example following the HubSpot documentation (see below), but nothing worked.\nThis involves the creation of tokens in event template as part of a public application.\nFirst method: I use the “HubSpot-api-client 11.1.0” python module. The code: file \"code-1.jpg\". The logs; file \"code-2.jpg\".\nSecond method: I tried with the example indicated on the page <https://developers.HubSpot.com/docs/guides/api/crm/extensions/timeline>, that is to say directly in the command terminal with the command indicated in the doc. My code and HubSpot server response: \"code-3.jpg\".\nAnyone have any idea what's going on?",
+    "time_stamp": "2025-02-17 11:17:03",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2025-02-17 12:36:21"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Collin Schindler",
+      "poster_handle": "collin_schindler"
+    },
+    "time_stamp": "2025-02-17 12:36:21",
+    "edited": {
+      "time_stamp": "2025-02-17 12:36:49"
+    },
+    "text": "_\"Internal server errors\"_ are almost always an issue with the receiving server. 400 errors are a \"you\" problem - 500 errors is a \"them\" problem. What I have for notes on 500 errors from HubSpot is this:\n• Usually resolved by waiting.\n• HubSpot could be temporarily overloaded or unavailable.\n• Set time delays between 500 errors and future calls (This is if you have a chain of API calls that you are planning on executing).\nThe response from HubSpot is probably a server reboot and maybe adding additional code to account for a request they weren't prepared for (which probably caused the crash in the first place). Unfortunately for you, this means they'll be down until they restart the server. We experienced a similar issue with v2 DELETE calls for Workflow APIs last week.\n\nHopefully this helps!"
+  },
+  {
+    "poster": {
+      "poster_name": "Cephandrius Consulting",
+      "poster_handle": "cepha.consulting"
+    },
+    "time_stamp": "2025-02-17 15:29:08",
+    "text": "Hi all, I'm pretty sure I'm missing something simple, but I can't find it in the API docs and I'm banging my head against the wall here.  I'm trying to start an export of specific columns of one of the views in my CRM.  However, it only recognizes column names that don't have spaces in them.  For example, with this request:\n```{\n            \"path\": \"/crm/v3/exports/export/async\",\n            \"method\": \"POST\",\n            \"body\": {\n                \"exportType\": \"VIEW\",\n                \"format\": \"CSV\",\n                \"exportName\": \"Detailed_Buyers\",\n                \"language\": \"EN\",\n                \"objectType\": \"CONTACT\",\n                \"objectProperties\": [\"COMPANY NAME\", \"CITY\"],\n}```\nI get the following error:\n```{\"status\":\"error\",\"message\":\"Please fix or remove these properties as they are not a part of the object: COMPANY NAME\",\"correlationId\":\"&lt;redacted&gt;\",\"context\":{\"objectProperties\":[\"COMPANY NAME\"]},\"category\":\"VALIDATION_ERROR\"}```\nI have a few other columns with spaces in the names, but just kept it simple for this example.\n\nThank you in advance!",
+    "reply_count": 8,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2025-02-17 15:43:20"
+      },
+      {
+        "time_stamp": "2025-02-17 15:46:15"
+      },
+      {
+        "time_stamp": "2025-02-17 15:47:16"
+      },
+      {
+        "time_stamp": "2025-02-17 15:47:52"
+      },
+      {
+        "time_stamp": "2025-02-17 15:49:12"
+      },
+      {
+        "time_stamp": "2025-02-17 15:52:01"
+      },
+      {
+        "time_stamp": "2025-02-17 15:52:28"
+      },
+      {
+        "time_stamp": "2025-02-18 01:16:41"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Collin Schindler",
+      "poster_handle": "collin_schindler"
+    },
+    "time_stamp": "2025-02-17 15:43:20",
+    "edited": {
+      "time_stamp": "2025-02-17 15:48:10"
+    },
+    "text": "HubSpot properties have different internal names than what the name actually shows. Example:\n```Company name => name```\nYou can find these internal property names by clicking the Object name -> Actions -> Edit Properties -> Click property you want to see. Example:\n\n```Companies -> Actions -> Edit Properties -> Company Name```\nAnd in this case you'll see that the internal value for \"Company Name\" is actually \"name\".\n\nThis is really cumbersome to track all of these values down, so<@U04CC57CMBP> built a really useful app to show HubSpot's internal property names for the main four Core HubSpot Objects.\n<https://hs-default-properties.replit.app>"
+  },
+  {
+    "text": "Following `Companies -&gt; Actions -&gt; Edit Properties -&gt; Company Name` takes you here:",
+    "time_stamp": "2025-02-17 15:46:15"
+  },
+  {
+    "poster": {
+      "poster_name": "Cephandrius Consulting",
+      "poster_handle": "cepha.consulting"
+    },
+    "time_stamp": "2025-02-17 15:47:16",
+    "text": "oof, that is cumbersome.  But your answer was very helpful, thank you!  Just fyi the link you sent me was a 404 when I tried to open it"
+  },
+  {
+    "poster": {
+      "poster_name": "Collin Schindler",
+      "poster_handle": "collin_schindler"
+    },
+    "time_stamp": "2025-02-17 15:47:52",
+    "edited": {
+      "time_stamp": "2025-02-17 15:49:09"
+    },
+    "text": "Oh yeah, you need to remove `/companies` . I will fix that.\n\nEDIT: Should work now"
+  },
+  {
+    "poster": {
+      "poster_name": "Cephandrius Consulting",
+      "poster_handle": "cepha.consulting"
+    },
+    "time_stamp": "2025-02-17 15:49:12",
+    "text": "OK, yeah that works.  I assume with these internal names, I now need to use the `exportInternalValuesOptions` field?"
+  },
+  {
+    "poster": {
+      "poster_name": "Collin Schindler",
+      "poster_handle": "collin_schindler"
+    },
+    "time_stamp": "2025-02-17 15:52:01",
+    "edited": {
+      "time_stamp": "2025-02-17 15:53:20"
+    },
+    "text": "I haven't personally used the Exports API but that sounds like you'll get the actual internal value name instead of the value of the property - if I had to guess. Or maybe a list of all possible options if there is a dropdown selection for that property."
+  },
+  {
+    "poster": {
+      "poster_name": "Cephandrius Consulting",
+      "poster_handle": "cepha.consulting"
+    },
+    "time_stamp": "2025-02-17 15:52:28",
+    "text": "OK, I can fiddle around with it, you've solved my big problem, thank you again"
+  },
+  {
+    "poster": {
+      "poster_name": "Nikhil Agrawal",
+      "poster_handle": "nikhil.agrawal"
+    },
+    "time_stamp": "2025-02-17 22:02:08",
+    "text": "No brother "
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2025-02-17 22:02:38",
+    "text": "My suggestion - have your team start updating notes on a text field on the deal object."
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2025-02-17 22:03:12",
+    "text": "If you can't run any script to to parse the note_body and store in a seperate field, your process needs to change."
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2025-02-17 22:04:02",
+    "text": "There is a default hubspt property called next step - see if that works for you"
+  },
+  {
+    "poster": {
+      "poster_name": "Manab Roy",
+      "poster_handle": "manab986"
+    },
+    "time_stamp": "2025-02-17 23:23:55",
+    "text": "It’s a TTL issue of the GraphQL Schema update. After a few minutes, it resolved automatically."
+  }
+]

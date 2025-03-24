@@ -1,0 +1,82 @@
+[
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2020-07-22 06:06:29",
+    "text": "Hey <@U012W4YEUTX> I’m going to address your questions/comments in reverse order since answer them that why will hopefully clear things up.\n• re: invalid type error - While it is correctly an error because you are making an assocation from `ticket` to `contact` so the only valid `type` is `ticket_to_contact` , the error message isn’t particularly helpful, you supplied a `type` but it’s not the correct one. I’ll get a ticket filed with the CRM team to see if we can clean up that error\n• re: path path params - This was done partially to keep consistency with the Objects APIs where one call can work for one object type. Another reason was that leave space to increase the flexibility of the assocations API. One day it may be possible to define more `type`s of assocations between two object types. For example, you could have the main `contact_to_ticket` type, but you could also create a `watcher_to_ticket` type which could be included in batch call to `/crm/v3/associations/contact/ticket`. Our fear was adding more flexibility to the associations API by not including the objects in the path param would make it more confusing. That could be incorrect and what we really need is a graph API that just lets you define how everything is related to each other in a single call. I would love to hear your thoughts on that. (and any examples of people doing this well)\n• I’m actually surprised your call that includes both directions of the associations works.  You shouldn’t need to specify both directions of the association. Once two objects are associated with one another, they are associated. You can do either “direction” through the API but the end result is the same.  I’m going to create a ticket for myself to update the docs to try and make that clearer. Really appreciate the feedback \n• I think I got everything but let me know if I missed anything"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-07-22 07:58:15",
+    "edited": {
+      "time_stamp": "2020-07-22 07:59:23"
+    },
+    "text": "1. Re: \"you supplied a type but it’s not the correct one\"... but the type I used, I believe was listed in the type API. It does seem I had the endpoint path wrong though, let me retry with that fixed.\n2. I wouldn't have a problem with offering one that's kind-of more generic but maybe trickier to use, and one that's more narrow/clear. I just worry about the current version eating up my API query\n\n3. Doing both directions (correctly, given the assoc is bidirectional) does not work... but the error with which it failed was bizarre... going back to point 1. The legacy docs said you have to make the association in both ways yourself, the new docs are silent on this, at least in the parts I read to code it yesterday.\n\nStrategically speaking: despite the oddness, I was able to use the Ticket submit and Association APIs to successfully build an ability to track an insurance claim in HubSpot... and I just got off of a conf call with an insurance carrier partner, where being able to say I had that capability (nevermind I coded it yesterday) scored us a win, which was nice."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-07-22 08:10:53",
+    "edited": {
+      "time_stamp": "2020-07-22 08:11:00"
+    },
+    "text": "After doing some bug-squashing based on the feedback, it looks like you can create the reverse assoc after you create the forward assoc without it throwing an error. I am curious... when I do this, does it create a duplicate assoc? Or are assoces between two objects de-duplicated somehow?\n\nWe need an equivalent of <https://knowledge.HubSpot.com/crm-setup/deduplication-of-contacts-companies-deals-tickets> for all of the other objects and linkages in the schema, such as the assoces."
+  },
+  {
+    "poster": {
+      "poster_name": "Laura Alvarez",
+      "poster_handle": "laura.alvarez"
+    },
+    "time_stamp": "2020-07-22 11:45:25",
+    "text": "Hi everyone, I would like to learn how to create custom objects, Can someone share with me any documentation about this?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-07-22 13:31:41"
+      },
+      {
+        "time_stamp": "2020-07-23 17:29:05"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Wong",
+      "poster_handle": "eric.wong"
+    },
+    "time_stamp": "2020-07-22 11:59:05",
+    "text": "HI. Does the v3 Contacts API provide ways to retrieve property history? I read in documentation that v1 endpoints have a `propertyMode` parameter for this purpose, but could not find anything similar in v3."
+  },
+  {
+    "poster": {
+      "poster_name": "Wade Williams",
+      "poster_handle": "wade"
+    },
+    "time_stamp": "2020-07-22 13:29:46",
+    "text": "<@U012W4YEUTX> Thank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-07-22 13:31:41",
+    "text": "That isn't currently supported, but if you have more specifics and context we might be able to recommend some strategies."
+  },
+  {
+    "poster": {
+      "poster_name": "Joni L.",
+      "poster_handle": "joni.laukkonen"
+    },
+    "time_stamp": "2020-07-22 15:46:37",
+    "text": "With a quick glance it seems like you have quite a lot going on there. You have an onsubmit on the form itself, then you're adding an eventlistener to the form and you also set event handler to the submit event at the bottom.\n\nTo make things easier to debug I would suggest trying to comment out other stuff and leave the document ready + submit() function at the bottom, remove the onsubmit from the form as well. Move formcontents inside the submit. And btw on your other post on that code snippet you got the portal id and form id intact so I suggest you edit them away :+1:"
+  }
+]

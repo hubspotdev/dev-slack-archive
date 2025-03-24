@@ -1,0 +1,23 @@
+[
+  {
+    "poster": {
+      "poster_name": "Twentyninetimes",
+      "poster_handle": "tech817"
+    },
+    "time_stamp": "2022-11-09 02:57:28",
+    "text": "I’ll add this here as well as it was originally posted in <#C2YH119N2|hubl> channel:\n\nWe’ve just finished a header language switcher that checks all languages in variable langCodes for HubSpot CMS pages.\n\nIf a page url is not translated to one or more of the active languages in langCodes, then it will add the url to said language homepage.\nHowever if a page url is translated to one or more languages in langCodes then it will add the url for the translated page per language.\n\nHope it will help someone out in a similar situation:\n\n```&lt;ul class=\"language__options js-language__options\"&gt;\n\t{# Language codes #}\n    {% set langCodes = {'English': 'en', 'Dansk': 'da'} %}\n\n    {# Language loop #}\n    {% for key, val in langCodes.items() %}\n        {# Discard current page language and check if other languages have translations of the current page #}\n        {% if content.translated_content[val].slug is none and val != content.language.languageTag %}\n            {# If a page is not translated to one or more of the languages in langCodes, then add a url to said language homepage #}\n            {% set URL = \"/{{ val }}\" %}\n        {% else %}\n            {# If val is not equal to the current page language AND a translation exists, then add the url to the translated page #}\n            {% if val != content.language.languageTag %}\n                {% set URL = \"/\"~content.translated_content[val].slug %}\n            {% else %}\n                {# If val equals the current page, then add the current url through request.path or simply set URL to '' #}\n                {% set URL = request.path %}\n            {% endif %}                                \n        {% endif %}\n\n        {# Language selector #}\n        &lt;li&gt;\n            &lt;a class=\"language__options-item\" href=\"{{ URL }}\" title=\"{{ key }}\"&gt;\n                {# Flag icon - Make sure to upload svg flags name by val. E.g. de.svg, en.svg etc. in a /flags folder or similar #}                                \n                &lt;img src=\"{{ base_url }}/flags/{{ val }}.svg\" loading=\"lazy\" width=\"18\" height=\"18\" alt=\"{{ key }}\"&gt;\n                {# Language #}\n                &lt;span&gt;{{ key }}&lt;/span&gt;\n            &lt;/a&gt;\n        &lt;/li&gt;\n    {% endfor %}   \n&lt;/ul&gt;```\n",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-11-21 17:17:47"
+      },
+      {
+        "time_stamp": "2022-11-21 17:32:40"
+      },
+      {
+        "time_stamp": "2022-11-22 01:02:40"
+      }
+    ]
+  }
+]

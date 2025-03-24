@@ -1,0 +1,42 @@
+[
+  {
+    "poster": {
+      "poster_name": "Rolando Carias",
+      "poster_handle": "rolando"
+    },
+    "time_stamp": "2024-06-14 12:50:39",
+    "text": "Hi all! Is there a way to sprinkle a `module.js`  file with some HUBL?",
+    "reply_count": 4,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-06-14 13:20:43"
+      },
+      {
+        "time_stamp": "2024-06-14 13:47:13"
+      },
+      {
+        "time_stamp": "2024-06-17 03:43:33"
+      },
+      {
+        "time_stamp": "2024-06-17 03:46:23"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2024-06-14 13:20:43",
+    "text": "Hey <@U04B3M0M18E> - unfortunately you can't add Hubl to the module.js\n\nBUT :smile:\n\nYou can add something like\n```{% require_js %}\n&lt;script&gt;\n...\n&lt;/script&gt;\n{% end_require_js %}```\nto the `module.html` then you can use Hubl in JS.\n\nAnother option(advanced; if you're planning to use the js several-times):\ncreate a seperate html(!) file with a <https://developers.HubSpot.com/docs/cms/hubl/variables-macros-syntax|macro> and use it in the module like this\n\n\n*custom_js_macro.html:*\n```{% macro custom_js(value_1, value_2) %}\n{% require_js %}\n&lt;script&gt;\nconst var_1 = {{ value_1 }}; \nconst var_2 = {{ value_2 }};\n{# this is just for demo; no need to set const's. Just write your js as you need it #}\n...\n&lt;/script&gt;\n{% end_require_js %}\n{% endmacro %}```\n*module.html:*\n```{%- import './../../js/custom_js_macro.html' -%} {# change the path to your structure #}\n\n...\n\n{{ custom_js( module.value_1, module.value_2) }}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Rolando Carias",
+      "poster_handle": "rolando"
+    },
+    "time_stamp": "2024-06-14 13:47:13",
+    "text": "Hey <@UJAPS2K4N> This helps a lot. I like the macro approach for reusability. :slightly_smiling_face: Thanks a lot for the info"
+  }
+]

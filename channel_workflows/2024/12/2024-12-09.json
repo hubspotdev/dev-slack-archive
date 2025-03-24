@@ -1,0 +1,26 @@
+[
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2024-12-09 03:23:55",
+    "text": "yes, you just need to throw an error in the try catch block of the api call in the custom coded action and it should retry automatically"
+  },
+  {
+    "poster": {
+      "poster_name": "Stian Strand",
+      "poster_handle": "superstian94"
+    },
+    "time_stamp": "2024-12-09 03:29:35",
+    "text": "Thank you. This is in a workflow extension for a public app, not a custom coded action, But the issue is really the same.\nIt is retrying the action now. My problem is that I need to tell the workflow how long to wait before it tries again, so it doesn't retry another 15 times before the rate limit has recovered.\n\nI am sending back a Retry-After header with value 1000 so it should wait 1000 seconds before running the action again, but it does not wait long enough :thinking_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Alex Woodbridge",
+      "poster_handle": "alex.woodbridge"
+    },
+    "time_stamp": "2024-12-09 13:09:17",
+    "text": "I use polling to try and delay the retries when communicating to twilio:\n```// Poll the message status until it reaches a terminal state\nasync function waitForMessageStatus(sid, retries = 5, delay = 10000) {\n    console.log(`Polling message status for SID: ${sid}. Retries: ${retries}, Delay between retries: ${delay}ms`);\n\n    let status;\n    for (let i = 0; i &lt; retries; i++) {\n        status = await getMessageStatus(sid);\n        \n        // Check if the status is one of the terminal states\n        if (['delivered', 'failed', 'undelivered', 'partially_delivered'].includes(status)) {\n            console.log(`Message SID: ${sid} reached a terminal status: ${status}`);\n            return status; // Return immediately if terminal state is detected\n        }\n\n        console.log(`Message SID: ${sid} still in status: ${status}. Waiting ${delay}ms before retrying... (${i + 1}/${retries})`);\n        await sleep(delay); // Wait before checking again\n    }\n\n    // If retries are exhausted, return the last known status (even if it isn't a terminal state)\n    console.log(`Message SID: ${sid} did not reach a terminal state after ${retries} retries. Last known status: ${status}`);\n    return status; \n}```"
+  }
+]

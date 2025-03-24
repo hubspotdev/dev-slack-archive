@@ -1,0 +1,38 @@
+[
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2023-09-05 01:16:10",
+    "text": "A global module/partial have a single instance, if you want to create multiple global modules with the same structure but different data you need to clone the module"
+  },
+  {
+    "poster": {
+      "poster_name": "Viktor Miruschenko",
+      "poster_handle": "vedariy"
+    },
+    "time_stamp": "2023-09-05 10:59:00",
+    "text": "Thank you for answer! Just the goal is a little bit opposite.  The goal is to have module which will have different views in different contexts for the same data. Like I have one module to add 'happy client logos'. And when I would insert it into different sections - it would have different look. The certain usecase I would want to implement:\n1) I insert this module X into Hero section on Home page with field option  'show full width' to show logos as full-screen slider.\n2) In CMS content editor, I add content into this module X.\n3) Then I insert this module X into custom section Logos code with field option  'show fixed width', which will say to module output its  content logos in columns in fixed width area.\n\nFrom what I guess I can't do this without using Custom Objects. But may be someone knows tricks to use module as Single Source of Truth of data but output it differently by passing different param value into it in different templates? Thank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2023-09-05 11:07:09",
+    "text": "Hubdb probably your best option. You can load the same data everywhere, but still customize the module at the page level"
+  },
+  {
+    "poster": {
+      "poster_name": "Stuart Grant",
+      "poster_handle": "stuart-g"
+    },
+    "time_stamp": "2023-09-05 11:54:20",
+    "text": "Here's a handy Python script that collects the module fields JSON examples from HubSpot's module fields documentation, and writes each field to a file named after the field type. I'm creating a HS theme generator more specific to my needs and this was the first step - someone may find it useful.\n\n```import requests\nfrom bs4 import BeautifulSoup\nimport json\nimport re\nimport os\n\nurl = \"<https://developers.HubSpot.com/docs/cms/building-blocks/module-theme-fields>\"\n\nresponse = requests.get(url)\n\nif response.status_code == 200:\n    soup = BeautifulSoup(response.text, 'html.parser')\n    code_tabs = soup.find_all('code-tab')\n\n    print(f\"Found {len(code_tabs)} code tabs.\")\n\n    if not os.path.exists(\"fields\"):\n        os.makedirs(\"fields\")\n\n    for code_tab in code_tabs:\n        script_text = code_tab.get_text(strip=True)\n\n        # HubSpot code-tab fields start with a comment that provides the type name.\n        field_type_match = re.search(r'//.*?field', script_text)\n\n        if field_type_match:\n            field_type = field_type_match.group(0).replace(\"//\", \"\").replace(\"field\", \"\").strip().replace(\" \", \"-\").lower()\n\n            if field_type:\n                # Everything after the field name comment is JSON.\n                json_objects = re.findall(r'//.*?field(.*)', script_text, flags=re.DOTALL)  \n\n                if json_objects:\n                    json_data = json_objects[0]\n\n                    try:\n                        parsed_json = json.loads(json_data)\n                    except ValueError as e:\n                        print(f\"Error parsing JSON: {e}\")\n                        continue\n\n                    # Write the parsed JSON to a file with the field type as the name.\n                    with open(f\"fields/{field_type}.json\", \"w\") as json_file:\n                        formatted_json = json.dumps(parsed_json, indent=4)\n                        json_file.write(formatted_json)\n                        print(f\"Wrote {field_type}.json\")\n\n    print(\"Complete.\")\nelse:\n    print(f\"Failed to retrieve the web page (Status code: {response.status_code})\")```"
+  },
+  {
+    "text": "Here's the output:",
+    "time_stamp": "2023-09-05 11:55:01"
+  }
+]

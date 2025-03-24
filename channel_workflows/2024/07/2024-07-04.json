@@ -1,0 +1,64 @@
+[
+  {
+    "poster": {
+      "poster_name": "Dean Winc",
+      "poster_handle": "mahi"
+    },
+    "time_stamp": "2024-07-04 03:10:30",
+    "edited": {
+      "time_stamp": "2024-07-04 03:12:02"
+    },
+    "text": "<@U05TKF2G5L3>  thanks for the response. But for dynamic input how can i populate the values like `email, objectId,staticInput`   etc. key value dynamically from my workflow enrollment data ?\n\n``` {\n  \"webhookUrl\": \"<https://actionurl.com/>\",\n  \"callbackId\": \"ap-102670506-56776413549-7-0\",\n  \"origin\": {\n    \"portalId\": 102670506,\n    \"actionDefinitionId\": 10646377,\n    \"actionDefinitionVersion\": 1\n  },\n  \"context\": {\n    \"source\": \"WORKFLOWS\",\n    \"workflowId\": 192814114\n  },\n  \"object\": {\n    \"objectId\": 904,\n    \"properties\": {\n      \"email\": \"ajenkenbb@gnu.org\"\n    },\n    \"objectType\": \"CONTACT\"\n  },\n  \"inputFields\": {\n    \"staticInput\": \"My Static Input\",\n    \"objectInput\": \"995\",\n    \"optionsInput\": \"1\"\n  }\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Dean Winc",
+      "poster_handle": "mahi"
+    },
+    "time_stamp": "2024-07-04 04:01:05",
+    "text": "<@U05TKF2G5L3> what i am struggling to understand is that how can I pass the whole object data as the function's `event` argument?\nDo i write the input event object inside the `PRE_ACTION_EXECUTION`  function ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Dean Winc",
+      "poster_handle": "mahi"
+    },
+    "time_stamp": "2024-07-04 04:25:11",
+    "edited": {
+      "time_stamp": "2024-07-04 04:26:15"
+    },
+    "text": "<@U032A8A6P1T> I'm also in need of help in a similar issue.\nI need to send some dynamic payload data to my `actionURL` . Correct me if I am a wrong, I need to use the following object as event input in the *PRE_ACTION_EXECUTION* function?\n``` {\n  \"webhookUrl\": \"<https://actionurl.com/>\",\n  \"callbackId\": \"ap-102670506-56776413549-7-0\",\n  \"origin\": {\n    \"portalId\": 102670506,\n    \"actionDefinitionId\": 10646377,\n    \"actionDefinitionVersion\": 1\n  },\n  \"context\": {\n    \"source\": \"WORKFLOWS\",\n    \"workflowId\": 192814114\n  },\n  \"object\": {\n    \"objectId\": 904,\n    \"properties\": {\n      \"email\": \"ajenkenbb@gnu.org\"\n    },\n    \"objectType\": \"CONTACT\"\n  },\n  \"inputFields\": {\n    \"staticInput\": \"My Static Input\",\n    \"objectInput\": \"995\",\n    \"optionsInput\": \"1\"\n  }\n}```\nBut for dynamic input how can i populate the values of `email, objectId,`  the values for `staticInput`  etc. dynamically from my workflow enrollment data to the execution function below ?\n\nThanks!\n```\"functionType\": \"PRE_ACTION_EXECUTION\",\n\n \"functionSource\": \"exports.main = function(event, callback) { return callback(transformRequest(event)); }\\nfunction transformRequest(request) { return { webhookUrl: '<https://number-converter-psi.vercel.app/convert>', body: JSON.stringify({value:777}), contentType: 'application/json', accept: 'application/json', httpMethod: 'POST' }; }\"```"
+  },
+  {
+    "poster": {
+      "poster_name": "Aqsa Qayyum",
+      "poster_handle": "aqsa"
+    },
+    "time_stamp": "2024-07-04 07:34:50",
+    "edited": {
+      "time_stamp": "2024-07-04 07:49:00"
+    },
+    "text": "Hello,\n\nI am creating custom action. I want when this custom action to send an api call to my platform which will return a \"Include\" or \"Exclude\" response and based on the response of api, If it's \"Include\" then it 4 string type fields should be visible on my action form else those 4 fields should not be visible on the action form.\n\nI tried like following but it is not working the way I want because it is including select dropdown. I don't want user to select any field and then 4 fields should be visible on the action form.\nI want my api to be called silently which returns \"Include\" or \"Exclude\"  and based on that api response 4 fields to be shown or not in the action form. Thank you in advance.\n\n``` return {\n    actionUrl: '<https://webhook.site/d4acb54d-e210-4d04-b0e4-7d42351f3ddb>',\n    published: true,\n    objectTypes: ['CONTACT'],\n    inputFields: [\n      {\n        typeDefinition: {\n          name: 'selectTemplate',\n          type: 'enumeration',\n          fieldType: 'select',\n          optionsUrl: `${backendUrl}/template/postCardOptions`,\n          dynamicOptions: true\n        },\n        supportedValueTypes: ['STATIC_VALUE'],\n        isRequired: true\n      },\n      {\n        typeDefinition: {\n          name: \"propertyAddress\",\n          type: \"string\",\n          fieldType: \"text\"\n        },\n        supportedValueTypes: [\"STATIC_VALUE\"],\n        isRequired: false\n      },\n      {\n        typeDefinition: {\n          name: \"propertyCity\",\n          type: \"string\",\n          fieldType: \"text\"\n        },\n        supportedValueTypes: [\"STATIC_VALUE\"],\n        isRequired: false\n      },\n      {\n        typeDefinition: {\n          name: \"propertyState\",\n          type: \"string\",\n          fieldType: \"text\"\n        },\n        supportedValueTypes: [\"STATIC_VALUE\"],\n        isRequired: false\n      },\n      {\n        typeDefinition: {\n          name: \"propertyZipCode\",\n          type: \"string\",\n          fieldType: \"text\"\n        },\n        supportedValueTypes: [\"STATIC_VALUE\"],\n        isRequired: false\n      }\n    ],\n    outputFields: [\n      {\n        typeDefinition: {\n          name: 'myOutput',\n          type: 'string',\n          fieldType: 'text'\n        },\n        supportedValueTypes: ['STATIC_VALUE']\n      }\n    ],\n    inputFieldDependencies: [\n      {\n        dependencyType: \"SINGLE_FIELD\",\n        controllingFieldName: \"selectTemplate\",\n        dependentFieldNames: [\n          \"propertyAddress\",\n          \"propertyCity\",\n          \"propertyState\",\n          \"propertyZipCode\"\n        ]\n      }\n    ],\n    labels: {\n      en: {\n        inputFieldLabels: {\n          selectTemplate: \"Select Template\",\n          propertyAddress: \"Property Address\",\n          propertyCity: \"Property City\",\n          propertyState: \"Property State\",\n          propertyZipCode: \"Property Zip Code\"\n        },\n        actionName: \"My Extension\",\n        actionDescription: \"My Extension Description\",\n        appDisplayName: \"My App Display Name\",\n        actionCardContent: \"My Action Card Content\"\n      }\n    },\n    functions: [\n      {\n        functionType: \"PRE_ACTION_EXECUTION\",\n        functionSource: `exports.main = async (event, callback) => {\n          try {\n            const includeFields = true;\n\n            const inputFields = {\n              propertyAddress: includeFields ? '' : null,\n              propertyCity: includeFields ? '' : null,\n              propertyState: includeFields ? '' : null,\n              propertyZipCode: includeFields ? '' : null,\n            };\n\n            callback({ inputFields });\n          } catch (error) {\n            console.error(\"Error in PRE_ACTION_EXECUTION function:\", error);\n            callback({ error: 'Failed to execute pre-action function' });\n          }\n        }`\n      }\n    ]\n  };```\nThanks in advance !!!",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-07-05 06:04:29"
+      },
+      {
+        "time_stamp": "2024-07-05 08:29:43"
+      },
+      {
+        "time_stamp": "2024-07-05 08:30:18"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Cameron Harro",
+      "poster_handle": "cameron420"
+    },
+    "time_stamp": "2024-07-04 09:27:33",
+    "text": "Nope! Similarly to the <https://developers.HubSpot.com/beta-docs/reference/api/automation/custom-code-actions#create-a-custom-code-action|custom coded actions>, HubSpot passes the event argument to the exports.main function when it calls it. So you can just refer to properties of the event object in the function without defining it yourself."
+  }
+]

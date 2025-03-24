@@ -1,0 +1,136 @@
+[
+  {
+    "poster": {
+      "poster_name": "Dan Nightingale",
+      "poster_handle": "daniel.nightingale"
+    },
+    "time_stamp": "2024-09-02 02:03:22",
+    "text": "Thanks for the reply Ryan. My current script returns all columns and I can't see a column called record ID or anything named Associated. How do I include associations in the request?I know I cant get this information if I run a report out of HubSpot but I want to use the table data. I see there is a separate API for associations but this seems to be more focused on inserted records with associations and not from a reporting perspective."
+  },
+  {
+    "poster": {
+      "poster_name": "Sasindran",
+      "poster_handle": "sasindran.s"
+    },
+    "time_stamp": "2024-09-02 03:58:52",
+    "text": "Hi Everyone!\n\nIs there any API available to restore the deleted records in HubSpot?"
+  },
+  {
+    "text": ":wave: Hello, team!, I am trying to add chatbox in my ReactJS Application using the code,\n\nuseEffect(() => {\n      const script = document.createElement('script');\n      if (isOpen) {\n          script.src='<//js-na1.hs-scripts.com/472343.js>';\n          document.body.appendChild(script);\n\n          script.addEventListener('load', () => {\n              // @ts-ignore\n              if (window.hbspt) {\n                  // @ts-ignore\n                  window.hbspt.forms.create({\n                      target: '#HubSpotForm'\n                  })\n              }\n          });\n                    // @ts-ignore\n\n          console.log(window.hsConversationsSettings, 'window.HubSpotConversations');\n\n          // @ts-ignore\n          window.HubSpotConversations?.widget.load();\n      } else {\n          // @ts-ignore\n          window.HubSpotConversations?.widget.remove();\n      }\n  }, [isOpen]);\n\nnow chatbox is working as expected but I want to show the dynamic value in the welcome message, can anyone help me how to do that?",
+    "time_stamp": "2024-09-02 04:01:04",
+    "edited": {
+      "time_stamp": "2024-09-02 04:01:36"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-09-02 04:08:39",
+    "text": "Share your script which shows how you are getting the contact / deal data please"
+  },
+  {
+    "poster": {
+      "poster_name": "Dan Nightingale",
+      "poster_handle": "daniel.nightingale"
+    },
+    "time_stamp": "2024-09-02 04:16:13",
+    "text": "import requests\nimport json\nimport csv\n\n\naccess_token = \"\"\napi_endpoint = \"<https://api.hubapi.com/crm/v3/properties/deals>\"\n\n# Set up the headers with the access token\nheaders = {\n    \"Authorization\": f\"Bearer {access_token}\",\n    \"Content-Type\": \"application/json\"\n}\n\n# Make the API call\nresponse = requests.get(api_endpoint, headers=headers)\n\n# Check if the request was successful\nif response.status_code == 200:\n    data = response.json()\n\n    # Extract properties data\n    properties = data.get(\"results\", [])\n\n    # Define the output CSV file\n    csv_file = \"deals_properties.csv\"\n\n    # Open the CSV file for writing\n    with open(csv_file, mode='w', newline='', encoding='utf-8') as file:\n        writer = csv.writer(file)\n\n        # Write the header row\n        writer.writerow([\"Name\", \"Label\", \"Type\", \"Field Type\", \"Group Name\", \"Options\"])\n\n        # Write each property to the CSV\n        for property in properties:\n            name = property.get(\"name\", \"\")\n            label = property.get(\"label\", \"\")\n            property_type = property.get(\"type\", \"\")\n            field_type = property.get(\"fieldType\", \"\")\n            group_name = property.get(\"groupName\", \"\")\n            options = property.get(\"options\", [])\n\n            # Flatten the options into a single string if available\n            options_str = \", \".join([option.get(\"label\", \"\") for option in options]) if options else \"\"\n\n            writer.writerow([name, label, property_type, field_type, group_name, options_str])\n\n    print(f\"Data exported to {csv_file} successfully!\")\nelse:\n    print(f\"Failed to retrieve data. Status code: {response.status_code}, Response: {response.text}\")"
+  },
+  {
+    "poster": {
+      "poster_name": "Dan Nightingale",
+      "poster_handle": "daniel.nightingale"
+    },
+    "time_stamp": "2024-09-02 04:16:35",
+    "text": "Hi Ryan, This is the script I'm using to return the properties of the Deals as an example. Thanks for you help with this."
+  },
+  {
+    "poster": {
+      "poster_name": "Sourav Kundu",
+      "poster_handle": "sourav.kundu"
+    },
+    "time_stamp": "2024-09-02 06:40:25",
+    "text": "Hey everyone,\n\nJust following up on my previous post regarding the issue with tracking Google and Facebook leads after the recent API shift. We haven't received any feedback yet and would really appreciate your insights or suggestions on how to resolve this. Has anyone else faced similar issues or found a workaround?\n\nThanks in advance for your help!"
+  },
+  {
+    "time_stamp": "2024-09-02 10:00:05",
+    "text": "Reminder: *Want to be the first to know when a new API is available or an existing API has a new version?*  We publish all of that on our <https://developers.HubSpot.com/changelog|Developer Changelog>.  While we do our best to avoid <https://developers.HubSpot.com/docs/breaking-change-definition|breaking changes> to our APIs, sometimes for security, and reliability we have to. The Changelog is where we’ll post announcements ahead of time about it. <https://developers.HubSpot.com/changelog|Subscribe to the Developer Changelog> to stay up-to-date on what’s happening in the world of HubSpot development."
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-09-02 10:36:55",
+    "edited": {
+      "time_stamp": "2024-09-02 10:37:18"
+    },
+    "text": "Ok.  You are using the API endpoint which fetches the properties/fields for the deal object.\n\nYou actually want a different API endpoint.\n\n<https://api.hubapi.com/crm/v3/objects/deals>\n\nHere is how you would fetch all deals, with contact associations, and with all properties using Python.\n\n```client = HubSpot.Client.create(access_token=access_token)\n\nproperties = [] #your list of properties\n\ntry:\n    api_response = client.crm.deals.get_all(associations=[\"contacts\"], properties=properties)\nexcept ApiException as e:\n    print(\"Exception when calling basic_api->get_page: %s\\n\" % e)```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-09-02 10:39:28",
+    "text": "The `get_all` method isn't well documented but under the hood it implements a pager and will return all deals in your HubSpot account.\n\n`api_response` will contain an array of dicts which will look something like this.\n\n```{'archived': False,\n  'archived_at': None,\n  'associations': None,\n  'created_at': datetime.datetime(2015, 5, 26, 4, 50, 31, 115000, tzinfo=tzutc()),\n  'id': '4365101',\n  'properties': {'amount': '12000',\n                 'closedate': '2018-07-19T04:50:41.394Z',\n                 'createdate': '2015-05-26T04:50:31.115Z',\n                 'dealname': '2016_05 Scholz Industries',\n                 'dealstage': '1488520',\n                 'hs_lastmodifieddate': '2024-04-03T22:29:13.177Z',\n                 'hs_object_id': '4365101',\n                 'pipeline': '1488513'}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-09-02 10:39:54",
+    "text": "Notice the `associations` key.  This is a deal with no contact associations"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-09-02 10:40:17",
+    "text": "```{'archived': False,\n  'archived_at': None,\n  'associations': {'contacts': {'paging': None,\n                                'results': [{'id': '49294',\n                                             'type': 'deal_to_contact'}]}},\n  'created_at': datetime.datetime(2015, 6, 25, 14, 0, tzinfo=tzutc()),\n  'id': '5749710',\n  'properties': {'amount': '22710',\n                 'closedate': '2015-07-02T14:00:00Z',\n                 'createdate': '2015-06-25T14:00:00Z',\n                 'dealname': '2015_06 NetSuite - The RH Group (Rain Harvesting '\n                             'Pty Ltd)',\n                 'dealstage': '1488519',\n                 'hs_lastmodifieddate': '2024-04-03T22:29:20.040Z',\n                 'hs_object_id': '5749710',\n                 'pipeline': '1488513'},\n  'properties_with_history': None,\n  'updated_at': datetime.datetime(2024, 4, 3, 22, 29, 20, 40000, tzinfo=tzutc())}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-09-02 10:40:27",
+    "text": "This is a deal with `associations`"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-09-02 10:43:36",
+    "text": "Next steps might include...\n\n1.) Populating the `properties` array dynamically with all the fields that are part of the deal object - this comes from the script you have already written.\n2.) Parsing the `response_api` to extract out the `properties` and `associations` for each deal record\n3.) Check out the `pandas` library for easy DataFrame creation and writing to CSV/Excel\n\nIf you need a dedicated person to help you with custom scripts/projects like this send me a DM and we can connect."
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-09-02 10:49:31",
+    "text": "I don't think the `filter` is supported with this API endpoint.\n\nTry using the `search` endpoint\n\n<https://developers.HubSpot.com/beta-docs/reference/api/crm/objects/contacts#search>"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-09-02 10:50:27",
+    "text": "Here you go --&gt; <https://developers.HubSpot.com/beta-docs/reference/api/crm/lists>"
+  },
+  {
+    "poster": {
+      "poster_name": "Abdalla Ibrahim (Abdo Samy)",
+      "poster_handle": "abdalla.samy795"
+    },
+    "time_stamp": "2024-09-02 17:07:43",
+    "text": "Thank you so much. found it :heart:"
+  }
+]

@@ -1,0 +1,405 @@
+[
+  {
+    "poster": {
+      "poster_name": "Duncan Cosser",
+      "poster_handle": "duncan.c"
+    },
+    "time_stamp": "2023-08-02 03:12:43",
+    "text": "Ah thanks <@U036TUPVAV8> - did you do that client-side or in the request?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ivo Hofland",
+      "poster_handle": "ivo"
+    },
+    "time_stamp": "2023-08-02 03:50:20",
+    "text": "Do you have an unique external ID for your line items? An option would be to add a property with your unique external ID to the line item. Then use this property to either update an existing line item or create a new one."
+  },
+  {
+    "poster": {
+      "poster_name": "Taylor O'Reilly",
+      "poster_handle": "taylor699"
+    },
+    "time_stamp": "2023-08-02 07:30:52",
+    "text": "I had to do this all on the server before sending the response back but if you only need to do it once for each object it shouldn't be too bad."
+  },
+  {
+    "poster": {
+      "poster_name": "Shanley Rosero",
+      "poster_handle": "shanley.rosero"
+    },
+    "time_stamp": "2023-08-02 07:40:59",
+    "edited": {
+      "time_stamp": "2023-08-02 07:41:38"
+    },
+    "text": "<@U05KPMCCG74>: if you're using postman you can use this test script on your API call to log all custom properties\n```var jsonData = pm.response.json();\nlet properties = jsonData.properties;\n\nlet props = [];\n\nproperties.forEach(function (property) {\n    if (!property.name.includes(\"hs_\") &amp;&amp; !property.name.includes(\"HubSpot_\")) {\n        props.push(property.name);\n    }\n});\n\nconsole.log(JSON.stringify(props));```\nbtw I'm using the schemas api here <https://api.hubapi.com/crm/v3/schemas/{{objectid}}>"
+  },
+  {
+    "poster": {
+      "poster_name": "Shanley Rosero",
+      "poster_handle": "shanley.rosero"
+    },
+    "time_stamp": "2023-08-02 07:49:35",
+    "text": "<@U04Q5ARNZEV>: Personally to use less API call we just batch delete all the associated line items then add it again with changes applied. The former would require fetching currently associated line items, comparing, then adding, and deleting (if there's replacement in the line items)"
+  },
+  {
+    "poster": {
+      "poster_name": "Taylor O'Reilly",
+      "poster_handle": "taylor699"
+    },
+    "time_stamp": "2023-08-02 07:55:12",
+    "edited": {
+      "time_stamp": "2023-08-02 08:00:01"
+    },
+    "text": "hey Shanley this code might produce some weird edge cases. afaik all the HubSpot default props start with hs_ so I would check for this at the start of the string to avoid possible custom props with this like \"graphs_available\" of course this isn't a silver bullet but your are probably less likely to run into issues.\n\n`const properties = [{name:'hs_one'}, {name: 'custom_one'}, {name: 'graphs_available'}]`\n`const data = properties.filter(prop =&gt; !prop.name.startsWith(\"hs_\"))`\n`console.log(data) // [{\"name\": \"custom_one\"},{\"name\": \"graphs_available\"}]`\n\n*sorry for the typos still havent had my coffee this morning"
+  },
+  {
+    "text": "Hi everyone,  does anyone know how to configure the webhook to send me an event when a pipeline or a stage for a ticket is created?",
+    "time_stamp": "2023-08-02 08:08:51",
+    "reply_count": 9,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-08-02 08:14:21"
+      },
+      {
+        "time_stamp": "2023-08-02 08:36:40"
+      },
+      {
+        "time_stamp": "2023-08-02 08:40:43"
+      },
+      {
+        "time_stamp": "2023-08-02 08:53:26"
+      },
+      {
+        "time_stamp": "2023-08-02 09:20:42"
+      },
+      {
+        "time_stamp": "2023-08-02 09:56:00"
+      },
+      {
+        "time_stamp": "2023-08-02 10:34:47"
+      },
+      {
+        "time_stamp": "2023-08-02 10:46:08"
+      },
+      {
+        "time_stamp": "2023-08-02 11:11:54"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Shanley Rosero",
+      "poster_handle": "shanley.rosero"
+    },
+    "time_stamp": "2023-08-02 08:14:21",
+    "text": "Hi <@U058R6EDGQ7>: Can you provide context where is this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Abel González Rodriguez",
+      "poster_handle": "abelgr45"
+    },
+    "time_stamp": "2023-08-02 08:18:40",
+    "text": "Hi everyone, I hope you are well, does anyone know if it is possible to add contacts to a business from the api?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-08-02 09:51:58"
+      },
+      {
+        "time_stamp": "2023-08-02 16:00:19"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Valentina Varela Alzate",
+      "poster_handle": "valentina.varela"
+    },
+    "time_stamp": "2023-08-02 08:36:40",
+    "text": "<@U02P3JPAV3Q> Of course, here it is:\nFor the webhooks part I am in my developer account, I am trying to create a subscription but I don't know what kind of object or what the ticket pipelines are associated to.\n\nI'm checking the ticket pipelines from configuration -&gt; data management -&gt; tickets -&gt; pipelines\n\nWhat I want is that every time a pipeline object or a pipeline state is created I can receive a webhook with that information."
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-08-02 08:40:43"
+  },
+  {
+    "poster": {
+      "poster_name": "Shanley Rosero",
+      "poster_handle": "shanley.rosero"
+    },
+    "time_stamp": "2023-08-02 08:47:00",
+    "text": "Ah right he might have custom props with internal names having `hs_` in it. Thanks <@U036TUPVAV8>"
+  },
+  {
+    "poster": {
+      "poster_name": "Shanley Rosero",
+      "poster_handle": "shanley.rosero"
+    },
+    "time_stamp": "2023-08-02 08:53:26",
+    "text": "Just to be sure I understood well, you want to set up a webhook to know  each time a stage is added to or created in the ticket pipeline, correct?"
+  },
+  {
+    "text": "I don't think it would be possible if that's the case since there's no subscription type for object schema changes. Only subscription type for tickets that I have below . And this notifies only if _any_ ticket (record) pipeline stage (in this case) was changed, which I don't think is applicable for the use case your trying to achieve.",
+    "time_stamp": "2023-08-02 09:20:42"
+  },
+  {
+    "poster": {
+      "poster_name": "Cristóbal Parraguez",
+      "poster_handle": "cparraguez"
+    },
+    "time_stamp": "2023-08-02 09:51:58",
+    "edited": {
+      "time_stamp": "2023-08-02 09:52:07"
+    },
+    "text": "If \"add to a business\" means create an association, then yes: <https://developers.HubSpot.com/docs/api/crm/associations/v3|associations API>"
+  },
+  {
+    "poster": {
+      "poster_name": "Cristóbal Parraguez",
+      "poster_handle": "cparraguez"
+    },
+    "time_stamp": "2023-08-02 09:56:00",
+    "text": "You can create a workaround using 2 workflows:\n\n• Whenever a deal is created. branch of pipeline/stage values\n• Create a branch for each known pipeline or stage\n• The object will fall in the none-met branch whenever a a new stage/pipeline is added since you didn't create a branch for it when you created the workflow. Add the webhook step there.\n• You need to update the workflow with the new stage/pipeline after the webhook is triggered to prevent triggering the webhook again."
+  },
+  {
+    "poster": {
+      "poster_name": "Tyler Sweeten",
+      "poster_handle": "tyler.sweeten"
+    },
+    "time_stamp": "2023-08-02 09:59:48",
+    "text": "Hello Everybody,\nI'm still new to API's and would very much appreciate some guidance on a question I am having. I am trying to use the task api in order to search for specific tasks where the status is not completed and the source is a workflow. I could not find any documentation around different task properties, and could not find a way to set a custom property for source through a workflow either. I was wondering if anybody has any experience with task properties in API, or might have a way to get around having to use and api to filter tasks by source? Thank you",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-08-02 10:52:33"
+      },
+      {
+        "time_stamp": "2023-08-02 12:27:16"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Lee M",
+      "poster_handle": "lee467"
+    },
+    "time_stamp": "2023-08-02 10:08:41",
+    "text": "<@U02P3JPAV3Q> Yeah, that's what I was wondering.  So when you say batch delete is this the right call? DELETE <https://api.hubapi.com/crm/v3/objects/line_items/12345678>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nadia X García",
+      "poster_handle": "nadia.garcia"
+    },
+    "time_stamp": "2023-08-02 10:19:43",
+    "text": "Hello all! Is there any service to create meetings for custom development? Like this <https://meetings.HubSpot.com/n> ? Thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Shanley Rosero",
+      "poster_handle": "shanley.rosero"
+    },
+    "time_stamp": "2023-08-02 10:34:47",
+    "text": "I just assumed she didn't have Operations Hub to leverage webhook actions, which is why she chose public apps, but <@U03BA1PRV7S> excellent idea."
+  },
+  {
+    "poster": {
+      "poster_name": "Shanley Rosero",
+      "poster_handle": "shanley.rosero"
+    },
+    "time_stamp": "2023-08-02 10:39:17",
+    "text": "<@U04Q5ARNZEV>: This one *`/crm/v3/objects/line_items/batch/archive`*\nJust get all associated line items first  from a specific record to then aggregate the line item ids to be batch deleted using the endpoint above\n\n<https://developers.HubSpot.com/docs/api/crm/line-items>"
+  },
+  {
+    "poster": {
+      "poster_name": "Cristóbal Parraguez",
+      "poster_handle": "cparraguez"
+    },
+    "time_stamp": "2023-08-02 10:46:08",
+    "text": "I'm not sure if she has Ops Hub or not but if she doesnt, heres the workaround of the workaround:\n• Instead of the \"send webhook step\", set a create a google sheets row.\n• Create an app script that will trigger any time a row is added and send a webhook"
+  },
+  {
+    "poster": {
+      "poster_name": "Cristóbal Parraguez",
+      "poster_handle": "cparraguez"
+    },
+    "time_stamp": "2023-08-02 10:52:33",
+    "text": "I dont think there is a task property that indicates the source. I would set a \"tag\" in all tasks created by workflows for example: instead of \"Update Deal's Information\", set the name to \"[Automated] Update Deal's Information\" and then you can search for tasks that have \"Automated\" where status is X,Y,Z."
+  },
+  {
+    "poster": {
+      "poster_name": "Valentina Varela Alzate",
+      "poster_handle": "valentina.varela"
+    },
+    "time_stamp": "2023-08-02 11:11:54",
+    "edited": {
+      "time_stamp": "2023-08-02 11:12:10"
+    },
+    "text": "<@U03BA1PRV7S> <@U02P3JPAV3Q> perfect, I will explore the solutions, thank you very much"
+  },
+  {
+    "poster": {
+      "poster_name": "Lee M",
+      "poster_handle": "lee467"
+    },
+    "time_stamp": "2023-08-02 11:44:38",
+    "text": "<@U02P3JPAV3Q> Thanks will give that a try.  Appreciate your time and info."
+  },
+  {
+    "poster": {
+      "poster_name": "Sedky Abou-Shamalah",
+      "poster_handle": "sedky"
+    },
+    "time_stamp": "2023-08-02 12:00:30",
+    "text": "Hi - Looking for an API to receive the most recent X emails for a given Company, provided a Company ID.\nI’m getting confused with this `associations` .  Is there an easy way to do this?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-08-02 12:38:58"
+      },
+      {
+        "time_stamp": "2023-08-03 04:27:57"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Sedky Abou-Shamalah",
+      "poster_handle": "sedky"
+    },
+    "time_stamp": "2023-08-02 12:15:09",
+    "text": "There’s also the “Engagements - Email” API, but as far as I can see, there’s no way to filter by Company?\n<https://developers.HubSpot.com/docs/api/crm/email>"
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2023-08-02 12:27:16",
+    "edited": {
+      "time_stamp": "2023-08-02 12:27:59"
+    },
+    "text": "You can retrieve a full property list for the vast majority of object types in HubSpot using the Properties API.\n\n`hs_engagement_source` is likely what you’re looking for.\n\n<https://developers.HubSpot.com/docs/api/crm/properties>"
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2023-08-02 12:38:58",
+    "text": "You can use the Associations API, fromObjectType: Company, toObjectType: Email. And adding the company id as an input.\n\nDepending on what you need, you could then use the IDs returned in the response to then batch read the emails using the API doc you linked in your message.\n\nRetrieving the most recent email for a Company will be a bit more involved than a contact, where you could probably just use the search API.\n\nHaven’t spent a ton of time with the Email API, so there could be a simpler way.\n\n<https://developers.HubSpot.com/docs/api/crm/associations>"
+  },
+  {
+    "poster": {
+      "poster_name": "Taylor O'Reilly",
+      "poster_handle": "taylor699"
+    },
+    "time_stamp": "2023-08-02 12:54:47",
+    "text": "hey everyone. is it possible to get what users haven’t accepted invites to a portal yet?"
+  },
+  {
+    "poster": {
+      "poster_name": "Lee M",
+      "poster_handle": "lee467"
+    },
+    "time_stamp": "2023-08-02 12:58:22",
+    "text": "<@U02P3JPAV3Q> so I am sending over the following:\n\n<https://api.hubapi.com/crm/v3/objects/line_items/batch/archive>\n\nbody is:\n{\"inputs\":[{\"id\":\"6312610840\"},{\"id\":\"6312610841\"},{\"id\":\"6312610842\"}]}\n\nThe return content is:\n\"Value cannot be null.\" &amp; vbCrLf &amp; \"Parameter name: name\"\n\nOn <https://developers.HubSpot.com/docs/api/crm/line-items>, section 'Archive a batch of line items by ID' doesn't say anything about a 'name' parameter.\n\nAny ideas why I get this return text?"
+  },
+  {
+    "poster": {
+      "poster_name": "Cody Koscielski",
+      "poster_handle": "codykoscielski"
+    },
+    "time_stamp": "2023-08-02 13:27:44",
+    "edited": {
+      "time_stamp": "2023-08-02 13:28:16"
+    },
+    "text": "Hi everyone! I am currently working on a custom build PHP application and I am trying to integrate GraphQL to query two custom objects. After some reserach, I am using the Softonic GraphQL package to make the connection. I have a private app setup and I am passing in the auth Bearer token in my request, but I am getting a 401 unauthorized message. I tested my query and it works in the GraphQLi editor on HubSpot. Here is my code:\n\n_public function_ searchCustomObjects($value) {\n    $client = ClientBuilder::_build_('<https://api.hubapi.com/collector/graphql>');\n\n    $query = '\n    query MyQuery {\n        CRM {\n            p_distributors_collection(filter: {zip_code__eq: $value}) {\n                items {\n                    distributor\n                    distributor_email\n                    distributor_phone\n                }\n            }\n            p_zip_codes_collection(filter: {zip_code__eq: $value}) {\n                items {\n                     distributor\n                    distributor_email\n                    distributor_phone\n                }\n            }\n        }\n    }\n';\n\n    $options = [\n        'json' =&gt; [\n            'query' =&gt; $query,\n            'variables' =&gt; [\n                'value' =&gt; $value,\n            ],\n        ],\n        'headers' =&gt; [\n            'Authorization' =&gt; 'Bearer ' . $this-&gt;apiKey,\n            'Content-Type' =&gt; 'application/json',\n        ],\n    ];\n\n    $response = $client-&gt;query($query, $options);\n\n    _if_ (!$response-&gt;hasErrors()) {\n        _return_ $response-&gt;getData();\n    } _else_ {\n        _throw new_ Exception(\"GraphQL query failed: \" . _json_encode_($response-&gt;getErrors()));\n    }\n}\n\nAny advise?"
+  },
+  {
+    "poster": {
+      "poster_name": "Lee M",
+      "poster_handle": "lee467"
+    },
+    "time_stamp": "2023-08-02 13:36:50",
+    "text": "<@U02P3JPAV3Q> Is it possible that in sandbox you can't delete?  I just tried DELETE <https://api.hubapi.com/crm/v3/objects/quotes/#######> and it returns json about quote object is not deleted, this again is in sandbox environment."
+  },
+  {
+    "poster": {
+      "poster_name": "Shanley Rosero",
+      "poster_handle": "shanley.rosero"
+    },
+    "time_stamp": "2023-08-02 13:40:10",
+    "text": "You can delete in sandbox. Are you sure your not passing an empty id? in the body"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Fiori",
+      "poster_handle": "ericf"
+    },
+    "time_stamp": "2023-08-02 13:55:51",
+    "text": "Does anyone know if it is possible to get the ratelimit headers from the HubSpot Javascript client library?"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Sullivan",
+      "poster_handle": "ssullivan"
+    },
+    "time_stamp": "2023-08-02 13:59:46",
+    "text": "Hello, all. On our old email platform, we were able to utilize their API to automatically send out daily emails (using a cron job that fired a script which sent all the information through their API). It looks as though HubSpot does not have that availability in their Marketing Email API. We cannot use the Single-Send API since we need to send to a list, not individual emails. I've been messing around with it and am able to create the email using the Marketing Email API, but cannot set it to \"publish\". I see there are a decent bit of properties in the data we're allowed to pass through, but nothing seems to work. Leaves me to believe it's not functional...yet.\n\nDoes anyone have any workarounds for getting automatic emails (same template, different content) sent out, daily?"
+  },
+  {
+    "poster": {
+      "poster_name": "Lee M",
+      "poster_handle": "lee467"
+    },
+    "time_stamp": "2023-08-02 14:17:31",
+    "text": "<@U02P3JPAV3Q> yeah, looking at logs it appears to be working so I wonder if it's the handing of 204 result."
+  },
+  {
+    "poster": {
+      "poster_name": "Lee M",
+      "poster_handle": "lee467"
+    },
+    "time_stamp": "2023-08-02 14:44:44",
+    "text": "<@U02P3JPAV3Q> I couldn't get batch line item archive to work but can get quote archive to work so just going to recreate quote and line items.  Appreciate all your time"
+  },
+  {
+    "poster": {
+      "poster_name": "Shanley Rosero",
+      "poster_handle": "shanley.rosero"
+    },
+    "time_stamp": "2023-08-02 14:45:54",
+    "text": "Welcome, I'm actually trying batch line item archive right now"
+  },
+  {
+    "poster": {
+      "poster_name": "Shanley Rosero",
+      "poster_handle": "shanley.rosero"
+    },
+    "time_stamp": "2023-08-02 14:51:27",
+    "text": "<@U04Q5ARNZEV>: It's actually working sorry missed out what you said about 204"
+  },
+  {
+    "poster": {
+      "poster_name": "Abel González Rodriguez",
+      "poster_handle": "abelgr45"
+    },
+    "time_stamp": "2023-08-02 16:00:19",
+    "text": "yes, it’s perfect, thanks"
+  },
+  {
+    "poster": {
+      "poster_name": "John Alfie Machica",
+      "poster_handle": "jcmachica"
+    },
+    "time_stamp": "2023-08-03 00:49:09",
+    "text": "good day! got a quick question, can i use HubSpot api for python to extract details from files inside a folder in HubSpot? details like (file_id, who uploaded the file, file url)"
+  }
+]

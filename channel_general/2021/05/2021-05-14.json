@@ -1,0 +1,220 @@
+[
+  {
+    "poster": {
+      "poster_name": "Stefan Dzalev",
+      "poster_handle": "stefan632"
+    },
+    "time_stamp": "2021-05-14 01:13:46",
+    "text": "Hi, in my dynamic page i use a list of other pages from another table. example:  inside car i have a carousel of trucks, that i am getting from another table. the issue is, when i try to redirect to the trucks url, the slug is not changing to `trucks/` but it stays `cars/`\nbasically this is what i do\n```            {% for row in hubdb_table_rows(&lt;table id&gt;, \"limit=6\") %}\n                  &lt;div class=\"inspslideboximg\"&gt;\n                     &lt;a href=\"trucks/{{ row.hs_path }}\"&gt;&lt;img style=\"width:390px;height:261px;\" src=\"{{ row.image.url }}\"&gt;&lt;/a&gt;\n                  &lt;/div&gt;\n            {% endfor %}\n ```",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-05-14 01:42:08"
+      },
+      {
+        "time_stamp": "2021-05-14 01:42:30"
+      },
+      {
+        "time_stamp": "2021-05-14 05:14:07"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Stefan Dzalev",
+      "poster_handle": "stefan632"
+    },
+    "time_stamp": "2021-05-14 01:15:03",
+    "text": "and when clicked the url is cars/trucks/{hs path}, it does not remove the cars slug. any ideas ???"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-05-14 01:41:28",
+    "text": "Using Webhooks"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-05-14 01:42:08",
+    "text": "because trucks/ is relative"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-05-14 01:42:30",
+    "edited": {
+      "time_stamp": "2021-05-14 01:42:48"
+    },
+    "text": "You need to do\n```href=\"/trucks/{{ row.hs_path }}/\"```"
+  },
+  {
+    "poster": {
+      "poster_name": "Stefan Dzalev",
+      "poster_handle": "stefan632"
+    },
+    "time_stamp": "2021-05-14 05:14:07",
+    "text": "Thanks Kieran, you saved my day!"
+  },
+  {
+    "poster": {
+      "poster_name": "Russell Benzing",
+      "poster_handle": "rbenzing"
+    },
+    "time_stamp": "2021-05-14 07:15:58",
+    "text": "Hello HubSpot Devs, I have a general question around file uploads from forms. When did they change to an integration? the urls of files uploaded look like:\n```<https://api.HubSpot.com/form-integrations/v1/uploaded-files/signed-url-redirect/>…```\nHowever this isn’t a public url. My problem is I want to us a field like this to upload profile images. Is there a way to make the urls public for image uploads?\nTag <@U2H3TT8F2> :D",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-05-14 08:04:43"
+      },
+      {
+        "time_stamp": "2021-05-14 08:06:05"
+      },
+      {
+        "time_stamp": "2021-05-14 08:16:42"
+      },
+      {
+        "time_stamp": "2021-05-14 08:24:24"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-05-14 08:04:43",
+    "text": "<https://developers.HubSpot.com/changelog/upcoming-forms-file-upload-access>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-05-14 08:06:05",
+    "edited": {
+      "time_stamp": "2021-05-14 08:06:34"
+    },
+    "text": "Basic jist was - by default we treat file uploads in forms as intended to be private so folks don’t accidentally host things that should be confidential at a publicly accessible URL.\n\nIntegrations can choose how the images are uploaded - designating if it should be public."
+  },
+  {
+    "poster": {
+      "poster_name": "Russell Benzing",
+      "poster_handle": "rbenzing"
+    },
+    "time_stamp": "2021-05-14 08:16:42",
+    "text": "Thanks <@U7SL518D6> that makes sense. I must have missed that announcement. Is there an area in Settings to adjust how the images are uploaded? or do i need to build an integration for this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-05-14 08:24:24",
+    "text": "This may not be the definitive answer. I just poked around in the form tool - we don’t appear to have a way to change whether the field makes a file public/private in the UI.\n\nYou can however using the API - which while you can use a custom integration for it - you can also use a serverless function.\n\n<https://developers.HubSpot.com/changelog/new-endpoint-to-download-files>\n\nSo basically you could have your form actually just post to a serverless function - then your function could either upload the file direct to the file manager and associate it to the contact, or you could do it the less efficient route and have it be part of the form. Get the url from the contact, and change the URL to a public URL."
+  },
+  {
+    "poster": {
+      "poster_name": "Taylor Jones",
+      "poster_handle": "taylor602"
+    },
+    "time_stamp": "2021-05-14 10:43:06",
+    "text": "Hi, I’m not sure where to ask this, but I am working on an a react application that uses the `chat widget sdk`.  We are trying to set\n```window.hsConversationsSettings = {\n   inlineEmbedSelector: '#some-id',\n}```\nprior to loading the script, but when we do we are seeing that the `window.HubSpotConversations.widget.status()` is always returning:\n```{loaded: false, pending: true}```\nWhen we remove `window.hsConversationsSettings`, the widget loads successfully but is not embedded where we would like it.  Any help would really be appreciated."
+  },
+  {
+    "subtype": "tombstone",
+    "text": "This message was deleted.",
+    "time_stamp": "2021-05-14 10:52:21",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2021-05-14 11:12:19"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Christopher Mathieu",
+      "poster_handle": "christopher.mathieu"
+    },
+    "time_stamp": "2021-05-14 11:11:45",
+    "text": "Has anybody figured out a workaround for the fact that form error messages aren’t being read by screen readers on HubSpot?"
+  },
+  {
+    "poster": {
+      "poster_name": "Christopher Mathieu",
+      "poster_handle": "christopher.mathieu"
+    },
+    "time_stamp": "2021-05-14 11:12:01",
+    "text": "Or to be more specific they ARE read its just they're not related to the associated input field"
+  },
+  {
+    "poster": {
+      "poster_name": "Lance Erickson",
+      "poster_handle": "lance.erickson"
+    },
+    "time_stamp": "2021-05-14 11:12:19",
+    "text": "Might want to cross-post to <#C2YHAHB6K|api>"
+  },
+  {
+    "poster": {
+      "poster_name": "Christopher Mathieu",
+      "poster_handle": "christopher.mathieu"
+    },
+    "time_stamp": "2021-05-14 11:12:21",
+    "text": "Which is throwing an accessibility issue"
+  },
+  {
+    "poster": {
+      "poster_name": "Barry Grennan",
+      "poster_handle": "barry"
+    },
+    "time_stamp": "2021-05-14 11:18:46",
+    "edited": {
+      "time_stamp": "2021-05-14 11:19:58"
+    },
+    "text": "Hi All, this is a conundrum I constantly run into:\nI want to remove a post from the {% content for contents %} loop. In this case it's a featured post.\nBut any method I've come across always leaves the removed post in the loop.index so you end up showing an uneven amount of posts.",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-05-14 11:26:52"
+      },
+      {
+        "time_stamp": "2021-05-14 11:26:59"
+      },
+      {
+        "time_stamp": "2021-05-26 13:36:25"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-05-14 11:26:52",
+    "edited": {
+      "time_stamp": "2021-05-14 11:28:03"
+    },
+    "text": "How about something like this?\n\n```{% set new_contents = [] %}\n\n{% for content in contents %}\n  {% unless item.is_featured %}\n    {% new_contents.append(content) %}\n  {% endunless %}\n{% endfor %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-05-14 11:26:59",
+    "text": "then you can iterate over new_contents."
+  }
+]

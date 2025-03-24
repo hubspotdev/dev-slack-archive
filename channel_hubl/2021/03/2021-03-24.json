@@ -1,0 +1,222 @@
+[
+  {
+    "poster": {
+      "poster_name": "Miro Sedlacek",
+      "poster_handle": "miro.sedlacek"
+    },
+    "time_stamp": "2021-03-24 03:18:02",
+    "text": "is there a way i can do ajax filtering on the blog listing page?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2021-03-24 08:20:08"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andrej Prazenica",
+      "poster_handle": "prazenica"
+    },
+    "time_stamp": "2021-03-24 06:38:33",
+    "text": "Hi! :slightly_smiling_face:\n\nWe’re trying to find out, why we can’t list our blog posts with this:\n      Here: :arrow_down:\n```      {% for content in contents %}\n          &lt;div class=\"post-item\"&gt;\n              Post item markup that renders with each iteration.              \n          &lt;/div&gt;\n      {% endfor %}```\n    This is in the official documentation, but for some reason it doesn’t work :confused: Is there anyone who had the similar experience?\n\n``` {{ blog_recent_posts('default',200) }}\n      {% set rec_posts = blog_recent_posts('default', 200) %}\n      {% for rec_post in rec_posts %}\n          &lt;div class=\"post-title\"&gt;{{ rec_post.name }}&lt;/div&gt;\n      {% endfor %}```\n:top: This works fine.",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-03-24 06:46:26"
+      },
+      {
+        "time_stamp": "2021-03-24 06:48:38"
+      },
+      {
+        "time_stamp": "2021-03-24 06:58:27"
+      },
+      {
+        "time_stamp": "2021-03-24 07:17:53"
+      },
+      {
+        "time_stamp": "2021-03-24 07:21:42"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-03-24 06:46:26",
+    "text": "<https://developers.HubSpot.com/docs/cms/building-blocks/templates/blog-template-markup#blog-listing-for-loop|Blog loop> needs to be used on a blog listing template as contents is populated by the blog.\n\n\n<https://developers.HubSpot.com/docs/cms/hubl/functions#blog-recent-posts|Blog recent post functions>, should be used anywhere you need to display the blog listing outside of your blog listing page.  You could use it on a post detail page, or on your normal CMS page templates.\n\nif you’re not on a blog template you need to provide something other than `default` as the value because otherwise you’re not telling it what blog you want to pull posts from."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrej Prazenica",
+      "poster_handle": "prazenica"
+    },
+    "time_stamp": "2021-03-24 06:48:38",
+    "text": "Hi Jon, thanks for the quick answer. We actually do use the same template for listing and also for blog posts.\nDo you have any other idea, what might be the problem?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-03-24 06:58:27",
+    "text": "Sounds like you’re likely accidentally trying to use for content in contents on the post detail page then.\n\nThis is one of the advantages of separating the blog post  and blog listing templates.\n\nWhich is our recommendation as it makes the content creator side of the experience easier. It also makes troubleshooting as a developer much easier since you are separating the logic for the two different template types.\n\nI would compare your templates against the HubSpot boilerplate and see where there are differences.\n\n<https://github.com/HubSpot/cms-theme-boilerplate/blob/main/src/templates/blog-index.html>\n\n<https://github.com/HubSpot/cms-theme-boilerplate/blob/main/src/templates/blog-post.html>"
+  },
+  {
+    "poster": {
+      "poster_name": "Sami Sundberg",
+      "poster_handle": "sami.sundberg"
+    },
+    "time_stamp": "2021-03-24 07:04:19",
+    "text": "I assume that you have CMS Enterprise since you need membership functionality to get `crm_object` function work. Enterprise Hub means you can create serverless functions.\n\nIf you create serverless function that uses Owner API end-point (more <https://legacydocs.HubSpot.com/docs/methods/owners/get_an_owner|here>) you can code frontside javascript that renders deal owners based on id’s after the page is loaded. A bit complicated but doable.\n\nAlso if the contact owner is same as the deal owner, it would be easier to get contact owner instead. That you can do with `{{ personalization_token(\"contact.HubSpot_owner_id.firstname\", \"us\") }}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Sami Sundberg",
+      "poster_handle": "sami.sundberg"
+    },
+    "time_stamp": "2021-03-24 07:15:04",
+    "text": "Is `{{ personalization_token(\"contact.HubSpot_owner_id.firstname\", \"us\") }}`  something you could use here?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrej Prazenica",
+      "poster_handle": "prazenica"
+    },
+    "time_stamp": "2021-03-24 07:17:53",
+    "text": "Hi Jon,\nagain, thank you very much.\n\nHere is our code:\n```&lt;!--\n  templateType: blog_listing\n  isAvailableForNewContent: true\n--&gt;```\n``` {% if is_listing_view %}\n            LISTING\n        {% else %}\n            BLOG POST\n        {% endif %}```\n\nI’m getting: BLOG POST\n\nWe set up this blog template as a listing one in the settings as well. Do you have any recommendation?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-03-24 07:21:42",
+    "edited": {
+      "time_stamp": "2021-03-24 07:22:20"
+    },
+    "text": "well for one, if you’re using blog_listing as your template type you don’t need to use the if statement at all. In-fact it probably returns null because you can’t use it as the blog detail page  anyways. thus resulting in blog post displaying, because the variable is undefined."
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2021-03-24 08:20:08",
+    "text": "Only if you load the blogs via ajax to begin with. Or at some point override the paginated default with an ajax listing. For example you could create the listing page using the default setup in HubSpot but then make a filte rmodule that clears the default listing and switches over to an ajax based listing. But It seems a little wonky in my mind to do it that way. Might as well grab them all via ajax once from the beginning and then use JS to conditionally display them with the filters"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonny MacEachern",
+      "poster_handle": "maceachern.jonny"
+    },
+    "time_stamp": "2021-03-24 09:33:20",
+    "edited": {
+      "time_stamp": "2021-03-24 09:33:54"
+    },
+    "text": "If I go to <http://example.com/blog/topics/foobar/|example.com/blog/topics/foobar/>, my listings template filters by the `foobar` tag, however I’m not sure which HubL variable this is leveraging. By accessing this endpoint, does HubSpot automatically filter `contents` to those of that tag?",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-03-24 09:52:24"
+      },
+      {
+        "time_stamp": "2021-03-24 09:53:19"
+      },
+      {
+        "time_stamp": "2021-03-24 09:54:14"
+      },
+      {
+        "time_stamp": "2021-03-24 09:57:50"
+      },
+      {
+        "time_stamp": "2021-03-24 10:42:48"
+      },
+      {
+        "time_stamp": "2021-03-24 10:44:26"
+      },
+      {
+        "time_stamp": "2021-03-24 10:44:33"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Stefen Phelps",
+      "poster_handle": "stefen"
+    },
+    "time_stamp": "2021-03-24 09:52:24",
+    "text": "that’s correct."
+  },
+  {
+    "poster": {
+      "poster_name": "Stefen Phelps",
+      "poster_handle": "stefen"
+    },
+    "time_stamp": "2021-03-24 09:53:19",
+    "text": "you can use the `tag` variable for content you want to show only on those topic pages"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonny MacEachern",
+      "poster_handle": "maceachern.jonny"
+    },
+    "time_stamp": "2021-03-24 09:54:14",
+    "edited": {
+      "time_stamp": "2021-03-24 09:54:22"
+    },
+    "text": "Alright. And one other issue I’m having is that it seems to not include the most recent post for that tag, as in an off-by-one error. Are there any gotchas that I should be aware of that may be causing this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Stefen Phelps",
+      "poster_handle": "stefen"
+    },
+    "time_stamp": "2021-03-24 09:57:50",
+    "text": "shouldn’t be doing that. sounds like there might be an if statement in the contents loop checking for an index != 0 or something along those lines."
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2021-03-24 10:22:28",
+    "text": "Thanks! Yeah, I was afraid that was the answer, that's all I can think of."
+  },
+  {
+    "poster": {
+      "poster_name": "Jonny MacEachern",
+      "poster_handle": "maceachern.jonny"
+    },
+    "time_stamp": "2021-03-24 10:42:48",
+    "text": "Thanks Stefan, that was the issue. Last question - how could I check if I’m on the default blog listings vs. tag-filtered listings?"
+  },
+  {
+    "poster": {
+      "poster_name": "Stefen Phelps",
+      "poster_handle": "stefen"
+    },
+    "time_stamp": "2021-03-24 10:44:26",
+    "text": "`{% if tag %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonny MacEachern",
+      "poster_handle": "maceachern.jonny"
+    },
+    "time_stamp": "2021-03-24 10:44:33",
+    "text": "Thank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Aaron Dadap",
+      "poster_handle": "wesleyadwebster"
+    },
+    "time_stamp": "2021-03-24 16:17:16",
+    "text": "I have a HubDB list of members, that gets iterated through. I want to add a drop down by locations using Vue. I have no idea how to connect the two. Is there an example? I inherited a codebase that had a different filter type with checkboxes but its really hard to refactor it or just getting the hubdb portion of it. So I opt in to make a new one from scratch"
+  }
+]

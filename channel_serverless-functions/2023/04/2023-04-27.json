@@ -1,0 +1,54 @@
+[
+  {
+    "text": "Hello there! I’m a beginner in programming and I’m trying to create a record from an object to another, using CRM extensions UI. The form is working, but the values is not sending to create a record.\n\nHere is the code:\n`const HubSpot = require('@HubSpot/api-client');`\n`const HubSpotClient = new HubSpot.Client({ accessToken: 'mytoken' });`\n\n`exports.main = async (context = {}, sendResponse) =&gt; {`\n  `const { valor_base_das_parcelas } = context.propertiesToSend;`\n  \n\n  `try {`\n    `sendResponse({`\n      `sections: [`\n        `{`\n          `type: \"text\",`\n          `text: \"Preencha os campos abaixo para adicionar um reajuste.\",`\n        `},`\n        `{`\n          `type: \"form\",`\n          `content: [`\n            `{`\n              `type: \"select\",`\n              `id: \"indexador\",`\n              `name: \"indexador\",`\n              `label: \"Indexador\",`\n              `placeholder: \"Select a value\",`\n              `options: [`\n                `{`\n                  `value: \"IGP-DI\",`\n                  `label: \"IGP-DI\"`\n                `},`\n                `{`\n                  `value: \"IGP-M\",`\n                  `label: \"IGP-M\"`\n                `},`\n                `{`\n                  `value: \"IPC\",`\n                  `label: \"IPC\"`\n                `},`\n                `{`\n                  `value: \"IPCA\",`\n                  `label: \"IPCA\"`\n                `},`\n                `{`\n                  `value: \"Manual\",`\n                  `label: \"Manual\"`\n                `},`\n                `{`\n                  `value: \"Média de IPCA e IGP-M\",`\n                  `label: \"Média de IPCA e IGP-M\"`\n                `}`\n              `]`\n            `},`\n            `{`\n              `type: \"input\",`\n              `name: \"data_do_reajuste\",`\n              `id: \"data_do_reajuste\",`\n              `label: \"Data do Reajuste\",`\n              `tooltip: \"Digite a data do reajuste\",`\n              `inputType: \"text\",`\n              `placeholder: \"YYYY-MM-DD\",`\n              `description: \"Insira a data do reajuste no formato YYYY-MM-DD.\",`\n              `pattern: \"^\\\\d{4}-\\\\d{2}-\\\\d{2}$\",`\n              `validationErrorMessage: \"Digite a data no formato correto: YYYY-MM-DD.\",`\n            `},`\n            `{`\n              `type: \"input\",`\n              `name: \"reajuste_percentual\",`\n              `id: \"reajuste_percentual\",`\n              `label: \"Reajuste Percentual\",`\n              `tooltip: \"Digite o reajuste percentual\",`\n              `inputType: \"text\",`\n              `description: \"Insira o reajuste percentual como um número (ex.: 5 para 5%).\",`\n              `pattern: \"^(0|[1-9][0-9]?|100)$\",`\n              `validationErrorMessage: \"Digite um número inteiro entre 0 e 100.\",`\n            `},`\n            `{`\n              `type: \"input\",`\n              `id: \"valor_no_periodo\",`\n              `name: \"valor_no_periodo\",`\n              `inputType: \"text\",`\n              `label: \"Valor no Período\",`\n              `initialValue: valor_base_das_parcelas, // Preencha o campo com o valor_base_das_parcelas`\n            `},`\n          `],`\n        `},`\n        `{`\n          `type: \"button\",`\n          `text: \"Adicionar reajuste\",`\n          `onClick: {`\n            `type: \"SUBMIT\",`\n            `serverlessFunction: \"reajustes-card\",` \n          `},`\n        `},`\n      `],`\n    `});`\n\n    `if (context.event &amp;&amp; context.event.type === 'SUBMIT') {`\n\n        `const indexador = context.event.payload.formState.indexador;`\n        `const data_do_reajuste = context.event.payload.formState.data_do_reajuste;`\n        `const reajuste_percentual = context.event.payload.formState.reajuste_percentual;`\n        `const valor_no_periodo = context.event.payload.formState.valor_no_periodo;`\n        \n        \n        \n        `// Convertendo strings para data e números`\n        `const date = new Date(data_do_reajuste);`\n        `const isValidDate = !isNaN(date.getTime());`\n        `const convertedDataDoReajuste = isValidDate ? date.toISOString() : null;`\n        `const convertedReajustePercentual = parseFloat(reajuste_percentual);`\n        `const convertedValorNoPeriodo = parseFloat(valor_no_periodo);`\n    \n        `const properties = {`\n          `data_do_reajuste: convertedDataDoReajuste,`\n          `reajuste_percentual: convertedReajustePercentual,`\n          `valor_no_periodo: convertedValorNoPeriodo,`\n          `indexador: indexador,`\n        `};`\n    \n        `const SimplePublicObjectInputForCreate = {`\n          `properties,`\n        `};`\n    \n        `// Substitua objectType pelo tipo de objeto que você deseja criar (ex: 'deals', 'contacts', etc.)`\n        `const objectType = '2-113459555';`\n        `await HubSpotClient.crm.objects.basicApi.create(`\n              `objectType,`\n              `SimplePublicObjectInputForCreate`\n            `);`\n\n        `}`\n            `sendResponse({`\n              `message: {`\n                `type: \"SUCCESS\",`\n                `body: \"Object created successfully.\",`\n              `},`\n            `});`\n          \n      `} catch (error) {`\n        `sendResponse({`\n          `message: {`\n            `type: \"ERROR\",`\n            `body: `Error: ${error.message}`,`\n          `},`\n        `});`\n      `}}`",
+    "time_stamp": "2023-04-27 09:20:38",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-04-27 09:22:32"
+      },
+      {
+        "time_stamp": "2023-04-27 09:47:29"
+      },
+      {
+        "time_stamp": "2023-04-27 09:51:54"
+      },
+      {
+        "time_stamp": "2023-04-27 09:56:27"
+      }
+    ]
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-04-27 09:22:32"
+  },
+  {
+    "poster": {
+      "poster_name": "Ayoola Animashaun",
+      "poster_handle": "aanimashaun"
+    },
+    "time_stamp": "2023-04-27 09:47:29",
+    "text": "There’s a required property that needs to be set when creating a record on this object.. Looks like the property ‘indexador’.\n\nCheck if this property is set, or add a default or make it unrequired"
+  },
+  {
+    "poster": {
+      "poster_name": "Ayoola Animashaun",
+      "poster_handle": "aanimashaun"
+    },
+    "time_stamp": "2023-04-27 09:48:21",
+    "text": "Hi all,\n\nI wonder if anyone has an idea how I can address an issue I am having with the CRM cards, the middle pane card.\n\nBasically, I have a form... with two drop down properties. I want dropdown 2 to show values based on what a user selects in drop down 1.\n\nAt the moment, when I build the card, drop down 2 doesnt change based on drop down 1.\n\nI thought about having two cards, and arrange the project such that, card 1 has drop down one and a button called ‘Next’. Onclick, the button should fire a serverless action hook..... This is not working.. the cards are showing over each other.... and clicking the button doesn’t do anything.\n\nAm I on the right track with 2 cards, is there anyway to fix this?\n\nLastly, is it possible to use JS to control the behavior of the crm card?"
+  },
+  {
+    "text": "Thank you <@U03BVLC2LDN>. The input is correct on form, but seems that part of the code can’t receive the inputs.\n\nif (context.event &amp;&amp; context.event.type === ‘SUBMIT’) {\n\n        const indexador = context.event.payload.formState.indexador;\n        const data_do_reajuste = context.event.payload.formState.data_do_reajuste;\n        const reajuste_percentual = context.event.payload.formState.reajuste_percentual;\n        const valor_no_periodo = context.event.payload.formState.valor_no_periodo;\n\n\n\n        // Convertendo strings para data e números\n        const date = new Date(data_do_reajuste);\n        const isValidDate = !isNaN(date.getTime());\n        const convertedDataDoReajuste = isValidDate ? date.toISOString() : null;\n        const convertedReajustePercentual = parseFloat(reajuste_percentual);\n        const convertedValorNoPeriodo = parseFloat(valor_no_periodo);\n\n        const properties = {\n          data_do_reajuste: convertedDataDoReajuste,\n          reajuste_percentual: convertedReajustePercentual,\n          valor_no_periodo: convertedValorNoPeriodo,\n          indexador: indexador,\n        };\n\n        const SimplePublicObjectInputForCreate = {\n          properties,\n        };",
+    "time_stamp": "2023-04-27 09:51:54"
+  },
+  {
+    "poster": {
+      "poster_name": "Ayoola Animashaun",
+      "poster_handle": "aanimashaun"
+    },
+    "time_stamp": "2023-04-27 09:56:27",
+    "text": "Log it out… Are other inputs coming out?"
+  }
+]

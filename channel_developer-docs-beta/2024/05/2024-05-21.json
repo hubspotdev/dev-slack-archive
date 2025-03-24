@@ -1,0 +1,115 @@
+[
+  {
+    "poster": {
+      "poster_name": "Sebastiano Zanni",
+      "poster_handle": "sebastiano.zanni"
+    },
+    "time_stamp": "2024-05-21 06:38:25",
+    "text": "I have a couple of questions about conversations api. We retrieve tickets and their associations with conversations, sometimes we receive different response from HubSpot. We need the conversation ID to get then all the messages related to that thread, using\n```GET /conversations/v3/conversations/threads/{threadId}/messages```\nWhat it is happening is that sometime I'm receiving this response:\n```{\n    \"id\": \"2746822317\",\n    \"properties\": {\n        \"createdate\": \"2024-05-21T09:18:15Z\",\n        \"hs_auto_generated_from_thread_id\": \"7191973763\",\n        \"hs_conversations_originating_thread_id\": \"7191973763\",\n        \"hs_lastmodifieddate\": \"2024-05-21T09:23:22.291Z\",\n        \"hs_object_id\": \"2746822317\",\n        \"source_thread_id\": null\n    },\n    \"createdAt\": \"2024-05-21T09:18:15Z\",\n    \"updatedAt\": \"2024-05-21T09:23:22.291Z\",\n    \"archived\": false,\n    \"associations\": {\n        \"conversations\": {\n            \"results\": [\n                {\n                    \"id\": \"331169028705\",\n                    \"type\": \"ticket_to_conversation_v2\"\n                }\n            ]\n        }\n    }\n}```\nSometimes I'm receiving this one\n```{\n    \"id\": \"2742344964\",\n    \"properties\": {\n        \"createdate\": \"2024-05-20T12:03:32Z\",\n        \"hs_auto_generated_from_thread_id\": \"7184877065\",\n        \"hs_conversations_originating_thread_id\": \"7184877065\",\n        \"hs_lastmodifieddate\": \"2024-05-21T09:27:20.358Z\",\n        \"hs_object_id\": \"2742344964\",\n        \"source_thread_id\": null\n    },\n    \"createdAt\": \"2024-05-20T12:03:32Z\",\n    \"updatedAt\": \"2024-05-21T09:27:20.358Z\",\n    \"archived\": false,\n    \"associations\": {\n        \"conversations\": {\n            \"results\": [\n                {\n                    \"id\": \"7184877065\",\n                    \"type\": \"ticket_to_conversation\"\n                },\n                {\n                    \"id\": \"330895907684\",\n                    \"type\": \"ticket_to_conversation_v2\"\n                }\n            ]\n        }\n    }\n}```\nA conversation is generating 2 kind of ids: \"ticket_to_conversation\" and \"ticket_to_conversation_v2\"\nConversation API is working only with \"ticket_to_conversation\" id, and not with \"ticket_to_conversation_v2\" id\n\nI need to know:\n1. why sometime \"ticket_to_conversation\" is missing?\n2. how can I connect \"ticket_to_conversation_v2\" to the thread id I need to call later?\nPlease help, thank you\n\ncc <@U01QVR44MEY> <@U018962HD47>",
+    "reply_count": 15,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-05-21 07:31:32"
+      },
+      {
+        "time_stamp": "2024-05-21 07:42:38"
+      },
+      {
+        "time_stamp": "2024-05-21 07:43:08"
+      },
+      {
+        "time_stamp": "2024-05-21 07:44:47"
+      },
+      {
+        "time_stamp": "2024-05-21 07:45:45"
+      },
+      {
+        "time_stamp": "2024-05-21 07:50:08"
+      },
+      {
+        "time_stamp": "2024-05-21 07:50:49"
+      },
+      {
+        "time_stamp": "2024-05-22 09:18:32"
+      },
+      {
+        "time_stamp": "2024-05-22 11:00:38"
+      },
+      {
+        "time_stamp": "2024-05-22 11:03:07"
+      },
+      {
+        "time_stamp": "2024-05-22 11:51:50"
+      },
+      {
+        "time_stamp": "2024-06-03 01:12:16"
+      },
+      {
+        "time_stamp": "2024-07-08 10:15:36"
+      },
+      {
+        "time_stamp": "2024-07-08 10:20:07"
+      },
+      {
+        "time_stamp": "2024-07-09 03:08:44"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-05-21 07:31:32",
+    "text": "HubSpot is currently testing a new association type \"ticket_to_conversation_v2\". This new association, `278`, is intended to map a one-to-one relationship between a ticket and a conversation, which is distinct from the `ticket_to_conversation` which maps one conversation to many tickets.\n\nThere could be several reasons why sometimes \"ticket_to_conversation\" associations are missing:\n• The conversation API might still be in beta or under development/testing, and the new `v2` associations might not be fully integrated yet.\n• There might be conditions or configurations in your HubSpot setup where newer associations are applied selectively.\nCurrently, based on the recent messages, it seems that the `ticket_to_conversation_v2` isn't fully functional or production-ready. For now, you should primarily rely on the `ticket_to_conversation` associations as the `v2` option might not be reliable yet.\nHere's a sumary of the way forward:\n1. *Check for Both Associations*: When you retrieve conversations, you should check for both `ticket_to_conversation` and `ticket_to_conversation_v2`. Prioritize using `ticket_to_conversation` where available.\n2. *Fallback Logic*: If `ticket_to_conversation` is missing and only `ticket_to_conversation_v2` is available, continue using the current debug approach to log these instances. This way, once the `v2` issue is resolved by HubSpot, you can adapt your logic swiftly.\n*Example JSON Handling:*\nHere's some pseudo-code to handle conversation associations safely:\n```function getConversationId(associations) {\n    let conversationId = null;\n    let v2_fallback = null;\n\n    for (let association of associations) {\n        if (association.type === \"ticket_to_conversation\") {\n            conversationId = association.id;\n        } else if (association.type === \"ticket_to_conversation_v2\") {\n            v2_fallback = association.id;\n        }\n    }\n\n    return conversationId ? conversationId : v2_fallback;\n}\n\n// Example usage:\nlet associations = ticket.associations.conversations.results;\nlet conversationId = getConversationId(associations);\n\nif (conversationId) {\n    // Proceed to get messages using the conversation ID\n    // GET /conversations/v3/conversations/threads/{threadId}/messages\n} else {\n    console.error(\"No valid conversation ID found for ticket.\");\n}```\nBy ensuring you're ready for both types of associations and logging unknown cases, you can maintain robust integration even as HubSpot rolls out new features and updates.\nFor more precise event handling, monitoring HubSpot’s official updates on their API or contacting their support can provide the latest fixes or features on the use of `ticket_to_conversation_v2`."
+  },
+  {
+    "poster": {
+      "poster_name": "Sebastiano Zanni",
+      "poster_handle": "sebastiano.zanni"
+    },
+    "time_stamp": "2024-05-21 07:42:38",
+    "text": "thanks <@U01QVR44MEY>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-05-21 07:43:08",
+    "text": "100% bro"
+  },
+  {
+    "poster": {
+      "poster_name": "Sebastiano Zanni",
+      "poster_handle": "sebastiano.zanni"
+    },
+    "time_stamp": "2024-05-21 07:44:47",
+    "text": "is that correct that v2 does not work with thread messages endpoint?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-05-21 07:45:45",
+    "text": "v2 should definitely work still for getting the messages, the v2 is just a one to one association label"
+  },
+  {
+    "poster": {
+      "poster_name": "Sebastiano Zanni",
+      "poster_handle": "sebastiano.zanni"
+    },
+    "time_stamp": "2024-05-21 07:50:08",
+    "text": "actually this endpoint\n```<https://api.hubapi.com/conversations/v3/conversations/threads/330895907684/messages>```\nresponds\n```{\n    \"status\": \"error\",\n    \"message\": \"Thread 330895907684 not found\",\n    \"correlationId\": \"d4e95bcf-7fd2-403d-918a-d52a4622ee93\",\n    \"context\": {\n        \"id\": [\n            \"330895907684\"\n        ]\n    },\n    \"category\": \"OBJECT_NOT_FOUND\",\n    \"subCategory\": \"ConversationsResourceNotFoundError.THREAD_NOT_FOUND\"\n}```\nIf I use \"ticket_to_conversation\" id I get the list of messages"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-05-21 07:50:49",
+    "text": "very interesting, <@U04B32JHTUZ> should the v2 associations work like this?"
+  }
+]

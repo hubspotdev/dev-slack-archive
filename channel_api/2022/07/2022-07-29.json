@@ -1,0 +1,49 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jacek Łacny",
+      "poster_handle": "programista.zacny"
+    },
+    "time_stamp": "2022-07-29 03:19:04",
+    "text": "I have problem with `/api-catalog-public/v1/apis/marketing/v3/forms` .\nI used Swagger Codegen to generate Java classes (OpenAPI Generator does not work, problem with StackOverflowError, circular dependencies).\nI'm trying to call <https://developers.HubSpot.com/docs/api/marketing/forms> \"GET form definition\" <https://api.hubapi.com/marketing/v3/forms/{{formId}}>\nand deserialize it and there is a problem with Jackson (Spring Boot app):\n```org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Could not resolve subtype of [simple type, class com.hubapi.api.model.forms.HubSpotFormDefinition]: missing type id property 'type'; nested exception is com.fasterxml.jackson.databind.exc.InvalidTypeIdException: Could not resolve subtype of [simple type, class com.hubapi.api.model.forms.HubSpotFormDefinition]: missing type id property 'type'\n at [Source: (PushbackInputStream); line: 1, column: 4185]```\nAnd there is no property `type` in response from API.\n\nI think something wrong could be with:\n```package com.hubapi.api.model.forms;\n\nimport com.fasterxml.jackson.annotation.JsonSubTypes;\nimport com.fasterxml.jackson.annotation.JsonTypeInfo;\n/**\n* OneOfFormDefinitionBase\n*/\n@JsonTypeInfo(\n  use = JsonTypeInfo.Id.NAME,\n  include = JsonTypeInfo.As.PROPERTY,\n  property = \"type\")\n@JsonSubTypes({\n  @JsonSubTypes.Type(value = HubSpotFormDefinition.class, name = \"HubSpotFormDefinition\")\n})\npublic interface OneOfFormDefinitionBase {\n\n}```\nBTW: What is this? It's part of `HubSpotFormDefinition` definition in API.\n```          \"x-HubSpot-java-type-name\" : \"com.HubSpot.forms.external.core.models.forms.HubSpotFormDefinition\",\n          \"x-HubSpot-external-project-origin\" : false,\n          \"x-HubSpot-sub-type-impl\" : true```",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-07-29 06:42:19"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Fritsche",
+      "poster_handle": "chris.fritsche"
+    },
+    "time_stamp": "2022-07-29 03:20:31",
+    "text": "Hi!\nI renamed a private app last week, and had no impact or side-effects..."
+  },
+  {
+    "poster": {
+      "poster_name": "Muhsin Meydan",
+      "poster_handle": "muhsin"
+    },
+    "time_stamp": "2022-07-29 05:12:40",
+    "text": "Hi, I am submitting a request for creating a company and a contact then another one for creating association between them. Is this how things works with association flow? is there a away to create Company with Contact and associate them in a single call?"
+  },
+  {
+    "poster": {
+      "poster_name": "Amber Behring-Wojcek",
+      "poster_handle": "awojcek"
+    },
+    "time_stamp": "2022-07-29 06:18:50",
+    "text": "Thanks for sharing!"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacek Łacny",
+      "poster_handle": "programista.zacny"
+    },
+    "time_stamp": "2022-07-29 06:42:19",
+    "text": "<https://community.HubSpot.com/t5/APIs-Integrations/Java-deserializing-problem-with-oneOf/td-p/672759>"
+  }
+]

@@ -1,0 +1,85 @@
+[
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2023-10-17 04:39:05",
+    "text": "Is there anyone who can help me with this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Parker Short",
+      "poster_handle": "parker"
+    },
+    "time_stamp": "2023-10-17 08:04:50",
+    "text": "Was working with the exports API and ran into some weirdness - first it seems like it doesn’t support all of the operators as the search API, such as CONTAINS_TOKEN. Also, was curious why the rate limit was so low (10/day). We have a client who often shares their customer records with their own customers, and we were hoping to use the exports api in a custom card to simplify this. Don’t think that will be possible with only 10 requests a day."
+  },
+  {
+    "poster": {
+      "poster_name": "Adam Brown",
+      "poster_handle": "abrown"
+    },
+    "time_stamp": "2023-10-17 08:18:49",
+    "edited": {
+      "time_stamp": "2023-10-17 08:19:26"
+    },
+    "text": "error 405 - bad request\n\nhello everyone, young developer here getting into  working with apis for the first time. Goal of my project is to update a HubSpot custom property that I created to hold a Big Commerce customer ID. Having trouble with trying to pull the test record I am using.  not sure whether I am making the request properly or not (again I am new to apis)\n\nbcCustomerEmail hold the value of the email I pulled off big commerce record.\n```const HubSpotEndpoint = `<https://api.hubapi.com/crm/v3/objects/contacts/?email=${bcCustomerEmail}>`;\n\n      const HubSpotApiKey = process.env.HubSpot_ACCESS_TOKEN;\n      const HubSpotHeaders = {\n        \"Content-Type\": \"application/json\",\n        Authorization: `Bearer ${HubSpotApiKey}`, // Include your HubSpot API key here\n      };\n      ///// HubSpot payload request\n      const HubSpotPayload = {\n        properties: [\"email\", \"big_commerce_customer_id\"],\n        idProperty: \"email\",\n        inputs: [\n          {\n            id: bcCustomerEmail,\n          },\n        ],\n      };\n\n      try {\n        const HubSpotReponse = await axios.patch(\n          HubSpotEndpoint,\n          HubSpotPayload,\n          {\n            headers: HubSpotHeaders,\n          }\n        );\n        const contactId = HubSpotReponse.data;\n        console.log(contactId);\n      } catch (error) {\n        console.error(\"Error fetching contact from HubSpot:\", error);\n      }\n    })```"
+  },
+  {
+    "text": "Hey guys, I'm creating a custom code action, but running into an issue with using a custom property\n\nThe default HS properties for `name` and `id` work fine, but a custom property (internal name = `iata` , single line text) does not.\n\n```            # Retrieve the company name\n            company_names = [record.get('properties', {}).get('name') for record in company_search_response.get('results')]\n            print(f\"Company Name: {company_names}\")\n\n            # Retrieve the company record ID\n            company_ids = [record.get('id') for record in company_search_response.get('results')]\n            print(f\"Company Record ID: {company_ids}\")\n\n            # Retrieve the \"IATA\" property value using the internal name \"iata\"\n            company_iata = company_record.get('properties', {}).get('iata')\n            print(f\"Company Record IATA Property Value: {company_iata}\")```\nI've checked:\n• Private app scopes are `crm.objects.companies.read`  and `crm.objects.companies.write`\n• Spelling of property internal name is correct\nI also faced the same issue with the contact record property of the same name, though by this CCA being for a contact workflow I was able to use `iata_value = event.get('inputFields', {}).get('IATA')` to work around the issue.\n\nAny ideas?\n\nEDIT: I just realised that the AI I ran this through added `name` instead of `company` and `id` instead of `hs_object_id` - I have no idea why this works... but I guess this shows that I should be using a different value than `iata`.\n\nEDIT2: I just tested `print(f\"Company Properties: {company_record.get('properties')}\")` which only returned the following, so guessing the way custom properties are returned differs?\n\n```Company Properties: {'createdate': '2023-10-16T13:40:04.846Z', 'domain': 'Dundermifflin.com', 'hs_lastmodifieddate': '2023-10-16T18:01:29.015Z', 'hs_object_id': '17688050486', 'name': 'Dunder Mifflin'}```",
+    "time_stamp": "2023-10-17 08:47:28",
+    "edited": {
+      "time_stamp": "2023-10-17 09:54:23"
+    },
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-10-17 15:42:24"
+      },
+      {
+        "time_stamp": "2023-10-17 15:42:41"
+      },
+      {
+        "time_stamp": "2023-10-20 11:21:50"
+      }
+    ]
+  },
+  {
+    "text": "Hi Guys :slightly_smiling_face: I have a weird issue: I'm trying to migrate a workflow containing a custom code but when I read the current workflow I have \"UNSUPPORTED_ACTION\" in the action type (screen 1). I tried to change it back to \"CUSTOM_CODE\" but then I got an error (screen 2). Did someone already bumped into this issue before? Any help would be appreciated :slightly_smiling_face:",
+    "time_stamp": "2023-10-17 10:29:57",
+    "edited": {
+      "time_stamp": "2023-10-17 10:30:08"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Luc Benayoun",
+      "poster_handle": "luc"
+    },
+    "time_stamp": "2023-10-17 10:31:28",
+    "text": "FYI I already tried to migrate the workflow as it is and I get an internal error but if I remove the action from the object the migration is successful :wink:"
+  },
+  {
+    "poster": {
+      "poster_name": "Tyler Hanevold",
+      "poster_handle": "thanevold"
+    },
+    "time_stamp": "2023-10-17 15:42:24",
+    "text": "Hi <@UP452DA2Z>, are you just looking to get these values for the record that's in the workflow? You can do this via the inputs at the top of the custom coded action."
+  },
+  {
+    "poster": {
+      "poster_name": "Tyler Hanevold",
+      "poster_handle": "thanevold"
+    },
+    "time_stamp": "2023-10-17 15:42:41",
+    "text": "No need to make an API request for them."
+  },
+  {
+    "poster": {
+      "poster_name": "Paul Kirstein",
+      "poster_handle": "paul.kirstein"
+    },
+    "time_stamp": "2023-10-18 00:42:10",
+    "text": "Hello all, considering HubSpots new Contact to Contact Associations Beta, does anyone have any knowledge of how to go about this via API ... ive tried object type 1 to object type 1 through associations/contacts/hs_object_id/contacts/other_hs_object_id"
+  }
+]

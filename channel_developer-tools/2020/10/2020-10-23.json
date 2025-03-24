@@ -1,0 +1,117 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jonathan Stanis",
+      "poster_handle": "jstanis"
+    },
+    "time_stamp": "2020-10-23 12:32:24",
+    "text": "Are there any guidelines on making sure CSS in files and modules is written correctly to that CSS minification and combining works?"
+  },
+  {
+    "poster": {
+      "poster_name": "Quentin Lamamy",
+      "poster_handle": "quentin.lamamy"
+    },
+    "time_stamp": "2020-10-23 12:41:22",
+    "text": "I’m not sure to understand :thinking_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonathan Stanis",
+      "poster_handle": "jstanis"
+    },
+    "time_stamp": "2020-10-23 13:05:19",
+    "text": "We have pages that use both a CSS file and CSS in custom modules. HubSpot says that it will combine all of that CSS into one file, but it is not doing it. Is there documentation to determine what the issue is? Is there some formatting of the CSS that is causing an issue?"
+  },
+  {
+    "poster": {
+      "poster_name": "Tony Strack",
+      "poster_handle": "tstrack"
+    },
+    "time_stamp": "2020-10-23 13:36:05",
+    "edited": {
+      "time_stamp": "2020-10-23 13:51:15"
+    },
+    "text": "CSS in custom modules will not be combined into one file. The docs aren't right. :disappointed: <https://HubSpotdev.slack.com/archives/CFPRTEGTX/p1600274521065100>"
+  },
+  {
+    "poster": {
+      "poster_name": "Tony Strack",
+      "poster_handle": "tstrack"
+    },
+    "time_stamp": "2020-10-23 13:41:48",
+    "text": "At least that's my understanding. <@U7SL518D6> can you confirm?",
+    "reply_count": 6,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2020-10-23 13:58:31"
+      },
+      {
+        "time_stamp": "2020-10-23 13:59:07"
+      },
+      {
+        "time_stamp": "2020-10-23 14:04:28"
+      },
+      {
+        "time_stamp": "2020-10-23 14:05:42"
+      },
+      {
+        "time_stamp": "2020-10-23 14:17:31"
+      },
+      {
+        "time_stamp": "2020-10-26 07:08:37"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2020-10-23 13:58:31",
+    "edited": {
+      "time_stamp": "2020-10-23 14:00:09"
+    },
+    "text": "<@UB690RZA7> and <@UDPA7JFHA> So there’s a lot to it - you should still be seeing minifying occurring across the board unless your file has errors. Where possible we display the errors in the design manager in the file itself to help you catch them. You can also find some hints to which files have these issues using the Code alerts tool which is available int CMS Hub Enterprise.\n\nRegarding combining of module CSS it’s actually better not combined. Combining made a lot of sense before the majority of browsers used HTTP2. Now with HTTP2 whether you have 1 long combined file or 10 small files, it doesn’t make a significant difference. The browser doesn’t need to wait to request the files, it requests them all at once.\n\nHere’s where HTTP2 and split files completely kills the combined CSS approach:\n\n*You have a homepage. Your homepage has 10 modules that you frequently use throughout the rest of your site. A visitor goes to your homepage.*\n\nWith the combined approach:\n1 large/massive css file is loaded containing the CSS for all of the modules currently on the page.\n\nWith the un-combined approach:\n10 CSS files of varying size are loaded.\n\n*Now say you as a developer update 1 module on that homepage. The same user revisits the page.*\n\nCombined CSS:\nThe entire combined CSS file cannot be returned from cache, the entire file has to be re-downloaded regardless of the size of the actual change.\n\nUncombined CSS:\nThe 1 module’s CSS file is updated.\nEliminating 9 of 10 of the files from having to be re-downloaded.\n\n*Now the user navigates to a new page on your site.*\n*You have 2 new modules on the page as well as all of the ones you had on the homepage.*\n\nCombined CSS:\nThe user loads a new CSS file that has all of the css for all of the modules for this page. It is different from the Homepage, because there are modules on this page that weren’t on the homepage. This file is large/massive.\n\nUn-combined CSS:\nThe user loads 2 CSS files, one for each of the new modules.\n10 css files are not download and are just served immediately from cache. Drastically eliminating the majority of the loading time.\n\nAs you can see this makes a drastic difference for performance."
+  },
+  {
+    "poster": {
+      "poster_name": "Jonathan Stanis",
+      "poster_handle": "jstanis"
+    },
+    "time_stamp": "2020-10-23 13:59:07",
+    "text": "Thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2020-10-23 14:04:28",
+    "text": "There are some things to consider though on your end. You shouldn’t say make hundreds of small css files. There is a point at which separate files does outweigh the benefits.\n\nMy recommendation is for modules where you might share CSS classes, and say headers and footers use `require_css` to load 1 common css file across the modules or in your partials. These areas don’t typically change as often as module code might, and their changes affect the majority of pages on your site. So combining eliminates the requests."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2020-10-23 14:05:42",
+    "text": "Outside of modules, you can also use `{% include %}` to manually combine these assets into that one main stylesheet. We actually do this in our boilerplate. For development sake the files are separated and organized, but all get included into the 1 file."
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Wessolly",
+      "poster_handle": "webdesign"
+    },
+    "time_stamp": "2020-10-23 14:17:31",
+    "text": "Thanks so much <@U7SL518D6> for this detailed explanation!"
+  },
+  {
+    "text": "Hi there, I'm having some trouble fixing the image in this pop-up module.  <https://app.HubSpot.com/design-manager/7852120/modules/36541908581?tfid=34258619758>\nCould someone help me top centre the image? The migration team created this module for our team to work - but I had to adapt the code to make it work as an independent module.",
+    "time_stamp": "2020-10-23 15:17:46",
+    "edited": {
+      "time_stamp": "2020-10-23 15:17:59"
+    }
+  }
+]

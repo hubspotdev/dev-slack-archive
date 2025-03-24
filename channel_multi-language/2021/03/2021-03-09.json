@@ -1,0 +1,45 @@
+[
+  {
+    "poster": {
+      "poster_name": "Indra Pinsel",
+      "poster_handle": "indra"
+    },
+    "time_stamp": "2021-03-09 08:02:35",
+    "text": "Can anybody help me out?\n\nI’m building a custom language switcher. I’m stuck on retrieving one item from the `group.translations` for blog type.\nTo get the `absolute_url` from the `group.translations` It’s only possible through loop and get the values like:\n\n```{% set languages = group.translations %}\n{% for lang in languages %}\n   {{ lang.absolute_url }}\n{% endfor %}```\nThe problem is that I want to set a variable for the `absolute_url`.\nWhen creating it inside the for loop it can’t be used outside of it to set the value elsewhere.\nI try to get the value like: `{% set en_url = group.translations.en.absolute_url %}`\n\nGood to know. The example above will work on regular pages where the object is `content.translated_content`.\nSo `{% set en_url = content.translated_content.en.absolute_url %}` does work.\n\nAnyone that can help me with this?",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-03-09 22:40:24"
+      },
+      {
+        "time_stamp": "2021-03-12 08:02:11"
+      },
+      {
+        "time_stamp": "2021-03-12 08:06:45"
+      },
+      {
+        "time_stamp": "2021-03-15 07:52:39"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Indra Pinsel",
+      "poster_handle": "indra"
+    },
+    "time_stamp": "2021-03-09 08:13:38",
+    "text": "Easiest way is using the body href lang to target the language elements and add them with a before of or after element\n\nAlternative is creating a custom language switcher and retrieving the current languages from `group.translations` and `content.translated_content`."
+  },
+  {
+    "poster": {
+      "poster_name": "Alex Ivan",
+      "poster_handle": "alex346"
+    },
+    "time_stamp": "2021-03-09 22:40:24",
+    "edited": {
+      "time_stamp": "2021-03-09 22:41:01"
+    },
+    "text": "Hi.\nMaybe you can use an object to store the value.\nExample:\n```{% set en_url = {} %}\n{% for lang in group.translations %}\n   {% do en_url.update({value: lang.absolute_url}) %}\n{% endfor %}\n{{ en_url.value }}```"
+  }
+]

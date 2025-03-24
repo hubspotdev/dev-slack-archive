@@ -1,0 +1,130 @@
+[
+  {
+    "poster": {
+      "poster_name": "Paul-Yves Lucas",
+      "poster_handle": "paul-yves"
+    },
+    "time_stamp": "2024-10-23 01:46:24",
+    "edited": {
+      "time_stamp": "2024-10-23 02:19:07"
+    },
+    "text": "Hello\n\nWe started trying custom channels on our test environment but I am stuck creating the channel using the api.\nI am following <https://developers.HubSpot.com/docs/guides/api/conversations/create-custom-channels> but have errors regarding the api key or the scopes depending if I try a public or private app.\n\nThe doc mention public app but public api key are supposed to be deprecated.\nIf I do\n```capabilities = { \"richText\": [\"HYPERLINK\", \"TEXT_ALIGNMENT\", \"BLOCKQUOTE\", \"LISTS\", \"TEXT_COLOR\"], allowConversationStart: true, allowOutgoingMessages: true, \"maxFileAttachmentCount\": 3, \"maxFileAttachmentSizeBytes\": 2_500_000, \"maxTotalFileAttachmentSizeBytes\": 5_500_000 }\nbody = {\"name\": \"captain custom channel\", \"webhookUrl\": \"<https://staging.captaincontrat.com/hooks/HubSpot/conversation>\", capabilities: }\nHEADERS = { 'Content-Type': 'application/json' }.freeze\nYOUR_DEVELOPER_API_KEY = xxx\nHTTParty.post(\"<https://api.hubapi.com/conversations/v3/custom-channels?hapikey={YOUR_DEVELOPER_API_KEY}&appId=35980>\", {headers: HEADERS, body: })```\nI have the following error (and I tried generating a new key):\n```=> {\"status\"=>\"error\",\n \"message\"=>\n \"The API key provided is invalid. View or manage your API key here: <https://app.HubSpot.com/l/api-key/>\",\n \"correlationId\"=>\"b02178a8-40f3-4311-a48f-51a959df995f\",\n \"category\"=>\"INVALID_AUTHENTICATION\",\n \"links\"=>{\"api key\"=>\"<https://app.HubSpot.com/l/api-key/>\"}}```\nThis is not especially surprising given that dev api keys are supposed to be sunsetted. So I tried to use access token.\nIf I try a private app and bearer auth token like :\n```same body\nHEADERS = { 'Content-Type': 'application/json', Authorization: \"Bearer #{ACCESS_TOKEN}\" }.freeze\nHTTParty.post(\"<https://api.hubapi.com/conversations/v3/custom-channels?appId=1024738>\", {headers: HEADERS, body: })```\nit results in\n```{\"status\"=>\"error\",\n \"message\"=>\n \"The scope needed for this API call isn't available for public use. If you have questions, contact support or post in our developer forum.\",\n \"correlationId\"=>\"79eebd1f-3bad-4156-851a-05bb6fe41b39\",\n \"links\"=>\n {\"support\"=>\"<https://help.HubSpot.com/>\",\n  \"forum\"=>\n  \"<https://community.HubSpot.com/t5/APIs-Integrations/bd-p/integrations>\"},\n \"category\"=>\"MISSING_SCOPES\"}```\nBoth app have the proper scopes detailed in the doc (`conversations.custom_channels.read`, `conversations.custom_channels.write` and `conversations.read`)",
+    "reply_count": 19,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-10-23 09:00:30"
+      },
+      {
+        "time_stamp": "2024-10-23 09:56:49"
+      },
+      {
+        "time_stamp": "2024-10-23 09:57:43"
+      },
+      {
+        "time_stamp": "2024-10-25 01:49:55"
+      },
+      {
+        "time_stamp": "2024-10-25 06:45:22"
+      },
+      {
+        "time_stamp": "2024-10-25 08:00:00"
+      },
+      {
+        "time_stamp": "2024-10-28 13:22:11"
+      },
+      {
+        "time_stamp": "2024-10-29 02:23:56"
+      },
+      {
+        "time_stamp": "2024-10-29 02:24:31"
+      },
+      {
+        "time_stamp": "2024-10-29 02:25:23"
+      },
+      {
+        "time_stamp": "2024-10-29 08:20:50"
+      },
+      {
+        "time_stamp": "2024-10-29 08:21:24"
+      },
+      {
+        "time_stamp": "2024-10-29 08:25:45"
+      },
+      {
+        "time_stamp": "2024-10-29 08:32:29"
+      },
+      {
+        "time_stamp": "2024-10-29 08:49:45"
+      },
+      {
+        "time_stamp": "2024-10-29 09:17:36"
+      },
+      {
+        "time_stamp": "2024-10-29 09:29:18"
+      },
+      {
+        "time_stamp": "2024-10-31 03:56:00"
+      },
+      {
+        "time_stamp": "2024-10-31 07:09:10"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Youssef Farag",
+      "poster_handle": "youssef.amir"
+    },
+    "time_stamp": "2024-10-23 03:28:18",
+    "text": "Hello everyone. I have a question regarding <https://developers.HubSpot.com/docs/guides/api/conversations/create-custom-channels#publish-received-messages-to-HubSpot|publishing received messages> endpoint (to create a conversation thread) - I'm working on integration an external channel(s) with users having their unique IDs. In the API request, I use `deliveryIdentifier: {\"type\": \"CHANNEL_SPECIFIC_OPAQUE_ID\", \"value\": \"Channel USER ID\"}`  attribute here that maps to the channel user ID - but this field doesn't correspond to any contact identification attribute and so the conversation gets created under a \"Unknown Visitor\" with no contact associated. I'm trying to attach/update the Inbox conversation with that contact created and I can't figure a way for it, except from the UI.\n\nThe only workaround that worked is to create a contact with a fake email (<mailto:userID@example.com|userID@example.com>) and then send the `deliveryIdentifier: {\"type\": \"HS_EMAIL_ADDRESS\", \"value\": \"<mailto:userID@example.com|userID@example.com>}` which correctly maps and creates the conversation with the right contact.\n\nIs there a better way than this to attach a contact to a conversation? - Thank you :raised_hands::skin-tone-4:",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-10-23 07:37:34"
+      },
+      {
+        "time_stamp": "2024-10-24 08:27:19"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Hirsh",
+      "poster_handle": "ehirsh"
+    },
+    "time_stamp": "2024-10-23 07:37:34",
+    "text": "Hello! Welcome to our multi-phase journey towards better omnichannel identity management in HubSpot.\n\nInternally, we casually call the functionality you are asking after \"automatic contact association\"\n\nThe state of the system today is that,\n\n• Given a custom channel of `deliveryIdentifier` type `CHANNEL_SPECIFIC_OPAQUE_ID`\n• When a contact initiates a conversation over that custom channel _for the first time_ by sending an incoming message\n• Then the sender of that incoming message will be displayed as Unknown Visitor. And the support rep in Help Desk (or Inbox) _must manually associate the contact_ - either by creating a new contact or adding to an existing contact.\n    ◦ However, the good news is that the conversations platform underpinning this API stores this association, and _for all subsequent_ conversations initiated by that same contact, _automatic contact association *will* work_\nThis is how HubSpot's Live Chat and Facebook Messenger integrations work, which also use opaque identifiers.\n\nYou're right that the difference is that the contact might have a pre-existing email address or phone number property that our identity system can look up for automatic contact association to work  the very first time, but not a pre-existing opaque ID.\nAnd there is not currently a way to directly access this opaque ID via API to add them to contacts, nor does the sister Conversation API have an endpoint to associate a conversation to a contact."
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Hirsh",
+      "poster_handle": "ehirsh"
+    },
+    "time_stamp": "2024-10-23 09:00:30",
+    "edited": {
+      "time_stamp": "2024-10-23 09:02:53"
+    },
+    "text": "Yes. <https://developers.HubSpot.com/changelog/upcoming-api-key-sunset|the older public API keys have been sunse>t but the one being asked for here is your public app's 'Developer API Key' which are still in use.\n\n<https://developers.HubSpot.com/docs/api/developer-tools-overview#developer-api-keys>"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Hirsh",
+      "poster_handle": "ehirsh"
+    },
+    "time_stamp": "2024-10-23 09:56:49",
+    "text": "The names for all of these keys can be confusingly similar. We're going to update the Custom Channels API docs to be more clear which one we mean."
+  },
+  {
+    "poster": {
+      "poster_name": "Paul-Yves Lucas",
+      "poster_handle": "paul-yves"
+    },
+    "time_stamp": "2024-10-23 09:57:43",
+    "edited": {
+      "time_stamp": "2024-10-23 09:57:51"
+    },
+    "text": "ok, still, I used the key in question and have the `\"The API key provided is invalid. View or manage your API key here: <https://app.HubSpot.com/l/api-key/>\"` error. By the way, the link in the error message leads to a 404 error (after validating the app I use)"
+  }
+]

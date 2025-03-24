@@ -1,0 +1,10 @@
+[
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2024-06-14 06:23:09",
+    "text": "Hey <@U0775P3JBFZ>, I'd say it's related to how pages are getting handled \"under the hood\" by HubSpot.\n\n*One thing that's missed quite often is:*\nOnce you create a page with dnd functionality and change something on the page(can be a text change, adding/removing modules, basically anything) HubSpot will \"cut\" the connection to the template and basically create a new \"non-visible\" template just for this specific page. Therefore every change you make to the template after changing something on a specific page won't affect the already existing page.\n\nAlso - if you're building dynamic pages I wouldn't use dnd functionality/modules. Especially not the rich-text. :slightly_smiling_face:\nInstead I'd create a static HTML template and pass all the data into it with HTML/Hubl like you've did it inside the rich_text html part without the \"dnd_rich_text\". Something like:\n\n```&lt;article class=\"page-hero\"&gt;\n    &lt;section class=\"container\"&gt;\n        &lt;header class=\"row-fluid\"&gt;\n              &lt;div class=\"col-12 col-md-6\"&gt;\n                  &lt;h1&gt;School: {{ dynamic_page_hubdb_row.hs_name }}!&lt;/h1&gt;\n                  &lt;p&gt;{{ dynamic_page_hubdb_row.description }}&lt;/p&gt;\n              &lt;/div&gt;\n              &lt;div class=\"col-12 col-md-6\"&gt;\n                  &lt;img src=\"{{ dynamic_page_hubdb_row.hero_image.src }} \" alt=\"{{ dynamic_page_hubdb_row.hero_image.alt }}\" class=\"hero-image\"&gt;\n              &lt;/div&gt;\n        &lt;/header&gt;\n    &lt;/section&gt;\n&lt;/article&gt;```"
+  }
+]

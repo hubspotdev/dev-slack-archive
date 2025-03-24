@@ -1,0 +1,29 @@
+[
+  {
+    "poster": {
+      "poster_name": "Andriy Volk",
+      "poster_handle": "anvolk"
+    },
+    "time_stamp": "2025-02-05 11:48:37",
+    "text": "Hi <@UP7PDCSNL> , I can see that there were 818 successful PUT requests to `/crm/v3/lists/326008/memberships/add`  HUBID: 2788055 and only one that has failed with 400 (correlation ID: `56b7fc28-d4c1-4070-8b33-10b91ac0e933` you’ve mentioned)\nThis request appears to be the last one in series.\n\nSame picture I can see for HUBID: 3478499 with 18 successful requests to `/crm/v3/lists/163309/memberships/add` prior to single one that failed with 400\n\nIt seems like your code is adding memberships in batches and the last batch fails for those lists to parse on our end.\nCould there be anything about your batching logic that could cause that?"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Popelka",
+      "poster_handle": "eric.popelka"
+    },
+    "time_stamp": "2025-02-05 11:59:32",
+    "edited": {
+      "time_stamp": "2025-02-05 12:00:14"
+    },
+    "text": "Hmm, well the request being the last in series does make sense because my code will quit with an error when it gets the 400 \"a request body was expected\" error. I do have a check for null/empty array before trying to add list members\n\nI'm now seeing that it's not just the list membership endpoint. Sometimes POST `/crm/v3/objects/contacts/batch/read` fails with the same error\n\nI really think there's something about the specifics of what I'm sending -- I think Cloudflare must be triggering it as spam/malicious, because a lot of is taking emails and adding them to lists. so it looks like i'm trying to do something nefarious with emails...But I'm just syncing marketing lists from MS dynamics to HubSpot lol\n\nMaybe i can try lowering my batch size or adding some retries."
+  },
+  {
+    "poster": {
+      "poster_name": "Andriy Volk",
+      "poster_handle": "anvolk"
+    },
+    "time_stamp": "2025-02-05 12:42:44",
+    "text": "Would it be hard on your end to retry failed request couple times? It will help us to see if it’s consistent for the data being sent?\n\nIt seems that nothing in your PUT request to lists v3 APIs should be showing any relation to emails as you send just JSON array of strings.\n\nObjects endpoints (e.g.`/crm/v3/objects/contacts/batch/read` ) correspond to different area of API, so I’d recommend to reach out to <#C2YHAHB6K|api> for support.\n\nIn general I’d be surprised if Cloudflare would let request through all the way to the service with somehow modified body if it was flagged as malicious or so."
+  }
+]

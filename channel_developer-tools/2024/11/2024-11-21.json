@@ -1,0 +1,10 @@
+[
+  {
+    "poster": {
+      "poster_name": "nicmktg",
+      "poster_handle": "nicolast"
+    },
+    "time_stamp": "2024-11-21 08:36:16",
+    "text": "Hi, everyone! As a lot of you know HubSpot does not return an error when creating a new company through the API where that company already exists like it does with contacts. My workaround was just to accomplish a search of the domain first and then if nothing is found to go ahead and create the company. This should keep us from duplicating a bunch of records.\n\nHowever, we are dealing with several thousand companies in the database so we are easily hitting the limit of 5 searches per second. If we space it out, in theory it would take like an hour per company creation just to verify it doesn't already exist. Is there a better workaround for this that I am not aware of? It seems odd that there is no proper solution for this, especially from HubSpot. Below are examples of the requests. Thanks in advance!\n\nEndPoint: <https://api.hubapi.com/crm/v3/objects/companies/search>\nHttpMethod : POST\n{\n    \"filterGroups\": [\n        {\n            \"filters\": [\n                {\n                    \"propertyName\": \"customer_number\",\n                    \"operator\": \"EQ\",\n                    \"value\": \"123456\"\n                }\n            ]\n        }\n    ]\n}\n\nIf no existing record is returned then:\n\nEndpoint: <https://api.hubapi.com/crm/v3/objects/companies>\nHttpMethod : POST\n{\n    \"properties\": {\n        \"name\": \"Test Company\",\n        \"customer_number\": \"123456\",\n        \"phone\": \"phone\",\n        \"address\": \"address\",\n        \"city\": \"city\",\n        \"state\": \"state\",\n        \"zip\": \"zip\",\n        \"country\": \"country\"\n    }\n}\n\nAgain the search seems to work but the API limits are making it take forever for a single record."
+  }
+]

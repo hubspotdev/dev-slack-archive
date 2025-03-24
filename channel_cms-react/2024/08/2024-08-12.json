@@ -1,0 +1,225 @@
+[
+  {
+    "poster": {
+      "poster_name": "Duncan Beaton",
+      "poster_handle": "duncan.beaton"
+    },
+    "time_stamp": "2024-08-12 05:05:01",
+    "text": "Hello :wave:\n\nI’ve been working on a HubSpot project for the past few months and encountered some issues with errors.\n\nThe main problem is that if one module fails, the entire React project stops rendering, across every page it touches and we receive vague error messages like:\n\n```Error rendering module tag: Unable to render JS Component because a JS Rendering Lambda function corresponding to entry point @projects/react-******```\nIs this being addressed on HubSpot’s side?",
+    "reply_count": 15,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-08-12 06:11:31"
+      },
+      {
+        "time_stamp": "2024-08-12 06:22:41"
+      },
+      {
+        "time_stamp": "2024-08-12 06:23:35"
+      },
+      {
+        "time_stamp": "2024-08-12 06:25:59"
+      },
+      {
+        "time_stamp": "2024-08-12 06:31:56"
+      },
+      {
+        "time_stamp": "2024-08-12 06:36:52"
+      },
+      {
+        "time_stamp": "2024-08-12 06:38:28"
+      },
+      {
+        "time_stamp": "2024-08-12 06:39:04"
+      },
+      {
+        "time_stamp": "2024-08-12 06:41:02"
+      },
+      {
+        "time_stamp": "2024-08-12 08:05:42"
+      },
+      {
+        "time_stamp": "2024-08-12 08:14:23"
+      },
+      {
+        "time_stamp": "2024-08-16 08:31:51"
+      },
+      {
+        "time_stamp": "2024-08-16 08:34:42"
+      },
+      {
+        "time_stamp": "2024-08-16 08:35:02"
+      },
+      {
+        "time_stamp": "2024-08-16 08:35:50"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Duncan Beaton",
+      "poster_handle": "duncan.beaton"
+    },
+    "time_stamp": "2024-08-12 05:13:58",
+    "text": "Hey I dont think that this is in the docs anywhere"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-08-12 06:05:01",
+    "text": "Hello Dennis -\n\nTTFB (time to first bite) can be impacted by a number of things and mitigated within our system at different levels.\n\nRelative to CMS React, when modules are built and do not make use of `getServerSideProps` they are be pre-rendered along with the rest of the page. The pre-rendering of a page with CMS React and without generally works the same and thus is subject to things that would disable pre-rendering i.e. use of the request query, or contact hubl variable.\n\nWhen using `getServerSideProps` , those modules are not pre-rendered, however caching configuration at the module level can work to improve TTFB performance.\n\nCan you provide a specific example of where you are experience slow TTFB, and perhaps there is an opportunity for optimization."
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-08-12 06:11:31",
+    "edited": {
+      "time_stamp": "2024-08-12 06:11:44"
+    },
+    "text": "Hello Duncan -\n\nThank you for the feedback.\n\nCan you provide specifics as to what you mean by \"fails\" i.e. a failed build, or some internal error within the module code ...?\n\nThis error specifically points to an issue where the path to a particular react module or partial does not match the most recent build of the project.\n\nI'm interested in more context, and what expected behavior might be?"
+  },
+  {
+    "poster": {
+      "poster_name": "Duncan Beaton",
+      "poster_handle": "duncan.beaton"
+    },
+    "time_stamp": "2024-08-12 06:22:41",
+    "text": "Hi Bryon,\n\nThanks for your prompt response.\n\nI’ve been testing this as my schedule allows and have identified two types of issues:\n\n1. Application Developer Bugs\n\nThese occur when my code throws an error, causing HubSpot to fail to render. For instance, I had a React component that passed an empty string to new URL, which resulted in an error.\n\n2. Module Field Breaking Changes\n\nIt seems that removing properties from modules that are still being referenced leads to HubSpot failing to render.\nFor example, my component had a boolean field, and if I removed this field after using the module on a page, HubSpot wouldn’t render."
+  },
+  {
+    "poster": {
+      "poster_name": "Duncan Beaton",
+      "poster_handle": "duncan.beaton"
+    },
+    "time_stamp": "2024-08-12 06:23:35",
+    "text": "These issues are fine. The error reporting could be improved but it is ok.\n\nThe big problem is that if ONE single module breaks then this causes ALL of the HubSpot modules NOT to render. This causes all of our pages to render nothing and significant effective downtime."
+  },
+  {
+    "poster": {
+      "poster_name": "Duncan Beaton",
+      "poster_handle": "duncan.beaton"
+    },
+    "time_stamp": "2024-08-12 06:25:59",
+    "text": "We really need a solution for this and would really appreciate any help.\n\nThank you"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-08-12 06:31:56",
+    "edited": {
+      "time_stamp": "2024-08-12 06:36:53"
+    },
+    "text": "Not that this solves the issue directly, but are you aware of the ability to rollback to a previous working build in the projects tool?"
+  },
+  {
+    "poster": {
+      "poster_name": "Duncan Beaton",
+      "poster_handle": "duncan.beaton"
+    },
+    "time_stamp": "2024-08-12 06:36:52",
+    "text": "Yes, thank you, Bryon. This is a helpful feature.\n\nHowever, we want to avoid testing and rolling back in production, as it impacts our users.\n\nThe errors I mentioned work fine locally but only become problematic in production.\n\nThis is a significant concern because any module that errors will affect all other modules."
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-08-12 06:38:28",
+    "text": "When working locally are you making use of the \"proxy page\" flow?\n\nWould the ability to have a \"build preview\" be useful so that you can build a project iteration and then view a page for a specific undeployed build?"
+  },
+  {
+    "poster": {
+      "poster_name": "Duncan Beaton",
+      "poster_handle": "duncan.beaton"
+    },
+    "time_stamp": "2024-08-12 06:39:04",
+    "text": "Yes the proxy page is really great"
+  },
+  {
+    "poster": {
+      "poster_name": "Duncan Beaton",
+      "poster_handle": "duncan.beaton"
+    },
+    "time_stamp": "2024-08-12 06:41:02",
+    "text": "Build preview would be useful for new pages in development. It is more of a nice to have"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-08-12 08:05:42",
+    "text": "Relative to the single module error causing other modules of the same project to fail on the page, we will look into this to keep the failures specific to the module with the error.\n\nDo you have a specific ask for the failure behavior of the module with the error in this case? Currently we log out the server side error in the browser console. Other behavior you are looking for?"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-08-12 08:12:45",
+    "text": ":wave: - If you have built developer projects based serverless endpoint functions and are looking for logs - DM me and I can ungate you to a new log experience for those serverless endpoints."
+  },
+  {
+    "poster": {
+      "poster_name": "Duncan Beaton",
+      "poster_handle": "duncan.beaton"
+    },
+    "time_stamp": "2024-08-12 08:14:23",
+    "text": "Great thank you Bryon! If there is anything I can help with on my side let me know.\n\nI didn’t realise that you logged out the server error to the console. That is helpful to know."
+  },
+  {
+    "poster": {
+      "poster_name": "Dennis K",
+      "poster_handle": "dennis579"
+    },
+    "time_stamp": "2024-08-12 10:05:25",
+    "text": "<https://github.HubSpot.com/cms-react/reference/islands.html>"
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2024-08-12 10:07:31",
+    "edited": {
+      "time_stamp": "2024-08-12 10:09:06"
+    },
+    "text": "Hi! Yes, we have one production site right now build with this solution and for me it’s a huge improvement. For the client there is no difference though but DX wise it is great that you can now develop sites using React. Check out the docs here: <https://github.HubSpot.com/cms-react/reference/islands.html>\n\nNo huge pitfalls though. Most thinks are working smoothly and I had only one issue while developing a Video module since this is missing (?). But someone from the team posted a nice workaround here in this channel.\n\nOf course there are improvements to be made but I don’t think CMS React is out of beta. Some things feel unconventional, but I would say it is stable and efficient enough to go with CMS React instead of HUBL if you are familiar with React"
+  },
+  {
+    "poster": {
+      "poster_name": "Kris Bradbury",
+      "poster_handle": "kris.bradbury"
+    },
+    "time_stamp": "2024-08-12 13:29:17",
+    "text": "This is great news thanks for the reply :slightly_smiling_face: I have been playing with it today and it seems pretty decent. We are building a glorified CRUD application that will interact with CRM objects and HubDB and display some externally sourced data so hoping we will be able to do it all ok"
+  },
+  {
+    "poster": {
+      "poster_name": "Pete",
+      "poster_handle": "pete369"
+    },
+    "time_stamp": "2024-08-12 15:36:46",
+    "text": "thanks for nothing "
+  },
+  {
+    "poster": {
+      "poster_name": "Dennis K",
+      "poster_handle": "dennis579"
+    },
+    "time_stamp": "2024-08-12 19:50:59",
+    "text": "if you are that lazy and would like to see some snippets than open up GPT"
+  },
+  {
+    "poster": {
+      "poster_name": "Dennis K",
+      "poster_handle": "dennis579"
+    },
+    "time_stamp": "2024-08-12 19:51:23",
+    "text": "I did send you the docs so you can learn and figure it out yourself"
+  }
+]

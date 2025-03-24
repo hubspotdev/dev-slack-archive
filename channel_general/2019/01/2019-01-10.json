@@ -1,0 +1,392 @@
+[
+  null,
+  {
+    "poster": {
+      "poster_name": "Shay Redmond",
+      "poster_handle": "shay"
+    },
+    "time_stamp": "2019-01-10 04:09:14",
+    "text": "Hi Jon, I can add a little clarity to this. Right now there isn't a plan to introduce a feature like this but I can see where the feedback is coming from. I've shared with my teams to see what their thoughts are and to identify if there's anything we could do here."
+  },
+  {
+    "poster": {
+      "poster_name": "Shay Redmond",
+      "poster_handle": "shay"
+    },
+    "time_stamp": "2019-01-10 04:12:56",
+    "text": "To add some clarity to this, the tracking links have always worked this way, for all customers. This link contains an encrypted string that includes *everything* that's needed to ensure we can:\n1) Record a click on Email ID `XYZ`\n2) Attribute that click to Contact ID `ABC`\n3) Deduplicate the link in the event that there's two links in the email going to the same URL (i.e. for the click map report)\n4) Redirect the visitor to the originally set URL in the editor"
+  },
+  {
+    "poster": {
+      "poster_name": "Shay Redmond",
+      "poster_handle": "shay"
+    },
+    "time_stamp": "2019-01-10 04:13:54",
+    "text": "All those pieces of info are included together in the encryption to ensure that everything works correctly, without the ability to include code like the analytics.js code in an email, the URL strings are the common practice to achieve this in an email"
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-01-10 07:25:39",
+    "edited": {
+      "time_stamp": "2019-01-10 07:28:49"
+    },
+    "text": "couldn’t you instead do it using a significantly shorter query parameter just added to the end of the real url for HubSpot sites?\n\nFor example if I’m linking to a page hosted on HubSpot, theoretically it should be simple to generate a unique id - that id would be tied both to that contact record and the individual link in the email that string I don’t really know why it would need to be encrypted, as it could just simply be a number id that is generated based on an internal HubSpot contact record ID, a numerical id identifying which email,  which link in the email it was. I don’t personally think it would matter if that information were not encrypted as it’s not personally identifiable.\n\nOr even better you could just generate a random string/number for each combo of link - email, and contact id and just cross reference this random string/number server side\n\nSo instead of\n<http://domain.com/[540|domain.com/[540> characters]\n\nYou have something like: `<http://domain.com/?etc=1241513625a|domain.com/?etc=1241513625a>`\n\nThe redirection to the new URL that information shouldn’t even be stored in the URL itself.\n\nWhen linking to a HubSpot hosted page the easy solution - when you see `?etc` you can actually just track the hit server side, and if you want to track more info that requires javascript? guess what? you already have the hs analytics script loading by default.\n\nOn top of that, for pages NOT hosted on HubSpot  - encrypting the redirect url obfuscates what’s going on.\neasy solution that I think people would be okay with:\n\n`<http://hub.ly/www.domain.com?etc=[trackingid]|hub.ly/www.domain.com?etc=[trackingid]>`\nThe URL is completely unobfuscated. People know where they’re going, and they can tell that HubSpot is going to track them.\n\nBonus feature: If a person puts HubSpots tracking code onto their non HS site, you could make it possible to link to the page with just `<http://www.domain.com?etc=[trackingid]|www.domain.com?etc=[trackingid]>` and your analytics would simply fire off the tracking id to your servers."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-01-10 07:26:40",
+    "text": "despite what I had suggested above, having a feature like this would be awesome still as we do have some clients that have more restrictive security protocols they have to follow for legal reasons."
+  },
+  {
+    "poster": {
+      "poster_name": "Joe",
+      "poster_handle": "joe"
+    },
+    "time_stamp": "2019-01-10 08:21:40",
+    "text": "hmm... I feel like the <https://designers.HubSpot.com/docs/hubl/hubl-supported-variables> may be incorrect.\nthe blog variable `{{ topic }}` says it should include `topic.name` and `topic.slug` items, however trying to show those in a template gives a blank result and checking the Developer Info link of a topic listing page, the `topic` variable just outputs the slug content",
+    "reply_count": 7,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2019-01-10 09:00:49"
+      },
+      {
+        "time_stamp": "2019-01-10 09:12:39"
+      },
+      {
+        "time_stamp": "2019-01-10 09:13:52"
+      },
+      {
+        "time_stamp": "2019-01-10 10:17:41"
+      },
+      {
+        "time_stamp": "2019-01-10 10:19:12"
+      },
+      {
+        "time_stamp": "2019-01-10 10:21:49"
+      },
+      {
+        "time_stamp": "2019-01-10 13:40:14"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Gary Wong",
+      "poster_handle": "gary"
+    },
+    "time_stamp": "2019-01-10 08:27:07",
+    "text": "Hi Shay, this group our subscribers that Jon and I are solving this URL issue for all belongs to a company who our client has permission to markets to. (a very big company with 30k+ employees). This company is extremely tight on spam control and trains their users to review entire links and not click on links that they cannot review entirely.  Their IT folks are absolutely up in arms over these URLs as they look “spammy”. They are threatening to remove our client from being able to send emails to the group unless we fix the URLs.  Removing any tracking would be the simplest solution, and that’s why we asked for tracking control by campaign.  If there’s even a chance this could be solved in the near future, the client might be savable. Meanwhile we’re looking at another email provider just for that group as that’s our only other solution but our client is not happy about it because they didn’t have this problem prior to switching to HubSpot this month from SalesForce Marketing Cloud."
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-01-10 09:00:49",
+    "edited": {
+      "time_stamp": "2019-01-10 09:01:26"
+    },
+    "text": "maybe what you’re wanting is this\n{{ contents_topics }} (it’s documented in that same page)\n\nEither way you have to loop through the topics to get the topic name and topic slug unless you’re on the topic listing page"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe",
+      "poster_handle": "joe"
+    },
+    "time_stamp": "2019-01-10 09:12:39",
+    "edited": {
+      "time_stamp": "2019-01-10 09:12:59"
+    },
+    "text": "Yeah, though i was looping through an array created by `{% set topics = blog_topics('default', 250) %}` instead of using that `{{ contents_topics }}` variable.\nHad opened a ticket and they said the documentation just hasn't been updated. Apparently that `{{ topic.name}}` and `{{ topic.slug}}` functionality existed, but the person i was speaking with didn't have an answer for why it was removed.\n\nFrustrating to have to create a comparison loop, but if that's all i got available, gotta do it lol"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-01-10 09:13:52",
+    "edited": {
+      "time_stamp": "2019-01-10 09:14:36"
+    },
+    "text": "can you post your code? because topic does include both of those  so I’m a little bit confused, and not sure why you have to make a comparison loop."
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Dwyer",
+      "poster_handle": "jdwyer"
+    },
+    "time_stamp": "2019-01-10 09:50:21",
+    "text": "Hey BJ, just saw this. I happen to have a module for this. Here’s a portion of the code I use:\n```{% if module.number_of_buttons &gt;= 1 %}\n&lt;!-- Button : BEGIN --&gt;\n&lt;tr&gt;\n  &lt;td align=\"center\"&gt;\n    &lt;table align=\"center\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\"&gt;\n      &lt;tr&gt;\n        &lt;td align=\"center\"&gt;\n          &lt;a href='{{ module.button_1_url }}' target=\"_blank\" bgcolor=\"#476478\" style=\"{% if module.max_button_width %}max-width: {{ module.max_button_width }}%; {% endif %}{% if module.button_width %}width: {{ module.button_width }}px; {% endif %}text-align: center !important; text-transform: uppercase; font-family: 'Open Sans', Helvetica, Arial, sans-serif !important; font-size: 13px; font-weight: 600; color: #ffffff; text-decoration: none; padding: 10px 20px; border-radius: 25px; background: #476478; border: 1px solid #476478; display: inline-block;\"&gt;{{ module.button_1_text }}&lt;/a&gt;\n        &lt;/td&gt;\n      &lt;/tr&gt;\n    &lt;/table&gt;\n  &lt;/td&gt;\n&lt;/tr&gt;\n&lt;!-- Button : END --&gt;\n{% endif %}```\n\nAnd the fields: <https://d.pr/i/Va6Z6l>\n\nI’ve got it set up to where they can create up to five buttons, but you could adapt it to just be an on/off toggle."
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Dwyer",
+      "poster_handle": "jdwyer"
+    },
+    "time_stamp": "2019-01-10 09:52:40",
+    "text": "Also, the `Button Width` and `Max Button Width` fields are probably not necessary, but I needed that functionality for an email where each button needed to be the same size.\nHere’s the end result: <https://d.pr/i/unfBiY>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-01-10 10:08:03",
+    "text": "Where is everyone at with moving a HubSpot blog from one HubSpot portal to another? Is this something that HubSpot can do? I know I've seen <@U38EZFVFE> post a blog post before on a way to do this. Is API the best option? Does someone have a working solution that is plug and play? Can you export from HS to Wordpress and back to HS?"
+  },
+  {
+    "poster": {
+      "poster_name": "Christopher Mathieu",
+      "poster_handle": "christopher.mathieu"
+    },
+    "time_stamp": "2019-01-10 10:09:22",
+    "text": "<https://github.com/c-stone/hub-batch>"
+  },
+  {
+    "poster": {
+      "poster_name": "Christopher Mathieu",
+      "poster_handle": "christopher.mathieu"
+    },
+    "time_stamp": "2019-01-10 10:09:35",
+    "text": "check that out"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-01-10 10:10:34",
+    "text": "hahah <@U24GZQ3GF> that looks like it might be the real deal"
+  },
+  {
+    "poster": {
+      "poster_name": "Christopher Mathieu",
+      "poster_handle": "christopher.mathieu"
+    },
+    "time_stamp": "2019-01-10 10:11:19",
+    "text": "we used it to merge blogs successfully once, but it should work for migrating too based on the description"
+  },
+  {
+    "poster": {
+      "poster_name": "Christopher Mathieu",
+      "poster_handle": "christopher.mathieu"
+    },
+    "time_stamp": "2019-01-10 10:12:09",
+    "text": "also check this out <https://github.com/williamspiro/hubXml>",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2019-01-10 15:56:48"
+      },
+      {
+        "time_stamp": "2019-01-10 15:56:52"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-01-10 10:17:08",
+    "edited": {
+      "time_stamp": "2019-01-10 10:17:18"
+    },
+    "text": "I have that one favorited lol!"
+  },
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2019-01-10 10:17:41",
+    "text": "in the topic listing page, there is a variable as he said `{{ topic }}`but it basically the slug only not an array with `.name` or `.slug` so yeah, the doc. is wrong there"
+  },
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2019-01-10 10:19:12",
+    "edited": {
+      "time_stamp": "2019-01-10 10:22:42"
+    },
+    "text": "although, if I remember right you can use `contents_topics` array and filter by the slug (not need to call to blog_topics)"
+  },
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2019-01-10 10:21:49",
+    "text": "`{% set myTopic = contents_topics|selectattr(\"slug\", \"equalto\", topic) %}` that should give you the full array"
+  },
+  {
+    "poster": {
+      "poster_name": "William",
+      "poster_handle": "cwilbanks"
+    },
+    "time_stamp": "2019-01-10 12:34:34",
+    "text": "I am trying to make the logo carousel hide items as it scales down instead of shrinking the logos but can't seem to figure out how to do this. Does anyone have a suggestion for doing this?",
+    "reply_count": 4,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2019-01-10 14:20:58"
+      },
+      {
+        "time_stamp": "2019-01-10 14:43:45"
+      },
+      {
+        "time_stamp": "2019-01-10 15:50:09"
+      },
+      {
+        "time_stamp": "2019-01-10 15:50:32"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Shay Redmond",
+      "poster_handle": "shay"
+    },
+    "time_stamp": "2019-01-10 12:54:37",
+    "text": "&gt; couldn’t you instead do it using a significantly shorter query parameter just added to the end of the real url for HubSpot sites?\n&gt; For example if I’m linking to a page hosted on HubSpot, theoretically it should be simple to generate a unique id - that id would be tied both to that contact record and the individual link in the email that string I don’t really know why it would need to be encrypted, as it could just simply be a number id that is generated based on an internal HubSpot contact record ID, a numerical id identifying which email,  which link in the email it was. I don’t personally think it would matter if that information were not encrypted as it’s not personally identifiable.\nThis would create a significant dependency chain where many things could go wrong, if the tracking code was removed, or if the visitor left the page before the events fired off, or if they had a JS blocking browser extension we'd run the risk of not being able to capture the event that the click happened meaning email reporting data would be almost impossible to trust. It also means that, if for whatever reason there was ever an outage on the CMS, far more than just the CMS would be impacted, bringing down email tracking data (and social click tracking too, they use the same tracking infra).\n&gt; Or even better you could just generate a random string/number for each combo of link - email, and contact id and just cross reference this random string/number server side\n&gt;\n&gt;So instead of\n&gt;domain.com/[540 characters]\n&gt;\n&gt;You have something like: `<http://domain.com/?etc=1241513625a|domain.com/?etc=1241513625a>`\nWe actually did have something just like this in the past for HTML emails, and currently have a similar version inside of plain text emails, but the issue here is that by needing a relationship between ?id=1234 and the resolved ?emailId=XYZ&amp;contactId=ABC&amp;linkId=123&amp;redirectUrl=<http://original.com|original.com> we need to store this in a database somewhere to ensure that we can translate one into the other and this would *dramatically* slow down the redirect process. The result is we'd have to load the URL with the first ID, do the look up to grab the redirect URL and record the click data, and then redirect the visitor off to the final destination which would add a significant amount of time (and server load) to this event which happens hundreds of millions of times a day. As it stands today, the system that handles redirecting doesn't require any databases or requests like this since it's able to take the `GET` request that it receives and instantaneously fire off an event with the parameter to our logging servers to process later and at the same time unencrypt the redirect parameter to send the user on their way. There's almost zero dependecies in the mix and as a result it has one of the highest uptimes of any of our services since it does so little when it's executed. It personally doesn't handle any of the processing, it just takes the request and redirects the user on their way. It's able to do that because all the information it needs to take action is stored in the URL itself, not server side anywhere. This is also why it needs to be encrypted, so that there can't be a man-in-the-middle attack that rewrites the string to say change an unencrypted `redirectURL=<http://originaldestination.com>` parameter to `redirectURL=<http://mymaliciouswebsite.com>`. If this was possible, an attacker could rewrite a link in a genuine marketing email to send the recipient somewhere malicious and it'd look like the sender of the marketing email was the one who sent them there. The way it's set up with the encryption ensures that the recipient will be sent directly where the HubSpot customer wants them to go, and since it's included in the URL and not stored on a server it's done *really* fast."
+  },
+  {
+    "poster": {
+      "poster_name": "Shay Redmond",
+      "poster_handle": "shay"
+    },
+    "time_stamp": "2019-01-10 12:55:24",
+    "text": "I hope this helps add some clarity to why it's set up the way it is today, I'm by no means deliberately trying to push back, just trying to explain why the system is currently built the way it is, it's very deliberately built the way it is."
+  },
+  {
+    "poster": {
+      "poster_name": "Shay Redmond",
+      "poster_handle": "shay"
+    },
+    "time_stamp": "2019-01-10 12:56:03",
+    "text": "In saying that though, we *definitely* agree that it needs some streamlining to make it a little less gross looking. There's a lengthy discussion happening in our slack about it right now."
+  },
+  {
+    "poster": {
+      "poster_name": "Shay Redmond",
+      "poster_handle": "shay"
+    },
+    "time_stamp": "2019-01-10 12:56:41",
+    "text": "Hi Gary! I added a little more info on how it works (and why it works that way) in this thread: <https://HubSpotdev.slack.com/archives/C22PU4LV8/p1547043405203800>"
+  },
+  {
+    "poster": {
+      "poster_name": "Shay Redmond",
+      "poster_handle": "shay"
+    },
+    "time_stamp": "2019-01-10 12:57:22",
+    "text": "We're discussing how we might be able to clean it up and make it look less spammy right now, so it's safe to share that we're looking to make improvements to it, but I don't have any clarity yet on exactly when that might be released."
+  },
+  {
+    "poster": {
+      "poster_name": "Joe",
+      "poster_handle": "joe"
+    },
+    "time_stamp": "2019-01-10 13:40:14",
+    "text": "exactly as Gonzalo said, the Hubl documentation is outdated.\nand yeah, i'll have to adjust my code a bit, but referencing the `{{ contents_topics }}` will be easier to reference than using a query function for the blog tags.\nyour one line is fantastic, much cleaner than the loop i was doing before:\n```\n{% set topics = blog_topics('default', 250) %}\n{% for item in topics %}\n{% if item.slug == topic %}&lt;h1&gt;{{ item.name }}&lt;/h1&gt;{% endif %}\n{% endfor %}\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Luke Summerfield",
+      "poster_handle": "lukesummerfield"
+    },
+    "time_stamp": "2019-01-10 14:20:58",
+    "text": "Have any code or screenshots you could share <@UBV0Z50DA> so we can take a look at what you're working with?"
+  },
+  {
+    "poster": {
+      "poster_name": "William",
+      "poster_handle": "cwilbanks"
+    },
+    "time_stamp": "2019-01-10 14:43:45",
+    "text": "Thanks for the reply. I was using the HubSpot logo carousel module from the marketplace but I think I have it figured out now."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-01-10 15:50:09",
+    "text": "If you send a link I can help you out"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-01-10 15:50:32",
+    "text": "you likely need to do a `display: none` on a specific media query"
+  },
+  {
+    "text": "",
+    "time_stamp": "2019-01-10 15:52:42"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-01-10 15:53:11",
+    "text": "<@UBV0Z50DA> ^^^ that might work for you"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-01-10 15:56:48",
+    "text": "I actually already have this in my repos folder and have used it"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-01-10 15:56:52",
+    "text": "smh"
+  },
+  null,
+  null,
+  null,
+  {
+    "poster": {
+      "poster_name": "Remington Begg",
+      "poster_handle": "remingtonbegg"
+    },
+    "time_stamp": "2019-01-10 18:52:47",
+    "text": "<@UA498ULG2> this and Image underneath"
+  },
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null
+]

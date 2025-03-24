@@ -1,0 +1,189 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2022-06-17 07:09:44",
+    "edited": {
+      "time_stamp": "2022-06-17 07:10:15"
+    },
+    "text": "<@U03BA1PRV7S> a snippet of that code may be helpful to post here, both for <@U03H787GXAB> and also for anyone searching for this in the future. When I searched the slack for pagination issues before, I only found unanswered questions."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2022-06-17 07:10:34",
+    "text": "dang! why would they remove that kind of functionality? I wonder what it was replaced with."
+  },
+  {
+    "poster": {
+      "poster_name": "Cristóbal Parraguez",
+      "poster_handle": "cparraguez"
+    },
+    "time_stamp": "2022-06-17 07:42:36",
+    "text": "```import json\nimport requests\n\nx = []\npages=1\nurl = '<https://api.hubapi.com/crm/v3/objects/contacts?archived=False&amp;limit=100>'\nheaders = {\"Content-Type\" : \"application/json\"}\nparams = {\"hapikey\" : \"xxx\"}\nresponse = requests.get( url = url, headers = headers, params = params)\nj = json.loads(response.text)\nx = x + j[\"results\"]\n\nwhile \"paging\" in j.keys():\n    pages +=1\n    url = j[\"paging\"][\"next\"][\"link\"]\n    response = requests.get( url = url, headers = headers, params = params)\n    j = json.loads(response.text)\n    x = x + j[\"results\"]\n    \nprint(pages)\nprint(len(x))\nprint(x)```"
+  },
+  {
+    "poster": {
+      "poster_name": "Cristóbal Parraguez",
+      "poster_handle": "cparraguez"
+    },
+    "time_stamp": "2022-06-17 07:43:12",
+    "text": "This will create a variable 'x' with all values from all pages looped, not sure if this is what you guys were looking for"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2022-06-17 07:43:59",
+    "text": "why not use `response.json()` ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2022-06-17 07:44:31",
+    "text": "and `x.append(j['results'])` ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Cristóbal Parraguez",
+      "poster_handle": "cparraguez"
+    },
+    "time_stamp": "2022-06-17 07:44:31",
+    "text": "Idk, this is how I've always made requests"
+  },
+  {
+    "poster": {
+      "poster_name": "Cristóbal Parraguez",
+      "poster_handle": "cparraguez"
+    },
+    "time_stamp": "2022-06-17 07:45:05",
+    "text": "You can append the values I guess, should work the same. Code performance might increase for larger code"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2022-06-17 07:45:07",
+    "text": "does this raise an error when there isn’t a next page? `url = j[\"paging\"][\"next\"][\"link\"]`"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2022-06-17 07:45:26",
+    "text": "thanks so much for sharing this (for future folks who might need it)!"
+  },
+  {
+    "poster": {
+      "poster_name": "Cristóbal Parraguez",
+      "poster_handle": "cparraguez"
+    },
+    "time_stamp": "2022-06-17 07:45:53",
+    "text": "yeah it raises an error but the while stops it from running that piece of code if its not there"
+  },
+  {
+    "poster": {
+      "poster_name": "Cristóbal Parraguez",
+      "poster_handle": "cparraguez"
+    },
+    "time_stamp": "2022-06-17 07:46:09",
+    "text": "because \"paging\" disappears in the last page lol"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2022-06-17 07:46:36",
+    "text": "i was just about to say i suppose the while condition will stop it from getting there, so as long as we can count on `paging` always having `next` and then `next` having `link` it should be fine. This is helpful!"
+  },
+  {
+    "poster": {
+      "poster_name": "Cristóbal Parraguez",
+      "poster_handle": "cparraguez"
+    },
+    "time_stamp": "2022-06-17 07:47:11",
+    "text": "Yeah it always have a link :slightly_smiling_face: I ve used this multiple times for the last 5 months"
+  },
+  {
+    "poster": {
+      "poster_name": "Cristóbal Parraguez",
+      "poster_handle": "cparraguez"
+    },
+    "time_stamp": "2022-06-17 07:47:40",
+    "text": "You can do a test by changing the limit to = 2 and check a small data set where the values are predictable"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2022-06-17 07:47:42",
+    "text": "sorry i slipped into “code review” mode :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Cristóbal Parraguez",
+      "poster_handle": "cparraguez"
+    },
+    "time_stamp": "2022-06-17 07:48:10",
+    "text": "Hahaha all good! :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Severns Guntzel",
+      "poster_handle": "jeff347"
+    },
+    "time_stamp": "2022-06-17 10:16:23",
+    "edited": {
+      "time_stamp": "2022-06-17 10:47:11"
+    },
+    "text": "I'm stumped: I'm trying to write a call that will output a json file of all contacts that includes values for all custom properties. I can get a list of all contacts and I can query against custom properties, but for this particularly urgent need, the solution eludes me. (FYI: I am happy for help in curl, python, or ruby.) Thank you good people!"
+  },
+  {
+    "poster": {
+      "poster_name": "Renan Nogueira",
+      "poster_handle": "renan.nogueira"
+    },
+    "time_stamp": "2022-06-17 12:35:11",
+    "text": "How can I get all properties of the tickets api without specifying it? <https://legacydocs.HubSpot.com/docs/methods/tickets/get-all-tickets>"
+  },
+  {
+    "poster": {
+      "poster_name": "David Perdue",
+      "poster_handle": "dperdue"
+    },
+    "time_stamp": "2022-06-17 16:32:39",
+    "text": "I'm having trouble with the GET /contacts/v1/lists/static API (<https://legacydocs.HubSpot.com/docs/methods/lists/get_static_lists>). If I supply an hapikey it works. But if I use OAuth I get an error saying \"This oauth-token (TOKEN) does not have proper permissions! (requires any of [contacts-lists-access, contacts-lists-read])\". Is this a scopes issue? I tried adding the contacts scope, but that did not help. Any help is appreciated. I know there were some scopes changes a few months back.",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-06-20 01:48:20"
+      },
+      {
+        "time_stamp": "2022-06-21 08:04:27"
+      },
+      {
+        "time_stamp": "2022-06-21 14:15:14"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Gibbons",
+      "poster_handle": "ryan805"
+    },
+    "time_stamp": "2022-06-17 22:20:28",
+    "text": "Can the API be used to pull all blog posts from two different blogs in HubSpot?  Could you then theoretically create a custom page using that data to combine the two blogs in a sortable and filterable fashion?"
+  }
+]

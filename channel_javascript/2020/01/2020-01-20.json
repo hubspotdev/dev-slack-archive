@@ -1,0 +1,283 @@
+[
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2020-01-20 02:46:40",
+    "edited": {
+      "time_stamp": "2020-01-20 02:47:14"
+    },
+    "text": "Hi Tom, As I think you already understand you can’t put hubl in the JS portion of the module. There are 2 ways around this,\nAdd a script tag in the hubl and html section and add your JS there between require JS tags: <https://designers.HubSpot.com/docs/hubl/hubl-supported-tags#require-js>\n\nOr the second method would be to add a div that contains your data:\n`&lt;div class=\"contact-data\" style=\"display:none\" data-tcc=\"{{ contact.tenancy_created_company }}\"&gt;&lt;/div&gt;`\n\nThen in your JS `var tenancyData = $('.contact-data').data('tcc');` You can add multiple data attributes and you can obviously name them whatever you want. depending on what data you have you may need to sanitize it so that it doesn’t close the quotes or anything like that"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Mitchell",
+      "poster_handle": "tom.mitchell"
+    },
+    "time_stamp": "2020-01-20 02:57:34",
+    "text": "Thank you <@UDJV5B73R> that's incredibly helpful. As you can probably tell, I'm a bit of a js noob and am having to learn it as I go for this project. I'd be really grateful if you could help me out with how I need to format the 'tcc' value within the data bit below to make it pull in properly? I've tried it with various brackets and things but can't seem to get it to work currently.\n\n```var tenancyData = $('.contact-data').data('tcc');\n\nvar options = {\n          series: [{\n          name: 'Your agency',\n          data: [22,20,15,45]\n        }, {```"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2020-01-20 03:04:53",
+    "edited": {
+      "time_stamp": "2020-01-20 03:06:45"
+    },
+    "text": "What is the data returned going to be?\nYou may literally be able to do something like that?\n```var options = {\n          series: [{\n          name: 'Your agency',\n          data: [tenancyData]\n        }, {```\nIf the data = 22,20,15,45 but you may need to do something like this,\n<https://www.tutorialrepublic.com/faq/how-to-convert-comma-separated-string-into-an-array-in-javascript.php>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2020-01-20 03:08:09",
+    "text": "should just be the split line to create the array"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Mitchell",
+      "poster_handle": "tom.mitchell"
+    },
+    "time_stamp": "2020-01-20 03:08:33",
+    "text": "Each value will be a single number, so what I'm working towards (I think) is a data series that contains - for example - five values ie tcc1, tcc2, tcc3, tcc4, tcc5"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Mitchell",
+      "poster_handle": "tom.mitchell"
+    },
+    "time_stamp": "2020-01-20 03:09:15",
+    "text": "so I assume I'd define each of these in the div as you mentioned above and add them to the js"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2020-01-20 03:09:42",
+    "text": "okay, so `data: [tcc1,tcc2,tcc3,tcc4,tcc5]` should do it"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2020-01-20 03:11:00",
+    "text": "And\n```var tcc1 = $('.contact-data').data('tcc1');\nvar tcc2 = $('.contact-data').data('tcc2');\nvar tcc3 = $('.contact-data').data('tcc3');\nvar tcc4 = $('.contact-data').data('tcc4');\nvar tcc5 = $('.contact-data').data('tcc5');```"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Mitchell",
+      "poster_handle": "tom.mitchell"
+    },
+    "time_stamp": "2020-01-20 03:26:42",
+    "text": "Brilliant, thanks so much <@UDJV5B73R>. I think I'm in business! Really do appreciate your help"
+  },
+  {
+    "poster": {
+      "poster_name": "Julie",
+      "poster_handle": "julie.goncalves"
+    },
+    "time_stamp": "2020-01-20 06:30:23",
+    "edited": {
+      "time_stamp": "2020-01-20 06:31:43"
+    },
+    "text": "Hi, i am trying to pick the inputs of a form, but it wont work, can't someone help me?\nI already try this to ways.\n1:\n```&lt;script charset=\"utf-8\" type=\"text/javascript\" src=\"//js.hsforms.net/forms/v2.js\"&gt;&lt;/script&gt;\n&lt;script&gt;\n  hbspt.forms.create({\n\tportalId: \"*******\",\n\tformId: \"***************\"\n});\n  console.log($('input[name=\"lastname\"]').val());\n  \n&lt;/script&gt;```\n2:\n```&lt;script charset=\"utf-8\" type=\"text/javascript\" src=\"//js.hsforms.net/forms/v2.js\"&gt;&lt;/script&gt;\n&lt;script&gt;\n  hbspt.forms.create({\n\tportalId: \"*******\",\n\tformId: \"***************\",\n    onFormSubmit: function($form){\n       console.log($('input[name=\"lastname\"]').val());\n}\n});\n    \n&lt;/script&gt;```",
+    "reply_count": 14,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2020-01-20 06:34:22"
+      },
+      {
+        "time_stamp": "2020-01-20 06:34:49"
+      },
+      {
+        "time_stamp": "2020-01-20 06:35:34"
+      },
+      {
+        "time_stamp": "2020-01-20 06:36:51"
+      },
+      {
+        "time_stamp": "2020-01-20 06:39:04"
+      },
+      {
+        "time_stamp": "2020-01-20 06:39:19"
+      },
+      {
+        "time_stamp": "2020-01-20 06:41:32"
+      },
+      {
+        "time_stamp": "2020-01-20 06:42:37"
+      },
+      {
+        "time_stamp": "2020-01-20 06:42:43"
+      },
+      {
+        "time_stamp": "2020-01-20 06:45:55"
+      },
+      {
+        "time_stamp": "2020-01-20 06:47:32"
+      },
+      {
+        "time_stamp": "2020-01-20 06:57:09"
+      },
+      {
+        "time_stamp": "2020-01-20 06:58:26"
+      },
+      {
+        "time_stamp": "2020-01-21 02:00:32"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "David Duymelinck",
+      "poster_handle": "david.duymelinck"
+    },
+    "time_stamp": "2020-01-20 06:34:22",
+    "text": "have you tried de HubSpot global form events? <https://developers.HubSpot.com/global-form-events>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2020-01-20 06:34:49",
+    "text": "Just came across this myself the other day, in on form submit\n```var formData = new FormData($form.get(0));\nformData.get('lastname')```"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2020-01-20 06:35:34",
+    "edited": {
+      "time_stamp": "2020-01-20 06:38:36"
+    },
+    "text": "I don’t think it’s IE/PreChromeEdge friendly though so I also added a formdata polyfill\n\n(Any ideas on what to call PreChromeEdge?)"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2020-01-20 06:36:51",
+    "text": "<https://developer.mozilla.org/en-US/docs/Web/API/FormData/get>"
+  },
+  {
+    "poster": {
+      "poster_name": "Julie",
+      "poster_handle": "julie.goncalves"
+    },
+    "time_stamp": "2020-01-20 06:39:04",
+    "text": "I don't understand very much about Globa events, how can't i use in the cas of onFormSubmit()?"
+  },
+  {
+    "poster": {
+      "poster_name": "Sadiya",
+      "poster_handle": "sadiya"
+    },
+    "time_stamp": "2020-01-20 06:39:19",
+    "text": "You need to add whole form script in an interval since HubSpot form take time to load."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2020-01-20 06:41:32",
+    "text": "```&lt;script charset=\"utf-8\" type=\"text/javascript\" src=\"//js.hsforms.net/forms/v2.js\"&gt;&lt;/script&gt;\n&lt;script&gt;\n  hbspt.forms.create({\n\tportalId: \"*******\",\n\tformId: \"***************\",\n    onFormSubmit: function($form){\n      var formData = new FormData($form.get(0));\n      console.log(formData.get('lastname') );\n    }\n});\n\n&lt;/script&gt;```\nAs I said this should just work"
+  },
+  {
+    "poster": {
+      "poster_name": "Julie",
+      "poster_handle": "julie.goncalves"
+    },
+    "time_stamp": "2020-01-20 06:42:37",
+    "text": "It Work!!"
+  },
+  {
+    "poster": {
+      "poster_name": "Julie",
+      "poster_handle": "julie.goncalves"
+    },
+    "time_stamp": "2020-01-20 06:42:43",
+    "text": "Thank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2020-01-20 06:45:55",
+    "text": "Make sure to add a pollyfill if you want it to work on PreChromeEdge/IE <https://github.com/jimmywarting/FormData>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2020-01-20 06:47:32",
+    "text": "Sorry it does work on edge 18"
+  },
+  {
+    "poster": {
+      "poster_name": "Julie",
+      "poster_handle": "julie.goncalves"
+    },
+    "time_stamp": "2020-01-20 06:57:09",
+    "edited": {
+      "time_stamp": "2020-01-20 06:57:43"
+    },
+    "text": "If it is a select input, what i have to do to get the selected option?"
+  },
+  {
+    "text": "",
+    "time_stamp": "2020-01-20 06:58:26"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonathan Stanis",
+      "poster_handle": "jstanis"
+    },
+    "time_stamp": "2020-01-20 08:49:00",
+    "text": "Does HubSpot combine JS files if multiple are attached to a template?",
+    "reply_count": 4,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2020-01-20 10:39:15"
+      },
+      {
+        "time_stamp": "2020-01-20 12:33:07"
+      },
+      {
+        "time_stamp": "2020-01-21 12:59:25"
+      },
+      {
+        "time_stamp": "2020-01-22 13:15:44"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2020-01-20 10:39:15",
+    "text": "If they are included properly they should unless there is some sort of error in a js file upon concatenation."
+  },
+  {
+    "poster": {
+      "poster_name": "Jonathan Stanis",
+      "poster_handle": "jstanis"
+    },
+    "time_stamp": "2020-01-20 12:33:07",
+    "text": "Is this an immediate effect or does it take a bit to happen? I have a template with two JS files attached and they minified almost immediatly but they remained seperate."
+  }
+]

@@ -1,0 +1,114 @@
+[
+  {
+    "poster": {
+      "poster_name": "Harun Kumar Siva",
+      "poster_handle": "harun"
+    },
+    "time_stamp": "2024-08-19 01:45:36",
+    "text": "Make sure you have <https://developers.HubSpot.com/docs/api/crm/users#:~:text=This%20objectId%20is%20different%20from%20the%20userId|read the note about the difference between the User Id and Object Id here.>\n\nYou can make a request to the users endpoint without the user_id to retrieve a <https://developers.HubSpot.com/beta-docs/reference/api/settings/users/user-details#get-%2Fcrm%2Fv3%2Fobjects%2Fusers|list of all users >and their Object Ids.\n\nIf you then make a request to read a specific user with one of the returned Object Ids it shouldn't 404."
+  },
+  {
+    "poster": {
+      "poster_name": "Tuomas Leiviskä",
+      "poster_handle": "tuomas.eventilla"
+    },
+    "time_stamp": "2024-08-19 04:40:45",
+    "text": "Hi! We have interesting problem:\nWe are creating contacts through form submission api (I added imaginary name and email):\n```[2024-08-19T13:15:04.225] .DEBUG: POST <https://forms.HubSpot.com/submissions/v3/integration/submit/5663185/c60c8f3f-4f4a-4cea-bded-d49917f0858e{>\"fields\":[{\"name\":\"firstname\",\"label\":\"firstname\",\"value\":\"loremipsum\"},{\"name\":\"lastname\",\"label\":\"lastname\",\"value\":\"dolors\"},{\"name\":\"email\",\"label\":\"email\",\"value\":\"<mailto:testing+123@domain.com|testing+123@domain.com>\"},```\nAfter this we get\n```[2024-08-19T13:15:04.661] .DEBUG: 200 {\"inlineMessage\":\"\"} [] []```\nAfter this we try to get contact and get 404. We try to add contact to list and get invalidEmail:\n```[2024-08-16T13:14:05.007] .DEBUG: GET <https://api.hubapi.com/contacts/v1/contact/email/testing+123@domain.com/profile[]> [] []\n[2024-08-16T13:14:05.216] .DEBUG: 404 {\"status\":\"error\",\"message\":\"contact does not exist\",\"correlationId\":\"877b0be0-2d83-4d50-af9e-03d9c178117c\",\"errors\":[{\"message\":\"The contact e:testing+123@domain.com does not exist.\"}],\"category\":\"OBJECT_NOT_FOUND\"} [] []\n[2024-08-16T13:14:05.218] .DEBUG: POST <https://api.hubapi.com/contacts/v1/lists/455/add{>\"emails\":[\"<mailto:testing+123@domain.com|testing+123@domain.com>\"\"]} [] []\n[2024-08-16T13:14:05.444] .DEBUG: 200 {\"updated\":[],\"discarded\":[],\"invalidVids\":[],\"invalidEmails\":[\"<mailto:testing+123@domain.com|testing+123@domain.com>\"\"]} [] []```\n*Is there delay in creating contact via forms?* Because after couple of days we are doing same and contact is found and email is not flagged as invalid. I am aware that contact needs to exist to be added to list. Thank you in advance!",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-08-19 06:55:31"
+      },
+      {
+        "time_stamp": "2024-08-19 06:56:36"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Dirk van der Giesen",
+      "poster_handle": "dvandergiesen"
+    },
+    "time_stamp": "2024-08-19 05:42:07",
+    "edited": {
+      "time_stamp": "2024-08-19 05:43:32"
+    },
+    "text": "Thank you Nicholas, i will contact someone with HubSpot  and then follow-up on this here"
+  },
+  {
+    "poster": {
+      "poster_name": "Michal Wezykowski",
+      "poster_handle": "michal.wezykowski"
+    },
+    "time_stamp": "2024-08-19 06:55:31",
+    "text": "Hey <@U07H1NCGLLF> , it's not officially stated that delays exist or how long it is but your first code is creating submission not a contact ergo delay is expected with internal HubSpot processing to create contact.\n\nIf short time is mandatory you could create contact first and then send submission. Look up property history on contact and cross reference with form submission timestamp to see what roughly the delay is and if it meets your requirements. Happy coding :wink:"
+  },
+  {
+    "poster": {
+      "poster_name": "Tuomas Leiviskä",
+      "poster_handle": "tuomas.eventilla"
+    },
+    "time_stamp": "2024-08-19 06:56:36",
+    "text": "Thank you Michal!"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Broomell",
+      "poster_handle": "mark407"
+    },
+    "time_stamp": "2024-08-19 08:32:37",
+    "text": "Hi all, is there a way to use webhook data in a custom code block on a workflow? So far I can only _trigger_ the workflow and use the data on a contact, but I want to take that data and use it directly in custom JS within the workflow. Thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Broomell",
+      "poster_handle": "mark407"
+    },
+    "time_stamp": "2024-08-19 08:35:48",
+    "text": "NVM, I've found it - if anyone else got confused on this, you have to import the property from the webhook source when formatting the custom code block."
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan Vogele",
+      "poster_handle": "nathan148"
+    },
+    "time_stamp": "2024-08-19 16:19:30",
+    "text": "Node client, sorry should have clarified <@U03REFNRMB3>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan Vogele",
+      "poster_handle": "nathan148"
+    },
+    "time_stamp": "2024-08-19 16:31:26",
+    "text": "<@U25PYL3Q8> Hey not sure where it's documented. I finally found it in the Postman workspace.  <https://www.postman.com/HubSpot/HubSpot-public-api-workspace/request/0mhhdfm/merge-two-objects-with-same-type>\n\nThe primary object is the main one it merges into. I'd need to test to make sure, but I bet latest information takes priority."
+  },
+  {
+    "poster": {
+      "poster_name": "James Elmer",
+      "poster_handle": "jameselmer"
+    },
+    "time_stamp": "2024-08-19 16:45:11",
+    "text": "As an aside. <@U060JS28BNJ> any idea if sequences will be included in this API At some point? It seems according the above it is nested under it. Is there a beta for it that we can get access too? We have alot of use cases for it."
+  },
+  {
+    "poster": {
+      "poster_name": "Paul Schwarz",
+      "poster_handle": "pschwarz"
+    },
+    "time_stamp": "2024-08-19 18:38:29",
+    "text": "I don’t know, I’ll pull in <@U05E77XEY4V> to reach out to the team in charge of the sequences part of the product to see if it’s in their plans."
+  },
+  {
+    "poster": {
+      "poster_name": "Ashutosh Singh",
+      "poster_handle": "ashutosh.singh"
+    },
+    "time_stamp": "2024-08-19 22:31:50",
+    "edited": {
+      "time_stamp": "2024-08-19 22:32:09"
+    },
+    "text": "Hi All\n\nI have created an app from a developer account, but my users are unable to authorise themselves unless they're superadmin in their standard account. I'm getting below error\n\nAuthorization failed because you don't have permissions to authorize the scopes required by the app. Please contact your super admin to get the necessary permissions."
+  }
+]

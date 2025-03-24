@@ -1,0 +1,155 @@
+[
+  {
+    "poster": {
+      "poster_name": "Tony Strack",
+      "poster_handle": "tstrack"
+    },
+    "time_stamp": "2019-04-17 07:09:29",
+    "text": "Are dynamic hubdb pages supposed to show up in the HubSpot site search results? I ran a few searches and those dynamic pages are not showing up."
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-04-17 08:19:07",
+    "text": "Yes, they should be showing up. Just to be sure, the table is updated/published correct?"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-04-17 08:19:29",
+    "text": "if it is, then it might just need time for it to be indexed in the search"
+  },
+  {
+    "poster": {
+      "poster_name": "Tony Strack",
+      "poster_handle": "tstrack"
+    },
+    "time_stamp": "2019-04-17 08:23:28",
+    "text": "Yep! The table is updated &amp; published. Do you happen know how long it takes for indexing?"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-04-17 08:24:11",
+    "text": "that I dont know offhand but i dont imagine more than 24hrs. <@U6GNQ7JBU> might be able to chime in on the indexing time for that."
+  },
+  {
+    "poster": {
+      "poster_name": "Tony Strack",
+      "poster_handle": "tstrack"
+    },
+    "time_stamp": "2019-04-17 08:26:50",
+    "text": "i'll give it some time and check in tomorrow. thanks, AJ!"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-04-17 08:27:34",
+    "text": "cc <@UD5NW4PJ5> It should happen pretty quickly"
+  },
+  {
+    "poster": {
+      "poster_name": "Tony Strack",
+      "poster_handle": "tstrack"
+    },
+    "time_stamp": "2019-04-17 08:37:51",
+    "text": "thanks, <@U6GNQ7JBU>. i'll keep an eye on it."
+  },
+  {
+    "poster": {
+      "poster_name": "Sylvia King",
+      "poster_handle": "sking"
+    },
+    "time_stamp": "2019-04-17 10:14:41",
+    "text": "I am creating a subnav that filters rows in the HubDB according to a select field column called \"event_location\" in which the choices are United States, Europe, and Asia. I'd like the ability to dynamically show/hide subnav items that are not selected. Currently all the subnav items are showing, including Asia, which is not currently being used.\n\nFrom Template:\n{% elif dynamic_page_hubdb_table_id %}\n{% set region = hubdb_table_column(1234567, \"event_location\").options %}\n{% for choice in region %}\n{% if choice.name == \"United States\" %}&lt;button type=\"button\" class=\"control control-color font-link text-teal\" data-filter=\".united-states\"&gt;{{ module.labels.united_states }}&lt;/button&gt;&lt;span&gt;&amp;#x2758; &lt;/span&gt;\n      {% elif choice.name == \"Europe\" %}&lt;button type=\"button\" class=\"control control-color font-link text-teal\" data-filter=\".europe\"&gt;{{ module.labels.europe }}&lt;/button&gt;&lt;span&gt;&amp;#x2758; &lt;/span&gt;\n      {% elif choice.name == \"Asia\" %}&lt;button type=\"button\" class=\"control control-color font-link text-teal\" data-filter=\".asia\"&gt;{{ <http://module.labels.asia|module.labels.asia> }}&lt;/button&gt;&lt;span&gt;&amp;#x2758; &lt;/span&gt;\n      {% else %}\n      {% endif %}\n      {% endfor %}"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2019-04-17 11:23:14",
+    "text": "Since you are using hubdb_table_column to get the options, it will always give you all the three options in the result and it will go through the loop 3 times and displays all. Rather you need to have a hubdb table row and select only one value in the row and use hubdb_table_row or hubdb_table_rows to get the actual value."
+  },
+  {
+    "poster": {
+      "poster_name": "Sylvia King",
+      "poster_handle": "sking"
+    },
+    "time_stamp": "2019-04-17 11:36:06",
+    "text": "Ok <@UG52C29EE> I will try using table row"
+  },
+  {
+    "poster": {
+      "poster_name": "Sylvia King",
+      "poster_handle": "sking"
+    },
+    "time_stamp": "2019-04-17 11:58:08",
+    "text": "<@UG52C29EE> can you explain why \"|unique\" doesn't work? I'm not sure how to select 1 value.\n{% for row in hubdb_table_rows(1234567, queryparam) %}\n{% if row.event_location.name == \"United States\"%}\n{{ row.event_location.name|unique}}\n{% else%}\n{% endif %}\n{% endfor %}"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2019-04-17 11:59:45",
+    "text": "Why do you need a unique after getting the required row?"
+  },
+  {
+    "poster": {
+      "poster_name": "Sylvia King",
+      "poster_handle": "sking"
+    },
+    "time_stamp": "2019-04-17 12:25:24",
+    "text": "I'd like to only show each of \"United States,\" \"Europe,\" or \"Asia\" only once, but it's showing each as many times as there are rows."
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2019-04-17 13:31:03",
+    "text": "bringing this back to the convo",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-04-18 13:37:18"
+      },
+      {
+        "time_stamp": "2019-04-18 14:42:09"
+      },
+      {
+        "time_stamp": "2019-04-18 14:43:00"
+      },
+      {
+        "time_stamp": "2019-04-18 14:43:54"
+      },
+      {
+        "time_stamp": "2019-04-18 14:46:23"
+      },
+      {
+        "time_stamp": "2019-04-18 14:50:41"
+      },
+      {
+        "time_stamp": "2019-04-18 14:51:13"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nick Montagu",
+      "poster_handle": "nick090"
+    },
+    "time_stamp": "2019-04-17 21:08:43",
+    "text": "Sounds like what you really need is an [regions] table "
+  }
+]

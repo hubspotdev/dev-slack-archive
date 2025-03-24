@@ -1,0 +1,34 @@
+[
+  {
+    "poster": {
+      "poster_name": "Noel Williams",
+      "poster_handle": "noel.williams"
+    },
+    "time_stamp": "2024-04-23 13:42:58",
+    "text": "similar issue. solved with custom code action in workflow to move file to a specific folder and make public."
+  },
+  {
+    "poster": {
+      "poster_name": "Noel Williams",
+      "poster_handle": "noel.williams"
+    },
+    "time_stamp": "2024-04-23 13:43:34",
+    "text": "```const HubSpot = require('@HubSpot/api-client');\nexports.main = async (event, callback) =&gt; {\n\nconst fileUrl = event.inputFields['image_file'];\nlet regexp = /https:\\/\\/.*signed-url-redirect\\/(.*)\\?.*/;\n\nlet result = fileUrl.match(regexp);\n\nlet url = \"\";  \nconst HubSpotClient = new HubSpot.Client({accessToken:process.env.PRIVATEAPP});\n\nconst FileUpdateInput = {\nparentFolderId: \"123456789012\", //id of folder in file manager to move file to\nisUsableInContent: true, \naccess: \"PUBLIC_INDEXABLE\" };\nconst fileId = result[1];\n\ntry {\n  const apiResponse = await HubSpotClient.files.filesApi.updateProperties(fileId, FileUpdateInput);\n  console.log(JSON.stringify(apiResponse, null, 2));\n  url = apiResponse.url;\n} catch (e) {\n  e.message === 'HTTP request failed'\n    ? console.error(JSON.stringify(e.response, null, 2))\n    : console.error(e)\n}\n  \n  callback({\n    outputFields: {\nurl : url\n    }\n  });\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Khushbu patel",
+      "poster_handle": "khushbu.patel"
+    },
+    "time_stamp": "2024-04-23 22:47:20",
+    "text": "Thanks <@UCTAN7RPA>"
+  },
+  {
+    "poster": {
+      "poster_name": "Suman Ghosh",
+      "poster_handle": "suman"
+    },
+    "time_stamp": "2024-04-23 23:32:05",
+    "text": "After downloading modules from marketplace, users are not able to clone the module. We are getting this support request from past few days. is there any specific reason or something we are missing while publishing the module in marketplace."
+  }
+]

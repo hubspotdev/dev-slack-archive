@@ -1,0 +1,133 @@
+[
+  {
+    "poster": {
+      "poster_name": "Ben Lerner",
+      "poster_handle": "ben198"
+    },
+    "time_stamp": "2023-02-11 08:10:47",
+    "edited": {
+      "time_stamp": "2023-02-11 08:21:05"
+    },
+    "text": "Hey guys, question - is it possible to create dynamic pages from a HubDB table without having a listing page?   Right now on my \"About Us\" page I have a module displaying the rows from the HubDB table called \"Job Listing\".   I would like it to auto create a new page for instance `<http://www.123.com/about-us/{{JOB|www.123.com/about-us/{{JOB> TITLE}}` and not have a listing page as `<http://www.123.com/about-us/jobs/{{JOB|www.123.com/about-us/jobs/{{JOB> TITLE}}`.  Is this an option?   Havent really found any ways around this.\n\nAlso not entirely clear the right process here.   I have a template created for the \"Job Description\" page.   However this looks entirely different than a \"Job Listing\" page as per the dcumentation, so how exactly would I go about differentiating this on a single template?  With HubL?",
+    "reply_count": 10,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-02-11 09:17:04"
+      },
+      {
+        "time_stamp": "2023-02-11 10:01:15"
+      },
+      {
+        "time_stamp": "2023-02-11 12:02:38"
+      },
+      {
+        "time_stamp": "2023-02-11 12:14:57"
+      },
+      {
+        "time_stamp": "2023-02-11 12:15:16"
+      },
+      {
+        "time_stamp": "2023-02-11 12:15:49"
+      },
+      {
+        "time_stamp": "2023-02-11 12:16:28"
+      },
+      {
+        "time_stamp": "2023-02-11 12:16:59"
+      },
+      {
+        "time_stamp": "2023-02-11 12:18:36"
+      },
+      {
+        "time_stamp": "2023-02-11 12:18:46"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2023-02-11 09:17:04",
+    "edited": {
+      "time_stamp": "2023-02-11 09:20:42"
+    },
+    "text": "Could you just /about-us as the 'listing' page. You don't actually have to display them there, it can be whatever you want. You could still use the module you're using now. It just acts as the root page for the dynamic pages. Then the rest of the jobs would be /about-us/jobtitle"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Lerner",
+      "poster_handle": "ben198"
+    },
+    "time_stamp": "2023-02-11 10:01:15",
+    "text": "But then we're/how do I apply the job description template I created?  Would it be via HubL?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Lerner",
+      "poster_handle": "ben198"
+    },
+    "time_stamp": "2023-02-11 12:02:38",
+    "text": "I figured it out - on the about page, need to differentiate what appears for the listing page vs the job page via this code:\n\n```{% if dynamic_page_hubdb_row %}        \n    &lt;h1&gt;{{ dynamic_page_hubdb_row.hs_name }}&lt;/h1&gt;\n    &lt;h2&gt;{{ dynamic_page_hubdb_row.name }}&lt;/h2&gt;\n    &lt;h3&gt;{{ dynamic_page_hubdb_row.role }}&lt;/h3&gt;\n    &lt;p&gt;{{dynamic_page_hubdb_row.bio}}&lt;/p&gt;\n{% elif dynamic_page_hubdb_table_id %}\n    &lt;ul&gt;\n    {% for row in hubdb_table_rows(dynamic_page_hubdb_table_id) %}\n        &lt;li&gt;&lt;a href=\"{{ request.path }}/{{ row.hs_path }}\"&gt;{{ row.hs_name }}&lt;/a&gt;&lt;/li&gt;                \n    {% endfor %}\n    &lt;/ul&gt;\n{% endif %}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2023-02-11 12:14:57",
+    "text": "Yepp that ^"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Lerner",
+      "poster_handle": "ben198"
+    },
+    "time_stamp": "2023-02-11 12:15:16",
+    "text": "Yea - been messing around with it now!   Thanks buddy! :smiley:"
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2023-02-11 12:15:49",
+    "edited": {
+      "time_stamp": "2023-02-11 12:19:30"
+    },
+    "text": "No let me know if you have any other questions. I've built a ton with hubdb"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Lerner",
+      "poster_handle": "ben198"
+    },
+    "time_stamp": "2023-02-11 12:16:28",
+    "text": "Actually one random one I havent found - is there a way to pull in the date the HubDB row was created?  Curious if thats possible instead of adding in a \"publish date\" field."
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Lerner",
+      "poster_handle": "ben198"
+    },
+    "time_stamp": "2023-02-11 12:16:59",
+    "text": "If I wanted to display on the job posting the \"post date\" for instance"
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2023-02-11 12:18:36",
+    "text": "row.hs_created_at"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Lerner",
+      "poster_handle": "ben198"
+    },
+    "time_stamp": "2023-02-11 12:18:46",
+    "text": "Amazing - thanks man!"
+  }
+]

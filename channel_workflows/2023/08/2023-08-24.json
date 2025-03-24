@@ -1,0 +1,250 @@
+[
+  {
+    "poster": {
+      "poster_name": "Peter Sterkenburg",
+      "poster_handle": "peter.sterkenburg"
+    },
+    "time_stamp": "2023-08-24 02:31:11",
+    "text": "Calling the hive brain here :raised_hands: Would anyone have any pointers for me on this challenge? Many thanks in advance!! <https://community.HubSpot.com/t5/CRM/Workflow-to-trigger-a-notification-only-when-certain-value/m-p/839420#M142540>"
+  },
+  {
+    "poster": {
+      "poster_name": "Hugo Prokop",
+      "poster_handle": "prokop.hugo"
+    },
+    "time_stamp": "2023-08-24 03:35:18",
+    "text": "Hi there, I'm tearing my hair out.\n\nI'm trying to make an association between a contact and a company. All the information I need is stored in the contact form.\nI also need to add a label to the company.\nI've gone back to the doc, I've done some research on the internet, this Slack etc. I haven't found anything conclusive. All my codes have an error.\n\nFor example, I often get this error: TypeError: Cannot read properties of undefined (reading 'basicApi')\n\nBut the code comes from a script I found on this Slack site.\n\nIf anyone has encountered this problem and can help me find a solution, I'd love to hear from you.\n\nthanks a lot !",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-08-24 07:44:31"
+      },
+      {
+        "time_stamp": "2023-08-24 07:51:21"
+      },
+      {
+        "time_stamp": "2023-08-24 11:47:23"
+      },
+      {
+        "time_stamp": "2023-08-25 04:15:32"
+      },
+      {
+        "time_stamp": "2023-08-25 08:43:38"
+      },
+      {
+        "time_stamp": "2023-08-28 02:51:21"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2023-08-24 07:44:31",
+    "text": "Good day to ya - recommend sharing the code you’re trying to run."
+  },
+  {
+    "poster": {
+      "poster_name": "Hugo Prokop",
+      "poster_handle": "prokop.hugo"
+    },
+    "time_stamp": "2023-08-24 07:51:21",
+    "edited": {
+      "time_stamp": "2023-08-24 07:51:47"
+    },
+    "text": "Sure !\n\n`const HubSpot = require('@HubSpot/api-client');`\n\n`exports.main = (event, callback) =&gt; {`\n  `console.log(\"Starting the association process...\");`\n\n  `const HubSpotClient = new HubSpot.Client({`\n    `accessToken: process.env.secretName`\n  `});`\n\n  `const contactId = event.inputFields['hs_object_id'];`\n  `const companyId = event.inputFields['id_company_with_label_apporteur'];`\n\n  `console.log(\"Contact ID:\", contactId);`\n  `console.log(\"Company ID:\", companyId);`\n\n  `const associationSpec = {`\n    `\"from\": {`\n      `\"id\": companyId`\n    `},`\n    `\"to\": {`\n      `\"id\": contactId`\n    `},`\n    `\"typeId\": 280,`\n    `\"label\": \"Apporteur\",`\n  `};`\n  \n  `console.log(\"Creating the association...\");`\n\n  `HubSpotClient.crm.companies.associationsApi.create(associationSpec).then(response =&gt; {`\n    `console.log(\"Association response:\", response);`\n\n    `if (response.statusCode === 200) {`\n      `console.log(\"Association successful!\");`\n      `callback({outputFields: {success: true}});`\n    `} else {`\n      `console.log(\"Association failed.\");`\n      `callback({outputFields: {success: false}});`\n    `}`\n  `}).catch(err =&gt; {`\n    `console.error(\"Error:\", err);`\n    `callback({outputFields: {success: false}});`\n  `});`\n`};`\n\nIm workin on this. And I have this error :\n\n```2023-08-24T13:50:16.664Z\tINFO\tStarting the association process...\n2023-08-24T13:50:16.671Z\tINFO\tContact ID: 450651\n2023-08-24T13:50:16.671Z\tINFO\tCompany ID: 17050278924\n2023-08-24T13:50:16.671Z\tINFO\tCreating the association...\n2023-08-24T13:50:17.275Z\tERROR\tError: RequiredError: Required parameter toObjectType was null or undefined when calling AssociationsApi.create.\n    at AssociationsApiRequestFactory.&lt;anonymous&gt; (/opt/nodejs/node_modules/@HubSpot/api-client/lib/codegen/crm/companies/apis/AssociationsApi.js:62:23)\n    at Generator.next (&lt;anonymous&gt;)\n    at /opt/nodejs/node_modules/@HubSpot/api-client/lib/codegen/crm/companies/apis/AssociationsApi.js:8:71\n    at new Promise (&lt;anonymous&gt;)\n    at __awaiter (/opt/nodejs/node_modules/@HubSpot/api-client/lib/codegen/crm/companies/apis/AssociationsApi.js:4:12)\n    at AssociationsApiRequestFactory.create (/opt/nodejs/node_modules/@HubSpot/api-client/lib/codegen/crm/companies/apis/AssociationsApi.js:56:16)\n    at ObservableAssociationsApi.create (/opt/nodejs/node_modules/@HubSpot/api-client/lib/codegen/crm/companies/types/ObservableAPI.js:29:59)\n    at PromiseAssociationsApi.create (/opt/nodejs/node_modules/@HubSpot/api-client/lib/codegen/crm/companies/types/PromiseAPI.js:14:33)\n    at Object.exports.main (/var/task/file.js:30:47)\n    at Runtime.exports.HubSpot_handler [as handler] (/var/task/HubSpotHandler.js:6:21) {\n  api: 'AssociationsApi',\n  method: 'create',\n  field: 'toObjectType'\n}\n\nMemory: 75/128 MB\nRuntime: 708.82 ms```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Or Levin",
+      "poster_handle": "or.l"
+    },
+    "time_stamp": "2023-08-24 10:32:04",
+    "text": "is there any update on CBE data use in a workflow?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-08-24 10:43:57",
+    "text": "Good thought, I would also like to know this"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-08-24 10:44:18",
+    "text": "<@U0157R7AQ84> or <@UHVJJUWFN> or <@U02EFVAAGCR> might have an idea"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2023-08-24 11:03:50",
+    "text": "active project, still working through details, no timeline yet on when we’ll complete it"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-08-24 11:26:38",
+    "text": "LOVE IT! appreciate the reply <@UHVJJUWFN>"
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2023-08-24 11:47:23",
+    "text": "hmmm, I’m not as familiar with the client as I once was - specifically the object specific association ones. But if it follows the same convention as the others, you could try passing the toObjectType as the first parameter in your request, like so:\n```let toObjectType = \"contact\"  \nHubSpotClient.crm.companies.associationsApi.create(toObjectType, associationSpec)```\nWhat I’d recommend is to try using the latest v4 associations endpoint. A request similar to your own, using the client might look like the following:\n\n```let companyId;\nlet contactId;\nlet data = {\n\tinputs: [\n\t\t{\n\t\t\ttypes: [{ associationCategory: \"USER_DEFINED\", associationTypeId: 280 }],\n\t\t\tfrom: { id: companyId },\n\t\t\tto: { id: contactId }\n\t\t}\n\t]\n};\nconst fromObjectType = \"company\";\nconst toObjectType = \"contact\";\n\ntry {\n\tconst apiResponse = await HubSpotClient.crm.associations.v4.batchApi.create(\n\t\tfromObjectType,\n\t\ttoObjectType,\n\t\tdata\n\t);\n\n\tconsole.log(\"response\", apiResponse);\n} catch (err) {\n\tconsole.error(err);\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Swanson",
+      "poster_handle": "matt353"
+    },
+    "time_stamp": "2023-08-24 12:32:45",
+    "text": "Is there any issue with the HubSpot translation service that caches Workflow action labels/descriptions? I feel like it shouldn’t take hours for labels to get updated and it really slows down development speed"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-08-24 12:33:26",
+    "reply_count": 13,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-08-24 13:11:43"
+      },
+      {
+        "time_stamp": "2023-08-24 13:12:02"
+      },
+      {
+        "time_stamp": "2023-08-24 13:12:50"
+      },
+      {
+        "time_stamp": "2023-08-24 13:13:51"
+      },
+      {
+        "time_stamp": "2023-08-24 13:29:40"
+      },
+      {
+        "time_stamp": "2023-08-24 13:31:28"
+      },
+      {
+        "time_stamp": "2023-08-24 13:32:24"
+      },
+      {
+        "time_stamp": "2023-08-24 13:52:56"
+      },
+      {
+        "time_stamp": "2023-08-24 13:58:23"
+      },
+      {
+        "time_stamp": "2023-08-24 14:07:28"
+      },
+      {
+        "time_stamp": "2023-08-25 06:12:20"
+      },
+      {
+        "time_stamp": "2023-08-25 06:13:19"
+      },
+      {
+        "time_stamp": "2023-08-25 06:14:21"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2023-08-24 13:11:43",
+    "text": "Hi there, I reached out to our team. It sounds like we were having an issue this morning. We restarted the service and it should be back up and running now. Sorry about that"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2023-08-24 13:12:02",
+    "text": "It should be nearly instant for english labels and I’m finding out for you what the lag would be for other languages"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2023-08-24 13:12:50",
+    "text": "It sounds like it could be up to 2 to 3 days for our translators to get to those strings and translate into all available languages"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Swanson",
+      "poster_handle": "matt353"
+    },
+    "time_stamp": "2023-08-24 13:13:51",
+    "text": "thank you! :pray:"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Swanson",
+      "poster_handle": "matt353"
+    },
+    "time_stamp": "2023-08-24 13:29:40",
+    "text": "is that service reported anywhere on <https://status.HubSpot.com/>"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2023-08-24 13:31:28",
+    "text": "i don’t think so, this is an internal service that should not have had an impact on customers. we’re discussing the issue to make sure it doesn’t happen again and/or so we can provide more visibility"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Swanson",
+      "poster_handle": "matt353"
+    },
+    "time_stamp": "2023-08-24 13:32:24",
+    "text": "appreciate that"
+  },
+  {
+    "poster": {
+      "poster_name": "Or Levin",
+      "poster_handle": "or.l"
+    },
+    "time_stamp": "2023-08-24 13:51:44",
+    "text": "thank you both guys :100:"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Swanson",
+      "poster_handle": "matt353"
+    },
+    "time_stamp": "2023-08-24 13:52:56",
+    "text": "<@UHVJJUWFN> not sure if there are still issues, our labels resynced after you first posted, but now it’s been 5+ minutes since I pushed an update and they have not changed"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Swanson",
+      "poster_handle": "matt353"
+    },
+    "time_stamp": "2023-08-24 13:58:23",
+    "text": "it’s updated now: took ~10 minutes total"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2023-08-24 14:07:28",
+    "text": "hmm that’s not right, i’ll check again"
+  }
+]

@@ -1,0 +1,10 @@
+[
+  {
+    "poster": {
+      "poster_name": "Manuel Krämer",
+      "poster_handle": "mkraemer"
+    },
+    "time_stamp": "2022-06-09 02:06:46",
+    "text": "Hey there.\nI made a module based on the new \"Programmable Email Beta\" because I need to use custom properties.\nThe module consists of a rich text field that gets modified in order to add a specific URL parameter to all links. It seems that the code works for a standard module but not for the programmable email module:\n\n`{% set arr = module.rich_text|split(\"href\") %}`  \n`{% set newText = [] %}`\n`{% for el in arr %}`\n  `{% for innerEl in el|split('\"') %}`\n    `{% if innerEl is string_startingwith \"http\" or innerEl is string_startingwith \"www\" %}`\n      `{% set link = innerEl %}`\n      `{% set newLink = innerEl %}`\n      `{% if link is string_containing \"?\" %}`\n        `{% set newLink = link + \"&amp;HubSpot_id=\" + contact.hs_object_id %}`\n      `{% else if link|list|last == \"/\" %}`\n        `{% set newLink = link + \"?HubSpot_id=\" + contact.hs_object_id %}`\n      `{% else %}`\n        `{% set newLink = link + \"/?HubSpot_id=\" + contact.hs_object_id %}`\n      `{% endif %}`\n      `{% do newText.append(newLink) %}`\n    `{% else %}`\n      `{% do newText.append(innerEl) %}`\n    `{% endif %}`\n    `{% if not loop.last %}`\n      `{% do newText.append('\"') %}`\n    `{% endif %}`\n  `{% endfor %}`\n  `{% if not loop.last %}`\n    `{% do newText.append(' href') %}`\n  `{% endif %}`\n`{% endfor %}`\n`{% set finishedText = newText|join%}`\n\nThe outcome is that the content of the rich text field gets displayed three times and I can't explain why this happens (for the standard module everything works fine). Do any of you know if there is a problem with using the |startingwith or |split function?\nThanks!"
+  }
+]

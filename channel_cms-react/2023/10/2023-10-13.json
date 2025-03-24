@@ -1,0 +1,392 @@
+[
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2023-10-13 10:56:01",
+    "text": "Hey <@U02GKQT4U9K>, we are aiming to get a fix in for this by end of next week, thanks for reporting!"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-10-13 11:21:50",
+    "text": "I'm also getting this error that crashes the proxy:\n```Finished render of @projects/theme-assets-project/app/components/partials/TailwindStyles.jsx (i = 0)\nnode:events:489\n      throw er; // Unhandled 'error' event\n      ^```\n",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-10-13 11:25:31"
+      },
+      {
+        "time_stamp": "2023-10-13 11:25:56"
+      },
+      {
+        "time_stamp": "2023-10-13 11:26:12"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-10-13 11:25:31",
+    "text": "is that the end of the error message?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-10-13 11:25:56",
+    "text": "I don't think so, I'll have to share again when it triggers again"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-10-13 11:26:12",
+    "text": "I think it has to do with returning or not returning something in TailwindStyles.jsx maybe"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-10-13 11:29:03",
+    "edited": {
+      "time_stamp": "2023-10-13 11:29:19"
+    },
+    "text": "sorry for the delay here - i think the answer to this may depend on whether or not `Layout` is within an island"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-10-13 11:30:05",
+    "edited": {
+      "time_stamp": "2023-10-13 11:30:14"
+    },
+    "text": "i just modified our styling example to have `TailwindPartial` and `AnotherTailwindPartial`, and moved the css import to a wrapping `Layout` component, then used that in both partials, but not within an island"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-10-13 11:31:11",
+    "text": "that resulted in a single CSS file shared across both partials, meaning if they were both on the same page they’d share that one CSS file"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-10-13 11:32:15",
+    "text": "and related to our thread the other day, since `Layout` is just making the CSS import there’s no need for it to be in an island"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-10-13 11:33:21",
+    "text": "ok, that sounds great, so like this:\n```export const Component = (props) =&gt; {\n  return (\n      &lt;Layout&gt;\n        &lt;Island\n          hydrateOn=\"idle\"\n          module={CTABannerIsland}\n          {...props}\n        /&gt;\n      &lt;/Layout&gt;\n  );\n};```"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-10-13 11:33:27",
+    "text": "with Layout importing the css"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-10-13 11:33:29",
+    "text": "right"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-10-13 11:33:45",
+    "text": "ok, that's how I have it setup in most cases"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-10-13 11:33:53",
+    "text": "is there a way of moving the CSS to the head?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-10-13 11:34:12",
+    "text": "^ or is that even a good idea"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-10-13 11:34:16",
+    "edited": {
+      "time_stamp": "2023-10-13 11:34:35"
+    },
+    "text": "not currently for CSS imports, that may change in the future"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-10-13 11:34:55",
+    "text": "i’m not sure it’d have any impact on the duplicate CSS part of the problem"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-10-13 11:35:04",
+    "text": "also....I guess in all scenarios tailwind is loading all css for all components...I think"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-10-13 11:35:13",
+    "text": "even if they are not used"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-10-13 11:35:43",
+    "text": "right?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-10-13 11:41:25",
+    "edited": {
+      "time_stamp": "2023-10-13 11:41:32"
+    },
+    "text": "doing some validation to get the answer"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-10-13 11:42:00",
+    "text": "^ I appreciate it"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-10-13 11:57:51",
+    "text": "so i think the answer will be yes, if you use a shared `Layout` component like that it’ll be the combination of all the styles for any paths that use that component"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-10-13 11:58:04",
+    "text": "i’m still verifying that our build works the way it should for that pattern"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-10-13 11:58:31",
+    "text": "k, that's probably not ideal but I don't know how else it could possibly work"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-10-13 11:58:56",
+    "text": "probably doesn't make a huge difference but I guess it could in theory"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-10-13 11:59:38",
+    "text": "the alternative is not doing the `Layout` thing, and setting up individual ones per partial or whatever"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-10-13 11:59:48",
+    "text": "then you’d get exactly what you need"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-10-13 12:00:16",
+    "text": "it may duplicate some styles if you add a second one into the page, but i don’t think tailwind can ‘codesplit’ css in a way to avoid that"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-10-13 12:01:04",
+    "text": "seems like it would duplicate all of the \"base\" styles"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-10-13 12:01:14",
+    "text": "or I guess not, it would only include what is used"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-10-13 12:01:35",
+    "text": "but there would definitely be some duplication...hmm"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-10-13 12:02:31",
+    "text": "a separate partial is also a contender, that would be similar to Layout"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-10-13 12:38:16",
+    "text": "ok got sidetracked by some config issues when validating what happens, but got things working again"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-10-13 12:55:03",
+    "text": "it looks like at least for basic cases, even if you have multiple `.css` files with the `@import`s to get tailwind working, currently each will include all of the base styles and the utility classes used by the whole project"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-10-13 12:55:24",
+    "text": "there may be some point where it splits but i’m not sure"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-10-13 12:56:35",
+    "text": "&gt; With CSS files this small, you don’t have to worry about complex solutions like code-splitting your CSS for each page, and can instead just ship a single small CSS file that’s downloaded once and cached until you redeploy your site.\nthis seems to be the general philosophy of tailwind, though <https://tailwindcss.com/docs/optimizing-for-production>"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-10-13 13:08:16",
+    "text": "awesome, thanks for looking into it"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-10-13 13:09:32",
+    "text": "so either the layout or the loading partial as standalone seem to be good solutions then"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-10-13 13:09:48",
+    "text": "yeah i think they don’t actually make much of a difference after all"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-10-13 13:19:38",
+    "text": "is either direction more likely to be supported in the future by whatever ends up moving that into the &lt;head&gt;?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-10-13 13:19:57",
+    "text": "i don’t think it’d make a difference"
+  },
+  {
+    "text": "Anyone know how to get rid of all these redundant divs that are wrapping modules? Can I do away with sections and layouts?",
+    "time_stamp": "2023-10-13 17:00:18",
+    "reply_count": 7,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-10-14 09:36:49"
+      },
+      {
+        "time_stamp": "2023-10-16 13:03:45"
+      },
+      {
+        "time_stamp": "2023-10-16 13:03:56"
+      },
+      {
+        "time_stamp": "2023-10-16 13:04:17"
+      },
+      {
+        "time_stamp": "2023-10-16 13:04:36"
+      },
+      {
+        "time_stamp": "2023-10-16 13:07:49"
+      },
+      {
+        "time_stamp": "2023-10-18 12:10:25"
+      }
+    ]
+  }
+]

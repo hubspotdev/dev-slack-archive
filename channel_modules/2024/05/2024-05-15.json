@@ -1,0 +1,38 @@
+[
+  {
+    "text": "Hi all - I'm on our Product team and wanted to share that we've built a way to make files uploaded to custom file properties 'public' (rather than private, which was what was preventing these fileIDs from being used externally). This change will apply only to newly created custom file properties in the short-term, but we plan to enable it for existing file properties in the longer-term.\n\nIf you'd like access to this change &amp; would be willing to test it out, please share your portalID and I can give you access today.",
+    "time_stamp": "2024-05-15 10:58:47"
+  },
+  {
+    "poster": {
+      "poster_name": "Elijah Gastin",
+      "poster_handle": "elijah.gastin"
+    },
+    "time_stamp": "2024-05-15 12:40:11",
+    "edited": {
+      "time_stamp": "2024-05-16 12:53:39"
+    },
+    "text": "Hey Devs, ran into a use case of where i wanted to use two diffrent options in the display conditions. I reached out support and they were able to find this invaluable information. Figured to share it here because i think its neat.\n\n<https://alyssawilie.com/blog/how-to-set-module-field-display-conditions-and-visibility-in-HubSpot#:~:text=Copy%20this%20snippet!-,Advanced%20Visibility,-Beyond%20what%27s%20capable|https://alyssawilie.com/blog/how-to-set-module-field-display-conditions-and-visibility-in-HubSpot#:~:text=Copy%20this%20s[…]ond%20what%27s%20capable>\n\nEdit: <@UATE4ATHP> has found the HubSpot documentation for advanced_visibility in the sea of documentation which can be found <https://developers.HubSpot.com/docs/cms/building-blocks/module-theme-fields-overview#field-visibility|here>. Thanks again.",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-16 08:28:21"
+      },
+      {
+        "time_stamp": "2024-05-16 12:49:40"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Elijah Gastin",
+      "poster_handle": "elijah.gastin"
+    },
+    "time_stamp": "2024-05-15 13:39:39",
+    "edited": {
+      "time_stamp": "2024-05-15 13:40:24"
+    },
+    "text": "At first, i thought this was an issue related to limit cause limit cause default limit is 10 and this still might be the case just changing the query limit to something higher like 1000 that max. But the biggest issue this line here\n```{% set hubdb_row = hubdb_table_row(hubdb_table.id, row_id) %}```\nI cant seem to find where i read it but the row field can only be called a max 10 times. I rewrote the code. This should work for you.\n```\n{# Table Macros #}\n{% set hubdb_table = hubdb_table(module.hubdb_tables.choose_table) %} {# Selects the table #}\n{% set column_count = hubdb_table.columns|length %} {# Number of columns in the table #}\n{% set skipped_column_count = column_count - 1 %} {# Skip first column (Name) #}\n\n{# Fetch all rows at once for batching #}\n{% set rows = hubdb_table_rows(hubdb_table.id) %}\n\n{# Sorting based on user selection #}\n{% if module.hubdb_tables.sort_rows == 'most_recent' %}\n    {% set sorted_rows = rows %}\n{% elif module.hubdb_tables.sort_rows == 'oldest' %}\n    {% set sorted_rows = rows|reverse %}\n{% else %}\n    {% set sorted_rows = rows %} {# Default to no sorting #}\n{% endif %}\n\n{# HTML Starts #}\n<div class=\"tabledb-wrapper_{{ name }}\">\n<div class=\"tabledb-container_{{ name }}\" role=\"table\" aria-label=\"\">\n  <div class=\"tabledb_{{ name }} headertb firstrow\" role=\"rowgroup\">\n    {% for i in range(1, column_count) %} {# Loop through columns, skipping the first column #}\n      {% set column_info = hubdb_table.columns[i] %}\n      <div class=\"rowdb_{{ name }}{% if loop.first %} sticky {% endif %}\" role=\"columnheader\">{{ column_info.label }}</div>\n    {% endfor %}\n  </div>\n  {% for row in sorted_rows[:20] %} {# Process up to 20 rows #}\n    <div class=\"tabledb_{{ name }} rowdb_{{ name }}\" role=\"rowgroup\">\n      {% for i in range(1, column_count) %} {# Loop through columns, skipping the first column #}\n        {% set column_info = hubdb_table.columns[i] %}\n        {% set value = row[column_info.name] %}\n        <div class=\"rowdb_{{ name }}{% if loop.first %} sticky {% endif %}\" role=\"cell\">{{ value }}</div>\n      {% endfor %}\n    </div>\n  {% endfor %}\n</div>\n</div>```"
+  }
+]

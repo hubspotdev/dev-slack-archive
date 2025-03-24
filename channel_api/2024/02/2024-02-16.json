@@ -1,0 +1,296 @@
+[
+  {
+    "poster": {
+      "poster_name": "Kirill Mashenkov",
+      "poster_handle": "k.mashenkov"
+    },
+    "time_stamp": "2024-02-16 04:06:13",
+    "edited": {
+      "time_stamp": "2024-02-16 04:06:29"
+    },
+    "text": "hi, where can i get requirements for creating contact via api -  /crm/v3/objects/contacts\nwho can help me please?\nI got errors, when sending request"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-02-16 06:02:40",
+    "text": "I am wondering why you want all of the domains, are you then going to then perform more API calls with them or do you just want a complete list for some other purpose.  I ask this because if you just want a list of them I would consider just setting up a report to gather them instead of using the API.  If you do need them from the API then you could use the search function. <https://developers.HubSpot.com/docs/api/crm/search>"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-02-16 06:12:45",
+    "text": "tokens are per portal - you can get info on your access or refresh tokens to see the data they hold - <https://developers.HubSpot.com/docs/api/oauth/tokens>"
+  },
+  {
+    "poster": {
+      "poster_name": "Rene Freiburghaus",
+      "poster_handle": "rene.freiburghaus"
+    },
+    "time_stamp": "2024-02-16 06:19:40",
+    "text": "Appreciate the response, I will look into it, my use case is mainly to create a vetting tool for my reps."
+  },
+  {
+    "poster": {
+      "poster_name": "Ankit",
+      "poster_handle": "ankit188"
+    },
+    "time_stamp": "2024-02-16 08:24:14",
+    "text": "Hi All,\nHow i send the pdf in the object file type properties, over the object API\nplease help"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan Vogele",
+      "poster_handle": "nathan148"
+    },
+    "time_stamp": "2024-02-16 08:46:45",
+    "text": "Your body request needs updated. Here's some node I reuse all the time when I do stuff like this.\n\n```async function createAssociation(\n  HubSpotClient,\n  fromObjectType,\n  fromObjectId,\n  toObjectType,\n  toObjectId,\n  associationCategory,\n  associationTypeId\n) {\n  // Function to check if a parameter is missing and log it\n  const checkParam = (param, paramName) =&gt; {\n    if (param === null || param === undefined) {\n      console.error(`Missing parameter: ${paramName}`);\n      return true;\n    }\n    return false;\n  };\n\n  // Validate associationCategory to ensure it is either \"USER_DEFINED\" or \"HubSpot_DEFINED\"\n  if (![\"USER_DEFINED\", \"HubSpot_DEFINED\"].includes(associationCategory)) {\n    console.error(\n      `Invalid associationCategory: ${associationCategory}. Must be \"USER_DEFINED\" or \"HubSpot_DEFINED\".`\n    );\n    return;\n  }\n\n  // Check for null or undefined parameters\n  if (\n    checkParam(fromObjectType, \"fromObjectType\") ||\n    checkParam(fromObjectId, \"fromObjectId\") ||\n    checkParam(toObjectType, \"toObjectType\") ||\n    checkParam(toObjectId, \"toObjectId\") ||\n    checkParam(associationCategory, \"associationCategory\") ||\n    checkParam(associationTypeId, \"associationTypeId\")\n  ) {\n    return; // Exit the function if any required parameter is missing\n  }\n\n  // Define the association specification based on the provided category and type\n  let associationSpec = [\n    {\n      associationCategory: associationCategory,\n      associationTypeId: associationTypeId,\n    },\n  ];\n\n  console.log(\n    `Creating association: ${fromObjectId} (${fromObjectType}) -&gt; ${toObjectId} (${toObjectType}) with category '${associationCategory}' and type ID '${associationTypeId}'`\n  );\n\n  try {\n    // Execute the association creation via the HubSpot API\n    const apiResponse = await HubSpotClient.crm.associations.v4.basicApi.create(\n      fromObjectType,\n      fromObjectId,\n      toObjectType,\n      toObjectId,\n      associationSpec\n    );\n\n    console.log(\n      \"Association created successfully:\",\n      JSON.stringify(apiResponse, null, 2)\n    );\n    return apiResponse;\n  } catch (e) {\n    console.error(\n      \"Failed to create association:\",\n      e.message === \"HTTP request failed\"\n        ? JSON.stringify(e.response, null, 2)\n        : e\n    );\n    throw e; // Rethrow the error for external handling\n  }```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan Vogele",
+      "poster_handle": "nathan148"
+    },
+    "time_stamp": "2024-02-16 08:48:22",
+    "text": "then you can just call it in your code like this whenever you need to make an association:\n\n```      await createAssociation(\n        HubSpotClient,\n        \"companies\",\n        companyId,\n        \"contacts\",\n        contact.id,\n        \"USER_DEFINED\",\n        11 // typeId for \"whatever label you want to associate\" \n      );```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan Vogele",
+      "poster_handle": "nathan148"
+    },
+    "time_stamp": "2024-02-16 08:50:09",
+    "text": "Does anyone know how to append an association? I have a usecase where I'm trying to keep \"Primary company\" on a contact, but as soon as I add a new label that \"Primary Company\" label goes away. However, when I try to associate the new Primary Company it removes the new association I just made.\n\nI know I'm missing something stupid, but after reading the docs I can't figure out what."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-02-16 08:57:52",
+    "edited": {
+      "time_stamp": "2024-02-16 08:58:09"
+    },
+    "text": "is it possible to pull the data from a module using any API if I only know it's unique on-page id? `1187d0b8-6f65-413a-89aa-eac4fea5c97d`? I'm grabbing that id from the postBody and would like to get the value of the content inside that module—is that possible?"
+  },
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2024-02-16 09:21:56",
+    "edited": {
+      "time_stamp": "2024-02-16 09:23:54"
+    },
+    "text": "I'm monitoring a Private app making API calls to our portal. I know what the application on the other end does but I don't have access to it, and their developer doesn't have much to go on either (he sees the same error message). Since about 2 weeks now, most calls are returning 403 statuses with this error message:\n`{\"status\":\"error\",\"message\":\"There was a problem with the request.\",\"correlationId\":\"b83a40d1-2f7b-43fb-9364-f74a48b4897c\"}`\n\nThese are simple create/update calls for Custom object records. I checked, we didn't change any scopes or the auth token, and developer confirmed that they didn't change anything on their end either (I do believe it'd be a clearer message if that was the case too). Any idea what could be causing this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Teigseth",
+      "poster_handle": "arno.teigseth"
+    },
+    "time_stamp": "2024-02-16 09:25:43",
+    "edited": {
+      "time_stamp": "2024-02-16 09:26:00"
+    },
+    "text": "hi guys! What is the best method for searching contacts by \"principal email OR any secondary emails\"?\n\nBelow what I was using with `crm/v3/objects/contacts/search`, but sales people are adding extra contacts to \"secondary\" email :thinking_face:\n```{    \n    \"filterGroups\": [\n        {\n            \"filters\": [\n                {\n                    \"operator\": \"EQ\",\n                    \"propertyName\": \"email\",\n                    \"value\": \"*_partial_email_here*\"\n                }\n            ]\n        }       \n    ]    \n}```",
+    "reply_count": 9,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-02-16 09:30:12"
+      },
+      {
+        "time_stamp": "2024-02-16 09:30:55"
+      },
+      {
+        "time_stamp": "2024-02-16 09:38:43"
+      },
+      {
+        "time_stamp": "2024-02-16 12:33:47"
+      },
+      {
+        "time_stamp": "2024-02-16 12:35:44"
+      },
+      {
+        "time_stamp": "2024-02-16 12:56:45"
+      },
+      {
+        "time_stamp": "2024-02-16 13:04:58"
+      },
+      {
+        "time_stamp": "2024-02-16 13:53:14"
+      },
+      {
+        "time_stamp": "2024-02-16 13:56:16"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Stacey Thomas",
+      "poster_handle": "stacey.thomas"
+    },
+    "time_stamp": "2024-02-16 09:30:12",
+    "text": "Would it work to add a simple OR to the filter...? TBH i've not used an OR in filtering HubSpot before so i'd be interested to know if it works...\n```{\n  \"filterGroups\": [\n    {\n      \"filters\": [\n        {\n          \"operator\": \"OR\",\n          \"filters\": [\n            {\n              \"operator\": \"EQ\",\n              \"propertyName\": \"email\",\n              \"value\": \"*_partial_email_here*\"\n            },\n            {\n              \"operator\": \"EQ\",\n              \"propertyName\": \"secondary_email\",\n              \"value\": \"*_partial_email_here*\"\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Teigseth",
+      "poster_handle": "arno.teigseth"
+    },
+    "time_stamp": "2024-02-16 09:30:55",
+    "text": "Will try! Maybe my fault was using `secondaryEmails` -- didn't actually look up the name, just trusted whatever that web page said :innocent:"
+  },
+  {
+    "poster": {
+      "poster_name": "Stacey Thomas",
+      "poster_handle": "stacey.thomas"
+    },
+    "time_stamp": "2024-02-16 09:38:43",
+    "text": "You will need to amend the property name to whatever your internal reference is or whatever you define it as in the inputs :)"
+  },
+  {
+    "poster": {
+      "poster_name": "Robbie Boyd",
+      "poster_handle": "robbie100"
+    },
+    "time_stamp": "2024-02-16 10:04:27",
+    "text": "Is there a HubSpot membership login api?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-02-16 12:36:59"
+      },
+      {
+        "time_stamp": "2024-02-17 15:58:09"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2024-02-16 12:33:47",
+    "edited": {
+      "time_stamp": "2024-02-16 12:41:32"
+    },
+    "text": "think the prop you’re looking for is “hs_additional_emails”. Could adapt the following, which is how you’d go about looking for a match in the email prop OR the additional_emails prop:\n\n```\t\t\t\tfilterGroups: [\n\t\t\t\t\t{\n\t\t\t\t\t\tfilters: [\n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\tvalue: `0123`,\n\t\t\t\t\t\t\t\tpropertyName: \"phone\",\n\t\t\t\t\t\t\t\toperator: \"EQ\"\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t]\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\tfilters: [\n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\tvalue: `7027430070`,\n\t\t\t\t\t\t\t\tpropertyName: \"mobilephone\",\n\t\t\t\t\t\t\t\toperator: \"EQ\"\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t]\n\t\t\t\t\t}\n\t\t\t\t],\n\t\t\t\tproperties: [\"phone\", \"firstname\", \"mobilephone\"],\n\t\t\t\tlimit: 10,\n\t\t\t\tafter: 0\n\t\t\t}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2024-02-16 12:35:44",
+    "edited": {
+      "time_stamp": "2024-02-16 12:36:12"
+    },
+    "text": "and if you’re just looking for the inclusion of a substring, opposed to an exact match - e.g. “nikodi” as the value in your search request, and expecting “<mailto:nikodixon@gmail.com|nikodixon@gmail.com>” to be returned in the results - you’ll want to use the “CONTAINS_TOKEN” operator instead of EQ."
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2024-02-16 12:36:59",
+    "text": "pretty sure that’s a no."
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Teigseth",
+      "poster_handle": "arno.teigseth"
+    },
+    "time_stamp": "2024-02-16 12:56:45",
+    "text": "nice! yeah that's *hs_additional_emails* as it turns out!\n\nFor me, on `propertyName=\"email\"`, EQ with value=`*_partial_email_*` works just like CONTAINS_TOKEN,\n\nbut on the other hand EQ doesn't return anything on querying with `propertyName=\"hs_additional_emails\"` :thinking_face:\n\nI \"know it can be done\" because when I search for a secondary/additional email in the HubSpot UI, I do get a match (showing primary email in the match list). Just is a bit of a mystery how to pull it off with the API"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Teigseth",
+      "poster_handle": "arno.teigseth"
+    },
+    "time_stamp": "2024-02-16 13:04:58",
+    "edited": {
+      "time_stamp": "2024-02-16 13:48:59"
+    },
+    "text": "OK FOUND IT\n\nso EQ/CONTAINS_TOKEN doesn't return anything when querying hs_additional_emails\n\n*BUT* this works:\n```{\n    \"properties\": [\n        \"hs_additional_emails\",\n        \"email\",\n        \"firstname\",\n        \"lastname\"\n    ],\n    \"query\": \"_partial_email_\"\n}```\n(also with just `{\"query\": \"partial\"}` without any asterisks :partying_face: )\nReference <https://developers.HubSpot.com/docs/api/crm/search>"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-02-16 13:20:37",
+    "text": "When creating a new blog post via the API, are all of the example fields in the `Parameters` example object required? Is everything in the schema required? is there any way to tell what's required?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-02-16 13:33:18"
+      },
+      {
+        "time_stamp": "2024-02-16 13:44:13"
+      },
+      {
+        "time_stamp": "2024-02-16 13:44:54"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Stone",
+      "poster_handle": "chris.stone603"
+    },
+    "time_stamp": "2024-02-16 13:33:18",
+    "text": "I'm not exactly sure which fields are required but I do know that you don't need to include all of them. I believe you can include just what you need, just may not be able to publish until publish requirements are met."
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Stone",
+      "poster_handle": "chris.stone603"
+    },
+    "time_stamp": "2024-02-16 13:44:13",
+    "text": "Name and contentGroupId are required"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-02-16 13:44:54",
+    "text": "awesome, thank you that definitely helps"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Teigseth",
+      "poster_handle": "arno.teigseth"
+    },
+    "time_stamp": "2024-02-16 13:48:13",
+    "text": "Is this the channel to ask about CRM UI extensions (beta )?\n\nI've setup a Contact card with the getting started function, works great. Now\n\n• how do I switch environments in the callable function? Tried\n    ◦ reading from a JSON/JS file in same dir\n    ◦ setting ENV variables\nworks well in dev, but seems all of these approaches fail when deployed to HubSpot :thinking_face:\n\nWe have a staging and a production stack and would like to outsource the environment variables"
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2024-02-16 13:53:14",
+    "edited": {
+      "time_stamp": "2024-02-16 13:53:41"
+    },
+    "text": "good to hear, and very interesting - I’ve never made use of the “query” param using the search endpoints. Good to keep in mind going forward.\n\nDouble checked the route I suggested though - and granted the rest of the request is setup appropriately, the approach works.\n\nYou’d have had to have included an additional filterGroup for the primary “email” property though, to cover both bases."
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Teigseth",
+      "poster_handle": "arno.teigseth"
+    },
+    "time_stamp": "2024-02-16 13:56:16",
+    "text": "hmm yeah strange, cause when I search for \"*arno*\" in propertyName=email, I can see all the variants in the returned object, like     hs_additional_email=\"arno2@domain;arno435@domain;barno@domain\" …\nBut when I search for the same string on hs_additional_email, I just get back an empty array [] so that's very strange :thinking_face:\n\nSomething's likely up with a setting somewhere then. Thanks for double checking though!"
+  }
+]

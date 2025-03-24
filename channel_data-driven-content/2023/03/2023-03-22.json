@@ -1,0 +1,142 @@
+[
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2023-03-22 02:33:34",
+    "edited": {
+      "time_stamp": "2023-03-22 02:43:03"
+    },
+    "text": "Linking to dynamic pages from _another page_ than the overview page with GraphQL.\n\nWe’ve enabled the option for editors to show content of a collection, on modules outside of the overview page.\nThe usual way of linking from the overview to a dynamic page is like `{{ request.path }}/{{ row.hs_path }}` .\n\nWhen displaying a collection on a different page, the `request.path` will never equate the right overview page, causing the link to fail.\nIn GraphQL it doesn’t seem possible to get the overview page of the item itself - this would have made this a non-issue, but I also see this hard to set up right. with the way dyanmic pages work today.\n\nIs the only way forward adding a column, like `overview_path`, or is there a smarter way?",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-03-22 02:42:04"
+      },
+      {
+        "time_stamp": "2023-03-22 02:43:47"
+      },
+      {
+        "time_stamp": "2023-03-22 02:43:56"
+      },
+      {
+        "time_stamp": "2023-03-22 03:08:19"
+      },
+      {
+        "time_stamp": "2023-03-22 03:18:32"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2023-03-22 02:42:04",
+    "text": "I usually create an empty global module called \"translations\" with various fields (like for example: product_listing_url) then in base.html I add this module with export_to_template_context=true, then where I need to call any of those fields I use `{{ widget_data.translations.product_listing_url }}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2023-03-22 02:43:47",
+    "text": "Huh, that’s actually a good idea. We’re already having a bunch of these translations/settings in such a module."
+  },
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2023-03-22 02:43:56",
+    "text": "Thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2023-03-22 03:08:19",
+    "edited": {
+      "time_stamp": "2023-03-22 03:16:33"
+    },
+    "text": "I went with this, for future reference.\nChecking if the URL matches the one you’re currently on, otherwise showing the settings URL.\nCould of course be simplified, but I’d rather progressively enhance it, by using the settings URL only if it exists.\n```                            {% set courseListingURL = settings.courses.course_listing_url.href %}\n                            {% if courseListingURL != null &amp;&amp; request != courseListingURL %}\n                                    {% set itemDetailLink = \"{{ courseListingURL }}/{{ item.hs_path }}\" %}\n                                {% else %}\n                                    {% set itemDetailLink = \"{{ request.path }}/{{ item.hs_path }}\" %}\n                            {% endif %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2023-03-22 03:18:32",
+    "text": "I usually just use the url from settings on the listing page too to simplify this"
+  },
+  {
+    "poster": {
+      "poster_name": "Stef Leitch",
+      "poster_handle": "sleitch"
+    },
+    "time_stamp": "2023-03-22 11:17:54",
+    "text": "Hey, I was OOO for the past week, but it does look like we're using the case-sensitive HubDB contains operator when using the `contains` filter in GraphQL. Will talk to the team about possibly switching it to be case insensitive."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-22 11:22:25",
+    "text": ":fire: Thanks Stef, really appreciate it"
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin-C",
+      "poster_handle": "kevin285"
+    },
+    "time_stamp": "2023-03-22 12:13:15",
+    "text": "Hey all, we're trying to reorganize rows in a HubDB, we've opted into the drag to reorder HubDB, but found that the HubDB will be too large to manage this way. My thought was to re-import an order CSV. Where attempting to important a single row CSV to clear the current HubDB, then im port the ordered CSV. The issue is that this does nothing, and the import button stops working after attempting it.\n\nWe're also seeing substantial errors in the console that might be related. See the loom below:\n<https://www.loom.com/share/0e4f1d7ac39c47ffae3e0eb0534e5b4c>",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-03-22 13:20:32"
+      },
+      {
+        "time_stamp": "2023-03-22 15:07:36"
+      },
+      {
+        "time_stamp": "2023-03-22 15:23:33"
+      },
+      {
+        "time_stamp": "2023-03-23 08:03:28"
+      },
+      {
+        "time_stamp": "2023-03-23 08:37:13"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Stef Leitch",
+      "poster_handle": "sleitch"
+    },
+    "time_stamp": "2023-03-22 13:20:32",
+    "text": "Hi Kevin, I can replicate this issue when trying to import a file with a single line as well. It seems to be a front end issue, so I'll let that team know.\n\nAs a workaround for now, it seems to work for me if I import a file with an empty second line (so 1st line is the header with all the column names, and then 2nd line is blank).\n\nIf that workaround doesn't work, let me know!"
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin-C",
+      "poster_handle": "kevin285"
+    },
+    "time_stamp": "2023-03-22 15:07:36",
+    "text": "Thanks <@U024L8W0MB6>Always appreciated!"
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin-C",
+      "poster_handle": "kevin285"
+    },
+    "time_stamp": "2023-03-22 15:23:33",
+    "text": "<@U024L8W0MB6> that did not do the trick, but if we remove all of the data from the HS defined columns the upload works as expected"
+  }
+]

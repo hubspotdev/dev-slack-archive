@@ -1,0 +1,173 @@
+[
+  {
+    "poster": {
+      "poster_name": "Nadjet",
+      "poster_handle": "nadjet.bouzid"
+    },
+    "time_stamp": "2023-03-09 03:13:02",
+    "text": "Helloo everyone, I am working with serach api and i am having trouble displaying the result of my search. I am using this link to have the request structure <https://developers.HubSpot.com/docs/api/crm/search> . Thank you for your helop! have a good one :slightly_smiling_face:",
+    "reply_count": 17,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-03-09 07:33:30"
+      },
+      {
+        "time_stamp": "2023-03-09 07:51:18"
+      },
+      {
+        "time_stamp": "2023-03-09 07:53:01"
+      },
+      {
+        "time_stamp": "2023-03-09 07:56:19"
+      },
+      {
+        "time_stamp": "2023-03-09 07:56:40"
+      },
+      {
+        "time_stamp": "2023-03-09 08:12:51"
+      },
+      {
+        "time_stamp": "2023-03-09 08:14:36"
+      },
+      {
+        "time_stamp": "2023-03-09 08:26:36"
+      },
+      {
+        "time_stamp": "2023-03-09 08:26:46"
+      },
+      {
+        "time_stamp": "2023-03-09 08:31:14"
+      },
+      {
+        "time_stamp": "2023-03-09 08:35:07"
+      },
+      {
+        "time_stamp": "2023-03-09 08:35:13"
+      },
+      {
+        "time_stamp": "2023-03-09 08:44:09"
+      },
+      {
+        "time_stamp": "2023-03-09 08:44:20"
+      },
+      {
+        "time_stamp": "2023-03-10 01:44:10"
+      },
+      {
+        "time_stamp": "2023-03-10 06:51:10"
+      },
+      {
+        "time_stamp": "2023-03-10 06:51:15"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-09 07:33:30",
+    "text": "Do you have the code that you're using?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nadjet",
+      "poster_handle": "nadjet.bouzid"
+    },
+    "time_stamp": "2023-03-09 07:51:18",
+    "text": "`// For external API calls`\n`const axios = require(\"axios\");`\n`const http = require(\"https\");` \n`const express = require('express');`\n\n`exports.main = async (context = {}, sendResponse) =&gt; {`\n  `let body ;`\n  `const { hs_object_id, firstname, lastname } = context.propertiesToSend;`\n    `const options = {`\n      `\"method\": \"POST\",`\n      `\"hostname\": \"<http://api.hubapi.com|api.hubapi.com>\",`\n      `\"port\": null,`\n      `\"path\": \"/crm/v3/objects/contacts/search\",`\n      `\"headers\": {`\n        `\"Content-Type\": \"application/json\",`\n        `'accept':'application/json',`\n      `},`\n      `\"data\": {`\n        `\"properties\": [\"firstname\", \"email\"],`\n        `\"limit\": 2`\n      `}`\n      \n    `};`\n    `try {`\n      `req = http.request(options, function (res) {`\n        `const chunks = [];`\n        `res.on(\"data\", function (chunk) {`\n          `chunks.push(chunk);`\n        `});`\n        `res.on(\"end\", function () {`\n          `body = Buffer.concat(chunks);`\n          `sendResponse({ sections: [{`\n            `\"type\": \"text\",`\n            `\"text\": \"In the function \",`\n            `}],` \n          `});` \n        `});`\n      `});`\n      `req.write(JSON.stringify({`\n        `filterGroups: [{`\n          `filters: [{`\n            `propertyName: 'civilite',` \n            `operator: 'EQ',` \n            `value: 'Madame'}]}]`\n      `}));`\n      \n      `req.end();`\n    `} catch(error) {`\n        `sendResponse({ sections: [{`\n            `\"type\": \"text\",`\n            `\"text\": \"In the try \",`\n            `}],` \n          `});` \n    \n    `}`\n`};`"
+  },
+  {
+    "poster": {
+      "poster_name": "Nadjet",
+      "poster_handle": "nadjet.bouzid"
+    },
+    "time_stamp": "2023-03-09 07:53:01",
+    "text": "Hey, here is it. I was trying to use a card to display some properties but feel free to not take that into consideration"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-09 07:56:19",
+    "text": "So why don't you use this code instead:\n```var axios = require('axios');\nvar data = JSON.stringify({\n  \"filterGroups\": [\n    {\n      \"filters\": [\n        {\n          \"value\": \"Madame\",\n          \"propertyName\": \"civilite\",\n          \"operator\": \"EQ\"\n        }\n      ]\n    }\n  ],\n  \"properties\": [\n    \"firstname\",\n    \"email\"\n  ],\n  \"limit\": 2\n});\n\nvar config = {\n  method: 'post',\n  url: '<https://api.hubapi.com/crm/v3/objects/contacts/search>',\n  headers: { \n    'Authorization': 'Bearer pat-na1-xxxxxxx', \n    'Content-Type': 'application/json'\n  },\n  data : data\n};\n\naxios(config)\n.then(function (response) {\n  console.log(JSON.stringify(response.data));\n})\n.catch(function (error) {\n  console.log(error);\n});```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-09 07:56:40",
+    "text": "This will run the api call but it isn't connected to the card you'll have to connect it yourself"
+  },
+  {
+    "poster": {
+      "poster_name": "Nadjet",
+      "poster_handle": "nadjet.bouzid"
+    },
+    "time_stamp": "2023-03-09 08:12:51",
+    "text": "Thanks !! if I am getting it, this\n```axios(config)\n.then(function (response) {\n  console.log(JSON.stringify(response.data));\n})```\n will display the response/result of the search ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nadjet",
+      "poster_handle": "nadjet.bouzid"
+    },
+    "time_stamp": "2023-03-09 08:14:36",
+    "text": "To be precise, where will it be displayed ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-09 08:26:36",
+    "text": "Yes that will display the results in the logs for the app, but it won't send to the crm card"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-09 08:26:46",
+    "text": "you'll just have to setup those sections yourself"
+  },
+  {
+    "poster": {
+      "poster_name": "Nadjet",
+      "poster_handle": "nadjet.bouzid"
+    },
+    "time_stamp": "2023-03-09 08:31:14",
+    "text": "Thanks a lot for your help ! I will try it :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-09 08:35:07",
+    "text": "of course"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-09 08:35:13",
+    "text": "let me know how it goes"
+  },
+  {
+    "poster": {
+      "poster_name": "Nadjet",
+      "poster_handle": "nadjet.bouzid"
+    },
+    "time_stamp": "2023-03-09 08:44:09",
+    "text": "actually, i'm having this issue, i don't know what is going on because i don't see the logs"
+  },
+  {
+    "text": "I have this in app's logs",
+    "time_stamp": "2023-03-09 08:44:20"
+  }
+]

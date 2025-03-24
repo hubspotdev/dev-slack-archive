@@ -1,0 +1,85 @@
+[
+  {
+    "text": "I am trying to remove the .contentEditor-preview-loading class but it seems like it is generated to index.js.. Wondering if there's a way to overwrite this.. index.js might be the default file in HubSpot, i tried to inject different method but it's index.js is still overpowering.. Any idea on this?\n\nI don't want to trigger the preload\n\nLike\n\n``` // Dynamically add a new CSS rule to hide the element with the class name '.contentEditor-preview-loading'\n    const style = document.createElement('style');\n    style.textContent = '.contentEditor-preview-loading { display: none !important; }';\n    document.head.appendChild(style);```",
+    "time_stamp": "2024-06-06 02:27:24",
+    "edited": {
+      "time_stamp": "2024-06-06 02:28:33"
+    },
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-06-06 03:09:23"
+      },
+      {
+        "time_stamp": "2024-06-06 15:04:35"
+      },
+      {
+        "time_stamp": "2024-06-06 16:34:48"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Angelic Sanoy",
+      "poster_handle": "info.samthing"
+    },
+    "time_stamp": "2024-06-06 03:09:23",
+    "text": "or should I use\n```{% if is_in_editor %}```\n?"
+  },
+  {
+    "poster": {
+      "poster_name": "Danielle Urban",
+      "poster_handle": "danielle844"
+    },
+    "time_stamp": "2024-06-06 08:47:15",
+    "text": "I'm working on a custom double opt-in process for a client where we are assuming an email click is not enough (spam blockers registering fake clicks and all that). The solution I'm running with currently is to track the submit button on the subscription preferences page as a HubSpot custom event. Problem is, HubSpot blocks analytics code on the subscription preferences page and you can't remove that block.\n\nSooo I have a javascript listener for the button click in the head and can scrape for the userID then I have to send that somewhere and that middleware will pipe it back to HS to the custom event completion endpoint. That middle piece is where I'm stuck. Typically I'd hack this together in AppScript (no serverless functions in this account) but I'd rather keep it confined to their existing tech stack, which includes Segment.\n\nI THINK Segment can handle the event tracking and piping back to HubSpot, I'm just totally new to Segment and not sure how to set up that event. Any Segment experts in here?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrei Axinoi",
+      "poster_handle": "andreiaxinoi"
+    },
+    "time_stamp": "2024-06-06 10:45:06",
+    "text": "Hi all. Since Node JS is a Javascript runtime environment. I decided to post on this channel. I'm working on a Node.js chatbot, and I'm having some trouble with the state management of quick replies. Here's the current code snippet I'm using:\n```  exports.main = (event, callback) =&gt; {const userMessage = event.userMessage.message.toLowerCase();\n  const userId = event.userMessage.vid; \n\n  // Initialize user session if it doesn't exist\n  if (!event.session[userId]) {\n    event.session[userId] = { clickedReplies: [] };\n  }\n\n  // Define quick replies and their responses with associated keywords\n  const quickReplies = [\n    { value: 'Show me available properties?', label: 'Show me available properties?', response: 'To explore our available properties, check out our online inventory. Please visit the link below to see our current listings: &lt;a href=\"<https://www.google.com>\"&gt;Browse Our Current Inventory&lt;/a&gt;', keywords: ['inventory', 'houses', 'available properties', 'houses to buy', 'properties'] },\n    { value: 'What markets are you in?', label: 'What markets are you in?', response: 'To explore the markets we operate in, check out our detailed listings online. Please visit the link below to view our available markets:&lt;a href=\"<https://www.google.com>\"&gt;Discover Our Available Markets&lt;/a&gt;', keywords: ['markets', 'states', 'cities', 'regions'] },\n    { value: 'What property management services do you offer?', label: 'What property management services do you offer?', response: 'You can view our comprehensive list of Property Management services by following the link below:&lt;a href=\"<https://www.google.com>\"&gt;Property Management Services&lt;a/&gt;', keywords: ['management services', 'property management service', 'services', 'property management'] },\n    { value: 'Would you like to schedule a call with one of our portfolio advisors?', label: 'Would you like to schedule a call with one of our portfolio advisors?', response: 'You can schedule a call with our portfolio advisors here: &lt;a href=\"<https://www.google.com>\"&gt;Schedule a Call&lt;/a&gt;', keywords: ['schedule a call', 'portfolio advisors', 'consultation', 'book', 'book a call'] }\n  ];\n\n  let botMessage = 'Hello! How can I assist you today?';\n\n  // Check if the user message matches any quick reply value\n  const matchedReply = quickReplies.find(reply =&gt; reply.value.toLowerCase() === userMessage);\n\n  // Check if the user message contains any of the keywords for each quick reply\n  const matchedKeywordReply = quickReplies.find(reply =&gt; reply.keywords.some(keyword =&gt; userMessage.includes(keyword)));\n\n  if (matchedReply) {\n    botMessage = matchedReply.response;\n    // Add the clicked quick reply to the user's session\n    if (!event.session[userId].clickedReplies.includes(matchedReply.value.toLowerCase())) {\n      event.session[userId].clickedReplies.push(matchedReply.value.toLowerCase());\n    }\n  } else if (matchedKeywordReply) {\n    botMessage = matchedKeywordReply.response;\n    // Add the clicked quick reply to the user's session\n    if (!event.session[userId].clickedReplies.includes(matchedKeywordReply.value.toLowerCase())) {\n      event.session[userId].clickedReplies.push(matchedKeywordReply.value.toLowerCase());\n    }\n  }\n\n  // Filter out quick replies that the user has already clicked\n  const availableQuickReplies = quickReplies.filter(reply =&gt; !event.session[userId].clickedReplies.includes(reply.value.toLowerCase()));\n\n  // Add quick reply options to the bot response only if there are any left\n  const quickReplyOptions = availableQuickReplies.map(reply =&gt; ({\n    label: reply.label,\n    value: reply.value\n  }));\n\n  const responseJson = {\n    botMessage: botMessage,\n    responseExpected: true,\n    quickReplies: quickReplyOptions.length &gt; 0 ? quickReplyOptions : [] // Include quick reply options in the response if there are any left\n  };\n\n  callback(responseJson);};```\nThe code works to eliminate selected quick replies from the array, but after clicking on a different quick reply, the previously selected quick reply still reappears.I've tested different approaches to solve this, but the issue persists.\nHas anyone faced a similar issue or have any insights on how to resolve this? Any help would be greatly appreciated!"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2024-06-06 15:04:35",
+    "text": "I might be misreading, but I’m fairly certain that class is a part of the HubSpot editor UI — not your site.\n\nIf you’re wanting to adjust the behavior of your site based on whether or not you’re in the editor, I suggest that you use the `is_in_editor` HubL variable. I personally like adding a body class, which I can check for in my JS:\n```{# Add \"is-in-editor\" class to body when in the editor #}\n&lt;body class=\"body-class-stuff ... {{ 'is-in-editor' if is_in_editor }}\"&gt;```\nand, to leverage that in your scripts:\n```// Set the flag\nconst hsEditorActive = document.body.classList.contains(\"is-in-editor\");\n\n// Return a function early if you're in the editor\nif(hsEditorActive) { return; }```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Angelic Sanoy",
+      "poster_handle": "info.samthing"
+    },
+    "time_stamp": "2024-06-06 16:34:48",
+    "text": "Thank you Evelynn. Yes, I'm trying to remove the preload in the editor.. I tried to manipulate the DOM but it looks like the javascript is in index.js.. I'll try to inject this in the html body..\n\nThis looks perfect.. T"
+  },
+  {
+    "poster": {
+      "poster_name": "dac dao",
+      "poster_handle": "dacdao01"
+    },
+    "time_stamp": "2024-06-06 22:14:05",
+    "text": "Hi I have an issue with exporting the current object records that the user is viewing to the sever-less function. I am creating a custom CRM card private app using HubSpot ui package and I am using the crm data component, CrmPropertyList and it is showing all of the records that the current user is seeing. But I want to pass the properties values (I.e company name, company address) to the serverless function so I could send the data to another api.",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-07-09 00:25:08"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "dac dao",
+      "poster_handle": "dacdao01"
+    },
+    "time_stamp": "2024-06-06 22:15:40",
+    "text": "I have been trying everything in my power to get the display value in CrmPropertyList to set in a variable but I can’t figure it out on my own. "
+  }
+]

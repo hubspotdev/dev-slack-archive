@@ -1,0 +1,355 @@
+[
+  {
+    "poster": {
+      "poster_name": "Fabian Müller",
+      "poster_handle": "fabian.mueller"
+    },
+    "time_stamp": "2022-12-30 01:40:31",
+    "text": "Hi,\nI am still having troubles getting tokens (auth code and refresh token) when using the official Python API:\n`client.auth.oauth.tokens_api.create_token` with both `grant_type=\"refresh_token\"` and `grant_type=\"authorization_code\"`\n\nWith the *same parameters* a cURL request like the one below is working:\n```curl --request POST \\\n  --url <https://api.hubapi.com/oauth/v1/token> \\\n  --header 'content-type: application/x-www-form-urlencoded' \\\n  --data '...'```\nwith cURL I get the token while the Python API returns a 404 (Reason: Not Found).\n\nIs this a bug in the Python API or do I miss something here?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-12-30 01:45:53"
+      },
+      {
+        "time_stamp": "2022-12-30 07:33:39"
+      },
+      {
+        "time_stamp": "2022-12-30 08:08:56"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Fabian Müller",
+      "poster_handle": "fabian.mueller"
+    },
+    "time_stamp": "2022-12-30 01:45:53",
+    "text": "It is also working with the `<http://requests.post|requests.post>` from default python…"
+  },
+  {
+    "poster": {
+      "poster_name": "Mikael Zandin",
+      "poster_handle": "mikael.zandin"
+    },
+    "time_stamp": "2022-12-30 05:15:49",
+    "text": "am trying to write an integration to HubSpot in which I retrieve all the contacts associated with one company.  I am using this endpoint: \"<https://api.hubapi.com/companies/{id}/contacts>\" which is returning several contacts correctly.  However the contacts returned are all IsPrimary on this company.  Is there a way to get all contacts associated with the company, whether or not they are primary?",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-12-30 07:37:34"
+      },
+      {
+        "time_stamp": "2022-12-30 07:37:37"
+      },
+      {
+        "time_stamp": "2022-12-30 07:38:04"
+      },
+      {
+        "time_stamp": "2022-12-30 07:38:48"
+      },
+      {
+        "time_stamp": "2022-12-30 07:48:42"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-12-30 07:33:39",
+    "text": "Is it possible that you can share the python code? the one that isn't working?"
+  },
+  {
+    "text": "Sure you can do this using the v4 endpoints.",
+    "time_stamp": "2022-12-30 07:37:34"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-12-30 07:37:37",
+    "text": "<https://developers.HubSpot.com/docs/api/crm/companies>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-12-30 07:38:04",
+    "text": "Just provide the company id and the toObjectType is going to be 0-1"
+  },
+  {
+    "poster": {
+      "poster_name": "Mikael Zandin",
+      "poster_handle": "mikael.zandin"
+    },
+    "time_stamp": "2022-12-30 07:38:48",
+    "text": "thanks, I'll give it a try'"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-12-30 07:48:42",
+    "text": "of course, let me know if you have any questions"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan De Long",
+      "poster_handle": "ndelong"
+    },
+    "time_stamp": "2022-12-30 07:50:14",
+    "text": "Awesome, glad it worked! :slightly_smiling_face:"
+  },
+  {
+    "text": "Hi <@U01QVR44MEY>, As I describe earlier, I want to move contacts and activities from one portal to another portal. And when I copy contacts through API, in the activity section, it says that (image 1), but clients want it like it as in the first portal (image 2). Is it possible?",
+    "time_stamp": "2022-12-30 07:58:33"
+  },
+  {
+    "poster": {
+      "poster_name": "Fabian Müller",
+      "poster_handle": "fabian.mueller"
+    },
+    "time_stamp": "2022-12-30 08:08:56",
+    "text": "I already worked around using native `requests` in python but the code was more or less this:\n\n```HubSpot = create_client()\ntokens_response =  HubSpot.auth.oauth.default_api.create_token(grant_type=\"authorization_code\",\n  code=\"code\",\n  redirect_uri=\"uri\",\nclient_id=os.environ.get(\"HubSpot_CLIENT_ID\"),   client_secret=os.environ.get(\"HubSpot_CLIENT_SECRET\"),\n    )```\nfor refreshing the token, I switched to grant_type=“refresh_token” and instead of `code=...`  used `refresh_token=…`\n\nAs I said, when using the exact same parameters it works in cURL and requests flawless…"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-12-30 08:34:09",
+    "text": "<https://HubSpotdev.slack.com/archives/C2YHAHB6K/p1671114115301299?thread_ts=1671104604.523769&amp;cid=C2YHAHB6K>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-12-30 08:35:30",
+    "text": "You can't bulk edit all the contacts and have those activities show up, you'll need to get those activities through the api and then recreate them through the api on the other portal"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-12-30 08:35:31",
+    "text": "<https://community.HubSpot.com/t5/APIs-Integrations/API-Full-Data-Export-of-Contacts-and-Activities/td-p/225435>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-12-30 08:35:44",
+    "text": "<https://community.HubSpot.com/t5/APIs-Integrations/How-to-export-contact-timeline-events/m-p/227583>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-12-30 08:36:29",
+    "text": "<@U039S43D3NC> Let me know if any of this isn't making a ton sense"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-12-30 08:39:05",
+    "text": "there's a company called import2 that does these types of migration so you don't need to build out the intergration yourself"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-12-30 08:39:13",
+    "text": "might be worth looking into <https://community.HubSpot.com/t5/CRM/How-to-import-conversation-histories-and-add-attach-them-to/m-p/6775/highlight/true#M379>"
+  },
+  {
+    "poster": {
+      "poster_name": "Navaz Sharif",
+      "poster_handle": "navaz"
+    },
+    "time_stamp": "2022-12-30 08:40:02",
+    "text": "Thanks <@U01QVR44MEY> I will go through the documentation you sent me and let you know if any issue has come or not. And one more thing...You are wonderful!"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-12-30 08:40:27",
+    "text": "Of course, just let me know if I can help"
+  },
+  {
+    "poster": {
+      "poster_name": "Navaz Sharif",
+      "poster_handle": "navaz"
+    },
+    "time_stamp": "2022-12-30 08:41:15",
+    "text": "Sure mate!"
+  },
+  {
+    "poster": {
+      "poster_name": "Rafael Model",
+      "poster_handle": "rafael.model"
+    },
+    "time_stamp": "2022-12-30 08:51:54",
+    "edited": {
+      "time_stamp": "2022-12-30 08:52:31"
+    },
+    "text": "Hello.\n\nI'm trying to create a company using the api client for python and I have a custom property that is a `multiple checkboxes`. When I try using a single field it works but whenever I use two I get a `VALIDATION_ERROR` .\n\nMy properties look like:\n{\n  \"city\": \"Cambridge\",\n  \"domain\": \"<http://biglytics.net|biglytics.net>\",\n  \"industry\": \"Technology\",\n  \"name\": \"Biglytics\",\n  \"phone\": \"<tel:8779290687|(877) 929-0687>\",\n  \"state\": \"Massachusetts\",\n  \"my_custom_prop___expanded: [\"foo\", \"bar\"]\n}",
+    "reply_count": 12,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-12-30 09:36:11"
+      },
+      {
+        "time_stamp": "2022-12-30 09:37:19"
+      },
+      {
+        "time_stamp": "2022-12-30 11:57:14"
+      },
+      {
+        "time_stamp": "2022-12-30 12:18:59"
+      },
+      {
+        "time_stamp": "2022-12-30 12:19:50"
+      },
+      {
+        "time_stamp": "2022-12-30 12:20:27"
+      },
+      {
+        "time_stamp": "2022-12-30 12:51:21"
+      },
+      {
+        "time_stamp": "2022-12-30 13:03:54"
+      },
+      {
+        "time_stamp": "2022-12-30 13:05:10"
+      },
+      {
+        "time_stamp": "2022-12-30 13:06:51"
+      },
+      {
+        "time_stamp": "2022-12-30 13:09:09"
+      },
+      {
+        "time_stamp": "2022-12-30 13:10:04"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-12-30 09:36:11",
+    "edited": {
+      "time_stamp": "2022-12-30 09:36:59"
+    },
+    "text": "For multiple checkboxes you define your option not as an array but a semicolon separated string, for example:\n```{\n\"city\": \"Cambridge\",\n\"domain\": \"<http://biglytics.net|biglytics.net>\",\n\"industry\": \"Technology\",\n\"name\": \"Biglytics\",\n\"phone\": \"<tel:(877)929-0687|(877) 929-0687>\",\n\"state\": \"Massachusetts\",\n\"my_custom_prop__expanded\":\"foo;bar\"\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-12-30 09:37:19",
+    "text": "Let me know if this make sense"
+  },
+  {
+    "poster": {
+      "poster_name": "David Roma",
+      "poster_handle": "droma"
+    },
+    "time_stamp": "2022-12-30 10:04:10",
+    "text": "I'm a full stack dev, and to date, all of my dev work on HubSpot has been for the CMS and building custom integrations using HubSpots APIs. I now want to build my first Marketplace App and am *looking for an App Marketplace Provider to get on a Zoom with me for 1 hour* to answer specific questions I have regarding building a Marketplace App. I will pay your hourly rate for the consulting time. Please DM me if interested."
+  },
+  {
+    "poster": {
+      "poster_name": "Rafael Model",
+      "poster_handle": "rafael.model"
+    },
+    "time_stamp": "2022-12-30 11:57:14",
+    "text": "Hey, <@U01QVR44MEY> thank you for answering! This actually solved my problem.\n\nI do have one concern: This is not obvious (at leas to me) and I spent hours looking at documentation and didn't found anything about this. Did I missed this section in the documentation? Could this be something more explicit in the docs for new developers?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-12-30 12:18:59",
+    "text": "<@U04GV1SAWPQ> glad I could help you solve this! The docs for properties are located here: <https://developers.HubSpot.com/docs/api/crm/properties>"
+  },
+  {
+    "text": "The multiple checkbox property type is called an enumeration and the section for it is this:",
+    "time_stamp": "2022-12-30 12:19:50"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-12-30 12:20:27",
+    "text": "But I agree with you there might be a better way to explain how to set this property, what are some of your thoughts to better explain this"
+  },
+  {
+    "poster": {
+      "poster_name": "Rafael Model",
+      "poster_handle": "rafael.model"
+    },
+    "time_stamp": "2022-12-30 12:51:21",
+    "text": "Well, this is not a problem explaining thing. Actually your documentation is exceptional, very simple and well explained. The issue I found is that there is just TOO MUCH stuff, which naturally makes things harder to find.\n\nIf there was an example, or link to how custom properties work inside the objects documentation, like <https://developers.HubSpot.com/docs/api/crm/companies|here> I would definitely find it and have my problem solved."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-12-30 13:03:54",
+    "text": "Totally agree that it's hard to get know every little piece of the docs when you first get started"
+  },
+  {
+    "text": "Basically the flow HubSpot wants you to take is, if you're interacting with the crm objects you'll go to this page first: `link` , then you want to create a custom property so you'll see this section:",
+    "time_stamp": "2022-12-30 13:05:10"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-12-30 13:06:51",
+    "edited": {
+      "time_stamp": "2022-12-30 13:07:16"
+    },
+    "text": "Which will then take you to the properties documentation page. Honestly I'm very biased because I've been doing HS development for the last serveral years but  also currently have 30 HubSpot tabs open right now (50% docs,, 50% different portals)"
+  },
+  {
+    "poster": {
+      "poster_name": "Rafael Model",
+      "poster_handle": "rafael.model"
+    },
+    "time_stamp": "2022-12-30 13:09:09",
+    "text": "Ok, <@U01QVR44MEY> thank you very much for you help and feedback. Have a good new year!"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-12-30 13:10:04",
+    "text": "Of course, you as well"
+  }
+]

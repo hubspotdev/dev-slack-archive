@@ -1,0 +1,250 @@
+[
+  {
+    "poster": {
+      "poster_name": "Thorlak Fink",
+      "poster_handle": "thorlak.fink"
+    },
+    "time_stamp": "2024-02-29 01:37:31",
+    "text": "I don't mind using custom code.\nAnd I think I have to as there is apparently no way to use built in functionality/actions to check the length of a string or number. :man-shrugging:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Davis",
+      "poster_handle": "jdavis"
+    },
+    "time_stamp": "2024-02-29 06:58:17",
+    "text": "Yeah, you'd likely have to use code then - at least you've got a good jump on the implementation here"
+  },
+  {
+    "poster": {
+      "poster_name": "Carrie Krakowski",
+      "poster_handle": "ckrakowski"
+    },
+    "time_stamp": "2024-02-29 12:49:05",
+    "text": "Hello all! Not used to working in workflows and so I’m hoping this is simple… :grimacing:\n\n&gt; Is there a way to create a branch based on if a date field is empty?\nThanks!",
+    "reply_count": 4,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-02-29 12:58:39"
+      },
+      {
+        "time_stamp": "2024-02-29 13:16:27"
+      },
+      {
+        "time_stamp": "2024-02-29 13:32:23"
+      },
+      {
+        "time_stamp": "2024-02-29 13:33:26"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carrie Krakowski",
+      "poster_handle": "ckrakowski"
+    },
+    "time_stamp": "2024-02-29 12:58:39",
+    "text": "Figured this out using matching filter criteria as opposed to single property value"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-02-29 13:16:27",
+    "text": "Yes - this should be possible"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrew Smeallie",
+      "poster_handle": "andrew431"
+    },
+    "time_stamp": "2024-02-29 13:32:23",
+    "text": "[Date Field Name] &gt;&gt;&gt; \"Is Unknown\" is the statement you are looking for. Unknown means it's null/empty."
+  },
+  {
+    "poster": {
+      "poster_name": "Carrie Krakowski",
+      "poster_handle": "ckrakowski"
+    },
+    "time_stamp": "2024-02-29 13:33:26",
+    "text": "Yep! I was just looking at the Single Property Value instead of using the Matching Filter Criteria option. Durrr :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2024-02-29 21:13:55",
+    "text": "Hello Carlsson, I hope this message finds you well! Here is the updated version of the code with the API call to format the note and associate it to a contact:"
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2024-02-29 21:14:03",
+    "text": "```import requests, json\nfrom pprint import pprint\nfrom datetime import datetime\n\ndef association_object_url(fromobjecttype,fromobjectid,toobjecttype,toobjectid):\n  return f\"<https://api.hubapi.com/crm/v4/objects/{fromobjecttype}/{fromobjectid}/associations/{toobjecttype}/{toobjectid}>\"\n\nnotesurl = \"<https://api.hubapi.com/crm/v3/objects/notes>\"\n\n# In the authentication area of your private app you will grab this access token.\nheaders = {\n    \"Authorization\": \"Bearer YOUR_PRIVATE_APP_BEARER_TOKEN\",\n    \"Content-Type\": \"application/json\"\n}\n\n# Note: Data was already in a Python dict.\ndata = [\n  {\n    \"name\": \"Solid brass hammered cabinet handle\",\n    \"id\": \"42498\",\n    \"slug\": \"solid-brass-hammered-cabinet-handle\",\n    \"quantity\": \"1\",\n    \"product_code\": \"CH1067\"\n  }\n]\n\ndef format_product(item):\n    # Initialize productDetails with default values to ensure a dictionary is returned\n    productDetails = {\n        \"Product Name\": item.get(\"name\", \"N/A\"),\n        \"Quantity\": item.get(\"quantity\", \"N/A\"),\n        \"Child Product Name\": item.get(\"childProductName\", \"N/A\"),\n        \"Product Code\": item.get(\"product_code\", \"N/A\"),\n        \"Finishing\": \"N/A\",\n        \"Image URL\": item.get(\"image\", \"N/A\"),\n        \"Product URL\": f\"<https://www.josephgiles.com/products/{item.get('slug'>, 'N/A')}\"\n    }\n\n    # Attempt to update 'Finishing' if 'parameters' is present and contains 'FINISHING'\n    parameters = item.get(\"parameters\", [])\n    for param in parameters:\n        if param.get(\"name\") == \"FINISHING\":\n            productDetails[\"Finishing\"] = param.get(\"value\", \"N/A\")\n            break\n    return productDetails\n\nfriendly_format = format_product(data[0])\n\nnotebody = \"\"\n\n# Check if friendly_format is not None to avoid AttributeError\nif friendly_format is not None:\n    for key, value in friendly_format.items():\n        notebody += f\"{key}: {value} \\n\" \n        print(notebody)\nelse:\n    #print(\"Error: Product details could not be formatted.\")\n    notebody = \"Error: Product details could not be formatted.\"\n\ncurrenttime = datetime.now()\ncurrenttime_unix_milliseconds = int(currenttime.timestamp() * 1000)\n\n# Note: We may want to get the correct owner ID based on the user, or we can just use a generic one...\n#Required properties for the notes api:\nnoteproperties = {\n    \"hs_note_body\": notebody,\n    \"hs_timestamp\": str(currenttime_unix_milliseconds),\n    \"HubSpot_owner_id\": \"702528128\"\n}\n\n#Convert note properties to JSON format:\nnotepropertiesJSON = json.dumps({\n  \"properties\": {\n      \"hs_note_body\": noteproperties[\"hs_note_body\"],\n      \"hs_timestamp\": noteproperties[\"hs_timestamp\"],\n      \"HubSpot_owner_id\": noteproperties[\"HubSpot_owner_id\"]\n    }\n})\n\n# Request to post and create the note.\nresponse = <http://requests.post|requests.post>(notesurl, headers=headers, data=notepropertiesJSON)\n\n# Check for success and print the response, or print an error message\nif response.status_code == 200 or response.status_code == 201:\n    pprint(response.json())\n    response_json = response.json()    \n    hs_object_id = response_json.get('id')  # The ID is at the top level of the response JSON\n    print(hs_object_id)    \nelse:\n    print(f\"Failed to create note: {response.status_code}\")\n    print(response.text)\n\n# Association between Note &amp; Contact:\nassociation_response = requests.put(association_object_url('0-1','51','notes',hs_object_id), headers=headers, json=[{\"associationCategory\":\"HubSpot_DEFINED\",\"associationTypeId\":201}])\n\n# Check for success and print the response, or print an error message\nif association_response.status_code == 200 or association_response.status_code == 201:\n    pprint(association_response.json())\n    association_response_json = association_response.json()    \n    hs_object_id = association_response_json.get('id')  # The ID is at the top level of the response JSON    \nelse:\n    print(f\"Failed to associate note: {response.status_code}\")\n    print(association_response.text)```"
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2024-02-29 21:14:14",
+    "text": "Please make note of the following:"
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2024-02-29 21:14:27",
+    "text": "1: You will need to create a private app with the appropriate scopes"
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2024-02-29 21:15:08",
+    "text": "2: There are a few areas in there where I have hard coded, including the ContactID of the contact you would like the note associated with, and the owner of the note. If you want to find the contact and contact owner you will need to get those IDs with a further API call"
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2024-02-29 21:16:12",
+    "text": "3: The association ID of 201 is the association ID for my development system between notes and contacts, you will need to make user of the associations api at <https://developers.HubSpot.com/docs/api/crm/associations> between 0-1 (contacts) and notes to get the appropriate association id"
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2024-02-29 21:17:51",
+    "text": "4: I cannot for the life of me get the damn HubSpot Python SDK to work to make API requests. I have AGAIN used the requests library (with is a widely used API request library) to make the API calls. This is acceptable but not best practice (or at least not viewed as ideal by professional developers). This is something I would consider acceptable if your use case is writing a work flow."
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2024-02-29 21:19:39",
+    "text": "5: In order to “tune in” the transformation code that takes in data and reformats it I would need to do some more investigation of the possible data that is coming from the API. You will also need to write an API call to the API endpoint that gets this data initially, and reformat it from its probably JSON format into a python dict. If you want to work through that let me know."
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2024-02-29 21:20:17",
+    "text": "6: You will need to consider when this will trigger in your work-flow. It is hard to kick-off a workflow based on an external event without making use of the Webhook functionality within the HubSpot workflows."
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2024-02-29 21:23:55",
+    "text": "Also feel free to reach out. I am happy to help."
+  },
+  {
+    "poster": {
+      "poster_name": "Jessiemar Pedrosa",
+      "poster_handle": "jessiemarpedrosa"
+    },
+    "time_stamp": "2024-03-01 00:25:35",
+    "edited": {
+      "time_stamp": "2024-03-01 00:25:47"
+    },
+    "text": "In a Workflow, can you use Data Output Value from a Custom Code Action for a branch filter criteria? Basically for an if/then situation? If not, do you have any workaround for this or suggestion? Thanks!",
+    "reply_count": 27,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2024-03-01 03:00:51"
+      },
+      {
+        "time_stamp": "2024-03-01 03:01:27"
+      },
+      {
+        "time_stamp": "2024-03-01 03:08:47"
+      },
+      {
+        "time_stamp": "2024-03-01 03:13:52"
+      },
+      {
+        "time_stamp": "2024-03-01 07:16:14"
+      },
+      {
+        "time_stamp": "2024-03-01 07:16:40"
+      },
+      {
+        "time_stamp": "2024-03-01 07:17:09"
+      },
+      {
+        "time_stamp": "2024-03-01 09:44:08"
+      },
+      {
+        "time_stamp": "2024-03-01 10:28:44"
+      },
+      {
+        "time_stamp": "2024-03-01 10:30:06"
+      },
+      {
+        "time_stamp": "2024-03-01 10:34:15"
+      },
+      {
+        "time_stamp": "2024-03-01 10:37:22"
+      },
+      {
+        "time_stamp": "2024-03-01 10:37:48"
+      },
+      {
+        "time_stamp": "2024-03-01 14:46:50"
+      },
+      {
+        "time_stamp": "2024-03-01 22:31:55"
+      },
+      {
+        "time_stamp": "2024-03-04 06:45:41"
+      },
+      {
+        "time_stamp": "2024-03-04 06:53:53"
+      },
+      {
+        "time_stamp": "2024-03-04 06:58:00"
+      },
+      {
+        "time_stamp": "2024-03-04 07:46:15"
+      },
+      {
+        "time_stamp": "2024-03-04 07:55:54"
+      },
+      {
+        "time_stamp": "2024-03-04 08:06:21"
+      },
+      {
+        "time_stamp": "2024-03-04 08:07:12"
+      },
+      {
+        "time_stamp": "2024-03-04 08:08:30"
+      },
+      {
+        "time_stamp": "2024-03-04 08:10:06"
+      },
+      {
+        "time_stamp": "2024-03-04 08:11:59"
+      },
+      {
+        "time_stamp": "2024-03-04 08:12:04"
+      },
+      {
+        "time_stamp": "2024-03-04 17:19:51"
+      }
+    ]
+  }
+]

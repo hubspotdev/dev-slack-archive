@@ -1,0 +1,256 @@
+[
+  {
+    "poster": {
+      "poster_name": "Markus Zweng",
+      "poster_handle": "markus.kaskaden"
+    },
+    "time_stamp": "2019-06-19 03:45:35",
+    "text": "Hi there!\n\ni would like to know, what’s your take on serving retina images / limiting image dimensions from a custom module.\n\nI thought about leveraging the image resizing functionality of the HubSpot CDN.\nMy custom module has an image field. When i access its src-attribute, the URL structure\nof the CDN link does not allow to use the resizing functionality, because the parameters do not work\nE.g. `<https://cdn2.HubSpot.net/hubfs/{HubSpot_id}/{image_name_ext}?width={desired_width}>`\nTo have this functionality the URL should be `<https://cdn2.HubSpot.net/hub/{HubSpot_id}/hubfs/{image_name_ext}?width={desired_width}>`\n\nOf course i can reconstruct the URL within the module, but maybe there is a nicer way?\nI tried the tags `image`, `image_src` and the function `resize_image_url`, but the URL stays the same...",
+    "reply_count": 18,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2019-06-19 04:57:16"
+      },
+      {
+        "time_stamp": "2019-06-19 05:51:22"
+      },
+      {
+        "time_stamp": "2019-06-19 06:59:26"
+      },
+      {
+        "time_stamp": "2019-06-19 06:59:40"
+      },
+      {
+        "time_stamp": "2019-06-19 07:00:32"
+      },
+      {
+        "time_stamp": "2019-06-19 07:01:49"
+      },
+      {
+        "time_stamp": "2019-06-19 07:03:05"
+      },
+      {
+        "time_stamp": "2019-06-19 07:03:38"
+      },
+      {
+        "time_stamp": "2019-06-19 07:03:52"
+      },
+      {
+        "time_stamp": "2019-06-19 07:03:59"
+      },
+      {
+        "time_stamp": "2019-06-19 07:08:20"
+      },
+      {
+        "time_stamp": "2019-06-19 07:19:03"
+      },
+      {
+        "time_stamp": "2019-06-19 09:35:34"
+      },
+      {
+        "time_stamp": "2019-06-19 09:38:50"
+      },
+      {
+        "time_stamp": "2019-06-19 09:49:59"
+      },
+      {
+        "time_stamp": "2019-06-19 09:51:12"
+      },
+      {
+        "time_stamp": "2019-06-19 10:03:13"
+      },
+      {
+        "time_stamp": "2019-06-19 10:04:10"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Cristian Teichner",
+      "poster_handle": "cristianteichner"
+    },
+    "time_stamp": "2019-06-19 04:57:16",
+    "edited": {
+      "time_stamp": "2019-06-19 04:57:37"
+    },
+    "text": "Also interested in this ^ Currently we’re using a macro to reconstruct the URL and use src-attribute but it breaks when the image filename contains spaces…"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-06-19 05:51:22",
+    "edited": {
+      "time_stamp": "2019-06-19 05:51:57"
+    },
+    "text": "Use image resize url function.\nIf you're using it correctly it works perfectly. What you might have experienced is HubSpots caching and the length of time it takes to optimize the image. You can work around the caching problem with the <#CBBAW6Z3R|community-browser-extension> \n\nThe first load time to the page is when the function calls for the new resized image. If it cant process the image fast enough you get the  original. Subsequent requests will return the resized image because the server has had time to work its magic.\n\nThis temporary delay is mostly just noticeable on very large images.\n\nAlso a good thing to know, the image is untouched if your parameters are the same as the images dimensions. Though you should still get the webp optimization"
+  },
+  {
+    "poster": {
+      "poster_name": "Stefen Phelps",
+      "poster_handle": "stefen"
+    },
+    "time_stamp": "2019-06-19 06:59:26",
+    "text": "if you want to leave some control to the person editing the page, I do this: `&lt;img src=\"{{ resize_image_url(image.src, image.width) }}\" srcset=\"{{ resize_image_url(image.src, image.width) }} 1x, {{ resize_image_url(image.src, image.width|multiply(2) ) }} 2x, {{ resize_image_url(image.src, image.width|multiply(3) ) }} 3x\"&gt;`"
+  },
+  {
+    "poster": {
+      "poster_name": "Stefen Phelps",
+      "poster_handle": "stefen"
+    },
+    "time_stamp": "2019-06-19 06:59:40",
+    "text": "otherwise, you can set a hard coded size"
+  },
+  {
+    "poster": {
+      "poster_name": "Stefen Phelps",
+      "poster_handle": "stefen"
+    },
+    "time_stamp": "2019-06-19 07:00:32",
+    "text": "never had any problem with that technique"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-06-19 07:01:49",
+    "edited": {
+      "time_stamp": "2019-06-19 07:02:28"
+    },
+    "text": "yea I do what Stefen does as well. I made a macro for handling it automatically, I like the multiply method I’m not currently doing that."
+  },
+  {
+    "poster": {
+      "poster_name": "Stefen Phelps",
+      "poster_handle": "stefen"
+    },
+    "time_stamp": "2019-06-19 07:03:05",
+    "text": "it used to be the case, all you needed was the `width` attribute and the srcset and sizes properties would automatically get added. at some point in the last year or so that changed"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-06-19 07:03:38",
+    "text": "huh, I thought that feature still worked. besides I like having control over the srcset anyhow"
+  },
+  {
+    "poster": {
+      "poster_name": "Stefen Phelps",
+      "poster_handle": "stefen"
+    },
+    "time_stamp": "2019-06-19 07:03:52",
+    "text": "yeah it was nice until you tried to lazy load images"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-06-19 07:03:59",
+    "text": "I prefer to use the px method instead of 2x style sizing so I like the control"
+  },
+  {
+    "poster": {
+      "poster_name": "Markus Zweng",
+      "poster_handle": "markus.kaskaden"
+    },
+    "time_stamp": "2019-06-19 07:08:20",
+    "edited": {
+      "time_stamp": "2019-06-19 07:12:50"
+    },
+    "text": "Hi <@U7SL518D6>!\n\nthanks for your detailed answer! I really appreciate it.\n\nYou are absolutely right. The `resize_image_url` function works just fine and does return the right URL structure. So, it must have been the processing time of the image and / or cache during my first tests.\n\nI’m just digging into this, so another thing i’m trying to figure out is how HubSpot is adding the `srcset` attribute for images….\n<@U7V9DQ31P> - thanks! Both of you just answered that :slightly_smiling_face:\n\nIt seems that HubSpot is still adding `srcset` on pages that are actually live. I cannot see it on my dev account or content staging.\nI guess it gets added, if one uses Hubl tags like `image`, `linked_image` and so on and does not interfere with just using the img tag and coding the srcset attribute with the methods you described?"
+  },
+  {
+    "poster": {
+      "poster_name": "Markus Zweng",
+      "poster_handle": "markus.kaskaden"
+    },
+    "time_stamp": "2019-06-19 07:19:03",
+    "text": "Anyway, that really helped me, so thanks a lot :slightly_smiling_face::+1:"
+  },
+  {
+    "poster": {
+      "poster_name": "Markus Zweng",
+      "poster_handle": "markus.kaskaden"
+    },
+    "time_stamp": "2019-06-19 09:35:34",
+    "text": "I looked into this a bit further and HubSpot is adding `srcset` (at least on live instances) and is using the “resize-URL” as soon as the `width` attribute is set on an `img` tag.\nIt adds alternative image widths corresponding to the configured width of the image utilizing the factors .5, 1, 1.5, 2, 2.5 and 3.\nSo, if the image is 120px, versions with 60px, 120px, 180x, 240px, 300px, 360px are offered to the browser for responsive and retina optimization.\nSo, it’s actually enough to just set the `width` attribute, except one wants to add more factors or specific media queries via `sizes` to the `srcset`"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-06-19 09:38:50",
+    "text": "yea, I personally try to make sure to use sizes as much as I can.\n\nStill can’t wait for a true equivalent to srcset and sizes comes to css.\n(yes I know about the webkit specific property that’s similar but it comes up short compared to the combo of power sizes and srcset has)"
+  },
+  {
+    "poster": {
+      "poster_name": "Markus Zweng",
+      "poster_handle": "markus.kaskaden"
+    },
+    "time_stamp": "2019-06-19 09:49:59",
+    "text": "Yes, it’s a really powerful feature and i would like to see it there too.\nWould be better, to have percentages configured in `sizes` for sure, but the HubSpot implementation is of course more general and well done, now that i finally grasped how it is implemented :sweat_smile:\nDo you also use `image-set` for background-images?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-06-19 09:51:12",
+    "text": "occasionally - that’s the property i was referring to. it unfortunately isn’t as versatile as srcset + sizes so I don’t use it much"
+  },
+  {
+    "poster": {
+      "poster_name": "Markus Zweng",
+      "poster_handle": "markus.kaskaden"
+    },
+    "time_stamp": "2019-06-19 10:03:13",
+    "text": "yes, true. I did not use it yet, but might try it for background-images.\nThanks again and have a great week :v:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-06-19 10:04:10",
+    "text": "You too!"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-06-19 12:43:07",
+    "text": "<@UBFA10FMF> A quick follow up to this, referring to the article you linked, when creating fields like Follow up email there is no field type for selecting an email in the DM..."
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-06-19 12:44:31",
+    "text": "If this is a field that can be added, this would make it so you can replicate the default form module 100%"
+  },
+  {
+    "poster": {
+      "poster_name": "Michele Herzog",
+      "poster_handle": "mherzog"
+    },
+    "time_stamp": "2019-06-19 12:44:55",
+    "text": "There should be a Followup Email field <@U2H3TT8F2> if you're in a portal that has email access. Wanna DM me if you're seeing otherwise?"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-06-19 12:52:53",
+    "text": "As an update to those on the thread, its there, just the text \"email\" was truncated on the dropdown. Thanks again Michele!"
+  }
+]

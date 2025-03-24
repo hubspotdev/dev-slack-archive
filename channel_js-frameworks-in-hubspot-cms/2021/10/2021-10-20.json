@@ -1,0 +1,13 @@
+[
+  {
+    "poster": {
+      "poster_name": "Serhat",
+      "poster_handle": "serhat"
+    },
+    "time_stamp": "2021-10-20 09:14:06",
+    "edited": {
+      "time_stamp": "2021-10-20 09:14:14"
+    },
+    "text": "Hi <@U7SL518D6>,\n\nJust wanted to keep you posted here as it might be helpful for others;\n\nThe way we overcome this issue is using a macro inside the Vue wrapper, which loads the content outside of the Vue component.\n``` {{ generateCTA(item.button_content.cta_field, 'CTA'~loop.index) }}```\n```\n{% macro generateCTA(guid, altText) %}\n{% set cta_img_url = \"<https://HubSpot-no-cache-eu1-prod.s3.amazonaws.com/cta/default/{portal-id-here}/>\" ~ guid ~ \".png\" %}\n&lt;!--HubSpot Call-to-Action Code --&gt;\n&lt;span class=\"hs-cta-wrapper\" id=\"hs-cta-wrapper-{{ guid }}\"&gt;\n  &lt;span class=\"hs-cta-node hs-cta-{{ guid }}\" id=\"hs-cta-{{ guid }}\"&gt;&lt;!--[if lte IE 8]&gt;&lt;div id=\"hs-cta-ie-element\"&gt;&lt;/div&gt;&lt;![endif]--&gt;\n    &lt;a href=\"<https://HubSpot-cta-redirect-eu1-prod.s3.amazonaws.com/cta/redirect/{portal-id-here}/{{> guid }}\" target=\"_blank\" &gt;\n      &lt;img class=\"hs-cta-img\" id=\"hs-cta-img-{{ guid }}\" style=\"border-width:0px;\" src=\"{{ cta_img_url }}\" alt=\"{{ altText }}\"/&gt;&lt;/a&gt;\n  &lt;/span&gt;\n  {% require_js %}\n  &lt;script charset=\"utf-8\" src=\"<https://js-eu1.hscta.net/cta/current.js>\"&gt;&lt;/script&gt;\n  &lt;script type=\"text/javascript\"&gt; hbspt.cta.load({portal-id-here}, '{{ guid }}', {\"useNewLoader\":\"true\",\"region\":\"eu1\"}); &lt;/script&gt;\n  {% end_require_js %}\n&lt;/span&gt;&lt;!-- end HubSpot Call-to-Action Code --&gt;\n{% endmacro %}```\n"
+  }
+]

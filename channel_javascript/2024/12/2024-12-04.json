@@ -1,0 +1,96 @@
+[
+  {
+    "poster": {
+      "poster_name": "Zach Donnelly",
+      "poster_handle": "zach335"
+    },
+    "time_stamp": "2024-12-04 04:58:04",
+    "text": "Hi everyone,\nI’m new to this and would appreciate any help with mass ticket creation based on company property values. Essentially, I’m trying to create a ticket for each multiselect option selected in a company property, but only if the frequency and date match \"today.\" This is being triggered by a scheduled workflow in HubSpot that runs for each company. If the date matches today, a ticket should be created for each selected multiselect option.\n\nCant get it to work so please let me know if my approach or code is off — I’d appreciate any feedback :slightly_smiling_face:\n\n```const axios = require('axios');\n\nexports.HubSpot_handler = async (event, context, callback) =&gt; {\n  try {\n    // Example input parameters (assuming these come from the event or another source)\n    const pos_systems = [\"POS_System_1\", \"POS_System_2\"]; // Example POS systems as an array of strings\n    const sales_data_sync_frequency = \"Weekly\"; // Could be \"Weekly\", \"Monthly\", or \"Daily\"\n    const sales_data_sync_day = \"Monday\"; // Could be a day (\"Monday\") or a numeric date (\"15\")\n    const hs_object_id = 12345; // Example HubSpot company ID\n\n    const today = new Date();\n    const todayDate = today.getDate(); // Get current day (1-31)\n    const todayDay = today.toLocaleString('en-us', { weekday: 'long' }); // Get current day name (Monday, Tuesday, etc.)\n\n    let shouldCreateTicket = false;\n\n    // Determine if the ticket should be created based on the sync frequency\n    if (sales_data_sync_frequency === \"Weekly\" &amp;&amp; sales_data_sync_day === todayDay) {\n      // Weekly frequency matches today's day\n      shouldCreateTicket = true;\n    } else if (\n      sales_data_sync_frequency === \"Monthly\" &amp;&amp;\n      Number(sales_data_sync_day) === todayDate\n    ) {\n      // Monthly frequency matches today's numeric date\n      shouldCreateTicket = true;\n    } else if (sales_data_sync_frequency === \"Daily\") {\n      // If daily, always create a ticket\n      shouldCreateTicket = true;\n    }\n\n    if (shouldCreateTicket) {\n      // Create a ticket for each POS system\n      for (const system of pos_systems) {\n        try {\n          // Ticket data for HubSpot API\n          const ticketData = {\n            properties: {\n              subject: `Data Sync Issue for ${system}`,\n              description: `Company requires data sync for ${system} on ${sales_data_sync_frequency} (${sales_data_sync_day}).`,\n              hs_pipeline: \"57378187\", // Updated pipeline ID\n              hs_pipeline_stage: \"114054429\", // Updated stage ID\n            },\n            associations: {\n              // Correctly using an array for companyIds\n              companyIds: [hs_object_id], // Associate the ticket with the company using the company ID\n            }\n          };\n\n          console.log(\"Ticket data being sent:\", JSON.stringify(ticketData, null, 2));\n\n          // API call configuration\n          const config = {\n            method: \"post\",\n            url: `<https://api.hubapi.com/crm/v3/objects/tickets>`,\n            headers: {\n              Authorization: `Bearer ${process.env.SECRET_KEY}`,\n              \"Content-Type\": \"application/json\",\n            },\n            data: ticketData,\n          };\n\n          // Send the API request to create a ticket in HubSpot\n          const response = await axios.request(config);\n          console.log(`Ticket created for ${system}: ${response.data.id}`);\n        } catch (error) {\n          console.error(`Error creating ticket for ${system}:`, error.response?.data || error.message);\n        }\n      }\n    } else {\n      console.log(\"No tickets need to be created today for this company.\");\n    }\n\n    // Return a success response\n    callback(null, { message: \"Processing completed successfully.\" });\n  } catch (error) {\n    // If an error occurs anywhere in the process, log it and return the error\n    console.error(\"Error fetching company data or creating tickets:\", error.message);\n    callback(error);\n  }\n};```"
+  },
+  {
+    "poster": {
+      "poster_name": "Purusothaman K",
+      "poster_handle": "pk"
+    },
+    "time_stamp": "2024-12-04 06:21:52",
+    "text": "We have integrated our UI extension on the Deal Record page and are currently using fetchCrmObjectProperties to retrieve data from the current deal record, such as the name.\n\nTo fetch the most recent associated contact property (email) directly from the Deal object, we initially attempted to use a formula custom property. However, formula custom properties are only supported in the Enterprise and Professional editions and are unfortunately not available in the Starter edition.\n\nGiven this limitation, we need to explore an alternative solution to reliably fetch the most recent associated contact property (email) directly from the Deal object in our UI extension.",
+    "reply_count": 10,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-12-04 06:39:29"
+      },
+      {
+        "time_stamp": "2024-12-04 07:29:42"
+      },
+      {
+        "time_stamp": "2024-12-04 08:18:13"
+      },
+      {
+        "time_stamp": "2024-12-04 11:54:35"
+      },
+      {
+        "time_stamp": "2024-12-05 04:35:56"
+      },
+      {
+        "time_stamp": "2024-12-05 05:44:26"
+      },
+      {
+        "time_stamp": "2024-12-05 05:45:25"
+      },
+      {
+        "time_stamp": "2024-12-05 05:52:16"
+      },
+      {
+        "time_stamp": "2024-12-05 05:56:27"
+      },
+      {
+        "time_stamp": "2024-12-05 21:28:21"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-12-04 06:23:16",
+    "text": "You will get more people responding to this in the <#C05R599UA12|ui-extensions> channel.  I am not sure exactly what you are trying to achive, but I would say that you cannot access a UI-Extension by a url - rather they are created in a portal as a private or public app, both of which can access the current record where the extension appears (contact, deal, etc) and fetch any properties you want from the front end of the app using actions.fetchCrmObjectProperties.  Also you can either use serverless functions in the case of private apps or create a REST backend for a public extension where you can get any data you want from HubSpot and your front end (your React app) can pass down the parameters you want to get back in your call.  Like I stated earlier, you may get more info by posting your question in the <#C05R599UA12|ui-extensions> channel where there are some expert people who may offer other options."
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-12-04 06:31:41",
+    "text": "I believe you will need to create those associations yourself - either pass them in the payload when you create the custom object or use the associations api to create the association after the object has been created.  Take a look at docs for both and perhaps post these questions in the <#C2YHAHB6K|api> channel"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-12-04 06:39:29",
+    "text": "I believe fetchCrmObjectProperties will only allow retrieving current properties so you could either create a custom property in the deal with that last contact (maybe updating it from a workflow somehow) or you could have your extension call a serverless function to retrieve the data you want.  If your extension is a public app instead of private then you can call your app backend to do that work."
+  },
+  {
+    "poster": {
+      "poster_name": "Purusothaman K",
+      "poster_handle": "pk"
+    },
+    "time_stamp": "2024-12-04 07:29:42",
+    "text": "Thanks for the response <@U01GW2U4WMA> \n\nIs it possible to create a workflow in a public app to automatically populate the email address of a recently created contact in a custom string field of a deal?\n\nSpecifically, when a new contact is associated with a deal, I want to automatically update the custom field in the deal with the email address of the most recently attached contact."
+  },
+  {
+    "text": "Well, yes I believe you could.  But I would first try manually creating a workflow to test with and make sure I know it would work.  The workflow could have a trigger that enrolls any deal that has associated contacts and then I probably would use custom code to figure out the rest.  That code would need to use the API to get all those contacts and then sort them where the latest one to be associated with the deal was the first in the sort and then populate some deal property to hold that contact email or id.  I am not sure how exactly I would do this without actually doing it.  But I think it might be possible.  Then you could eventually take this concept into your extension and have it create the workflow and any properties needed during your install process.",
+    "time_stamp": "2024-12-04 08:18:13"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-12-04 11:54:35",
+    "text": "You can get associations of that deal and get that information. You don’t need to do a whole bunch of other things."
+  }
+]

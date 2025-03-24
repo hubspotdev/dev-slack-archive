@@ -1,0 +1,248 @@
+[
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2018-11-07 07:16:20",
+    "text": "Anyone around here have experience getting a gulp task with vinyl-ftp working with HubSpot.  I've got a vinyl task running with no errors, but it's not actually updating the file I'd like it to.",
+    "reply_count": 21,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2018-11-07 07:24:20"
+      },
+      {
+        "time_stamp": "2018-11-07 07:31:17"
+      },
+      {
+        "time_stamp": "2018-11-07 07:31:52"
+      },
+      {
+        "time_stamp": "2018-11-07 07:32:47"
+      },
+      {
+        "time_stamp": "2018-11-07 07:53:10"
+      },
+      {
+        "time_stamp": "2018-11-07 07:53:27"
+      },
+      {
+        "time_stamp": "2018-11-07 07:54:53"
+      },
+      {
+        "time_stamp": "2018-11-07 07:57:44"
+      },
+      {
+        "time_stamp": "2018-11-07 08:01:06"
+      },
+      {
+        "time_stamp": "2018-11-07 08:13:06"
+      },
+      {
+        "time_stamp": "2018-11-07 08:22:29"
+      },
+      {
+        "time_stamp": "2018-11-07 08:54:23"
+      },
+      {
+        "time_stamp": "2018-11-07 08:55:10"
+      },
+      {
+        "time_stamp": "2018-11-07 11:17:05"
+      },
+      {
+        "time_stamp": "2018-11-07 11:18:13"
+      },
+      {
+        "time_stamp": "2018-11-07 11:18:49"
+      },
+      {
+        "time_stamp": "2018-11-07 11:19:10"
+      },
+      {
+        "time_stamp": "2018-11-07 12:30:13"
+      },
+      {
+        "time_stamp": "2018-11-07 12:30:26"
+      },
+      {
+        "time_stamp": "2018-11-07 13:18:41"
+      },
+      {
+        "time_stamp": "2018-11-07 13:19:43"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Anthony Pizzurro",
+      "poster_handle": "anthonypizzurro"
+    },
+    "time_stamp": "2018-11-07 07:24:20",
+    "text": "Yep. What’s your task look like?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2018-11-07 07:31:17",
+    "text": "```var gulp = require('gulp');\nvar sass = require('gulp-sass');\nvar ftp = require('vinyl-ftp');\nvar gutil = require('gulp-util');\n\ngulp.task('styles', function () {\n    gulp.src('sass/**/*.scss')\n        .pipe(sass().on('error', sass.logError))\n        .pipe(gulp.dest('./'));\n});\n\ngulp.task('deploy', function () {\n\n    var conn = ftp.create({\n        host: '<http://ftp.hubapi.com|ftp.hubapi.com>',\n        user: 'USERNAME',\n        password: 'PASSWORD',\n        parallel: 5,\n        port: '3200',\n        reload: true,\n        debug: function (d) { console.log(d); },\n        secure: true,\n        log: gutil.log\n    });\n\n    var globs = [\n        './module.css'\n        // 'module.js',\n        // 'fields.json',\n        // 'meta.json',\n        // 'module.html'\n    ];\n\n\n    return gulp.src(globs, { base: '.', buffer: false })\n        .pipe(conn.newer('/portals/164795-square_2_marketing/content/modules/6465018971-Test Fields/module.css')) // only upload newer files\n        .pipe(conn.dest('/portals/164795-square_2_marketing/content/modules/6465018971-Test Fields/module.css'));\n});\n\n//Watch task\ngulp.task('default', function () {\n    gulp.watch('sass/**/*.scss', ['styles']);\n});\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2018-11-07 07:31:52",
+    "text": "it's a bit of a mess right now.  mostly trying to get deploy to work.  I'll figure out the watch and default later on."
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2018-11-07 07:32:47",
+    "text": "pretty sure my issue is being caused by my `blobs` or my `base`  (still new to vinyl)"
+  },
+  {
+    "poster": {
+      "poster_name": "Anthony Pizzurro",
+      "poster_handle": "anthonypizzurro"
+    },
+    "time_stamp": "2018-11-07 07:53:10",
+    "text": "Everything looks good to me- I would question whether your glob is targeting your src files correctly"
+  },
+  {
+    "poster": {
+      "poster_name": "Anthony Pizzurro",
+      "poster_handle": "anthonypizzurro"
+    },
+    "time_stamp": "2018-11-07 07:53:27",
+    "text": "is module.css in the same directory as your gulpfile?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2018-11-07 07:54:53",
+    "text": "it is"
+  },
+  {
+    "poster": {
+      "poster_name": "Anthony Pizzurro",
+      "poster_handle": "anthonypizzurro"
+    },
+    "time_stamp": "2018-11-07 07:57:44",
+    "text": "i think the only other difference in my config is: `/portals/164795-square_2_marketing/content/modules/6465018971-Test Fields/module.css` is more like `portals/164795-square_2_marketing/content/modules/6465018971-Test Fields` no beginning slash, and it points to a folder, not a file"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2018-11-07 08:01:06",
+    "text": "I just gave that a shot, and no change unfortunately"
+  },
+  {
+    "poster": {
+      "poster_name": "Anthony Pizzurro",
+      "poster_handle": "anthonypizzurro"
+    },
+    "time_stamp": "2018-11-07 08:13:06",
+    "text": "hmm.. You’re close. Admittedly, I haven’t tried uploading a file to the `modules` folder, just `designs` but it _should_ work.\n\nYou also might try something like gulp-debug to make sure you’ve picked up the correct file: <https://www.npmjs.com/package/gulp-debug>"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2018-11-07 08:22:29",
+    "text": "I definitely feel close (lol)"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2018-11-07 08:54:23",
+    "text": "looks like it's a problem with my blob.  ```var gulp = require('gulp');\nvar sass = require('gulp-sass');\nvar ftp = require('vinyl-ftp');\nvar gutil = require('gulp-util');\nvar debug = require('gulp-debug');\ngulp.task('styles', function () {\n    gulp.src('sass/**/*.scss')\n        .pipe(sass().on('error', sass.logError))\n        .pipe(gulp.dest('./'));\n});\n\ngulp.task('deploy', function () {\n    \n\n    var conn = ftp.create({\n        host: '<http://ftp.hubapi.com|ftp.hubapi.com>',\n        user: 'user',\n        password: 'pass,\n        parallel: 5,\n        port: '3200',\n        reload: true,\n        debug: function (d) { console.log(d); },\n        secure: true,\n        log: gutil.log\n    });\n\n    var globs = [\n        './module.css',\n        './module.js',\n        './fields.json',\n        './meta.json',\n        './module.html'\n    ];\n\n\n    return gulp.src(globs, { base: '', buffer: false })\n        .pipe(conn.newer('portals/164795-square_2_marketing/content/modules/6465018971-Test%20Fields')) // only upload newer files\n        .pipe(conn.dest('portals/164795-square_2_marketing/content/modules/6465018971-Test%20Fields'));\n});\n\ngulp.task('debugFTP', () =&gt;\n    gulp.src('./')\n        .pipe(debug({ title: 'unicorn:' }))\n        .pipe(gulp.dest('dist'))\n);\n\n\n//Watch task\ngulp.task('default', function () {\n    gulp.watch('sass/**/*.scss', ['styles', 'deploy', 'debugFTP' ]);\n\n\n});```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2018-11-07 08:55:10",
+    "text": "changed my gulpfile to the above, and now when I run gulp I get the following: ```[10:52:54] Starting 'debugFTP'...\n[10:52:54] unicorn:\n[10:52:54] unicorn: 1 item\n[10:52:54] CONN\n[10:52:54] Finished 'debugFTP' after 82 ms```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2018-11-07 11:17:05",
+    "text": "Ok, came back to this and had another look.  Updated my gulpfile.  Looks like I've got the blob working correctly, but now I'm running into some interesting issues.\n\nWhen I run my deploy to the module, my deploy finishes no problem, but nothing actually happens.\n\nWhen I run my deploy to a directory in designs, I get an error after it attempts to MKDIR"
+  },
+  {
+    "poster": {
+      "poster_name": "Anthony Pizzurro",
+      "poster_handle": "anthonypizzurro"
+    },
+    "time_stamp": "2018-11-07 11:18:13",
+    "text": "interesting, does it say what the error is?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2018-11-07 11:18:49",
+    "text": "Error: Requested action not taken."
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2018-11-07 11:19:10",
+    "text": "``` at makeError (/Users/ianmcilwain1/Dropbox/module-editor/node_modules/ftp/lib/connection.js:1067:13)\n    at Parser.&lt;anonymous&gt; (/Users/ianmcilwain1/Dropbox/module-editor/node_modules/ftp/lib/connection.js:113:25)\n    at emitTwo (events.js:126:13)\n    at Parser.emit (events.js:214:7)\n    at Parser._write (/Users/ianmcilwain1/Dropbox/module-editor/node_modules/ftp/lib/parser.js:59:10)\n    at doWrite (_stream_writable.js:387:12)\n    at writeOrBuffer (_stream_writable.js:373:5)\n    at Parser.Writable.write (_stream_writable.js:290:11)\n    at TLSSocket.ondata (/Users/ianmcilwain1/Dropbox/module-editor/node_modules/ftp/lib/connection.js:273:20)\n    at emitOne (events.js:116:13)```"
+  },
+  {
+    "poster": {
+      "poster_name": "Anthony Pizzurro",
+      "poster_handle": "anthonypizzurro"
+    },
+    "time_stamp": "2018-11-07 12:30:13",
+    "text": "hmm. have you tried this with any regular files? Like a plain old CSS file? I have a feeling this is an issue with the way modules get represented in FTP"
+  },
+  {
+    "poster": {
+      "poster_name": "Anthony Pizzurro",
+      "poster_handle": "anthonypizzurro"
+    },
+    "time_stamp": "2018-11-07 12:30:26",
+    "text": "I’ll try to test this when I get a chance as well"
+  },
+  {
+    "poster": {
+      "poster_name": "Anthony Pizzurro",
+      "poster_handle": "anthonypizzurro"
+    },
+    "time_stamp": "2018-11-07 13:18:41",
+    "edited": {
+      "time_stamp": "2018-11-07 13:19:10"
+    },
+    "text": "```var globs = [\n    './module.css'\n];\n\n\nreturn gulp.src( globs, { base: '.', buffer: false } )\n    .pipe(conn.newer(\"portals/XXXXXX-apizzurro_com/content/modules/6381771003-Blog date\")) \n    .pipe(conn.dest(\"portals/XXXXXX-apizzurro_com/content/modules/6381771003-Blog date\"))\n});```"
+  },
+  {
+    "poster": {
+      "poster_name": "Anthony Pizzurro",
+      "poster_handle": "anthonypizzurro"
+    },
+    "time_stamp": "2018-11-07 13:19:43",
+    "text": "I’m wondering if the `%20` in your file path needs to be an actual space"
+  }
+]

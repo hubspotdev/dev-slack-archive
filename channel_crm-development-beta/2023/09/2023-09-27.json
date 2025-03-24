@@ -1,0 +1,28 @@
+[
+  {
+    "poster": {
+      "poster_name": "I Made Sariyanta",
+      "poster_handle": "desar.sariyanta"
+    },
+    "time_stamp": "2023-09-27 04:48:55",
+    "text": "Hi all,\nI'm trying to use the ui to batch create a custom object to another custom object.\nHere's is the code that I have:\n\n```const HubSpot = require(\"@HubSpot/api-client\");\n\nexports.main = async (context = {}, sendResponse) =&gt; {\n  const client = new HubSpot.Client({\n    accessToken: process.env.ACCESS_TOKEN,\n  });\n  const { hs_object_id } = context.propertiesToSend;\n  const { start, end, structure } = context.parameters;\n\n  const buildingNumbers = [];\n  for (let i = start; i &lt;= end; i++) {\n    const buildingNumber = structure.replace(\"[BN]\", i);\n    buildingNumbers.push(buildingNumber);\n  }\n  const id = hs_object_id.toString();\n  const associationTypeId = 61; // This is the association type id Bouwnummer to Projecdetails\n  const associationCategory = 'USER_DEFINED';\n  const inputs = [];\n  buildingNumbers.forEach((bouwnummer) =&gt; {\n    inputs.push({\n      properties: {\n        bouwnummer: bouwnummer,\n      },\n      associations: [{\n        to: {id: id},\n        types: [{\n          associationCategory: associationCategory,\n          id: associationTypeId\n        }]\n      }]\n    })\n  })\n\n\n  try {\n    const response = await client.crm.objects.batchApi.create(\"p_simar_bouwnummers\", {\n      inputs: inputs,\n    });\n    sendResponse({message: `${JSON.stringify(response)}`,\n    });\n  } catch (error) {\n    sendResponse({ message: error.message });\n  }\n};```\nThis creates the records in the object Bouwnummers but it is not associated to the record Projectdteails where the card is shown.\n\nWhen I do the same call via the developer docs api test, it works.\nDid I miss anything?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-09-27 07:55:15"
+      },
+      {
+        "time_stamp": "2023-09-29 08:32:20"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "I Made Sariyanta",
+      "poster_handle": "desar.sariyanta"
+    },
+    "time_stamp": "2023-09-27 07:55:15",
+    "text": "This one is fixed. The issue was that the @HubSpot/api-client was old. Fixed it by upgrading to the latest version."
+  }
+]

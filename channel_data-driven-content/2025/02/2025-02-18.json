@@ -1,0 +1,25 @@
+[
+  {
+    "poster": {
+      "poster_name": "Matthias",
+      "poster_handle": "matthias"
+    },
+    "time_stamp": "2025-02-18 06:32:10",
+    "text": "Hi everyone! First post here, so not sure if this is the right channel, lmk if it's supposed to go somewhere else :slightly_smiling_face:\n\nI have a question about the `related_blog_posts` function in HubSpot: I want to show related posts below a blogpost - this works fine in some cases, but not always, especially if a post uses a newly created tag and there aren't any other matches or only one or two with the same tag. Is there an easy way to check if there are other posts with the same tag and if so, display them (exclusively) and if not, show latest posts instead?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2025-02-18 06:34:02"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matthias",
+      "poster_handle": "matthias"
+    },
+    "time_stamp": "2025-02-18 06:34:02",
+    "text": "The snippet looks like this at the moment:\n\n```&lt;h2&gt;Related Posts&lt;/h2&gt;\n&lt;div class=\"cr-related-posts-container-inner\"&gt;\n  {% related_blog_posts blog_ids=\"xxx\", tags=\"{{ post_tags }}\", limit=3, start_date=\"2023-07-01\", callback=\"blog_post_formatter\" %}\n  &lt;script&gt;\n    var blog_post_formatter = function(blogposts) {\n      var formatted = \"&lt;div&gt;\";\n      for (var i = 0; i &lt; blogposts.length; i++) {\n        var blogpost = blogposts[i];\n        formatted += '&lt;div class=\"related-blog-item\"&gt;';\n        if (blogpost.featuredImage) {\n          formatted += `&lt;a class=\"related-blog-image-url\" href=\"${blogpost.url}\"&gt;&lt;img loading=\"lazy\" src=\"${blogpost.featuredImage}\" alt=\"${blogpost.featuredImageAltText}\"&gt;&lt;/a&gt;`;\n        }\n        formatted += `&lt;a class=\"related-blog-title\" href=\"${blogpost.url}\"&gt;&lt;h3&gt;${blogpost.name}&lt;/h3&gt;&lt;/a&gt;`;\n        formatted += `&lt;span class=\"related-blog-date blog-index_post_timestamp\"&gt;${new Date(blogpost.publishDate).toLocaleDateString(\"fr-CA\")}&lt;/span&gt;`;\n        var strippedString = blogpost.postSummary.replace(/(&lt;([^&gt;]+)&gt;)/gi, \"\");\n        formatted += `&lt;div class=\"related-blog-post-summary\"&gt;${strippedString.substring(0, 200)}...&lt;p class=\"cr-related-readmore read_more_holder\"&gt;&lt;a href=\"${blogpost.url}\"&gt;Read more&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;`;\n        formatted += '&lt;/div&gt;';\n      }\n      formatted += '&lt;/div&gt;';\n      return formatted;\n    }\n  &lt;/script&gt;\n&lt;/div&gt;```\nSo even if there aren't any tags, it always shows 3 posts as suggested in the function, but I would rather only display one or two that definitely have the tag that the post is having. If there are none, fall back to the 3 latest posts. Is this possible?"
+  }
+]

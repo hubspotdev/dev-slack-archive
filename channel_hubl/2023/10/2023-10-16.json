@@ -1,0 +1,18 @@
+[
+  {
+    "text": "<@U05BC4T17T4> I created a new prop for testing, of type number and unformatted.\nI updated my code to test these cases (using filters like format_currency_value, int and render too):\n```  &lt;li&gt;\n    &lt;strong&gt;DIRECT:&lt;/strong&gt; {{ contact.number___unformatted | format_currency_value('de-DE', 2) }} {{ contact.number___unformatted | int | format_currency_value('de-DE', 2) }} {{ contact.number___unformatted | render | int | format_currency_value('de-DE', 2) }}\n  &lt;/li&gt;\n  &lt;li&gt;\n    &lt;strong&gt;PT:&lt;/strong&gt; {{ personalization_token('contact.number___unformatted','') | format_currency_value('de-DE', 2) }} {{ personalization_token('contact.number___unformatted','') | int | format_currency_value('de-DE', 2) }} {{ personalization_token('contact.number___unformatted','') | render | int | format_currency_value('de-DE', 2) }}\n  &lt;/li&gt;```\nSee the attached image for the result.\nAs you can see, I tested both direct access to the prop (switched programmable email beta option ON for this) and the personalization_token function. The first one doesn't even render anything (don't know why, any ideas?), the second one renders something but not as I desire, even though it shouldn't, given that HS <https://developers.HubSpot.com/docs/cms/hubl/filters|here> says this:\n```Please note: you can apply HubL filters to personalization tokens, such as contact and company tokens, on HubSpot CMS and blog pages, but not in emails. ```\nI'd really like to know if what I'm trying to achieve is actually not possible or if I'm missing something obvious and trivial...",
+    "time_stamp": "2023-10-16 04:34:08"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-10-16 11:40:43",
+    "text": "I would just assume that it’s not possible to do this sort of formatting with personalization tokens, if you’re still not seeing any luck with it. The official stance is that it shouldn’t ever work, so I’d assume that’s the case, rather than holding out for an exception.\n\nThe alternative I’ve usually fallen back on is to make an alternate contact property with the correct formatting. It’s cumbersome, restrictive, violates DRY, and pretty annoying to deal with — but it _does_ work when you need it to.\n\nAnother possible alternative would be to make a direct CRM call <https://developers.HubSpot.com/docs/cms/hubl/functions#crm-object|using the >`crm_object`<https://developers.HubSpot.com/docs/cms/hubl/functions#crm-object| function>, but that comes along with a <https://developers.HubSpot.com/docs/cms/guides/email/hubdb-crm-objects#email-sending-limits|pretty restrictive set of usage and sending limits> — and I still can’t totally guarantee it would work."
+  },
+  {
+    "text": "How do I display the amount of a deal stage on a page using crm_objects() function? It only shows when fetching via associated_objects().\n\n```{% set deals = crm_objects(\"deal\", \"limit=5\", \"dealname, amount, dealstage\") %}\n\n{{deals}}\n&lt;ul&gt;\n\n\n{% for deal in deals.results %}\n&lt;li&gt;\nName: {{ deal.dealname }}\nAmount: {{ deal.amount }}\nStage: {% if deal.stage == '81550999' %}\nvalid\n{% else %}\nnull\n{% endif %}\n&lt;/li&gt;\n{% endfor %}\n&lt;/ul&gt;```",
+    "time_stamp": "2023-10-16 16:17:45"
+  }
+]

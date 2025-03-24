@@ -1,0 +1,94 @@
+[
+  {
+    "poster": {
+      "poster_name": "Dan Vickers",
+      "poster_handle": "daniel402"
+    },
+    "time_stamp": "2024-02-27 08:43:00",
+    "edited": {
+      "time_stamp": "2024-02-27 08:43:33"
+    },
+    "text": "I'm trying to overwrite the form redirect in order to append URL parameters from the form but for some reason an unable to hijack the redirect, I've tried updating the json value and tried window replacing on both the onBeforeFormSubmit and onFormSubmitted events to no avail, any ideas?\n\n*onBeforeFormSubmit Variation*\n```window.addEventListener('message', event => {\n  if (event.data.type === 'hsFormCallback' && event.data.eventName === 'onBeforeFormSubmit') {\n    const firstname = event.data.data[0].value;\n    const lastname = event.data.data[1].value;\n    const email = event.data.data[2].value;\n    const phone = event.data.data[3].value;\n    let context = JSON.parse(event.data.data[4].value);\n    const redirectUrl = context.originalEmbedContext.redirectUrl;\n    let queryVariables = \"?\";\n\n    if (redirectUrl && firstname && lastname && email && phone) {\n      if (firstname) { queryVariables = queryVariables + `first_name=${firstname}`; }\n      if (lastname) { queryVariables = queryVariables + `&last_name=${lastname}`; }\n      if (email) { queryVariables = queryVariables + `&email=${email}`; }\n      if (phone) { queryVariables = queryVariables + `&phone_number=${phone}`; }\n      \n      const newRedirect = redirectUrl + queryVariables;\n      \n      context.originalEmbedContext.redirectUrl = newRedirect;\n      window.location.href = newRedirect;\n    }\n  }\n});```\n*onSubmitted Variation*\n```\ndocument.addEventListener('DOMContentLoaded', function() {\n  window.addEventListener('message', function(event) {\n    if (event.data.type === 'hsFormCallback' && event.data.eventName === 'onFormSubmitted') {\n      const submissionData = event.data.data.submissionValues;\n      const firstname = submissionData.firstname;\n      const lastname = submissionData.lastname;\n      const email = submissionData.email;\n      const phone = submissionData.phone;\n      const redirectUrl = event.data.data.redirectUrl;\n      let queryVariables = \"?\";\n\n      if (firstname) { queryVariables = queryVariables + `first_name=${firstname}`; }\n      if (lastname) { queryVariables = queryVariables + `&last_name=${lastname}`; }\n      if (email) { queryVariables = queryVariables + `&email=${email}`; }\n      if (phone) { queryVariables = queryVariables + `&phone_number=${phone}`; }\n      \n      const newRedirect = redirectUrl + queryVariables;\n      \n      event.data.data.redirectUrl = newRedirect;\n      window.location.href = newRedirect;\n    }\n  });\n});```",
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-02-27 09:20:52"
+      },
+      {
+        "time_stamp": "2024-02-27 09:21:56"
+      },
+      {
+        "time_stamp": "2024-02-27 09:22:53"
+      },
+      {
+        "time_stamp": "2024-02-27 13:19:01"
+      },
+      {
+        "time_stamp": "2024-02-27 18:19:03"
+      },
+      {
+        "time_stamp": "2024-02-27 18:21:52"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Max Schuurmans",
+      "poster_handle": "m.schuurmans"
+    },
+    "time_stamp": "2024-02-27 09:06:45",
+    "text": "<@UCBCHJD7T> if you are using embedded why not set the default in your form editor? You can select a default by clicking on the radio button in the field options,"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-02-27 09:20:52",
+    "text": "onBeforeFormSubmit naming is a bit odd,\n\nIt’s like it’s left the station but not arrived at HubSpot\n\nSo what I end up doing is using onFormReady\n\nget the submit button and do an event that on “click” of the submit button\n\nI think HubSpot always seems to trigger this click event even if the button wasn’t clicked (keyboard navigation etc)\n\nYou can then put your code in there instead"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-02-27 09:21:56",
+    "text": "I’ve only really used the above for custom validation like e.preventDefault, but I assume it should work"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-02-27 09:22:53",
+    "text": "though saying that I feel like your event listners should work, to redirect the page"
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2024-02-27 13:19:01",
+    "text": "I, too have spent many an hour trying to come up with something a bit more elegant than attaching an event listener to the submit button using the onFormReady - to no avail.\n\nSecond the approach suggested above."
+  },
+  {
+    "poster": {
+      "poster_name": "Dan Vickers",
+      "poster_handle": "daniel402"
+    },
+    "time_stamp": "2024-02-27 18:19:03",
+    "edited": {
+      "time_stamp": "2024-02-27 18:20:01"
+    },
+    "text": "So i actually went with a different approach as that just didn't seem the right use of the hooks for me (allbeit probably the only way to achieve this redirection without my solution).\n\nAs the redirect was to an external site anyway, I hard coded the base redirect URL and then opened a new tab with that URL on submit, and set the form redirect to be the same page it's currently on so it looks like a refresh to the user :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Dan Vickers",
+      "poster_handle": "daniel402"
+    },
+    "time_stamp": "2024-02-27 18:21:52",
+    "text": "I am glad there isnt a \"simple\" solution I was missing though so really appreciate the spotlight on the formReady way forward i'll store that nugget of info for future projects :smile:"
+  }
+]

@@ -1,0 +1,152 @@
+[
+  {
+    "poster": {
+      "poster_name": "Frédéric Curier",
+      "poster_handle": "frederic.curier"
+    },
+    "time_stamp": "2019-12-18 01:28:33",
+    "text": "Sorry for this bad question\nI solve my issue!\nMany thanks :+1:"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-12-18 09:21:23",
+    "text": "hey thanks I'll try to start from what you did to see is its work to make api calls with the webhook events as trigger for the call"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-12-18 09:25:25",
+    "text": "just a question. you use `app.get` to add a route for the webhook... I used `<http://app.post|app.post>` because I tought it was the way to do it... Why are you using `get` method?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-12-18 10:32:04",
+    "edited": {
+      "time_stamp": "2019-12-18 10:32:52"
+    },
+    "text": "Ah i see what you mean - yeah so that was just an example - it needs changing to POST and some verification methods/checks - it wasnt intended to be a functioning webhook endpoint, was just for me to test easily in my browser :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-12-18 10:42:53",
+    "text": "ok good!"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-12-18 12:04:05",
+    "text": "I managed to make your code work, but I got the following error at this point `let accessToken = await getAccessToken(hubId);`\n```(node:23) UnhandledPromiseRejectionWarning: StatusCodeError: 401 - \"{\\\"status\\\":\\\"error\\\",\\\"message\\\":\\\"Any of the listed authentication credentials are missing\\\",\\\"correlationId\\\":\\\"640d871a-d794-4b46-8e67-c74ec72462de\\\",\\\"engagement\\\":{\\\"shhkey-v1\\\":\\\"shhkey-v1 not engaged. Shhkey not found in the request header.\\\",\\\"vendorkey-gae\\\":\\\"vendorkey-gae not engaged. Vendorkey not found in request headers.\\\",\\\"oauth-token\\\":\\\"oauth-token not engaged. Malformed OAuth access token found in request header.\\\",\\\"hapikey\\\":\\\"hapikey not engaged. hapikey is not present in query params.\\\",\\\"internal-cookie\\\":\\\"internal-cookie not engaged. Cookie not found in the request.\\\",\\\"app-cookie\\\":\\\"app-cookie not engaged. App cookie is not present on the request.\\\"},\\\"requestId\\\":\\\"c1d49702-483e-4986-9be3-7c3610b3f05d\\\"}\"```"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-12-18 12:26:14",
+    "text": "forgot that there was an error in your code that I just caught"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-12-18 12:28:18",
+    "edited": {
+      "time_stamp": "2019-12-18 12:28:30"
+    },
+    "text": "yeah, theres likely lots of errors, hacked it together real quick yesterday :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-12-18 12:54:18",
+    "text": "finally I still got the error"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-12-18 12:54:27",
+    "text": "I continue to debug"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-12-18 12:56:43",
+    "text": "isn't it weird that there is no headers in that request\n```const exchangeForTokens = async (hubId, exchangeProof) =&gt; {\n  try {\n    const responseBody = await <http://request.post|request.post>('<https://api.hubapi.com/oauth/v1/token>', {\n      form: exchangeProof\n    });\n\n    // Usually, this token data should be persisted in a database and associated with\n    // a user identity.\n    const tokens = JSON.parse(responseBody);\n\n    const responseBodyInfo = await request.get('<https://api.hubapi.com/oauth/v1/access-tokens/>' + tokens.access_token);\n    const tokenInfo = JSON.parse(responseBodyInfo);\n\n\n    refreshTokenStore[hubId] = tokens.refresh_token;\n    accessTokenCache.set(hubId, tokens.access_token, Math.round(tokens.expires_in * 0.75));\n\n    console.log('       &gt; Received an access token and refresh token for hub id: ' + tokenInfo.hub_id);\n    return tokens.access_token;\n  } catch (e) {\n    console.error(`       &gt; Error exchanging ${exchangeProof.grant_type} for access token`);\n    return JSON.parse(e.response.body);\n  }\n};```\nand we got this in the error\n```\\\"oauth-token\\\":\\\"oauth-token not engaged. Malformed OAuth access token found in request header.\\```"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-12-18 12:57:20",
+    "text": "I'm wondering if there is an header pass by I mean that I dont understand or there is no header and should put one"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-12-18 13:34:29",
+    "text": "there is something wrong with the whole refreshing token process. I don't think it is related to the fact that I use a webhook finally.. I think that part just never worked in the quickstart app"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-12-18 13:49:04",
+    "text": "i imagine theres just some bug, or when i tweaked it i missed something"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-12-18 13:49:18",
+    "text": "the oauth flow is pretty standard, i dont think the codes expire"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-12-18 14:11:15",
+    "text": "well in that case regarding the error that I get do you have a guess on what is wrong?... because I don't have any clue and it's been almost two days I spent on this problem..."
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-12-18 14:17:26",
+    "text": "Oh I think it is working!"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2019-12-18 14:21:18",
+    "text": "well no... it still fails at refreshing the token..."
+  }
+]

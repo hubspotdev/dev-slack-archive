@@ -1,0 +1,10 @@
+[
+  {
+    "poster": {
+      "poster_name": "Tyson Buck",
+      "poster_handle": "tyson"
+    },
+    "time_stamp": "2024-12-09 15:50:07",
+    "text": "I am not proficient in JS and could use some help with this code. It's throwing an error in the workflow. What it's purpose is, is to force the deal owner to select a specific buying role for the associated contact to the deal.\n```const HubSpot = require('@HubSpot/api-client');\nconst HubSpotClient = new HubSpot.Client({ accessToken: process.env.ACCESS_TOKEN})\n  \nexports.main = async (event, callback) =&gt; {\n\n  const dealID = event.inputFields['dealID'];\n\n  let getContactsForDeal = await HubSpotClient.apiRequest({\n        method: 'GET',\n        path: '/crm/v4/objects/deal/' + dealID + '/associations/contacts',\n    });\n  console.log(getContactsForDeal.body.results);  \t\n  let inputList = [];\n    for(let contact of getContactsForDeal.body.results) {\n        console.log(contact.toObjectId);        \n        inputList.push({\n            id: `${contact.toObjectId}` ,\n        })\n  }\n  \n  let getContactRequest = {\n        inputs: inputList,\n        properties: [\n            \"hs_buying_role\"        \n        ]    \n  };\n  console.log(JSON.stringify(getContactRequest));\n  \n  let getContacts = await HubSpotClient.apiRequest({\n        method: 'POST',\n        path: '/crm/v3/objects/contacts/batch/read?archived=false',\n        body: getContactRequest,\n  });\n  console.log(getContacts.body.results);\n\n  let missingBuyingRole = true;\n    for(let contact of getContacts.body.results) {\n        if(contact.properties.hs_buying_role !== null &amp;&amp; contact.properties.hs_buying_role.includes('CHAMPION'))\n            missingBuyingRole = false;\n        console.log(contact.properties.hs_buying_role);                \n  }\n  console.log(missingBuyingRole);\n\n\n  callback({\n    outputFields: {\n      missingBuyingRole: missingBuyingRole,\n    }\n  });\n}```"
+  }
+]

@@ -1,0 +1,73 @@
+[
+  {
+    "poster": {
+      "poster_name": "Stephen Brown",
+      "poster_handle": "stephen783"
+    },
+    "time_stamp": "2022-02-08 11:53:14",
+    "edited": {
+      "time_stamp": "2022-02-08 11:53:47"
+    },
+    "text": "Hello, does anyone know if it's possible to set the owner of a contact using the Create or Update contact api? I'm not sure if it's a bug, I am creating a contact and company and then associating them, and as part of the payload for each, it checks if there is an owner query parameter and sets the owner if there is. It is working in all regards, but for some reason the owner is not being set on the contact record (it is working for the company).\nI logged the data being sent for the contact, it is:\n\n{\"properties\":[{\"property\":\"firstname\",\"value\":\"Stephen\"},{\"property\":\"lastname\",\"value\":\"Brown\"},{\"property\":\"email\",\"value\":\"<mailto:stephen+test2@impulsecreative.com|stephen+test2@impulsecreative.com>\"},{\"property\":\"company\",\"value\":\"testfdas\"},{\"property\":\"HubSpot_owner_id\",\"value\":\"87349627\"}]}\n\nAll properties other than HubSpot_owner_id are being set without issue. I should note that there are no errors that are being caught.\n\nAny help would be appreciated :slightly_smiling_face:",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-02-08 12:02:48"
+      },
+      {
+        "time_stamp": "2022-02-08 15:35:44"
+      },
+      {
+        "time_stamp": "2022-02-08 16:31:48"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2022-02-08 12:02:48",
+    "text": "Hey Stephen, this is possible, a couple of thoughts:\n\n1. The owner ID is a unique value from both the owner’s contact and HubSpot ID; to find it you can either query the API for the values tied to each email or poke around in the inspector on the properties settings page.\n2. If there’s any other automation in the portal that is responsible for assigning the owner ID based on a workflow or other qualifying logic, then that may be overwriting or conflicting with your API script"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Solari",
+      "poster_handle": "eric894"
+    },
+    "time_stamp": "2022-02-08 14:11:37",
+    "text": "I'm looking to set the unit_discount or whatever the internal property is called for line items through the API. Does anyone know how to do this?\n\nI've attempted the following:\n\nPOST <https://api.hubapi.com/crm/v3/objects/line_items> HTTP/1.1\nHost: <http://api.hubapi.com|api.hubapi.com>\nAccept: application/json\nAccept-Encoding: gzip, deflate\nContent-Type: application/json\nContent-Length: 166\n{\"properties\":{\"name\":\"Some Amazing Discount\",\"hs_product_id\":\"1373660684\",\"quantity\":\"1\",\"price\":0.0,\"hs_unit_discount\":48.0000}}\n\nI've tried using unit_discount, unitdiscount, hs_unit_discount with no success",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-06-30 14:55:36"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "TB",
+      "poster_handle": "tien.bui88"
+    },
+    "time_stamp": "2022-02-08 14:23:41",
+    "text": "2 years later and I am still searching for an answer to this. Is there a dev or someone on HubSpot team that we can ping for some update on this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Brown",
+      "poster_handle": "stephen783"
+    },
+    "time_stamp": "2022-02-08 15:35:44",
+    "text": "I ended up figuring it out, it was because my email was pulling as undefined in the request_url\n\n`<https://api.hubapi.com/contacts/v1/contact/createOrUpdate/email/${email}?hapikey=${API_KEY>}`\n\nI thought that would throw an error. Surprisingly, it doesn't. It let the function run and even created a new contact with the payload data, but it wouldn't add any properties other than first name, last name, company, and email."
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2022-02-08 16:31:48",
+    "text": "Interesting, glad you got it solved "
+  }
+]

@@ -1,0 +1,95 @@
+[
+  null,
+  null,
+  {
+    "poster": {
+      "poster_name": "Theresa Weaver",
+      "poster_handle": "theresa.weaver"
+    },
+    "time_stamp": "2019-01-18 08:38:58",
+    "text": "Hey Ian I would love to reuse this code and do something similar with popular topics on the posts (sourcing them from all 5 blogs and displaying them in a list), I have gotten it to where I can get some topics to show up (not 100% sure they are coming from all of the blogs though) but I am struggling to get a URL that will display the posts, as some of the topics are used in multiple blogs. do you have any thoughts on this? I really appreciate your time! I am mainly a HTML CSS coder so this is a bit outside of my normal element but a fun challenge :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2019-01-18 09:32:04",
+    "text": "You'd probably need to add a query string to the page: `?topic=foo`. Then you can pull the topic into the HubL with `request.query_dict.topic`"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2019-01-18 09:32:14",
+    "text": "If I'm understanding what you're trying to do correctly"
+  },
+  {
+    "poster": {
+      "poster_name": "Theresa Weaver",
+      "poster_handle": "theresa.weaver"
+    },
+    "time_stamp": "2019-01-18 10:01:07",
+    "text": "Here is the code that I am currently using, some of it was from a template\n```{% set popular_1 = blog_popular_posts('1', 6) %}\n    {% set popular_2 = blog_popular_posts('2', 6) %}\n    {% set popular_3 = blog_popular_posts('3', 6) %}\n    {% set popular_4 = blog_popular_posts('4', 6) %}\n    {% set popular_5 = blog_popular_posts('5', 6) %}\n    {% set  pop_tags = popular_2 + popular_3 + popular_4 + popular_1 + popular_5 %}\n     {# set array variable name as topics #}\n      {% set topics = [] %}\n        {% for pop_tag in pop_tags %} \n        {# add topic of popular posts into array variable topics #}\n        {% set topics = topics + pop_tag.topic_list %}    \t    \t   \n        {# check if it is last loop #}\n          {% if loop.last %}\n          {# sort topics name and filter duplicate/repeated names in array #}\n          {% set topics = topics|sort(true, false, 'name')|unique('name')  %}    \n            {% for topic in topics %} \n              {% if pop_tag.topic_list %}\n                &lt;a class=\"topic-link\" href=\"{{ blog_tag_url.slug }}/topic/{{ topic }}\"&gt; {{ topic }} &lt;/a&gt;\n              {% endif %}\n            {% endfor %}\n          {% endif %}\n        {% endfor %}```\n\nBut blog_tag_url isn’t pulling the correct information"
+  },
+  null,
+  null,
+  null,
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2019-01-18 10:43:21",
+    "text": "Oh, I see"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2019-01-18 10:43:28",
+    "text": "I think you want `&lt;a class=\"topic-link\" href=\"{{ blog_tag_url('default', topic.slug) }}\"&gt;{{ topic.name }}&lt;/a&gt;`"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2019-01-18 10:45:03",
+    "text": "I don't think you want the `{% if pop_tag.topic_list %}`"
+  },
+  null,
+  null,
+  null,
+  null,
+  {
+    "poster": {
+      "poster_name": "Theresa Weaver",
+      "poster_handle": "theresa.weaver"
+    },
+    "time_stamp": "2019-01-18 12:01:19",
+    "text": "hmm I took out the pop_tag.topic_list, but the blog_tag_url is still pulling in the wrong domain"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2019-01-18 12:53:03",
+    "text": "Well it's gonna be whatever domain your default blog is on"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2019-01-18 12:54:08",
+    "edited": {
+      "time_stamp": "2019-01-18 12:54:15"
+    },
+    "text": "If you want to link to a page that pulls from all blogs, you might want to do the query string thing I suggested, along with something like `&lt;a class=\"topic-link\" href=\"https://path.to/page?topic={{ topic.slug }}\"&gt;{{ topic.name }}&lt;/a&gt;`"
+  },
+  null
+]

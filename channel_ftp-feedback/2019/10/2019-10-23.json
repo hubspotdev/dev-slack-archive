@@ -1,0 +1,33 @@
+[
+  {
+    "poster": {
+      "poster_name": "aldo",
+      "poster_handle": "aldo619"
+    },
+    "time_stamp": "2019-10-23 17:43:02",
+    "text": "hey @here - could anyone sense check this ftp config? I keep getting time out errors and haven’t been able to connect. I’m using this vscode extension:\n\n<https://marketplace.visualstudio.com/items?itemName=liximomo.sftp&amp;ssr=false#overview>\n\nI think the part I’m missing is the tls authentication part. I’ve tried both `sftp` protocol and `ftp`. I either get a timeout error or a “login not allowed before ssl/tls is established” error. I’ve also tried both of these protocols using both ports `3200` and `3201`.\n\n```\n{\n  \"name\": \"Emerging IT\",\n  \"host\": \"<http://ftp.hubapi.com|ftp.hubapi.com>\",\n  \"protocol\": \"sftp\",\n  \"port\": 3200,\n  \"username\": \"&lt;my email&gt;\",\n  \"password\": \"&lt;my password&gt;\",\n  \"remotePath\": \"/\",\n  \"uploadOnSave\": true\n}\n```\n\nAnyone know what I’m doing wrong?"
+  },
+  {
+    "poster": {
+      "poster_name": "aldo",
+      "poster_handle": "aldo619"
+    },
+    "time_stamp": "2019-10-23 17:48:21",
+    "text": "update: Looks like I can get a connection using cyber duck, so it’s probably something I’m doing wrong with that vscode plugin. If anyone’s gotten that a set up like this to work I’d love to learn how"
+  },
+  {
+    "poster": {
+      "poster_name": "aldo",
+      "poster_handle": "aldo619"
+    },
+    "time_stamp": "2019-10-23 18:17:15",
+    "edited": {
+      "time_stamp": "2019-10-23 18:17:22"
+    },
+    "text": "yet another update, sorry folks. I can connect to ftp and see my demo and developer sandbox instances but not the instance I’ve been invited to by my client. Is it possible that this is a HubSpot user permissions issue?"
+  },
+  {
+    "text": "alrighty my dudes I’ve solved it. There were a few things at play here.\n\n1. *My client enabled 2fac auth* this morning while I was trying to configure this. Obviously that’s a no-go for FTP access. I know you can use the beta local dev cli but I wanted to stick to prod ready tools for this project. As a result I got my client to disable 2fac at least while we’re in the dev phase.\n\n2. *I was missing the TLS part* like I thought. Because I could connect using a different ftp client I knew it must have been my config. A search brought up this page that has an extended config:\n\n```\n{\n  \"name\": \"Emerging IT\",\n  \"host\": \"<http://ftp.hubapi.com|ftp.hubapi.com>\",\n  \"protocol\": \"ftp\",\n  \"port\": 3200,\n  \"username\": \"&lt;my email&gt;\",\n  \"password\": \"&lt;my password&gt;\",\n  \"remotePath\": \"/\",\n  \"uploadOnSave\": true,\n  \"secure\": true,\n  \"secureOptions\": { \"rejectUnauthorized\": false }\n}\n```\n\nNotice the new `secure` and `secureOptions` fields.\n\nsource: <http://daily.madeforbrowser.com/ftp-over-tls-in-visual-studio-code-using-sftp/>\n\n3. *I needed super admin*. I noticed that I could access my dev sandbox but not my client’s instance. My account had been set up by my PM on their end. It had almost all perms enabled but there’s apparently no permission to enable ftp access. I found this forum post where someone’s asking about it.\n\n<https://community.HubSpot.com/t5/CMS-Development/User-settings-for-FTP-access/td-p/289102>\n\nSo I got my account changed to super admin and now we’re golden!",
+    "time_stamp": "2019-10-23 19:06:56"
+  }
+]

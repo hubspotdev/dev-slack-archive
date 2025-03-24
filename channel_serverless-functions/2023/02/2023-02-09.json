@@ -1,0 +1,224 @@
+[
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2023-02-09 05:30:29",
+    "text": "Have any of you solved handling data, without a key/value storage?\n\nI’m grabbing data from an external feed (press releases), and create/update/delete blog posts based on the content of the feed.\nInstead of having to look and compare data with HubSpot’s APIs, I’m storing the content of the feed in an object, and then perform the different checks, and forward payloads to either CRUD endpoint.\n“If `item2` already exists, don’t do anything”, “if `item5` is removed, send that payload to the `delete` endpoint”, etc.\nThis works wonderfully.\n\nHowever, every time I iterate on the function, thus reupload it, my “data store” object is emptied, meaning the operation starts over, all items in the feed are created in the blog again, and so on.\n\nAs far as I can see, there no way for me to persist this data object. So I need to store the data elsewhere.\nBut how - As a file? As HubDB rows? How would you do it?"
+  },
+  {
+    "poster": {
+      "poster_name": "Sejal Parikh (HubSpot PM)",
+      "poster_handle": "sparikh"
+    },
+    "time_stamp": "2023-02-09 10:51:13",
+    "text": ""
+  },
+  {
+    "poster": {
+      "poster_name": "Odin Morningstar",
+      "poster_handle": "odin.morningstar.dev"
+    },
+    "time_stamp": "2023-02-09 13:46:47",
+    "text": "Does anyone know for CRM Project serverless functions if I'm able to split function codes into commonJS modules and use require if they are in the same folder? Or does everything need to be bundled inline aside from Core Node/ Npm public dependencies?",
+    "reply_count": 18,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-02-09 13:47:39"
+      },
+      {
+        "time_stamp": "2023-02-09 13:48:09"
+      },
+      {
+        "time_stamp": "2023-02-09 13:49:37"
+      },
+      {
+        "time_stamp": "2023-02-09 13:50:03"
+      },
+      {
+        "time_stamp": "2023-02-09 13:51:01"
+      },
+      {
+        "time_stamp": "2023-02-09 13:51:11"
+      },
+      {
+        "time_stamp": "2023-02-09 13:51:40"
+      },
+      {
+        "time_stamp": "2023-02-09 13:52:31"
+      },
+      {
+        "time_stamp": "2023-02-09 13:52:36"
+      },
+      {
+        "time_stamp": "2023-02-09 13:52:55"
+      },
+      {
+        "time_stamp": "2023-02-09 13:53:17"
+      },
+      {
+        "time_stamp": "2023-02-09 13:53:17"
+      },
+      {
+        "time_stamp": "2023-02-09 13:53:20"
+      },
+      {
+        "time_stamp": "2023-02-09 19:05:41"
+      },
+      {
+        "time_stamp": "2023-02-09 19:06:38"
+      },
+      {
+        "time_stamp": "2023-02-09 19:07:29"
+      },
+      {
+        "time_stamp": "2023-02-09 19:07:47"
+      },
+      {
+        "time_stamp": "2023-02-09 19:08:30"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-09 13:47:39",
+    "text": "You could technically split it (I've done this before but don't know for sure that you can still do it) but it would probably hurt load times"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-09 13:48:09",
+    "text": "especially for larger files, you only have a 5 second window to run that function and send back a response"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-09 13:49:37",
+    "text": "I would suggest breaking up the function like in this example <https://github.com/HubSpot/ui-extensions-examples/tree/main/with-asana-api/src/app/app.functions>"
+  },
+  {
+    "poster": {
+      "poster_name": "Odin Morningstar",
+      "poster_handle": "odin.morningstar.dev"
+    },
+    "time_stamp": "2023-02-09 13:50:03",
+    "text": "Carter to the rescue as usual! Thanks I didn't consider the load time aspect. Rollup it is! Out of curiosity do you know if the time used for CRM serverless executions counts towards the 10 minute execution time limit for an account?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-09 13:51:01",
+    "text": "What 10 minute limit?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-09 13:51:11",
+    "text": "are you talking about api limits?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-09 13:51:40",
+    "text": "because no requesting a function doesn't affect the api limit, if you have a function access the apis that will count towards the limit"
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2023-02-09 13:52:31",
+    "text": "For cms serverless functions it's limited to 600 execution seconds per minute."
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-02-09 13:52:36"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-09 13:52:55",
+    "text": "Yep those are seperate"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-09 13:53:17",
+    "text": "<@U03FJQPSC0Y> correct me if I'm wrong"
+  },
+  {
+    "poster": {
+      "poster_name": "Odin Morningstar",
+      "poster_handle": "odin.morningstar.dev"
+    },
+    "time_stamp": "2023-02-09 13:53:17",
+    "text": "Thank you so much!"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-09 13:53:20",
+    "text": "of course"
+  },
+  {
+    "poster": {
+      "poster_name": "Sejal Parikh (HubSpot PM)",
+      "poster_handle": "sparikh"
+    },
+    "time_stamp": "2023-02-09 19:05:41",
+    "text": "That’s correct, App functions are separate from CMS endpoint functions. But thanks for callout, I will check if we have similar limits documented for App functions."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-09 19:06:38",
+    "text": "Per our last conversation on this, they haven't enforced limits yet"
+  },
+  {
+    "poster": {
+      "poster_name": "Sejal Parikh (HubSpot PM)",
+      "poster_handle": "sparikh"
+    },
+    "time_stamp": "2023-02-09 19:07:29",
+    "text": "Execution time is limited to 5sec"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-09 19:07:47",
+    "edited": {
+      "time_stamp": "2023-02-09 19:08:02"
+    },
+    "text": "Yes, but totally minute limits is what we're talking about"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-09 19:08:30",
+    "text": "Would love to get that 5secs limit bumped up to 10secs"
+  }
+]

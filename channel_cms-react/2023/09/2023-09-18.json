@@ -1,0 +1,253 @@
+[
+  {
+    "poster": {
+      "poster_name": "Arrigo Lupori",
+      "poster_handle": "arrigo.lupori270"
+    },
+    "time_stamp": "2023-09-18 06:40:55",
+    "text": "<@UAYBXDG4U> sorry it took me a while to get back to you.\nRegarding the first message, yup that would be very nice!\n\nFor the second message, I was using the `recent_blog_posts` function to fetch all the recent blog posts and turn the HTML into JSON, then pass the variable into hublParameters.\n\nMy issue was that for some reason new posts weren't being refreshed on the website. I though it was because components are server-rendered once but even with client-side only it didn't work.\n\nThis goes back to the issue of me being unable to debug hublParameters :slightly_smiling_face:\n\nSo debugging is the important bit."
+  },
+  {
+    "poster": {
+      "poster_name": "Arrigo Lupori",
+      "poster_handle": "arrigo.lupori270"
+    },
+    "time_stamp": "2023-09-18 06:55:03",
+    "text": "Hi everyone,\n\nJust wanted to share that after about 1 week of work I was able to finally publish my website, <https://sagewill.com|sagewill.com>, entirely using JS components in HubSpot (except for individual blog posts) :smile:\n\nI really like the experience, and I'm glad it works well in production.\n\nThank you to <@UAYBXDG4U> and <@UCY83QS6Q> for all the help so far :raised_hands:",
+    "reply_count": 8,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2023-09-18 11:41:48"
+      },
+      {
+        "time_stamp": "2023-09-18 13:36:30"
+      },
+      {
+        "time_stamp": "2023-09-19 05:44:56"
+      },
+      {
+        "time_stamp": "2023-09-19 05:47:07"
+      },
+      {
+        "time_stamp": "2023-09-19 05:47:40"
+      },
+      {
+        "time_stamp": "2023-09-19 05:48:35"
+      },
+      {
+        "time_stamp": "2023-09-19 07:31:28"
+      },
+      {
+        "time_stamp": "2023-09-20 03:18:17"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-09-18 11:41:48",
+    "text": "looks great! congrats on launch"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-09-18 12:27:28",
+    "text": "<@U04DVL5T2TE> Would it be possible for you guys add `build-storybook` and expose the configuration?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-09-18 12:42:20",
+    "text": "we can look into it - the main challenge i see is making the built stories work when they include both server-only and client code"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-09-18 12:43:31",
+    "text": "update: we have a solution in mind here for getting babel macros working, should have something ready in the nearish future"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-09-18 12:44:35",
+    "text": "Can you elaborate on `server-only` so i'm clear?! :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-09-18 12:47:22",
+    "text": "yup! in our system islands are a boundary between server-only components and components that are loaded on the client - without an island, everything is just loaded on the server and not in the browser\n\n by default storybook doesn’t support server-side rendering at all so it’ll load all component code in the browser. so if you have a story of a component that has regular components, as well as an island with some other components in it, the whole thing will run on the browser"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-09-18 12:48:09",
+    "edited": {
+      "time_stamp": "2023-09-18 12:48:24"
+    },
+    "text": "so for those non-island components, they may render in ways that they might not expect. for example if they use `usePageUrl()` it’ll behave differently than in the dev server or in production"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-09-18 12:48:57",
+    "text": "as we add more server features in the future that will be more and more likely and potentially not just slightly different but fully breaking"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-09-18 12:50:03",
+    "edited": {
+      "time_stamp": "2023-09-18 12:50:17"
+    },
+    "text": "our solution currently for storybook is `moduleStoryWithIsland`, which does use server rendering to what shows up in storybook, but that won’t work with static build output like what `storybook-build` creates. so i’d like to make sure if we surface it it doesnt cause a lot of broken stories with normal usage"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-09-18 12:50:18",
+    "text": "Ahh, I see so when leveraging hooks, methods, etc that are meant for server - those could cause errors"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-09-18 12:50:46",
+    "text": "yup exactly. and for example if/when we add data fetching on the server, that will probably fully not work in storybook"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-09-18 12:51:26",
+    "edited": {
+      "time_stamp": "2023-09-18 12:51:37"
+    },
+    "text": "which probably is ok as far as the spirit of storybook goes, it’s not really meant to have data fetching in it, but just immediately failing isn’t great"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-09-18 12:52:39",
+    "edited": {
+      "time_stamp": "2023-09-18 12:52:42"
+    },
+    "text": "especially when a lot of the value of deploying a storybook build is a source of truth for ‘does this work exactly how i want it to?’"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-09-18 12:52:54",
+    "text": "So sounds like the storybook use-case is to be able to render _everything...._ Ya, that was going to be another question - use case is typically UI components, not the higher order ones"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-09-18 12:53:36",
+    "text": "yeah agreed its for smaller UI components ideally, but someone somewhere will want it for bigger components :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-09-18 12:54:04",
+    "text": "Ya, for our use-case it's really more of a tool to share w/ design and content creators for documentation and pattern alignment..."
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-09-18 12:54:49",
+    "text": "if you’d like, i’ll look into just surfacing it as an experimental thing and then we can see what works/doesn’t work"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-09-18 12:55:26",
+    "text": "ya, for sure..."
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-09-18 12:55:54",
+    "edited": {
+      "time_stamp": "2023-09-18 12:56:17"
+    },
+    "text": "opening up configuration will be a bit harder because we have some of our own configuration to layer it into, similar to general vite configuration"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-09-18 12:55:59",
+    "text": "obviously there will be limitations... but happy to work around"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-09-18 12:57:09",
+    "text": "Ya, I dug around the cms-dev-server package, lots of customization..."
+  },
+  {
+    "poster": {
+      "poster_name": "George Grigorita",
+      "poster_handle": "george.grigorita"
+    },
+    "time_stamp": "2023-09-18 13:36:30",
+    "text": "Congrats, looks great! I wonder how’s the editing experience in the editor"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-09-18 16:55:01",
+    "text": "I should also ask if there's anyway to expose `.storybook/preview.js`  config"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-09-18 17:06:30",
+    "text": "That falls under the same category of we customize it to make things work but could probably figure out a way to fold in incoming customization as well"
+  }
+]

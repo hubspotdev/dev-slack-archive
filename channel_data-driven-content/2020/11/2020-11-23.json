@@ -1,0 +1,93 @@
+[
+  {
+    "poster": {
+      "poster_name": "PJ Calkins",
+      "poster_handle": "pjcalkins"
+    },
+    "time_stamp": "2020-11-23 09:19:22",
+    "text": "Can HubDB be pulled into a custom Module? We are trying to map out a development plan but are uncertain of what the best way is.\nWe want to have a module that is a logo with a link slider that can be placed on any page, old and new, but we want an easy user friendly way/place for our client to update/change logos once and have it update everywhere that module is placed. Any direction would be greatly appreciated. Thank you.",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-11-23 11:02:34"
+      },
+      {
+        "time_stamp": "2021-02-16 02:01:08"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2020-11-23 11:02:34",
+    "text": "You could always create a global module and make use of the <https://developers.HubSpot.com/docs/cms/hubl/tags#gallery|gallery HubL tag> inside of the module. Then you can create a <https://developers.HubSpot.com/docs/cms/building-blocks/module-theme-fields-overview#field-groups|group> in the module that is <https://developers.HubSpot.com/docs/cms/building-blocks/module-theme-fields-overview#repeaters|repeating> and include the following fields for each instance based on what is in the tag content:\n```&lt;-- Block syntax --&gt;\n{% widget_block gallery \"Gallery\" display_mode='standard' sizing='static', transition='slide', caption_position='below', auto_advance=True, overrideable=True, description_text='', show_pagination=True, label='Gallery', loop_slides=True, num_seconds=5  %}\n    {% widget_attribute \"slides\" is_json=True %}\n        [{\n            \"caption\": \"CRM Contacts App\", \n            \"show_caption\": true, \n            \"link_url\": \"<http://www.HubSpot.com/crm>\", \n            \"alt_text\": \"Screenshot of CRM Contacts\", \n            \"img_src\": \"<http://go.HubSpot.com/hubfs/Contacts-View-1.png?t=1430860504240>\", \n            \"open_in_new_tab\": true\n        }, \n        {\n            \"caption\": \"HubSpot CRM Contact Profile\", \n            \"show_caption\": true, \n            \"link_url\": \"<http://www.HubSpot.com/>\", \n            \"alt_text\": \"HubSpot CRM Contact Profile\", \n            \"img_src\": \"<http://cdn2.HubSpot.net/hubfs/53/Contact-Profile.png?t=1430860504240>\", \n            \"open_in_new_tab\": true\n        }]\n    {% end_widget_attribute %}\n{% end_widget_block %}```\nIdeally creating fields for these:\n• “caption” (text field)\n• “show_caption” (boolean)\n• “link_url”: (link)\n• “alt_text”: (text)\n• “img_src”: (image)\n• “open_in_new_tab” (boolean)"
+  },
+  {
+    "text": "Hi there - I'm going a bit crazy trying to work out why I'm unable to build arrays from a table. I'm using the following:\n\n```{% set arrayMonth = [] %}\n{% set arrayCreated = [] %}\n{% set arrayCompleted = [] %}\n\n{% for row in hubdb_table_rows(xxxxxx) %}\n      {% if row.id == 1000 %}\n{% do arrayMonth.append( row.month ) %}\n{% do arrayCreated.append( row.tenancies_created_company ) %}\n{% do arrayCompleted.append( row.tenancies_completed_company ) %}\n      {% endif %}\n{% endfor %}\n\n{{ arrayMonth }}\n{{ arrayCreated }}\n{{ arrayCompleted }}```\nas per screenshot there are three records in the database with the id value 1000 - but I'm only being returned the a single value for each 'array' (the first value) - `[2020-08] [8] [14]`",
+    "time_stamp": "2020-11-23 14:55:24",
+    "reply_count": 5,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2020-12-04 01:25:40"
+      },
+      {
+        "time_stamp": "2020-12-04 01:25:58"
+      },
+      {
+        "time_stamp": "2020-12-04 01:27:16"
+      },
+      {
+        "time_stamp": "2020-12-04 01:28:10"
+      },
+      {
+        "time_stamp": "2020-12-04 01:29:34"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Mitchell",
+      "poster_handle": "tom.mitchell"
+    },
+    "time_stamp": "2020-11-23 14:55:54",
+    "text": "Any clues as to what I'm doing wrong would be hugely appreciated"
+  },
+  {
+    "poster": {
+      "poster_name": "Ilich Padilla",
+      "poster_handle": "ilich.padilla"
+    },
+    "time_stamp": "2020-11-23 16:00:54",
+    "text": "Starting that you have two columns named ID",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-11-23 16:11:53"
+      },
+      {
+        "time_stamp": "2020-11-23 16:26:47"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Mitchell",
+      "poster_handle": "tom.mitchell"
+    },
+    "time_stamp": "2020-11-23 16:11:53",
+    "text": "Yes not good practice but they have different id names. I've now worked out that the issue was that I needed to add 'limit=9999' to the 'for row' in order to get all of the database in one hit."
+  },
+  {
+    "poster": {
+      "poster_name": "Ilich Padilla",
+      "poster_handle": "ilich.padilla"
+    },
+    "time_stamp": "2020-11-23 16:26:47",
+    "text": "Great :+1: "
+  }
+]

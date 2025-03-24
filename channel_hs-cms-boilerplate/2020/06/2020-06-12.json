@@ -1,0 +1,108 @@
+[
+  {
+    "poster": {
+      "poster_name": "Mike Griffith",
+      "poster_handle": "mike.griffith"
+    },
+    "time_stamp": "2020-06-12 10:39:32",
+    "edited": {
+      "time_stamp": "2020-06-12 11:03:00"
+    },
+    "text": "Is there any guidance for how the `HubSpot/cms-theme-boilerplate` can be used alongside `HubSpot/cms-react-boilerplat`:reactjs:?  I'm trying to optimize our development structure going forward, and just looking for general guidance for how to structure things.  We want both HubL templates as well as some more dynamic modules (using either React or Vue).  Do you just keep them entirely separate, or have you found a way to integrate more dynamic modules inside the theme boilerplate project?",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-06-12 14:13:23"
+      },
+      {
+        "time_stamp": "2020-06-12 14:16:18"
+      },
+      {
+        "time_stamp": "2020-06-12 14:22:33"
+      },
+      {
+        "time_stamp": "2020-06-12 14:46:25"
+      },
+      {
+        "time_stamp": "2020-06-12 14:47:00"
+      },
+      {
+        "time_stamp": "2020-06-12 15:07:03"
+      },
+      {
+        "time_stamp": "2020-06-12 15:16:06"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin Leonard",
+      "poster_handle": "kleonard"
+    },
+    "time_stamp": "2020-06-12 14:13:23",
+    "text": "We’ve thought about those boilerplates as separate examples, so we don’t have any resource on that (yet!) but while setting up the React boilerplate I was seeing the opportunity to have an example of a theme with build step that allows for more dynamic stuff in it"
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin Leonard",
+      "poster_handle": "kleonard"
+    },
+    "time_stamp": "2020-06-12 14:16:18",
+    "text": "As far as how to structure things, internally we’ve leaned into webpack to copy over files that don’t require a build step, so we end up with a `src`  and `dist` , and some whole directories just got copied over in the build process. So IMO it works well in a single project"
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Rosa",
+      "poster_handle": "jasonrosa"
+    },
+    "time_stamp": "2020-06-12 14:17:23",
+    "edited": {
+      "time_stamp": "2020-06-12 14:18:37"
+    },
+    "text": "Hey everyone :wave: we just pushed out a patch release to boilerplate here (<https://github.com/HubSpot/cms-theme-boilerplate/releases/tag/v1.2.4>) to resolve a couple of bugs and add version control getting started steps to the readme and Wiki (thank you to <@UVCQGSL2C> and <@U7W3EP1A6> for the contributions!). We have also started a project board (<https://github.com/HubSpot/cms-theme-boilerplate/projects/2>) for version 1.3 of boilerplate which is focused on fixing any outstanding bugs and improving the out of the box site performance of boilerplate/the boilerplate demo website. Please let me know if you have any ideas, questions or concerns about that. Have a great weekend everyone!"
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin Leonard",
+      "poster_handle": "kleonard"
+    },
+    "time_stamp": "2020-06-12 14:22:33",
+    "text": "so similar to what we’re doing with images here, I’d opt to have a config for `src/templates` , `fields / meta.json`  etc to copy over the stuff that doesn’t get modified in the build <https://github.com/HubSpot/cms-react-boilerplate/blob/master/webpack.config.js#L65>"
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin Leonard",
+      "poster_handle": "kleonard"
+    },
+    "time_stamp": "2020-06-12 14:46:25",
+    "edited": {
+      "time_stamp": "2020-06-12 14:47:22"
+    },
+    "text": "As a tangential example, not React, but many of the modules’ js on <http://developers.HubSpot.com|developers.HubSpot.com> are transpiled. The whole project is set up as a theme that gets built with webpack and each module js file has its own entry point, i.e.\n```  entry: {\n    main: ['./src/js/main.js'],\n    'index__moduleA.js': ['./src/js/index__moduleA.js'],\n  },\n  output: {\n    filename: 'js/[name].js',\n  },```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin Leonard",
+      "poster_handle": "kleonard"
+    },
+    "time_stamp": "2020-06-12 14:47:00",
+    "text": "and the copy plugin would looks something like this,\n```    new CopyWebpackPlugin([\n      { from: 'src/fields.json', to: 'fields.json' },\n      { from: 'src/images', to: 'images' },\n      { from: 'src/macros', to: 'macros' },\n      { from: 'src/modules', to: 'modules' },\n      { from: 'src/templates', to: 'templates' },\n      { from: 'src/theme.json', to: 'theme.json' },\n    ])  ```"
+  },
+  {
+    "poster": {
+      "poster_name": "Mike Griffith",
+      "poster_handle": "mike.griffith"
+    },
+    "time_stamp": "2020-06-12 15:07:03",
+    "text": "Oh I think that makes sense.  So I could have multiple sub-modules but 1 top-level webpack step, as opposed to a webpack config per module"
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin Leonard",
+      "poster_handle": "kleonard"
+    },
+    "time_stamp": "2020-06-12 15:16:06",
+    "text": "Yup! That’d be what what I’d go for"
+  }
+]

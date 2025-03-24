@@ -1,0 +1,122 @@
+[
+  {
+    "poster": {
+      "poster_name": "Juan Camilo Romero",
+      "poster_handle": "juancamiloromero"
+    },
+    "time_stamp": "2023-05-23 06:52:14",
+    "text": "<@U04UF7BNBK4> by any chance you know how to create a custom object in this schema?"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Pokorniecki",
+      "poster_handle": "byron.pokorniecki.ext"
+    },
+    "time_stamp": "2023-05-23 06:54:29",
+    "text": "*POST /crm/v3/objects/2-14963659/*\n\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Juan Camilo Romero",
+      "poster_handle": "juancamiloromero"
+    },
+    "time_stamp": "2023-05-23 07:01:53",
+    "text": "so i need to create two POST routes?"
+  },
+  {
+    "poster": {
+      "poster_name": "Juan Camilo Romero",
+      "poster_handle": "juancamiloromero"
+    },
+    "time_stamp": "2023-05-23 07:02:36",
+    "text": "Im supposed to have this <http://app.post|app.post> route that can create or update"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Pokorniecki",
+      "poster_handle": "byron.pokorniecki.ext"
+    },
+    "time_stamp": "2023-05-23 07:08:12",
+    "text": "If you want to update an object you need the id and use a patch request. If you want to create a new custom object entry, you have to use the post request.\n\nThe route of your application depends a bit on the logic that your own API should follow.\n\nBut lets imagine you just have one endpoint in your app that takes all the relevant information to update or create an entry. Your first step has to be to find it the object already exists. If it exists you get back the objectId and can use the PATCH call to update it.\nIf it does not exist, then you use the POST endpoint without the objectId and create a new one."
+  },
+  {
+    "poster": {
+      "poster_name": "Juan Camilo Romero",
+      "poster_handle": "juancamiloromero"
+    },
+    "time_stamp": "2023-05-23 07:11:41",
+    "text": "wow, never done that before, im a beginner. Don't really know what you are meaning, How could i verify if it exists or not to create a new one or updated if it exists with this route?"
+  },
+  {
+    "poster": {
+      "poster_name": "Juan Camilo Romero",
+      "poster_handle": "juancamiloromero"
+    },
+    "time_stamp": "2023-05-23 07:11:57",
+    "text": "Again, thank for you time and patience!"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Pokorniecki",
+      "poster_handle": "byron.pokorniecki.ext"
+    },
+    "time_stamp": "2023-05-23 08:48:25",
+    "text": "Hey, no worries.\nWhat I meant by checking if it exists is making a request to the HubSpot API to try and fetch the object with the name that you receive in your request.\n\nSo you could do something like:\n```const name = req.body.name;\nconst customObjectSearchURL = \"<https://api.HubSpot.com/crm/v3/objects/2-14963659/search>\";\nconst updateCustomObjectURL = \"<https://api.HubSpot.com/crm/v3/objects/2-14963659/>\";\nconst createCustomObjectURL = \"<https://api.HubSpot.com/crm/v3/objects/2-14963659>\";\n\nconst searchPayload = {\n  \"filterGroups\": [\n    {\n      \"filters\": [\n        {\n          \"value\": name,\n          \"propertyName\": \"string\",\n          \"operator\": \"EQ\"\n        }\n      ]\n    }\n  ]\n};\n\nconst customObjectPayload = {\n  \"properties\": {\n    \"name\": name,\n    \"price\": req.body.price,\n    \"description\": req.body.description\n  }\n};\n\ntry {\n  const response = await <http://axios.post|axios.post>(customObjectSearchURL, searchPayload);\n  const data = await response.json();\n  if (data.total != 0) {\n    // we have results, so there is an object and we want to update it with its id\n    const objectId = data.results[0].id;\n    await <http://axios.post|axios.post>(updateCustomObjectURL + objectId, customObjectPayload);\n  } else {\n    // we found no results and have to create a new object\n    await <http://axios.post|axios.post>(createCustomObjectURL, customObjectPayload);\n  }\n  res.json({\"message\": \"Worked!\"}); // adjusted this to return something postman can work with\n} catch(error) {\n  console.log(error);\n  res.json(error); // adjusted this for postman\n}\n\n  ```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Juan Camilo Romero",
+      "poster_handle": "juancamiloromero"
+    },
+    "time_stamp": "2023-05-23 08:58:30",
+    "text": "OHH thanks for your time! This is great an d new stuff! I dont see anymore the patch method, is that still ok to make the updates?"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Pokorniecki",
+      "poster_handle": "byron.pokorniecki.ext"
+    },
+    "time_stamp": "2023-05-23 09:02:51",
+    "text": "you are right - and oversight on my part.\n```await <http://axios.post|axios.post>(updateCustomObjectURL + objectId, customObjectPayload);\n\n// should be\nawait axios.patch(updateCustomObjectURL + objectId, customObjectPayload);```"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Pokorniecki",
+      "poster_handle": "byron.pokorniecki.ext"
+    },
+    "time_stamp": "2023-05-23 09:05:07",
+    "text": "There might be other minor mistakes, but this was just meant to give you one example how you could do it without going too deep."
+  },
+  {
+    "poster": {
+      "poster_name": "Juan Camilo Romero",
+      "poster_handle": "juancamiloromero"
+    },
+    "time_stamp": "2023-05-23 09:09:58",
+    "text": "Thanks! Ill have a lot to digest right now cause adpating it to my code so it works is gonna be challenging!"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Pokorniecki",
+      "poster_handle": "byron.pokorniecki.ext"
+    },
+    "time_stamp": "2023-05-23 09:14:22",
+    "text": ":pray: Good luck! Always feels good when it works in the end - but getting there is the most exciting :D"
+  },
+  {
+    "poster": {
+      "poster_name": "Juan Camilo Romero",
+      "poster_handle": "juancamiloromero"
+    },
+    "time_stamp": "2023-05-23 09:18:20",
+    "text": "Sure it is! Amazing help! :+1:"
+  },
+  {
+    "poster": {
+      "poster_name": "Juan Camilo Romero",
+      "poster_handle": "juancamiloromero"
+    },
+    "time_stamp": "2023-05-23 12:18:59",
+    "text": "<@U04UF7BNBK4> i made it!\nThis is how it ended up working thanks to your help!\n<http://app.post|app.post>('/update-cobj', async (req, res) =&gt; {\n  const customObject = {\n    properties: {\n      name: req.body.name,\n      description: req.body.description,\n      price: req.body.price,\n    }\n  };\n\n  const createOrUpdateCustomObjectUrl = '<https://api.HubSpot.com/crm/v3/objects/2-14963659>';\n  const headers = {\n    Authorization: `Bearer ${PRIVATE_APP_ACCESS}`,\n    'Content-Type': 'application/json'\n  };\n\n  try {\n    const checkRecordExistsUrl = `${createOrUpdateCustomObjectUrl}/search`;\n    const searchPayload = {\n      filterGroups: [\n        {\n          filters: [\n            {\n              propertyName: 'name',\n              operator: 'EQ',\n              value: req.body.name\n            }\n          ]\n        }\n      ]\n    };\n    const checkRecordExistsResponse = await <http://axios.post|axios.post>(checkRecordExistsUrl, searchPayload, { headers });\n\n    if (checkRecordExistsResponse.data.total === 0) {\n      // Custom object record doesn't exist, create a new one\n      const createCustomObjectResponse = await <http://axios.post|axios.post>(createOrUpdateCustomObjectUrl, customObject, { headers });\n      console.log(\"New custom object record created:\", createCustomObjectResponse.data);\n    } else {\n      // Custom object record already exists, update it\n      const recordId = checkRecordExistsResponse.data.results[0].id;\n      const updateCustomObjectUrl = `${createOrUpdateCustomObjectUrl}/${recordId}`;\n      await axios.patch(updateCustomObjectUrl, customObject, { headers });\n      console.log(\"Custom object record updated:\", recordId);\n    }\n\n    res.redirect('/');\n  } catch (error) {\n    console.error(error);\n    res.redirect('/');\n  }\n});"
+  }
+]

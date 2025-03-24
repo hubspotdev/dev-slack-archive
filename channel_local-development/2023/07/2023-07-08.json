@@ -1,0 +1,18 @@
+[
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2023-07-08 06:52:28",
+    "text": "figured it out, it was indeed the `{{` and the `}}` that didn't get through validation, so the easiest way to solve this is by wrapping the bundled file in `{% raw %}` and `{% endraw %}` tags to escape the double curly brackets"
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2023-07-08 06:54:43",
+    "text": "to wrap the bundled file in webpack I used the BannerPlugin, <https://webpack.js.org/plugins/banner-plugin/|this here is a link to docs>.\n\nThis ends up looking like the below:\n\n```const webpack = require('webpack');\n\nmodule.exports = {\n  // Your existing webpack configuration...\n  plugins: [\n    // Other plugins...\n    new webpack.BannerPlugin({\n      banner: '/* {% raw %} */',\n      raw: true,\n      entryOnly: true,\n      test: /main\\.js$/, // Replace 'main' with the actual name of your main bundle file\n    }),\n    new webpack.BannerPlugin({\n      banner: '/* {% endraw %} */',\n      raw: true,\n      entryOnly: true,\n      test: /main\\.js$/, // Replace 'main' with the actual name of your main bundle file\n    }),\n  ],\n};```"
+  }
+]

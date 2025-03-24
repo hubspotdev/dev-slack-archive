@@ -1,0 +1,149 @@
+[
+  {
+    "poster": {
+      "poster_name": "Gijs Jager (Workit)",
+      "poster_handle": "gijs.jager"
+    },
+    "time_stamp": "2025-02-24 01:25:51",
+    "text": "Hi, can someone tell me what the best practice is to search for objects and retrieve their associations?\n\nI am doing:\n`POST {{domain}}/crm/v3/objects/{{customObjectId}}/search`\n\nWith a payload:\n```{\n    \"properties\": [\n        \"active\",\n        \"start_date\",\n        \"end_date\",\n        \"project_number\"\n    ],\n    \"filterGroups\": [\n      ....\n    ]\n}```\nBut I want to retreive the contact ID's connected to this custom object in my search result?\nHow can I do this?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2025-02-24 02:55:37"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Tal Rei",
+      "poster_handle": "tal.r"
+    },
+    "time_stamp": "2025-02-24 02:50:02",
+    "text": "Hi :pray:\n\nI'm looking for a way to use the API to transfer associations made in HubSpot to Salesforce.\nfrom what I understand, the native integration does not allow associations to pass from HubSpot to Salesforce, only the other way around, so I need to find a solution for this.\nI want to transfer the association of a custom object (Business Campaign) to a Deal, Contact, and Company in Salesforce. The custom object exists in both HubSpot and Salesforce, and both are synchronized.\nIs there anyone who can guide me (at least at the beginning of the process) so I know how to proceed? I feel completely lost.\n\nThank you in advance! :blush:",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2025-02-24 08:41:21"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Gijs Jager (Workit)",
+      "poster_handle": "gijs.jager"
+    },
+    "time_stamp": "2025-02-24 02:55:37",
+    "text": "I ended up using the GraphQL endpoint. That was the fix!"
+  },
+  {
+    "poster": {
+      "poster_name": "Oliver Morgan",
+      "poster_handle": "oliver069"
+    },
+    "time_stamp": "2025-02-24 08:38:27",
+    "edited": {
+      "time_stamp": "2025-02-24 08:39:08"
+    },
+    "text": "Hi all,\n\nDoes anyone know what events contribute to a web analytics sessions? <https://knowledge.HubSpot.com/reports/why-do-HubSpot-and-google-analytics-not-match?_gl=1*iyfm2b*_ga*MTcwMjAxMzQ0Ny4xNzM5NTQ0NzQx*_ga_LXTM6CQ0XK*MTc0MDE0MTEyOS4xMy4wLjE3NDAxNDExMjkuNjAuMC4w#:~:text=In%20HubSpot%2C,of%20a%20session.|This documentation> mentions this:\n```In HubSpot, sessions encompass a series of analytics activities taken by a visitor to your website. Activities can include page views, CTA clicks, events, and more. A session expires after 30 minutes of inactivity. New sessions begin when a visitor returns to your site after 30 minutes of inactivity or with a new session campaign (e.g., the visitor returns to your site from a different traffic source). You can find sessions data in both your sources report and web analytics dashboard. Sessions are restarted at midnight in the account's timezone. If a user initiates a session at 23.59 and then returns at 00:01 by viewing a page, the previous session ended at midnight, and there has been no visit since then, so this isn't counted as being part of a session.```\nI know that page visit (e_visited_page) event would count but not sure what others could be included. Thank you :blush:",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2025-02-24 08:44:28"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ahmed Hassan",
+      "poster_handle": "ahmed703"
+    },
+    "time_stamp": "2025-02-24 08:41:21",
+    "edited": {
+      "time_stamp": "2025-02-24 08:46:20"
+    },
+    "text": "Hey Tal!\n\n1. HS uses an Associations API to link different objects with custom objects. You'll need to retrieve these associations from HS first and you will receive an array of associated object IDs. \n2. Then since your Business Campaign custom object is already synced between both HS and Salesforce you need to get the corresponding Salesforce IDs for each HS object and make sure that each HS object correctly maps to its Salesforce counterpart. \n3. Find the corresponding Salesforce records by querying Salesforce for matching objects using their HS IDs then use the REST API or SOQL to retrieve records.\n4. Use Salesforce’s API to update the Business Campaign record with the correct lookup fields for objects. \nSince this is a recurring process I strongly recommend setting up an automation tool to take care of this.\n\nAlso try to super test the mapping to ensure avoiding errors, also not sure how often this will happen but ensure handling the rate limits since both systems have it."
+  },
+  {
+    "poster": {
+      "poster_name": "Ahmed Hassan",
+      "poster_handle": "ahmed703"
+    },
+    "time_stamp": "2025-02-24 08:44:28",
+    "text": "Hey Oliver,\n\n1. Page Views \n2. CTA Clicks \n3. Form Submissions \n4. Live Chat &amp; Chatbot Interactions\n5. Video Views (if integrated) \n6. Custom Tracking Events (if set up) \nKeep in mind that if there is no interaction for 30 minutes then the session ends unless the user returns after 30 minutes then a new session starts. Plus, by default if I am not mistaken the sessions are reset at midnight UTC :slightly_smiling_face:"
+  },
+  {
+    "time_stamp": "2025-02-24 10:00:24",
+    "text": "Reminder: *Want to be the first to know when a new API is available or an existing API has a new version?*  We publish all of that on our <https://developers.HubSpot.com/changelog|Developer Changelog>.  While we do our best to avoid <https://developers.HubSpot.com/docs/breaking-change-definition|breaking changes> to our APIs, sometimes for security, and reliability we have to. The Changelog is where we’ll post announcements ahead of time about it. <https://developers.HubSpot.com/changelog|Subscribe to the Developer Changelog> to stay up-to-date on what’s happening in the world of HubSpot development."
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Lerner",
+      "poster_handle": "ben198"
+    },
+    "time_stamp": "2025-02-24 11:43:29",
+    "edited": {
+      "time_stamp": "2025-02-24 11:43:40"
+    },
+    "text": "Question - Im not seeing it but I have heard it was possible to view / export / create reports and dashboards via API.  Am I dreaming or is it possible?  :pray:",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2025-02-24 17:36:44"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Stefan Loncar",
+      "poster_handle": "stefan801"
+    },
+    "time_stamp": "2025-02-24 12:10:37",
+    "text": "How do we create a contact with multiple email addresses but add them as additional email addresses in the email property rather than in a custom property?",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2025-02-24 17:30:37"
+      },
+      {
+        "time_stamp": "2025-02-24 17:30:47"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Stefan Marogel",
+      "poster_handle": "stefan.marogel"
+    },
+    "time_stamp": "2025-02-24 17:20:58",
+    "text": "Hello! I am trying to develop an app that has timeline events - so far things went well until adding tokens via the API - I have added a date field for a token from the interface and there is no info as to how to treat dates here - <https://developers.HubSpot.com/docs/guides/api/crm/extensions/timeline#understand-> -\n\n I initially did not know I was supposed to have a miliseconds timestamp - I fixed this, but then I get a number instead of a date in the timeline event - so I tried using the {{#formatDate}} macro - but this basically doesn't work - initially it crashed the preview of the details \"Something went wrong when loading details for this activity\"\n\nSo right now I cannot add any events of this type and I've reverted to the version that worked - (the API says it's OK, but the timeline event is not added and I don't know where to look for the data that is added or how to debug).\n\nDo you have any ideas? Thank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2025-02-24 17:30:37",
+    "text": "• To add secondary emails to a contact, when creating or editing the contact, in your request body, include emails in the `hs_additional_emails` field. Multiple emails can be separated by a semi-colon.\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2025-02-24 17:30:47",
+    "text": "<https://developers.HubSpot.com/docs/guides/api/crm/objects/contacts#secondary-emails>"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2025-02-24 17:36:44",
+    "text": "<https://developers.HubSpot.com/docs/guides/api/analytics-and-events/reporting#using-the-analytics-data>"
+  }
+]

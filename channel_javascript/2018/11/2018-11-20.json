@@ -1,0 +1,333 @@
+[
+  null,
+  null,
+  null,
+  null,
+  null,
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-11-20 13:08:44",
+    "text": "So I have a few different D3 operations and some loops that I have to wait for before I run a function. Let me know if this idea is dumb:\n\nThe plan is to have a variable that gets ++1 every time one of these operations finishes. At the end of each function after it adds 1 to the variable there is an if statement to check if the number is high enough, and if it is my function fires."
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2018-11-20 13:12:38",
+    "text": "I _think_ that would work, but I'm not sure it would be the most efficient. Something tells me that the function should fire regardless, and you put the if-logic as a condition within the function itself (else return false) but I'm not 100% that's \"right\" either."
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-11-20 13:13:16",
+    "text": "Yeah it sucks because I have to manually set the goal number"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-11-20 13:13:43",
+    "text": "I guess I could nest all the operations maybe"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2018-11-20 13:18:12",
+    "text": "probably a question better asked of StackOverflow or another more JS-oriented community. I know a lot of frameworks and Node stuff, but in terms of what's 'expensive' and programatic theory and that kind of thing (I feel like I should be saying the word \"recursion\" for some reason) you're probably going to want to look elsewhere. Would love to know what you find out though,  especially as it pertains to D3. I've been keeping my eye on it, but haven't had a use case to mess around with it yet"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2018-11-20 13:23:35",
+    "text": "only other thing I can think of would be using Vue as a state manager and hooking into a state change"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-11-20 13:30:34",
+    "text": "Okay so I figured it out (I think)"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-11-20 13:31:19",
+    "text": "With D3 I’m using a function that converts CSVs to JSON, then I’m extracting data into arrays and variables"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-11-20 13:35:27",
+    "text": "So initially I was doing something like:\n```\nd3.csv(\"path/to/thefirst.csv\",function(data1){\n    var data1Processed = data1.filter(function(d){\n        return d.whateverProperty == whateverVariable;\n    });\n});\nd3.csv(\"path/to/thesecond.csv\",function(data2){\n    var data2Processed = data1.filter(function(d){\n        return d.whateverProperty == whateverVariable;\n    });\n});\nd3.csv(\"path/to/thethird.csv\",function(data3){\n    var data3Processed = data1.filter(function(d){\n        return d.whateverProperty == whateverVariable;\n    });\n});\n\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-11-20 13:35:36",
+    "text": "And this is what worked:"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-11-20 13:37:00",
+    "text": "```\nd3.csv(\"path/to/thefirst.csv\",function(data1){\n    var data1Processed = data1.filter(function(d){\n        return d.whateverProperty == whateverVariable;\n    });\n    d3.csv(\"path/to/thesecond.csv\",function(data2){\n        var data2Processed = data1.filter(function(d){\n            return d.whateverProperty == whateverVariable;\n        });\n        d3.csv(\"path/to/thethird.csv\",function(data3){\n            var data3Processed = data1.filter(function(d){\n                return d.whateverProperty == whateverVariable;\n            });\n            dataDependentFunction();\n        });\n    });\n});\n\n\n\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-11-20 13:37:42",
+    "text": "So by nesting everything it seems to have somehow waited for the parent to finish before tackling the child."
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-11-20 13:38:36",
+    "text": "<@U26BLKGE4>"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2018-11-20 13:40:15",
+    "text": "Thanks man, that's interesting. I guess it makes sense, as functions don't necessarily wait for one to finish before starting the next, so having the steps all be part of one function would be logically sound. Definitely a lot easier than trying to hack together those incrementing variables"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-11-20 13:46:41",
+    "text": "I think D3 treats that second-argument function as a callback. It still looks a little messy to me because the functions aren’t dependent on their parent but if it runs well I guess I don’t care."
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-11-20 14:04:22",
+    "text": "I think another way I could do this is to offload all of those other data processing functions into the `dataDependentFunction` at the end"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-11-20 14:04:45",
+    "text": "and just pass all of the variables through"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2018-11-20 14:07:57",
+    "text": "have to considered using `$.when().then()`"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-11-20 14:09:55",
+    "text": "I was considering it but I didn’t know if I wanted to bring jQuery to the party"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-11-20 14:10:15",
+    "text": "That may save me some headaches though!"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2018-11-20 14:12:17",
+    "text": "yes it does."
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2018-11-20 14:12:37",
+    "text": "I ran 7 ajax request at once through this before and it ran super buttery smoothe"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2018-11-20 14:13:25",
+    "text": "if it a HubSpot thing then jQuery is already there."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-11-20 14:18:26",
+    "text": "yea - the fact HS loads jQuery is like enabling an alcoholic to use alcohol lol. I want to lean more vanilla js, but “it’s already loaded so… why not use it?”"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-11-20 14:18:44",
+    "text": "VANILLA HAS ALCOHOL IN IT"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-11-20 14:19:54",
+    "text": "I always feel bad if I’ve written some enormous thing and somehow didn’t use jQuery and then I use it for like… one jQuery method"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-11-20 14:20:51",
+    "text": "yea it definitely feels wrong."
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2018-11-20 15:23:34",
+    "text": "i dont know about you guys but I use jQuery just for speed. There are a few instances where I divert from jquery for an app or specific use case but it does get things going quick and 90% of my sites dont call for anything else."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-11-20 15:25:42",
+    "edited": {
+      "time_stamp": "2018-11-20 15:25:48"
+    },
+    "text": "I use jQuery when I’m building something simple, when I have to care about old browsers and when vuejs feels overkill"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2018-11-20 15:26:10",
+    "text": ":thumbsup_all:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-11-20 15:30:14",
+    "text": "I want to get better at my vanilla js skills though because really most things I’m doing when I use jquery, there are now easy ways to do them without needing jquery now",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2018-11-21 07:30:50"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2018-11-20 15:36:41",
+    "text": "oh yeas.. arrow functions :heart:"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-11-20 16:31:24",
+    "text": "I want to use arrow functions so bad…"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-11-20 16:31:26",
+    "text": "but alas"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-11-20 16:31:28",
+    "text": "IE11",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2018-11-20 18:06:36"
+      },
+      {
+        "time_stamp": "2018-11-20 21:16:06"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Lewis Robinson",
+      "poster_handle": "lewisvrobinson"
+    },
+    "time_stamp": "2018-11-20 16:33:06",
+    "text": "just use babel?"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2018-11-20 18:06:36",
+    "text": "I thought we decided to redirect to chrome download "
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-11-20 21:16:06",
+    "text": "Yeah that didn’t go over well…"
+  },
+  null
+]

@@ -1,0 +1,103 @@
+[
+  {
+    "poster": {
+      "poster_name": "Amrou Bellalouna",
+      "poster_handle": "amrbellalouna"
+    },
+    "time_stamp": "2021-08-14 04:38:11",
+    "text": "<@UFBNA9K9A> <@U012W4YEUTX> Can you guys help out with this please ?\n<@UP51JBCD9> Could be of help too"
+  },
+  {
+    "poster": {
+      "poster_name": "Craig Schmieder",
+      "poster_handle": "craig431"
+    },
+    "time_stamp": "2021-08-14 11:30:58",
+    "edited": {
+      "time_stamp": "2021-08-14 11:31:52"
+    },
+    "text": "I'm having difficulty with the concept of going through the OAuth flow for webhooks. I have set up an app and an associated webhook under a development account. The test is working, in that I receive the test object at my secure endpoint. I have set up an Oauth flow for the app. I can \"seemingly\" approve the app through OAuth so that my HubSpot Enterprise account can use it. But no webhooks get issued (Deal creation in this case). I assume perhaps it has something to do with the refresh tokens?  It's not obvious who or what process would be responsible for issuing them or how they would be submitted in the instance of a webhook which is essentially a push notification. I see no detailed documentation for this process.",
+    "reply_count": 3,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2021-08-16 04:05:06"
+      },
+      {
+        "time_stamp": "2021-08-19 14:44:57"
+      },
+      {
+        "time_stamp": "2021-08-19 17:03:18"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Raphael Villas",
+      "poster_handle": "raphael.villas"
+    },
+    "time_stamp": "2021-08-14 13:33:50",
+    "text": ":wave: everyone. I’m using the HubSpot-api-ruby gem to do a POST contact to the v3 api. I’d like to get a basic post working using the example on <https://developers.HubSpot.com/docs/api/crm/contacts>. I have imitated the example in the docs, hard-coding the properties. The response is coming back a 200 but the record created has empty values across the board. Any ideas?",
+    "reply_count": 7,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2021-08-14 13:36:07"
+      },
+      {
+        "time_stamp": "2021-08-14 13:41:14"
+      },
+      {
+        "time_stamp": "2021-08-14 13:43:44"
+      },
+      {
+        "time_stamp": "2021-08-14 13:44:58"
+      },
+      {
+        "time_stamp": "2021-08-14 21:49:41"
+      },
+      {
+        "time_stamp": "2021-08-15 18:07:45"
+      },
+      {
+        "time_stamp": "2021-08-15 18:08:13"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Raphael Villas",
+      "poster_handle": "raphael.villas"
+    },
+    "time_stamp": "2021-08-14 13:36:07",
+    "text": "Here’s the code I’m triggering…\n```properties = {\n  \"company\": \"Spacely Sprockets\",\n  \"email\": \"<mailto:george@spacelysprockets.net|george@spacelysprockets.net>\",\n  \"firstname\": \"George\",\n  \"lastname\": \"Jetson\",\n  \"phone\": \"<tel:(555)555-5555|(555) 555-5555>\",\n  \"website\": \"<http://spacelysprockets.net|spacelysprockets.net>\"\n}\nsimple_public_object_input = HubSpot::Crm::Contacts::SimplePublicObjectInput.new(properties: properties)\nbegin\n  api_response = HubSpot::Crm::Contacts::BasicApi.new.create(simple_public_object_input: simple_public_object_input, auth_names: \"hapikey\")\n  puts api_response\nrescue HubSpot::Crm::Contacts::ApiError =&gt; e\n  error_message = JSON.parse(e.response_body)['message']\n  puts error_message\nend```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Raphael Villas",
+      "poster_handle": "raphael.villas"
+    },
+    "time_stamp": "2021-08-14 13:41:14",
+    "text": "Here’s what I get from the console…\nprops = {email:‘<mailto:george@spacelysprockets.com|george@spacelysprockets.com>’}\n=&gt; {:email=&gt;“<mailto:george@spacelysprockets.com|george@spacelysprockets.com>”}\n[5] pry(main)&gt; ContactCreator.call props\nETHON: performed EASY effective_url=<https://api.hubapi.com/crm/v3/objects/contacts?hapikey=9mykeyblahblah0> response_code=201 return_code=ok total_time=0.390547\n{:id=&gt;“901\", :properties=&gt;{“createdate”=&gt;“2021-08-14T19:39:59.573Z”, “hs_is_unworked”=&gt;“true”, “hs_marketable_status”=&gt;“false”, “hs_marketable_until_renewal”=&gt;“false”, “hs_object_id”=&gt;“901\", “lastmodifieddate”=&gt;“2021-08-14T19:39:59.573Z”}, :createdAt=&gt;Sat, 14 Aug 2021 19:39:59 +0000, :updatedAt=&gt;Sat, 14 Aug 2021 19:39:59 +0000, :archived=&gt;false}"
+  },
+  {
+    "text": "The entry looks like this",
+    "time_stamp": "2021-08-14 13:43:44"
+  },
+  {
+    "poster": {
+      "poster_name": "Raphael Villas",
+      "poster_handle": "raphael.villas"
+    },
+    "time_stamp": "2021-08-14 13:44:58",
+    "text": "Something to keep in mind... This call to the service object doesn’t pass the email prop to the HubSpot request. I’ve got the props defined as indicated above with all of the attributes."
+  },
+  {
+    "poster": {
+      "poster_name": "Raphael Villas",
+      "poster_handle": "raphael.villas"
+    },
+    "time_stamp": "2021-08-14 21:49:41",
+    "text": "Figured this out…. It turns out the call to `#create` doesn’t need the `simple_public_object_input` key. It’s called like this:\n```HubSpot::Crm::Contacts::BasicApi.new.create(simple_public_object_input, auth_names: \"hapikey\")```\nFor reference:\n<https://github.com/HubSpot/HubSpot-api-ruby/blob/22602f38b0cf360f5bea901deb907e7cca249c52/lib/HubSpot/codegen/crm/contacts/api/basic_api.rb#L93>"
+  }
+]

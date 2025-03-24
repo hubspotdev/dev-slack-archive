@@ -1,0 +1,179 @@
+[
+  {
+    "poster": {
+      "poster_name": "Simon Lafis",
+      "poster_handle": "simon"
+    },
+    "time_stamp": "2020-01-27 04:14:58",
+    "edited": {
+      "time_stamp": "2020-01-27 04:17:24"
+    },
+    "text": "Can someone help me with a PHP example for the v2 request signature?\nI have tried several times but it does not match the X-HubSpot-Signature.\n\n<https://developers.HubSpot.com/docs/faq/v2-request-validation>",
+    "reply_count": 12,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2020-01-27 04:30:23"
+      },
+      {
+        "time_stamp": "2020-01-27 05:14:56"
+      },
+      {
+        "time_stamp": "2020-01-27 05:16:23"
+      },
+      {
+        "time_stamp": "2020-01-27 05:18:30"
+      },
+      {
+        "time_stamp": "2020-01-27 05:27:31"
+      },
+      {
+        "time_stamp": "2020-01-27 05:36:07"
+      },
+      {
+        "time_stamp": "2020-01-27 05:39:06"
+      },
+      {
+        "time_stamp": "2020-01-27 05:40:18"
+      },
+      {
+        "time_stamp": "2020-01-27 05:41:17"
+      },
+      {
+        "time_stamp": "2020-01-27 05:52:41"
+      },
+      {
+        "time_stamp": "2020-01-27 06:03:24"
+      },
+      {
+        "time_stamp": "2020-01-27 07:15:41"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "David Duymelinck",
+      "poster_handle": "david.duymelinck"
+    },
+    "time_stamp": "2020-01-27 04:30:23",
+    "text": "``` $expected = hash('sha256', 'yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyyGET<https://www.example.com/webhook_uri>');\n\nif($expected === getallheaders( )['X-HubSpot-Signature']) {\n// do something\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Simon Lafis",
+      "poster_handle": "simon"
+    },
+    "time_stamp": "2020-01-27 05:14:56",
+    "text": "Thanks David! So far I understand. But what should <https://www.example.com/webhook_uri> be?"
+  },
+  {
+    "poster": {
+      "poster_name": "David Duymelinck",
+      "poster_handle": "david.duymelinck"
+    },
+    "time_stamp": "2020-01-27 05:16:23",
+    "text": "the url you added to the webhook url field in the form"
+  },
+  {
+    "poster": {
+      "poster_name": "Simon Lafis",
+      "poster_handle": "simon"
+    },
+    "time_stamp": "2020-01-27 05:18:30",
+    "text": "Already tried that, depending on which contact card you are inside the CRM extension it returns a different header. So I think there should be something else. Or why does the header differs between contact cards?"
+  },
+  {
+    "poster": {
+      "poster_name": "David Duymelinck",
+      "poster_handle": "david.duymelinck"
+    },
+    "time_stamp": "2020-01-27 05:27:31",
+    "text": "The header will change based on the form input. That is the second example. So you have to get the request body and json stingify it. `$post = 'yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyyPOST<https://www.example.com/webhook_uri'.json_encode($_POST)>;`"
+  },
+  {
+    "poster": {
+      "poster_name": "Simon Lafis",
+      "poster_handle": "simon"
+    },
+    "time_stamp": "2020-01-27 05:36:07",
+    "edited": {
+      "time_stamp": "2020-01-27 05:37:32"
+    },
+    "text": "But HubSpot send the CRM Extension hook with GET. Tested with <https://webhook.site/>"
+  },
+  {
+    "poster": {
+      "poster_name": "David Duymelinck",
+      "poster_handle": "david.duymelinck"
+    },
+    "time_stamp": "2020-01-27 05:39:06",
+    "text": "You know which X-HubSpot-Signature HubSpot sends, so I would play arround with the parts that you use to create the hash to get an identical output."
+  },
+  {
+    "poster": {
+      "poster_name": "Simon Lafis",
+      "poster_handle": "simon"
+    },
+    "time_stamp": "2020-01-27 05:40:18",
+    "text": "Yes, have done it but did not make it work and therefore thought if anyone else had succeeded."
+  },
+  {
+    "poster": {
+      "poster_name": "David Duymelinck",
+      "poster_handle": "david.duymelinck"
+    },
+    "time_stamp": "2020-01-27 05:41:17",
+    "text": "And you are using the correct version check?"
+  },
+  {
+    "poster": {
+      "poster_name": "Simon Lafis",
+      "poster_handle": "simon"
+    },
+    "time_stamp": "2020-01-27 05:52:41",
+    "text": "Yes, it v2"
+  },
+  {
+    "poster": {
+      "poster_name": "David Duymelinck",
+      "poster_handle": "david.duymelinck"
+    },
+    "time_stamp": "2020-01-27 06:03:24",
+    "text": "The only thing i can think of now is that the client secret is not the one of the app id in the workflow."
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2020-01-27 07:13:03",
+    "text": "I think the best solution (which isn’t a perfect answer to your question) would be to sue the new beta APIs here: <https://developers.HubSpot.com/docs-beta/crm/contacts> where you can include the `archived` param. It gets you ALL deleted contacts rather than just the most recent ones but you can page through to get the most recent ones"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2020-01-27 07:15:41",
+    "text": "One thing to check (sorry I don’t have a more specific answer for you) is the the order of your parameters. I’ve seen that cause errors before.  Makes ure whatever method you are using to encode the parameters preserve the error you specify."
+  },
+  {
+    "poster": {
+      "poster_name": "Rahmona Henry",
+      "poster_handle": "rhenry"
+    },
+    "time_stamp": "2020-01-27 21:07:08",
+    "edited": {
+      "time_stamp": "2020-01-28 06:46:51"
+    },
+    "text": "Hi <@UT4B78UET>,  Our documentation is still a work in progress. In the interim, this solution that we posted on the community will work in the short term. Thank you for your patience: <https://community.HubSpot.com/t5/APIs-Integrations/CRM-Imports-Endpoint/m-p/314350>"
+  },
+  {
+    "poster": {
+      "poster_name": "Itzcoatl Calva",
+      "poster_handle": "itzcoatl.calva"
+    },
+    "time_stamp": "2020-01-28 00:34:25",
+    "text": "Hi <@UFBNA9K9A> Thanks for your help, what about Companies? Is there a similar end point?\nDo you know if this beta kind of stable or expecting many changes?"
+  }
+]

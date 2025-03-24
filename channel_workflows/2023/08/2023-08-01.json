@@ -1,0 +1,154 @@
+[
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2023-08-01 04:43:54",
+    "text": "do the example coded automation workflows posted on github just not work? i think there is somethign wrong with the HubSpot client becaus making an api call the convetional way like in the docs seems to work find but if i do it with the client librabry like in the github examples it just doesn't seem to work. am i missing something here?"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-08-01 06:12:17",
+    "text": "Hi all, I am trying to figure out the best way, to handle the \"Contact already created\" error.\nI have a workflow, and 2 object run trough it at the same time. They create a contact based on another field in them, at the same time.\nI do a check before, with custom code, to check if the contact already exists, but of course if they run through it at the same time, they just pass this both.\nWhat would be the best way to handle this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-08-01 06:13:50",
+    "text": "<@U04NQ0Z32GK> I switched to using Axios instead. Let me try to find the code!"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-08-01 06:14:09",
+    "text": "(So moving away from the library, and just doing an API call manually)"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-08-01 06:16:48",
+    "text": "Here is the full code:\n```const HubSpot = require('@HubSpot/api-client');\nconst axios = require('axios');\n\nexports.main = async (event, callback) =&gt; {\n\n  // If we reach this, it means we have found the linked company, which means we can associate the object.\n\n  const HubSpotClient = new HubSpot.Client({\n    accessToken: process.env.ACCESS_TOKEN\n  });\n\n  const headers = {\n    \"Authorization\": \"Bearer \" + process.env.ACCESS_TOKEN,\n    \"Content-Type\": \"application/json\",\n  };\n\n  const contactId = event.inputFields['hs_object_id'];\n  const companyId = event.inputFields['company_exists_id'];\n\n\n  const objectType = \"contacts\";\n  const objectId = contactId;\n  const toObjectType = \"companies\";\n  const after = 0;\n  const limit = 500;  \n\n  // Make the API call to add the line items\n  try {\n    const url = \"<https://api.hubapi.com/crm/v4/objects/>\"+objectType+\"/\"+objectId+\"/associations/\"+toObjectType+\"?limit=\"+limit+\"&amp;after=\"+after;\n\n    const HubSpotApiResponse = await axios.get(url, { headers });\n    // @todo We will have to do a loop on all the associations. \n\n    if (HubSpotApiResponse.data.results.length &gt; 0 &amp;&amp; companyId == HubSpotApiResponse.data.results[0].toObjectId ){\n      // Association is already made!\n      callback({\n        outputFields: {\n          association_exists: true,\n        }\n      });\n    }\n    else{\n      // Association is not yet made, so make it now!\n      callback({\n        outputFields: {\n          association_exists: false,\n        }\n      });\n    }\n  } catch (e) {\n    e.message === 'HTTP request failed'\n      ? console.error(JSON.stringify(e.response, null, 2))\n    : console.error(e)\n  }\n\n  /*\n  try {\n    console.log(objectId);\n    const apiResponse = await HubSpotClient.crm.associations.v4.basicApi.getPage(objectType, objectId, toObjectType, after, limit);\n    console.log(apiResponse);\n\n  } catch (e) {\n    e.message === 'HTTP request failed'\n      ? console.error(JSON.stringify(e.response, null, 2))\n    : console.error(e)\n  }\n  */\n\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Oren Askarov",
+      "poster_handle": "askarovoren"
+    },
+    "time_stamp": "2023-08-01 08:09:16",
+    "text": "Hello HubSpot Developers,\nI have a customer that is looking for a solution for automating meeting type, based on a trigger.\nFor Example: When a meeting is booked, and the Deal Stage = [something], set Meeting Type to [something] .\n\nDoes anyone have an idea if this is something that can be done, or if there is a workaround?\n\nThanks",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-08-01 16:03:36"
+      },
+      {
+        "time_stamp": "2023-08-01 17:06:11"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Patrick Gabler",
+      "poster_handle": "pagab"
+    },
+    "time_stamp": "2023-08-01 10:18:17",
+    "text": "Hello everyone,\nwith quotes there is a possibility to mark as signed when using 'include space for written signature'. Does anyone know how I can use this as trigger in workflows? I'd like to send an email when a quote is manually marked as signed by a user.",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-08-01 15:54:03"
+      },
+      {
+        "time_stamp": "2023-08-02 01:30:02"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan Vogele",
+      "poster_handle": "nathan148"
+    },
+    "time_stamp": "2023-08-01 15:43:48",
+    "text": "Hey guys, this is probably a really stupid question but I can't find any information on it.\n\nIf you have a workflow triggering off deal stage, and a deal advances to a different stage, do all of the automations running in the previous workflow continue to their completion? (For example we have a multiple day process that triggers off the deal stage.)",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-08-01 15:50:00"
+      },
+      {
+        "time_stamp": "2023-08-01 15:50:56"
+      },
+      {
+        "time_stamp": "2023-08-01 16:00:52"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan Vogele",
+      "poster_handle": "nathan148"
+    },
+    "time_stamp": "2023-08-01 15:44:27",
+    "text": "I'm assuming that because the deal no longer matches the trigger it is automatically exited out but I can't confirm that."
+  },
+  {
+    "text": "Not a stupid question- this behavior is actually quite nuanced. The answer is it depends-\n\nIf you are using a contact-based workflow triggering off of an associated deal’s stage, and the\n\n_When a contact no longer meets the enrollment conditions, remove them from this workflow?_ \n\nsetting is set to\n\n_No, keep them in this workflow_\n\nthen the contact will proceed as normal through the workflow until it is either unenrolled or reaches the last action on it’s path.\n\nIf you are using a deal-based workflow, then the deal will continue through the workflow unless a suppression criteria is met that unenrolls it (i.e., if you didn’t want deals to continue through the workflow, you could set a suppression criteria of “Deal stage is not equal to any of X”, where X is the enrollment trigger)",
+    "time_stamp": "2023-08-01 15:50:00",
+    "edited": {
+      "time_stamp": "2023-08-01 15:50:25"
+    }
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-08-01 15:50:56"
+  },
+  {
+    "text": "Does a contact-based workflow with an associated quote trigger do what you’re looking for?",
+    "time_stamp": "2023-08-01 15:54:03"
+  },
+  {
+    "poster": {
+      "poster_name": "Jesse Bartola",
+      "poster_handle": "jbartola"
+    },
+    "time_stamp": "2023-08-01 15:55:22",
+    "text": "^ What Niko said. Our public-facing API right now is quite limited and we are looking into building a newer one with more robust functionality"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan Vogele",
+      "poster_handle": "nathan148"
+    },
+    "time_stamp": "2023-08-01 16:00:52",
+    "text": "This was super helpful! Thank you so much! <@U052C4YRTQF>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jesse Bartola",
+      "poster_handle": "jbartola"
+    },
+    "time_stamp": "2023-08-01 16:03:36",
+    "text": "Can you elaborate on your use case? I don’t believe Meeting objects have a _Deal Stage_ property"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-08-01 17:06:11",
+    "text": "Can prob do as a deal based workflow. Trigger is the meeting date of last meeting booked in meeting tool for a given associated contact to the deal is changed. IF branch - deal stage of deal is XYZ - do {thing}.\n\nIs that what you mean?"
+  }
+]

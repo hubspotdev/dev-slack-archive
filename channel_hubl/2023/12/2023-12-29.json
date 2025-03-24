@@ -1,0 +1,306 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2023-12-29 07:34:56",
+    "text": "I too am curious, what limit are you referring to Thomas? What was the error you saw that you're getting that from?\n\nMy guess based on the limited information provided is that you possibly just hit the 10 CRM object calls, not a file size limit. Which usually if you hit that it means you're not being efficient with how you're grabbing the data for your page. \n\n<https://legal.HubSpot.com/HubSpot-product-and-services-catalog#:~:text=invocations%20per%20CMS%20page%20load|https://legal.HubSpot.com/HubSpot-product-and-services-catalog#:~:text=invocations%20per%20CMS%20page%20load>"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-12-29 07:45:26",
+    "text": "Nah there's a 10meg limit per page HubSpot has. If the data is more than 10 megs it'll error out. It's happened across several accounts to us. If I catch the error again I'll take a photo"
+  },
+  {
+    "text": "getting a fatal error on this line even though it looks correct....what am I missing:\n\n```{% for item in results %}\n                {% set supportTicks = [] %}\n                {% set pipelineStage = (item.hs_pipeline.value|int) %}\n                  {% if pipelineStage = 0 %}\n                    {% set supportThrowaway = supportTicks.append(item) %}\n                  {% endif %}\n              {% endfor %}```\n",
+    "time_stamp": "2023-12-29 08:59:25",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-12-29 09:01:40"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-12-29 09:00:42",
+    "text": "would not be surprised if HubSpots compiler is trying to take both lines and merge them in the first example"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-12-29 09:01:40",
+    "text": "Andreas caught it, was missing a = lol"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2023-12-29 09:03:58",
+    "text": "Could you please answer the question as to what you are doing that you need to render 10mb of HTML so we can help you troubleshoot?"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-12-29 09:04:45",
+    "text": "was trying to catch the error to post it straight up but can't find it; basically if the renderer has more than 10 megs of data it'll error out and the page won't render"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2023-12-29 09:05:04",
+    "text": "I'm asking what are you trying to do?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2023-12-29 09:05:20",
+    "text": "what is the use-case that you need to print that much HTML"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-12-29 09:05:42",
+    "text": "its a portal so it's handling _alot_ of data that was unpaginated"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-12-29 09:05:51",
+    "text": "this also happened with Inbounds agenda page in the past"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-12-29 09:06:08",
+    "text": "sorry i'm just in looking to see whats wrong I didn't create the page"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2023-12-29 09:06:22",
+    "edited": {
+      "time_stamp": "2023-12-29 09:08:00"
+    },
+    "text": "Can you paginate, or filter the data? or use graphQL to grab just the data you actually need?\n\nBecause regardless of limits, 10mb is still a lot of data, and if most of it never even gets looked at by the user it'd be a waste of loading time. We could change it instead to be hybrid, getting some data server side some data client side to make it more efficient if the user actually decides they need more of the data."
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-12-29 09:06:35",
+    "text": "yeah thats what I changed it too and that seemed to \"fix\" it"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-12-29 09:07:42",
+    "text": "depends on your usage of 10mb tbh, opengl you can quickly zap up that 10mb limit"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2023-12-29 09:10:01",
+    "edited": {
+      "time_stamp": "2023-12-29 09:10:40"
+    },
+    "text": "Well in this scenario are you actually grabbing opengl or webgl data?"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-12-29 09:10:24",
+    "text": "nah, I didnt see your edit after so I was just giving an example lol"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-12-29 09:11:01",
+    "text": "this page had like 4 queries to the CRM for something like....~2000 data and the page couldn't handle it I guess but yeah moving to graphql it handled it better"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2023-12-29 09:11:55",
+    "text": "So currently the issue has not popped back up since converting over to graphQL and using graphQL to limit the data ingested to the page?"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-12-29 09:12:42",
+    "text": "ehhhhhh kinda... theres a module that isn't popping up either which makes me wonder if you can only do 1 graphql query _per_ page and not _per_module?"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-12-29 09:13:26",
+    "text": "but not receiving any errors so its more of a weird thing then a sure thing"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2023-12-29 09:15:04",
+    "text": "Modules and templates separately get graphQL queries. I will look through our docs but I don't recall a per-page limit, though to be honest if we don't have one that could change, if folks try to abuse that."
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-12-29 09:15:43",
+    "text": "yeah I don't remember running into that either which makes me think it might be something else but still not sure. appreciate you looking into it tho"
+  },
+  {
+    "text": "here's another fun one lol\n\n```                  {% if item.hs_lastmodifieddate|int != null %}\n                    &lt;td&gt;{{ item.hs_lastmodifieddate|int|format_time(\"long\")}}&lt;/td&gt;\n                  {% endif %}```\n",
+    "time_stamp": "2023-12-29 09:16:56"
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Wessolly",
+      "poster_handle": "webdesign"
+    },
+    "time_stamp": "2023-12-29 09:22:19",
+    "text": "hmm have you tried using\n``` {% if item.hs_lastmodifieddate|int %} ```\n? Maybe that works better than checking if not null?"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-12-29 09:22:59",
+    "text": "let me try!"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2023-12-29 09:23:31",
+    "text": "So after reviewing I see no mention of a limit when you have multiple queries but each individual query has complexity based limits and a max record limit (for CRM it looks like 500, for HubDB there is no limit)"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-12-29 09:23:44",
+    "text": "oh wow no limit for HubDB?"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-12-29 09:23:48",
+    "text": "thats good to know sweet"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-12-29 09:23:49",
+    "text": "thanks Jon"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2023-12-29 09:24:23",
+    "edited": {
+      "time_stamp": "2023-12-29 09:24:35"
+    },
+    "text": "well the HubDB no limit thing kind of has an artificial limit because HubDB itself has a row limit"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-12-29 09:24:32",
+    "text": "ohh right"
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Wessolly",
+      "poster_handle": "webdesign"
+    },
+    "time_stamp": "2023-12-29 09:24:40",
+    "text": "isn´t there also \"truthy\"? maybe that works?"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-12-29 09:32:38",
+    "text": "no go lol"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-12-29 09:32:42",
+    "text": "tried everything on this too <https://developers.HubSpot.com/docs/cms/hubl/operators-and-expression-tests>"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-12-29 09:32:47",
+    "text": "oh well its just a warning, thanks for your help andreas"
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Wessolly",
+      "poster_handle": "webdesign"
+    },
+    "time_stamp": "2023-12-29 09:32:57",
+    "text": "of course"
+  }
+]

@@ -1,0 +1,69 @@
+[
+  {
+    "poster": {
+      "poster_name": "Cristian",
+      "poster_handle": "crmolinaz"
+    },
+    "time_stamp": "2023-08-11 03:53:35",
+    "text": "Hi, i think you can use the __gt (greater than) and __lt (less than) to filter directly you date fields. The current date you can get it in hubl. Let me know if this can help you to solve this, otherwise i can help you with a piece of code that does this."
+  },
+  {
+    "poster": {
+      "poster_name": "hub.sketch",
+      "poster_handle": "hub.sketch"
+    },
+    "time_stamp": "2023-08-11 06:18:17",
+    "text": "<@U04T2CUCP8T> is there any document or guide link."
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan Gifford",
+      "poster_handle": "ngifford949"
+    },
+    "time_stamp": "2023-08-11 09:46:10",
+    "text": "<@U01EE8YSRFX> Yeah, you need to use alias mapping. <https://developers.HubSpot.com/docs/cms/marketplace-guidelines/module-requirements#aliases>\n\nSo, per your example, if the field name is currently \"software\", but you need to change it to \"group.software_name\", your module's fields.json file would need updated like this:\n\n```{\n    \"name\" : \"group\",\n    \"display_width\" : null,\n    \"label\" : \"Software Info\",\n    \"required\" : false,\n    \"locked\" : false,\n    \"children\" : [ {\n      \"name\" : \"software_name\",\n      \"display_width\" : null,\n      \"label\" : \"Software Name\",\n      \"required\" : false,\n      \"locked\" : false,\n      \"type\" : \"text\",\n      \"aliases_mapping\": {\n        \"property_aliases_paths\": {\n          \"software_name\": [\"software\"]\n        }\n      },\n      \"default\" : \"Software Title\"\n    } ]\n}```\nIt's a little confusing, but it does work. Then any active instances of the module with page content connected to \"software\" will still work, while new instances use \"group.software_name\"."
+  },
+  {
+    "poster": {
+      "poster_name": "Cooper Elias",
+      "poster_handle": "cooper.elias"
+    },
+    "time_stamp": "2023-08-11 11:16:22",
+    "text": "Thanks, <@U048HV37BSL>. I know I can filter by those parameters, so I guess the question is more how can I get the correct dates for the start and end of the current week to use when building that filter query?"
+  },
+  {
+    "poster": {
+      "poster_name": "Alessandra Lima",
+      "poster_handle": "alessandra.lima"
+    },
+    "time_stamp": "2023-08-11 14:45:10",
+    "edited": {
+      "time_stamp": "2023-08-11 14:52:37"
+    },
+    "text": "Hey guys. Thanks for answering!\nAfter a few days of trying, I managed to create the birthday module by collecting data via CRM and displaying the birthdays of the week.\n\nI'm a newbie with HubSpot development but I'll leave my implementation below. Still limited by the number of times we can use the 'crm_objects' function. So if your case is like mine that needs less than 1000 records then this solution may meet your need.\n\n```Hubl implementation\n\n{% if request_contact.is_logged_in %}\n    {% set offset = 0 %}\n    {% set limit = 100 %}\n    {% set allResults = [] %}\n    {% set hasMore = true %}\n    {% set current_month = today()|format_date('MM') %}\n    {% set actualWeekNumber = today()|format_date('W') %}\n    \n    {% for number in range(10) %}\n        {% if hasMore == true %}\n            {% set query = \"birthday_date__not_null&amp;limit=\" ~ limit ~ \"&amp;offset=\" ~ offset %} {# The prop type of birthday_date is date on CRM, and the date format in my country is DD/MM/YYYY #}\n            {% set contacts = crm_objects(\"contact\", query, \"firstname,lastname,email,birthday_date\") %}\n            {% set _ = allResults.extend(contacts.results) %}\n            {% set hasMore = contacts.has_more %}\n            {% set offset = offset + limit %}\n        {% endif %}\n    {% endfor %}\n\n    {% set filteredResults = [] %}\n\n    {% for contact in allResults %}\n        {% set contact_date_parts = contact.birthday_date|split(\"/\") %}\n        {% set contact_day = contact_date_parts[0]|int %}\n        {% set contact_month = contact_date_parts[1]|int %}\n        {% set lastname = contact.lastname|trim|split(\" \") %}\n        {% set formattedLastname = lastname[lastname|length - 1] %}\n        {% set name = contact.firstname ~ \" \" ~ formattedLastname %}\n        {% set birthday = contact.birthday_date|truncate(5, True, \"\")|replace(\"/\", \".\") %}\n        \n        {% set formatDateBirthday = contact.birthday_date|format_date('MM-DD-YYYY')  %}\n        {% if contact_month == current_month %}\n            {% set _ = filteredResults.append({\n                'day': contact_day,\n                'name': name,\n                'birthday': birthday,\n                'email': contact.email,\n              \n            }) %}\n        {% endif %}\n    {% endfor %}\n\n   {% set sortedResults = filteredResults|sort(false, false, 'day') %}\n\n     &lt;div class=\"container\"&gt;\n           &lt;div class=\"content\"&gt;\n      &lt;button class='card-slider-glider-prev' alt=\"Back\"&gt;\n        &lt;i class=\"fa-solid fa-circle-arrow-left fa-xl\" style=\"color: #EA7603;\"&gt;&lt;/i&gt;\n      &lt;/button&gt;\n   &lt;div class=\"birthday_cards\"&gt;\n   {% for result in sortedResults %}\n       {% set contactDate = today()|format_date('y') ~ '-' ~ result.birthday|replace(\".\", \"-\")  ~ \"T00:01:00-0300\" %}\n       {% set contactDateObject = contactDate|strtotime(\"yyyy-dd-MM'T'HH:mm:ssZ\") %}\n       {% set birthdayWeekNumber = contactDateObject|format_date('W') %}\n       \n        {% if birthdayWeekNumber == actualWeekNumber %}\n         {% set birthdayCard = \"card_birthday\" if today()|format_date('<http://dd.MM|dd.MM>') == result.birthday else \"card\" %}\n           &lt;div class=\"{{birthdayCard}}\"&gt;\n             &lt;div class=\"card_header\"&gt;\n               &lt;div class=\"card_img\"&gt;\n                &lt;img\n                  id=\"colab_img\"\n                  style=\"border-radius: 50%;\"\n                  src=\"<https://www.gravatar.com/avatar/{{> result.email|md5 }}?s=100&amp;d=mp\"\n                 /&gt;\n               &lt;/div&gt;\n              &lt;/div&gt;\n              &lt;div class=\"card_body\"&gt;\n               &lt;div class=\"card_date\"&gt;\n                &lt;strong&gt;\n                 {{ result.birthday  }}\n                &lt;/strong&gt;\n               &lt;/div&gt;\n               &lt;div class=\"card_name\"&gt;\n                &lt;p&gt;\n                 {{ result.name }}\n                &lt;/p&gt;\n              &lt;/div&gt;\n            &lt;/div&gt;\n         &lt;/div&gt;\n      {% endif %}\n   {% endfor %}  \n   &lt;/div&gt;\n   &lt;button class='card-slider-glider-next' alt=\"Next\"&gt;\n       &lt;i class=\"fa-solid fa-circle-arrow-right fa-xl\" style=\"color: #EA7603;\"&gt;&lt;/i&gt;\n   &lt;/button&gt;\n  &lt;/div&gt;\n &lt;/div&gt;\n\n{% else %} {# Only to show the module on page editor when creating a page #}\n   &lt;div class=\"container\"&gt;\n    &lt;div class=\"content\"&gt;\n      &lt;div class=\"birthday_cards\"&gt;\n       {% for x in range(0,5) %}\n        &lt;div class=\"card\"&gt;\n          &lt;div class=\"card_header\"&gt;\n            &lt;div class=\"card_img\"&gt;\n              &lt;img\n                id=\"colab_img\"\n                style=\"border-radius: 50%;\"\n                src=\"<https://www.gravatar.com/avatar/myEmailAddress@example.com?s=100&amp;d=mp>\"\n                /&gt;\n            &lt;/div&gt;\n          &lt;/div&gt;\n          &lt;div class=\"card_body\"&gt;\n           &lt;div class=\"card_date\"&gt;\n                &lt;strong&gt;\n                 20.01\n                &lt;/strong&gt;\n               &lt;/div&gt;\n           &lt;div class=\"card_name\"&gt;\n            &lt;p&gt;John Doe&lt;/p&gt;\n           &lt;/div&gt;\n          &lt;/div&gt;\n        &lt;/div&gt;\n       {% endfor %}   \n      &lt;/div&gt;\n    &lt;/div&gt;\n   &lt;/div&gt;\n\n{% endif %}\n\n\n{# Used glider.js scripts for carousel, and font awesome for arrows #}\n{% require_js %}\n    &lt;script src=\"<https://kit.fontawesome.com/18faa042c8.js>\" crossorigin=\"anonymous\"&gt;&lt;/script&gt;\n        \n    &lt;script\n      src=\"<https://cdnjs.cloudflare.com/ajax/libs/glider-js/1.7.8/glider.min.js>\"\n      integrity=\"sha512-AZURF+lGBgrV0WM7dsCFwaQEltUV5964wxMv+TSzbb6G1/Poa9sFxaCed8l8CcFRTiP7FsCgCyOm/kf1LARyxA==\"\n      crossorigin=\"anonymous\"\n      referrerpolicy=\"no-referrer\"\n    &gt;&lt;/script&gt;\n    &lt;script\n      src=\"<https://cdnjs.cloudflare.com/ajax/libs/glider-js/1.7.8/glider-compat.min.js>\"\n      integrity=\"sha512-uDuWqOxg/d52jrK9sfrZf5qj1VjXlbekCDElkB/EOJAa6xOhLR1mVU1RZ0rFUqx5L4EkUPwyqPfJiwLF3D7Ypw==\"\n      crossorigin=\"anonymous\"\n      referrerpolicy=\"no-referrer\"\n    &gt;&lt;/script&gt;\n    &lt;link\n      rel=\"stylesheet\"\n      href=\"<https://cdnjs.cloudflare.com/ajax/libs/glider-js/1.7.8/glider.css>\"\n      integrity=\"sha512-xcz2kgNDovRs9/wYWii2XSBEDlpaTq99iewiGN3PR/pNnPaSDiw6wHpXU0kFyonevdVj/MkeesxMII8sgolFCQ==\"\n      crossorigin=\"anonymous\"\n      referrerpolicy=\"no-referrer\"\n    /&gt;\n    &lt;script\n      src=\"<https://cdnjs.cloudflare.com/ajax/libs/glider-js/1.7.8/glider.js>\"\n      integrity=\"sha512-ILWSrKdpmM5K9QcqBevuJiiaLuCXI6UnMtjoI7R8d2uFAZ02EB4tkJCaWqeOXk5sXzdzc7qyu04YmD/aHPVAlA==\"\n      crossorigin=\"anonymous\"\n      referrerpolicy=\"no-referrer\"\n    &gt;&lt;/script&gt;\n    &lt;link\n      rel=\"stylesheet\"\n      href=\"<https://cdnjs.cloudflare.com/ajax/libs/glider-js/1.7.8/glider.min.css>\"\n      integrity=\"sha512-YM6sLXVMZqkCspZoZeIPGXrhD9wxlxEF7MzniuvegURqrTGV2xTfqq1v9FJnczH+5OGFl5V78RgHZGaK34ylVg==\"\n      crossorigin=\"anonymous\"\n      referrerpolicy=\"no-referrer\"\n    /&gt;\n    \n {% end_require_js %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Cristian",
+      "poster_handle": "crmolinaz"
+    },
+    "time_stamp": "2023-08-11 15:46:14",
+    "text": "i think you can try something like this:"
+  },
+  {
+    "poster": {
+      "poster_name": "Cristian",
+      "poster_handle": "crmolinaz"
+    },
+    "time_stamp": "2023-08-11 15:46:19",
+    "text": "```    {% set currentDay = local_dt|format_datetime('e')|int %}\n      \n    {% set plusDays = 0 %}  \n    {% if currentDay == 1 %}  {# Sunday #}\n      {% set plusDays = -6 %}\n    {% else if currentDay &gt; 2 %}\n      {% set plusDays = 2 - currentDay %}\n    {% endif %}\n    \n    {% set startOfTheWeek = local_dt|plus_time(plusDays, \"days\") %}\n    {% set endOfTheWeek = startOfTheWeek|plus_time(6, \"days\") %}\n\n    startOfTheWeek={{ startOfTheWeek|format_datetime('YYYY-MM-dd')|string ~ ' 00:00:00' }}\n    endOfTheWeek={{ endOfTheWeek|format_datetime('YYYY-MM-dd')|string ~ ' 23:59:59' }}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Cristian",
+      "poster_handle": "crmolinaz"
+    },
+    "time_stamp": "2023-08-11 15:47:39",
+    "text": "i dont have more details but this could give you an idea and may help you to solve your problem. That code above is printing for me : startOfTheWeek=2023-08-07 00:00:00 endOfTheWeek=2023-08-13 23:59:59"
+  }
+]

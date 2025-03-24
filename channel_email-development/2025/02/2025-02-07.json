@@ -1,0 +1,170 @@
+[
+  {
+    "poster": {
+      "poster_name": "Sruly D",
+      "poster_handle": "srulydavid"
+    },
+    "time_stamp": "2025-02-07 07:44:06",
+    "text": "Hi all.\nTrying to use logic in design manager to determine if an icon should show up in an email. This is the code\n```{% if contact.sales_owner_main_phone%}\n     \n     &lt;img src=\"<http://www.test.com/images/telicon.png>\" align=\"absmiddle\"  alt=\"\"/&gt; \n     {{contact.sales_owner_main_phone}} &lt;br /&gt;\n     \n     {% endif %}```\nThe intention is that if there's no phone number in hs, then dont show the icon. Issue is that the icon always shows, even if there's no phone number in the system.\nHow can we write code to determine if a main phone or cell phone field is populated or not?",
+    "reply_count": 10,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-02-07 10:46:25"
+      },
+      {
+        "time_stamp": "2025-02-07 10:46:54"
+      },
+      {
+        "time_stamp": "2025-02-07 10:47:57"
+      },
+      {
+        "time_stamp": "2025-02-07 11:18:06"
+      },
+      {
+        "time_stamp": "2025-02-07 11:20:06"
+      },
+      {
+        "time_stamp": "2025-02-07 11:21:38"
+      },
+      {
+        "time_stamp": "2025-02-07 11:23:25"
+      },
+      {
+        "time_stamp": "2025-02-07 11:31:12"
+      },
+      {
+        "time_stamp": "2025-02-07 11:36:05"
+      },
+      {
+        "time_stamp": "2025-02-07 11:58:54"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Piper Haywood",
+      "poster_handle": "piper"
+    },
+    "time_stamp": "2025-02-07 08:45:19",
+    "text": "Hey all! I'm taking over some custom drag-and-drop email template work from a prior developer and am running in to some confusion. Based on the small amount of documentation I have in our email templates repo (not his fault, he wasn't resourced to write the docs!), it seems like he used a sandbox account for testing purposes, likely a CMS developer sandbox and _not_ a standard sandbox because we're not on Enterprise.\n\nHowever, when I try to do the same and attempt to upload to my own free CMS developer sandbox using HubSpot's CLI, I get the error `You need Marketing Professional or above in order to make this compatible with email.`.\n\nDoes anyone know if there is a way to make this work so that I can test using a CMS developer sandbox account? Or is this just a non-starter?\n\nTIA for any help on this!\n\n(<@UEC65BQV8> I came across your post at the link below along the same lines but wasn't able to figure out from the replies whether or not you were able to get to the bottom of it...)\n<https://HubSpotdev.slack.com/archives/CJ5DN6RKP/p1583965958036900>"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Hineman",
+      "poster_handle": "mhineman.dev"
+    },
+    "time_stamp": "2025-02-07 09:50:59",
+    "text": "Without having much knowledge around Email Development, I am wondering if it possible to grab a Rich Text property from a contact and to use it as a hyper link within an email? My example would be this \"&lt;a href=\"{{ rich_text_property }}\"&gt;click here&lt;/a&gt;\" This is different for each contact that we email.",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2025-02-12 09:35:43"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "James Kupczak",
+      "poster_handle": "jimmykup"
+    },
+    "time_stamp": "2025-02-07 10:46:25",
+    "text": "Try this:\n\n```{% if contact.sales_owner_main_phone|length &gt; 4 %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "James Kupczak",
+      "poster_handle": "jimmykup"
+    },
+    "time_stamp": "2025-02-07 10:46:54",
+    "text": "You might be running into an issue where the value of that field _looks_ empty but actually has something in it."
+  },
+  {
+    "poster": {
+      "poster_name": "James Kupczak",
+      "poster_handle": "jimmykup"
+    },
+    "time_stamp": "2025-02-07 10:47:57",
+    "text": "You can test that out by using `{{ contact.sales_owner_main_phone|length ]}` in your code and then looking at an email preview where you expect the field to be blank. Did this code output 0? If not, what did it output."
+  },
+  {
+    "poster": {
+      "poster_name": "Sruly D",
+      "poster_handle": "srulydavid"
+    },
+    "time_stamp": "2025-02-07 11:18:06",
+    "text": "Thanks, I always get 34. Question is how else can I determine if the field is filled in. I tried trim to remove whitespace from the check and it did not seem to help."
+  },
+  {
+    "text": "And you’re testing this using a Contact Preview where you select a contact record to use for testing purposes?",
+    "time_stamp": "2025-02-07 11:20:06"
+  },
+  {
+    "poster": {
+      "poster_name": "Sruly D",
+      "poster_handle": "srulydavid"
+    },
+    "time_stamp": "2025-02-07 11:21:38",
+    "text": "yep, exactly. So I can test with different contacts that have different owners - some with a number and some without"
+  },
+  {
+    "poster": {
+      "poster_name": "James Kupczak",
+      "poster_handle": "jimmykup"
+    },
+    "time_stamp": "2025-02-07 11:23:25",
+    "text": "If you _always_ get 34, regardless of the contact having a real phone number in the field or not, that’s very strange.\n\nAre you getting 34 when the field is supposed to be empty? Or literally all the time?\n\nIn instances where the field is empty, what does this output?\n\n```'{{ contact.sales_owner_main_phone|length }}'&lt;br&gt;\n'{{ contact.sales_owner_main_phone }}'```\nDoes it output this?\n\n```'34'\n''```\n"
+  },
+  {
+    "text": "",
+    "time_stamp": "2025-02-07 11:31:12"
+  },
+  {
+    "time_stamp": "2025-02-07 11:36:05",
+    "text": "scratch head"
+  },
+  {
+    "poster": {
+      "poster_name": "Sruly D",
+      "poster_handle": "srulydavid"
+    },
+    "time_stamp": "2025-02-07 11:58:54",
+    "text": "exactly. Wonder what else I can use to determine if theres a value in that phone field..."
+  },
+  {
+    "poster": {
+      "poster_name": "Xiangkui Yao",
+      "poster_handle": "xiangkui"
+    },
+    "time_stamp": "2025-02-07 17:27:45",
+    "text": "I figured out that we need to put the part that needs to be rendered inside a programmable email module (or under a programmable email template). See this article: <https://knowledge.HubSpot.com/marketing-email/create-programmable-emails?_gl=1*1kv2i66*_ga*MTgxNDgxNzI5MC4xNzM4ODcxMDcw*_ga_LXTM6CQ0XK*MTczODk1NjM4My4xLjAuMTczODk1NjM4My42MC4wLjA|https://knowledge.HubSpot.com/marketing-email/create-programmable-emails?_gl=1*1kv2i66*[…]_ga_LXTM6CQ0XK*MTczODk1NjM4My4xLjAuMTczODk1NjM4My42MC4wLjA>"
+  },
+  {
+    "poster": {
+      "poster_name": "Alex Williams",
+      "poster_handle": "alex577"
+    },
+    "time_stamp": "2025-02-07 17:29:17",
+    "text": "That’s what I’ve been working on, but I haven’t spent enough time to know if it works - have you been successful yet? It seems like it has to be in a module if you want to embed it in a template with drag and drop also"
+  },
+  {
+    "poster": {
+      "poster_name": "Xiangkui Yao",
+      "poster_handle": "xiangkui"
+    },
+    "time_stamp": "2025-02-07 17:36:52",
+    "edited": {
+      "time_stamp": "2025-02-07 17:37:31"
+    },
+    "text": "Yes, what we did is to put the conditional part in a programmable module  and drag and drop it into an email template."
+  },
+  {
+    "poster": {
+      "poster_name": "Alex Williams",
+      "poster_handle": "alex577"
+    },
+    "time_stamp": "2025-02-07 19:22:36",
+    "text": "Nice! Thanks for the help!"
+  }
+]

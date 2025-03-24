@@ -1,0 +1,148 @@
+[
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-08-18 08:28:46",
+    "text": "is there a way to get around `WARNING: The logs for this function have exceeded the 4KB limit.`?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-08-18 08:29:01",
+    "text": "it would be nice if it could show the first 4KB and then cut off the rest",
+    "reply_count": 16,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-08-18 09:31:50"
+      },
+      {
+        "time_stamp": "2023-08-18 09:53:20"
+      },
+      {
+        "time_stamp": "2023-08-18 09:55:54"
+      },
+      {
+        "time_stamp": "2023-08-18 09:57:37"
+      },
+      {
+        "time_stamp": "2023-08-18 10:07:51"
+      },
+      {
+        "time_stamp": "2023-08-18 10:46:08"
+      },
+      {
+        "time_stamp": "2023-08-18 12:35:08"
+      },
+      {
+        "time_stamp": "2023-08-18 13:38:52"
+      },
+      {
+        "time_stamp": "2023-08-31 14:14:22"
+      },
+      {
+        "time_stamp": "2023-08-31 14:28:35"
+      },
+      {
+        "time_stamp": "2023-08-31 14:28:37"
+      },
+      {
+        "time_stamp": "2023-08-31 14:29:23"
+      },
+      {
+        "time_stamp": "2023-08-31 14:30:06"
+      },
+      {
+        "time_stamp": "2023-08-31 14:30:43"
+      },
+      {
+        "time_stamp": "2023-08-31 14:30:53"
+      },
+      {
+        "time_stamp": "2023-08-31 14:33:40"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2023-08-18 09:31:50",
+    "edited": {
+      "time_stamp": "2023-08-18 09:32:25"
+    },
+    "text": "not that I know of. You could try messing around with something along the lines of:\n\n```const size = Buffer.byteLength(JSON.stringify(consoleLogData))```\nYou’d have to make sure you capture all your console.logs, including possible errors, and sum them. And cut it off before it reaches that 4KB limit. Even then though, not sure if you’d be able to capture everything. You’d have to test it a bit.\n\nI might try testing it myself when I get the chance. It’s a fairly annoying limitation. It’s a restriction on the AWS side if I’m not mistaken."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-08-18 09:53:20",
+    "text": "that's an interesting idea"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-08-18 09:55:54",
+    "text": "<@U039PUBV59N>\n```function logFirst4KB(data) {\n  const jsonString = JSON.stringify(data);\n  const fullSize = Buffer.byteLength(jsonString);\n  const targetSize = 4 * 1024; // 4KB in bytes\n\n  if (fullSize &gt; targetSize) {\n    const buffer = Buffer.from(jsonString);\n    const slicedString = buffer.slice(0, targetSize).toString();\n    console.log(slicedString);\n  } else {\n    console.log(jsonString);\n  }\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2023-08-18 09:57:37",
+    "text": "nice! Let me know if it ends up working."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-08-18 10:07:51",
+    "text": "<@U039PUBV59N> doesn't appear to work...not sure why"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-08-18 10:46:08",
+    "text": "anyone have any idea why that might not work? I'm getting the same `WARNING: The logs for this function have exceeded the 4KB limit.`"
+  },
+  {
+    "poster": {
+      "poster_name": "Phillip Hargrave",
+      "poster_handle": "phillip"
+    },
+    "time_stamp": "2023-08-18 11:14:19",
+    "edited": {
+      "time_stamp": "2023-08-18 11:15:43"
+    },
+    "text": "Best way I've found if you have custom objects is to create an entry with the variable, and an expiry datetime. Fetch the record, using search endpoint or graphql, filtering by expiry time greater than the present epoch timestamp. If you don't have custom objects you can also just store them in a file on the file manager (make it private if needed), then pull the file, if the timestamp has expired overwrite it with a new value and new timestamp.\n\nDepending on the requirements for access in the CRM you can create a dummy account for apps and limit the records to that team. Otherwise you can remove access to the files from your marketing team using the options in the file manager api (mark it hidden) so only private apps with a valid token may read them."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-08-18 12:35:08",
+    "text": "it does work...something must have been cached or something? I set the size to 3.9 just in case for additional testing..."
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2023-08-18 13:38:52",
+    "text": "that’s great to hear. That little function would likely be useful to a whole lot of devs here. Good stuff man."
+  }
+]

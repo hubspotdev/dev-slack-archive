@@ -1,0 +1,232 @@
+[
+  {
+    "poster": {
+      "poster_name": "Indra Pinsel",
+      "poster_handle": "indra"
+    },
+    "time_stamp": "2021-03-18 06:31:53",
+    "text": "Perhaps this tool will help you to manage the HubDB: <https://www.syncsmart.io/blog/hubdb-hq-an-easier-way-to-create-and-edit-hubdb-tables>"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Bennedbæk",
+      "poster_handle": "thomas_katalysator"
+    },
+    "time_stamp": "2021-03-18 07:55:20",
+    "text": "*Caching issue*\nI have a table used for displaying upcoming events. In the table there's a column to set the date and time of the event. When I call the table I filter out any courses that are older than today. However, this doesn't work too well, since HubSpot's built-in page caching makes past events stay up on the page for several days after they were  held.\n\nIs there a way to avoid this (other than fetching the table client side with JS)?\n\nFor reference, here's my HubL:\n\n```{% set filter_query = \"&amp;orderBy=date_start&amp;date_start__gt=\" + unixtimestamp(today()) %}\n{% set table = hubdb_table_rows(module.hubdb_table, filter_query) %}\n\n{% for item in table %}\n&lt;!-- Event info --&gt;\n{% endfor %}```",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2021-03-18 08:01:52"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2021-03-18 08:01:52",
+    "text": "<@U4W2EG8RY> can you DM me the page link I can take a look"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2021-03-18 08:02:29",
+    "text": "Add a {{ request.query }} to the page. Or any other request in hubl. It will kill the caching.",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-03-18 08:06:44"
+      },
+      {
+        "time_stamp": "2021-03-18 08:07:47"
+      },
+      {
+        "time_stamp": "2021-03-18 08:08:00"
+      },
+      {
+        "time_stamp": "2021-03-18 08:08:06"
+      },
+      {
+        "time_stamp": "2021-03-18 08:08:31"
+      },
+      {
+        "time_stamp": "2021-03-18 08:14:02"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Bennedbæk",
+      "poster_handle": "thomas_katalysator"
+    },
+    "time_stamp": "2021-03-18 08:06:44",
+    "text": "Thanks Chad! Something like that was my backup solution as well, but I'm wondering if there's a more \"official\" way to solve it :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2021-03-18 08:07:47",
+    "text": "It's interesting that you're having a problem because the way that HubSpot works is that it's pre-rendered on server side and if it sees a change on server side then it clears the cache"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2021-03-18 08:08:00",
+    "text": "So you shouldn't be having issues displaying the current events even though there is cashing"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2021-03-18 08:08:06",
+    "text": "Caching"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2021-03-18 08:08:31",
+    "text": "But as a quick fix the anything request anything will work"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Bennedbæk",
+      "poster_handle": "thomas_katalysator"
+    },
+    "time_stamp": "2021-03-18 08:14:02",
+    "text": "Yeah, it puzzles me a bit too... Thanks for your input though, much appreciated :thumbsup:"
+  },
+  {
+    "poster": {
+      "poster_name": "Cheryl McNamee",
+      "poster_handle": "cmcnamee"
+    },
+    "time_stamp": "2021-03-18 12:58:52",
+    "text": "Is it possible to orderBy more than one column in the api calls?  For example, I'd like to first order by my featured (sticky) column then by the created date column.   This would ensure that all items marked featured would show first in the results, then everything else that's left would be ordered by date.\n```<https://api.hubapi.com/hubdb/api/v2/tables/3487807/rows?portalId=8489056&amp;category=Commercial&amp;orderBy=-featured>```\nSo, this call does order them correctly by featured.\nBut, I didn't find anything in the documentation on ordering by more than one column.  So, I tried what I've seen other apis do for this:\n```<https://api.hubapi.com/hubdb/api/v2/tables/3487807/rows?portalId=8489056&amp;category=Commercial&amp;orderBy=-featured,-hs_created_at>```\nBut, then the featured ones aren't showing first.\nDoes anyone know if this is possible with the hubdb api?"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Yager",
+      "poster_handle": "stephen.yager"
+    },
+    "time_stamp": "2021-03-18 13:03:00",
+    "text": "<@U012F502T62>\n&gt; You can include this parameter (orderBy) multiple times to sort by multiple columns"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Yager",
+      "poster_handle": "stephen.yager"
+    },
+    "time_stamp": "2021-03-18 13:03:30",
+    "text": "so your query would look like\n```<https://api.hubapi.com/hubdb/api/v2/tables/3487807/rows?portalId=8489056&amp;category=Commercial&amp;orderBy=-featured&amp;orderBy-hs_created_at>```",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-03-19 09:44:26"
+      },
+      {
+        "time_stamp": "2021-03-19 11:00:49"
+      },
+      {
+        "time_stamp": "2021-03-19 11:02:06"
+      },
+      {
+        "time_stamp": "2021-03-19 11:26:10"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jake McLaren",
+      "poster_handle": "info721"
+    },
+    "time_stamp": "2021-03-18 16:03:13",
+    "text": "What is best practice to re-order rows without losing data?",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-03-18 16:22:28"
+      },
+      {
+        "time_stamp": "2021-03-18 16:41:56"
+      },
+      {
+        "time_stamp": "2021-03-18 16:42:53"
+      },
+      {
+        "time_stamp": "2021-03-18 18:19:16"
+      },
+      {
+        "time_stamp": "2021-03-18 18:20:13"
+      },
+      {
+        "time_stamp": "2021-03-18 18:21:22"
+      },
+      {
+        "time_stamp": "2021-03-19 12:23:54"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Yager",
+      "poster_handle": "stephen.yager"
+    },
+    "time_stamp": "2021-03-18 16:22:28",
+    "text": "I don't see why you would need to reorder rows when orderby will fix that for you. But if I had to hazard a guess, I would export everything as CSV, fix your rows, then import into a new table (I don't like deleting old data just in case)"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake McLaren",
+      "poster_handle": "info721"
+    },
+    "time_stamp": "2021-03-18 16:41:56",
+    "text": "I will look into it, we just didnt consider that items would display in the order they were entered and we have a bunch of parent/child items that are not in teh right spot so exporting the sheet sn cleaning it up is the the best place to start.  the other issue is when a new item is added sometimes we need that to wedge into the middle somewhere not necessarily by the date it was added."
+  },
+  {
+    "poster": {
+      "poster_name": "Jake McLaren",
+      "poster_handle": "info721"
+    },
+    "time_stamp": "2021-03-18 16:42:53",
+    "text": "Category A\nproduct a\nproduct b\nNew Product\nProduct c"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Yager",
+      "poster_handle": "stephen.yager"
+    },
+    "time_stamp": "2021-03-18 18:19:16",
+    "text": "again, the order by would be a better option, i would say if you need them in a very specific order, you can always add a new column and use that for order by, for example, you have a new number field, and have each row be something like 20 numbers apart so you can shim in new ones later"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Yager",
+      "poster_handle": "stephen.yager"
+    },
+    "time_stamp": "2021-03-18 18:20:13",
+    "text": "an example would be row 1 would have a value of 20, row 2 would have a value of 40, and so on, thus allowing you to say add a new product, and have its sort num be 25 and that would show second now"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Yager",
+      "poster_handle": "stephen.yager"
+    },
+    "time_stamp": "2021-03-18 18:21:22",
+    "text": "or if you suspect you will have lots of additions you can even go as high as 100 in between numbers, then when call for these rows, you only need to orderBy sort_col"
+  }
+]

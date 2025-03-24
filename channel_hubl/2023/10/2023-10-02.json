@@ -1,0 +1,18 @@
+[
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-10-02 12:37:50",
+    "text": "Multi-language system pages are a bit of a gray area in terms of support, and I don’t personally know of any comprehensive solution for implementing multi-language system pages in the way that you would with normal pages.\n\nMy personal workaround is to create a dictionary of translation strings for system page content, then use HubL to check the user’s HTTP request header for their preferred language via the global `request` object. With that, you can select the correct set of localized strings from the dictionary.\n\nA quick example:\n```{% set translation_strings = {\n    \"en_US\": { ... }\n    \"fr_FR\": { ... }\n    \"fr_CA\": { ... }\n    {# etc. #}\n    }\n%}\n\n{# accept-language can contain multiple preferred languages — this example only accounts for the primary, which will come first in the list #}\n{% set preferred_lang = request.headers[\"accept-language\"]|split(\",\")  %}\n\n{% if preferred_lang[0] is string_containing \"en\" %}\n    {% set local_strings = translation_strings.en_US %}\n{% elif preferred_lang[0] == \"fr_FR\" %}\n    {% set local_strings = translation_strings.fr_FR %}\n{% else %}\n    {# etc #}\n{% endif %}\n\n{# MARKUP #}\n{% module \"main_header\" \n    ...\n    page_title: local_strings.page_title\n%}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-10-02 12:46:08",
+    "text": "HubL does not have any functionality that would directly allow for the generation and sending of an email. To send an email based on a page action, there are a few approaches you can take:\n• If the action is something that would create a contact or trigger a custom event — for example, submitting a form — you can use that event as a trigger for a workflow that sends either a transactional or automated marketing email. If possible, *I strongly recommend going this route*.\n• If for some reason, you cannot trigger this event via a workflow, you can create a custom Private App which uses the <https://developers.HubSpot.com/docs/api/marketing/transactional-emails|Transactional Email API> to send an email. I wouldn’t recommend this unless you’re really confident that you know exactly what you’re doing, and are *absolutely certain* that the previous approach won’t work for you.\n• If neither of the above approaches fits your needs, which is fairly unlikely, you’ll have to implement it like you would on any other website: by sending a POST response to an service, server, or API. "
+  }
+]

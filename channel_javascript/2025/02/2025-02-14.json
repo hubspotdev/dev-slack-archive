@@ -1,0 +1,26 @@
+[
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 06:18:27",
+    "text": "It appears when checking out the script here that it is custom coded in to change the way the scroll behavior works when specific elements are on the screen. So while this is scrolljacking over these elements,  its slow.\n\nI see the debounce timer is 180, so that is 180ms. So it is only allowing 1 scroll event to happen every 180ms. That is 5 lines of scroll every second. I imagine this was implemented to slow down the scroll so users spend more time in that section. Reducing this from 180ms to like 20 or 50 might be the play here. I think it is worth throwing those numbers in to see how that works, and test/review\n\n```debounceTimer = setTimeout(() =&gt; {\n                            if (event.deltaY &gt; 0) {\n                                if (isBottomContentActive) {\n                                    // Scroll the fixed section when bottom-content is already active\n                                    removeSticky(\"scrollDown\");\n                                    document.querySelector(\".header\").style.opacity = \"1\";\n                                } else {\n                                    const findSlideIndex = Array.from(animationTexts).findIndex(\n                                        (text) =&gt; !text.classList.contains(\"active\")\n                                    );\n                                    if (\n                                        findSlideIndex !== -1 &amp;&amp;\n                                        bodyElement.classList.contains(\"no-scroll\")\n                                    ) {\n                                        scrollDown(findSlideIndex);\n                                        handleTextOpacity(findSlideIndex, \"scrollDown\");\n                                    }\n                                }\n                            } else {\n                                const findLastIndex = Array.from(animationTexts).findLastIndex(\n                                    (text) =&gt; text.classList.contains(\"active\")\n                                );\n                                if (\n                                    findLastIndex &gt;= 0 &amp;&amp;\n                                    bodyElement.classList.contains(\"no-scroll\")\n                                ) {\n                                    scrollUp(findLastIndex);\n                                    handleTextOpacity(findLastIndex, \"scrollUp\");\n                                } else {\n                                    removeSticky(\"scrollUp\");\n                                    document.querySelector(\".header\").style.opacity = \"1\";\n                                }\n                            }\n                        }, 180);```\nTHAT BEING SAID. I would not be myself if I told you that this is terrible user experience. There is zero benefit to the user that you take over normal scrolling behavior.\n\nJust my 2 cents on that — overall reduce the debounce timer. That is just saying only process one of these every X milliseconds"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrew Dunbar",
+      "poster_handle": "andrew127"
+    },
+    "time_stamp": "2025-02-14 06:20:56",
+    "text": "Nick! I hope you've been doing well. I agree with you on the UX, but since it is a request, I'll give it a shot to see if this helps the issue. Thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-02-14 06:26:44",
+    "text": "LOL I know how it goes lol"
+  }
+]

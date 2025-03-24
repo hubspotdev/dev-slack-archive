@@ -1,0 +1,282 @@
+[
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2024-05-27 04:19:24",
+    "text": "joining the question!"
+  },
+  {
+    "poster": {
+      "poster_name": "Val Kotlarov",
+      "poster_handle": "val.kotlarov"
+    },
+    "time_stamp": "2024-05-27 04:52:55",
+    "text": "<@U06KP87QUJW> No need to strip the inner `\"`'s - please note they are regular JSON  doublequotes inside a double quoted string.\nDo you know maybe someone form HS who can guide me me through this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Val Kotlarov",
+      "poster_handle": "val.kotlarov"
+    },
+    "time_stamp": "2024-05-27 05:38:48",
+    "edited": {
+      "time_stamp": "2024-05-27 05:39:47"
+    },
+    "text": "Bye the way - this request is for a webhook, it arrives when action is triggered on HS. In that case, what is the URL? It's `<https://api.hubapi.com>` ?\n\nDoes this string look good?\n```POST<https://api.hubapi.com/[{eventId:123456,subscriptionId:1234,portalId:1234,appId:1234,occurredAt:1234,subscriptionType:deal.propertyChange,attemptNumber:0>,    objectId:1234,propertyName:dealstage,propertyValue:contractsent,changeSource:CRM_UI,sourceId:userId:64535554}]```"
+  },
+  {
+    "text": "<@U06SDFMD947> I meant stripping the backslashes not the quotes. Sorry for the misunderstanding. If you play around with the string in this tool <https://www.devglan.com/online-tools/hmac-sha256-online> as per the screenshot do you get the correct hash?",
+    "time_stamp": "2024-05-27 05:41:49"
+  },
+  {
+    "poster": {
+      "poster_name": "Val Kotlarov",
+      "poster_handle": "val.kotlarov"
+    },
+    "time_stamp": "2024-05-27 05:44:08",
+    "text": "Sorry yes, I edited it manually - so this string is well constructed before applying the hashing functions?\n``` POST<https://api.hubapi.com/[{>\"eventId\":123456,\"subscriptionId\":1234,\"portalId\":1234,\"appId\":1234,\"occurredAt\":1234,\"subscriptionType\":\"deal.propertyChange\",       \"attemptNumber\":0,\"objectId\":1234,\"propertyName\":\"dealstage\",\"propertyValue\":\"contractsent\",\"changeSource\":\"CRM_UI\",\"sourceId\":\"userId:64535554\"}]```"
+  },
+  {
+    "poster": {
+      "poster_name": "Omar Tanti",
+      "poster_handle": "omar.tanti"
+    },
+    "time_stamp": "2024-05-27 05:53:41",
+    "edited": {
+      "time_stamp": "2024-05-27 05:54:03"
+    },
+    "text": "So this is a sample from one of my projects. The url is for the webhook endpoint that you need to set up. not the HubSpot one <@U06SDFMD947>\n\n```POST<https://webhook.site/1d5744f7-bcf1-45bd-bb99-bc61a06ebc0b[{>\"eventId\":111111,\"subscriptionId\":111111,\"portalId\":111111,\"appId\":111111,\"occurredAt\":1701690196181,\"subscriptionType\":\"deal.propertyChange\",\"attemptNumber\":0,\"objectId\":9883334098,\"propertyName\":\"dealstage\",\"propertyValue\":\"decisionmakerboughtin\",\"changeSource\":\"CRM_UI\",\"sourceId\":\"userId:52094771\"}]1701690196833```"
+  },
+  {
+    "poster": {
+      "poster_name": "Val Kotlarov",
+      "poster_handle": "val.kotlarov"
+    },
+    "time_stamp": "2024-05-27 05:57:01",
+    "text": "I see so that was my problem while I'm develing with Ngrok. Going to try that out. Thanks <@U06KP87QUJW>!"
+  },
+  {
+    "poster": {
+      "poster_name": "Omar Tanti",
+      "poster_handle": "omar.tanti"
+    },
+    "time_stamp": "2024-05-27 06:16:05",
+    "text": "welcome <@U06SDFMD947> let me know how it goes"
+  },
+  {
+    "poster": {
+      "poster_name": "Val Kotlarov",
+      "poster_handle": "val.kotlarov"
+    },
+    "time_stamp": "2024-05-27 07:56:55",
+    "edited": {
+      "time_stamp": "2024-05-27 08:09:16"
+    },
+    "text": "<@U06KP87QUJW> ~Still cannot get it working. In your example:~\n```POST<https://webhook.site/1d5744f7-bcf1-45bd-bb99-bc61a06ebc0b[{>\"eventId....```\nLike missing `/` between `ebc0b` and  `[{\"e...` ?\nBecause the code was:\n```... 'https://' + event['requestContext']['domainName'] + '/' +  raw_payload ...```"
+  },
+  {
+    "poster": {
+      "poster_name": "Val Kotlarov",
+      "poster_handle": "val.kotlarov"
+    },
+    "time_stamp": "2024-05-27 07:57:48",
+    "text": "Also `event['requestContext']['domainName']` is only a domain name like `<http://example.com|example.com>` or it has the path too like `<http://example.com/hs_callback|example.com/hs_callback>`  ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Val Kotlarov",
+      "poster_handle": "val.kotlarov"
+    },
+    "time_stamp": "2024-05-27 08:11:33",
+    "text": "Got it working finally. The URL has to be full URL - <protocol://domain/path/to> ! :slightly_smiling_face: and then - no slashes - just:\n```method_url_body = \"#{request.request_method}#{URL}#{raw_payload}#{provided_timestamp}\"```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Val Kotlarov",
+      "poster_handle": "val.kotlarov"
+    },
+    "time_stamp": "2024-05-27 08:16:05",
+    "text": "Or simply:\n```    method_url_body = \"#{request.request_method}#{request.original_url}#{raw_payload}#{provided_timestamp}\"```\nOk thank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Omar Tanti",
+      "poster_handle": "omar.tanti"
+    },
+    "time_stamp": "2024-05-27 08:57:20",
+    "text": "very good :slightly_smiling_face: well done <@U06SDFMD947> !"
+  },
+  {
+    "poster": {
+      "poster_name": "James Brownlee",
+      "poster_handle": "james150"
+    },
+    "time_stamp": "2024-05-27 09:13:11",
+    "text": "Hoping someone can help here?\n\nMy first Public App integration. \n\nI have everything set up already, I am providing a response to the fetch request.\n\nThe response is accepted and some of the data is displaying, however for each string response, I get Invalid Property displayed in HubSpot.\n\nI did have the same issue with currency, however realised I needed to send a currency code with the data and that works fine and displays the values.\n\nJust strings are not doing that.\n\nThese are the properties I am responding with, is there something I am missing?\n\n\n\n     \"properties\": [\n                        {\n                            \"name\": \"finance_amount\",\n                            \"label\": \"Total Opportunity Value\",\n                            \"dataType\": \"CURRENCY\",\n                            \"value\": amount,\n                            \"currencyCode\": \"GBP\"\n                        },\n                        {\n                            \"name\": \"2_year_profile\",\n                            \"label\": \"2 Year Term Profile\",\n                            \"dataType\": \"STRING\",\n                            \"value\": \"1 + 23\"\n                        },\n                        {\n                            \"name\": \"2_year_repayment\",\n                            \"label\": \"Monthly Repayment\",\n                            \"dataType\": \"CURRENCY\",\n                            \"value\": two_year_rental,\n                            \"currencyCode\": \"GBP\"\n                        },\n                        {\n                            \"name\": \"3_year_profile\",\n                            \"label\": \"3 Year Term Profile\",\n                            \"dataType\": \"STRING\",\n                            \"value\": \"1 + 35\"\n                        },\n                        {\n                            \"name\": \"3_year_repayment\",\n                            \"label\": \"Monthly Repayment\",\n                            \"dataType\": \"CURRENCY\",\n                            \"value\": three_year_rental,\n                            \"currencyCode\": \"GBP\"\n                        },\n                        {\n                            \"name\": \"5_year_profile\",\n                            \"label\": \"5 Year Term Profile\",\n                            \"dataType\": \"STRING\",\n                            \"value\": \"1 + 59\"\n                        },\n                        {\n                            \"name\": \"5_year_repayment\",\n                            \"label\": \"Monthly Repayment\",\n                            \"dataType\": \"CURRENCY\",\n                            \"value\": five_year_rental,\n                            \"currencyCode\": \"GBP\"\n                        },\n                        {\n                            \"name\": \"contact\",\n                            \"label\": \"Contact Name\",\n                            \"dataType\": \"STRING\",\n                            \"value\": \"Max Ley\"\n                        },\n                        {\n                            \"name\": \"contact_email\",\n                            \"label\": \"Contact Email\",\n                            \"dataType\": \"EMAIL\",\n                            \"value\": \"<mailto:max@systemsfinance.co.uk|max@systemsfinance.co.uk>\"\n                        },\n                        {\n                            \"name\": \"contact_number\",\n                            \"label\": \"Contact Number\",\n                            \"dataType\": \"STRING\",\n                            \"value\": \"telephone number\"\n                        }\n                    ],\n\n",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-05-28 04:43:15"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Dylan López",
+      "poster_handle": "dylan.lopez"
+    },
+    "time_stamp": "2024-05-27 11:39:01",
+    "text": "Hello. I have a technical question about using HubSpot object exports via API. I configured it to give me a CSV file with all the properties of each object, but when I get the export I get a .zip file, which is strange because before it only exported the .csv file itself.",
+    "reply_count": 10,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-27 12:39:10"
+      },
+      {
+        "time_stamp": "2024-05-27 14:03:46"
+      },
+      {
+        "time_stamp": "2024-05-27 14:04:06"
+      },
+      {
+        "time_stamp": "2024-05-27 18:22:11"
+      },
+      {
+        "time_stamp": "2024-05-27 18:22:47"
+      },
+      {
+        "time_stamp": "2024-05-27 18:26:42"
+      },
+      {
+        "time_stamp": "2024-05-27 18:28:14"
+      },
+      {
+        "time_stamp": "2024-05-27 18:31:32"
+      },
+      {
+        "time_stamp": "2024-05-27 18:49:45"
+      },
+      {
+        "time_stamp": "2024-05-27 18:50:37"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Dylan López",
+      "poster_handle": "dylan.lopez"
+    },
+    "time_stamp": "2024-05-27 11:40:56",
+    "text": "My question is: When will a .zip be thrown when requesting an object export? Because I tried it and it gave me a .zip file with only a .csv file inside it."
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Niederberger",
+      "poster_handle": "thomas.niederberger"
+    },
+    "time_stamp": "2024-05-27 12:39:10",
+    "text": "The last time I used it I sent a POST to that endpoint: <https://api.hubapi.com/crm/v3/exports/export/async> and then checked with a GET on: <https://api-na1.HubSpot.com/crm/v3/exports/export/async/tasks/$taskId/status> until it was done."
+  },
+  {
+    "poster": {
+      "poster_name": "Dylan López",
+      "poster_handle": "dylan.lopez"
+    },
+    "time_stamp": "2024-05-27 14:03:46",
+    "text": "Yes, I did that, but I did something: In the POST request I had defined a few properties of the object to be exported, when I assigned many more properties it exported the CSV file inside a zip archive"
+  },
+  {
+    "poster": {
+      "poster_name": "Dylan López",
+      "poster_handle": "dylan.lopez"
+    },
+    "time_stamp": "2024-05-27 14:04:06",
+    "text": "Is that normal?"
+  },
+  {
+    "poster": {
+      "poster_name": "Antonio Acevedo",
+      "poster_handle": "antonio888"
+    },
+    "time_stamp": "2024-05-27 15:25:31",
+    "text": "Hi,\n\nCan someone please explain the difference between \"private apps\" and \"developer apps\"? My understanding is that:\n• *Private apps:* meant for *oauth-based server-to-server* flow, use mainly to interactions from our own servers with our own HubSpot account.\n• *Developer apps:* meant for *oauth based client credentials* flow, used mainly for interactions from our own servers with our customer accounts.\nIs that correct?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-27 18:25:13"
+      },
+      {
+        "time_stamp": "2024-05-29 05:43:54"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Niederberger",
+      "poster_handle": "thomas.niederberger"
+    },
+    "time_stamp": "2024-05-27 18:22:11",
+    "text": "I got a CSV out, not sure why you get a ZIP."
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Niederberger",
+      "poster_handle": "thomas.niederberger"
+    },
+    "time_stamp": "2024-05-27 18:22:47",
+    "text": "but if you, you probably could unpack it - my script was all in php"
+  },
+  {
+    "poster": {
+      "poster_name": "Alex Zappa",
+      "poster_handle": "reatlat"
+    },
+    "time_stamp": "2024-05-27 18:25:13",
+    "text": "<@U073724UWFN> I think this is right, meantime I never heard about `Developer apps`\nso far, I know there is `private` and `public` apps.\nPlease visit <https://developers.HubSpot.com/beta-docs/guides/apps/overview|HS Docs>."
+  },
+  {
+    "poster": {
+      "poster_name": "Dylan López",
+      "poster_handle": "dylan.lopez"
+    },
+    "time_stamp": "2024-05-27 18:26:42",
+    "edited": {
+      "time_stamp": "2024-05-27 18:26:50"
+    },
+    "text": "Maybe the quantity of parameters? Because with a Lot of properties that returned the zip."
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Niederberger",
+      "poster_handle": "thomas.niederberger"
+    },
+    "time_stamp": "2024-05-27 18:28:14",
+    "text": "Do you want my PHP file?"
+  },
+  {
+    "poster": {
+      "poster_name": "Dylan López",
+      "poster_handle": "dylan.lopez"
+    },
+    "time_stamp": "2024-05-27 18:31:32",
+    "text": "I don't know so much about PHP, but, could yo show me how you call the endpoint please?"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Niederberger",
+      "poster_handle": "thomas.niederberger"
+    },
+    "time_stamp": "2024-05-27 18:49:45",
+    "text": "Did you look at the documentation:\n<https://developers.HubSpot.com/docs/api/crm/exports>"
+  },
+  {
+    "poster": {
+      "poster_name": "Dylan López",
+      "poster_handle": "dylan.lopez"
+    },
+    "time_stamp": "2024-05-27 18:50:37",
+    "text": "Yes, but i didn't found information about the zip file"
+  }
+]

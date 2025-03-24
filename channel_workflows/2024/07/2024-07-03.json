@@ -1,0 +1,51 @@
+[
+  {
+    "poster": {
+      "poster_name": "Dean Winc",
+      "poster_handle": "mahi"
+    },
+    "time_stamp": "2024-07-03 06:09:47",
+    "edited": {
+      "time_stamp": "2024-07-03 06:19:59"
+    },
+    "text": "Hello I'm facing a problem in bringing the the expected `value` in the `outputFields`  in my custom Workflow Actions.\n\nHere's what I'm trying  to achieve is that whenever the a `POST` request is sent to the *actionURL* it will return a data and I want to use that returned data in my `outputFields`  .\n\nHere's the *POST* request code :\n\n```{\n    \"actionUrl\": \"<https://number-converter.vercel.app/test>\",\n    \"inputFields\": [\n        {\n            \"typeDefinition\": {\n                \"name\": \"widgetName\",\n                \"type\": \"string\",\n                \"fieldType\": \"text\"\n            },\n            \"supportedValueTypes\": [\n                \"STATIC_VALUE\"\n            ],\n            \"isRequired\": true\n        }\n    ],\n     \"outputFields\": [\n        {\n            \"typeDefinition\": {\n                \"name\": \"Output1\",\n                \"type\": \"string\",\n                \"fieldType\": \"text\"\n            },\n            \"supportedValueTypes\": [\n                \"STATIC_VALUE\"\n            ]\n        }\n    ],\n    \"labels\": {\n        \"en\": {\n            \"actionName\": \"Create Widget - Example 2\",\n            \"actionCardContent\": \"Create widget {{widgetName}}\",\n            \"inputFieldLabels\": {\n                \"widgetName\": \"Widget Name\"\n            },\n            \"outputFieldLabels\": {\n                \"Output1\": \"Widget Output\"\n            }\n        }\n    },\n    \"functions\": [\n        {\n            \"functionType\": \"PRE_ACTION_EXECUTION\",\n            \"functionSource\": \"exports.main = function(event, callback) { return callback(transformRequest(event)); }\\nfunction transformRequest(request) { return { webhookUrl: '<https://number-converter-psi.vercel.app/convert>', body: JSON.stringify({value:777}), contentType: 'application/json', accept: 'application/json', httpMethod: 'POST' }; }\"\n        }\n    ]\n}```\nHere the actionURL will return data like this\n```{\n    \"result\":\"777\"\n}```\n1. Now how can I put the returned value *777* dynamically in the outputFields below? Do I need to use a *Execution function* for this ?\n```{\n  \"outputFields\":{\n    \"myOutput\":\"Some value\",\n    \"hs_execution_state\": \"SUCCESS\" \n  }\n}```\n2. Also,  Every time the action executes. I want to put a  *inputField* value dynamically in the *request payload*. Current I'm doing it using *PRE_ACTION_EXECUTION function* and hardcoding the value.\nSo how can i make it dynamic and also is the used function correct ?\n\n``` \"functionType\": \"PRE_ACTION_EXECUTION\",\n            \"functionSource\": \"exports.main = function(event, callback) { return callback(transformRequest(event)); }\\nfunction transformRequest(request) { return { webhookUrl: '<https://number-converter-psi.vercel.app/convert>', body: JSON.stringify({value:777}), contentType: 'application/json', accept: 'application/json', httpMethod: 'POST' }; }\"```\nThank in Advance!",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-07-03 08:37:27"
+      },
+      {
+        "time_stamp": "2024-07-04 03:10:30"
+      },
+      {
+        "time_stamp": "2024-07-04 04:01:05"
+      },
+      {
+        "time_stamp": "2024-07-04 09:27:33"
+      },
+      {
+        "time_stamp": "2024-07-05 03:24:31"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jonas De Mets",
+      "poster_handle": "jonas297"
+    },
+    "time_stamp": "2024-07-03 06:18:58",
+    "text": "No worries! Thanks anyway :pray:"
+  },
+  {
+    "poster": {
+      "poster_name": "Cameron Harro",
+      "poster_handle": "cameron420"
+    },
+    "time_stamp": "2024-07-03 08:37:27",
+    "edited": {
+      "time_stamp": "2024-07-03 08:37:57"
+    },
+    "text": "Hey <@U05JJCC63FE>,\n1. Yes, you’ll want a <https://developers.HubSpot.com/beta-docs/guides/api/automation/custom-workflow-actions#post_action_execution-function|Post Action Execution function> which parses the response body and returns the `outputFields` object accordingly.\n2. In a <https://developers.HubSpot.com/beta-docs/guides/api/automation/custom-workflow-actions#pre_action_execution-function|Pre Action Execution function>, the `event` argument will contain the inputField values in a format like this: \n```//\n{\n  \"webhookUrl\": \"<https://actionurl.com/>\",\n  \"callbackId\": \"ap-102670506-56776413549-7-0\",\n  \"origin\": {\n    \"portalId\": 102670506,\n    \"actionDefinitionId\": 10646377,\n    \"actionDefinitionVersion\": 1\n  },\n  \"context\": {\n    \"source\": \"WORKFLOWS\",\n    \"workflowId\": 192814114\n  },\n  \"object\": {\n    \"objectId\": 904,\n    \"properties\": {\n      \"email\": \"ajenkenbb@gnu.org\"\n    },\n    \"objectType\": \"CONTACT\"\n  },\n  \"inputFields\": {\n    \"staticInput\": \"My Static Input\",\n    \"objectInput\": \"995\",\n    \"optionsInput\": \"1\"\n  }\n}```\nThat means you could replace `JSON.stringify({value:777})`  in your second function with `JSON.stringify({value:request.inputFields.yourInput})` , then when you pass “event” to “transformRequest”, it will configure the data dynamically.\n\nLast thing is I don’t think you need to return the callback in the main export, you just need to call it."
+  }
+]

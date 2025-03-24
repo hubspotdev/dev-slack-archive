@@ -1,0 +1,55 @@
+[
+  {
+    "poster": {
+      "poster_name": "Johanz Cyrille Tan",
+      "poster_handle": "jcyrilletan"
+    },
+    "time_stamp": "2023-01-11 03:57:46",
+    "text": "Hi There,\n\nI've created a *Podcast Pop-up Form* module (Button Title, Button ID name, and Form). When I add the second Podcast Pop-up module to the page, the final form (*Form 2*) will be selected. So when I clicked the first button, the pop-up form was *Form 2*, where it should be *Form 1* instead. Please see my code below. Thanks for your help.\n\n```&lt;button id=\"{{ module.button_id_name }}-{{ name }}\" class=\"btn-podcasts\"&gt;{{ module.button_name }}&lt;/button&gt;\n\n&lt;div id=\"{{ module.button_id_name }}-modal-{{ name }}\" class=\"modal\"&gt;\n\t&lt;div class=\"modal-content\"&gt;\n\t\t&lt;div class=\"modal-header\"&gt;\n\t\t  &lt;span class=\"close close-{{ name }}\"&gt;&amp;times;&lt;/span&gt;\n\t\t&lt;/div&gt;\n\t\t{% form\n\t\t\tform_to_use=\"{{ module.form_field.form_id }}\"\n\t\t\tresponse_response_type=\"{{ module.form_field.response_type }}\"\n\t\t\tresponse_message=\"{{ module.form_field.message }}\"\n\t\t\tresponse_redirect_id=\"{{ module.form_field.redirect_id }}\"\n\t\t\tresponse_redirect_url=\"{{module.form_field.redirect_url}}\"\n\t\t\tgotowebinar_webinar_key=\"{{ module.form_field.gotowebinar_webinar_key }}\"\n\t\t%}\n\t&lt;/div&gt;\n&lt;/div&gt;\n\n{% require_js %}\n&lt;script&gt;\n// Get the modal\nvar modal = document.getElementById(\"{{ module.button_id_name }}-modal-{{ name }}\");\n\n// Get the button that opens the modal\nvar btn = document.getElementById(\"{{ module.button_id_name }}-{{ name }}\");\n\n// Get the &lt;span&gt; element that closes the modal\nvar span = document.getElementsByClassName(\"close-{{ name }}\")[0];\n\n// When the user clicks on the button, open the modal\nbtn.onclick = function() {\n  modal.style.display = \"block\";\n}\n\n// When the user clicks on &lt;span&gt; (x), close the modal\nspan.onclick = function() {\n  modal.style.display = \"none\";\n}\n\n// When the user clicks anywhere outside of the modal, close it\nwindow.onclick = function(event) {\n  if (event.target == modal) {\n    modal.style.display = \"none\";\n  }\n}\n&lt;/script&gt;\n{% end_require_js %}```",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-01-11 11:55:42"
+      },
+      {
+        "time_stamp": "2023-01-11 12:04:45"
+      },
+      {
+        "time_stamp": "2023-01-14 13:24:46"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Don Elliott",
+      "poster_handle": "delliott"
+    },
+    "time_stamp": "2023-01-11 09:38:59",
+    "text": "Hi All,\n\nI’ve copied the boilerplate HubSpot Social Sharing module because I want to be able to use different icons than the ones it provides by default. I had to copy as opposed to clone because there was no clone option. I’ve copied everything exactly into my new module and published, but it doesn’t show up as an option in the Add Sidebar when editing a page. The “make available in templates and pages” option is checked. Any ideas what I might be missing?"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-01-11 11:55:42",
+    "text": "Hard to be exactly certain without seeing your fields setup in this case, but I’d suspect something is going on with your modal, btn and span variables being in the global namespace.\n\nSince the JS is going to be unique per-module (owing to the insertion of element IDs via HubL), an additional instance of the script is going to be added to the page for every module. Since those variables are globally scoped, later instances of the script are reassigning the value of variables that might still be in use by previous instances."
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-01-11 12:04:45",
+    "text": "Quick fixes for this would include:\n• Scoping your variables by putting them inside of a function.\n• Adding the module `{{ id }}` to the variable names so that they’re unique per-module\nA better fix would be to rewrite your Javascript in a way that isn’t unique on a per-module basis, so that you’re not dealing with duplicative scripts."
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Ranem",
+      "poster_handle": "dustin248"
+    },
+    "time_stamp": "2023-01-11 14:03:45",
+    "text": "Is it possible to use logic based on the user that is logged in on a page? I'd like to dynamically show a single row from a HubDB table based on who is logged in.\n\nFor example;\nShow Row 1 if <mailto:example@gmail.com|example@gmail.com> is logged in.\nShow Row 2 if <mailto:example2@gmail.com|example2@gmail.com> is logged in.\n\nThank you!"
+  }
+]

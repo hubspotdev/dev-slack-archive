@@ -1,0 +1,197 @@
+[
+  {
+    "poster": {
+      "poster_name": "Mark Lerner",
+      "poster_handle": "mark595"
+    },
+    "time_stamp": "2022-05-15 10:56:54",
+    "text": "Ok, im really banging my head against the wall here. I just can’t figure out how to display a hubdb table the way I want it to look. I essentially just want it to display the exact way it appears in the hubdb file"
+  },
+  {
+    "text": "",
+    "time_stamp": "2022-05-15 10:56:57"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Lerner",
+      "poster_handle": "mark595"
+    },
+    "time_stamp": "2022-05-15 10:57:31",
+    "text": "It’s a competitor comparison table in which the first column shows the company name and the following columns show a feature and a check mark or X (images) to indicate if it’s supported by said company."
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Lerner",
+      "poster_handle": "mark595"
+    },
+    "time_stamp": "2022-05-15 10:57:47",
+    "text": "I’ve spent all weekend trying to figure this out on my own."
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Carlin",
+      "poster_handle": "martin264"
+    },
+    "time_stamp": "2022-05-15 11:01:02",
+    "text": "has the table been published? what does the hubl template look like?",
+    "reply_count": 3,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-05-15 11:20:20"
+      },
+      {
+        "time_stamp": "2022-05-15 11:21:02"
+      },
+      {
+        "time_stamp": "2022-05-15 11:23:44"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Lerner",
+      "poster_handle": "mark595"
+    },
+    "time_stamp": "2022-05-15 11:16:00",
+    "text": "Published, yes. I’ve gone through so many iterations of trying different hubl that I am now back to a blank screen."
+  },
+  {
+    "text": "when printing the entire thing",
+    "time_stamp": "2022-05-15 11:20:20"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Lerner",
+      "poster_handle": "mark595"
+    },
+    "time_stamp": "2022-05-15 11:21:02",
+    "text": "I just want the first row to show company name, the columns to have their column name on the first row, and then the values in those columns correctly placed for each company."
+  },
+  {
+    "text": "Can’t even get this to work",
+    "time_stamp": "2022-05-15 11:23:44"
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Carlin",
+      "poster_handle": "martin264"
+    },
+    "time_stamp": "2022-05-15 11:24:54",
+    "text": "hmm, dunno what's happening there, this is how I fetch stuff from my hub db tables\n\n```{% for row in hubdb_table_rows(the_table_id) %}\n \n{% endfor %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Carlin",
+      "poster_handle": "martin264"
+    },
+    "time_stamp": "2022-05-15 11:26:44",
+    "text": "so you could do something like\n\n```&lt;table&gt;\n    &lt;thead&gt;\n        &lt;tr&gt;\n            &lt;th&gt;Competitor&lt;/th&gt;\n        &lt;/tr&gt;\n    &lt;/thead&gt;\n    &lt;tbody&gt;\n        {% for row in hubdb_table_rows(the_table_id) %}\n             &lt;tr&gt;\n                 &lt;td&gt;{{ row.column_name_from_hub_db&lt;/td&gt;\n             &lt;/tr&gt;\n        {% endfor %}\n    &lt;/tbody&gt;\n&lt;/table&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Lerner",
+      "poster_handle": "mark595"
+    },
+    "time_stamp": "2022-05-15 11:33:27",
+    "text": "Do you have to specify each column?"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Lerner",
+      "poster_handle": "mark595"
+    },
+    "time_stamp": "2022-05-15 11:33:33",
+    "text": "Not just have it loop through all of them"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Lerner",
+      "poster_handle": "mark595"
+    },
+    "time_stamp": "2022-05-15 11:45:50",
+    "text": "```{% set competitor_table = hubdb_table(module.hubdb_table) %}\n{% set competitor_table_rows = hubdb_table_rows(module.hubdb_table) %}\n&lt;div class=\"Comparison__Grid\"&gt;\n{% for column in competitor_table.columns %}\n{% set current_col = column.name %} \n  &lt;div&gt;\n  \n{{ column.label }}   \n  &lt;/div&gt;\n  {% for row in competitor_table_rows %}\n  &lt;div&gt;\n  {{ row|attr(current_col) }} \n  &lt;/div&gt;\n  {% endfor %}\n{% endfor %}\n  &lt;/div&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Lerner",
+      "poster_handle": "mark595"
+    },
+    "time_stamp": "2022-05-15 11:46:04",
+    "text": "seems to work, but I dont know how to specific that I want the image URL from “current_col”",
+    "reply_count": 9,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-05-15 14:00:15"
+      },
+      {
+        "time_stamp": "2022-05-15 14:03:11"
+      },
+      {
+        "time_stamp": "2022-05-15 14:12:54"
+      },
+      {
+        "time_stamp": "2022-05-15 14:29:11"
+      },
+      {
+        "time_stamp": "2022-05-15 20:38:33"
+      },
+      {
+        "time_stamp": "2022-05-15 20:38:54"
+      },
+      {
+        "time_stamp": "2022-05-15 20:39:41"
+      },
+      {
+        "time_stamp": "2022-05-16 15:25:31"
+      },
+      {
+        "time_stamp": "2022-05-16 19:12:00"
+      }
+    ]
+  },
+  {
+    "text": "",
+    "time_stamp": "2022-05-15 14:00:15"
+  },
+  {
+    "text": "I used the method you used above just cleaned it up a bit and added some styling. For the images you need to check for the type of the column then pull the `url` as the `src` for your image tags.",
+    "time_stamp": "2022-05-15 14:03:11",
+    "edited": {
+      "time_stamp": "2022-05-15 14:06:13"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Lerner",
+      "poster_handle": "mark595"
+    },
+    "time_stamp": "2022-05-15 14:12:54",
+    "text": "Wow! Thank you so much. I will test this out when I get back to my coMputer. Huge props. "
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin Ordener",
+      "poster_handle": "k.ordener.dev"
+    },
+    "time_stamp": "2022-05-15 14:29:11",
+    "text": "No prob! If you need any more help with it feel free to msg me directly."
+  },
+  {
+    "text": "OK! We are getting super close. I actually changed the table to have the columns be the company and the rows be the “feature” however, I’d like to have the “logos” row show just the image values above (next to features)",
+    "time_stamp": "2022-05-15 20:38:33"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Lerner",
+      "poster_handle": "mark595"
+    },
+    "time_stamp": "2022-05-15 20:38:54",
+    "text": "`{% set table = ( module.hubdb_table) %}`\n`{% set table_data = hubdb_table(table) %}`\n`{% set table_rows = hubdb_table_rows(table) %}`\n`&lt;div class=\"Comparison__Table\"&gt;`\n `{% for column in table_data.columns %}`\n  `{% if loop.index is equalto 1 %}`\n      `{% do column_names.append(column.label) %}`\n  `&lt;h4 class=\"HLabel\"&gt;`\n    `{{ column.label }}`\n  `&lt;/h4&gt;`\n `{% else %}`\n  `&lt;div&gt; &lt;/div&gt;`\n  `{% endif %}`\n  `{% endfor %}`\n  `{% for row in table_rows %}`\n  `{% for column in table_data.columns %}`\n    `{% if column.type == 'IMAGE' %}`\n    `{% set source = row|attr(column.name) %}`\n    `&lt;img src=\"{{ source.url }}\"&gt;`\n            `{% else %}`\n              `&lt;div&gt; {{ row|attr(column.name) }}&lt;/div&gt;`\n            `{% endif %}`\n  \n        `{% endfor %}`\n     \n    `{% endfor %}`\n `&lt;/div&gt;`"
+  },
+  {
+    "text": "table:",
+    "time_stamp": "2022-05-15 20:39:41"
+  }
+]

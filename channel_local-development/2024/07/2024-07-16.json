@@ -1,0 +1,142 @@
+[
+  {
+    "poster": {
+      "poster_name": "David Sereboff",
+      "poster_handle": "david200"
+    },
+    "time_stamp": "2024-07-16 07:39:05",
+    "edited": {
+      "time_stamp": "2024-07-16 07:40:18"
+    },
+    "text": "Hello all, new to HubSpot Slack. I'm running into an issue when testing a webhook from within the HubSpot console. I provisioned my API to 'seemingly' meet the requirements regarding payload, etc., but receive nothing but a 400 response and null error message from HubSpot.\n\nI'm also unsure if this is the proper place to ask this question, so any assist on both fronts is appreciated!"
+  },
+  {
+    "poster": {
+      "poster_name": "Twentyninetimes",
+      "poster_handle": "tech817"
+    },
+    "time_stamp": "2024-07-16 10:32:12",
+    "edited": {
+      "time_stamp": "2024-07-16 10:40:05"
+    },
+    "text": "Is it possible to disable “Apply changes” and just have the CMS update changes instantly. Sometimes changes are updated immediately other times I need to hit the Apply Changes button - it’s not clear to me what causes the differences in update behaviour.\n\nIt’s mostly in grouped / repeater items I experience the Apply Changes function.",
+    "reply_count": 10,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-07-16 10:39:10"
+      },
+      {
+        "time_stamp": "2024-07-16 12:55:46"
+      },
+      {
+        "time_stamp": "2024-07-16 13:06:32"
+      },
+      {
+        "time_stamp": "2024-07-16 13:08:03"
+      },
+      {
+        "time_stamp": "2024-07-16 13:08:03"
+      },
+      {
+        "time_stamp": "2024-07-16 13:08:56"
+      },
+      {
+        "time_stamp": "2024-07-16 13:08:59"
+      },
+      {
+        "time_stamp": "2024-07-16 13:09:02"
+      },
+      {
+        "time_stamp": "2024-07-16 13:09:18"
+      },
+      {
+        "time_stamp": "2024-07-16 13:22:00"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Twentyninetimes",
+      "poster_handle": "tech817"
+    },
+    "time_stamp": "2024-07-16 10:39:10",
+    "text": "```When the user updates a module that we can apply to the page without a refresh, we auto-apply the changes and show a confirmation message that changes were applied and saved. Conversely, when a user makes a module update that requires the page editor to refresh to show those changes on the page, the \"Apply changes\" button slides in so that the user can apply their changes.```\n<https://developers.HubSpot.com/changelog/usability-and-interface-improvements-for-the-page-editor>\n\nBut what defines if a module is one that doesn’t require a refresh or not?"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2024-07-16 12:55:46",
+    "text": "This is primarily determined by whether or not you have Javascript in that module’s `module.js`. I believe that the intent is to prevent issues that might be caused by module scripts firing over and over again when doing things like typing or sliding a number field.\n\nNotably, this *only* applies to JS in `module.js`, so JS within `{% require_js %}` tags in `module.html` won’t cause the “Apply Changes” mode to trigger, nor will JS in your main JS bundle, or methods of writing inline JS, like Alpine.\n\nThe check only seems to look at whether there is _something_ in your `module.js` file, and doesn’t actually check if that JS does anything. For example, if you use `module.js` as an entrypoint for running PostCSS on `module.css` via webpack, the debug information that PostCSS leaves behind will cause the “Apply Changes” button to appear.\n\nTypically, I just move my into a `{% require_js %}` block in `module.html`. So long as you’re not doing anything scoped to the specific module _(which you shouldn’t anyway, if you’re writing robust JS)_, it only gets added to the page once, so it’s functionally identical to using `module.js`."
+  },
+  {
+    "poster": {
+      "poster_name": "Twentyninetimes",
+      "poster_handle": "tech817"
+    },
+    "time_stamp": "2024-07-16 13:06:32",
+    "text": "<@U04AQA0QM8E> Thank you for a very elaborate answer. Unfortunately the modules in questions contain nothing in the module.js files.\n\nThough we have a custom setup that populates and minifies module.css through a module.scss file (nested css).\n\nBut that doesn’t really do anything with the module.js file as it is handled by our gulp setup"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2024-07-16 13:08:03",
+    "text": "Check the output of your module.js — it may still be using it as an entrypoint, as most transpilers will require a different entrypoint for each output file."
+  },
+  {
+    "poster": {
+      "poster_name": "Twentyninetimes",
+      "poster_handle": "tech817"
+    },
+    "time_stamp": "2024-07-16 13:08:03",
+    "text": "Just double checked. A few of them actually had some js in the module.js file. So just wrapping that in require_js will fix the issue?"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2024-07-16 13:08:56",
+    "text": "Yup, move it into `module.html` and then wrap it in `require_js` and `&lt;script&gt;` tags."
+  },
+  {
+    "poster": {
+      "poster_name": "Twentyninetimes",
+      "poster_handle": "tech817"
+    },
+    "time_stamp": "2024-07-16 13:08:59",
+    "text": "in the html file"
+  },
+  {
+    "poster": {
+      "poster_name": "Twentyninetimes",
+      "poster_handle": "tech817"
+    },
+    "time_stamp": "2024-07-16 13:09:02",
+    "text": "yes, ok cool"
+  },
+  {
+    "poster": {
+      "poster_name": "Twentyninetimes",
+      "poster_handle": "tech817"
+    },
+    "time_stamp": "2024-07-16 13:09:18",
+    "text": "I will give it a go. Thanks a ton for your time. Much appreciated"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2024-07-16 13:22:00",
+    "text": "Of course!"
+  },
+  {
+    "text": "Hi everyone, does anyone happen to know how to solve the error in the image? It doesn't allow me to upload the files. Am I missing some permission or something?",
+    "time_stamp": "2024-07-16 14:28:12"
+  }
+]

@@ -1,0 +1,246 @@
+[
+  {
+    "poster": {
+      "poster_name": "LOIC BURDET",
+      "poster_handle": "loic_burdet"
+    },
+    "time_stamp": "2018-10-02 01:46:20",
+    "edited": {
+      "time_stamp": "2018-10-02 03:09:01"
+    },
+    "text": "*LANGUAGE ISSUE*\nI have website pages traducted in 4 languages and 4 blogs for each language\nI would like to filter suggested results and results by language\nI use &lt;input type=“hidden” name=“language” value=“{{ langue }}“&gt; where LANGUE depends on website traduction\nFor website pages and landing pages it’s OK, it works\nBut my problem is with blogs because blog don’t use TRANSLATION feature.\nDoes anyone know how doing this  ?",
+    "reply_count": 20,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2018-10-02 05:15:58"
+      },
+      {
+        "time_stamp": "2018-10-02 05:16:19"
+      },
+      {
+        "time_stamp": "2018-10-02 05:17:10"
+      },
+      {
+        "time_stamp": "2018-10-02 07:26:32"
+      },
+      {
+        "time_stamp": "2018-10-02 07:28:04"
+      },
+      {
+        "time_stamp": "2018-10-02 07:28:56"
+      },
+      {
+        "time_stamp": "2018-10-02 07:29:19"
+      },
+      {
+        "time_stamp": "2018-10-02 07:31:12"
+      },
+      {
+        "time_stamp": "2018-10-02 07:33:01"
+      },
+      {
+        "time_stamp": "2018-10-02 07:33:36"
+      },
+      {
+        "time_stamp": "2018-10-02 07:34:16"
+      },
+      {
+        "time_stamp": "2018-10-02 07:34:17"
+      },
+      {
+        "time_stamp": "2018-10-02 07:34:36"
+      },
+      {
+        "time_stamp": "2018-10-02 07:34:37"
+      },
+      {
+        "time_stamp": "2018-10-02 07:35:37"
+      },
+      {
+        "time_stamp": "2018-10-02 07:35:54"
+      },
+      {
+        "time_stamp": "2018-10-02 07:36:02"
+      },
+      {
+        "time_stamp": "2018-10-02 07:36:32"
+      },
+      {
+        "time_stamp": "2018-10-02 07:36:49"
+      },
+      {
+        "time_stamp": "2018-10-02 08:00:28"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-10-02 05:15:58",
+    "text": "I was going to add a filter by content group id today"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-10-02 05:16:19",
+    "text": "So you could put in your blog id for each search and it would work"
+  },
+  {
+    "poster": {
+      "poster_name": "LOIC BURDET",
+      "poster_handle": "loic_burdet"
+    },
+    "time_stamp": "2018-10-02 05:17:10",
+    "text": "Amazing !"
+  },
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2018-10-02 07:26:32",
+    "edited": {
+      "time_stamp": "2018-10-02 07:27:04"
+    },
+    "text": "I usually solve this with the pathPrefix (but you need to setup all your langs under subfolders. But it has more sense to me set the whole site under /fr and then you are able to search on website + blog)"
+  },
+  {
+    "poster": {
+      "poster_name": "LOIC BURDET",
+      "poster_handle": "loic_burdet"
+    },
+    "time_stamp": "2018-10-02 07:28:04",
+    "text": "Yes you’re right <@U7ADCU3BM>\nenglish is the base\nfrench version is under /fr/\ngerman is under /de/\nand dutch is under /nl/"
+  },
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2018-10-02 07:28:56",
+    "text": "then my suggestions is add something like this to your search module:\n`&lt;input type=\"hidden\" name=\"pathPrefix\" value=\"{{ lang_slug }}\"&gt;`"
+  },
+  {
+    "poster": {
+      "poster_name": "LOIC BURDET",
+      "poster_handle": "loic_burdet"
+    },
+    "time_stamp": "2018-10-02 07:29:19",
+    "text": "You rock !"
+  },
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2018-10-02 07:31:12",
+    "text": "in my case lang_slug is a custom one (because I don't like default HS lang prefixes like fr-be etc)"
+  },
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2018-10-02 07:33:01",
+    "text": "I see you use customs too so this is the full solution you need:"
+  },
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2018-10-02 07:33:36",
+    "edited": {
+      "time_stamp": "2018-10-02 07:34:22"
+    },
+    "text": "`{% if request.full_url is string_startingwith  \"/nl\")`\n`    {% set lang_slug = \"nl/\" %}`\n`{% elif request.full_url is string_startingwith \"/fr\" %}`\n`    {% set lang_slug = \"fr/\" %}`\n`{% elif request.full_url is string_startingwith \"/de\" %}`\n`    {% set lang_slug = \"de/\" %}`\n`{% else %}`\n    `{% set lang_slug = \"/\" %}`\n`{% endif %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "LOIC BURDET",
+      "poster_handle": "loic_burdet"
+    },
+    "time_stamp": "2018-10-02 07:34:16",
+    "text": "That’s it\nI used"
+  },
+  {
+    "poster": {
+      "poster_name": "LOIC BURDET",
+      "poster_handle": "loic_burdet"
+    },
+    "time_stamp": "2018-10-02 07:34:17",
+    "text": "{% if request.path is string_containing \"/fr/\"  %}\n          {% set langue = \"fr\" %}\n          {% elif request.path is string_containing \"/nl/\"  %}\n          {% set langue = \"nl\" %}\n          {% elif request.path is string_containing \"/de/\"  %}\n          {% set langue = \"de\" %}\n          {% else  %}\n          {% set langue = \"en\" %}\n          {% endif %}"
+  },
+  {
+    "poster": {
+      "poster_name": "LOIC BURDET",
+      "poster_handle": "loic_burdet"
+    },
+    "time_stamp": "2018-10-02 07:34:36",
+    "text": "i will change path by full_url"
+  },
+  {
+    "poster": {
+      "poster_name": "LOIC BURDET",
+      "poster_handle": "loic_burdet"
+    },
+    "time_stamp": "2018-10-02 07:34:37",
+    "text": ":slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2018-10-02 07:35:37",
+    "edited": {
+      "time_stamp": "2018-10-02 07:35:48"
+    },
+    "text": "if en is default and you don't have it in the slug (/en/...) you should set to an empty string or slash only"
+  },
+  {
+    "poster": {
+      "poster_name": "LOIC BURDET",
+      "poster_handle": "loic_burdet"
+    },
+    "time_stamp": "2018-10-02 07:35:54",
+    "text": "great"
+  },
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2018-10-02 07:36:02",
+    "text": "probably path will work too"
+  },
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2018-10-02 07:36:32",
+    "text": "I got it from other advanced project that had more than one brand under the same portal so had to filter by domain too"
+  },
+  {
+    "poster": {
+      "poster_name": "LOIC BURDET",
+      "poster_handle": "loic_burdet"
+    },
+    "time_stamp": "2018-10-02 07:36:49",
+    "text": "understand"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-10-02 08:00:28",
+    "text": "The `groupId` filter should be available today, just need to backfill the blog post index"
+  }
+]

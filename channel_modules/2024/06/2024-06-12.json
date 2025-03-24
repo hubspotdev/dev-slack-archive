@@ -1,0 +1,87 @@
+[
+  {
+    "poster": {
+      "poster_name": "Zori Manzanares",
+      "poster_handle": "zoraida.manzanares"
+    },
+    "time_stamp": "2024-06-12 05:35:59",
+    "text": "```Hello everyone, I am trying to adapt a module from a theme and make it global content. The problem is that when I include it, it is creating conflicts with the CSS of other pages. How can I make adjustments within the module so that it does not affect the rest of the pages? Here is the code:                                                                                            \n{% end_require_css %}\n\n&lt;section class=\"blog-navfooter navfooter-checkbox\"&gt;\n  &lt;div class=\"container {% if module.add_border_top %} bordered-top {% endif %}\"&gt;\n    &lt;div class=\"row equal\"&gt;\n      &lt;div class=\"col-lg-7 blog-navfooter--separator\"&gt;\n        &lt;div class=\"row\"&gt;\n          {% for item in module.link_column %}\n            &lt;div class=\"col-lg-3\"&gt;\n              &lt;div class=\"blog-navfooter--title text-uppercase\"&gt;\n                &lt;strong&gt;{{ item.col_title }}&lt;/strong&gt;\n              &lt;/div&gt;\n              &lt;ul class=\"blog-navfooter--list\"&gt;\n                {% for item2 in item.link_element %}\n                  &lt;li&gt;\n                    {% set href = item2.link_field.url.href %}\n                    &lt;a href=\"{{ href }}\"\n                      {% if item2.link_field.open_in_new_tab %}target=\"_blank\"{% endif %}\n                      {% if item2.link_field.rel %}rel=\"{{ item2.link_field.rel }}\"{% endif %}\n                    &gt;\n                      {{ item2.link_anchor_text }}\n                    &lt;/a&gt;\n                  &lt;/li&gt;\n                {% endfor %}\n              &lt;/ul&gt;\n            &lt;/div&gt;\n          {% endfor %}\n          {% if module.show_blog_posts %}\n            {% set blog_columns = module.blog_column %}\n            {% if blog_columns|length == 2 %}\n              &lt;div class=\"col-lg-3\"&gt;\n                &lt;div class=\"blog-navfooter--title text-uppercase\"&gt;\n                  &lt;strong&gt;{{ blog_columns[1].blog_column_title }}&lt;/strong&gt;\n                &lt;/div&gt;\n                {% set rec_posts = blog_recent_posts(blog_columns[1].blog_to_show, blog_columns[1].number_of_posts) %}\n                &lt;ul class=\"blog-navfooter--list\"&gt;\n                  {% for rec_post in rec_posts %}\n                    &lt;li&gt;&lt;a href=\"{{ rec_post.absolute_url }}\"&gt;{{ rec_post.name|truncate(35, True, \"...\") }}&lt;/a&gt;&lt;/li&gt;\n                  {% endfor %}\n                &lt;/ul&gt;\n              &lt;/div&gt;\n              &lt;div class=\"col-lg-3\"&gt;\n                &lt;div class=\"blog-navfooter--title text-uppercase\"&gt;\n                  &lt;strong&gt;{{ blog_columns[0].blog_column_title }}&lt;/strong&gt;\n                &lt;/div&gt;\n                {% set rec_posts = blog_recent_posts(blog_columns[0].blog_to_show, blog_columns[0].number_of_posts) %}\n                &lt;ul class=\"blog-navfooter--list\"&gt;\n                  {% for rec_post in rec_posts %}\n                    &lt;li&gt;&lt;a href=\"{{ rec_post.absolute_url }}\"&gt;{{ rec_post.name|truncate(35, True, \"...\") }}&lt;/a&gt;&lt;/li&gt;\n                  {% endfor %}\n                &lt;/ul&gt;\n              &lt;/div&gt;\n            {% else %}\n              {% for item in blog_columns %}\n                &lt;div class=\"col-lg-3\"&gt;\n                  &lt;div class=\"blog-navfooter--title text-uppercase\"&gt;\n                    &lt;strong&gt;{{ item.blog_column_title }}&lt;/strong&gt;\n                  &lt;/div&gt;\n                  {% set rec_posts = blog_recent_posts(item.blog_to_show, item.number_of_posts) %}\n                  &lt;ul class=\"blog-navfooter--list\"&gt;\n                    {% for rec_post in rec_posts %}\n                      &lt;li&gt;&lt;a href=\"{{ rec_post.absolute_url }}\"&gt;{{ rec_post.name|truncate(35, True, \"...\") }}&lt;/a&gt;&lt;/li&gt;\n                    {% endfor %}\n                  &lt;/ul&gt;\n                &lt;/div&gt;\n              {% endfor %}\n            {% endif %}\n          {% endif %}\n        &lt;/div&gt;\n      &lt;/div&gt;\n      &lt;div class=\"col-lg-4 offset-lg-1\"&gt;\n        &lt;div class=\"blog-navfooter--form align-top\"&gt;\n          &lt;div class=\"blog-navfooter--title text-uppercase\"&gt;\n            &lt;strong&gt;{{ module.form_group.form_title }}&lt;/strong&gt;\n          &lt;/div&gt;\n          &lt;div class=\"hs-richtext\"&gt;\n            &lt;p&gt;\n              {% form\n                form_to_use=\"{{ module.form_group.form.form_id }}\"\n                response_type=\"{{ module.form_group.form.response_type }}\"\n                response_message=\"{{ module.form_group.form.message }}\"\n                response_redirect_id=\"{{ module.form_group.form.redirect_id }}\"\n                response_redirect_url=\"{{ module.form_group.form.redirect_url }}\"\n                gotowebinar_webinar_key=\"{{ module.form_group.form.gotowebinar_webinar_key }}\"\n              %}\n            &lt;/p&gt;\n          &lt;/div&gt;\n          \n        &lt;/div&gt;\n      &lt;/div&gt;\n    &lt;/div&gt;\n  &lt;/div&gt;\n&lt;/section&gt;\n.blog-navfooter .blog-navfooter--title {\n    font-family: 'Arial', sans-serif !important;\n    font-weight: bold !important; /* Asegura que el título del newsletter esté en negrita */\n    display: block;\n    margin-bottom: 10px;\n    text-transform: uppercase; /* Asegura que el texto esté en mayúsculas */\n    font-size: 14px !important; /* Ajusta el tamaño de los títulos de los enlaces a 14px */\n}\n\n.blog-navfooter .blog-navfooter--list {\n    padding: 0;\n    margin: 0;\n    list-style: none;\n}\n\n.blog-navfooter .blog-navfooter--list li {\n    margin-bottom: 5px;\n}\n\n.blog-navfooter .blog-navfooter--list a {\n    font-family: 'Arial', sans-serif !important;\n    font-size: 12px !important;\n    text-decoration: none;\n    color: black !important; /* Cambiar el color del texto de los enlaces a negro */\n    display: inline-block;\n    padding-left: 0; /* Asegura que no haya padding adicional */\n    font-weight: normal !important; /* Asegura que los enlaces no estén en negrita */\n}\n\n/* Eliminar el punto adicional en el checkbox */\n.blog-navfooter .hs-form-booleancheckbox label::marker {\n    display: none !important;\n}\n\nli::marker {\n    content: \"\";\n}\n\n.blog-navfooter .hs-form-booleancheckbox label {\n    text-align: left !important; /* Alinear el texto a la izquierda */\n    display: flex !important; /* Usar flexbox para alinear horizontalmente */\n    align-items: center !important; /* Alinear verticalmente en el centro */\n    margin-bottom: 10px; /* Ajuste para separación del siguiente elemento */\n}\n\n/* Eliminar el punto adicional en el checkbox */\n.blog-navfooter .hs-form-booleancheckbox::marker,\n.blog-navfooter .inputs-list::marker {\n    display: none !important;\n}\n\n.blog-navfooter .inputs-list {\n    padding-left: 0 !important; /* Asegura que no haya padding adicional en la lista */\n}\n\n.blog-navfooter .hs-form-booleancheckbox input[type=\"checkbox\"] {\n    -webkit-appearance: checkbox !important;\n    -moz-appearance: checkbox !important;\n    -ms-appearance: checkbox !important;\n    appearance: checkbox !important;\n    width: auto !important; /* Asegurar que el ancho sea adecuado */\n    height: auto !important; /* Asegurar que la altura sea adecuada */\n    margin-right: 5px !important; /* Añadir espacio entre el checkbox y el texto */\n    padding: 0 !important; /* Eliminar padding no deseado */\n    background: none !important; /* Eliminar fondo no deseado */\n    border: initial !important; /* Restablecer el borde al valor predeterminado */\n    vertical-align: middle; /* Alinear verticalmente con el texto */\n}\n\n/* Asegurar que los nombres de los campos del formulario sean visibles */\n.hs-form label {\n    display: block;\n    font-size: 10px !important;\n    font-family: 'Arial', sans-serif !important;\n    margin-bottom: 5px;\n}\n\n/* Ajustes para los campos de entrada del formulario */\n.hs-form input, \n.hs-form textarea,\n.hs-form select {\n    font-size: 10px !important; /* Ajusta el tamaño de la fuente del formulario */\n}\n\n/* Ajustes para el botón del formulario */\n.hs-form input[type=\"submit\"],\n.hs-form input[type=\"button\"],\n.hs-form button {\n    font-family: 'Arial', sans-serif !important;\n    font-size: 10px !important;\n    padding: 5px 10px !important; /* Ajuste el padding del botón */\n}\n\n/* Agregar padding al contenedor del formulario */\n.blog-navfooter .blog-navfooter--form {\n    padding: 15px;\n    margin-top: 20px; /* Añadir espacio entre el formulario y el texto de arriba */\n}\n\n/* Estilo para el texto del formulario */\n.hs-richtext p {\n    font-size: 10px !important;\n    font-family: 'Arial', sans-serif !important;\n    margin: 0;\n    padding: 0;\n}\n\n/* Ajustes para el tamaño de fuente de los enlaces dentro de .blog-navfooter--list */\n.blog-navfooter .blog-navfooter--list a {\n    font-size: 12px !important; /* Tamaño de fuente de 12px */\n    font-family: 'Arial', sans-serif !important; /* Fuente */\n    color: black !important; /* Color del texto negro */\n    text-decoration: none; /* Sin subrayado */\n}\n\n/* Ajustes para el contenedor que rodea todo el navfooter */\n.container-fluid {\n    padding: 20px; /* Agregar padding alrededor del contenedor */\n    border-top: 1px solid #ccc; /* Línea de separación en la parte superior */\n    overflow: auto; /* Utilizar desplazamiento automático para manejar el desbordamiento */\n}\n\n/* Línea de separación entre los bloques de enlaces y el formulario */\n.blog-navfooter--separator {\n    border-top: 1px solid #ccc;\n    padding-top: 20px; /* Añadir espacio entre la línea de separación y el contenido */\n    margin-top: 20px; /* Añadir espacio entre la línea de separación y el contenido superior */\n}\n\n/* Línea de separación entre el lado izquierdo y derecho */\n.blog-navfooter {\n    border-right: 1px solid #ccc; /* Línea de separación */\n}\n\n/* Ajustar el espacio entre el checkbox y el texto */\n.blog-navfooter .hs-form-booleancheckbox label {\n    display: flex;\n    align-items: center; /* Alinear verticalmente el contenido */\n    margin-bottom: 5px; /* Reducir el espacio entre los elementos */\n}\n\n/* Ajustar el tamaño de fuente del texto del checkbox */\n.blog-navfooter .hs-form-booleancheckbox label span {\n    font-size: 10px !important;\n}\n\n/* Ajustar el tamaño de fuente de hs-richtext */\n.hs-richtext p {\n    font-size: 10px !important;\n  \n}\n.hs-richtext a {\n    font-size: 10px !important;\n  \n}\n.hs-richtext a {\n    font-size: 10px !important;\n  \n}\n/* Ajustes para el tamaño y el padding del botón */\n.hs-button.primary.large {\n    font-family: Arial, sans-serif !important; /* Utilizar la fuente Arial */\n    font-size: 16px !important; /* Tamaño de fuente de 10px */\n    padding: 10px 10px !important; /* Ajustar el padding */\n}\n\n/* Ajustar el espacio entre el checkbox y el texto dentro de hs-form-booleancheckbox-display */\n.hs-form-booleancheckbox-display span {\n    margin-left: 5px; /* Reducir el margen izquierdo del texto */\n}\n\n/* Agregar padding al div con class \"actions\" */\n.blog-navfooter .actions {\n    padding: 5px;\n}\n\n/* Agregar padding superior a la clase \"hs-form-booleancheckbox-display\" */\n.blog-navfooter .hs-form-booleancheckbox-display {\n    padding-top: 5px;\n}\n.address, dl, ol, ul {\n    margin-bottom: 0 !important; \n}\n\n.input span {\n    margin-left: -17px;\n}```"
+  },
+  {
+    "text": "How do I find this CSS within HubSpot? It is only causing problems on that specific page",
+    "time_stamp": "2024-06-12 07:22:41",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-06-12 07:38:06"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Edmond Deema",
+      "poster_handle": "edmond"
+    },
+    "time_stamp": "2024-06-12 07:38:06",
+    "text": "Most of the Css is stored under the Design manager, can you give us the page and the section you are having trouble with? :slightly_smiling_face:"
+  },
+  {
+    "text": "<https://www.manpowergroup.it/le-nostre-soluzioni>",
+    "time_stamp": "2024-06-12 07:40:21"
+  },
+  {
+    "poster": {
+      "poster_name": "Zori Manzanares",
+      "poster_handle": "zoraida.manzanares"
+    },
+    "time_stamp": "2024-06-12 07:41:15",
+    "text": "\"Yes, I'm looking at the template there, but I can't find that rule in the main CSS or in any other CSS... it's the only page where it is affected. If you browse the other pages, it's fine.\""
+  },
+  {
+    "poster": {
+      "poster_name": "Zori Manzanares",
+      "poster_handle": "zoraida.manzanares"
+    },
+    "time_stamp": "2024-06-12 07:41:56",
+    "text": "<@U06G4DKLZJP> thanks for your help"
+  },
+  {
+    "poster": {
+      "poster_name": "Edmond Deema",
+      "poster_handle": "edmond"
+    },
+    "time_stamp": "2024-06-12 08:53:33",
+    "text": "Are you sure it's a CSS problem, have you checked the page in editor does it look the same as the live environment?"
+  },
+  {
+    "poster": {
+      "poster_name": "David Bacon",
+      "poster_handle": "david007"
+    },
+    "time_stamp": "2024-06-12 09:10:10",
+    "text": "Hi Conor-  were you able to find anything?"
+  },
+  {
+    "text": "yes, in the editor page looks the same  :",
+    "time_stamp": "2024-06-12 09:12:37",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-06-12 15:58:53"
+      },
+      {
+        "time_stamp": "2024-06-13 15:00:22"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2024-06-12 15:58:53",
+    "text": "<@U06U1BWP1FB> Check your page settings (settings button top right), if theres something in the advanced settings(header) it's page specific.\nAnother option would be to go to the page template and look for something like\n`{% set template_css = \"SOME-PATH-TO-A-CSS\" %}` (should be somewhere in the first couple of lines)\n\nIf you find something like the template_css inside the template you'll have to edit this file. BUT - be careful since you can mess up a lot of things. To make sure open this file, go to \"Actions -&gt; Show dependent files\"(left sidebar) and check which files will be affected by this change.\n\nAlso - since I know that you're working/have worked with a partner -&gt; please forward your request with your desired changes to them/their developer. :slightly_smiling_face:"
+  }
+]

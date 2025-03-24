@@ -1,0 +1,54 @@
+[
+  {
+    "poster": {
+      "poster_name": "Carlos Rodriguez",
+      "poster_handle": "crodriguez952"
+    },
+    "time_stamp": "2023-08-29 08:09:54",
+    "text": "good evening, someone who has integrated chatflow in nodejs?"
+  },
+  {
+    "poster": {
+      "poster_name": "Erin Shimamoto",
+      "poster_handle": "erin490"
+    },
+    "time_stamp": "2023-08-29 08:23:08",
+    "text": ":sparkles: *Squarespace Purchases -&gt; HubSpot Deals* :sparkles:\n\nHello! (I hope this is the right Channel :grimacing: )\n\nOur client has been having issues with Squarespace purchases not being able to create Deals in HubSpot. This is mainly due to the whole HubSpot tracking code not existing on the Checkout page.\n\nBut, based on my digging, we CAN add code to the Order Confirmation page. We can insert information specific to the customer, such as:\n• {orderId}\n• {orderSubtotal} \n• {orderSubtotalCents}\n• {orderGrandTotal}\n• {orderGrandTotalCents} \n• {customerEmailAddress} \nThis is where my knowledge falls short. We’re not directly responsible for development, but if we can point their in-house developers in the right direction, that could provide big kudos to us.\n\nI guess does anyone have experience pushing this information into HubSpot and creating a new Deal with this information so we can properly track ecommerce purchases and ROI from marketing efforts within our portal? :pray:",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-08-29 17:23:56"
+      },
+      {
+        "time_stamp": "2023-09-11 14:10:42"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-08-29 17:23:56",
+    "text": "I’ve solved an adjacent problem for a client who uses Squarespace eCommerce — we weren’t creating Deals on conversion, but I imagine it should largely be applicable. (However, it _does_ require Marketing Hub Enterprise and might also require some paid tier of Operations Hub.)\n\nIn our case, we created a Custom Behavioral Event whose properties would hold the data we wanted associated with the contact. On the Checkout Confirmation page, we used `trackCustomBehavioralEvent`<https://developers.HubSpot.com/docs/api/events/tracking-code#tracking-custom-behavioral-events-marketing-hub-enterprise-only-| from the Tracking Code API> to fire the custom behavioral event and collect the event data. Then, we used a workflow that triggered off of that custom event, which processed and assigned the data as necessary.\n\nI’m not usually the one who actually creates/handles workflows on our team, so I can’t say for certain, but I’m _fairly_ confident that you should be able to use them to create a deal.\n\nIn our case, there _was_ transaction data that we needed that wasn’t available in the six values (`{orderId}`, etc.) that Squarespace provides in their official documentation. To get all of the data needed for our events _(and to implement GA4 ecommerce tracking that actually works_ :upside_down_face:_)_ we wound up having to rely on some undocumented functionality.\n\nThe checkout page contains the `Y.Squarespace.CommerceAnalytics._yuievt.events[\"commerceTrack:commerce-checkout-confirmed\"].details[0]` Javascript object — this object contains information like the purchaser’s contact info (first/last name, address, etc.), the currency type used for the purchase, the items that were purchased and in which volumes. To my knowledge, this undocumented JS object is the _only_ place to get this data. However, it _is_ undocumented and its use is not officially supported by Squarespace, so you’ll have to use it at your own risk.\n\nI hope you find this all helpful, and I hope it saves you some of the endless hours of pain that I had to endure to figure all of this out. Let me know if you wind up needing more help!"
+  },
+  {
+    "poster": {
+      "poster_name": "Kemish Marvin Salinas Guillermo",
+      "poster_handle": "kemishsalinas93"
+    },
+    "time_stamp": "2023-08-29 22:11:19",
+    "text": "Hello, I have a form in HubSpot, I want that when selecting an option from a dropdown it takes me to a different url, any way to do it?   thank you team",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-08-30 07:44:59"
+      },
+      {
+        "time_stamp": "2023-09-05 22:54:21"
+      }
+    ]
+  }
+]

@@ -1,0 +1,296 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jonathan Stanis",
+      "poster_handle": "jstanis"
+    },
+    "time_stamp": "2019-08-07 10:11:32",
+    "text": "How does everyone implement lazy loading? I have been trying to use Lazysizes with mixed results. When I make a custom module to load the image it works fine, but when I try to do it inside of a rich text module it does not seem to work.",
+    "reply_count": 24,
+    "reply_users_count": 6,
+    "replies": [
+      {
+        "time_stamp": "2019-08-07 10:30:53"
+      },
+      {
+        "time_stamp": "2019-08-07 10:45:55"
+      },
+      {
+        "time_stamp": "2019-08-07 11:23:29"
+      },
+      {
+        "time_stamp": "2019-08-07 11:24:27"
+      },
+      {
+        "time_stamp": "2019-08-07 11:24:30"
+      },
+      {
+        "time_stamp": "2019-08-07 11:24:51"
+      },
+      {
+        "time_stamp": "2019-08-07 12:48:53"
+      },
+      {
+        "time_stamp": "2019-08-07 12:49:14"
+      },
+      {
+        "time_stamp": "2019-08-07 12:50:25"
+      },
+      {
+        "time_stamp": "2019-08-07 12:50:43"
+      },
+      {
+        "time_stamp": "2019-08-07 13:11:18"
+      },
+      {
+        "time_stamp": "2019-08-07 13:11:28"
+      },
+      {
+        "time_stamp": "2019-08-07 13:33:07"
+      },
+      {
+        "time_stamp": "2019-08-07 13:33:26"
+      },
+      {
+        "time_stamp": "2019-08-07 13:33:34"
+      },
+      {
+        "time_stamp": "2019-08-07 13:33:36"
+      },
+      {
+        "time_stamp": "2019-08-08 06:55:32"
+      },
+      {
+        "time_stamp": "2019-08-08 06:57:54"
+      },
+      {
+        "time_stamp": "2019-08-08 10:49:19"
+      },
+      {
+        "time_stamp": "2019-08-08 10:57:30"
+      },
+      {
+        "time_stamp": "2019-08-08 10:59:59"
+      },
+      {
+        "time_stamp": "2019-08-08 11:14:55"
+      },
+      {
+        "time_stamp": "2019-08-08 11:31:45"
+      },
+      {
+        "time_stamp": "2019-08-12 15:53:46"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Lindsey Newman",
+      "poster_handle": "lindseyn"
+    },
+    "time_stamp": "2019-08-07 10:30:53",
+    "text": "How are you implementing it in the rich text module? Are you editing source on each one to replace the src with data-src so lazy load will work on those images?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonathan Stanis",
+      "poster_handle": "jstanis"
+    },
+    "time_stamp": "2019-08-07 10:45:55",
+    "text": "Yes, and adding the class=“lazyload”. It looks like the implementation then modifies the image to also include an additional image src.\n```&lt;img data-src=\"<http://cdn2.HubSpot.net/hubfs/2259185/Gordon-Flesch-Site/Our_Team_Images/Tom_Flesch_400x400_60.jpg?noresize>\" alt=\"Tom_Flesch_400x400_60.jpg\" class=\"ls-is-cached lazyloaded\" src=\"<https://www.gflesch.com/hubfs/Gordon-Flesch-Site/Our_Team_Images/Tom_Flesch_400x400_60.jpg?noresize>\"&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-08-07 11:23:29",
+    "text": "```// Lazy Loading\n(function() {\n\tif (\"loading\" in HTMLImageElement.prototype) {\n\t\tvar lazyEls2 = $('[loading=lazy]');\n\t\tlazyEls2.each(function(){\n\t\t\tvar src = $(this).data('src');\n\t\t\tvar srcset = $(this).data('srcset');\n\t\t\t$(this).attr({\n\t\t\t\t\"src\" : src,\n\t\t\t\t\"srcset\" : srcset\n\t\t\t});\n\t\t\t$(this).addClass('loaded');\n\t\t});\n\t} else {\n\t\t// Dynamically include a lazy loading library of your choice\n\t\t// Here including vanilla-lazyload\n\t\tvar script = document.createElement(\"script\");\n\t\tscript.async = true;\n\t\tscript.src =\n\t\t\t\"<https://cdn.jsdelivr.net/npm/vanilla-lazyload@12.0.0/dist/lazyload.min.js>\";\n\t\twindow.lazyLoadOptions = {\n\t\t\telements_selector: \"[loading=lazy]\",\n\t\t\t//eventually more options here\n\t\t};\n\t\tdocument.body.appendChild(script);\n\t}\n}());```"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-08-07 11:24:27",
+    "text": "add `loading=\"lazy\"` to the image sand make sure the src attr has `data-src`"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-08-07 11:24:30",
+    "text": "instead"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-08-07 11:24:51",
+    "text": "can also be used with srcset"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonathan Stanis",
+      "poster_handle": "jstanis"
+    },
+    "time_stamp": "2019-08-07 12:48:53",
+    "text": "Do you just inline that JS in the website header?"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-08-07 12:49:14",
+    "text": "I just add it to the site script file"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-08-07 12:50:25",
+    "text": "`loading=\"lazy\"` is he upcoming browser method of lazy loading images"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-08-07 12:50:43",
+    "text": "but im using it instead of a class or ID"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonathan Stanis",
+      "poster_handle": "jstanis"
+    },
+    "time_stamp": "2019-08-07 13:11:18",
+    "text": "Thanks. I will give that a try."
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-08-07 13:11:28",
+    "text": "yep. its super easy."
+  },
+  {
+    "poster": {
+      "poster_name": "MicahLotemo27",
+      "poster_handle": "micahlote27"
+    },
+    "time_stamp": "2019-08-07 13:20:24",
+    "text": "Are you able to use different templates onto eachother?",
+    "reply_count": 9,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2019-08-07 13:26:15"
+      },
+      {
+        "time_stamp": "2019-08-07 13:26:31"
+      },
+      {
+        "time_stamp": "2019-08-07 13:29:39"
+      },
+      {
+        "time_stamp": "2019-08-07 13:29:48"
+      },
+      {
+        "time_stamp": "2019-08-07 13:55:12"
+      },
+      {
+        "time_stamp": "2019-08-08 05:14:18"
+      },
+      {
+        "time_stamp": "2019-08-08 05:15:39"
+      },
+      {
+        "time_stamp": "2019-08-08 05:16:48"
+      },
+      {
+        "time_stamp": "2019-08-10 11:09:50"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-08-07 13:26:15",
+    "text": "Do you mean including templates inside of templates?"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-08-07 13:26:31",
+    "text": "you can do template partials that can be included into other templates"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2019-08-07 13:29:39",
+    "text": "aj..."
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2019-08-07 13:29:48",
+    "text": "if two templates love each other"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2019-08-07 13:33:07",
+    "text": "2 fun facts"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2019-08-07 13:33:26",
+    "text": "1) `loading=\"lazy\"` will work on iframes"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-08-07 13:33:34",
+    "edited": {
+      "time_stamp": "2019-08-07 13:33:36"
+    },
+    "text": "and videos"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2019-08-07 13:33:36",
+    "text": "2) ```Setting the loading attribute to auto (or simply leaving the value blank, as in loading=\"\") lets the browser decide whether or not to lazy-load an image. It takes many things into consideration to make that decision, like the platform, whether Data Saver mode is enabled, network conditions, image size, image vs. iframe, the CSS display property, among others.```"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-08-07 13:55:12",
+    "text": "they make a site?"
+  }
+]

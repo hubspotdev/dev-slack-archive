@@ -1,0 +1,129 @@
+[
+  {
+    "poster": {
+      "poster_name": "Chandler Ives",
+      "poster_handle": "cives727"
+    },
+    "time_stamp": "2020-08-05 12:20:24",
+    "text": "What would I have to add to  `{% for row in hubdb_table_rows('2620345', \"&amp;orderBy=date\") %}` to only show future dates?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-08-05 12:22:20"
+      },
+      {
+        "time_stamp": "2020-08-05 12:23:08"
+      },
+      {
+        "time_stamp": "2020-08-05 13:05:57"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2020-08-05 12:22:20",
+    "text": "```For DATETIME filters, you can use relative dates in place of timestamps in order to specify a value relative to the current time. For example, -3h would correspond to the timestamp 3 hours before now, whereas 10s would correspond to 10 seconds in the future. Supported timeunits are ms (milliseconds), s (seconds), m (minutes), h (hours), d (days). Current time can be used by specifying a zero value: 0s```"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2020-08-05 12:23:08",
+    "text": "I think you can use `column_name__gt=0s`"
+  },
+  {
+    "poster": {
+      "poster_name": "Joey Valera",
+      "poster_handle": "joey.valera"
+    },
+    "time_stamp": "2020-08-05 12:54:02",
+    "edited": {
+      "time_stamp": "2020-08-05 12:54:57"
+    },
+    "text": "Hi, I'm trying to use the api to delete a row <https://api.hubapi.com/hubdb/api/v2/tables/{sample_tab_id}/rows/sample_row_id?hubikey> and it works well it does delete the row when checking on the HubDB dashboard. But when I've tried quering the new DB Rows using the api the row that supposed to be deleted is still there. \n\n1.)The delete api is not autopublish, how can I make this automatically published so I can query the new db using the api.\n\n2) <https://api.hubapi.com/hubdb/api/v2/tables/{sample_tab_id}/rows/sample_row_id/draft?hubikey> results in 405 (method not allowed) kinda weird because this is available on the docs.\n<https://legacydocs.HubSpot.com/docs/methods/hubdb/v2/delete_row>",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-08-05 12:56:51"
+      },
+      {
+        "time_stamp": "2020-08-05 12:58:14"
+      },
+      {
+        "time_stamp": "2020-08-05 21:17:27"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2020-08-05 12:56:51",
+    "text": "1. You need to call `publish`  api after you delete the row.  There is no automatic publish."
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2020-08-05 12:58:14",
+    "text": "2. When you call delete API, it deltes from DRAFT, so you will not find the deleted row in the DRAFT table. I think thats why `hubdb/api/v2/tables/{sample_tab_id}/rows/sample_row_id/draft?`  returns 40X response"
+  },
+  {
+    "poster": {
+      "poster_name": "Chandler Ives",
+      "poster_handle": "cives727"
+    },
+    "time_stamp": "2020-08-05 13:01:03",
+    "text": "Can you use module values inside of a queryparam? I'm getting an error for `{% set queryparam = \"&amp;orderBy=last_name&amp;board__contains={{ module.board_selector }}\" %}`",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-08-05 13:11:31"
+      },
+      {
+        "time_stamp": "2020-08-05 13:25:41"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Chandler Ives",
+      "poster_handle": "cives727"
+    },
+    "time_stamp": "2020-08-05 13:05:57",
+    "text": "Thanks Gobi. That worked"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2020-08-05 13:11:31",
+    "text": "As soon as you start an expression (with either `{%` or `{{` ) you are now operating within HubL. Expressions cannot contain one another. So here you would want to use `~` append operator for the string: `{% set queryparam = \"&amp;orderBy=last_name&amp;board__contains=\" ~ module.board_selector %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Chandler Ives",
+      "poster_handle": "cives727"
+    },
+    "time_stamp": "2020-08-05 13:25:41",
+    "text": "Perfect, thank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Joey Valera",
+      "poster_handle": "joey.valera"
+    },
+    "time_stamp": "2020-08-05 21:17:27",
+    "text": "<@UG52C29EE> - awesome, I'll try it later that really solves it. :+1:"
+  }
+]

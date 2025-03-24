@@ -1,0 +1,87 @@
+[
+  {
+    "poster": {
+      "poster_name": "Yamine  Moussaoui",
+      "poster_handle": "yamine"
+    },
+    "time_stamp": "2023-07-05 07:41:53",
+    "text": "Hello, I'm following up on an old problem I had with a personalised code where I wanted transactions linked to a property (personalised property) where the end date of one is the same start date as the next. Here is my code and it gives me 0 deals matching dates. `const HubSpotClient = require('@HubSpot/api-client');`\n\n`exports.main = async (event, callback) =&gt; {`\n\n  `// Initialisation du client HubSpot`\n  `const HubSpot = new HubSpotClient.Client({accessToken: process.env.______});`  \n\n  `// Récupération des valeurs des champs d'entrée`\n  `const dealId = event.inputFields['dealId'];`  \n  `const DateDebut = new Date(event.inputFields['DateDebut'] * 1);`\n  `const DateFin = new Date(event.inputFields['DateFin'] * 1);`\n  \n  `console.log('DateDebut:', DateDebut);`\n  `console.log('DateFin:', DateFin);`\n\n  `// Vérification si dealId est défini`\n  `if (!dealId) {`\n    `console.error(\"dealId is not defined\");`\n    `return;`\n  `}`\n\n  `const toDeal = \"DEAL\";`\n  `const toLogement = \"2-112304201\";`\n\n  `try {`\n    `console.log('dealId:', dealId);`\n\n    `// Récupération de l'association entre le deal et le logement`\n    `const apiCustomResponse = await HubSpot.crm.objects.associationsApi.getAll(toDeal, dealId, [toLogement]);`\n\n    `const logementId = apiCustomResponse.results[0].id ;`\n    `console.log(\"logementId: \" + logementId );`  \n\n    `// Récupération des transactions associées au logement`\n    `const DEALSApiResponse = await  HubSpot.crm.objects.associationsApi.getAll(toLogement, logementId, [\"DEAL\"]);`\n    `const DEALS = DEALSApiResponse.results;`\n    `console.log(DEALS.length);`\n\n    `// Utilisation d'un ensemble pour stocker les ID de deals uniques`\n    `const uniqueDealIds = new Set();`\n    `DEALS.forEach(association =&gt; {`\n      `uniqueDealIds.add(association.id);` \n    `});`\n\n    `// Affichage du nombre de deals distincts`\n    `console.log(\"Nombre de deals distincts associés au logement :\", uniqueDealIds);`\n    \n  \n    `const dealsWithMatchingDates = [];`\n\n    \n\n\n    `// Comparaison des dates entre les transactions`\n    `for (let i = 0; i &lt; uniqueDealIds.length - 1; i++) {`\n      `const currentDeal = uniqueDealIds[i];`\n      `const nextDeal = uniqueDealIds[i + 1];`\n\n      `if (currentDeal &amp;&amp; currentDeal.properties &amp;&amp; nextDeal &amp;&amp; nextDeal.properties) {`\n        `const currentTransactionEndDate = new Date(currentDeal.properties.DateFin);`\n        `const nextTransactionStartDate = new Date(nextDeal.properties.DateDebut);`\n\n        `if (currentTransactionEndDate.getTime() === nextTransactionStartDate.getTime()) {`\n          `dealsWithMatchingDates.push(currentDeal);`\n          `dealsWithMatchingDates.push(nextDeal);`\n        `}`\n      `}`\n    `}`\n\n    `const timestamp = 1612742400000;`\n    `const date = new Date(timestamp);`\n\n    `console.log(date.toString()); // Affiche la date sous forme de chaîne de caractères`\n\n    `console.log(\"dealsWithMatchingDates :\", dealsWithMatchingDates.length);`\n\n    `// Appel du callback avec les champs de sortie`\n    `callback({`\n      `outputFields: {`\n        `dealId: dealId,`\n      `}`\n    `});`\n\n  `} catch (e) {`\n    `e.message === 'HTTP request failed'`\n      `? console.error(JSON.stringify(e.response, null, 2))`\n      `: console.error(e)`\n  `}`  \n`}`",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-07-05 07:48:57"
+      },
+      {
+        "time_stamp": "2023-07-05 07:49:45"
+      },
+      {
+        "time_stamp": "2023-07-05 07:50:16"
+      },
+      {
+        "time_stamp": "2023-07-05 07:51:02"
+      },
+      {
+        "time_stamp": "2023-07-07 05:06:12"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-05 07:48:57",
+    "text": "Hey <@U050UHNGRLN>, couple of small problems with this code, I've corrected them but haven't tested it. Try this:\n```const HubSpotClient = require('@HubSpot/api-client');\n\nexports.main = async (event, callback) =&gt; {\n  const HubSpot = new HubSpotClient.Client({accessToken: process.env.______});\n  const dealId = event.inputFields['dealId'];  \n  const DateDebut = new Date(event.inputFields['DateDebut'] * 1);\n  const DateFin = new Date(event.inputFields['DateFin'] * 1);\n  \n  if (!dealId) {\n    console.error(\"dealId is not defined\");\n    return;\n  }\n\n  const toDeal = \"DEAL\";\n  const toLogement = \"2-112304201\";\n  try {\n    const apiCustomResponse = await HubSpot.crm.objects.associationsApi.getAll(toDeal, dealId, [toLogement]);\n    const logementId = apiCustomResponse.results[0].id ;\n    const DEALSApiResponse = await HubSpot.crm.objects.associationsApi.getAll(toLogement, logementId, [\"DEAL\"]);\n    const DEALS = DEALSApiResponse.results;\n\n    const uniqueDealIds = new Set();\n    DEALS.forEach(association =&gt; {\n      uniqueDealIds.add(association.id); \n    });\n\n    const uniqueDealIdsArray = Array.from(uniqueDealIds);\n  \n    const dealsWithMatchingDates = [];\n  \n   for (let i = 0; i &lt; uniqueDealIdsArray.length - 1; i++) {\n      const currentDeal = uniqueDealIdsArray[i];\n      const nextDeal = uniqueDealIdsArray[i + 1];\n      if (currentDeal &amp;&amp; currentDeal.properties &amp;&amp; nextDeal &amp;&amp; nextDeal.properties) {\n        const currentTransactionEndDate = new Date(currentDeal.properties.DateFin);\n        const nextTransactionStartDate = new Date(nextDeal.properties.DateDebut);\n        if (\n          currentTransactionEndDate.getFullYear() === nextTransactionStartDate.getFullYear() &amp;&amp;\n          currentTransactionEndDate.getMonth() === nextTransactionStartDate.getMonth() &amp;&amp;\n          currentTransactionEndDate.getDate() === nextTransactionStartDate.getDate()\n        ) {\n          dealsWithMatchingDates.push(currentDeal);\n          dealsWithMatchingDates.push(nextDeal);\n        }\n      }\n    }\n  \n    callback({\n      outputFields: {\n        dealId: dealId,\n      }\n    });\n  } catch (e) {\n    e.message === 'HTTP request failed'\n      ? console.error(JSON.stringify(e.response, null, 2))\n      : console.error(e)\n  }  \n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-05 07:49:45",
+    "text": "The couple of errors were, you were storing the deals in a Set and not an Array, and second you were looking for an exact date &amp; time match instead of just a date match"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-05 07:50:16",
+    "text": "Last thing to point out are these lines:\n\n```        const currentTransactionEndDate = new Date(currentDeal.properties.DateFin);\n        const nextTransactionStartDate = new Date(nextDeal.properties.DateDebut);```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-05 07:51:02",
+    "text": "those properties aren't correct (all internal property names are lowercase) so you'll want to go into property settings and figure out the internal name and then update those 2 lines"
+  },
+  {
+    "poster": {
+      "poster_name": "Daniel Mariscal",
+      "poster_handle": "daniel666"
+    },
+    "time_stamp": "2023-07-05 11:41:17",
+    "edited": {
+      "time_stamp": "2023-07-05 11:50:06"
+    },
+    "text": "Hi, i hope you can help me with some ideas or maybe someone has the same problem.  I try to Connect HubSpot with a local development via webhook in a workflow, trying to keep updated my contact information, especially when the contact is created via HubSpot. now when I create a new contact  the info goes to my development without problem, but when I updated a contact the workflow doesn’t send any information, I try to make it work using different properties to validate a trigger for the workflow, but with out success and in the workflow alert say that I can’n use any properties to this purpose."
+  },
+  {
+    "text": "This message contains interactive elements.",
+    "time_stamp": "2023-07-05 13:33:20",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-07-05 13:36:47"
+      }
+    ]
+  },
+  {
+    "text": "This message contains interactive elements.",
+    "time_stamp": "2023-07-05 13:36:47"
+  }
+]

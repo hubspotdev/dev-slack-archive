@@ -1,0 +1,50 @@
+[
+  {
+    "poster": {
+      "poster_name": "Taylor O'Reilly",
+      "poster_handle": "taylor699"
+    },
+    "time_stamp": "2022-08-16 12:31:09",
+    "edited": {
+      "time_stamp": "2022-08-16 12:31:22"
+    },
+    "text": "Is there a way to get the labels of a choice field?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-08-17 18:23:55"
+      },
+      {
+        "time_stamp": "2022-08-17 18:23:59"
+      },
+      {
+        "time_stamp": "2022-08-17 18:26:00"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Gunnar Normand",
+      "poster_handle": "gunnarnormand"
+    },
+    "time_stamp": "2022-08-16 13:42:58",
+    "text": "I ended up using JavaScript and the HubDB API to build the module. I'll drop some snippets below if anyone would like to see.\n\nI would love to hear if someone has a better solution or if they need help with something similar..questions comments, concerns let me know!"
+  },
+  {
+    "poster": {
+      "poster_name": "Gunnar Normand",
+      "poster_handle": "gunnarnormand"
+    },
+    "time_stamp": "2022-08-16 13:43:51",
+    "text": "HTML\n```          &lt;form class=\"select-product\" name=\"select-product\"&gt;\n            &lt;select name=\"type\" class=\"product-select-input\"&gt;\n              &lt;option value=\"\" selected disabled hidden&gt;Select Product&lt;/option&gt;\n              {% for row in hubdb_table_rows(\"compare\") %}\n              &lt;option name=\"product\" value=\"{{ row.name }}\"&gt;\n                {{ row.name }}\n              &lt;/option&gt;\n              {% endfor %}\n            &lt;/select&gt;\n            &lt;input class=\"button small light\" type=\"submit\" value=\"select\" /&gt;\n          &lt;/form&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Gunnar Normand",
+      "poster_handle": "gunnarnormand"
+    },
+    "time_stamp": "2022-08-16 13:44:58",
+    "text": "JS\n```const baseEndpoint = '<https://api.hubapi.com/hubdb/api/v2>';\nconst tableEndpoint = 'tables/*******/rows';\nconst portalId = '*******';\n\nconst form = document.querySelectorAll('form.select-product');\nconst productContent = document.querySelector('.product__content')\n\nasync function fetchProducts(value) {\n    const res = await fetch(`${baseEndpoint}/${tableEndpoint}?portalId=${portalId}&amp;name=${value}`);\n    const data = await res.json();\n    return data;\n}\n\n\nasync function handleSubmit(event) {\n    event.preventDefault();\n    const el = event.currentTarget;\n    let formSelect = this.querySelector('.product-select-input');\n    fetchAndDisplay(formSelect.value, this);\n}\n\nasync function fetchAndDisplay(value, formElem) {\n    // turn the form off\n    formElem.submit.disabled = true;\n    // submit the search\n    const products = await fetchProducts(value);\n    // turn the form on\n    formElem.submit.disabled = false;\n    displayProducts(products, formElem);\n}\n\nfunction displayProducts(products, formElem) {\n\n    let currentProductContent = formElem.parentElement.nextElementSibling;\n    let productArray = products.objects[0].values;\n\n    const html = `\n        &lt;div class=\"product__image\"&gt;\n            &lt;img src=\"${productArray[2].url}\" alt=\"300x200\" class=\"img-responsive\" /&gt;\n          &lt;/div&gt;\n\n          &lt;div class=\"product__description\"&gt;\n          ${productArray[3]}\n          &lt;/div&gt;\n\n          &lt;div class=\"product__ctas\"&gt;\n            &lt;a href=\"${productArray[4]}\" class=\"button small\" target=\"_blank\"&gt;View Product&lt;/a&gt;\n            &lt;a href=\"${productArray[5]}\" class=\"button small ghost\" target=\"_blank\"&gt;Request a Quote&lt;/a&gt;\n          &lt;/div&gt;\n    `;\n\n    currentProductContent.innerHTML = html;\n}\n\n\nform.forEach(function (item) {\n  item.addEventListener('submit', handleSubmit);\n});```"
+  }
+]

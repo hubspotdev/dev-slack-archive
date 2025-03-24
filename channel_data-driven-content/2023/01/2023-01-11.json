@@ -1,0 +1,10 @@
+[
+  {
+    "poster": {
+      "poster_name": "Stef Leitch",
+      "poster_handle": "sleitch"
+    },
+    "time_stamp": "2023-01-11 07:27:52",
+    "text": "Hi Matias,\n\nWhile there is no way to dynamically modify a GraphQL query based on a variable passed into the query, for fields that are interfaces (those that are queried via the `... on` syntax, like child tables), you can add all the appropriate possible options in the query, and it will only retrieve the field based on the appropriate child table. For example, if you had a query like so:\n\n```query webinarsByCountry($country: String) {\n  HUBDB {\n    country_collection(filter: {country__eq: $brand}) {\n      items {\n        country\n        hs_child_table_collection {\n          ... on hubdb_courses_uk_collection {\n            items {\n              title\n            }\n          }\n          ... on hubdb_courses_us_collection {\n            items {\n              title\n            }\n          }\n        }\n      }\n    }\n  }\n}```\n`hs_child_table_collection` would include the items for either the UK or US child table, depending on what was selected in the row being retrieved. If there are fields that only exist in some child tables and not others, the module/template/api consuming the query would have to account for checking if those fields are there and using them as needed.\n\nThat's probably not as clean or maintainable as you'd like, particularly if you have a bunch of different countries, but this is a limitation in GraphQL itself.\n\nAlternatively, you could look for a solution that doesn't use child tables, but given what you stated about your use case, it sounds like that's not an easy path either."
+  }
+]

@@ -1,0 +1,530 @@
+[
+  {
+    "text": "anyone with experience batch deleting crm contacts?\n\nI read the <https://developers.HubSpot.com/docs/api/crm/contacts#delete-contacts|docs> but nothing pointing to batch deletion.\n\nPlease help, thanks!",
+    "time_stamp": "2023-06-27 01:23:27",
+    "reply_count": 7,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2023-06-27 01:25:44"
+      },
+      {
+        "time_stamp": "2023-06-27 01:28:44"
+      },
+      {
+        "time_stamp": "2023-06-27 02:18:10"
+      },
+      {
+        "time_stamp": "2023-06-27 02:20:35"
+      },
+      {
+        "time_stamp": "2023-06-27 07:11:05"
+      },
+      {
+        "time_stamp": "2023-06-27 07:11:39"
+      },
+      {
+        "time_stamp": "2023-06-30 08:21:46"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Tejas Panchal",
+      "poster_handle": "tejpanchal93"
+    },
+    "time_stamp": "2023-06-27 01:25:44",
+    "text": "Hi <@U05ECLN4518>\nPlease check may be  its help : <https://community.HubSpot.com/t5/Account-Settings/Can-I-bulk-delete-all-data-in-my-CRM-account-Or-should-I-set-up/m-p/17095>"
+  },
+  {
+    "poster": {
+      "poster_name": "Mubarak Showole",
+      "poster_handle": "mubarak.show"
+    },
+    "time_stamp": "2023-06-27 01:28:44",
+    "text": "Thanks for the link <@UPDDTPW3H> but unfortunately i need to do the deletion through the API."
+  },
+  {
+    "poster": {
+      "poster_name": "Rune Dekker",
+      "poster_handle": "rune"
+    },
+    "time_stamp": "2023-06-27 01:35:18",
+    "text": "Hi all!\n\nI own the HubSpot account for our company and we need to get the line items data to a Google Spreadsheet so we can make the correct forecast. For this a colleague helped (as I'm not a developer myself) with writing the code for Apps Script with the help of the API Docs for line items. We get the quantity, create date, last modified date and product id in, but the rest not. Is there anyone here who has experience with this and knows what we're doing wrong? (I will paste the code we have now in a reply to this message)\nAny help would be amazing!",
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-06-27 01:35:32"
+      },
+      {
+        "time_stamp": "2023-06-27 07:05:51"
+      },
+      {
+        "time_stamp": "2023-06-27 07:27:33"
+      },
+      {
+        "time_stamp": "2023-06-27 07:28:39"
+      },
+      {
+        "time_stamp": "2023-06-27 07:37:22"
+      },
+      {
+        "time_stamp": "2023-06-29 01:05:38"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Rune Dekker",
+      "poster_handle": "rune"
+    },
+    "time_stamp": "2023-06-27 01:35:32",
+    "text": "function getData(url) {\n\nvar API_KEY = \"YOUR_HubSpot_API_KEY\"; // Replace YOUR_HubSpot_API_KEY with your API Key\n\nif (url == undefined || url == '') {\n  url = \"<https://api.hubapi.com/crm/v3/objects/line_items?limit=100&amp;archived=false>\";\n}\n\nvar options = {\n  'method' : 'get'\n  , 'headers': {'Authorization': 'Bearer '+  API_KEY}\n  , muteHttpExceptions: true\n};\n\nvar response = UrlFetchApp.fetch(url, options);\n\nvar results = JSON.parse(response.getContentText());\n\nreturn results;\n}\n\nfunction callHsapi() {\n\n// Prepare sheet\nvar sheet = SpreadsheetApp.getActiveSheet();\n\nvar header = [\"createdate\", \"hs_lastmodifieddate\", \"hs_product_id\", \"hs_recurring_billing_period\", \"name\", \"price\", \"quantity\", \"recurringbillingfrequency\"];\n\nvar items = [header];\n\nvar data = {};\n\nvar url = '';\n\nvar next = 'GO!';\n\n// Retrieve data till there is nothing left\nwhile (next) {\n  // Get next batch\n  data = getData(url);\n\n  // Process batch\n  data['results'].forEach(function (result) {\n\n    items.push([result['properties'].createdate, result['properties'].hs_lastmodifieddate, result['properties'].hs_product_id, result['properties'].hs_recurring_billing_period, result['properties'].name, result['properties'].price, result['properties'].quantity, result['properties'].recurringbillingfrequency]);\n\n  });\n\n  // Set properties for next run\n  url = data?.paging?.next?.link;\n  next = data?.paging?.next?.after;\n\n  // Sleep to not bash the HS API\n  Utilities.sleep(1000);\n}\n\nsheet.getRange(1,1,items.length,items[0].length).setValues(items);\n\ndata['results'].forEach(function (result) {\n\nLogger.log(result['properties']);\n\n});\n\n}"
+  },
+  {
+    "poster": {
+      "poster_name": "Twan Derks",
+      "poster_handle": "twan"
+    },
+    "time_stamp": "2023-06-27 01:51:08",
+    "text": "Question: is it possible to make a HubSpot app that adds a input field and submit button in the right sidebar per company or contact etc?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-06-27 06:44:03"
+      }
+    ]
+  },
+  {
+    "text": "It is the Batch Archive action.\nPOST*`/crm/v3/objects/contacts/batch/archive`*\n\nArchive a batch of contacts by giving a list of ids.\n\nYou can find it on the document page as shown here:",
+    "time_stamp": "2023-06-27 02:18:10"
+  },
+  {
+    "poster": {
+      "poster_name": "Mubarak Showole",
+      "poster_handle": "mubarak.show"
+    },
+    "time_stamp": "2023-06-27 02:20:35",
+    "text": "Thanks <@U058ZPH175H> `archive` endpoint is the closest to what i need. However, I want to permanently delete the contacts, not `archive` them."
+  },
+  {
+    "poster": {
+      "poster_name": "Anand",
+      "poster_handle": "anandkumar.r"
+    },
+    "time_stamp": "2023-06-27 03:20:57",
+    "text": "Hello Team !\nI am using HubSpot api for getting the deals details . I need to get the product category of the deals .\nIn fact I am able to retrieve the product category value using the property '*product_category*' .\n\nThe product category in the HubSpot has 2 values - INTERNAL_VALUE and LABEL.\nThe property - '*product_category'* is getting the *INTERNAL_VALUE* but I need the *LABEL .* \n\nCould you please let me know what is the property name of the *LABEL ?*",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-06-27 06:48:49"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kobe Kapoor",
+      "poster_handle": "kobe"
+    },
+    "time_stamp": "2023-06-27 06:44:03",
+    "text": "Do you mean in the CRM itself? Could you send a screenshot of what you’re hoping for?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kobe Kapoor",
+      "poster_handle": "kobe"
+    },
+    "time_stamp": "2023-06-27 06:48:49",
+    "text": "I don’t know it off the top of my head but here <https://developers.HubSpot.com/docs/api/crm/crm-custom-objects|https://developers.HubSpot.com/docs/api/crm/crm-custom-objects> try using the object schema request and get the existing schema of deal, then you’ll be able to see every single property and it’s internal value.\n\nGreat asset to have to find properties and associations for objects as well that aren’t as accessible like engagements etc"
+  },
+  {
+    "poster": {
+      "poster_name": "Kobe Kapoor",
+      "poster_handle": "kobe"
+    },
+    "time_stamp": "2023-06-27 07:05:51",
+    "text": "What did you need help with specifically?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kobe Kapoor",
+      "poster_handle": "kobe"
+    },
+    "time_stamp": "2023-06-27 07:11:05",
+    "text": "There is no batch delete API, sorry!"
+  },
+  {
+    "poster": {
+      "poster_name": "Kobe Kapoor",
+      "poster_handle": "kobe"
+    },
+    "time_stamp": "2023-06-27 07:11:39",
+    "text": "<https://community.HubSpot.com/t5/APIs-Integrations/Is-there-a-batch-DELETE-endpoint/m-p/280103|https://community.HubSpot.com/t5/APIs-Integrations/Is-there-a-batch-DELETE-endpoint/m-p/280103>\n\nThis is a few years old but it makes sense that HubSpot wouldn’t introduce a feature like this as it could destroy peoples CRMs"
+  },
+  {
+    "poster": {
+      "poster_name": "Kobe Kapoor",
+      "poster_handle": "kobe"
+    },
+    "time_stamp": "2023-06-27 07:13:21",
+    "text": "Have you checked the api monitoring in the developer dashboard?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kobe Kapoor",
+      "poster_handle": "kobe"
+    },
+    "time_stamp": "2023-06-27 07:14:32",
+    "text": "I had this issue once and I had to go to app settings and set up an app settings page and then it started working"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-06-27 07:27:33",
+    "text": "In your GET url you need `&amp;properties=hs_lastmodifieddate,hs_product_id,hs_recurring_billing_period,etc,etc2,etc3`"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-06-27 07:28:39",
+    "text": "For every property you want returned. This must include the default property names that are returned as the parameter overwrites what is returned."
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-06-27 07:37:22",
+    "text": "Also I’m not 100% sure if parameters passed in transfer to `data.paging.next.link` although they might I just don’t know off the top of my head"
+  },
+  {
+    "poster": {
+      "poster_name": "Manoel Rocha",
+      "poster_handle": "manoelrocha399"
+    },
+    "time_stamp": "2023-06-27 07:44:31",
+    "text": "```Hi guys, good morning. I'm a dev and I have a mission to make a mass update of a property called \"last purchase date\" in HubSpot, with data from my mysql database, for example company x has this property and I have to update the HubSpot with its value, the logic is all ready but I'm not finding the endpoint to change this property in HubSpot, could someone help me?```\n",
+    "reply_count": 8,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-06-27 07:53:01"
+      },
+      {
+        "time_stamp": "2023-06-27 07:56:22"
+      },
+      {
+        "time_stamp": "2023-06-27 08:43:05"
+      },
+      {
+        "time_stamp": "2023-06-27 09:06:36"
+      },
+      {
+        "time_stamp": "2023-06-27 10:25:40"
+      },
+      {
+        "time_stamp": "2023-06-27 10:26:21"
+      },
+      {
+        "time_stamp": "2023-06-27 10:29:06"
+      },
+      {
+        "time_stamp": "2023-06-27 10:52:08"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-06-27 07:53:01",
+    "text": "PATCH\n/crm/v3/objects/companies/{companyId} from <https://developers.HubSpot.com/docs/api/crm/companies|https://developers.HubSpot.com/docs/api/crm/companies>"
+  },
+  {
+    "poster": {
+      "poster_name": "Manoel Rocha",
+      "poster_handle": "manoelrocha399"
+    },
+    "time_stamp": "2023-06-27 07:56:22",
+    "text": "```I wanted to iterate company by company to compare the HubSpot company name with the company name in my bank and from there update this specific property, but when I get a /crm/v3/objects/companies/ and I try to do a companies. properties for example, returns me some data, but it doesn't return me that specific property that I want to update```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Emiliano Vargas",
+      "poster_handle": "emivargas1998"
+    },
+    "time_stamp": "2023-06-27 08:38:44",
+    "edited": {
+      "time_stamp": "2023-06-27 08:39:04"
+    },
+    "text": "Hello everyone!\n\nIs it possible from the Quotes API to update the \"Tax\" section of a quote object? If the quote is already published can this be modified?\n\nContext: A client wants to retrieve the tax calculation from a third party app and put it on the Quote generated on HubSpot, for that I am using a workflow based on quotes (when a new quote is published it triggers a custom coded action that communicates to this 3rd party app)"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-06-27 08:43:05",
+    "text": "In your get request url add the parameter `properties=properties,that,you,want,returned,by,property,name`"
+  },
+  {
+    "text": "My webhook settings",
+    "time_stamp": "2023-06-27 08:49:03"
+  },
+  {
+    "text": "Monitoring",
+    "time_stamp": "2023-06-27 08:50:56"
+  },
+  {
+    "poster": {
+      "poster_name": "Oleksandr Starovoit",
+      "poster_handle": "alexstar4"
+    },
+    "time_stamp": "2023-06-27 08:54:50",
+    "text": "&gt; I had this issue once and I had to go to app settings and set up an app settings page and then it started working\nCan you write what you set up on App Settings ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Manoel Rocha",
+      "poster_handle": "manoelrocha399"
+    },
+    "time_stamp": "2023-06-27 09:06:36",
+    "text": "```in this case how would I do with the \"HubSpot client\" using node? currently, for example, I get the name like this: const companiesHubSpot = await this.HubSpotClient.crm.companies.basicApi.getPage();\n\n    const nameEmpresasHubSpot = companiesHubSpot.results.map((company) =&gt; company.properties.name);\n\nbut when I do a companies.properties it returns a data structure that does not contain the property I wanted to update```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-06-27 10:25:40",
+    "text": "<https://developers.HubSpot.com/docs/api/client-libraries|https://developers.HubSpot.com/docs/api/client-libraries>\n\n```//Example call\nHubSpotClient.crm.contacts.basicApi\n    .getPage(limit, after, properties, associations, archived)\n    .then((results) =&gt; {\n        console.log(results.body)\n    })\n    .catch((err) =&gt; {\n        console.error(err)\n    })```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-06-27 10:26:21",
+    "text": "I don’t use HubSpot client but more info can be found here"
+  },
+  {
+    "poster": {
+      "poster_name": "Manoel Rocha",
+      "poster_handle": "manoelrocha399"
+    },
+    "time_stamp": "2023-06-27 10:29:06",
+    "text": "tks"
+  },
+  {
+    "poster": {
+      "poster_name": "Manoel Rocha",
+      "poster_handle": "manoelrocha399"
+    },
+    "time_stamp": "2023-06-27 10:52:08",
+    "text": "If anyone knows the HubSpot client in more depth please try to help me with this issue, I'm having a lot of difficulty"
+  },
+  {
+    "poster": {
+      "poster_name": "Cody Koscielski",
+      "poster_handle": "codykoscielski"
+    },
+    "time_stamp": "2023-06-27 12:11:52",
+    "text": "Hi Everyone, me again! I am still working on the same project but now I am having some issues getting a POST request to work with my custom obj. The Search API docs and the devloper forms seem to be a little conflicting for information, so if any one has a minute to take a look at my code, that would be awesome. Here is what I am working with inside of a serverless function:\n\n`const axios = require('axios');`\n\nconst apiKey = _`//my API`_\n`const objectTypeId = _//My Obj_`\n\n`const client = axios.create({`\n    `baseURL: '<https://api.hubapi.com>',`\n    `timeout: 10000,`\n    `headers: {`\n        `'Content-Type': 'application/json',`\n        `'Authorization': `Bearer ${apiKey}``\n    `}`\n`})`\n`exports.main = async (_, sendResponse) =&gt; {`\n    `_try_ {`\n        const response = `_await_ <http://client.post|client.post>(`/crm/v3/objects/${objectTypeId}/search?hapikey=${apiKey}`, {`\n            filterGroups: [\n                {\n                  filters: [\n                    {\n                      fieldName: \"zip_code\",\n                      operator: \"CONTAINS\",\n                      value: 123456\n                    }\n                  ]\n                }\n              ]\n        });\n\n        console.log(response.data);\n        sendResponse({body: response.data, statusCode: 200});\n    } `_catch_ (error) {`\n        console.error('Fetch failed', error.message);\n        sendResponse({body: error.message, statusCode: 500});\n    }\n};\n\nWhenever I hit my endpoint, I am getting some 401 or 400 errors. Here is my servless.json file as well\n`{`\n    \"runtime\": \"nodejs18.x\",\n    \"version\": \"1.0\",\n    \"endpoints\": {\n        \"congratulation\": {\n          \"method\": \"GET\",\n          \"file\": \"congratulation.js\"\n        },\n        \"searchReps\" : {\n          \"method\": \"POST\",\n          \"file\": \"searchReps.js\"\n        }\n      }\n }\nThanks!",
+    "reply_count": 12,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-06-27 13:01:37"
+      },
+      {
+        "time_stamp": "2023-06-27 13:53:15"
+      },
+      {
+        "time_stamp": "2023-06-27 13:54:42"
+      },
+      {
+        "time_stamp": "2023-06-27 13:56:15"
+      },
+      {
+        "time_stamp": "2023-06-27 14:43:44"
+      },
+      {
+        "time_stamp": "2023-06-27 14:44:28"
+      },
+      {
+        "time_stamp": "2023-06-27 14:44:37"
+      },
+      {
+        "time_stamp": "2023-06-27 14:45:23"
+      },
+      {
+        "time_stamp": "2023-06-27 14:46:45"
+      },
+      {
+        "time_stamp": "2023-06-27 14:48:23"
+      },
+      {
+        "time_stamp": "2023-06-27 14:49:10"
+      },
+      {
+        "time_stamp": "2023-06-27 14:51:06"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Cody Koscielski",
+      "poster_handle": "codykoscielski"
+    },
+    "time_stamp": "2023-06-27 13:01:37",
+    "text": "<@U038DUUV3GE> Do you have any good tips on using the search API? I know you were a huge help yesterday, I greatly appreciate it!"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-06-27 13:53:15",
+    "text": "propertyName not fieldName and CONTAINS_TOKEN instead of CONTAINS"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-06-27 13:54:42",
+    "text": "Also hapikey is no longer used I believe"
+  },
+  {
+    "poster": {
+      "poster_name": "Cody Koscielski",
+      "poster_handle": "codykoscielski"
+    },
+    "time_stamp": "2023-06-27 13:56:15",
+    "text": "<@U038DUUV3GE> Thank you! I will give this a try and report back. I appreciate your help!"
+  },
+  {
+    "poster": {
+      "poster_name": "Cody Koscielski",
+      "poster_handle": "codykoscielski"
+    },
+    "time_stamp": "2023-06-27 14:43:44",
+    "text": "<@U038DUUV3GE> That totally worked, now I just have to figureout how to get the properties to come over with it. I just have the default ones. I tried to add the array of properties like you mentioned yesterday to the filters and also the params, no luck there"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-06-27 14:44:28",
+    "text": "It’s not on filters or params"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-06-27 14:44:37",
+    "text": "It’s on the first level of the req body"
+  },
+  {
+    "poster": {
+      "poster_name": "Cody Koscielski",
+      "poster_handle": "codykoscielski"
+    },
+    "time_stamp": "2023-06-27 14:45:23",
+    "text": "Do you have a good link for the docs so I can see? The only docs I found used a CURL script"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-06-27 14:46:45",
+    "text": "<https://developers.HubSpot.com/docs/api/crm/search#specify-returned-properties|https://developers.HubSpot.com/docs/api/crm/search#specify-returned-properties>"
+  },
+  {
+    "poster": {
+      "poster_name": "Cody Koscielski",
+      "poster_handle": "codykoscielski"
+    },
+    "time_stamp": "2023-06-27 14:48:23",
+    "text": "Ahhh, okay. So I can just put 'data': {properties} in my create method in the headers section? That's at least how I am reading it. This was the docs I was looking at, but since I am not that great in Node, the syntax confused me a bit"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-06-27 14:49:10",
+    "text": "Put properties on the same level that you have filterGroups"
+  },
+  {
+    "poster": {
+      "poster_name": "Cody Koscielski",
+      "poster_handle": "codykoscielski"
+    },
+    "time_stamp": "2023-06-27 14:51:06",
+    "text": "There we go! That worked, I can see all my needed properties. Now I just have some pretty, what should be, fetch method on the front end to grab the data, and then pass it into the. Thanks for all the help!"
+  },
+  {
+    "poster": {
+      "poster_name": "Manoel Rocha",
+      "poster_handle": "manoelrocha399"
+    },
+    "time_stamp": "2023-06-27 16:15:13",
+    "text": "Is it possible to update the \"last purchase date\" property of companies in HubSpot from the api?"
+  },
+  {
+    "poster": {
+      "poster_name": "Colin Johnson",
+      "poster_handle": "colin776"
+    },
+    "time_stamp": "2023-06-27 16:39:07",
+    "text": "Can we gather the company name on app install, has anyone found a solve for this? I can't find any docs on getting the company name associated with the account.",
+    "reply_count": 8,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-06-28 02:51:37"
+      },
+      {
+        "time_stamp": "2023-06-28 05:48:47"
+      },
+      {
+        "time_stamp": "2023-06-28 05:52:46"
+      },
+      {
+        "time_stamp": "2023-06-28 06:08:37"
+      },
+      {
+        "time_stamp": "2023-06-28 06:09:31"
+      },
+      {
+        "time_stamp": "2023-06-28 06:10:14"
+      },
+      {
+        "time_stamp": "2023-06-28 06:11:17"
+      },
+      {
+        "time_stamp": "2023-06-28 06:12:10"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "RanJ",
+      "poster_handle": "randy.okelly"
+    },
+    "time_stamp": "2023-06-27 16:57:50",
+    "text": "Hi everyone. I need to pass HubSpot property values to url parameters. The goals is to pass certain values to a survey platform… Is this the proper syntax to pass HubSpot data…\n\n`<https://companyurl.survey.com/jfe/form/SV_XXXXXXXXXXXXX?firstname={{personalization_token(>\"contact.firstname\")}}&amp;group={{personalization_token(\"contact.group\")}}`"
+  }
+]

@@ -1,0 +1,286 @@
+[
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-08-18 06:42:01",
+    "text": "<@U04DVL5T2TE> interested to hear your thoughts here but from a tailwind perspective. I'm going to research today to see if I can figure out how to have a \"virtual\" tailwind config file or some combination of separating out relevant chunks and then importing into both.\n\none issue is that the react config and webpack config files use different versions of imports/exports"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-08-18 09:11:54",
+    "edited": {
+      "time_stamp": "2023-08-18 09:13:17"
+    },
+    "text": "returning to this - something we’re looking into improving that i think will at least partially solve the problem you both are facing is being able to colocate hubl files and react components in a single build, including a theme\n\none nice consequence of this would be that we could potentially use our same vite build infrastructure that we currently use for JS to also build any CSS outside of the react tree, for example CSS only used in a hubl context or globally, so (i think) you could then share variables / configuration across them in the cases you’re describing. the aim more or less would be to eliminate the need for webpack to run within hubl themes and just rely on a single build"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-08-18 09:13:34",
+    "text": "would we have access to the vite build config in the same way that, for example, I use webpack right now?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-08-18 09:13:52",
+    "text": "especially for stuff like `HubSpotAutoUploadPlugin`"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-08-18 09:14:41",
+    "text": "we’re still exploring what we’d surface, but specifically since this would be in a world where everything would be in a project i don’t think the autoupload plugin would be necessary"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-08-18 09:15:26",
+    "text": "and either `hs project upload`,  `hs project watch` , or some other things some adjacent teams have coming up could replace that plugin"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-08-18 09:15:38",
+    "text": "yea, that would be great"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-08-18 09:17:47",
+    "text": "I use postcss to handle css file inside of modules, I have to import it into the module.js file so that it gets processed"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-08-18 09:18:18",
+    "edited": {
+      "time_stamp": "2023-08-18 09:18:25"
+    },
+    "text": "is that something that can be handled globally instead? or would it be more focused on a more standard tailwind config?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-08-18 09:18:59",
+    "text": "I can share my webpack file if that's helpful"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-08-18 09:20:20",
+    "text": "since postcss is already generally supported by vite, i think we’d be able to support general postcss processing"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-08-18 09:20:56",
+    "edited": {
+      "time_stamp": "2023-08-18 09:21:03"
+    },
+    "text": "and yeah the idea would be that it gets built without needing to import it somewhere where you don’t actually use it, just to get it to build"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-08-18 12:58:29",
+    "text": "Having a single vite build sounds great, I do agree that exposing some configuration options would be ideal.\n\nCurrently we have a webpack job that runs in a few Github workflow actions to test, lint, build and deploy to staging and prod envs. Would moving to project build and deploys replace that (not linting and testing) - I assume i'd be able to replace my theme build and uploads with project uploads?\n\nLastly, build on your server instances (via upload) is a bit slow, any chance to build locally then upload as an option?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-08-18 14:09:32",
+    "text": "Anyone else getting this warning from storybook? Any insights?\n```[vite] warning: \n/Users/foo/Dev/the-repo/the-project/the-app/components/elements/Img/Img.jsx\n153|    window.$RefreshReg$ = prevRefreshReg;\n154|    window.$RefreshSig$ = prevRefreshSig;\n155|    import(import.meta.url).then((currentExports) =&gt; {\n   |           ^\n156|      RefreshRuntime.registerExportsForReactRefresh(\"/Users/foo/Dev/the-repo/the-project/the-app/components/elements/Img/Img.jsx\", currentExports);\n157|      import.meta.hot.accept((nextExports) =&gt; {\nThe above dynamic import cannot be analyzed by Vite.\nSee <https://github.com/rollup/plugins/tree/master/packages/dynamic-import-vars#limitations> for supported dynamic import formats. If this is intended to be left as-is, you can use the /* @vite-ignore */ comment inside the import() call to suppress this warning.\n\n  Plugin: vite:import-analysis```",
+    "reply_count": 53,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-08-21 13:28:53"
+      },
+      {
+        "time_stamp": "2023-08-21 13:30:03"
+      },
+      {
+        "time_stamp": "2023-09-28 13:43:10"
+      },
+      {
+        "time_stamp": "2023-09-28 13:43:58"
+      },
+      {
+        "time_stamp": "2023-09-28 13:45:03"
+      },
+      {
+        "time_stamp": "2023-09-28 13:46:28"
+      },
+      {
+        "time_stamp": "2023-09-28 13:49:09"
+      },
+      {
+        "time_stamp": "2023-09-28 13:50:53"
+      },
+      {
+        "time_stamp": "2023-09-28 13:50:57"
+      },
+      {
+        "time_stamp": "2023-09-28 13:51:23"
+      },
+      {
+        "time_stamp": "2023-09-28 13:51:36"
+      },
+      {
+        "time_stamp": "2023-09-28 13:51:52"
+      },
+      {
+        "time_stamp": "2023-09-28 13:52:46"
+      },
+      {
+        "time_stamp": "2023-09-28 13:53:19"
+      },
+      {
+        "time_stamp": "2023-09-28 13:54:06"
+      },
+      {
+        "time_stamp": "2023-09-28 13:54:24"
+      },
+      {
+        "time_stamp": "2023-09-28 13:55:25"
+      },
+      {
+        "time_stamp": "2023-09-28 13:56:06"
+      },
+      {
+        "time_stamp": "2023-09-28 13:58:00"
+      },
+      {
+        "time_stamp": "2023-09-28 13:58:35"
+      },
+      {
+        "time_stamp": "2023-09-28 13:58:37"
+      },
+      {
+        "time_stamp": "2023-09-28 17:25:55"
+      },
+      {
+        "time_stamp": "2023-09-28 17:27:58"
+      },
+      {
+        "time_stamp": "2023-09-28 18:20:42"
+      },
+      {
+        "time_stamp": "2023-09-29 13:52:52"
+      },
+      {
+        "time_stamp": "2023-09-29 13:55:56"
+      },
+      {
+        "time_stamp": "2023-10-03 12:27:32"
+      },
+      {
+        "time_stamp": "2023-10-03 12:30:45"
+      },
+      {
+        "time_stamp": "2023-10-03 12:30:55"
+      },
+      {
+        "time_stamp": "2023-10-03 12:32:58"
+      },
+      {
+        "time_stamp": "2023-10-03 12:33:24"
+      },
+      {
+        "time_stamp": "2023-10-03 12:34:15"
+      },
+      {
+        "time_stamp": "2023-10-03 12:36:02"
+      },
+      {
+        "time_stamp": "2023-10-03 12:36:44"
+      },
+      {
+        "time_stamp": "2023-10-03 12:37:02"
+      },
+      {
+        "time_stamp": "2023-10-03 12:38:28"
+      },
+      {
+        "time_stamp": "2023-10-03 12:38:35"
+      },
+      {
+        "time_stamp": "2023-10-03 12:39:57"
+      },
+      {
+        "time_stamp": "2023-10-03 12:40:02"
+      },
+      {
+        "time_stamp": "2023-10-03 12:41:48"
+      },
+      {
+        "time_stamp": "2023-10-03 12:43:04"
+      },
+      {
+        "time_stamp": "2023-10-03 12:44:00"
+      },
+      {
+        "time_stamp": "2023-10-03 12:44:01"
+      },
+      {
+        "time_stamp": "2023-10-03 12:44:33"
+      },
+      {
+        "time_stamp": "2023-10-03 12:48:07"
+      },
+      {
+        "time_stamp": "2023-10-03 12:48:36"
+      },
+      {
+        "time_stamp": "2023-10-03 12:49:34"
+      },
+      {
+        "time_stamp": "2023-10-03 12:49:54"
+      },
+      {
+        "time_stamp": "2023-10-03 12:50:48"
+      },
+      {
+        "time_stamp": "2023-10-03 12:50:51"
+      },
+      {
+        "time_stamp": "2023-10-03 12:51:23"
+      },
+      {
+        "time_stamp": "2023-10-03 12:52:03"
+      },
+      {
+        "time_stamp": "2023-10-03 12:52:16"
+      }
+    ]
+  }
+]

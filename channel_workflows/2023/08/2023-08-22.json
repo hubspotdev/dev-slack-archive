@@ -1,0 +1,58 @@
+[
+  {
+    "poster": {
+      "poster_name": "Michael Haywood",
+      "poster_handle": "michael801"
+    },
+    "time_stamp": "2023-08-22 07:05:06",
+    "text": "Do you have re-enrollment turned on? Possible during testing that it maybe already enrolled the ticket you were testing with?"
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2023-08-22 09:04:27",
+    "edited": {
+      "time_stamp": "2023-08-22 09:05:23"
+    },
+    "text": "convert it to an unix/epoch as an int - new Date(dateToBeCopied).valueOf().\n\nTry to copy that value to your prop."
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2023-08-22 09:15:15",
+    "text": "is your serverless function returning the entire response to the workflow request?\n\nAlso, if you’re confident in it and it’s working as intended, good deal but declaring the territoryID with let and then redeclaring within the function with const seems strange to me.\n\nWhere/how is that getTerritoryID function being called? Doesn’t seem to be self invoking based on what I see here."
+  },
+  {
+    "poster": {
+      "poster_name": "Dan Robinson",
+      "poster_handle": "dan94.robinson"
+    },
+    "time_stamp": "2023-08-22 09:27:33",
+    "text": "It ended up enrolling overnight, but it took three hours to do so. Is there a way to make the tickets that are created trigger my workflow automatically immediately?"
+  },
+  {
+    "poster": {
+      "poster_name": "Dan Robinson",
+      "poster_handle": "dan94.robinson"
+    },
+    "time_stamp": "2023-08-22 09:27:50",
+    "text": "Or is that time frame normal for workflows?"
+  },
+  {
+    "poster": {
+      "poster_name": "Cody Koscielski",
+      "poster_handle": "codykoscielski"
+    },
+    "time_stamp": "2023-08-22 13:17:12",
+    "text": "Hmm... Now that I read back over that again with fresh eyes, I think you are right. That function is never running... I must have copied/pasted from my IDE into HubSpot wrong. Let me try to invoke that function and see if it runs.\n\nBut this is my serverless function that I am running:\nconst client = axios.create({\n    baseURL: '<https://api.hubapi.com>',\n    timeout: 10000,\n    headers: {\n        'Content-Type': 'application/json',\n        'Authorization': `Bearer ${apiKey}`,\n\n    }\n})\nexports.main = async ({body}, sendResponse) =&gt; {\n    try {\n\n        //Get the value from the quest data\n        const value = body.value\n\n        const response = await <http://client.post|client.post>(`/crm/v3/objects/${objectTypeId}/search`, {\n            properties: ['zip_code', 'territory_id'],\n            filterGroups: [\n                {\n                  filters: [\n                    {\n                        propertyName: \"zip_code\",\n                        operator: \"CONTAINS_TOKEN\",\n                        value: value,\n                    }\n                  ]\n                }\n              ]\n        });\n        sendResponse({body: response.data, statusCode: 200});\n    } catch (error) {\n        console.error('Fetch failed', error.message);\n        sendResponse({body: error.message, statusCode: 500});\n    }\n};"
+  },
+  {
+    "text": "OK, I updated my workflow code and I tested in a local node enviorment, that I do see the value I am looking for. This is running express out of convience, so I'm not sure if that is messing anythig up:\n\nconst axios = require('axios');\n\nexports.main = async (event, callback) =&gt; {\n    const postalCode = req.body.postalCode || '15222';\n\n    _if_ (!postalCode) {\n        console.log('Contact doesn\\'t have a zip code defined, no basis to assign a sales rep');\n        _return_ res.status(400).json({ error: \"Contact doesn't have a zip code\" });\n    }\n\n    console.log(`Found a zip code: ${postalCode}. Assignment in progress.`);\n\n    let data = {\n        value: postalCode\n    };\n    let jsonData = JSON.stringify(data);\n\n    _try_ {\n        const territoryID = _await_ getTerritoryID(jsonData);\n        res.json({ territoryID });\n    } _catch_ (error) {\n        console.error(`There was an error: ${error}`);\n        res.status(500).json({ error: error.message });\n    }\n}\n\nasync function getTerritoryID(jsonData) {\n    const axiosResponse = _await_ <http://axios.post|axios.post>('SERVERLESS FUNCTION URL', jsonData, {\n        headers: {\n            'Content-Type': 'application/json'\n        },\n    });\n\n    _return_ axiosResponse.data.results[0].properties.territory_id;\n}",
+    "subtype": "thread_broadcast",
+    "time_stamp": "2023-08-22 13:44:09"
+  }
+]

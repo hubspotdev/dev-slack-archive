@@ -1,0 +1,96 @@
+[
+  {
+    "text": "What would be the best way to pull this data into an transactional email?",
+    "time_stamp": "2023-07-13 04:02:30",
+    "reply_count": 9,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-07-13 04:10:36"
+      },
+      {
+        "time_stamp": "2023-07-13 04:16:58"
+      },
+      {
+        "time_stamp": "2023-07-13 04:28:14"
+      },
+      {
+        "time_stamp": "2023-07-13 04:31:21"
+      },
+      {
+        "time_stamp": "2023-07-13 04:33:45"
+      },
+      {
+        "time_stamp": "2023-07-13 09:51:03"
+      },
+      {
+        "time_stamp": "2023-07-13 10:06:39"
+      },
+      {
+        "time_stamp": "2023-07-14 02:19:24"
+      },
+      {
+        "time_stamp": "2023-07-14 03:12:02"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2023-07-13 04:10:36",
+    "text": "If the transactional emaiil is sent from a deal workflow those tokens are available as personalization tokens, for line items you could create a custom module (with enable programmable email BETA turned on) that loop trough line items and print them in the desired way"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Sharples",
+      "poster_handle": "sam.sharples"
+    },
+    "time_stamp": "2023-07-13 04:16:58",
+    "text": "this is the first I have heard about “programmable email”. Thank you very much, I will look into this :thanku:"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Sharples",
+      "poster_handle": "sam.sharples"
+    },
+    "time_stamp": "2023-07-13 04:28:14",
+    "text": "could you please point me in the right direction as to how to loop through the line items?"
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2023-07-13 04:31:21",
+    "edited": {
+      "time_stamp": "2023-07-13 04:32:22"
+    },
+    "text": "You need to use the `crm_associations`  function to fetch line items, something like that should work:\n`{% set objects = crm_associations( deal.hs_object_id, 'HubSpot_DEFINED', 19, \"\", properties) %}`  where properties is a string with comma separater property names that you need to fetch from line items"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Sharples",
+      "poster_handle": "sam.sharples"
+    },
+    "time_stamp": "2023-07-13 04:33:45",
+    "text": "amazing thank you!!"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Sharples",
+      "poster_handle": "sam.sharples"
+    },
+    "time_stamp": "2023-07-13 09:51:03",
+    "text": "can you think why this won’t work?\n```{{deal.hs_object_id}} returns 1234567\n\n{% set items = crm_associations( deal.hs_object_id, \"HubSpot_DEFINED\", 19, \"\", \"name,price,quantity,hs_position_on_quote\")%} \ndoesnt'work\n\n\n{% set items = crm_associations( 1234567, \"HubSpot_DEFINED\", 19, \"\", \"name,price,quantity,hs_position_on_quote\")%} \ndoes work```"
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2023-07-13 10:06:39",
+    "text": "Where are you testing this? I remember the token working only on sent emails, I added a fallback id for the editors for them to see a preview of the module, so for example in your case `{% set items = crm_associations( deal.hs_object_id || 1234567, \"HubSpot_DEFINED\", 19, \"\", \"name,price,quantity,hs_position_on_quote\") %}`"
+  }
+]

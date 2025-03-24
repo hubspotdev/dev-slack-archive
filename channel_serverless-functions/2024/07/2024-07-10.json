@@ -1,0 +1,193 @@
+[
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2024-07-10 01:11:29",
+    "text": "Oof that'd be helpful, 2 secs :slightly_smiling_face:"
+  },
+  {
+    "text": "This is still all I get unfortunately:\nLog trace shows no events after card render either.",
+    "time_stamp": "2024-07-10 01:15:11"
+  },
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2024-07-10 01:45:59",
+    "text": "<@U04EJHVD8FM> yeah so I wish I took a screenshot now, but all I have is the copied error message. That is literally all it said though.\n\nI tried a rebuild of the app (no real changes, just to see if that'd fix it), but that removed the logs of the previous build and with the new build it doesn't write out the error anymore, for some reason. The code of both my React and Serverless function is logging pretty much every fart of the process, but none of it makes it into the logs, *or* (and given the error above, I think it's more likely) it's something more general.\n\nFor reference, here is the code. I have almost the exact same code running in a different portal without issues, and the differences really shouldn't be of influence:\n\nFront-end\n```import React, { useState, useEffect } from 'react';\nimport { Button, HubSpot, Flex, Text } from '@HubSpot/ui-extensions';\n\nHubSpot.extend(({ context, runServerlessFunction, actions }) =&gt; (\n    &lt;Extension\n        context={context}\n        runServerless={runServerlessFunction}\n        actions={actions}\n        sendAlert={actions.addAlert}\n    /&gt;\n));\n\nconst Extension = ({ context, runServerless, actions, sendAlert }) =&gt; {\n    const { refreshObjectProperties, fetchCrmObjectProperties } = actions;\n\n    const [objectId, setObjectId] = useState(['']);\n\n    useEffect(() =&gt; {\n        fetchCrmObjectProperties(['hs_object_id']).then(response =&gt; {\n            setObjectId(response.hs_object_id);\n        });\n    }, [fetchCrmObjectProperties]);\n\n    const setTicketStatus = async button =&gt; {\n        try {\n            const { response } = await runServerless({\n                name: 'set-ticket-status',\n                parameters: {\n                    hs_object_id: objectId,\n                    ticket_status: button.status\n                }\n            });\n            refreshObjectProperties();\n            if (response) {\n                sendAlert({\n                    type: 'success',\n                    message: `Ticket Status set to ${button.label}`\n                });\n            } else {\n                sendAlert({\n                    type: 'danger',\n                    message: 'Error'\n                });\n            }\n        } catch (error) {\n            console.error('Error running serverless function:', error);\n            sendAlert({\n                type: 'danger',\n                message: 'Error: ${error.message || Unknown error}'\n            });\n        }\n    };\n\n    // Add or remove buttons with status\n    const buttons = [\n        {\n            label: 'Claim ticket',\n            status: '586120893'\n        },\n        {\n            label: 'Waiting on External',\n            status: '586120894'\n        },\n        {\n            label: 'Waiting on Replacement order',\n            status: '586120895'\n        },\n        {\n            label: 'Closed',\n            status: '4'\n        }\n    ];\n\n    return (\n        &lt;&gt;\n            &lt;Flex align='center' direction='row' wrap='wrap' gap='small'&gt;\n                &lt;Text&gt;\n                    Use the buttons below to assign the ticket to yourself and\n                    to set the status of the ticket.\n                &lt;/Text&gt;\n                {buttons.map(button =&gt; {\n                    return (\n                        &lt;Button\n                            key={button.status}\n                            type='button'\n                            onClick={() =&gt; setTicketStatus(button)}\n                        &gt;\n                            {button.label}\n                        &lt;/Button&gt;\n                    );\n                })}\n            &lt;/Flex&gt;\n        &lt;/&gt;\n    );\n};```\nServerless function:\n```const HubSpot = require('@HubSpot/api-client');\n\nexports.main = async (context = {}) =&gt; {\n    const { hs_object_id, ticket_status } = context.parameters;\n\n    const { userId } = context.user;\n\n    console.log(\n        'Starting function main with context:',\n        JSON.stringify(context, null, 2)\n    );\n\n    const HubSpotClient = new HubSpot.Client({\n        accessToken: process.env.authToken\n    });\n\n    const getOwner = async id =&gt; {\n        console.log(`Attempting to get owner for ID: ${id}`);\n        try {\n            const owner = await HubSpotClient.crm.owners.ownersApi.getById(\n                id,\n                'userId'\n            );\n            console.log('Owner retrieved:', JSON.stringify(owner, null, 2));\n            return owner;\n        } catch (e) {\n            console.error('Failed to retrieve owner:', e.message);\n            e.message === 'HTTP request failed'\n                ? console.error(\n                      'HTTP error details:',\n                      JSON.stringify(e.response, null, 2)\n                  )\n                : console.error('Error:', e);\n            throw e; // Re-throw the error to handle it in the main function\n        }\n    };\n\n    const updateTicket = async (status, newOwner) =&gt; {\n        console.log(\n            `Updating ticket with status: ${status} and new owner: ${newOwner}`\n        );\n        const properties = {\n            hs_pipeline_stage: status,\n            HubSpot_owner_id: newOwner\n        };\n\n        try {\n            const updateResult =\n                await HubSpotClient.crm.tickets.basicApi.update(hs_object_id, {\n                    properties\n                });\n            console.log(\n                'Ticket update successful:',\n                JSON.stringify(updateResult, null, 2)\n            );\n            return updateResult;\n        } catch (e) {\n            console.error('Failed to update ticket:', e.message);\n            e.message === 'HTTP request failed'\n                ? console.error(\n                      'HTTP error details:',\n                      JSON.stringify(e.response, null, 2)\n                  )\n                : console.error('Error:', e);\n            throw e; // Re-throw the error to handle it in the main function\n        }\n    };\n\n    try {\n        const owner = await getOwner(userId);\n        if (owner) {\n            console.log(\n                `Owner found with ID: ${owner.id}, proceeding to update ticket.`\n            );\n            return await updateTicket(ticket_status, owner.id);\n        } else {\n            console.log('No owner found, not updating ticket.');\n            return null;\n        }\n    } catch (e) {\n        console.error('Error in main function:', e);\n        return e; // Returning the error for further handling or logging\n    }\n};```\n"
+  },
+  {
+    "text": "And here's the error happening in the portal, when clicking any of the buttons:",
+    "time_stamp": "2024-07-10 01:47:15"
+  },
+  {
+    "poster": {
+      "poster_name": "Kiara Munz",
+      "poster_handle": "kimunz"
+    },
+    "time_stamp": "2024-07-10 05:40:44",
+    "text": "What is logged out to the console in the browser? I see you have `console.error('Error running serverless function:', error);`"
+  },
+  {
+    "poster": {
+      "poster_name": "Kiara Munz",
+      "poster_handle": "kimunz"
+    },
+    "time_stamp": "2024-07-10 05:44:03",
+    "edited": {
+      "time_stamp": "2024-07-10 05:46:32"
+    },
+    "text": "Also, could i see the serverless.json definition? (without any secrets ofc)"
+  },
+  {
+    "poster": {
+      "poster_name": "Kiara Munz",
+      "poster_handle": "kimunz"
+    },
+    "time_stamp": "2024-07-10 05:54:27",
+    "text": "The error that was missing a translation was one that was triggered when a serverless function that doesn't exist is called, so i am guessing a serverless name change or something caused this.\nI am going to contact my team about the failed runs not appearing in the logs!"
+  },
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2024-07-10 06:51:27",
+    "text": "So the error I see in my browser console is\nPOST <https://app-eu1.HubSpot.com/api/crm-extensibility/execution/internal/v3/action/function/2973077?portalId=144053734&amp;clienttimeout=30000&amp;hs_static_app=crm-records-ui&amp;hs_static_app_version=1.60730> 400 (Bad Request)\nin a file called raven.js:1242"
+  },
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2024-07-10 06:53:06",
+    "text": "Serverless.json below:\n```{\n    \"appFunctions\": {\n        \"set-ticket-status\": {\n            \"file\": \"set-ticket-status.js\",\n            \"secrets\": [\"\"],\n            \"method\": \"GET\"\n        },\n        \"notify-support\": {\n            \"file\": \"notify-support.js\",\n            \"secrets\": [\"\"],\n            \"method\": \"PATCH\"\n        }\n    }\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2024-07-10 06:53:19",
+    "text": "it's the top one, that one is the same as the file with the function"
+  },
+  {
+    "poster": {
+      "poster_name": "Kiara Munz",
+      "poster_handle": "kimunz"
+    },
+    "time_stamp": "2024-07-10 07:07:31",
+    "text": "Hmmm. Okay :eyes: , digging in deeper."
+  },
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2024-07-10 07:08:35",
+    "text": "So I did some more digging and the error I'm seeing pop up in my browser (not the console, literally the red error alert in HubSpot), is the one in my React code, i.e.:\n\n``` if (response) {\n                sendAlert({\n                    type: 'success',\n                    message: `Ticket Status set to ${button.label}`\n                });\n            } else {\n                sendAlert({\n                    type: 'danger',\n                    message: 'Error'\n                });\n            }```"
+  },
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2024-07-10 07:10:41",
+    "text": "So I now log every step of the Serverless into an error field, that gets returned in the response to the React if anything errors. If nothing errors, we get a success response, but if *neither* of those happens, it means for whatever reason, the serverless wasn't triggered. Like so:\n\n```if (response) {\n                if (response.error) {\n                    sendAlert({\n                        type: 'danger',\n                        message: `Error setting ticket status: ${response.message}`\n                    });\n                    console.error('Detailed error:', response.details);\n                } else {\n                    sendAlert({\n                        type: 'success',\n                        message: `Ticket Status set to ${button.label}`\n                    });\n                }\n            } else {\n                sendAlert({\n                    type: 'danger',\n                    message: `Error: Couldn't initiate serverless function`\n                });\n                console.error(\n                    'Serverless function response was null or undefined'\n                );\n            }\n        } ```"
+  },
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2024-07-10 07:11:32",
+    "text": "And when I try the button with this implemented, I get the last one, i.e. it can't get to the serverless it looks like. I agree could be some file mismatch, but I don't see anything like that in my code :disappointed:"
+  },
+  {
+    "poster": {
+      "poster_name": "Kiara Munz",
+      "poster_handle": "kimunz"
+    },
+    "time_stamp": "2024-07-10 07:13:42",
+    "text": "Hm. So I am looking at your project (we can find it using your portalId, which was included in the above console.error). All serverless functions stopped showing up in the project in build 35. So right now, in the eyes of the project you do not have a serverless function (not sure why yet!)\n\nIt seems like the source of the upload was github in build 34 (with function), and then HubSpot user starting with build 35"
+  },
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2024-07-10 07:14:26",
+    "text": "Hmm that makes sense, I disabled the github integration"
+  },
+  {
+    "poster": {
+      "poster_name": "Kiara Munz",
+      "poster_handle": "kimunz"
+    },
+    "time_stamp": "2024-07-10 07:14:56",
+    "text": "Build 35 is missing the app.functions folder entirely. NO idea why that would be different between github and user"
+  },
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2024-07-10 07:15:11",
+    "text": "Ok this gives me something to work with though"
+  },
+  {
+    "text": "Ugh could this be it:",
+    "time_stamp": "2024-07-10 07:16:09"
+  },
+  {
+    "text": "Working one looks like:",
+    "time_stamp": "2024-07-10 07:16:18"
+  },
+  {
+    "poster": {
+      "poster_name": "Seth Kaplan",
+      "poster_handle": "skaplan"
+    },
+    "time_stamp": "2024-07-10 07:16:28",
+    "text": ":yesyes:"
+  },
+  {
+    "time_stamp": "2024-07-10 07:16:40",
+    "text": "homer hedge"
+  },
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2024-07-10 07:17:48",
+    "text": "Ok, thanks for the off-record support guys, I'll be over here rethinking life choices for a bit :sweat_smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Kiara Munz",
+      "poster_handle": "kimunz"
+    },
+    "time_stamp": "2024-07-10 07:19:03",
+    "text": "No problem!!! Thanks for reporting!!! We wouldn't have caught that translation issue without someone working in non-english, so your report has helped our error rollout process!"
+  },
+  {
+    "poster": {
+      "poster_name": "Seth Kaplan",
+      "poster_handle": "skaplan"
+    },
+    "time_stamp": "2024-07-10 07:19:18",
+    "text": "Happens to us all bob :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2024-07-10 07:21:44",
+    "text": "Ah, well glad we could help eachother out then :slightly_smiling_face:"
+  }
+]

@@ -1,0 +1,39 @@
+[
+  {
+    "poster": {
+      "poster_name": "Willie Kim",
+      "poster_handle": "willie.kim"
+    },
+    "time_stamp": "2024-06-11 17:08:14",
+    "text": "Hello everyone, I was wondering if it's possible inject styles from a stylesheet into the modules as inline, before uploading the module to HubSpot (using hs upload)?\nAs some email clients don't support classes, we need to also add styles as inline so the modules get rendered correctly on those email clients as well. We want to the CLI tool to pick up the classnames used in the module.html files, and inject the corresponding css rules as inline to those elements.\nIs this something that's already possible (or something similiar to it)? Or should we create our own tool for that?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-06-11 17:16:52"
+      },
+      {
+        "time_stamp": "2024-06-11 18:05:50"
+      },
+      {
+        "time_stamp": "2024-06-12 11:31:02"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2024-06-11 17:16:52",
+    "text": "For email specifically, you might be looking for `hse-inline`!\n\nIf you include the attribute `data-hse-inline=true` or an ID of `hs-inline-css` on a style tag in an email, it’ll convert any of the rules contained within that style block into inline styles.\n\nFor example:\n```&lt;div class=\"my-element\"&gt;Hello world!&lt;/div&gt;\n\n&lt;style id=\"hs-inline-css\" type=\"text/css\"&gt;\n  .my-element { color: red; }\n&lt;/style&gt;```\nwould evaluate to:\n```&lt;div class=\"my-element\" style=\"color:red\"&gt;Hello world!&lt;/div&gt;```\nA few things to note when using this functionality:\n• I haven’t had any luck with the attribute version of this feature — only `id=\"hs-inline-css\"` has worked for me.\n• This inlining is *NOT* module-contained. So, if you have a selector of `p`, it would apply to _all_ `&lt;p&gt;` blocks in an email, not just the ones in that module.\n• Sometimes, the email builder will still incorrectly give you a warning about modules containing inline style elements. To my knowledge, there’s no way to prevent these."
+  },
+  {
+    "poster": {
+      "poster_name": "Willie Kim",
+      "poster_handle": "willie.kim"
+    },
+    "time_stamp": "2024-06-11 18:05:50",
+    "text": "<@U04AQA0QM8E> Thanks for the tips, I was trying to make it work with the attribute version but with no luck. After using the ID, I can see the feature working now. Can this be done with an external CSS file as well (the file is stored on HubSpot).\nSo something like:\n`&lt;style type=\"text/css\" id=\"hs-inline-css\" href=\"{{ get_asset_url(&lt;path-to-stylesheet&gt;)}}\"&gt;`"
+  }
+]

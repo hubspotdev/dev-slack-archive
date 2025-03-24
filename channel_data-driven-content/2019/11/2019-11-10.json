@@ -1,0 +1,88 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jayme Welch",
+      "poster_handle": "jayme.mcclellan"
+    },
+    "time_stamp": "2019-11-10 07:06:28",
+    "text": "I have 2 questions:\n1) Is it possible to autocomplete an input based on data from HubDB (e.g. display address has a full line address. As the user starts typing in \"Switzer...\" it would start showing the Switzerland addresses)\n2) Is it possible to query HubDB based on user input without reposting the page? In theory, I have already obtained the dataset can I filter it \"on the fly\" so the page doesn't have to go through a post?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-11-10 08:11:42"
+      },
+      {
+        "time_stamp": "2019-11-10 09:30:38"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-11-10 08:11:42",
+    "text": "Yes to both questions. There’s a few ways you can do it. All of them require you to use javascript to check against the form input.\n\nTotally depends on how you want to do it but you could store the data you need from HubDB in a script tag that creates an object on the page, you can query against.\n\nOR you can use the javascript API clients, which make it easier to work with the hubdb apis <https://docs.google.com/document/d/e/2PACX-1vTuu12oFF4bQY1zVD2-WKFuM2dEDN81-fZRV1tGaCL5Z_OcjC-B6O3mHXR6chaq25BU1D2FuvKIjc49/pub>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jayme Welch",
+      "poster_handle": "jayme.mcclellan"
+    },
+    "time_stamp": "2019-11-10 09:30:38",
+    "text": "Thank you!!"
+  },
+  {
+    "poster": {
+      "poster_name": "Caralyza",
+      "poster_handle": "caralyza"
+    },
+    "time_stamp": "2019-11-10 16:19:09",
+    "text": "Hi all- i'm trying to use hubl code to join 2 tables, however the foreign row part isn't rendering.",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-11-10 16:20:06"
+      },
+      {
+        "time_stamp": "2019-11-10 21:27:49"
+      },
+      {
+        "time_stamp": "2019-11-10 21:30:19"
+      },
+      {
+        "time_stamp": "2019-11-11 12:38:09"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Caralyza",
+      "poster_handle": "caralyza"
+    },
+    "time_stamp": "2019-11-10 16:19:10",
+    "text": "{% for row in hubdb_table_rows(2030573) %}\n  the event is {{ row.event_name }}\n                    ||\n\n  {% for foreign_row in row.foreign_table %}\n  \tthe hosting village is {{ foreign_row.village_name }}\n  {% endfor %}\n{% endfor %}"
+  },
+  {
+    "poster": {
+      "poster_name": "Caralyza",
+      "poster_handle": "caralyza"
+    },
+    "time_stamp": "2019-11-10 16:20:06",
+    "text": "should I be setting the foreign table id as a variable in the first place?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jaydip Suvagiya",
+      "poster_handle": "jaydip"
+    },
+    "time_stamp": "2019-11-10 21:27:49",
+    "text": "```\n{% for location in hubdb_table_rows(&lt;location table id&gt;) %}\n      &lt;h3 class=\"section-title\"&gt;&lt;span&gt;{{ location.location_name }}&lt;/span&gt;&lt;/h3&gt;\n        {% set eventFilter = \"&amp;orderBy=event_date\" %}\n        {% for foreign_row in hubdb_table_rows(&lt;event table id&gt;,eventFilter) %}\n          {% if (foreign_row['event_date']|datetimeformat('%j')) &gt;= (local_dt|datetimeformat('%j')) %}\n            {% for demo in foreign_row.event_location %}\n              {% if demo.hs_id == location.hs_id %}\n                &lt;div class=\"event tw-py-4\"&gt;\n                  &lt;div class=\"event-info\"&gt;\n                    &lt;b&gt;{{ foreign_row.event_date|datetimeformat('%d.%m.%Y') }}&lt;/b&gt; - {{ foreign_row.host_name }}\n                    &lt;br&gt;\n                    &lt;b&gt;{{ module.location_label }}&lt;/b&gt; - {{ foreign_row.event_name }}\n                    {% if foreign_row.event_note %}\n                    &lt;br&gt;\n                    &lt;small class=\"tw-mt-4 tw-block\"&gt;{{ foreign_row.event_note }}&lt;/small&gt;\n                    {% endif %}\n                  &lt;/div&gt;\n                  &lt;div class=\"event-button\"&gt;\n                    {% if foreign_row.event_availability.id == 1 %}\n                      &lt;a href=\"javascript:void(0)\" data-target=\"#bookingModal\" data-activate=\"modal\" class=\"btn\"&gt;{{ module.seats_available_btn }}&lt;/a&gt;\n                    {% elif foreign_row.event_availability.id == 2 %}\n                      &lt;a href=\"javascript:void(0)\" data-target=\"#bookingModal\" data-activate=\"modal\" class=\"btn-orange-300\"&gt;{{ module.almost_sold_out_btn }}&lt;/a&gt;\n                    {% elif foreign_row.event_availability.id == 3 %}\n                      &lt;a href=\"javascript:void(0)\" class=\"btn-orange-100\"&gt;{{ module.sold_out_btn }}&lt;/a&gt;\n                    {% endif %}\n                  &lt;/div&gt;\n                &lt;/div&gt;\n                &lt;hr&gt; \n              {% endif %}\n            {% endfor %}\n          {% endif %}\n        {% endfor %}\n      {% endfor %}\n```"
+  },
+  {
+    "text": "hey <@UMGLMQLA0>,\ni want this type of result, and i used the two table one for location and on for events\n\nmay be this help you",
+    "time_stamp": "2019-11-10 21:30:19"
+  }
+]

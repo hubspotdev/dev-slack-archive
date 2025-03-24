@@ -1,0 +1,58 @@
+[
+  {
+    "poster": {
+      "poster_name": "Thomas Orthbandt",
+      "poster_handle": "thomas.orthbandt"
+    },
+    "time_stamp": "2024-08-15 09:22:28",
+    "text": "Hi <@U25PYL3Q8> - Unfortunately, the `return false;` doesn't stop the form to be submitted, I believe this is due to the fact that the other email field (`name=\"email\"`) is valid from HubSpot and even though I still see an error message for the field `name=\"most_recent_referrer_email_address\"`, it allows the Submit to go through with the malformed email in `name=\"most_recent_referrer_email_address\"`.  I've provided the code below that validates the *referrer email* and displays the error message, now I need to make sure if that is not formatted correctly that the form doesn't submit regardless of the other form fields.  I've add this to my test page as well here: <https://www.pipefy.com/test-page/>\n\n&lt;script charset=\"utf-8\" type=\"text/javascript\" src=\"<https://js.hsforms.net/forms/embed/v2.js>\"&gt;&lt;/script&gt;\n&lt;script&gt;\n            hbspt.forms.create({\n               region: \"na1\",\n               portalId: \"44150209\",\n               formId: \"90cc6c1c-583c-4f8f-aeda-f296b9d2bdea\",\n\n               onFormReady: function() {\n                 const emailField = document.querySelector('input[name=\"most_recent_referrer_email_address\"]'); //targeting this input text field name\n\n                 // Function to validate the referrer email field\n                 function validateEmailField() {\n                   const emailValue = emailField.value.trim();\n                   const errorMsg = document.createElement('ul');\n                   errorMsg.classList.add('hs-input', 'invalid', 'error');\n                   errorMsg.setAttribute('role', 'alert');\n                   const errorItem = document.createElement('li');\n                   errorItem.innerHTML = '&lt;label class=\"hs-error-msg hs-main-font-element\"&gt;Email must be formatted correctly.&lt;/label&gt;';\n\n                   // Email validation regex\n                   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/;\n\n                   // Remove previous error message if it exists\n                   const previousError = emailField.parentElement.querySelector('.hs-error-msgs');\n                   if (previousError) {\n                     previousError.remove();\n                   }\n                   if (!emailPattern.test(emailValue)) {\n                     // Add error message below the email field\n                     errorMsg.appendChild(errorItem);\n                     emailField.parentElement.appendChild(errorMsg);\n\n                     // Add error class to the field\n                     emailField.classList.add('invalid', 'error');\n                     errorMsg.appendChild(errorItem);\n                     emailField.parentElement.appendChild(errorMsg);\n                   } else {\n                     // Remove error class if the email is valid\n                     emailField.classList.remove('invalid', 'error');\n                     return true; // Valid email\n                   }\n                }\n\n                // Validate on blur (when moving to the next field)\n                emailField.addEventListener('blur', validateEmailField);\n\n                // Validate on form submission\n                document.querySelector('form').addEventListener('submit', function(event) {\n                  const isValid = validateEmailField(event);\n                  if (!isValid) {\n                    return false; // Invalid email\n                  }\n                });\n              }\n            });\n&lt;/script&gt;"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-15 09:45:48",
+    "text": "```hbspt.forms.create({\n  region: \"na1\",\n  portalId: \"44150209\",\n  formId: \"90cc6c1c-583c-4f8f-aeda-f296b9d2bdea\",\n  onFormReady: function () {\n    const emailField = document.querySelector('input[name=\"most_recent_referrer_email_address\"]'); //targeting this input text field name\n    // Function to validate the referrer email field\n    function validateEmailField() {\n      const emailValue = emailField.value.trim();\n      const errorMsg = document.createElement('ul');\n      errorMsg.classList.add('hs-input', 'invalid', 'error');\n      errorMsg.setAttribute('role', 'alert');\n      const errorItem = document.createElement('li');\n      errorItem.innerHTML = '&lt;label class=\"hs-error-msg hs-main-font-element\"&gt;Email must be formatted correctly.&lt;/label&gt;';\n      // Email validation regex\n      const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/;\n      // Remove previous error message if it exists\n      const previousError = emailField.parentElement.querySelector('.hs-error-msgs');\n      if (previousError) {\n        previousError.remove();\n      }\n      if (!emailPattern.test(emailValue)) {\n        // Add error message below the email field\n        errorMsg.appendChild(errorItem);\n        emailField.parentElement.appendChild(errorMsg);\n        // Add error class to the field\n        emailField.classList.add('invalid', 'error');\n        errorMsg.appendChild(errorItem);\n        emailField.parentElement.appendChild(errorMsg);\n      } else {\n        // Remove error class if the email is valid\n        emailField.classList.remove('invalid', 'error');\n        return true; // Valid email\n      }\n    }\n    // Validate on blur (when moving to the next field)\n    emailField.addEventListener('blur', validateEmailField);\n    // Validate on form submission\n    document.querySelector('form').addEventListener('submit', function (event) {\n      const isValid = validateEmailField(event);\n      if (!isValid) {\n        return false; // Invalid email\n      }\n    });\n  },\n  onFormSubmit: function () {\n    // I often clear error messages here\n    // this is where you put in code that does this check. I'm going to use a very basic example, just checking for a string length of 5 characters. You would repalce this with your validation logic.\n\n    if (document.querySelector('input[name=\"most_recent_referrer_email_address\"]').value.trim().length &lt; 5) {\n      // return false here will return to the onFormSubmit that we can continue so that stuff gets stopped and form isn't submitted\n      // I often display error messages here\n      return false\n    }\n    // you could place more if statements in here, functions, etc.\n    // basically at this point they didn't get returned early back to the page, so we just say continue on\n    return true\n\n  }\n});```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-15 09:46:04",
+    "text": "I updated this with some comments. I didn’t touch your original code"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-15 09:46:18",
+    "text": "there area few ways of doing this, <https://community.HubSpot.com/t5/APIs-Integrations/Custom-validation-or-prevent-form-submission/m-p/666857>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-15 09:46:55",
+    "text": "using global form event listeners allows you to write more reusable code\n\n<https://legacydocs.HubSpot.com/global-form-events>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-15 09:47:24",
+    "text": "HOWEVER, if you are still learning the system, I think using the form embed code is the way to go."
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Orthbandt",
+      "poster_handle": "thomas.orthbandt"
+    },
+    "time_stamp": "2024-08-15 09:51:07",
+    "text": "Thank you <@U25PYL3Q8> - I'll take a look at the comments and your links, super useful and huge thanks."
+  }
+]

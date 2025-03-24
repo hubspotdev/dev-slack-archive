@@ -1,0 +1,138 @@
+[
+  {
+    "poster": {
+      "poster_name": "Sean Metcalf",
+      "poster_handle": "sean160"
+    },
+    "time_stamp": "2021-06-24 12:08:19",
+    "text": "getting a weird behavior when trying to change the value of a form field with javascript. Anyone run into this?\n\nI have a variable called 'inputEl' that targets the field input I want to change\nI have a variable called 'value' that is the value I want to add into the input\n\nWhen I set the value using: `inputEl.setAttribute('value', value)` or `inputEl.value = value` , it works and is visibly shown in the form field, but if I interact with the form in any way, the value is cleared for some mysterious reason.",
+    "reply_count": 12,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2021-06-24 13:44:32"
+      },
+      {
+        "time_stamp": "2021-06-24 13:46:11"
+      },
+      {
+        "time_stamp": "2021-06-24 13:46:34"
+      },
+      {
+        "time_stamp": "2021-06-24 13:48:43"
+      },
+      {
+        "time_stamp": "2021-06-24 13:49:07"
+      },
+      {
+        "time_stamp": "2021-06-24 13:49:37"
+      },
+      {
+        "time_stamp": "2021-06-24 13:59:14"
+      },
+      {
+        "time_stamp": "2021-06-24 14:01:58"
+      },
+      {
+        "time_stamp": "2021-06-24 14:51:27"
+      },
+      {
+        "time_stamp": "2021-06-24 14:55:54"
+      },
+      {
+        "time_stamp": "2021-06-24 15:37:33"
+      },
+      {
+        "time_stamp": "2021-06-28 12:10:59"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2021-06-24 13:44:32",
+    "text": "that’s because HubSpot forms are rendered using React so it’s all in a virtual DOM that overwrites what you are doing. To set the value of a form field, you’ll need to use `.change()` like we have the example <https://legacydocs.HubSpot.com/docs/methods/forms/advanced_form_options|here>"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Metcalf",
+      "poster_handle": "sean160"
+    },
+    "time_stamp": "2021-06-24 13:46:11",
+    "text": "but I'm not using jquery"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Metcalf",
+      "poster_handle": "sean160"
+    },
+    "time_stamp": "2021-06-24 13:46:34",
+    "text": ".change() errors as an unknown function"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Metcalf",
+      "poster_handle": "sean160"
+    },
+    "time_stamp": "2021-06-24 13:48:43",
+    "text": "thank you for responding btw, don't mean to sound mad, just frustrated this is taking me hours to figure out"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2021-06-24 13:49:07",
+    "text": "all good, I understand"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2021-06-24 13:49:37",
+    "text": "Full disclosure I haven’t tested this out but hooking into the change event should do the same thing <https://stackoverflow.com/questions/24172963/jquery-change-method-in-vanilla-javascript>"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Metcalf",
+      "poster_handle": "sean160"
+    },
+    "time_stamp": "2021-06-24 13:59:14",
+    "text": "sadly is not working"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Metcalf",
+      "poster_handle": "sean160"
+    },
+    "time_stamp": "2021-06-24 14:01:58",
+    "text": "same behavior happens. If I then go on to manually type something in the input and click out of the input to lose focus, then the onchange function runs, but not when its just being changed with javascript"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Metcalf",
+      "poster_handle": "sean160"
+    },
+    "time_stamp": "2021-06-24 14:51:27",
+    "text": "I finally found a solution on the developers forum:\n\ninput.value = value;\ninput.dispatchEvent(new Event('input', { bubbles: true }));"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Anderson",
+      "poster_handle": "banderson"
+    },
+    "time_stamp": "2021-06-24 14:55:54",
+    "text": "Hey Sean, I just happened to come across this question, and figured I'd share some info!\nCheck the browser compatibility here to make sure it works for your audience, but I think this is the type of approach you're looking for: <https://stackoverflow.com/a/23612498>\nWith some good docs here: <https://developer.mozilla.org/en-US/docs/Web/Events/Creating_and_triggering_events#triggering_built-in_events>"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Metcalf",
+      "poster_handle": "sean160"
+    },
+    "time_stamp": "2021-06-24 15:37:33",
+    "text": "awesome, thank you! the creation of an event was ultimately the solution. I think HubSpot should add this to their documentation for non jquery users."
+  }
+]

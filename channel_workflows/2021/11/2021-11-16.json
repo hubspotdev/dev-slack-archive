@@ -1,0 +1,24 @@
+[
+  {
+    "poster": {
+      "poster_name": "Paramjeet Singh",
+      "poster_handle": "paramjeet.s"
+    },
+    "time_stamp": "2021-11-16 03:31:41",
+    "edited": {
+      "time_stamp": "2021-11-16 03:39:39"
+    },
+    "text": "hi everyone, i m new here."
+  },
+  {
+    "poster": {
+      "poster_name": "Paramjeet Singh",
+      "poster_handle": "paramjeet.s"
+    },
+    "time_stamp": "2021-11-16 03:32:34",
+    "edited": {
+      "time_stamp": "2021-11-16 03:36:38"
+    },
+    "text": "i am creating work flow and i need to assign all contact owner to deal owner as i m using API so i need to do with api only , please help me to get all contacts which are associate with deals so i can fetch HubSpot_owner_id property and copy to deal owner property(HubSpot_owner_id) . here is the code i am using const HubSpot = require('@HubSpot/api-client');\nconst request = require(\"request\");\n//const nodemailer = require('nodemailer');\n//const mailgun = require(\"mailgun-js\");\n\nexports.main = (event, callback) =&gt; {\n\n  // change your api with these api's\n  const HubSpotClient = new HubSpot.Client({\n    apiKey: 'apikey'\n  });\n\n  HubSpotClient.crm.contacts.basicApi.getById(event.object.objectId, [\"HubSpot_owner_id\",\"email\"])\n    .then(resultss =&gt; {\n\n      let HubSpot_owner_id = resultss.body.properties.HubSpot_owner_id;\n      let email = resultss.body.properties.email;\n         var options = { method: 'POST',\n      url: '<https://api.hubapi.com/crm/v3/objects/deals/search?hapikey=apikey>',\n      headers:\n       {\n         'Content-Type': 'application/json' },\n      body: {\n        \"limit\": 100,\n        \"properties\": [ \"pipeline\" ],\n          \"filterGroups\":[\n            {\n              \"filters\":[\n                {\n              \"propertyName\": \"associations.contact\",\n              \"operator\": \"EQ\",\n              \"value\": event.object.objectId\n            }\n              ]\n            }\n          ]\n        },\n      json: true };\n   request(options, function (error, response, body) {\n            if (error) throw new Error(error);\n\n\n            if(body.total == 0)\n               // No\n               callback({\n                   outputFields: {\n                      dataStatus: 'there is no data fetched here'\n                   }\n               });\n            else\n              // Yes\n                  for (var i = 0; i &lt; body.results.length; i++) {\n                     // deals update\n                      var options2 = { method: 'PUT',\n                                    url: '<https://api.hubapi.com/deals/v1/deal/'+body.results[i].id>,\n                                    qs: { hapikey: 'apikey' },\n                                    headers:\n                                    {\n                                      'Content-Type': 'application/json' },\n                                     body: {\n                                      \"properties\": [\n                                        {\n                                          \"name\": \"HubSpot_owner_id\",\n                                          \"value\": HubSpot_owner_id\n                                        }\n                                      ]\n                                    },\n                                    json: true };\n                      request(options2, function (error2, response2, body2) {\n                          if (error2) throw new Error(error2);\n\n                          callback({\n                             outputFields: {\n                                // body: body2,\n                                dealUpdate: \"yes all deal updated!\",\n                                response2:response2\n                             }\n                          });\n                      });\n                  }\n        });\n});\n}"
+  }
+]

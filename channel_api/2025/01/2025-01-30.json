@@ -1,0 +1,98 @@
+[
+  {
+    "poster": {
+      "poster_name": "Kishan Padhiyar",
+      "poster_handle": "kishan720"
+    },
+    "time_stamp": "2025-01-30 01:47:32",
+    "edited": {
+      "time_stamp": "2025-01-30 01:53:01"
+    },
+    "text": "Hello, can anyone tell me how many properties I can use to fetch contact with property values? When I try with 400 properties, I get the error: *414 Request-URI Too Large*.\n\nI'm using <https://github.com/HubSpot/HubSpot-api-php|this> package.",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-01-30 04:22:42"
+      },
+      {
+        "time_stamp": "2025-01-30 05:12:47"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Harun Kumar Siva",
+      "poster_handle": "harun"
+    },
+    "time_stamp": "2025-01-30 04:22:42",
+    "edited": {
+      "time_stamp": "2025-01-30 04:22:53"
+    },
+    "text": "May be you could switch to the <https://developers.HubSpot.com/docs/reference/api/crm/objects/contacts#post-%2Fcrm%2Fv3%2Fobjects%2Fcontacts%2Fbatch%2Fread|Batch Read Contacts Endpoint> but passing in just a single Id so it effectively functions like Read a Contact endpoint.\n\nWith the Batch APIs the Http request uses the POST verb and the required list of properties would be passed in the body instead of the URL hopefully allowing you to work around the URI too large error."
+  },
+  {
+    "poster": {
+      "poster_name": "Kishan Padhiyar",
+      "poster_handle": "kishan720"
+    },
+    "time_stamp": "2025-01-30 05:12:47",
+    "text": "<@U058ZPH175H> Thanks it's working."
+  },
+  {
+    "poster": {
+      "poster_name": "Paul",
+      "poster_handle": "paul194"
+    },
+    "time_stamp": "2025-01-30 05:57:21",
+    "edited": {
+      "time_stamp": "2025-01-30 05:58:16"
+    },
+    "text": "*How to return all calendar availability*  :man-shrugging::skin-tone-2:\n\nUsing this endpoint:\n<https://api.hubapi.com/scheduler/v3/meetings/meeting-links/book/availability-page/xxxxxxxx?timezone=Europe%2FLondon>\n\nWe get a response that contains _some_ of the availability, along with a `hasMore => 1` flag.\n\nAnyone know how to get the rest of the availability?\n\nI've tried `&offset=1`, but that just returns the same response.\n\nCan't find anything in the docs and neither CS nor the Bot were any help.",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2025-01-30 06:43:10"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Norman Khine",
+      "poster_handle": "nkhine"
+    },
+    "time_stamp": "2025-01-30 05:59:08",
+    "text": "Hello, is there a more direct way to get a formId by searching for the form by name using the API?\nI can do something like\n```curl --request GET \\\n  --url \"<https://api.hubapi.com/forms/v2/forms>\" \\\n  --header \"Authorization: Bearer $HubSpot_DEV\" \\\n  --header \"Content-Type: application/json\" | jq -r '.[] | select(.name == \"Form for Deal 20062945626\") | .guid'```\nBut this fetches all the forms and then I filter out what I need. But this will fail as I have more than 20 forms, so I will need to deal with pagination.\nI can't see in the API docs the ability to get form details by querying for the name"
+  },
+  {
+    "poster": {
+      "poster_name": "Paul",
+      "poster_handle": "paul194"
+    },
+    "time_stamp": "2025-01-30 06:43:10",
+    "text": "If anyone wondered...\n\nThe API sends through availability in monthly chunks, starting with the current month.\n\nSo a loop in the API calls where `&amp;monthOffset=` starts at `0` and stops when the `hasMore` variable is empty (note, empty *\"\"*, not *\"false*\") works fine.\n\n`$has_more = !empty($response_body['linkAvailability']['hasMore']); // Stops if hasMore is empty`\n\nJust remember to merge the data from the multiple API calls."
+  },
+  {
+    "poster": {
+      "poster_name": "Matija Kordic",
+      "poster_handle": "matija912"
+    },
+    "time_stamp": "2025-01-30 08:54:40",
+    "text": "Hey all, been working with HubSpot api via HubSpot library in python and all is well but there was a new object added a couple of months ago called Listings. Now, I have searched the HubSpot API and it doesn't mention Listings anywhere.\n\nAlso tried: `api_client.crm.listings.get_all()` which usually works for companies, contacts, etc. but doesn't work for listings. Has anyone worked with listings via API?\n\nAny help much appreciated!",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2025-02-05 03:51:06"
+      }
+    ]
+  },
+  {
+    "text": "Hello all! I hope I'm missing something obvious, but when I make a call to Deals to return the property for \"pipeline\", in my example: <https://api.hubapi.com/crm/v3/objects/deals/123456789?properties=pipeline>\nI have \"default\" returned as the value. However, in the system, if I go to report builder, I see the same deal with \"xx Sales Pipeline\"\nWhat am I missing and how do I get \"xx Sales Pipeline\" returned with my call rather than \"default\"?\n\nUpdate: It seems like it has something to do with labeling. It seems \"xx Sales Pipeline\" is what the default pipeline name is, but how can I return that value when making the call? I sincerely appreciate any help on this!\n\nUpdate 2:\"crm/v3/pipelines/deals\" was exactly what I needed, just posting here in case someone else finds this helpful!",
+    "time_stamp": "2025-01-30 09:59:56",
+    "edited": {
+      "time_stamp": "2025-01-30 10:50:15"
+    }
+  }
+]

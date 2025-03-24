@@ -1,0 +1,36 @@
+[
+  {
+    "poster": {
+      "poster_name": "Chad Sollis",
+      "poster_handle": "chad182"
+    },
+    "time_stamp": "2025-01-04 08:45:49",
+    "text": "I know this was a year ago.  Lol.  But, if anyone else runs into a similar problem, I did solve this -- it was total user error.  I had the `.env` file in the wrong folder.  It should be in the `.functions` folder (as the documentation clearly states."
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Sollis",
+      "poster_handle": "chad182"
+    },
+    "time_stamp": "2025-01-04 10:35:30",
+    "edited": {
+      "time_stamp": "2025-01-04 10:36:10"
+    },
+    "text": "Hello, when calling `client.settings.users.usersApi.getById` from a serverless function (which is called from a ui-extension) *locally*, the result returns all user properties, including if the user is a super admin or not.  When I deploy that function, it does not return the same information.  Specifically, it does not include the property if the user is a super admin.  Is there a way, either from the ui-extension or the serverless function, to ascertain if the current logged-in user is a super admin?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2025-01-04 11:25:57"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Sollis",
+      "poster_handle": "chad182"
+    },
+    "time_stamp": "2025-01-04 11:25:57",
+    "text": "Ok.  I was able to solve this by enabling `crm.objects.users.read` permission for the private app, then using this endpoint `<https://api.hubapi.com/crm/v3/objects/users/batch/read>` with the following body in the serverless function.\n\n```{\n  \"idProperty\": \"hs_email\",\n  \"inputs\": [\n    {\n      \"id\": \"<mailto:myemail@domain.com|myemail@domain.com>\"\n    }\n  ],\n  \"properties\": [\n    \"hs_access\"\n  ]\n}```\nI can not think of a reason why this would have any security issues, but I'd be curious to hear from the community.\n\nThis is called in a serverless function deployed through a ui-extension, and only called from the ui-extension which is a tab on page layout."
+  }
+]

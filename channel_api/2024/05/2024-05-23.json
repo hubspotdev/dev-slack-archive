@@ -1,0 +1,131 @@
+[
+  {
+    "poster": {
+      "poster_name": "Val Kotlarov",
+      "poster_handle": "val.kotlarov"
+    },
+    "time_stamp": "2024-05-23 01:04:19",
+    "text": "<@U06KP87QUJW> it's Ruby but I can use any lang.\n<@U04JUUACH6E>\nThe relevant headers I'm getting:\nHTTP_X_HubSpot_SIGNATURE_VERSION=v1\nHTTP_X_HubSpot_SIGNATURE_V3=some_value\nand also HTTP_X_HubSpot_SIGNATURE=another_value"
+  },
+  {
+    "poster": {
+      "poster_name": "Val Kotlarov",
+      "poster_handle": "val.kotlarov"
+    },
+    "time_stamp": "2024-05-23 01:32:18",
+    "text": "For example:\n```OpenSSL::HMAC.hexdigest('sha256', 'QlientSecret', \"[{\\\"some\\\":\\\"value\\\",\\\"another\\\":1}]\")\n\n=&gt; \"ac5e2c2ecdc91d3869ed7c2d96f9a24bbf4e719c795d91beede2fa3d2687d89d\"```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Val Kotlarov",
+      "poster_handle": "val.kotlarov"
+    },
+    "time_stamp": "2024-05-23 01:32:44",
+    "text": "Does this look correct?"
+  },
+  {
+    "poster": {
+      "poster_name": "Omar Tanti",
+      "poster_handle": "omar.tanti"
+    },
+    "time_stamp": "2024-05-23 02:09:15",
+    "edited": {
+      "time_stamp": "2024-05-23 02:10:08"
+    },
+    "text": "<@U06SDFMD947> below please find my code snippet which I am using in an AWS Lambda function with Python to verify the signature:\n\n```HubSpot_WEBHOOK_SECRET = os.environ.get(\"HubSpot_WEBHOOK_SECRET\")\n\ndef lambda_handler(event, context):\n        \n    try:\n        \n        # Check if the request method is POST\n        if event['requestContext']['http']['method'] != 'POST':\n            return {\n                'statusCode': 405,\n                'body': json.dumps('Method Not Allowed. Only POST requests are allowed.')\n            }\n        \n        #Authorization API Key Check\n        authorized_request = validate_HubSpot_webhook(event)\n        print('Authorized:', authorized_request)\n        if not authorized_request:\n            # Incorrect API key provided\n            return {\n                \"statusCode\": 400,\n                \"body\": json.dumps({\"error\": \"Incorrect HubSpot Signature in the request headers.\"})\n            }\n            \n        # Extract data from the HubSpot Books webhook payload\n        payload = json.loads(event['body'])\n\ndef validate_HubSpot_webhook(event):\n    \n    # Ensure the header is present\n    if 'headers' not in event or 'x-HubSpot-signature-v3' not in event['headers'] or 'x-HubSpot-request-timestamp' not in event['headers']:\n        return False\n        \n    # Extract the raw payload from the event\n    raw_payload = event['body']\n\n    # Get the provided signature from the header\n    provided_signature = event['headers']['x-HubSpot-signature-v3']\n    provided_timestamp = event['headers']['x-HubSpot-request-timestamp']\n    \n    # Concatenate the string for validation\n    validation_string = (\n        event['requestContext']['http']['method'] +\n        'https://' + event['requestContext']['domainName'] + '/' +\n        raw_payload +\n        provided_timestamp\n    )\n\n    # Convert the validation string to bytes\n    validation_string_bytes = validation_string.encode('utf-8')\n    \n    # Convert the app secret to bytes\n    app_secret_bytes = HubSpot_WEBHOOK_SECRET.encode('utf-8')\n\n    #  Compute the expected signature using HMAC SHA-256\n    expected_signature = base64.b64encode(hmac.new(app_secret_bytes, validation_string_bytes, hashlib.sha256).digest()).decode('utf-8')\n\n    # Compare the provided and expected signatures\n    return hmac.compare_digest(provided_signature, expected_signature)```"
+  },
+  {
+    "poster": {
+      "poster_name": "Val Kotlarov",
+      "poster_handle": "val.kotlarov"
+    },
+    "time_stamp": "2024-05-23 04:33:32",
+    "text": "<@U06KP87QUJW> Using the above I build the `validation_string_bytes` which looks like:\n```\"POST<https://api.hubapi.com/[{>\\\"eventId\\\":123456,\\\"subscriptionId\\\":1234,\\\"portalId\\\":1234,\\\"appId\\\":1234,\\\"occurredAt\\\":1234,\\\"subscriptionType\\\":\\\"deal.propertyChange\\\",\\\"attemptNumber\\\":0,\\\"objectId\\\":1234,\\\"propertyName\\\":\\\"dealstage\\\",\\\"propertyValue\\\":\\\"contractsent\\\",\\\"changeSource\\\":\\\"CRM_UI\\\",\\\"sourceId\\\":\\\"userId:64535554\\\"}]12341234\"```\nStill after all the encodings strings don't match. Can it be that the `<https://api.hubapi.com>` should be something else?"
+  },
+  {
+    "poster": {
+      "poster_name": "Omar Tanti",
+      "poster_handle": "omar.tanti"
+    },
+    "time_stamp": "2024-05-23 07:15:02",
+    "text": "did you try stripping the '\\' <@U06SDFMD947>? I usually use this tool for testing as well in case it helps: <https://www.devglan.com/online-tools/hmac-sha256-online>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carlos Rodriguez",
+      "poster_handle": "crodriguez952"
+    },
+    "time_stamp": "2024-05-23 08:01:37",
+    "text": "Hello, how can I get all the notes for a deal?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-23 14:37:42"
+      },
+      {
+        "time_stamp": "2024-05-24 14:16:38"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Scott MacDonald",
+      "poster_handle": "scottandrewmacdonald"
+    },
+    "time_stamp": "2024-05-23 08:51:57",
+    "text": "Is there a way to turn on verbose logging/debugging responses in the API?\n\nI'm working mostly with the CRM endpoints (e.g. /crm/v3/objects) and I find that anytime I build something I get stuck trying to debug requests failing and returning a  \"400 - Bad Request\" which while accurate, is really unhelpful.\n\n*Example*: we created a custom object in HubSpot and I was trying to create a new instance of it via the API and getting a 400. The issue turned out to be a simple capitalization mismatch in the property's enumeration values (I was passing the value 'source' when the enumeration value was 'Source').\n\nEven just a simple message like 'property XYZ passed an invalid value' would help a ton. Is there anything like this?"
+  },
+  {
+    "text": "Hello Developers! I have a question about Google add activity tracking with HS tracking code and API. For now, we are using a non-HS form for the registration page. Currently, we manually pass the client info to the HS account via API. It does grab all the client's info from the form to HS accounts. However, when the client accesses the registration page from Google ad campaigns click, it does not grab the campaign info. Instead, it only shows \"This contact was created from Offline Sources from Integration\". I assume we need to pass HubSpotusertoken info via API as well. Could you please provide me any information or help doc about how I can grab and pass Google ads info to HS contacts? When I used Tracking code in the page, it grabbed campaign info but it does not pass client login information. We need all of the information. Please advise me. Thank you.",
+    "time_stamp": "2024-05-23 11:17:29"
+  },
+  {
+    "poster": {
+      "poster_name": "Matheus Jiran",
+      "poster_handle": "matheus"
+    },
+    "time_stamp": "2024-05-23 12:06:55",
+    "text": "Hey <@U01GW2U4WMA>, those were moved into the \"Commerce\" section"
+  },
+  {
+    "poster": {
+      "poster_name": "Matheus Jiran",
+      "poster_handle": "matheus"
+    },
+    "time_stamp": "2024-05-23 12:12:03",
+    "text": "Hey <@U04U9UFTKNJ> just adding an use case for this one. I have a client who is looking to integrate a Order and Inventory Management System with HubSpot. Goal is to enable them to build the quote in HubSpot with all the custom products and sync it to the third-party system.\n\nThis would require a very well structured system of folders, with an custom integration able to create a folder when it does not exist. Otherwise, we can update the HubSpot Library but the folder organization need to be done manually.\n\nIf this post was in Ideas Forum I'd be upvoting it :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Matheus Jiran",
+      "poster_handle": "matheus"
+    },
+    "time_stamp": "2024-05-23 14:37:42",
+    "text": "Hey <@U02JE0QQCG4>, yes. You can list the records associated with an record thru the <https://developers.HubSpot.com/docs/api/crm/associations|List endpoint for Associations>\n\n```'<https://api.hubapi.com/crm/v4/objects/deals/deal_id/associations/notes?limit=500>' ```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan De Long",
+      "poster_handle": "ndelong"
+    },
+    "time_stamp": "2024-05-23 14:48:27",
+    "text": "Hi Suhas! Sorry to be late to the party on this one!\n\nI wanted to let you know, there is currently not an API endpoint to accomplish this with HubSpot."
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan De Long",
+      "poster_handle": "ndelong"
+    },
+    "time_stamp": "2024-05-23 14:51:59",
+    "text": "However, if you wanted a workaround, I think you could consider a couple things:\n\nIf the workflow is associated with a list, you could understand the contacts that have gone through the workflow by reference that list via API.\n\nAnother idea could be, as part of the workflow you want to know enrollments for, have that workflow stamp a property on the contact record as a workflow step -- this would allow you later to see all contacts who have gone through that particular workflow because they would have that property set. :slightly_smiling_face:\n\nThere is also an update coming for the workflows API (Development of the v3 Workflows API will begin in Q4 2023). Here's a link to the HubSpot developer changelog: <https://developers.HubSpot.com/changelog>"
+  },
+  {
+    "poster": {
+      "poster_name": "Dave",
+      "poster_handle": "david99qg"
+    },
+    "time_stamp": "2024-05-23 15:03:12",
+    "text": "Hi Developers!\nAnyone who has previously connected the Forms API (<https://legacydocs.HubSpot.com/docs/methods/forms/get-submissions-for-a-form>), I have some doubts and would appreciate your support."
+  }
+]

@@ -1,0 +1,10 @@
+[
+  {
+    "poster": {
+      "poster_name": "Stefano Chiala",
+      "poster_handle": "stefano599"
+    },
+    "time_stamp": "2024-09-30 03:02:44",
+    "text": "Hi everyone,\nI have built an island which calls one serverless function that fetches three hubdb tables and returns the data.\nThe serverless function is called as follows:\n\n```const fetchData = async (_, { url }) =&gt; {\n  [...]\n\n  const results = await generateContentFeed(env);\n\n  return {\n    serverSideProps: { results, env },\n    caching: {\n      cacheControl: {\n        maxAge: 3600,\n      },\n    },\n  };\n};\n\nexport const getServerSideProps = withUrlPath(fetchData);```\nI have no problems locally.\nThree separate function were implemented before (with no caching though) but still no luck (actually seemed worse).\nWhen the app is deployed and the island is used in a page the app fails to render 'sometimes' and my bet is that the serverless function takes too much time to return the data (response size ~400kb).\nIn fact here are some logs of my function when I run `hs logs all --account=accountId --follow`\n```2024-09-30T08:00:45.825Z - SUCCESS - Execution Time: 5619ms\n2024-09-30T08:00:50.530Z - SUCCESS - Execution Time: 5302ms\n2024-09-30T08:08:37.615Z - SUCCESS - Execution Time: 5683ms\n2024-09-30T08:08:52.687Z - SUCCESS - Execution Time: 1100ms```\nThe first ones exceed 5000ms and the app does not render, the last one is only about 1ms and the app renders.\nAny idea on what I could do to make this working all the times?"
+  }
+]

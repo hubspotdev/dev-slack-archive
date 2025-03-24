@@ -1,0 +1,86 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jayme Welch",
+      "poster_handle": "jayme.mcclellan"
+    },
+    "time_stamp": "2020-09-30 05:53:08",
+    "text": "I have a dnd_section within a dnd_area. This has a background applied.  I now want to add 2 modules:\n1. My custom heading module for the section\n2. A custom module for the actual content area\nIs it possible to have 2 modules inside a dnd_section? It keeps yelling at me that it wants to split them into columns, but I clearly don't want two columns I just want a heading in one div and my module in another. (I am a little baffled that you would create a column and then put rows into that? That is a little backward to how rows and columns are typically derived - what am I missing?).",
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2020-09-30 07:32:54"
+      },
+      {
+        "time_stamp": "2020-09-30 07:33:55"
+      },
+      {
+        "time_stamp": "2020-09-30 07:34:27"
+      },
+      {
+        "time_stamp": "2020-09-30 07:58:35"
+      },
+      {
+        "time_stamp": "2020-09-30 09:04:04"
+      },
+      {
+        "time_stamp": "2020-12-03 10:27:35"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Melinda Green",
+      "poster_handle": "melinda.green"
+    },
+    "time_stamp": "2020-09-30 07:32:54",
+    "edited": {
+      "time_stamp": "2020-09-30 07:33:36"
+    },
+    "text": "try putting column at a level *above* row:\n```{% dnd_area 'dnd_area', label='Main section' %}\n      {% dnd_section %}\n        {% dnd_column offset=0, width=7 %}\n          {% dnd_row %}\n            {% dnd_module path='@HubSpot/rich_text' horizontal_alignment='CENTER' %}\n              {% module_attribute 'html' %}\n                &lt;h1&gt;Contact us&lt;/h1&gt;\n              {% end_module_attribute %}\n            {% end_dnd_module %}\n          {% end_dnd_row %}\n        {% end_dnd_column %}\n        {% dnd_column offset=7, width=1 %}\n        {% end_dnd_column %}\n        {% dnd_column offset=8, width=4 %}\n          {% dnd_row %}\n            {% dnd_module path='@HubSpot/rich_text' horizontal_alignment='CENTER' %}\n              {% module_attribute 'html' %}\n                &lt;h1&gt;Contact us&lt;/h1&gt;\n              {% end_module_attribute %}\n            {% end_dnd_module %}\n          {% end_dnd_row %}\n        {% end_dnd_column %}\n      {% end_dnd_section %}\n    {% end_dnd_area %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Melinda Green",
+      "poster_handle": "melinda.green"
+    },
+    "time_stamp": "2020-09-30 07:33:55",
+    "text": "this is from a template I built off of the boilerplate"
+  },
+  {
+    "poster": {
+      "poster_name": "Melinda Green",
+      "poster_handle": "melinda.green"
+    },
+    "time_stamp": "2020-09-30 07:34:27",
+    "text": "i _think_ you can also nest them, much like tables."
+  },
+  {
+    "poster": {
+      "poster_name": "Jayme Welch",
+      "poster_handle": "jayme.mcclellan"
+    },
+    "time_stamp": "2020-09-30 07:58:35",
+    "text": "Ugh that's just yucky in terms of the amount of nesting and code generated - not to mention the forced widths and offsets - I prefer to handle that in my custom css.  It should really just spit out this:\n&lt;section&gt;\n&lt;div container&gt;\n&lt;div row&gt;\n&lt;div&gt;heading module&lt;/div&gt;\n&lt;div&gt;custom module&lt;/div&gt;\n&lt;/div&gt;\n&lt;/div&gt;\n\nSo, I don't need or want any nesting. Just a clean new div line for each of my modules and that should be possible without having nesting overhead. I'll just throw it together in a module for now.  It works, but limits the amount of control I'm giving for designing pages."
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2020-09-30 09:04:04",
+    "edited": {
+      "time_stamp": "2020-09-30 09:13:24"
+    },
+    "text": "Hi Jayme, to better understand this - the dnd_* system actually uses a stripped down version of the bootstrap grid.\n\nSo:\n```{% dnd_area %} = &lt;div class=\"container\"&gt;\n{% dnd_section %} = &lt;div class=\"row\"&gt;{dnd_column|dnd_module}&lt;/div&gt;\n\n{% dnd_column %} = &lt;div class=\"col-x\"/&gt; {row}&lt;/div&gt;\n{% dnd_module %} = &lt;div class=\"col-x\"&gt;module code&lt;/div&gt;\n{% dnd_row %} = &lt;div class=\"row\"&gt;{dnd_column|dnd_module}&lt;/div&gt;```\nit’s not the most beautiful semantically, but I understand the reasoning - I imagine it’s to accommodate a consistent editing experience in the editor UI.\n\nFor theme development - I actually just look at creating custom modules for every section, as I much prefer it. I then just use dnd_section/dnd_module for scaffolding/layout.\n\nYour example of HTML markup, semantically is fine. However, in the context of bootstrap you always need a column within a row, and for nested columns you’re always going to need a row as the parent. Hence the boilerplate (which Bootstrap has always had)"
+  },
+  {
+    "poster": {
+      "poster_name": "Jatinder Kumar",
+      "poster_handle": "jatinder.k298"
+    },
+    "time_stamp": "2020-09-30 11:16:38",
+    "text": "can we give option to add custom id in section for on scroll landing page\nmeans one page template"
+  }
+]

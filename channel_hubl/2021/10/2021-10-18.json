@@ -1,0 +1,118 @@
+[
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2021-10-18 04:37:05",
+    "edited": {
+      "time_stamp": "2021-10-18 04:38:00"
+    },
+    "text": "I think you are trying to call the macro inside the masthead. Although if you are placing the macro in the root file you only need to call it like:\n```{{ img(module.field ) }}\n```\n(on the phone right now, can't provide full example, let me know if that give you some insights, I can expand later if needed)"
+  },
+  {
+    "poster": {
+      "poster_name": "Helder Vilela",
+      "poster_handle": "dev"
+    },
+    "time_stamp": "2021-10-18 12:13:31",
+    "text": "Hi there.\nQuestion: Is there a way to create a function similar to how we make macros?",
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2021-10-18 13:12:54"
+      },
+      {
+        "time_stamp": "2021-10-18 15:30:35"
+      },
+      {
+        "time_stamp": "2021-10-18 15:36:03"
+      },
+      {
+        "time_stamp": "2021-10-18 15:37:37"
+      },
+      {
+        "time_stamp": "2021-10-18 17:08:40"
+      },
+      {
+        "time_stamp": "2021-10-19 05:06:29"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2021-10-18 13:12:54",
+    "text": "A macro is essentially the HS version of a function. What are you looking to do?"
+  },
+  {
+    "poster": {
+      "poster_name": "Helder Vilela",
+      "poster_handle": "dev"
+    },
+    "time_stamp": "2021-10-18 15:30:35",
+    "text": "<@UQWGKUEN7> hi. Thanks\nI would like to create a function that can be used in if statements. As I understand macros just output html, they don't return values. right ?"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2021-10-18 15:36:03",
+    "text": "Ahhh well there are workarounds for getting macros to bend to your will. Do you have an example youre trying to make happen. It’s difficult to give any insight without having a use case to go off of."
+  },
+  {
+    "poster": {
+      "poster_name": "Helder Vilela",
+      "poster_handle": "dev"
+    },
+    "time_stamp": "2021-10-18 15:37:37",
+    "text": "No need. I found an alternative, but I was curious if there was any option, similar to jinja."
+  },
+  {
+    "poster": {
+      "poster_name": "Steven Hambleton",
+      "poster_handle": "steven994"
+    },
+    "time_stamp": "2021-10-18 17:03:52",
+    "edited": {
+      "time_stamp": "2021-10-18 17:09:15"
+    },
+    "text": "Masthead is a module with a custom choice field called `masthead_image`\n\nThe Macro is a seperate file."
+  },
+  {
+    "poster": {
+      "poster_name": "Steven Hambleton",
+      "poster_handle": "steven994"
+    },
+    "time_stamp": "2021-10-18 17:08:40",
+    "text": "Can you share so others can learn Helder?"
+  },
+  {
+    "poster": {
+      "poster_name": "Steven Hambleton",
+      "poster_handle": "steven994"
+    },
+    "time_stamp": "2021-10-18 17:15:43",
+    "text": "If I use this code in the Macro -\n\n```{%- macro img(masthead) -%}\nThe value of masthead is - {{ masthead }}&lt;br&gt;\n{%- if masthead == 'mailbox' -%}it's a mailbox{%- elif masthead == 'briefcase' -%}it's a briefcase{%- elif masthead -%}There's definitely something here!{%- else -%}Macro Image didn't work{%- endif -%}\n{%- endmacro -%}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Steven Hambleton",
+      "poster_handle": "steven994"
+    },
+    "time_stamp": "2021-10-18 17:17:29",
+    "text": "I can see the value of masthead (either mailbox or briefcase), it outputs just fine.\n\nBut no matter what I choose, the second line always outputs “There’s definitely something here!“, which clearly backs up the previous output.\n\nSo why oh why can’t I use == to test the value of the variable and output accordingly?"
+  },
+  {
+    "poster": {
+      "poster_name": "Claud Chan",
+      "poster_handle": "claud.chan"
+    },
+    "time_stamp": "2021-10-18 19:58:31",
+    "text": "Here is my current approach which works but somehow is an extra step to it:\n```{% set all_blog_posts = [] %}\n\n{# Here is the extra step. Selected blog field from repeater and store into array #}\n{% if module.blog_field %}\n  {% for blog_field in module.blog_field|unique %} {# add unique to exclude if duplicate blog id #}\n  \n    \n    {% set blogposts = blog_recent_posts(blog_field, 250) %}\n    {% for post in blogposts %}\n      {% set dict_var = {\n               'publish_date': post.publish_date, \n               'id': post.id, \n               'html_title': post.html_title, \n               'name': post.name, \n               'post_list_content': post.post_list_content, \n               'absolute_url': post.absolute_url, \n               'featured_image': post.featured_image, \n               'tag_list': post.tag_list, \n               'blog_post_author': post.blog_post_author, \n               'parent_blog': {\n                 'id': post.parent_blog.id, \n                 'html_title': post.parent_blog.html_title\n               }\n             }\n      %}\n      {% do all_blog_posts.append(dict_var) %}\n    {% endfor %}\n  {% endfor %}\n{% endif %}\n\n{# Here is where to display all the post from the array #}\n{% set rec_posts = all_blog_posts %}\n\n{# Continue loop the rec_posts to display the post #}\n{% for rec_post in rec_posts | sort(true, false, 'publish_date') %}\n  &lt;h3&gt;{{ rec_post.name }}&lt;/h3&gt;\n  {{ rec_post.post_list_content|truncatehtml(100)|striptags }}\n  &lt;hr&gt;\n{% endfor %}```"
+  }
+]

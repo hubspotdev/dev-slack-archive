@@ -1,0 +1,241 @@
+[
+  {
+    "poster": {
+      "poster_name": "pablo perez",
+      "poster_handle": "pablo765"
+    },
+    "time_stamp": "2024-06-25 05:26:46",
+    "text": "Any news, am in the same pickle, i am currently associating the emails to the ticket but the inbox is not showing them in the help desk, any way to hack this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Mercy Tariro Manyange",
+      "poster_handle": "mercyttongesai"
+    },
+    "time_stamp": "2024-06-25 05:29:14",
+    "edited": {
+      "time_stamp": "2024-06-25 05:37:03"
+    },
+    "text": "Hello, I am trying to create a custom object using a custom object API but I am getting this error in the browser\n```Cannot GET /```\nWhen I follow the URL for customObjectSchemas <https://api.HubSpot.com/crm/v3/schemas>\nI am getting this in the browser\n```{\n  \"status\": \"error\",\n  \"message\": \"Csrf token is missing from the request.\",\n  \"correlationId\": \"dbc61c6f-c2d3-48ce-80d1-662b12e06a49\",\n  \"engagement\": {\n    \"service-to-service\": \"Not engaged, Metadata not found for Infra-Idp. Fallback Shhkeys: service-to-service not engaged. Metadata for service-to-service request not found. is missing\",\n    \"oauth-token\": \"Not engaged, auth is missing\",\n    \"hapikey\": \"Not engaged, auth is missing\",\n    \"app-cookie\": \"Engaged\",\n    \"internal-cookie\": \"internal-auth not engaged. You can get a new internal auth cookie for host 'api.HubSpot.com' by visiting following link from your current browser window: <https://tools.hubteam.com/login/host/api.HubSpot.com> .\"\n  }\n}```\nand this in the terminal\n```-link-in-the-read-me) ✗ node index.js\nListening on <http://localhost:3000>\nError creating custom object schema: {\n  status: 'error',\n  message: 'unauthorized request',\n  correlationId: '0e8c34a1-6a19-4ffd-af66-b76332ea5fb2',\n  category: 'MISSING_PERMISSIONS'\n}```\nAnd here is the code I am using\n```const express = require('express');\nconst axios = require('axios');\nconst app = express();\nconst path = require('path');\n\napp.set('view engine', 'pug');\napp.use(express.static(__dirname + '/public'));\napp.use(express.urlencoded({ extended: true }));\napp.use(express.json());\napp.set('views', path.join(__dirname, 'views'));\n\n\n\nconst private_app_token = 'xxxx xxxxx xxxxxx'\n\n// Function to create custom object schema\nconst createCustomObjectSchema = async () => {\n  const endpoint = '<https://api.HubSpot.com/crm/v3/schemas>';\n  const headers = {\n    Authorization: `Bearer ${private_app_token}`,\n    'Content-Type': 'application/json'\n  };\n  const data = {\n    \"name\": \"pets\",\n    \"labels\": {\n        \"singular\": \"Pet_V2\",\n        \"plural\": \"Pets_V2\"\n    },\n    \"primaryDisplayProperty\": \"pet_name\", // Ensure this matches an existing property\n    \"secondaryDisplayProperties\": [\n        \"pet_type\"\n    ],\n    \"searchableProperties\": [\n        \"pet_name\",\n        \"pet_type\",\n        \"favourite_food\"\n    ],\n    \"requiredProperties\": [\n        \"pet_name\",\n        \"pet_type\",\n        \"favourite_food\"\n    ],\n    \"properties\": [\n        {\n            \"name\": \"pet_name\",\n            \"label\": \"Pet Name\",\n            \"type\": \"string\",\n            \"fieldType\": \"text\",\n            \"groupName\": \"pet_information\"\n        },\n        {\n            \"name\": \"pet_type\",\n            \"label\": \"Pet Type\",\n            \"type\": \"string\",\n            \"fieldType\": \"text\",\n            \"groupName\": \"pet_information\"\n        },\n        {\n            \"name\": \"favourite_food\",\n            \"label\": \"Favourite Food\",\n            \"type\": \"string\",\n            \"fieldType\": \"text\",\n            \"groupName\": \"pet_information\"\n        }\n    ],\n    \"associatedObjects\": [\n        \"CONTACT\"\n    ],\n    \"metaType\": \"HubSpot\"\n  };\n  \n  \n\n  try {\n    const response = await axios.post(endpoint, data, { headers });\n    console.log('Custom Object Schema Created:', response.data);\n  } catch (error) {\n    console.error('Error creating custom object schema:', error.response ? error.response.data : error.message);\n  }\n};\n\n// Run the function to create the custom object schema\ncreateCustomObjectSchema();\n\napp.get('/home-pets', async (req, res) => {\n  const petsEndpoint = '<https://api.HubSpot.com/crm/v3/objects/pets?properties=pet_name,pet_type,favourite_food>';\n  const headers = {\n    Authorization: `Bearer ${private_app_token}`,\n    'Content-Type': 'application/json'\n  }\n  const params = {\n    properties: ['pet_name', 'pet_type', 'favourite_food'] // Add the property names you want here\n  }\n  try {\n    const response = await axios.get(petsEndpoint, { headers, params });\n    console.log('API Response:', JSON.stringify(response.data, null, 2));\n    const pets = response.data.results;\n    console.log('Pet data:', JSON.stringify(pets, null, 2));\n    res.render('home', { pets: pets });\n  } catch (error) {\n    console.error(error);\n  }\n})\n\napp.get('/update-pets', (req, res) => {\n  try {\n    res.render('updates', { pageTitle: 'Update Custom Object Form | Integrating With HubSpot I Practicum' }); // Render the updates.pug template\n  } catch (error) {\n    console.error(error);\n  }\n});\n\n\napp.post('/update-pets', async (req, res) => {\n  const petsEndpoint = '<https://api.HubSpot.com/crm/v3/objects/pets>';\n  const headers = {\n    Authorization: `Bearer ${private_app_token}`,\n    'Content-Type': 'application/json'\n  }\n  const data = {\n    properties: {\n      pet_name: req.body.pet_name,\n      pet_type: req.body.pet_type,\n      favourite_food: req.body.favourite_food\n    }\n  }\n  try {\n    const response = await axios.post(petsEndpoint, data, { headers });\n    console.log('API Response:', JSON.stringify(response.data, null, 2));\n    res.redirect('/home-pets'); // Redirects to home page\n  } catch (error) {\n    console.error(error);\n  }\n});\n\n\napp.listen(3000, () => console.log('Listening on <http://localhost:3000>')); ```\nI checked my access token and found out it's correct\nI also regenerated it but I am still getting the same error with the HTTP status 403 in the HubSpot private app.\nI configured these scopes for my access token\n```crm.schemas.custom (read and write)\ncrm.objects.custom (read and write)\ncrm.objects.contacts (read and write)```",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-06-25 12:59:11"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "pablo perez",
+      "poster_handle": "pablo765"
+    },
+    "time_stamp": "2024-06-25 05:36:48",
+    "text": "Can we add object_type='ConvoInbox' or 'HELPDESK' as field to make the distinction?"
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Arsic",
+      "poster_handle": "milos.arsic"
+    },
+    "time_stamp": "2024-06-25 05:45:03",
+    "edited": {
+      "time_stamp": "2024-06-25 05:47:08"
+    },
+    "text": "Hello HubSpot Team,\nI am looking to integrate our app with your services and have some questions. I went through Postman, but I couldn't query HubSpot in the way I would like to. Specifically, I want to query Quotes to fetch all quotes for a certain company (record_id). From what I have seen, this does not seem possible through your API. Additionally, when I navigate to the Quotes tab in your app, I see that each quote has an amount column, which I cannot find in my API response.\n\nThanks in advance",
+    "reply_count": 10,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-06-25 06:29:17"
+      },
+      {
+        "time_stamp": "2024-06-25 06:39:18"
+      },
+      {
+        "time_stamp": "2024-06-25 06:42:16"
+      },
+      {
+        "time_stamp": "2024-06-25 06:42:38"
+      },
+      {
+        "time_stamp": "2024-06-25 07:12:23"
+      },
+      {
+        "time_stamp": "2024-06-25 07:17:24"
+      },
+      {
+        "time_stamp": "2024-06-25 07:17:31"
+      },
+      {
+        "time_stamp": "2024-06-25 07:19:07"
+      },
+      {
+        "time_stamp": "2024-06-25 07:20:38"
+      },
+      {
+        "time_stamp": "2024-06-26 14:11:27"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Willem Reus",
+      "poster_handle": "wreus"
+    },
+    "time_stamp": "2024-06-25 06:29:17",
+    "text": "Did you look into trying it through GraphQL? That is awesome for the associations."
+  },
+  {
+    "poster": {
+      "poster_name": "Willem Reus",
+      "poster_handle": "wreus"
+    },
+    "time_stamp": "2024-06-25 06:32:05",
+    "text": "Sorry, missed this one. Has anyone tried pulling all data and then passing it back to HubSpot with slight changes to see if this creates the record in the helpdesk? If not I will give that a go this weekend."
+  },
+  {
+    "poster": {
+      "poster_name": "Roeland Schoppers",
+      "poster_handle": "r.schoppers"
+    },
+    "time_stamp": "2024-06-25 06:34:25",
+    "text": "We gave up and accepted that our old tickets would not have their communication shown in the Helpdesk under the tickets.\n\nWe told ourselves at least that it would only be possible if HubSpot updates the conversations api to allow for creating conversations and associating them with tickets\n<https://developers.HubSpot.com/docs/api/conversations/conversations>\n\nBut not sure if that's the actual case :wink:"
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Arsic",
+      "poster_handle": "milos.arsic"
+    },
+    "time_stamp": "2024-06-25 06:39:18",
+    "text": "yeap I am looking into that right now,  but I have really hard times to figure out how to use it properly"
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Arsic",
+      "poster_handle": "milos.arsic"
+    },
+    "time_stamp": "2024-06-25 06:42:16",
+    "text": "I don't understand what these values stands for:\nconst objectType = \"objectType\";\nconst objectId = \"objectId\";\nconst toObjectType = \"toObjectType\";"
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Arsic",
+      "poster_handle": "milos.arsic"
+    },
+    "time_stamp": "2024-06-25 06:42:38",
+    "text": "and how to fetch all quotes for a certain company"
+  },
+  {
+    "text": "Does this answer the question? So in this case I set the company ID (= hs_bject_id) to fetch the company records, then go for the associated quotes and get a few properties. But I could also have just clicked all properties.",
+    "time_stamp": "2024-06-25 07:12:23"
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Arsic",
+      "poster_handle": "milos.arsic"
+    },
+    "time_stamp": "2024-06-25 07:17:24",
+    "text": "yes that is what I need"
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Arsic",
+      "poster_handle": "milos.arsic"
+    },
+    "time_stamp": "2024-06-25 07:17:31",
+    "edited": {
+      "time_stamp": "2024-06-25 07:17:40"
+    },
+    "text": "where can I find graphql playground?"
+  },
+  {
+    "poster": {
+      "poster_name": "Willem Reus",
+      "poster_handle": "wreus"
+    },
+    "time_stamp": "2024-06-25 07:19:07",
+    "text": "<https://app.HubSpot.com/graphiql/yourportalID>"
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Arsic",
+      "poster_handle": "milos.arsic"
+    },
+    "time_stamp": "2024-06-25 07:20:38",
+    "text": "tyvm :heart:"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicolás Ontaneda",
+      "poster_handle": "nicolas.ontaneda"
+    },
+    "time_stamp": "2024-06-25 09:07:01",
+    "text": ""
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2024-06-25 11:53:30",
+    "text": "<@U05BQDFF53P> <@UQNEXHW14> Hi! Is this the right place for this kind of post?"
+  },
+  {
+    "poster": {
+      "poster_name": "Mikita Dusmikeev",
+      "poster_handle": "dusmikeev.n.p"
+    },
+    "time_stamp": "2024-06-25 12:27:49",
+    "text": "Greetings dear HubSpot team.\nIs there any option to receive an amount of records in connections table using <@UDA553DRD>/api-client?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2024-06-25 12:59:11",
+    "text": "Based on <https://developers.HubSpot.com/docs/api/crm/crm-custom-objects> it looks like the endpoint to post to to create a custom object schema is *`/crm-object-schemas/v3/schemas`*"
+  },
+  {
+    "poster": {
+      "poster_name": "Carlos Rodriguez",
+      "poster_handle": "crodriguez952"
+    },
+    "time_stamp": "2024-06-25 13:31:26",
+    "edited": {
+      "time_stamp": "2024-06-25 13:37:26"
+    },
+    "text": "To obtain the pipelines I use this endpoint, <https://api.hubapi.com/crm/v3/pipelines/{>*objectType*}\nwhere do I get objectType from",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-06-26 05:07:33"
+      },
+      {
+        "time_stamp": "2024-06-26 05:09:25"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Willem Reus",
+      "poster_handle": "wreus"
+    },
+    "time_stamp": "2024-06-25 13:45:31",
+    "edited": {
+      "time_stamp": "2024-06-25 13:47:06"
+    },
+    "text": "<@U05MVV9KWEL> This is one that kept bothering me. But for now I'm done with it.\nHere is my logic:\n1. Create the email\n2. Create the ticket and during the creation associate it.\nHere is the code to create the ticket and associate it that I used:\n```{\n  \"associations\": [\n    {\n      \"types\": [\n        {\n          \"associationCategory\": \"HubSpot_DEFINED\",\n          \"associationTypeId\": 223\n        }\n      ],\n      \"to\": {\n        \"id\": \"55074961742\"\n      }\n    }\n  ],\n  \"properties\": {\n    \"subject\": \"Test from Postman\",\n    \"hs_pipeline_stage\": \"1\",\n    \"source_type\": \"EMAIL\",\n    \"hs_pipeline\": \"0\",\n    \"hs_lastmodifieddate\": 1719325181795,\n    \"hs_conversations_originating_thread_id\": 7421287812,\n    \"hs_conversations_originating_message_id\": \"c2b1781f-9883-492d-a53b-86476d7a56c9\",\n    \"createdate\": 1719324873750,\n    \"created_by\": 101,\n    \"content\": \"this is a test to create a helpdesk conversation\"\n  }\n}```"
+  },
+  {
+    "text": "Semi-proof it works:",
+    "time_stamp": "2024-06-25 13:48:51"
+  },
+  {
+    "poster": {
+      "poster_name": "James Carlo Luchavez",
+      "poster_handle": "jamescarloluchavez"
+    },
+    "time_stamp": "2024-06-25 15:46:23",
+    "text": "Hi, guys! Do any of you tried the HubSpot module on Make? Is it still working? Right now, I'm just using the HTTP module then do GET/POST requests to HubSpot API."
+  }
+]

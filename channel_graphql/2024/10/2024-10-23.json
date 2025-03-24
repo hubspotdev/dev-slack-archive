@@ -1,0 +1,69 @@
+[
+  {
+    "poster": {
+      "poster_name": "Preeti",
+      "poster_handle": "priyabagha806"
+    },
+    "time_stamp": "2024-10-23 02:48:11",
+    "text": "`query MyQuery{`\n  `CRM {`\n    `p_agent_collection(`\n      `filter: {agent_type__eq: \"Principal Agent\", agent_status__eq: \"Active\"}`\n    `) {`\n      `items {`\n        `name`\n        `agent_status`\n        `agent_type`\n        `associations {`\n          `note_collection__agent_to_note(`\n            `filter: {`\n              `hs_note_body__contains: \"New Offer\"`\n            `}`\n            `orderBy: hs_createdate__desc`\n            `limit: 100`\n          `) {`\n            `items {`\n              `hs_createdate`\n            `}`\n          `}`\n        `}`\n      `}`\n    `}`\n  `}`\n`}`\n\n`query CallQuery {`\n  `CRM {`\n    `task_collection(`\n      `limit: 100`\n      `orderBy: hs_created_by__desc`\n      `filter: {hs_task_type__eq: \"CALL\"}`\n    `) {`\n      `items {`\n        `hs_task_subject`\n        `HubSpot_owner_id`\n      `}`\n    `}`\n  `}`\n```}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Preeti",
+      "poster_handle": "priyabagha806"
+    },
+    "time_stamp": "2024-10-23 02:49:04",
+    "text": "I tried to run above code which is not working. I want to run all of them."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-10-23 07:48:23",
+    "edited": {
+      "time_stamp": "2024-10-23 07:51:59"
+    },
+    "text": "```query MyQuery {\n  CRM {\n    p_agent_collection(\n      filter: { agent_type__eq: \"Principal Agent\", agent_status__eq: \"Active\" }\n    ) {\n      items {\n        name\n        agent_status\n        agent_type\n        associations {\n          note_collection__agent_to_note(\n            filter: { hs_note_body__contains: \"New Offer\" }\n            orderBy: hs_createdate__desc\n            limit: 100\n          ) {\n            items {\n              hs_createdate\n            }\n          }\n        }\n      }\n    }\n    task_collection(\n      limit: 100\n      orderBy: hs_created_by__desc\n      filter: { hs_task_type__eq: \"CALL\" }\n    ) {\n      items {\n        hs_task_subject\n        HubSpot_owner_id\n      }\n    }\n  }\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Preeti",
+      "poster_handle": "priyabagha806"
+    },
+    "time_stamp": "2024-10-23 07:53:01",
+    "text": "Thank you <@U01QVR44MEY>, how we can define in module? For example (currently used below code in module):\n\n`{% set principleCollectionData = module.data_query.data.CRM.p_agent_collection.items %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-10-23 07:53:40",
+    "text": "so you would have 2 different vars for both the principleCollectionData and also the task collection"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-10-23 07:54:06",
+    "text": "```{% set principleCollectionData = module.data_query.data.CRM.p_agent_collection.items %}\n{% set taskCollectionData = module.data_query.data.CRM.task_collection.items %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Preeti",
+      "poster_handle": "priyabagha806"
+    },
+    "time_stamp": "2024-10-23 07:56:53",
+    "text": "Thank you <@U01QVR44MEY>, it works."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-10-23 08:01:28",
+    "text": "of course!"
+  }
+]

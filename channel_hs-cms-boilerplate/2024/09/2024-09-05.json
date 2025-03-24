@@ -1,0 +1,58 @@
+[
+  {
+    "poster": {
+      "poster_name": "Rakel Fairfull",
+      "poster_handle": "rfairfull"
+    },
+    "time_stamp": "2024-09-05 10:54:02",
+    "text": "I noticed there's this line of code in the base.html file:\n\n{# This is intended to be used if a template requires template specific style sheets #}\n    {% if template_css %}\n      {{ require_css(get_asset_url(template_css)) }}\n    {% endif %}\n\nHow do we use this? I can't find any documentation on this. I want to insert a CSS file just for a specific template.",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-09-05 13:42:12"
+      },
+      {
+        "time_stamp": "2024-09-05 13:43:23"
+      },
+      {
+        "time_stamp": "2024-09-05 13:46:28"
+      },
+      {
+        "time_stamp": "2024-09-05 13:50:35"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2024-09-05 13:42:12",
+    "text": "Hey Rakel. This isn’t a `sneaky hidden feature` of HubSpot, despite seeming like it. It is rather just a slightly obscure oddity of how theme templates kind of work.\n\nThe gist is that when you make a template file say `homePage.html` if it references `{% extends \"./path/to/base.html\" %}` it is technically, at the end of the day, nestled inside of the `base.html` file. And the oddity that I mentioned above is that you can create a variable inside of `homePage.html` called `{% set template_css = \"path/to/template/file.css\" %}` and it will be picked up and added to the base file.\n\nYou could, alternatively, just call `{{ require_css(get_asset_url(\"path/to/css_file.css\")) }}` directly in `homePage.html` but doing so you have less control over where that css file is injected. This might result in cascading style clashes. But is 100% a valid technique :slightly_smiling_face:\n\nDoes that make sense?"
+  },
+  {
+    "poster": {
+      "poster_name": "Rakel Fairfull",
+      "poster_handle": "rfairfull"
+    },
+    "time_stamp": "2024-09-05 13:43:23",
+    "text": "Got it! That makes sense. Thank you. I'm going to give it a try!"
+  },
+  {
+    "poster": {
+      "poster_name": "Rakel Fairfull",
+      "poster_handle": "rfairfull"
+    },
+    "time_stamp": "2024-09-05 13:46:28",
+    "text": "Hmm. I put it in my file like this\n\n{% set template_css = \"../css/lp.css\" %}\n{% extends \"./layouts/base.html\" %}\n\nI also tried putting the extends first ... neither seem to be loading my css file."
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2024-09-05 13:50:35",
+    "text": "```{% set template_css = \"../css/lp.css\" %}\n{% extends \"./layouts/base.html\" %}\n\n{% block body %} \n\n&lt;html markup goes here&gt;\n{% endblock %}```"
+  }
+]

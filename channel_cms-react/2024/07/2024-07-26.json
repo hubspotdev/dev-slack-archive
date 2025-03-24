@@ -1,0 +1,132 @@
+[
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2024-07-26 03:07:10",
+    "text": "hi <@U04E30N7A9F>, i run into the same problem, could you explain a bit more about the solution? I have contacted HubSpot and have an open ticket but would like to debug it on my own too..."
+  },
+  {
+    "poster": {
+      "poster_name": "Daniel Mahadi",
+      "poster_handle": "daniel.mahadi"
+    },
+    "time_stamp": "2024-07-26 03:08:03",
+    "text": "hey <@U01D95STUS3>\ni am suspecting it is the size of data that we put in to the module"
+  },
+  {
+    "poster": {
+      "poster_name": "Daniel Mahadi",
+      "poster_handle": "daniel.mahadi"
+    },
+    "time_stamp": "2024-07-26 03:08:52",
+    "text": "i am still wondering if there is a way to get the log as well.. so we know and can pinpoint the root issue"
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2024-07-26 03:10:19",
+    "text": "So, is this particular to the Island component being too big or generally the whole module?"
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2024-07-26 03:10:42",
+    "text": "I mean, you removed components from your app and it worked?"
+  },
+  {
+    "poster": {
+      "poster_name": "Daniel Mahadi",
+      "poster_handle": "daniel.mahadi"
+    },
+    "time_stamp": "2024-07-26 03:14:50",
+    "text": "i reduce the amount of data that i pass in to it"
+  },
+  {
+    "poster": {
+      "poster_name": "Daniel Mahadi",
+      "poster_handle": "daniel.mahadi"
+    },
+    "time_stamp": "2024-07-26 03:15:20",
+    "text": "so if you passed an array.. reduce the size just to test out"
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2024-07-26 03:19:19",
+    "text": "oh, okay, I'm only passing very little data, so i'll give it a try but there probably is another problem.\n\nBtw I totally agree that the error message should be more specific :wink:\n\nThanks for your time!"
+  },
+  {
+    "poster": {
+      "poster_name": "George Grigorita",
+      "poster_handle": "george571"
+    },
+    "time_stamp": "2024-07-26 04:35:20",
+    "text": "Hey Byron, I just checked with v0.16.1, and I have the same error. The portal is a sandbox account, not sure if it makes a difference."
+  },
+  {
+    "poster": {
+      "poster_name": "George Grigorita",
+      "poster_handle": "george571"
+    },
+    "time_stamp": "2024-07-26 04:38:37",
+    "text": "Turns out that this was separate from Mantine or the DataTable. It was happening because of lodash (I was using `get` and `sortBy`). Apparently, they don't get along too well with CMS React (I suspect Vite or some plugin in Vite might cause the error)."
+  },
+  {
+    "poster": {
+      "poster_name": "George Grigorita",
+      "poster_handle": "george571"
+    },
+    "time_stamp": "2024-07-26 05:32:57",
+    "text": "I've redone the `hs auth` process, but some permissions are missing (HubDB). This might also happen because I'm just \"Partner admin\" and not \"Super Admin.\"\n\nCurrent error on all pages (public and membership):\n`status: 401,`\n`category: 'INVALID_AUTHENTICATION',`\n`subCategory: 'LocalDevAuthErrorType.USER_TOKEN_PERMISSION_MISMATCH'`\n\nI'll update here when I've sorted my permissions."
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-07-26 07:18:00",
+    "text": "I'll try to help you out here, just trying out a potential solution, one moment"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-07-26 07:21:26",
+    "text": "```export function Component(props: any) {\n  return (\n    &lt;div&gt;\n      Video HTML:\n      &lt;div dangerouslySetInnerHTML={{ __html: props.hublData.videoHtml }}&gt;&lt;/div&gt;\n    &lt;/div&gt;\n  );\n}\n\nexport const meta = {\n  label: `Video Module`,\n};\n\nexport const fields = [\n  {\n    type: 'videoplayer',\n    id: '93ee45bd-a16c-9d0d-c287-e8b305cf48a1',\n    label: 'Video',\n    name: 'videoplayer_field',\n    default: {\n      player_id: 61698579204,\n      height: 270,\n      width: 480,\n      player_type: 'hsvideo2',\n    },\n  },\n];\n\nexport const hublDataTemplate = `\n  {% macro renderVideo() %}\n    {% if module.videoplayer_field.player_id %}\n      {% set max_width = module.videoplayer_field.size_type == 'auto_custom_max' ? module.videoplayer_field.max_width : module.videoplayer_field.width %}\n      {% set max_height = module.videoplayer_field.size_type == 'auto_custom_max' ? module.videoplayer_field.max_height : module.videoplayer_field.height %}\n      {% video_player \"embed_player\"\n        player_id={{ module.videoplayer_field.player_id }}\n        type={{ module.videoplayer_field.player_type || 'scriptV4' }}\n        full_width={{ module.videoplayer_field.size_type == 'auto_full_width' }},\n        conversion_asset={{ module.videoplayer_field.conversion_asset|tojson|safe }}\n        autoplay={{ module.videoplayer_field.autoplay }}\n        hidden_controls={{ module.videoplayer_field.hide_controls }}\n        loop={{ module.videoplayer_field.loop_video }}\n        muted={{ module.videoplayer_field.mute_by_default }}\n      %}\n    {% endif %}\n  {% endmacro %}\n  {% set hublData = { \"videoHtml\": renderVideo() } %}\n`;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-07-26 07:23:29",
+    "edited": {
+      "time_stamp": "2024-07-26 07:32:52"
+    },
+    "text": "I'll walk through this solution using `hublDataTemplate`\n\nBy using a <https://developers.HubSpot.com/docs/cms/hubl/variables-macros-syntax#macros)|HubL Macro> + <https://developers.HubSpot.com/docs/cms/hubl/tags#video-player|`video_player`> tag I am able to get the raw HTML that HubL would render, then pass it through as a property in on `hublData` in my `hublDataTemplate`"
+  },
+  {
+    "text": "The HubL I am using to render the video is the standard HubL associated with a Video field (see screenshot for source)\n\nThen I am taking that raw HTML and using React's `dangerouslySetInnerHTML` to insert the raw HTML in my React tree\n\nThis renders for me, let me know if you have any questions or issues implementing something like this\n\nThis is essentially doing the what a Video component would be doing",
+    "time_stamp": "2024-07-26 07:25:26",
+    "edited": {
+      "time_stamp": "2024-07-26 07:29:05"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Dennis K",
+      "poster_handle": "dennis579"
+    },
+    "time_stamp": "2024-07-26 07:33:30",
+    "text": "Thanks! Thats a creative solution :slightly_smiling_face: Will do this for now"
+  }
+]

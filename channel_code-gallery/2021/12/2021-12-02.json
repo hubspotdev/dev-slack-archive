@@ -1,0 +1,54 @@
+[
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2021-12-02 15:37:27",
+    "text": "Hey All — I dont know why I havent posted this earlier but I find clients often want an image gallery of some kind when it comes to hubDB tables. Not sure how you all handle it but I typically have them dump images in an RTE and then I reconstruct the images in hubl in a format that is useful for me.\n\nHere is a hubl snippet that I wrote a ways back which takes an RTE of just images and breaks them apart into an array of image objects `[{src: src, alt: alt}...]`\n\nIt’s been super helpful for me — hope it helps some of yall too!\n\n```{%- macro split_images(rte) -%}\n  {% set images_array = []%}\n\n    {% set images = rte|split('&lt;img') %}\n   \n     {% for image in images %}\n   \n        {% set image_obj = {\n           src:\"\",\n           alt:\"\"\n        }%}\n   \n        {% set image_temp = image|join('')|split(' ')%}\n   \n        {% for item in image_temp %}\n           {% if item is string_containing \"src\" %}\n              {% do image_obj.update({src: item|replace('src=','')|replace('\"','')})%}\n           {% endif %}\n        {% endfor %}\n   \n        {% set image_alt_temp = image|join('')|split('\"')%}\n       \n        {% set alt_text = {text: \"\", is_alt: false} %}\n   \n        {% for item in image_alt_temp %}\n           {% if alt_text.is_alt %}\n             {% do alt_text.update({text: item }) %}\n             {% do alt_text.update({is_alt: false }) %}\n             \n             {% do image_obj.update({alt: alt_text.text}) %}\n           {% endif %}\n   \n           {% if item is string_containing \"alt\" %}\n              {% do alt_text.update({is_alt: true})%}\n             {# {% do image_obj.update({alt: item|replace('alt=','')|replace('\"','')})%} #}\n           {% endif %}\n        {% endfor %}\n     {% do images_array.append(image_obj) %}\n   \n     {% endfor %}\n \n   {{images_array}}\n{% endmacro %}```",
+    "reply_count": 8,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2021-12-02 17:47:24"
+      },
+      {
+        "time_stamp": "2021-12-02 19:33:33"
+      },
+      {
+        "time_stamp": "2021-12-03 13:47:55"
+      },
+      {
+        "time_stamp": "2021-12-03 13:48:12"
+      },
+      {
+        "time_stamp": "2021-12-03 14:03:16"
+      },
+      {
+        "time_stamp": "2021-12-03 14:14:03"
+      },
+      {
+        "time_stamp": "2021-12-03 14:14:24"
+      },
+      {
+        "time_stamp": "2021-12-05 16:41:05"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-12-02 17:47:24",
+    "text": "You should make this into a blog post"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2021-12-02 19:33:33",
+    "text": "That was on the docket next. But this was faster for now :p likely this weekend!"
+  }
+]

@@ -1,0 +1,226 @@
+[
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2021-11-17 08:01:45",
+    "edited": {
+      "time_stamp": "2021-11-17 08:15:31"
+    },
+    "text": "Hi <@UDJV5B73R>, unfortunately, there is no way for you to prevent what the ID generates (I will loop in with folks internally on this though to see what I can find out). You could try using the `extra_classes` <https://developers.HubSpot.com/en/docs/cms/building-blocks/modules/using-modules-in-templates#parameters-available-for-all-modules|parameter> on the module field and then use that class to accomplish what you are looking to do.\n\nAs far as responses in this slack, while I understand your sentiment, please remember, as outlined in our <https://developers.HubSpot.com/slack/code-of-conduct#HubSpot-support-expectations|code of conduct>, this slack is not an official support channel and is a peer-to-peer community.\n\n```HubSpot Support Expectations\nThe Developer Slack is not an official support channel of HubSpot. While the slack may contain HubSpot Employees who are happy to assist where they can, please refrain from mentioning or messaging HubSpot employees with direct questions. If you have a question in which you require direct support from HubSpot, please use our in-app support tool or the community forums. HubSpot reserves the right to enforce, interpret, and extend these guidelines for the betterment of the community.```",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-11-17 08:24:32"
+      },
+      {
+        "time_stamp": "2021-11-17 08:49:19"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2021-11-17 08:24:32",
+    "edited": {
+      "time_stamp": "2021-11-17 08:51:45"
+    },
+    "text": "Unfortunately I’m just trying to comply with wcag 2.1 which notes you are not allowed duplicate IDs adding classes obviously won’t fix that\n\nAlso deleted the other comment about HubSpot’s support, just a bit frustrated you know, I have posted in the community also, the response I’ve had is just from another frustrated user"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2021-11-17 08:49:19",
+    "text": "Totally understandable. No worries, I have pinged some folks internally on this and will let you know if I hear anything back."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-11-17 09:04:13",
+    "edited": {
+      "time_stamp": "2021-11-17 09:05:34"
+    },
+    "text": "Hey Matt Scott, your HubL tags are missing a declaration that controls the id.\n\nHere’s an example of using these two tags with that declaration.\n\n```{% inline_text \"my_inline_text\" label=\"inline text label\" field=\"title\" value=\"inline text content\" %}\n\n{% inline_rich_text \"altered_id\" label=\"inline rich text label\" field=\"text\" value=\"inline rich text content\" %}```\nThis outputs\n```&lt;div id=\"hs_cos_wrapper_my_inline_text\" class=\"hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_inline_text\" style=\"\" data-hs-cos-general-type=\"widget\" data-hs-cos-type=\"inline_text\" data-hs-cos-field=\"title\"&gt;inline text content&lt;/div&gt;\n\n&lt;div id=\"hs_cos_wrapper_altered_id\" class=\"hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_inline_rich_text\" style=\"\" data-hs-cos-general-type=\"widget\" data-hs-cos-type=\"inline_rich_text\" data-hs-cos-field=\"text\"&gt;inline rich text content&lt;/div&gt;```\nIt modifies the `id` attribute added.\n\nI will double check our documentation of these tags and also see if we can get a warning to appear in the design manager if the developer does not provide that declaration."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-11-17 09:13:26",
+    "edited": {
+      "time_stamp": "2021-11-17 09:13:46"
+    },
+    "text": "I’ve just reviewed our documentation, and don’t see any instances on the <https://developers.HubSpot.com/docs/cms/hubl/tags|HubL tags> page where we left off that id.\n\n<@UDJV5B73R> if you recall where you saw the snippet without that, we would be very grateful. I’ll see if there are other ways we can make this more obvious in the documentation as well.\n\nAlso still looking into providing a warning if your template contains the tag without an id."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2021-11-17 09:19:44",
+    "edited": {
+      "time_stamp": "2021-11-17 09:22:49"
+    },
+    "text": "I’ve just been using the copy snippet from within the modules in design manager, it doesn’t add anything like that, is that something i’m supposed to manually do each time?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2021-11-17 09:22:58",
+    "text": "The documentation doesn’t list inline_text and inline_rich_text tags"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-11-17 09:23:25",
+    "edited": {
+      "time_stamp": "2021-11-17 09:23:49"
+    },
+    "text": "*Were you seeing this with the text and rich text fields? or where are you seeing those tags?*\nIf so I’ll chat with the team to see if there’s anything we can do to improve that experience.\n\nA challenge with that id value is that it has to be unique both for accessibility, and for HubSpot to process it as you’d expect. So our copy snippet functionality would need to be unique to the field which adds some complexity."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2021-11-17 09:26:35",
+    "text": "Yes I don’t know if it affects any other fields too, but the first field was text and the the second was rich text,\nWhat would make sense is after the underscore it puts the hubl variable name,  but then I guess you would still need to solve for repeaters too"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2021-11-17 09:36:27",
+    "text": "So if, as you suggested, I add something in quotes it does correctly update the id, however if it’s in a repeater it will still use the same id, I tried adding {{loop.index}} to the quotes but it’s not allowed"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-11-17 09:38:51",
+    "edited": {
+      "time_stamp": "2021-11-17 09:39:28"
+    },
+    "text": "I believe there’s still a way to handle it for repeaters using variables but you’re right that’s not elegant.\n\nChatting internally to see if we can safely remove the responsibility from the developer while limiting the effect on existing sites that may have CSS/JS tied to specific ids. Also without removing the developers ability to control the id - should that be wanted."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-11-17 09:40:04",
+    "text": "Appreciate you surfacing this and talking it through with us."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2021-11-17 09:42:31",
+    "text": "Thanks for your help! At least i’ve got a response to send to the client and the accessibility vigilante that flagged it up to them"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2021-11-17 09:50:04",
+    "text": "I also appreciate the complexity re existing clients having css/js tied to the IDs, It would be nice if I didn’t need to update my existing modules but can see that that could cause issues"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-11-17 09:53:45",
+    "edited": {
+      "time_stamp": "2021-11-17 09:54:40"
+    },
+    "text": "The way we’re thinking about the solution. Only tags where the id was not provided would the id change. So only CSS/JS targeting those specific ids would be affected.\n\nIt would already be a poor practice to target the generated ids but it is a possibility we have to consider.\n\nAny tags with specified ids would remain as they are.\n\nIf this is the path we take to helping simplify fixing this we will announce ahead of the change to give developers time."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2021-11-17 09:58:36",
+    "text": "Ah that makes sense and I agree with the poor practice statement, is there any kind of time frame I can let the client know or is it just a, it’ll happen when it happens kinda thing?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-11-17 10:11:00",
+    "text": "I recognize the sensitivity and need to be able to provide a timeline to stakeholders.\n\nUnfortunately right this minute I can’t give an estimate. We want to ensure the path to solving it is the right one. Development and testing of the changes needs to happen along with planning of how to roll it out to sites minimizing disruption.\n\nThe best I’m able to say right now is that I will keep you updated."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2021-11-17 10:15:41",
+    "text": "fair enough, I can probably implement the custom id solution, as in most cases the repeater doesn’t crop up, do you have any solution for appending the loop.index to the name if it does crop up? I tried `\"name{{loop.index}}\"`  and `\"name\"~{{loop.index}}` but they just gave errors"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2021-11-17 10:18:51",
+    "text": "Otherwise I can just remove the wrapper tag and use the value as is"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-11-17 10:18:54",
+    "text": "I will do some testing and get back to you.\n\nSome good news though is that if you’re using them within a module, you don’t actually need those tags"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-11-17 10:19:05",
+    "text": "Ditto what you said lol"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2021-11-17 10:21:58",
+    "edited": {
+      "time_stamp": "2021-11-17 10:24:28"
+    },
+    "text": "Thanks, whilst your here and thinking about accessibility, I will also mention that date picker form fields are not keyboard friendly, (require a mouse to use) I don’t use them on this site but just wanted to let you know\n<https://community.HubSpot.com/t5/CMS-Development/Accessibility-BUG-Can-t-update-Date-Picker-Field-without-using/m-p/489629>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-11-17 10:26:05",
+    "edited": {
+      "time_stamp": "2021-11-17 10:27:15"
+    },
+    "text": "This is a known issue and we’re working hard to address it with a future version of the forms embed code.\n\nIn the immediate term using the HubSpot form page itself instead of the embed code provides a better a11y experience.\n\nUpdating the embed code script similar to this unique `id`  hubl tag situation is complicated as existing sites are actively targetting the generated HTML with CSS and JS.\n\nAt this time I don’t have a specific timeline to give on the form embed code date picker improvement but it is a known issue we’re actively looking to resolve."
+  }
+]

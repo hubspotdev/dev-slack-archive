@@ -1,0 +1,221 @@
+[
+  {
+    "poster": {
+      "poster_name": "Manoj Sharma",
+      "poster_handle": "softengg.manoj"
+    },
+    "time_stamp": "2023-10-23 06:18:05",
+    "text": "Hi! Is there any possibility that we can declare a custom thank you page redirect along with the selected form using Gutenberg in wp-admin?\nI know that we can define a custom redirect for a single form in HubSpot dashboard but what if I need a custom thank you page for single form used in multiple pages.\nI want the form on homepage to redirect to abc page and same form on contact us page to redirect to xyzzy page."
+  },
+  {
+    "poster": {
+      "poster_name": "Kellen Rogers",
+      "poster_handle": "kellenr"
+    },
+    "time_stamp": "2023-10-23 08:17:43",
+    "edited": {
+      "time_stamp": "2023-10-23 09:28:57"
+    },
+    "text": "Hello <@UNHBK8QNM>, Thanks for responding.\n\nThe `options` array is [{ label: “Tom”, value:“<mailto:tom@netscape.net|tom@netscape.net>” }]\n\nThe `selected` variable is a string array of email addresses. I believe the `options` and `values` are correct because passing a value of [“<mailto:tom@netscape.net|tom@netscape.net>”] via the `values` property marks that option as selected upon initial load. It’s just the issue of reacting to a change in the values object.\n\nThe `toggleGroup` is included in the actual code and set to `checkboxList`"
+  },
+  {
+    "poster": {
+      "poster_name": "Danny Shekhtman",
+      "poster_handle": "dshekhtman"
+    },
+    "time_stamp": "2023-10-23 09:30:37",
+    "text": "Hey <@U05B94E8VF0>, are you using the `onChange` prop to run `setSelected`?"
+  },
+  {
+    "poster": {
+      "poster_name": "Danny Shekhtman",
+      "poster_handle": "dshekhtman"
+    },
+    "time_stamp": "2023-10-23 09:31:34",
+    "text": "I'm trying to repro your problem and I'm  don't think I'm able to."
+  },
+  {
+    "poster": {
+      "poster_name": "Kellen Rogers",
+      "poster_handle": "kellenr"
+    },
+    "time_stamp": "2023-10-23 09:32:15",
+    "text": "Yes.\n\n```onChange={(values: string[]) =&gt; setSelected([...values])```"
+  },
+  {
+    "poster": {
+      "poster_name": "Danny Shekhtman",
+      "poster_handle": "dshekhtman"
+    },
+    "time_stamp": "2023-10-23 09:32:54",
+    "text": "so you see `selected` changing when you log it to the console but it's not updating the `ToggleGroup` when `value={selected}`?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kellen Rogers",
+      "poster_handle": "kellenr"
+    },
+    "time_stamp": "2023-10-23 09:32:55",
+    "text": "Not a problem. Let me see if I can extract it out into a gist or coderpad and I'll link it to you."
+  },
+  {
+    "poster": {
+      "poster_name": "Danny Shekhtman",
+      "poster_handle": "dshekhtman"
+    },
+    "time_stamp": "2023-10-23 09:34:21",
+    "edited": {
+      "time_stamp": "2023-10-23 09:39:53"
+    },
+    "text": "Let me paste what I have as well\n\n```const options = [\n  { label: 'A', value: 'abc@bef.com' },\n  { label: 'B', value: 'ghi@jkl.com' },\n  { label: 'C', value: 'mno@pqr.com' },\n]\n\nconst [selected, setSelected] = useState([]);\n\nconsole.log(selected)\n\n<ToggleGroup\n  options={options}\n  toggleType=\"checkboxList\"\n  onChange={setSelected}\n  value={selected}\n/>```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kellen Rogers",
+      "poster_handle": "kellenr"
+    },
+    "time_stamp": "2023-10-23 10:22:06",
+    "text": "<@UNHBK8QNM> Here is a simple component that demonstrates the issue:\n\n```import { Button, Divider, Text, ToggleGroup } from '@HubSpot/ui-extensions'\nimport { useState } from 'react'\n\ntype Option = {\n  value: string\n  label: string\n  initialIsChecked?: boolean\n}\n\nconst emailsForHome: Option[] = [\n  {\n    value: '<mailto:tom@tom.com|tom@tom.com>',\n    label: 'Tom',\n  },\n  {\n    value: '<mailto:bob@bob.com|bob@bob.com>',\n    label: 'Bob',\n  },\n  {\n    value: '<mailto:joe@joe.com|joe@joe.com>',\n    label: 'Joe',\n  },\n]\n\nexport function ToggleGroupGist() {\n  const [selected, setSelected] = useState&lt;string[]&gt;(['<mailto:bob@bob.com|bob@bob.com>'])\n\n  const selectEmail = (email: string) =&gt; {\n    setSelected((prev) =&gt; {\n      if (!prev.includes(email)) {\n        return [...prev, email]\n      }\n      return prev\n    })\n  }\n\n  return (\n    &lt;&gt;\n      &lt;Button onClick={() =&gt; selectEmail('<mailto:tom@tom.com|tom@tom.com>')}&gt;Select Tom&lt;/Button&gt;\n      &lt;ToggleGroup\n        label=\"Home Emails\"\n        name=\"home_todos\"\n        options={emailsForHome}\n        toggleType=\"checkboxList\"\n        value={selected}\n      /&gt;\n      &lt;Divider /&gt;\n      Selected Value: &lt;Text&gt;{JSON.stringify(selected)}&lt;/Text&gt;\n    &lt;/&gt;\n  )\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kellen Rogers",
+      "poster_handle": "kellenr"
+    },
+    "time_stamp": "2023-10-23 10:24:41",
+    "text": "When you click the button to select Tom. The text field updates but the ToggleGroup does not."
+  },
+  {
+    "poster": {
+      "poster_name": "Kellen Rogers",
+      "poster_handle": "kellenr"
+    },
+    "time_stamp": "2023-10-23 10:25:51",
+    "edited": {
+      "time_stamp": "2023-10-23 10:26:10"
+    },
+    "text": "I'm on @HubSpot/ui-extensions v0.7.3 locally"
+  },
+  {
+    "poster": {
+      "poster_name": "Danny Shekhtman",
+      "poster_handle": "dshekhtman"
+    },
+    "time_stamp": "2023-10-23 12:58:38",
+    "text": "Hey Kellen, thanks for the code sample. I'm able to repro this now. It appears to be something on our end and I'm working on a fix now."
+  },
+  {
+    "poster": {
+      "poster_name": "Kellen Rogers",
+      "poster_handle": "kellenr"
+    },
+    "time_stamp": "2023-10-23 13:37:52",
+    "text": "<@UNHBK8QNM> Thank you for hoping on this so quickly! Much appreciated!"
+  },
+  {
+    "poster": {
+      "poster_name": "Sejal Parikh (HubSpot PM)",
+      "poster_handle": "sparikh"
+    },
+    "time_stamp": "2023-10-23 18:56:11",
+    "text": "<@U05RNDM3VM2> can you help me understand what type of use case you are building for, and what UX you are trying to accomplish? It'll help us come up with the right set of components that would solve for such problems."
+  },
+  {
+    "poster": {
+      "poster_name": "David Alarcón",
+      "poster_handle": "david.alarcon"
+    },
+    "time_stamp": "2023-10-23 22:38:55",
+    "text": "We are willing to build a tool to centralize several processes related with the deal on HubSpot"
+  },
+  {
+    "text": "This is a rough overview of the components we are willing to have as you see the UI/UX can become pretty complex without having flexibility.",
+    "time_stamp": "2023-10-23 22:39:49"
+  },
+  {
+    "poster": {
+      "poster_name": "David Alarcón",
+      "poster_handle": "david.alarcon"
+    },
+    "time_stamp": "2023-10-23 22:43:45",
+    "text": "For us the key parts would be have the possibility of adding modals it adds a lot of space for UI/UX improvements.\n\nHave options to wrap common parts together I think a border on the Box components could help on this.\n\nHave more clickable options had to implement several components using Button because there are no more clickable components example Toggle, Tabs, Checkbox…"
+  },
+  {
+    "poster": {
+      "poster_name": "Srihari K",
+      "poster_handle": "srihari.k"
+    },
+    "time_stamp": "2023-10-23 23:17:20",
+    "text": "Hello Everyone,\n\nAny one can you answer my question i am stuck here for 3 days anyone halp here i will appreciate. Thanks\n\n<https://community.HubSpot.com/t5/APIs-Integrations/serverless-function-Cannot-find-module-azure-msal-browser/td-p/868648>",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-10-23 23:35:53"
+      },
+      {
+        "time_stamp": "2023-10-23 23:48:32"
+      },
+      {
+        "time_stamp": "2023-10-23 23:51:12"
+      },
+      {
+        "time_stamp": "2023-10-23 23:55:19"
+      },
+      {
+        "time_stamp": "2023-10-23 23:55:42"
+      },
+      {
+        "time_stamp": "2023-10-23 23:56:35"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Daniel Wong",
+      "poster_handle": "dan.wong"
+    },
+    "time_stamp": "2023-10-23 23:35:53",
+    "text": "as far as I know, you can only load a very small set of dependencies set by HubSpot like axios. To load anything else in, someone else posted a workaround a while ago, but it involved using webpack to compile the entire dependencies together into 1 file and then dump that into the function. I personally couldn't get it to work though"
+  },
+  {
+    "poster": {
+      "poster_name": "Srihari K",
+      "poster_handle": "srihari.k"
+    },
+    "time_stamp": "2023-10-23 23:48:32",
+    "text": "Thanks for the reply <@U01DQL7AMFH>\n\nCan you help me out how to use webpack and merge into one file with dependencies.\n\n<https://community.HubSpot.com/t5/APIs-Integrations/Import-packages-in-serverless-functions/m-p/343901>\n\nI found this document but it’s not clear to me."
+  },
+  {
+    "poster": {
+      "poster_name": "Daniel Wong",
+      "poster_handle": "dan.wong"
+    },
+    "time_stamp": "2023-10-23 23:51:12",
+    "text": "I couldn't get it to work last time, but I was trying to load in the openai library which was pretty big, which may have been the issue.\n\nso the idea here is you would essentially create a separate node project inside your folder, and set the webpacker settings to compile everything into 1 file. You then take everything from that 1 file and paste it into the function content of the original HubSpot function"
+  },
+  {
+    "poster": {
+      "poster_name": "Srihari K",
+      "poster_handle": "srihari.k"
+    },
+    "time_stamp": "2023-10-23 23:55:19",
+    "text": "do you have any document or referral link."
+  },
+  {
+    "poster": {
+      "poster_name": "Daniel Wong",
+      "poster_handle": "dan.wong"
+    },
+    "time_stamp": "2023-10-23 23:55:42",
+    "text": "no, i just followed whatever post you just posted as well"
+  },
+  {
+    "poster": {
+      "poster_name": "Srihari K",
+      "poster_handle": "srihari.k"
+    },
+    "time_stamp": "2023-10-23 23:56:35",
+    "text": "Cool then let me try with that. Thanks for the reply <@U01DQL7AMFH>"
+  }
+]

@@ -1,0 +1,83 @@
+[
+  {
+    "poster": {
+      "poster_name": "Ryo Nishizaki",
+      "poster_handle": "rn.383.b2fz"
+    },
+    "time_stamp": "2023-09-21 03:34:22",
+    "text": "Hello\nI am developing an extension with UI Extension, but I get an error \"Cannot read properties of null (reading 'useState')\"\nWhat is the cause?\n```import React, { useState } from \"react\";\nimport {\n  Tile,\n  Divider,\n  Link,\n  Button,\n  Alert,\n  Text,\n  Input,\n  Flex,\n  HubSpot,\n} from \"@HubSpot/ui-extensions\";\nimport { CrmAssociationsPivot, CrmActionLink, CrmActionButton } from '@HubSpot/ui-extensions/crm';\nimport { Client } from '@HubSpot/api-client';\n\nconst dealContext = {\n objectTypeId: \"0-3\",\n objectId: 14795354663,\n}; \n\nconst associateContext = {\nobjectTypeId: \"0-3\",\nassociation: {\n objectTypeId: \"0-1\",\n objectId: 769851,\n },\n};\n\nHubSpot.extend(({ context, runServerlessFunction, actions }) =&gt; {\n  const HubSpotClient = new Client({ accessToken: \"hogehoge\" });\n\n  const [searchResult, setSearchResult] = useState([]);\n\n  const handleSearch = async () =&gt; {\n    const BatchInputPublicObjectId = { inputs: [{ id: \"151\" }] };\n    const fromObjectType = \"contact\";\n    const toObjectType = \"JobOffers\";\n\n    try {\n      const apiResponse = await HubSpotClient.crm.associations.batchApi.read(\n        fromObjectType,\n        toObjectType,\n        BatchInputPublicObjectId\n      );\n\n      console.log(JSON.stringify(apiResponse, null, 2));\n\n      setSearchResult(apiResponse.body.results);\n    } catch (e) {\n      e.message === \"HTTP request failed\"\n        ? console.error(JSON.stringify(e.response, null, 2))\n        : console.error(e);\n    }\n  };\n\n  return (\n    &lt;&gt;\n      &lt;Tile&gt;\n        &lt;Text&gt;JobOffer&lt;/Text&gt;\n        &lt;Divider /&gt;\n        &lt;Flex direction=\"column\"&gt;\n          &lt;Input placeholder=\"JobOfferName\" /&gt;\n          &lt;Input placeholder=\"Owner\" /&gt;\n          &lt;Button onClick={handleSearch}&gt;Search&lt;/Button&gt;\n        &lt;/Flex&gt;\n        &lt;Divider /&gt;\n        {searchResult.length &gt; 0 &amp;&amp; (\n          &lt;Alert type=\"success\"&gt;Search Result&lt;/Alert&gt;\n        )}\n      &lt;/Tile&gt;\n    &lt;/&gt;\n  );\n});```"
+  },
+  {
+    "poster": {
+      "poster_name": "David Sandel",
+      "poster_handle": "david664"
+    },
+    "time_stamp": "2023-09-21 09:48:07",
+    "text": "Hi, everyone. I’m new here, but not new to HubSpot. Has anyone successfully implemented custom field validation on a form that has been added to a HubSpot page via the form module?\n\nIt works when I add the form using the embed code and implement the javascript there, but  in doing so, it appears that 30-40% of our submissions fail. I talked to support and they told me to use the module instead of the embed code (which enrages me to no end, but that’s another story), and in using the module, I lose the custom validation.\n\nTo go back even further into this problem, I only need to use the custom validation because we’ve implemented a custom birthday field using single-line text. The existing date-picker field starts from today’s date and doesn’t allow people to skip through the years. Since our target audience is 30+, they literally had to click through 360 months just to get to their birthday. If anyone has a workaround for that, I’d be all ears too.\n\nThank you!",
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-09-21 10:02:11"
+      },
+      {
+        "time_stamp": "2023-09-21 10:05:09"
+      },
+      {
+        "time_stamp": "2023-09-21 10:07:47"
+      },
+      {
+        "time_stamp": "2023-09-21 10:20:42"
+      },
+      {
+        "time_stamp": "2023-09-22 08:07:29"
+      },
+      {
+        "time_stamp": "2023-09-22 08:08:57"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nich Mueller",
+      "poster_handle": "nich"
+    },
+    "time_stamp": "2023-09-21 10:02:11",
+    "text": "Does your custom javascript field validation execute after the HubSpot form has rendered?\n\n```window.addEventListener('message', event =&gt; {\n   if(event.data.type === 'hsFormCallback' &amp;&amp; event.data.eventName === 'onFormReady') {\n       // the form is ready to manipulate!\n   }\n});```"
+  },
+  {
+    "poster": {
+      "poster_name": "David Sandel",
+      "poster_handle": "david664"
+    },
+    "time_stamp": "2023-09-21 10:05:09",
+    "text": "That might be the answer!\n\nI was trying to use event listener for DOMContentLoaded, but it was being ignored. And I know that when using the HS library, we’re supposed to use onFormReady. I just couldn’t figure out how to use the onFormReady without the embedded code."
+  },
+  {
+    "poster": {
+      "poster_name": "Nich Mueller",
+      "poster_handle": "nich"
+    },
+    "time_stamp": "2023-09-21 10:07:47",
+    "text": "Yes I believe HubSpot forms render after DOMContentLoaded. This community thread might help: <https://community.HubSpot.com/t5/Share-Your-Work/Global-Form-Event-Listener-for-HubSpot-Forms-JavaScript/m-p/260900>"
+  },
+  {
+    "poster": {
+      "poster_name": "David Sandel",
+      "poster_handle": "david664"
+    },
+    "time_stamp": "2023-09-21 10:20:42",
+    "text": "This worked perfectly, thanks so much!"
+  },
+  {
+    "poster": {
+      "poster_name": "Alejandro Rodriguez",
+      "poster_handle": "alerodriguezlarosa"
+    },
+    "time_stamp": "2023-09-21 10:34:51",
+    "edited": {
+      "time_stamp": "2023-09-21 10:35:00"
+    },
+    "text": "<@U057DHLS75W> I made you a video to show you what's going on. There's multiple things you can do but the first thing I always do before adding more css is checking our what's causing the problem. There is a margin-right property on the menu items that is causing the extra space. You could try to find it in your source code and remove it or override the property. Let me know if you need extra help removing it but check first if you actually need that style. But here a video link where I show you what's going on:\n\n<https://www.loom.com/share/57d549eec5e84cf5a29fa010dcf02457?sid=43636dcb-502c-4c55-97db-d5be033d1387>"
+  }
+]

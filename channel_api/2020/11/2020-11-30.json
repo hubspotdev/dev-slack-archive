@@ -1,0 +1,379 @@
+[
+  {
+    "poster": {
+      "poster_name": "Carl Bateson",
+      "poster_handle": "cbateson"
+    },
+    "time_stamp": "2020-11-30 10:52:46",
+    "text": "Hey - any feedback on my question above? Is there a way to get properties history on the new API ?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-11-30 13:19:42"
+      },
+      {
+        "time_stamp": "2020-11-30 14:51:55"
+      }
+    ]
+  },
+  {
+    "text": "Hi everyone, I'm new here so hopefully, I'm asking this right. I'm working with the API on the backend to do some BI work in Bigquery/DataStudio and I see there is a field titled '*property_hs_date_entered_contractsent*'. This seems to map to an automated timestamp when the deal enters our 'To-Close' stage which is defined by our salesperson having sent the proposal to the client and just before the contract is signed which would be equivalent to our 'Closed Won' stage. I validated this by ensuring '*property_hs_date_entered_closedwon*' = '*property_hs_date_exited_contractsent*' which it did. I want to track the number of proposals sent last week by tracking the number of deals that enter this stage (To-Close or Contractsent on the backend). HubSpot doesn't seem to be consistently auto-populating this field, however, and because it is not a front-end UI field but rather just a back-end field, there isn't much about it on the front-end. I can prove that deals have entered the To-Close stage recently (within the month) as here is an example on the front end of the tracked changes. When I search the database, however, the most recent tracked '*property_hs_date_entered_contractsent*' date is 2020-10-27. *My question is: is there any tricks or quirks to ensuring this field auto-populates consistently?* I realize deals must move through every stage and not skip the stage in the pipeline to be counted but the example in the screenshot clearly shows it landing in the stage without triggering the timestamp. Any advice or pointers would help. Alternative fields in the API to use for tracking when a deal enters this stage might also be helpful in the meantime. Thanks!",
+    "time_stamp": "2020-11-30 10:54:33",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-11-30 13:20:47"
+      },
+      {
+        "time_stamp": "2020-11-30 14:39:57"
+      },
+      {
+        "time_stamp": "2020-11-30 19:51:19"
+      },
+      {
+        "time_stamp": "2020-11-30 19:51:27"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 11:18:27",
+    "text": "<https://developers.HubSpot.com/docs/api/crm/tickets>\n\n<https://developers.HubSpot.com/get-started>\n\nAfter you do some experiments with the stuff that already exists let us know some more specific questions and we could give some advice."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 11:21:03",
+    "text": "Hannah gave good advice... don't make this more complicated than it has to be... use the workflow system to detect unemailed contacts and make sure they get emailed what you want them emailed. Use the workflow features that block double-enrollment or end the enrollment in the workflow to kick people out or make sure it cannot trigger more than one time.\n\nOn the API side just focus on getting the contact added with a property set as to what marketing campaign they should be enrolled into (a default property exists for this which could/should be recycled for your use case just by filling in a new value for the field on the API side)."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 11:21:49",
+    "text": "\"So my question would be: is it possible to use the API to send a marketing email to a customer based on an active campaign?\"\n\nUltimate answer, no, not directly possible. But definitely possible using the workflow tool to hook things up to each other."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 11:24:30",
+    "text": "That's a relatively high request volume.\n\nI would ask if you have looked at HS's rate limit rules, and also if you have considered using something like this:\n\n*from* requests *import* Session\n*from* requests.adapters *import* HTTPAdapter\n*from* requests.packages.urllib3.util.retry *import* Retry\n\n*def get_rest_client*():\n   *# errors to retry:*\n   *# 502 Bad Gateway*\n   *# 503 Service Unavailable*\n   *# 504 Gateway Timeout*\n   retries = 10\n   retry = Retry(\n       total=retries, connect=retries, read=retries, status=retries,\n       backoff_factor=0.3,\n       status_forcelist=(502, 503, 504),\n   )\n\n   rest_client = Session()\n   backend    = HTTPAdapter(max_retries=retry)\n   rest_client.mount(*'http://'*, backend)\n   rest_client.mount(*'https://'*, backend)\n\n   *return* rest_client\n\nFor an error rate of only 0.006% it is easier configuring a solid Retry implementation than trying to track down every last possible cause of ECONNRESET on your network, Internet, and HubSpot side."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 11:25:13",
+    "text": "Not possible right now, I double checked a few weeks ago and some HS employees confirmed if you do a search here."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 11:26:27",
+    "text": "This isn't how it works. You have to get it from the Properties endpoint and cache it."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 12:59:27",
+    "text": "Check the response headers of calls to the API if unsure"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 12:59:59",
+    "text": "Can you be more specific? It depends on the context / topic of the question. Search is limited, but unfiltered is not limited but is paginated."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 13:00:48",
+    "text": "Probably. But we need more details to comment.\n\n<https://developers.HubSpot.com/docs/cms/features/cms-apis>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 13:03:49",
+    "text": "Based on my general experiences of CRM API, NOT specific to deal --&gt; products, this is right, but you can potentially speed it up using *`/crm/v3/objects/products/batch/read`*\nto get all the product entries and line item entries. That has been quite valuable in my code for Deal, Company, and Contact, and is listed as supported for these other Obj types."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 13:05:13",
+    "text": "Need more specifics / context to comment.\n\nThere is an owner ID property for each contact that will tell you who owns it to get their name and email from the Owners API"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 13:05:58",
+    "text": "<@UFBNA9K9A> I wonder if the displayOrder of properties will have the same problems I pinged you about last week with marking a property as a currency value."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 13:06:38",
+    "text": "Yes, it works perfectly and I use it dozens of times a day in production. You just have to list it in the list of properties you asked back from the Deals API."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 13:06:52",
+    "text": "<https://developers.HubSpot.com/docs/api/crm/deals>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 13:07:39",
+    "text": "Associations is the name of the game generally, but there are some properties if you dump out the list of contact properties from the properties API that should list the main company the contact is associated to"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 13:08:22",
+    "text": "It can definitely be done in general, but might or might not be possible with Indeed specifically depending on the process automation abilities they offer. Can you check Zapier and IFTTT also?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 13:08:39",
+    "text": "Depends on what the job site allows not what HS/CMS allows"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 13:09:36",
+    "text": "Yes, in the way Quentin said, but it is imperfect compared to full associations approach"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 13:10:57",
+    "text": "unlikely, way too obscure of a programming language for an SDK"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 13:12:22",
+    "text": "webhook, or nightly sync, lots of people here use webhooks, but personally I tend to prefer nightly syncs as they are more bulletproof, but depends what you are trying to do in more detail"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 13:12:56",
+    "text": "no workaround, done for performance reasons, will need to find some other ways of handling it"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 13:13:36",
+    "text": "I don't think so, but you can sneakily hack together using the Search API, and seeing # of results returned"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 13:13:41",
+    "text": "Note: capped at 10K"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 13:14:17",
+    "text": "there is an alternative email address property already on the contacts"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 13:14:37",
+    "text": "you can try playing with that property in the list of contact properties and see what happens"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 13:15:00",
+    "text": "`hs_additional_emails`"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2020-11-30 13:15:06",
+    "text": "The displayOrder of a property only affects where it is displayed inside a group in settings, I don’t believe this has any impact on how it’s displayed in a form since that would vary form to form and wouldn’t be consistent across all uses of the property"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 13:17:16",
+    "text": "\"import CSV to G Sheet\" isn't the HS API, that's Google's APIs. Hint: in my experience they are absolutely not fun to program with and really complicated. So you might want to look for an SDK or a CLI tool you can reuse.\n\n<https://github.com/nurdtechie98/drive-cli>\n\n<https://github.com/prasmussen/gdrive>\n\n<https://www.reddit.com/r/commandline/comments/ab58zx/google_drive_cli_client/>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 13:18:13",
+    "text": "probably not possible via the supported APIs, <@UFBNA9K9A>?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 13:19:16",
+    "text": "<https://community.HubSpot.com/t5/APIs-Integrations/API-v3-Properties-History-Available/td-p/365099>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 13:19:42",
+    "text": "Free community support. Thanksgiving holiday in the US. Be patient please."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 13:20:47",
+    "text": "You probably need to set up a workflow to help with this if you want 100% accurate trackable verifiable data with a history log."
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2020-11-30 13:22:04",
+    "text": "Correct, the version of the Workflows API that’s currently documented doesn’t support the information you need to get from the `enrollmentId` to the the flow that made the change. A newer version is planned but isn’t at the top of the automation team’s roadmap right now so for now, going into the UI is going to be your best option for chasing down these changes"
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin Kiser",
+      "poster_handle": "kevin.kiser"
+    },
+    "time_stamp": "2020-11-30 14:39:57",
+    "text": "As in, create a custom field and set the workflow to record to that instead?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carl Bateson",
+      "poster_handle": "cbateson"
+    },
+    "time_stamp": "2020-11-30 14:51:55",
+    "text": ":thumbsup:"
+  },
+  {
+    "poster": {
+      "poster_name": "Carl Bateson",
+      "poster_handle": "cbateson"
+    },
+    "time_stamp": "2020-11-30 14:52:47",
+    "text": "Thanks! :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 19:51:19",
+    "text": "Yeah, might be a good idea, because then you have full control of the field's content"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 19:51:27",
+    "text": "Which you won't get from this auto / default one"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-30 19:51:55",
+    "text": "I wondered if that might be the case too"
+  },
+  {
+    "poster": {
+      "poster_name": "Gal Briner",
+      "poster_handle": "gal.briner"
+    },
+    "time_stamp": "2020-12-01 00:58:28",
+    "text": "Hi HubSpot developers,\nI’m new so I hope I’m on the right channel.\nSo basically I have created a HubSpot App that sends data to a 3rd party app on certain events on a user action.\nFor eg. whenever a user updates a contact, we send the updated record to 3rd party platform.\nSo far this is all doable.\nWhat I want to do now, is also send the details of the person who is currently logged in (the person who actually performed the action).\n\nDo you think this is possible to fetch the Currently logged in user via the API on any trigger?\n\nThanks,\nGal",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-12-01 10:58:07"
+      },
+      {
+        "time_stamp": "2020-12-02 00:23:04"
+      },
+      {
+        "time_stamp": "2020-12-02 10:08:59"
+      },
+      {
+        "time_stamp": "2020-12-02 23:57:21"
+      },
+      {
+        "time_stamp": "2020-12-03 14:56:42"
+      }
+    ]
+  }
+]

@@ -1,0 +1,259 @@
+[
+  {
+    "poster": {
+      "poster_name": "Aitor",
+      "poster_handle": "aitor.tomas"
+    },
+    "time_stamp": "2024-03-22 01:14:36",
+    "text": "JFYI <https://HubSpotdev.slack.com/archives/C2YHAHB6K/p1711037388874939>\nI also opened a ticket with HubSpot Support for this. Let's see if they fix it :confused:"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Tsapanos",
+      "poster_handle": "michael.tsapanos"
+    },
+    "time_stamp": "2024-03-22 05:16:52",
+    "text": "Hi channel! I am trying to figure out what is the easiest way to send out emails through the API. The company I am working for doesn't have an enterprise level subscription nor do they have the transactional email add-on. Given that info, I am trying to understand if `/crm/v3/objects/emails` will be my best bet, but the documentation page (<https://developers.HubSpot.com/docs/api/crm/email#tab-2>) doesn't make it clear if making a post request to this endpoint, will also send out the email."
+  },
+  {
+    "text": "Hi everybody!\nI am trying to create a workflow that sends 3 parameters firstName, lastName, email to an external API. As I was trying both options 'custom code' and 'Send a webhook' I have noticed that the webhook version does not work where the custom code does, prefferably, I would ike to use the webhook version.\n\nOn the webhook version, I get the error `Not authorised!` I have double checked the API Value and it does not contains any empty spaces before or after.\n\n\nThe Custom Code version does work.\nCustom Code:\n```const axios = require('axios');\n\nexports.main = async (event, callback) => {\n  try {\n    // Replace these with actual values or references to workflow properties\n    const firstname = 'Test';\n    const lastname = 'Test2';\n    const email = 'example@domain.com';\n    const Token = 'Bearer [TOKEN]'; \n\n    // API URL\n    const apiUrl = '<https://api-uk.bepreparedapp.com/v1/clients>';\n\n    // Request headers\n    const headers = {\n      'Content-Type': 'application/json',\n      'Authorization': Token\n    };\n\n    // Request body\n    const requestBody = {\n      firstName: firstname,\n      lastName: lastname,\n      email: email\n    };\n\n    // Making the POST request\n    const response = await axios.post(apiUrl, requestBody, { headers: headers });\n    console.log('API call successful:', response.data);\n\n    // Use the callback function to output data for later actions in the workflow\n    callback({\n      outputFields: {\n        result: 'Success',\n        responseData: response.data\n      }\n    });\n  } catch (error) {\n    console.error('API call failed:', error);\n    callback({\n      outputFields: {\n        result: 'Failed',\n        error: error.message\n      }\n    });\n  }\n};```\nWhat is different on the webhook version? or is there something I do wrong?\n\nThanks for any assistance !",
+    "time_stamp": "2024-03-22 05:17:17",
+    "edited": {
+      "time_stamp": "2024-03-22 05:18:11"
+    },
+    "reply_count": 10,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-03-22 06:43:38"
+      },
+      {
+        "time_stamp": "2024-03-22 06:57:21"
+      },
+      {
+        "time_stamp": "2024-03-22 06:57:58"
+      },
+      {
+        "time_stamp": "2024-03-22 06:58:12"
+      },
+      {
+        "time_stamp": "2024-03-22 06:58:26"
+      },
+      {
+        "time_stamp": "2024-03-22 06:58:55"
+      },
+      {
+        "time_stamp": "2024-03-22 06:59:26"
+      },
+      {
+        "time_stamp": "2024-03-22 07:04:58"
+      },
+      {
+        "time_stamp": "2024-03-22 07:07:00"
+      },
+      {
+        "time_stamp": "2024-03-22 07:07:18"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-03-22 06:43:38",
+    "text": "Can you try this:\n• Click the *API key* dropdown menu and select a *secret*. The _secret_ value must be in the format *Bearer [YOUR_TOKEN]*.\n• Set the value of API key name to *Authorization*.\n• Set the value of _API key location_ to *Request Header*.\n"
+  },
+  {
+    "text": "Hi <@U04FNHJ0U2J>, thanks for your reply!\nI have done what you suggested but I still get the same error.\nCreated a new API Key, and added the value of Bearer [API_KEY]",
+    "time_stamp": "2024-03-22 06:57:21"
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-03-22 06:57:58",
+    "text": "*Authorization ****"
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-03-22 06:58:12",
+    "text": "Can you try that^"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert",
+      "poster_handle": "pupazarobert"
+    },
+    "time_stamp": "2024-03-22 06:58:26",
+    "text": "sure"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert",
+      "poster_handle": "pupazarobert"
+    },
+    "time_stamp": "2024-03-22 06:58:55",
+    "text": "Right! it did work!"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert",
+      "poster_handle": "pupazarobert"
+    },
+    "time_stamp": "2024-03-22 06:59:26",
+    "text": "can you explain please why that had an impact? the API key name is not just an internal name?"
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-03-22 07:04:58",
+    "text": "In your CCA you have the comment “//Request headers” and in this webhook you’re API key location is Request header.. in the CCA and webhook it needs “Authorization” : Token.. you’re authenticating both the same way."
+  },
+  {
+    "poster": {
+      "poster_name": "Robert",
+      "poster_handle": "pupazarobert"
+    },
+    "time_stamp": "2024-03-22 07:07:00",
+    "text": "I see! so the the 'API key name' is the name of the header parameter, and in this case is the 'Authorisation' parameter!\n\nAmazing! thanks a lot for the help !"
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-03-22 07:07:18",
+    "text": "Your welcome!"
+  },
+  {
+    "text": "Hi, has anyone else had issues with _HubSpot's contact source attribution_? Most of my sources are being set as *Offline sources* or *Direct traffic*. Im currently creating the contacts via the Contacts API once they complete the checkout and land on the confirmation page.\n\nI know the Contacts API does not send over the HubSpotutk with the session details so all contacts get created as *Offline* by default. I've already added the javascript code with the 'identify' call that sends the hubspost session data before creating the user via the Contacts API and also tried creating the contact via the Forms API passing in the HubSpotutk cookie as a parameter but sadly none of those options has made a huge difference, 80% of our contacts still get attributed to *Offline sources*.\n\nI started logging the user's HubSpotutk to see if I could find any informacion and I found that even though in the customer data saved in the HubSpotutk the source is accurate, on HubSpot when going inside the contact it will say *Direct traffic* or *Offline sources.* Does anyone know why this might be?",
+    "time_stamp": "2024-03-22 07:20:57"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-03-22 07:42:00",
+    "text": "sorry man, didn't have a chance to test this yet"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-03-22 07:42:16",
+    "text": "I'm honestly leaning towards thinking it's probably not possible"
+  },
+  {
+    "poster": {
+      "poster_name": "Maarten - misterworkflow.com",
+      "poster_handle": "maarten606"
+    },
+    "time_stamp": "2024-03-22 08:10:19",
+    "text": "I've just run the scenario, but that */files/v3/files/{fileId}* is not working. [404]"
+  },
+  {
+    "poster": {
+      "poster_name": "Tyler Sweeten",
+      "poster_handle": "tyler.sweeten"
+    },
+    "time_stamp": "2024-03-22 08:11:25",
+    "text": "Hello everyone, I recently got a notification that I was reaching association limits for engagements on a contact and company. I reached out to support and they suggested using an API to help delete/ unassociate these from the initial object. I was wondering if anyone here has had experience doing this and had some tips to get started?\nThanks"
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Barhainski",
+      "poster_handle": "andreas649"
+    },
+    "time_stamp": "2024-03-22 08:12:53",
+    "edited": {
+      "time_stamp": "2024-03-23 01:34:10"
+    },
+    "text": "Hi,\n\nwe are using HubSpot Forms and integrate them into our Webflow Page via the Webflow-Plugin. Therefore it is not an embed iframe but an API-Call. The Forms work well. When we submit the form all Data got transfered to HubSpot including the Page-URL and Conversion Page. All fine!\nBut we get Spam submissions, from somewhere. They have been send also via API but have no Page-URL (Conversion Page = Unavailable)\nIs there a way to Whitelist our URL to prevent submissions that comes from unknow?"
+  },
+  {
+    "text": "Hmmm, Are you doing a GET request?  I can't see you're whole code so hard for me to say but did you know you can test it right on the docs page?  That may help you troubleshoot this issue.  <https://developers.HubSpot.com/docs/api/files/files>",
+    "time_stamp": "2024-03-22 08:18:51"
+  },
+  {
+    "poster": {
+      "poster_name": "Tomás Hubmann",
+      "poster_handle": "thubmann"
+    },
+    "time_stamp": "2024-03-22 08:26:34",
+    "text": "Hi, I am tring to associate a Contact with a line_item is this posible with the HubSpot_DEFINED associations or with other method?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-03-22 13:43:43"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Amish Maqbool Khan",
+      "poster_handle": "amishmaqbool"
+    },
+    "time_stamp": "2024-03-22 10:06:51",
+    "text": "Hi everyone! <https://community.HubSpot.com/t5/Sales-Hub-Tools/Embedded-Meeting-Iframe-Height/td-p/813352> Here is same problem I am encountering while using Meeting iframe. I am unable to remove the overflow of vertical scroll from my form Here is an example <https://www.dnc.com/schedule-meeting>. Can someone help me out to resolve this issue by bruteforcing it's styling etc. Looking forward for someone's help",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-03-25 05:46:04"
+      },
+      {
+        "time_stamp": "2024-03-25 05:51:32"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Grégory Jannin",
+      "poster_handle": "gregory.jannin"
+    },
+    "time_stamp": "2024-03-22 10:11:55",
+    "text": "Thank you <@U01QVR44MEY>"
+  },
+  {
+    "poster": {
+      "poster_name": "Aitor",
+      "poster_handle": "aitor.tomas"
+    },
+    "time_stamp": "2024-03-22 10:13:36",
+    "text": "Maybe I was blind before but following the API documentation from <https://developers.HubSpot.com/docs/api/crm/crm-custom-objects#retrieve-existing-custom-objects|here>, this can be done:\n```/crm/v3/schemas/p_{object_name}```\nI tested with:\n```/crm/v3/schemas/p_my_objects```\nAnd it works."
+  },
+  {
+    "poster": {
+      "poster_name": "Aitor",
+      "poster_handle": "aitor.tomas"
+    },
+    "time_stamp": "2024-03-22 10:14:31",
+    "text": "For completeness, it allows to use 3 different ways:\n```/crm/v3/schemas/{objectTypeId}\n/crm/v3/schemas/p_{object_name}\n/crm/v3/schemas/{fullyQualifiedName}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2024-03-22 13:43:43",
+    "text": "I think line item to deal and deal to contact"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Hirsh",
+      "poster_handle": "ehirsh"
+    },
+    "time_stamp": "2024-03-22 14:43:31",
+    "text": "Hello from the HubSpot Product Manager of the Conversations API who has a keyword search in this Slack instance for words like 'conversations'  'sms' and 'whatsapp'\n\nThe GET threads and GET messages endpoints should have what you need, let me know if not! <https://developers.HubSpot.com/docs/api/conversations/conversations>"
+  }
+]

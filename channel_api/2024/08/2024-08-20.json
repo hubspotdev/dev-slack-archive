@@ -1,0 +1,135 @@
+[
+  {
+    "poster": {
+      "poster_name": "Ibrahim Elsanosi",
+      "poster_handle": "ibrahimsabat"
+    },
+    "time_stamp": "2024-08-20 01:49:06",
+    "edited": {
+      "time_stamp": "2024-08-21 02:29:00"
+    },
+    "text": "Hello,\nI am using the HubSpot Batch API to update contact properties with a batch size of 50 contacts. However, I've encountered some strange behavior: some contact properties are getting updated as expected, while others are not.\n\nI understand that HubSpot does not update the \"update date\" if the incoming property value is the same as the existing one. However, in my case, the new values are different from the existing ones, so the properties should be updated. Despite this, some updates are not being applied.\n\nHere is the code I’m using:\n\nCould you provide any insights or suggestions on what might be causing this issue?\n\nThank you.\n```public function updateContactBatch(array $batchData): void\n{\n    $batchInputs = [];\n\n    foreach ($batchData as $data) {\n\n        if (null === $contact = $this->getContact($data['email'])) {\n            return;\n        }\n\n        $properties = [\n            'example_property_one' => $data['example_value_one'],\n            'example_property_two' => $data['example_value_two'],\n            'example_property_three' => $data['example_value_three'],\n            'example_property_four' => $data['example_value_four'],\n            'example_property_five' => $data['example_value_five'],\n        ];\n\n        $updateObject = new SimplePublicObjectBatchInput([\n            'id' => $contact->getId(),\n            'properties' => $properties\n        ]);\n\n        $batchInputs[] = $updateObject;\n\n        sleep(1);\n    }\n\n    if (empty($batchInputs)) {\n        return;\n    }\n\n    $batchInput = new BatchInputSimplePublicObjectBatchInput(['inputs' => $batchInputs]);\n    sleep(40);\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nidhi Patel",
+      "poster_handle": "nidpatel"
+    },
+    "time_stamp": "2024-08-20 02:53:58",
+    "text": "In HubSpot CRM-&gt;Deals\nI want to show the deal owner ...How can I show that using API?\nI want to show owners other than the HubSpot Deal Owner."
+  },
+  {
+    "poster": {
+      "poster_name": "Win Han",
+      "poster_handle": "win.han"
+    },
+    "time_stamp": "2024-08-20 05:35:02",
+    "text": "Hello,\n\nI am not sure I am asking in the right channel. I am integrating my HubSpot app via OAuth. I have an error that says `Authorization failed because this account doesn't have access to the scopes required by the app. Please contact HubSpot support.`\n\nIs anyone able to help? Thanks in advanced!"
+  },
+  {
+    "poster": {
+      "poster_name": "Ievgen Gavrylenko",
+      "poster_handle": "ieg"
+    },
+    "time_stamp": "2024-08-20 07:27:09",
+    "edited": {
+      "time_stamp": "2024-08-20 07:32:29"
+    },
+    "text": "Hi everybody,\nI have faced with an interesting problem while using AWS Appflow for associating company -> deal:\n\nprobably Appflow wraps the following statement behind\n`https://api.hubapi.com/crm/v4/objects/company/{{companyID}}/associations/deal/{{dealID }}`\n\n*I’m giving the following input attributes and receive different errors:*\n\n\nassociationCategory=‘USER_DEFINED’\nassociationTypeId=`342` (<https://developers.HubSpot.com/docs/api/crm/associations|Company to deal>)\nid=<record_id_of_company>\ntoObjectId=<record_id_of_deal>\n\nI receive\n```[{\"recordId\":\"[]\",\"errorMessage\":\"[USER_DEFINED=342 is not a valid association definition id]\",\"isSuccess\":false}]```\n\nassociationCategory=‘USER_DEFINED’\nassociationTypeId=`6` (<https://developers.HubSpot.com/docs/api/crm/associations|Company to deal>)\nid=<record_id_of_company>\ntoObjectId=<record_id_of_deal>\n\n```[{\"recordId\":\"{\\\"USER_DEFINED\\\":[\\\"6\\\"]}\",\"errorMessage\":\"One or more association types in request don't match specified object types & direction: company -> deal\",\"isSuccess\":false}]```\n\nBasically, I have tried out all combinations of `associationTypeId` in (6, 342, 4, 341, 5) with corresponding  id and toObjectId\nUnfortunately, I can’t interpret properly errors I receive. Any suggestions how to fix that?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-08-20 14:36:21"
+      },
+      {
+        "time_stamp": "2024-08-26 10:33:13"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Shepherd",
+      "poster_handle": "michael.shepherd"
+    },
+    "time_stamp": "2024-08-20 07:31:09",
+    "text": "Hi <@U07GTPQQTAB>,\n\nApologies for the delayed response to this! I didn't get a notification for the thread and had some annual leave to spend.\n\nCould you please confirm whether you've managed to solve this yet or if you're still having the same issue?"
+  },
+  {
+    "text": "Hi group! I’m looking for some guidance and help!\nWe have a connected app (hubilo) logging activities against contact records. I’m looking to have some of those activities and their properties pulled into a Contact property. Has anyone done this?\nOn this example, I’d like to have all info from this activity copied over in a HubSpot contact property.",
+    "time_stamp": "2024-08-20 08:43:20",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-08-20 09:06:48"
+      }
+    ]
+  },
+  {
+    "text": "Hi there!\n\nThis is easy enough to do, not to worry.\n\nYou can make this work most simply by using a Workflow if that information is referenced as a property already.\n\nHere is a very simple example, where we know someone's \"Account Address\" which is added via a webhook into the field, we will copy this into the \"Street address\" which is the HubSpot contact property.\n\nIf the information you're trying to collect isn't a referenceable variable, it is worth taking a look to see if you can create a private app for it and break down the information you need through request formatting and turn it into properties you can easily reference going forward.\n\nHope this helps!",
+    "time_stamp": "2024-08-20 09:06:48",
+    "edited": {
+      "time_stamp": "2024-08-20 09:08:35"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Claire Ha",
+      "poster_handle": "cha"
+    },
+    "time_stamp": "2024-08-20 09:16:32",
+    "text": "Hello! I forwarded this thread to the Sequences team.\n\n<@U6URG5205>, re: your question, the Sequences team does not have any plans that I am aware of to move the automation platform (though I’ll resurface this when their PM is back from OOO) . In the meantime, I’d love to hear more about why you’d want this - what problems would it solve for you? What benefits do you get from Sequences being added to the Automation API?"
+  },
+  {
+    "poster": {
+      "poster_name": "Cal H",
+      "poster_handle": "cal.horlings"
+    },
+    "time_stamp": "2024-08-20 14:07:02",
+    "text": "API calls to /communication-preferences/v4/statuses/batch/read?channel=SMS and communication-preferences/v4/statuses/{subscriberIdString}?channel=SMS are returning VALIDATION_ERROR for \"invalid channel\".\n\nThe v4 documentation says it should be valid: <https://developers.HubSpot.com/beta-docs/reference/api/marketing/subscriptions#get-%2Fcommunication-preferences%2Fv4%2Fstatuses%2F%7Bsubscriberidstring%7D>\n\nAnyone else able to get this working?\n\nUltimately I'm looking to compile a list of the specific phone numbers subscribed for SMS Marketing from a set of Contacts known to be subscribed. Any insights on how else to accomplish this through the API would be appreciated."
+  },
+  {
+    "poster": {
+      "poster_name": "Cal H",
+      "poster_handle": "cal.horlings"
+    },
+    "time_stamp": "2024-08-20 14:36:21",
+    "text": "Rather than sending\n\tassociationCategory=‘USER_DEFINED’\ntry\n\tassociationCategory=‘HubSpot_DEFINED’"
+  },
+  {
+    "poster": {
+      "poster_name": "Nick Gurney",
+      "poster_handle": "nick754"
+    },
+    "time_stamp": "2024-08-20 21:58:02",
+    "text": "Hey All! Looking to dynamically update Tax rate on Line Items via TaxJar. Got most the logic working, but trying to figure out if I can update the tax rate directly on line items using the new Tax Rate field instead of just adding it to Quotes/Invoices. A couple questions I am hoping others might know:\n1. Can a line item have a one off tax rate? \n    a. If no, does it would be a bit ridiculous to create a Tax Rate for each line item and deactivate it after, right?\n2. Does anyone know the endpoint of have a link to the docs for creating Tax Rates? (assuming either of those exist yet)\nThanks so much!"
+  },
+  {
+    "poster": {
+      "poster_name": "Oliver Kershaw",
+      "poster_handle": "oliver852"
+    },
+    "time_stamp": "2024-08-20 23:19:39",
+    "text": "Hi all. Does anyone know if it’s possible to restrict the API to accessing contacts filtered by a custom property? AFAICT if you give read and write permissions to the CRM scopes, you open up the entire contacts system. Am I missing something? Or is my only option to create a custom object for my sensitive contacts?"
+  },
+  {
+    "poster": {
+      "poster_name": "Tina Dochana",
+      "poster_handle": "tinadochana7"
+    },
+    "time_stamp": "2024-08-21 00:11:28",
+    "text": "Hi everyone, I wasn't sure which channel to post in but I need help with deleting activities (Such as email threads and attachments) that accidentally get associated with the wrong deal or ticket. For example, my client's team is forwarding emails from referrals to a specific inbox in HubSpot. But because these emails are coming from referrers (i.e. hospitals, GPs, retirement centres), they sometimes forward an old email that mentions other deals or tickets. So now, the old thread is causing associations for the new conversation. I may have found a solution through an app but I was wondering if anyone knows of a solution that doesn't require a third-party app."
+  },
+  {
+    "poster": {
+      "poster_name": "Selvam",
+      "poster_handle": "selvam"
+    },
+    "time_stamp": "2024-08-21 00:36:14",
+    "edited": {
+      "time_stamp": "2024-08-21 00:36:51"
+    },
+    "text": "Hi Want to integrate angular iframe into HubSpot. when clicks the lead and start calling from HubSpot, angular iframe should load there we can do call controls. how to do this?."
+  }
+]

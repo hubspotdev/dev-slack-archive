@@ -1,0 +1,177 @@
+[
+  {
+    "poster": {
+      "poster_name": "Brandon Tuttle",
+      "poster_handle": "brandon139"
+    },
+    "time_stamp": "2022-10-07 12:13:55",
+    "edited": {
+      "time_stamp": "2022-10-07 12:14:50"
+    },
+    "text": "Hi, we have a custom code block in our workflow to execute a weighted round robin. The issue is often times, one of the reps leaves on vacation, and we ned to alter the round robin, and remember to add them back in. So, instead, I was going to do a if then, IF today is between these dates, then do this weighted round robin (with out the rep that is on vacation), BUT if not in those dates, then run the regular weighted round robin.\n\nIssue is, my python code needs to import modules (date and time), but doesnt look like custom code allows importing. Do you guys know of any work arounds? It works perfect in VS Code!\nThe error I get\n```[ERROR] Runtime.ImportModuleError: Unable to import module 'HubSpotHandler': No module named 'datetimerange'\nTraceback (most recent call last):\nMemory: 38/128 MB\nRuntime: 1.23 ms```\nHere is my date code:\n```from datetime import datetime, date\nfrom datetimerange import DateTimeRange\n\n\ntodayTime = datetime.today()\n\n\nleaveDate = datetime(1995, 3, 20)\nreturnDate = datetime(2025, 1, 1)\n\noutCome = todayTime &gt;= leaveDate and todayTime &lt;= returnDate\nprint(todayTime &gt;= leaveDate and todayTime &lt;= returnDate)```",
+    "reply_count": 15,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-10-07 12:14:38"
+      },
+      {
+        "time_stamp": "2022-10-07 12:15:07"
+      },
+      {
+        "time_stamp": "2022-10-07 12:15:33"
+      },
+      {
+        "time_stamp": "2022-10-07 12:15:45"
+      },
+      {
+        "time_stamp": "2022-10-07 12:28:01"
+      },
+      {
+        "time_stamp": "2022-10-07 12:29:12"
+      },
+      {
+        "time_stamp": "2022-10-07 12:31:25"
+      },
+      {
+        "time_stamp": "2022-10-07 12:31:29"
+      },
+      {
+        "time_stamp": "2022-10-07 12:34:31"
+      },
+      {
+        "time_stamp": "2022-10-07 12:35:41"
+      },
+      {
+        "time_stamp": "2022-10-07 12:37:54"
+      },
+      {
+        "time_stamp": "2022-10-07 12:38:29"
+      },
+      {
+        "time_stamp": "2022-10-07 12:38:50"
+      },
+      {
+        "time_stamp": "2022-10-07 12:41:49"
+      },
+      {
+        "time_stamp": "2022-10-07 12:42:12"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-10-07 12:14:38",
+    "text": "The imports are pretty locked down"
+  },
+  {
+    "text": "",
+    "time_stamp": "2022-10-07 12:15:07"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-10-07 12:15:33",
+    "text": "But datetime shouldn't be blocked"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-10-07 12:15:45",
+    "text": "Let me run some tests"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-10-07 12:28:01",
+    "text": "In the above code you don't use datetimerange, what are you trying to accomplish with it?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-10-07 12:29:12",
+    "text": "datetimerange isn't a supported package but I think we'll be able to build something custom"
+  },
+  {
+    "poster": {
+      "poster_name": "Brandon Tuttle",
+      "poster_handle": "brandon139"
+    },
+    "time_stamp": "2022-10-07 12:31:25",
+    "text": "oh my gosh, your right, I think its just in there from when I was trying different things. I took it out, and now getting this error"
+  },
+  {
+    "poster": {
+      "poster_name": "Brandon Tuttle",
+      "poster_handle": "brandon139"
+    },
+    "time_stamp": "2022-10-07 12:31:29",
+    "text": "```WARNING: The logs for this function have exceeded the 4KB limit.\n...\nTrue\nSTART RequestId: 46aa3500-66cc-42dc-ac26-4fe876c48871 Version: $LATEST\n[ERROR] AttributeError: module 'file' has no attribute 'main'\nTraceback (most recent call last):\n  File \"/var/task/HubSpotHandler.py\", line 4, in HubSpot_handler\n    return file.main(event)\nMemory: 37/128 MB\nRuntime: 2.22 ms```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-10-07 12:34:31",
+    "text": "Sorry running more tests"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-10-07 12:35:41",
+    "text": "Spaces and tabs are killing me!"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-10-07 12:37:54",
+    "text": "This code should work:\n```#!/usr/bin/python\n# -*- coding: utf-8 -*-\n\nfrom datetime import datetime, date\n\ndef main(event):\n    todayTime = datetime.today()\n    leaveDate = datetime(1995, 3, 20)\n    returnDate = datetime(2025, 1, 1)\n    outCome = todayTime &gt;= leaveDate and todayTime &lt;= returnDate\n    print(todayTime &gt;= leaveDate and todayTime &lt;= returnDate)\n    return {'outputFields': {'outcome': outCome, 'printStatement': todayTime &gt;= leaveDate and todayTime &lt;= returnDate}}```"
+  },
+  {
+    "text": "",
+    "time_stamp": "2022-10-07 12:38:29"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-10-07 12:38:50",
+    "text": "I return the Output and the thing that you print"
+  },
+  {
+    "poster": {
+      "poster_name": "Brandon Tuttle",
+      "poster_handle": "brandon139"
+    },
+    "time_stamp": "2022-10-07 12:41:49",
+    "text": "worked like a charm!! Thank you so much. Sorry, new to python, so I sure appreciate you helping clean it up!"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-10-07 12:42:12",
+    "edited": {
+      "time_stamp": "2022-10-07 12:42:17"
+    },
+    "text": "For sure"
+  }
+]

@@ -1,0 +1,172 @@
+[
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2020-12-04 02:25:00",
+    "edited": {
+      "time_stamp": "2020-12-04 02:25:16"
+    },
+    "text": "I’m building an endpoint, which communicates to an external service.\nThis service requires authentication with a secret + key, and returns an access token, which is required in the API calls. The token expires every 24 hours.\nI’m not sure how I can store/cache this token in the current environment, if at all.\n\nHave any of you done something similar?",
+    "reply_count": 15,
+    "reply_users_count": 6,
+    "replies": [
+      {
+        "time_stamp": "2020-12-04 02:52:59"
+      },
+      {
+        "time_stamp": "2020-12-04 02:58:13"
+      },
+      {
+        "time_stamp": "2020-12-04 07:16:54"
+      },
+      {
+        "time_stamp": "2020-12-04 07:17:49"
+      },
+      {
+        "time_stamp": "2020-12-04 07:23:11"
+      },
+      {
+        "time_stamp": "2020-12-04 11:02:12"
+      },
+      {
+        "time_stamp": "2020-12-04 11:11:31"
+      },
+      {
+        "time_stamp": "2020-12-04 11:12:59"
+      },
+      {
+        "time_stamp": "2020-12-04 11:13:11"
+      },
+      {
+        "time_stamp": "2020-12-04 11:13:37"
+      },
+      {
+        "time_stamp": "2020-12-04 11:16:04"
+      },
+      {
+        "time_stamp": "2020-12-04 11:16:51"
+      },
+      {
+        "time_stamp": "2020-12-04 11:17:04"
+      },
+      {
+        "time_stamp": "2020-12-18 05:26:48"
+      },
+      {
+        "time_stamp": "2020-12-30 05:37:23"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Rohan Sootarsing",
+      "poster_handle": "rohans"
+    },
+    "time_stamp": "2020-12-04 02:52:59",
+    "text": "You could store it in hubdb? potentially"
+  },
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2020-12-04 02:58:13",
+    "text": "Storing it in any way that’s visible (even if it’s just to users in the portal) is not an option, unfortunately."
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2020-12-04 07:16:54",
+    "edited": {
+      "time_stamp": "2020-12-04 07:17:23"
+    },
+    "text": "HubDB would be publicly accessible via API as well, not good for secrets/tokens.\n\n<@UCBDLK6SU> what  kind of traffic will this endpoint be getting? Might be a good fit for Firebase instead of HS serverless, as they give you serverless functions and a noSQL db. Or, you could also use HS for the serverless functions and just use Firebase as a free separate datastore if you wanted."
+  },
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2020-12-04 07:17:49",
+    "text": "Yeah, we can do anything we want with external services, but the point is to keep it within HubSpot, so the only data transfer goes from HubSpot to the external API and back, no through any kind of middleware."
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2020-12-04 07:23:11",
+    "text": "I don't know of a way to programmatically update HS secrets, so I'm not sure this will be possible unfortunately."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2020-12-04 11:02:12",
+    "text": "We are working on improving authentication capabilities in serverless functions. If I am understanding <@UCBDLK6SU> this is likely OAuth which we would like to support natively"
+  },
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2020-12-04 11:11:31",
+    "text": "That sounds good, <@U6GNQ7JBU>, any idea if it’s within H1 2021, or later? And yes, this is based on the Client Credentials Grant flow of the OAuth 2 specification"
+  },
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2020-12-04 11:12:59",
+    "edited": {
+      "time_stamp": "2020-12-04 11:13:16"
+    },
+    "text": "I’m also currently exploring if it’s possible to store the access token in the memory, with something like <https://www.npmjs.com/package/memory-cache|https://www.npmjs.com/package/memory-cache>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2020-12-04 11:13:11",
+    "text": "We can’t make any public promises but that is a reasonable timeline."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2020-12-04 11:13:37",
+    "text": "Basically you would give us the refresh token and refresh URL and we would inject the access key into the request information for the serverless function"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2020-12-04 11:16:04",
+    "text": "That way you don’t have to deal with refreshing the access token yourself"
+  },
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2020-12-04 11:16:51",
+    "text": "Yeah, that would be the preferred approach"
+  },
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2020-12-04 11:17:04",
+    "text": "Thanks for chiming in! "
+  }
+]

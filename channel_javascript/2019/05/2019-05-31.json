@@ -1,0 +1,25 @@
+[
+  {
+    "poster": {
+      "poster_name": "Maria Filipe",
+      "poster_handle": "maria.filipe"
+    },
+    "time_stamp": "2019-05-31 13:30:01",
+    "text": "Hi all! I'm trying to set a value for a form field in a custom module (these fields will be hidden). So far I've got it working for all hidden fields except for the date field... I've been testing around and can get milis (for midnight UTC) showing on a control text field, but nothing happens on the date field. Any ideas how to achieve this?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2019-05-31 16:49:08"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Maria Filipe",
+      "poster_handle": "maria.filipe"
+    },
+    "time_stamp": "2019-05-31 16:49:08",
+    "text": "Just figured it out: once I set the date property field as hidden (which was the real use case here), things started working, so all left was to replace the testing bits with the real bits. For anyone else with similar issue:\n```window.addEventListener('message', event =&gt; {\n   if(event.data.type === 'hsFormCallback' &amp;&amp; event.data.eventName === 'onFormReady') {\n\n     var mytimestamp;\n     mytimestamp = new Date();\n     mytimestamp.setUTCHours(0,0,0,0);\n     var logmytimestamp = Date.parse(mytimestamp);\n         \n     $('input[name=\"test\"]').val(logmytimestamp).change();\n     $('input[name=\"eventsregistered\"]').val(';{{widget_data.event_code.value}}').change(); \n     $('input[name=\"lasteventregistered\"]').val('{{widget_data.event_code.value}}').change(); \n     $('input[name=\"lasteventregisteredtime\"]').val(logmytimestamp).change();\n   \n   }\n});```"
+  }
+]

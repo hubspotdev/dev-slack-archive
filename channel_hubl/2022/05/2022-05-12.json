@@ -1,0 +1,317 @@
+[
+  {
+    "text": "Hello everyone! I am having a problem with the Hubl of a theme and header module that I'm working on. The module works as expected, no errors. But when I add it to the base html template, I get 48 errors, all of which are \"could not find property X\". But all of the instances of that property in the module are wrapped in IF statements that check for existence and length. I need to get these resolved so I can submit this theme to the marketplace, but I am completely stuck. Any help would be very much appreciated. Including some screenshots in case it helps.",
+    "time_stamp": "2022-05-12 07:00:54",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-05-12 08:46:07"
+      },
+      {
+        "time_stamp": "2022-05-12 08:49:30"
+      },
+      {
+        "time_stamp": "2022-05-12 08:50:47"
+      },
+      {
+        "time_stamp": "2022-05-12 08:52:28"
+      },
+      {
+        "time_stamp": "2022-05-12 08:59:31"
+      },
+      {
+        "time_stamp": "2022-05-12 09:00:42"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Michele Herzog",
+      "poster_handle": "michele.herzog24"
+    },
+    "time_stamp": "2022-05-12 08:46:07",
+    "text": "Hey <@U022FJKR4CQ>! Are you able to share the part of that module that references `child_links`? This message usually means some kind of field default is missing/not working."
+  },
+  {
+    "text": "<@U02NJACH5QS> hi! Thanks so much for getting back to me. Okay so this is for a mega menu module and it's a little convoluted. Here's what I have:\n```{% macro get_mega_classes(menu_item) %}\n  {% set mega_classes = [] %}\n  {% if menu_item.child_links|length &gt; 0 %}\n    {% do mega_classes.append(\"menu--level-2\") %}\n    {% for child_item in menu_item.child_links %}\n      {% if child_item.child_links|length &gt; 0 %}{% do mega_classes.append(\"menu--level-3\") %}{% endif %}\n    {% endfor %}\n  {% endif %}\n  {% if \"menu--level-2\" in mega_classes &amp;&amp; \"menu--level-3\" in mega_classes %}\n    menu--stacks\n  {% elif \"menu--level-2\" in mega_classes &amp;&amp; \"menu--level-3\" not in mega_classes %}\n    menu--blocks\n  {% else %}\n    menu--plain\n  {% endif %}\n{% endmacro %}\n\n{% macro render_mega_menu(mega_link, primary_menu) %}\n  {% if primary_menu %}{% set depth = 1 %}{% else %}{% set depth = depth + 1 %}{% endif %}\n  {% set class = get_mega_classes(mega_link)|trim %}\n  &lt;li class=\"{{ class }} depth--{{ depth }}\"&gt;\n    {{ render_mega_link(mega_link) }}\n    {% unless depth == 3 %}\n      {% if mega_link.child_links is defined &amp;&amp; mega_link.child_links|length &gt; 0 &amp;&amp; mega_link.child_links|length &lt; 8 %}\n          {{ render_mega_submenu(mega_link, depth) }}\n      {% elif mega_link.child_links is defined &amp;&amp; mega_link.child_links|length &gt; 0 &amp;&amp; mega_link.child_links|length &gt; 7 %}\n        {% for group in mega_link.child_links|batch(8) %}\n          &lt;li class=\"{{ get_mega_classes(mega_link)|trim }} depth--{{ depth }}\"&gt;\n            {% for child_link in group %}\n              {{ render_mega_submenu(child_link, depth) }}\n            {% endfor %}\n          &lt;/li&gt;\n        {% endfor %}\n      {% endif %}\n    {% endunless %}\n  &lt;/li&gt;\n{% endmacro %}\n\n{% macro primary_submenu_block(mega_link, depth) %}\n&lt;li class=\"mega-menu__primary-block\"&gt;\n  {{ render_mega_link(mega_link, depth) }}\n&lt;/li&gt;\n{% endmacro %}\n\n{% macro render_mega_submenu(mega_link, depth) %}\n{% set class = get_mega_classes(mega_link)|trim %}\n&lt;ul role=\"menu\" class=\"{{ class }} mega-menu mega-menu--submenu submenu--{{ depth }}\"&gt;\n  {% if depth == 1 %}\n    {% if class == \"menu--stacks\" %}\n      {{ primary_submenu_block(mega_link, 2) }}\n      {% for child_link in mega_link.child_links %}\n        {{ render_mega_submenu(child_link, 2) }}\n      {% endfor %} \n    {% else %}\n      {{ primary_submenu_block(mega_link, 2) }}\n      {% for child_link in mega_link.child_links %}\n        {{ render_mega_menu(child_link, false) }}\n      {% endfor %} \n    {% endif %}\n  {% else %}\n    {% if mega_link.child_links is defined &amp;&amp; mega_link.child_links|length &gt; 0 &amp;&amp; mega_link.child_links|length &gt; 7 %}\n      {% for group in mega_link.child_links|batch(8, \"\") %}\n        {% if !loop.first %}&lt;ul role=\"menu\" class=\"mega-menu mega-menu--submenu submenu--{{ depth }}\"&gt;{% endif %}\n          &lt;li class=\"{{ class }} depth--{{ depth }}\"&gt;\n            {% unless class == \"menu--stacks\" %}{{ render_mega_link(mega_link, depth) }}{% endunless %}\n            {% set next_depth = depth + 1 %}\n            {% for child_link in group %}\n              {% unless child_link == \"\" %}\n                {% if class == \"menu--stacks\" &amp;&amp; depth == 2 %}\n                  {{ render_mega_submenu(child_link, 3) }}\n                {% elif class == \"menu--blocks\" &amp;&amp; depth == 2 %}\n                  {{ render_mega_menu(child_link, false) }}\n                {% endif %}\n              {% endunless %}\n            {% endfor %}\n          &lt;/li&gt;\n        {% if !loop.last %}&lt;/ul&gt;{% endif %}\n      {% endfor %}\n    {% elif mega_link.child_links is defined &amp;&amp; mega_link.child_links|length &gt; 0 %}\n      {{ render_mega_link(mega_link,depth) }}\n      {% set next_depth = depth + 1 %}\n      {% for child_link in mega_link.child_links %}\n        {{ render_mega_menu(child_link, next_depth) }}\n      {% endfor %}\n    {% endif %}\n  {% endif %}\n&lt;/ul&gt;\n{% endmacro %}\n\n{% macro render_mega_link(mega_link, depth) %}\n{% set href = mega_link.mega_link.url.href if mega_link.mega_link.url.href %}\n{% if mega_link.mega_link.url.type is equalto \"EMAIL_ADDRESS\" %}\n{% set href = \"mailto:\" + href %}\n{% endif %}\n&lt;a href=\"{{ href }}\"\n   {% if mega_link.mega_link.open_in_new_tab %}target=\"_blank\"{% endif %}\n   {% if mega_link.mega_link.rel %}rel=\"{{ mega_link.mega_link.rel }}\"{% endif %}\n   &gt;\n  {% if depth == 1 %}\n    {{ mega_link.link_text }}\n  {% else %}\n    {% if mega_link.image.src %}\n      {% set sizeAttrs = 'width=\"{{ mega_link.image.width }}\" height=\"{{ mega_link.image.height }}\"' %}\n      {% if mega_link.image.size_type == 'auto' %}\n      {% set sizeAttrs = 'style=\"max-width: 100%; height: auto;\"' %}\n      {% elif mega_link.image.size_type == 'auto_custom_max' %}\n      {% set sizeAttrs = 'width=\"{{ mega_link.image.max_width }}\" height=\"{{ mega_link.image.max_height }}\" style=\"max-width: 100%; height: auto;\"' %}\n      {% endif %}\n      {% set loadingAttr = mega_link.image.loading != 'disabled' ? 'loading=\"{{ mega_link.image.loading }}\"' : '' %}\n      &lt;img src=\"{{ mega_link.image.src }}\" alt=\"{{ mega_link.image.alt }}\" {{ loadingAttr }} {{ sizeAttrs }}&gt;\n    {% endif %}\n    &lt;span class=\"mega-menu__link-text\"&gt;{{ mega_link.link_text }}&lt;/span&gt;\n    {% if mega_link.add_description %}&lt;span class=\"mega-menu__link-description\"&gt;{{ mega_link.description_text }}&lt;/span&gt;{% endif %}\n  {% endif %}\n&lt;/a&gt;\n{% endmacro %}```\nAlso including a screenshot of how the fields are set up",
+    "time_stamp": "2022-05-12 08:49:30"
+  },
+  {
+    "poster": {
+      "poster_name": "erin wiggers",
+      "poster_handle": "erin245"
+    },
+    "time_stamp": "2022-05-12 08:50:47",
+    "text": "So based on what you said about the fields not existing, I'm thinking that it's trying to keep looping even when it reaches the last level and has no child links. Any ideas how I can break out of that loop? <@U02NJACH5QS>"
+  },
+  {
+    "poster": {
+      "poster_name": "erin wiggers",
+      "poster_handle": "erin245"
+    },
+    "time_stamp": "2022-05-12 08:52:28",
+    "text": "I thought by wrapping it in IF statements that check for existence first it would prevent that from happening but obviously it is not haha"
+  },
+  {
+    "poster": {
+      "poster_name": "Michele Herzog",
+      "poster_handle": "michele.herzog24"
+    },
+    "time_stamp": "2022-05-12 08:59:31",
+    "text": "Hmm, I don’t think I’ve seen that kind of issue with looping, but I have seen a warning similar to this before. What happens if you try `{{group|pprint}}` after `{% for group in mega_link.child_links|batch(8) %}` in the `render_mega_menu` macro? It usually will help with debugging."
+  },
+  {
+    "poster": {
+      "poster_name": "Michele Herzog",
+      "poster_handle": "michele.herzog24"
+    },
+    "time_stamp": "2022-05-12 09:00:42",
+    "edited": {
+      "time_stamp": "2022-05-12 09:00:50"
+    },
+    "text": "Also, do you have a default object count set for both repeaters (mega_menu_items and child_links)?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jörg Lehmann",
+      "poster_handle": "joerg.lehmann"
+    },
+    "time_stamp": "2022-05-12 12:32:43",
+    "text": "Hello! :slightly_smiling_face: I am trying to loop through the values of a multiple checkbox property in an email using HubL. But so far i and a colleague could not get this to work. Among others we tried it using the following:\n\n{% for values in contact.sample_checkbox.values() %}\n  {{ loop.index }} | {{ value }}&lt;br&gt;\n{% endfor %}\n\nDoes anybody have a solution for this? Help is greatly appreciated.\nBest\nJörg",
+    "reply_count": 3,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2022-05-12 18:54:11"
+      },
+      {
+        "time_stamp": "2022-05-23 03:56:21"
+      },
+      {
+        "time_stamp": "2022-05-23 06:19:24"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomaslanenh"
+    },
+    "time_stamp": "2022-05-12 13:08:14",
+    "text": "Hey all, I got a weird issue that i'm wondering if any of you might know a way to fix. I have a tabbed based module that has a image slider &amp; a accordion inside of it. My goal was to have each tab have its own image slider with its dedicated issues. The problem i'm running into is that the module &amp; hubl I used isn't keeping this retained to its individual \"tab\". If that makes sense. It works with the accordions but not the images. The code i'm using for the images is:\n\n`&lt;div class=\"slideshow-container\"&gt;`\n                      `{% for img in item.col_1.gallery_image %}`\n                        `&lt;div class=\"mySlides fade\"&gt;`\n                          `&lt;img src=\"{{img.src}}\" alt=\"Gallery\"/&gt;`                   \n                        `&lt;/div&gt;`\n                      `{% endfor %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomaslanenh"
+    },
+    "time_stamp": "2022-05-12 13:08:28",
+    "text": "So i'm wondering if my for loop is looking at _all_ the images in that module and not specificially within that one repeater field"
+  },
+  {
+    "text": "This is how the fields are set up",
+    "time_stamp": "2022-05-12 13:09:13"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomaslanenh"
+    },
+    "time_stamp": "2022-05-12 13:09:32",
+    "text": "And this is the accordion code that does what its supposed to do:\n `{% for item in item.col_1.accordion %}`\n                      `&lt;span class=\"accordion\"&gt;`\n                      `{% inline_text field=\"item.accordion_header\" value=\"{{ item.accordion_header}}\"%}`\n                     `&lt;/span&gt;`\n                    `&lt;div class=\"panelAccordion\"&gt;`\n                      `{% inline_rich_text field=\"item.accordion_content\" value=\"{{ item.accordion_content }}\" %}`\n                    `&lt;/div&gt;`\n                `{% endfor %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomaslanenh"
+    },
+    "time_stamp": "2022-05-12 13:14:58",
+    "text": "I realize that doesn't really explain, so here's a video: <https://www.loom.com/share/683941b6872845e2a4d25ef6ecc77f36>"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomaslanenh"
+    },
+    "time_stamp": "2022-05-12 13:18:20",
+    "text": "So I guess I need to figure out the way to have it _not_ swap to the next set of images and just loop on itself"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomaslanenh"
+    },
+    "time_stamp": "2022-05-12 13:23:22",
+    "text": "Is there anyway to access the current instance of a repeater field via code? i.e. doing a key in React"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomaslanenh"
+    },
+    "time_stamp": "2022-05-12 13:27:31",
+    "text": "I guess I need to access the parent loop and not the child loop; so loop.index doesn't work because it gives me THIS instance of the loop, where's I need to set a index of the parents loop",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-05-12 13:37:28"
+      },
+      {
+        "time_stamp": "2022-05-12 13:37:58"
+      },
+      {
+        "time_stamp": "2022-05-12 13:40:02"
+      },
+      {
+        "time_stamp": "2022-05-12 13:40:27"
+      },
+      {
+        "time_stamp": "2022-05-12 13:41:08"
+      },
+      {
+        "time_stamp": "2022-05-12 13:43:25"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2022-05-12 13:37:28",
+    "edited": {
+      "time_stamp": "2022-05-12 13:37:37"
+    },
+    "text": "Inside your parent loop, you could do\n`{% set parent_loop = loop %}`\nAnd then access `parent_loop.index` in your child loop"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomaslanenh"
+    },
+    "time_stamp": "2022-05-12 13:37:58",
+    "text": "That's a good idea, let me try that"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomaslanenh"
+    },
+    "time_stamp": "2022-05-12 13:40:02",
+    "text": "You're a genious!!! Thanks Jack"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomaslanenh"
+    },
+    "time_stamp": "2022-05-12 13:40:27",
+    "text": "Much much cleaner then the way I was going to do it; grabbing the parent ID each iteration"
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2022-05-12 13:41:08",
+    "text": "Glad I could help!"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomaslanenh"
+    },
+    "time_stamp": "2022-05-12 13:43:25",
+    "text": "Now to figure out the best way to get this to run the loop per tabbed area :v"
+  },
+  {
+    "text": "Hello.\n\nI'm having this issue where the arrow-down button for this accordion isn't floating to the right, but it showed perfectly on the code preview. This has happened to some of my code to, where it shows up differently on the main page. Is there something I'm doing wrong?",
+    "time_stamp": "2022-05-12 14:05:49",
+    "reply_count": 6,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2022-05-12 14:07:35"
+      },
+      {
+        "time_stamp": "2022-05-12 14:08:33"
+      },
+      {
+        "time_stamp": "2022-05-12 14:11:52"
+      },
+      {
+        "time_stamp": "2022-05-12 14:13:17"
+      },
+      {
+        "time_stamp": "2022-05-12 19:04:17"
+      },
+      {
+        "time_stamp": "2022-05-13 04:00:11"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomaslanenh"
+    },
+    "time_stamp": "2022-05-12 14:07:35",
+    "text": "Try the following CSS code:\n\ndisplay: inline-flex;\njustify-content: space-between;"
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2022-05-12 14:08:33",
+    "edited": {
+      "time_stamp": "2022-05-12 14:10:04"
+    },
+    "text": "~Quick question, does it show up correctly if you add the `hsDebug=true` query parameter in the url on the published page?~ Nevermind I don't think this is related"
+  },
+  {
+    "poster": {
+      "poster_name": "Deborah Adeoye",
+      "poster_handle": "debbieadeoye1"
+    },
+    "time_stamp": "2022-05-12 14:11:52",
+    "text": "Well, that fixed her:relaxed:\nThank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomaslanenh"
+    },
+    "time_stamp": "2022-05-12 14:13:17",
+    "text": "I did literally the exact same thing a hour ago so no problem lol"
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin Ordener",
+      "poster_handle": "k.ordener.dev"
+    },
+    "time_stamp": "2022-05-12 18:54:11",
+    "text": "I'm not in a place I can test this yet but if you print out the value of the select it should tell you what the names of the options inside it you can call. {{ contact.sample_checkbox }}"
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin Ordener",
+      "poster_handle": "k.ordener.dev"
+    },
+    "time_stamp": "2022-05-12 19:04:17",
+    "edited": {
+      "time_stamp": "2022-05-12 19:04:56"
+    },
+    "text": "<@U03BP3NKF5E> <@U03E08RDD1V> Something to keep in mind with this solution. Inside the accordion you should have 3 main elements: question, caret icon, and the answer. If all 3 of these are siblings ie.\n```&lt;div class=\"container\"&gt;\n  &lt;span class=\"question\"&gt;question text here&lt;/span&gt;\n  &lt;span class=\"icon\"&gt;icon embed&lt;/span&gt;\n  &lt;span class=\"answer\"&gt;answer text here&lt;/span&gt;\n&lt;/div&gt;```\nThen when you open the accordion to show the answer the icon will probably move down to the middle of the space including the answer text. If that happens then you can group them like this to fix it:\n```&lt;div class=\"container\"&gt;\n  &lt;div class=\"question-container\"&gt;\n    &lt;span class=\"question\"&gt;question text here&lt;/span&gt;\n    &lt;span class=\"icon\"&gt;icon embed&lt;/span&gt;\n  &lt;/div&gt;\n  &lt;span class=\"answer\"&gt;answer text here&lt;/span&gt;\n&lt;/div&gt;```\nand then you add the flex and justify content to the question container instead of the parent container.\nThere are other ways of course but this is one of the easier methods."
+  },
+  {
+    "poster": {
+      "poster_name": "Kunal Yangal",
+      "poster_handle": "kunal"
+    },
+    "time_stamp": "2022-05-12 23:25:19",
+    "text": "Warning:\n`get_asset_url was called, but there is no resource at path NewAgeSaaS/css/templates/system.css`\n\n  Getting this error only for the System templates , Not for website template , anyone having idea how to resolve this ?"
+  }
+]

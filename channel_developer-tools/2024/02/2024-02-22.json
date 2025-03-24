@@ -1,0 +1,40 @@
+[
+  {
+    "poster": {
+      "poster_name": "James Marriott",
+      "poster_handle": "james442"
+    },
+    "time_stamp": "2024-02-22 03:33:35",
+    "edited": {
+      "time_stamp": "2024-02-22 03:34:16"
+    },
+    "text": "_We couldn't make the hs deploy action work but as it uses hs cli under the hood we found this solution using the hs cli_\n\nIn your repo .github/workflows/main.yml\n```name: Deploy to HubSpot\n\non:\n  push:\n    branches:\n      - main\n      - dev\n\njobs:\n  deploy-to-test:\n    runs-on: ubuntu-latest\n    if: github.ref == 'refs/heads/dev'\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n        with:\n          node-version: 18\n      - run: npm ci\n      - run: npm run upload:test\n        env:\n          HubSpot_PORTAL_ID: ${{ secrets.HubSpot_PORTAL_ID }}\n          HubSpot_PERSONAL_ACCESS_KEY: ${{ secrets.HubSpot_PERSONAL_ACCESS_KEY }}\n  deploy-to-prod:\n    runs-on: ubuntu-latest\n    if: github.ref == 'refs/heads/main'\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n        with:\n          node-version: 18\n      - run: npm ci\n      - run: npm run upload:prod\n        env:\n          HubSpot_PORTAL_ID: ${{ secrets.HubSpot_PORTAL_ID }}\n          HubSpot_PERSONAL_ACCESS_KEY: ${{ secrets.HubSpot_PERSONAL_ACCESS_KEY }}```\nin your package.json\n\n`\"upload:test\": \"hs upload --convertFields src your-website-theme-test --use-env --clean --force\",`\n    `\"upload:prod\": \"hs upload --convertFields src your-website-theme-prod --use-env --clean --force\"`\n\nIn your github repo settings/Actions/Repository secrets add your secrets from your HubSpot personal access key page.\n\nOn merge to dev / main your test / dev versions are deployed."
+  },
+  {
+    "poster": {
+      "poster_name": "Anna Zrust",
+      "poster_handle": "azrust"
+    },
+    "time_stamp": "2024-02-22 08:17:10",
+    "edited": {
+      "time_stamp": "2024-02-22 08:17:42"
+    },
+    "text": "<@U03AKL6Q1B2> Thank you but, this URL is not safe to use. You can see it has special numbers in it's path. Those numbers change based on the HubSpot cache etc.\n\nI tried to compare the url after I did some changes in the file. It was different.\n\nHonestly I think the only sure way to get up to date public url of the file is the hubl function mentioned above. Which I can not use on non HubSpot page"
+  },
+  {
+    "poster": {
+      "poster_name": "Carel schrier",
+      "poster_handle": "carel"
+    },
+    "time_stamp": "2024-02-22 09:01:31",
+    "text": "I created a Custom Object 'Vehicle' and through the web interface I can load the association between contact and vehicle again.\n\nBut now via python, I don't succeed.\n\nI started with the simple version, without assoosiation, only VIN and email, but I get a duplication error on that (see import attempts), do you guys have an idea?\n\nI tried first with UPSERT mode (you do that also via the web-import tool I thought) and also pure UPDATE, that was attempt 2."
+  },
+  {
+    "poster": {
+      "poster_name": "Jennifer Nixon",
+      "poster_handle": "jnixon"
+    },
+    "time_stamp": "2024-02-22 09:07:28",
+    "text": "Ah, you're right, I forgot about cache. These used to be fixed URLs long ago...sorry, I'm not sure there is a solution, maybe someone else will have one"
+  }
+]

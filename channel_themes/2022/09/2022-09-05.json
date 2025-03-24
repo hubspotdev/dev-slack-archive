@@ -1,0 +1,18 @@
+[
+  {
+    "poster": {
+      "poster_name": "Dmytro Hrynevych",
+      "poster_handle": "dmytro.hrynevych"
+    },
+    "time_stamp": "2022-09-05 03:39:41",
+    "text": "Hi <@U7SL518D6> , hope you can help here :slightly_smiling_face:\n\n***\n\nAfter running into the same issue and digging into it, I think I’ve found the cause of this warning, and to me, it now looks like some kind of server configuration issue or something on  a HubSpot side to generate minified CSS files.\n\nHere are more details:\n\n1.\nFor example, I have a file `custom.css`\n```body {\n  background: red;\n}```\nwith `hsDebug=true` I will get the same `custom.css` with this response\n```body {\n  background: red;\n}```\nand it works just fine with *no warnings* in the console\n\n2.\nBut without `hsDebug=true` (production mode) I will get `custom.min.css` with this minified and modified response:\n```body{background:red}\n/*# sourceMappingURL=<https://cdn1.HubSpotusercontent-eu1.net/hub/.../.../custom.css> */```\nand the part with the `sourceMappingURL` is actually the cause of the warnings in the console. The reference in the `sourceMappingURL` is actually a reference to the same `custom.css` files we would get with `hsDebug=true`. As far as I understand, the normal CSS markup in this file doesn’t match what the browser expects from a valid CSS source map, I assume it should be a valid JSON format for a CSS source map.\n\nTo summarize:\nLooks like it is a HubSpot CMS bug and I’d like to help in any way I can. I can create a bug report elsewhere. Let me know and thanks!\n\n ***\n\nI agree that if to disable CSS source maps in your browser, the warnings will go away, but with the CSS source maps option enabled, these warnings will still only appear on HubSpot CMS based sites and not on other sites.\n\n***\n\nThese sites also have the same issue:\n<http://HubSpot.com|HubSpot.com>\n<http://boilerplate.HubSpotcms.com|boilerplate.HubSpotcms.com> (edited)"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephanie O'Gay Garcia",
+      "poster_handle": "stephanie"
+    },
+    "time_stamp": "2022-09-05 14:05:29",
+    "text": "As a custom module, I usually wrap the image in a div, then use \"object-fit: cover\" with 100% height and width. That way it looks and behaves like a background image but still keeps the alt text."
+  }
+]

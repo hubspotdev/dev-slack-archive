@@ -1,0 +1,101 @@
+[
+  {
+    "text": "Hello, am I supposed to be able to control the brand colors through the theme editor as well?\n\nExample, these are my colors I have selected through my brand kit which I use css to inherit the colors into the theme. (see attached).\n\nColors come across just fine when I go into the theme editor (see attachment) – BUT if I try to unlink the secondary branding color and change it to red, I don't see it get updated/no change occurs.\n\nShouldn't this update? What am I missing? (see arrachment)\n\nEssentially, I am trying to make sure my background colors I have set from the brand kit allows for change in the theme editor and NOT just from the brand kit page.\n\nHere's my code for testing:\n```[\n{\n  \"name\": \"primary_branding_color\",\n  \"label\": \"Primary Branding Color\",\n  \"type\": \"color\",\n  \"hidden\": true,\n  \"default\": {\n    \"color\": \"#000\"\n  },\n  \"inherited_value\": {\n    \"property_value_paths\": {\n      \"color\": \"brand_settings.primaryColor\"\n    }\n  }\n},\n  {\n  \"name\": \"secondary_branding_color\",\n  \"label\": \"Secondary Branding Color\",\n  \"type\": \"color\",\n  \"hidden\": true,\n  \"default\": {\n    \"color\": \"#000\"\n  },\n  \"inherited_value\": {\n    \"property_value_paths\": {\n      \"color\": \"brand_settings.secondaryColor\"\n    }\n  }\n},\n    {\n  \"name\": \"accent_branding_body_text_color\",\n  \"label\": \"Body Text Branding Color\",\n  \"type\": \"color\",\n  \"hidden\": true,\n  \"default\": {\n    \"color\": \"#000\"\n  },\n  \"inherited_value\": {\n    \"property_value_paths\": {\n      \"color\": \"brand_settings.accentColor1\"\n    }\n  }\n},\n{\n  \"label\": \"Footer Link Text Color\",\n    \"name\": \"footerlink_text_color\",\n    \"type\": \"color\",\n    \"default\": {\n      \"color\": \"#000\"\n    }\n}\n]```\n```h2, p, h3 {\n    font-family: arial;\n    color: {{brand_settings.accentColor1.hex}};\n}\nheader {\n    padding: 10px 6%;\n    background: {{brand_settings.primaryColor.hex}};\n    margin-bottom: 0;\n    color: {{theme.header_text_color.color }};\n}\nfooter {\n  background: {{brand_settings.secondaryColor.hex}};\n  padding: 20px 6%;\n  margin-top: 5%;\n}```\n",
+    "time_stamp": "2025-02-11 08:39:48",
+    "reply_count": 8,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2025-02-11 10:24:58"
+      },
+      {
+        "time_stamp": "2025-02-11 10:44:36"
+      },
+      {
+        "time_stamp": "2025-02-11 10:45:00"
+      },
+      {
+        "time_stamp": "2025-02-11 10:54:20"
+      },
+      {
+        "time_stamp": "2025-02-11 11:04:33"
+      },
+      {
+        "time_stamp": "2025-02-11 11:08:53"
+      },
+      {
+        "time_stamp": "2025-02-11 11:17:23"
+      },
+      {
+        "time_stamp": "2025-02-11 12:51:19"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2025-02-11 10:24:58",
+    "text": "Hey <@U030ZNR7QUU>,\nit seems like the CSS part is a bit off.\nIf you write it like it is right now\n```h2, p, h3 {\n    font-family: arial;\n    color: {{brand_settings.accentColor1.hex}};\n}\nheader {\n    padding: 10px 6%;\n    background: {{brand_settings.primaryColor.hex}};\n    margin-bottom: 0;\n    color: {{theme.header_text_color.color }};\n}\nfooter {\n  background: {{brand_settings.secondaryColor.hex}};\n  padding: 20px 6%;\n  margin-top: 5%;\n}```\nthe settings from the theme settings won't be applied.\n\nIf you like to have the theme values being applied it should look like this:\n```h2, p, h3 {\n    font-family: arial;\n    color: {{theme.accent_branding_body_text_color.css}};\n}\nheader {\n    padding: 10px 6%;\n    background: {{theme.primary_branding_color.css}};\n    margin-bottom: 0;\n    color: {{theme.header_text_color.color }};\n}\nfooter {\n  background: {{theme.secondaryColor.css}};\n  padding: 20px 6%;\n  margin-top: 5%;\n}```\nalso: with colors you have a few options to render.\n.color will provide the color(hex) value\n.opacity will provide the opactiy(if there's one)\n.css will render the color as hex or rgb(if you set a different opacity than \"100\")\n\nalso - in order to remove the opacity option from the color field, add this to each color field you don't want to have opacity:\n```\"visibility\": {\n\t\t\t\t\t\"hidden_subfields\": {\n\t\t\t\t\t\t\"opacity\": true\n\t\t\t\t\t}\n\t\t\t\t},```\nSo the whole color field looks like this:\n```{\n\t\t\t\t\"name\": \"primary\",\n\t\t\t\t\"alternate_names\": [\"primary_color\"],\n\t\t\t\t\"label\": \"Primary color\",\n\t\t\t\t\"required\": false,\n\t\t\t\t\"locked\": false,\n\t\t\t\t\"inline_help_text\": \"\",\n\t\t\t\t\"help_text\": \"\",\n\t\t\t\t\"type\": \"color\",\n\t\t\t\t\"inherited_value\": {\n\t\t\t\t\t\"property_value_paths\": {\n\t\t\t\t\t\t\"color\": \"brand_settings.primaryColor\"\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t\t\"visibility\": {\n\t\t\t\t\t\"hidden_subfields\": {\n\t\t\t\t\t\t\"opacity\": true\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t\t\"default\": {\n\t\t\t\t\t\"color\": \"#A8EB12\"\n\t\t\t\t}\n\t\t\t}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Libby Noffsinger",
+      "poster_handle": "libbyn"
+    },
+    "time_stamp": "2025-02-11 10:44:36",
+    "text": "So is there a way to control both the primary color from the theme settings and the brand kit settings so they sync together? <@UJAPS2K4N>"
+  },
+  {
+    "poster": {
+      "poster_name": "Libby Noffsinger",
+      "poster_handle": "libbyn"
+    },
+    "time_stamp": "2025-02-11 10:45:00",
+    "text": "That's what I feel like I am missing from the the overall functionality :disappointed:"
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2025-02-11 10:54:20",
+    "text": "Not sure if I get you right...\n\nFor global settings such as colors, I'd recommend to use theme values only in the css. Doing so will allow you to have a single place with color settings.\nUsually when creating a theme that should be used several times(e.g Marketplace or several brandkits), you want to utilize brand settings since it's a good starting point. If you're creating a theme for a single purpose, you don't need to rely on brand settings. This means:\nIf you want to disable the \"linkage\" to a brandkit, simply remove the \"inherited_value\"... part from a color field.\n\nThe best practise for brand settings&amp;theme settings inheritance is:\nbrand settings -&gt; theme settings -&gt; CSS\nSo brand settings are inherited to theme settings and can be overwritten by them. The result from the theme settings is put to the CSS. This ensures that you have only one source of information"
+  },
+  {
+    "poster": {
+      "poster_name": "Libby Noffsinger",
+      "poster_handle": "libbyn"
+    },
+    "time_stamp": "2025-02-11 11:04:33",
+    "text": "Okay, thanks for the input! So truly, I can't control/change the brandkit colors (primary color for example) in the theme editor. Even though it shows up in the theme editor?\n\nThat's my main holdup."
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2025-02-11 11:08:53",
+    "edited": {
+      "time_stamp": "2025-02-11 11:09:10"
+    },
+    "text": "Yes and no. :sweat_smile: \nYou cannot change the value of the color in the brandkit settings via theme settings, but if you inherit the brand kit color into the theme you can overwrite the value in the theme settings. The most important part is to use {{ theme.}} in your css instead of {{ brand_settings.}}}"
+  },
+  {
+    "poster": {
+      "poster_name": "Libby Noffsinger",
+      "poster_handle": "libbyn"
+    },
+    "time_stamp": "2025-02-11 11:17:23",
+    "text": "Got it, that makes sense! That's where I was struggling.. especially since the brandkit colors show up in the theme editor. Just feel like I should have control there as well if it's going to show up. THANK YOU!"
+  },
+  {
+    "poster": {
+      "poster_name": "Jennifer Nixon",
+      "poster_handle": "jnixon"
+    },
+    "time_stamp": "2025-02-11 12:51:19",
+    "text": "I think the purpose is that the brand kit is the source of truth, you can use it in a theme or override it for that theme, but you can't change the brand kit colors without editing it directly."
+  }
+]

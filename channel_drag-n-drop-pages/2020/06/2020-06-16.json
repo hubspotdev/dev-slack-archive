@@ -1,0 +1,88 @@
+[
+  {
+    "poster": {
+      "poster_name": "Mirza Bilal",
+      "poster_handle": "mibaig"
+    },
+    "time_stamp": "2020-06-16 06:13:32",
+    "edited": {
+      "time_stamp": "2020-06-16 06:42:18"
+    },
+    "text": "I am trying to solve a problem. Our website need a *global carousel* having some items which can be displayed in one or more of the following pages depending upon their properties:\n• A page\n• B Page\n• C Page\nLet's say our carousel has five items:\n• Item 1 - *A*\n• Item 2 - *A + B*\n• Item 3 - *A + C*\n• Item 4 - *C*\n• Item 5 - *B + C*\nWhen the carousel component is dragged onto the *A page*, it should show:\n*A page should show*:\n• Item 1\n• Item 2\n• Item 3\n*B page should show*:\n• Item 2 \n• Item 5\n*C page should show*:\n• Item 3\n• Item 4\n• Item 5\nIn order to achieve this, what we are planning to do is to build a Global module that will allow our content creators to upload content from a single place and mark that content for the pages to display.",
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2020-06-16 06:29:39"
+      },
+      {
+        "time_stamp": "2020-06-16 06:40:24"
+      },
+      {
+        "time_stamp": "2020-06-16 06:57:12"
+      },
+      {
+        "time_stamp": "2020-06-16 07:00:32"
+      },
+      {
+        "time_stamp": "2020-06-16 08:01:45"
+      },
+      {
+        "time_stamp": "2020-06-16 08:43:19"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Stephanie O'Gay Garcia",
+      "poster_handle": "stephanie"
+    },
+    "time_stamp": "2020-06-16 06:29:39",
+    "edited": {
+      "time_stamp": "2020-06-16 06:31:13"
+    },
+    "text": "I did something similar to this - what I ended up doing was having two modules:\n\n• The global module where the client added in all items and set each item's type(s) - in this case partner logos and their verticals\n• A custom module at the page level where the client sets the page type(s) which are then added to the page as body class(es) - in this case the page vertical\nThen I used CSS to hide any items that aren't of that page's type(s).\n\nBecause you can't set page level fields on the global group I found I needed that second page level module, but perhaps if there's some other way of identifying the page type you wouldn't need it."
+  },
+  {
+    "poster": {
+      "poster_name": "Mirza Bilal",
+      "poster_handle": "mibaig"
+    },
+    "time_stamp": "2020-06-16 06:40:24",
+    "edited": {
+      "time_stamp": "2020-06-16 06:43:39"
+    },
+    "text": "Thanks <@UBUNBSM24>, can we use the HubDB to save data from global module for content from client.\nThe second module will fetch the data and create the layout according to page. is it possible to do this way?\n\nwant to create a carousel with filter option for each page. which section to display on *Page A* and which to *Page B*"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephanie O'Gay Garcia",
+      "poster_handle": "stephanie"
+    },
+    "time_stamp": "2020-06-16 06:57:12",
+    "text": "If you're using HubDB I don't think you need both modules. Create a local module that fetches all items from the HubDB table, one or more custom fields to set what they filter by on that specific page and update your filter to something like this: `{% set items = hubdb_table_rows({{ TABLE_ID }}, '&amp;your_hubbd_column__contains='~module.custom_field|urlencode  %}`\n\n You can combine HubDB and fields on your custom modules to set your HubDB table filters."
+  },
+  {
+    "text": "This is the specific example. There's an \"authors\" HubDB table and this module has a field to let them choose a \"research topic\" they want to filter by. The values in my module's research_topic field match the select options on the HubDb table's \"Research Topic\" column.\n\nIf it's a multiselect you could use multiple boolean fields and work out some logic.",
+    "time_stamp": "2020-06-16 07:00:32"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2020-06-16 08:01:45",
+    "edited": {
+      "time_stamp": "2020-06-16 08:02:12"
+    },
+    "text": "You could accomplish this using a global module. You would have to build a repeating group that would work for the slides and then inside that repeating group have another repeating group for the “Page” selector to choose what pages to show on\n\nYou would then want to compare the `{{content.id}}` var and make sure its `IN` the set of pages.\n\nFor example. here is some starting code:\n\n```{# wrapping div which is often the slider container #}\n  &lt;div&gt; \n    {# This is our main for loop to go through the repeating group (our slides) #}\n    {% for item in module.items %}\n        {# Next create an empty array to store the page ids where the slides need to be shown #}\n        {% set pageIds = [] %}\n\n        {% for pages in item.nested_group %}\n            {# Use the append function <https://designers.HubSpot.com/docs/hubl/functions#append> to add items to array  #}\n            {% do pageIds.append(content_by_id(pages.page_field).id) %}\n        {% endfor %}\n\n        {# IF statement to see if the current pages ID is in the array #}\n        {% if content_id in pageIds %}\n            {# YOUR SLIDER HERE #}\n        {% endif %}\n\n    {% endfor %}\n  &lt;/div&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Mirza Bilal",
+      "poster_handle": "mibaig"
+    },
+    "time_stamp": "2020-06-16 08:43:19",
+    "text": "<@U2H3TT8F2> Thanks for your, the content.id have worked for me, that part was missing and filled it."
+  }
+]

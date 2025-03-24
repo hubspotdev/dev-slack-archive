@@ -1,0 +1,299 @@
+[
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-01-30 06:13:01",
+    "text": "Do you mean, before the JS module is loaded by the browser? Or before it renders? or...?"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-01-30 06:14:06",
+    "text": "Is this from a 3rd party library?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-01-30 06:15:53",
+    "text": "not 100% sure, the goal is to have a light/dark mode theme state saved to localstorage so that when a user loads, it can show dark mode without a flash of unstyled colors"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-01-30 06:16:43",
+    "text": "I guess the server side stuff is a problem in this scenario? How would it know?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-01-30 06:17:18",
+    "text": "no, it's more like a pattern. I can show you, one sec"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-01-30 06:17:35",
+    "text": "Right, unless that value was saved somewhere else and passed along in a module field or partial param."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-01-30 06:18:07",
+    "text": "```export default function ThemeProvider({ children }) {\n  const [theme, setTheme] = useState('dark');\n  return (\n    &lt;ThemeContext.Provider value={{ theme, setTheme }}&gt;\n      {children}\n    &lt;/ThemeContext.Provider&gt;\n  );\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-01-30 06:18:35",
+    "text": "I have this in a separate file now and don't try to use {theme} directly inside before loading {useContext} from another component"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-01-30 06:18:54",
+    "text": "the setup as is works and is ideal"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-01-30 06:21:08",
+    "text": "so if I can find a way to pass it into the module that would work? hmm..."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-01-30 06:22:45",
+    "text": "```  {% js_module \"app_js_module\"\n    extra_classes=\"app-js-module\",\n    path=\"@projects/palettes-project/cms-assets/components/modules/App\" %}```\nI probably copied from the todo-list example"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-01-30 06:22:58",
+    "text": "I can access `extra_classes` somewhere/somehow I assume"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-01-30 06:23:47",
+    "text": "and can I pass an element through to here in the template?\n```    {% block body %}\n    {% endblock body %}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-01-30 06:24:05",
+    "text": "in theory, I can load that value in the `&lt;head&gt;` and then pass it along"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-01-30 06:24:31",
+    "text": "add it as -data- to a div or something"
+  },
+  null,
+  null,
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2023-01-30 07:30:47",
+    "text": "Note, we fixed this issue with missing modules in non-js rendered page last Friday afternoon (EST). It was a bit of a head-scratcher, since the bug has been around for months but it only impacted accounts with more than 500 total modules (and in pages that used modules that were beyond that set of 500).\n\nAnywho, sorry for the trouble! Thanks again for letting us now. I _think_ some of your accounts have already had the beta re-enabled and we’ll make sure to do that for everyone else today (/cc <@U03U053QC72>)"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-01-30 07:38:04",
+    "text": "Interesting, I don’t think I’ve ever run into this before but yes accessing the changed context value only works from components “below” the `ThemeProvider` in the react element tree. A little more on that at <https://stackoverflow.com/a/58153106>\n\nOne way to think of this is `&lt;ThemeProvider&gt;{useHookDependingOnTheme()}&lt;/ThemeProvider&gt;` is essentially like this to React:\n\n```const someThemeDependentValue = useHookDependingOnTheme();\n\nreturn &lt;ThemeProvider&gt;{someThemeDependentValue}&lt;/ThemeProvider&gt;```\n… so `useHookDependingOnTheme()` is actually being called _before_ `ThemeProvider` does anything. (However `&lt;ThemeProvider&gt;&lt;ChildComponent /&gt;&lt;/ThemeProvider&gt;` is different because the provider will have been called before the child component renders."
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-01-30 07:41:25",
+    "text": "I strongly suspect that currently our JS partials &amp; modules will not support outputting the `&lt;body&gt;` , so currently the body needs to live in the HubL template.\n\nThat’s not great, maybe addressable in the future… but I figure/hope using some `&lt;div&gt;` as your partial/module/app component’s root can work too (I’m fairly certain this would be a complex change how our “hybrid React + HubL” system works and not likely on our list soon)"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-01-30 08:01:02",
+    "text": "&gt; in theory, I can load that value in the `&lt;head&gt;` and then pass it along\nIf I’m following correctly, that won’t work. If a visitor refreshes your page:\n• The only way to get a local storage value is via client (browser)-side JavaScript\n• Yes, you could put some vanilla JS in the HEAD, but that actually won’t execute until _all_ of the server-side HTML is already generated**\n• So there is no notion of directly “passing” a browser JS variable to server-side rendering, because the server HTML has already been generated at that point (we should find a link to a typical server-side + client JS diagram to help)\nNow you _could_ do something like this (though I wouldn’t really recommend it):\n• First load of your page, your server-side HTML is rendered but is inside a single div that is `display:none`\n• The first visit on the client, some vanilla JS high in the document can check local storage, notice nothing is set, use/enable whatever default theme you want (classname toggle?), and then show that root div\n• If a visitor changes from light &lt;-&gt; dark, you set a local storage value\n• … so that next visit the new local storage value will be found before the div is made visible\n• However, that somewhat defeats the purpose of server-rending in the first class (might be a useful trade-off in some specific scenarios but I doubt a good general pattern)\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-01-30 08:01:50",
+    "text": "However I would recommend either…\n1. Saving the local storage setting in a cookie, accessing that value via Hubl {{ request.cookies.cookie_name }}, and passing that to your JS component\n2. Or not worrying about server rendering and using clientOnly={true} in your island to only render that component (&lt;App&gt;?) in the browser\nDepending on the situation the trade-offs for each of those might be better. In (1), you are  possibly making your server-render slower… assuming that the cookie is the _only dynamic per request piece of data_ you need (i.e. without that cookie you could prerender and cache the server HTML to be the same for every visitor).\n\nIn (2) you are waiting to render most-to-all of your HTML until JS is downloaded and executed. In many cases that is slower than a dynamic server-render would be, but in some app/long-session situations that perf is just fine (and the trade-off of not having to worry about server &lt;-&gt; client discrepancies is worth it).\n\nMy guess is that in your current case, (1) is the better call since your server-JS rendering already has to be dynamic for every visitor (grabbing values from HubDB)."
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-01-30 08:10:10",
+    "text": "**: Very subtle footnote about “until all of the server-side HTML is generated” that I’m kinda skeptical to even mention for now since it really gets into the nitty gritty of advanced optimizations…\n\nThere is a potential world (won’t work for now… and maybe never in our hybrid rendering with HubL approach?) where the server could _stream_ in the dynamic HTML after the `&lt;head&gt;` was sent. If you were careful then the vanilla head JS could run in parallel on the client while the server is still dynamically fetching and rendering the rest of the HTML. And then the vanilla JS _may_ finish running, accessing local storage, and flipping some body  classname to set the theme and make the app root visible before/just after the server-rendered HTML comes in.\n\nBut again, that is much more a thought experiment to think more deeply about server &lt;-&gt; client nuance rather than something that is actually worth considering… because the cookie solution is simpler &amp; better in many cases (and again we don’t do any HTML _streaming_ in our hybrid React + HubL rendering)"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-01-30 08:12:31",
+    "text": "wow, I appreciate the thorough response and considerations. thank you"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-01-30 08:12:41",
+    "text": "I'll have to think about it / re-read this"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-01-30 08:15:06",
+    "text": "the body does live in the HubL template. Let me double check but I'm pretty sure it's still not being passed / rendered"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-01-30 08:16:19",
+    "text": "<@UCY83QS6Q> yea, if I add a class to body in the hubl template, it does not show up when the app runs"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-01-30 08:16:38",
+    "text": "```  &lt;body class=\"something\"&gt;\n    {% block body %}\n    {% endblock body %}\n    {{ standard_footer_includes }}\n  &lt;/body&gt;```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-01-30 08:19:33",
+    "text": "To double check, where is `{% block body %}` defined and does it have its own `&lt;body&gt;` too?"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-01-30 08:20:16",
+    "text": "(and has this hubl change been uploaded… separately from the react project?)"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-01-30 08:20:57",
+    "text": "```{% block body %}\n\n  {% js_module \"app_js_module\"\n    theme=\"dark\",\n    path=\"@projects/palettes-project/cms-assets/components/modules/App\" %}\n\n{% endblock body %}```\nin a separate file. Same as the react example boilerplate"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-01-30 08:21:17",
+    "text": "and this is in localhost..."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-01-30 08:21:21",
+    "text": "so duh probably"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-01-30 08:21:33",
+    "text": "I forgot about that"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-01-30 08:24:10",
+    "text": "right, that makes sense. The solution of keeping/exporting context and ThemeProvider from a separate file works and feels clean"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-01-30 08:24:47",
+    "text": "I'm pretty sure I was only trying to use it directly to test but in the end it made more sense to useContext elsewhere"
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2023-01-30 08:26:24",
+    "text": "Yeah, easy to forget that with the “local proxying” that only is for JS components and all HubL changes still need to get uploaded.\n\nWe have a few potential ideas on how to make this better in the future (JS components inside your HubL theme and both are built together, maybe better dev server that can make it easier to watch HubL changes to upload and locally compile JS components at the same time, etc). But will noodle some on other smaller things we can do to help."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-01-30 08:28:05",
+    "text": "as you think about those, keep in mind that I'm probably using this private beta differently than I would the actual solution. I imagine using way more small, self-contained modules on landing pages + website pages vs. this \"app\" approach I am taking now"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-01-30 08:30:33",
+    "text": "Maybe… I think both of those use-cases are going to be likely (maybe not 50/50 but still not a big minority thing?). So I don’t want to underscore/disregard these things too much :+1:"
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2023-01-30 08:39:08",
+    "text": "Note, if useful to others we went deep into client-side and sever-side trade offs in this thread (particularly around light/dark mode, local storage/cookie, etc)"
+  }
+]

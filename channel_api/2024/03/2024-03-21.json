@@ -1,0 +1,575 @@
+[
+  {
+    "text": "I am currently working with the HubSpot API and I have encountered an issue that I need help with. I am trying to retrieve rows from a HubDB table using the HubSpotClient.cms.hubdb.rowsApi.getTableRows method from the <@UDA553DRD>/api-client Node.js library.\nAccording to the API documentation, it is possible to filter and sort the results by adding query parameters to the API request. However, it is not clear how to do this using the getTableRows method. Specifically, I would like to filter the rows based on a specific zip code. Could you please provide guidance on how to apply a filter to the getTableRows method? Any help would be greatly appreciated.",
+    "time_stamp": "2024-03-21 03:55:25",
+    "reply_count": 4,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-03-21 04:10:26"
+      },
+      {
+        "time_stamp": "2024-03-21 04:11:33"
+      },
+      {
+        "time_stamp": "2024-03-21 06:50:42"
+      },
+      {
+        "time_stamp": "2024-04-16 05:27:50"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Christensen Magtoto",
+      "poster_handle": "chris858"
+    },
+    "time_stamp": "2024-03-21 04:10:26",
+    "text": "Hello Oltian, it's in the overview section. You are in the Endpoint section I think. To give you an idea column is the name of the column in HubDB and gt stands for greater than. Example: name__eq=Chris then it will return the row with name as Chris."
+  },
+  {
+    "poster": {
+      "poster_name": "Oltian Kadriu",
+      "poster_handle": "oltian.kadriu"
+    },
+    "time_stamp": "2024-03-21 04:11:33",
+    "edited": {
+      "time_stamp": "2024-03-21 04:13:17"
+    },
+    "text": "Hi Christensen, I understood that, but I mean how can I use it in the code?\n\n`async function getHubDBData(HubSpotClient, tableIdOrName, sort, after, limit, properties) { return await HubSpotClient.cms.hubdb.rowsApi.getTableRows(tableIdOrName, sort, after, limit, properties); }`\n\n`const apiResponse = await getHubDBData(HubSpotClient, tableIdOrName, sort, after, limit, properties);`\n\nI got this, but I don't know how to pass the filter here. We just got sort."
+  },
+  {
+    "text": "Hi Amalia, I really appreciate your assistance! As you can see in the screenshot, I have retrieved a target's details, the hs_assignee_user_id is 61832395, but the user_id should be 610645284 when I request by client.crm.owners.owners_api.get_page(limit=200, archived=False).results",
+    "time_stamp": "2024-03-21 05:18:27"
+  },
+  {
+    "poster": {
+      "poster_name": "Mingkang Wang",
+      "poster_handle": "mingkang.wang"
+    },
+    "time_stamp": "2024-03-21 05:19:52",
+    "text": "Does the same user have multiple different ids in HubSpot?"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-03-21 05:37:07",
+    "text": "Here is the endpoint the docs show - remove the /api/ from yours I think:  */files/v3/files/{fileId}*"
+  },
+  {
+    "poster": {
+      "poster_name": "Christensen Magtoto",
+      "poster_handle": "chris858"
+    },
+    "time_stamp": "2024-03-21 06:50:42",
+    "text": "Unfortunately I also don't see how to do it in the NodeJS library but this is doable using HTTP request."
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-03-21 09:00:29",
+    "text": "Try to get the id not the user_id from the client.crm.owners.owners_api"
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-03-21 09:00:53",
+    "text": "Retrieve a list of owners\n\nTo retrieve the owners in your account, make a `GET` request to `/crm/v3/owners`. The response will return each user’s name, email, ID values, create/update dates, and if applicable, team information. Two ID values are returned, which are used for different purposes:\n• `id`: the ID of the owner. This value should be used when retrieving information about a specific owner, and when assigning an owner to a record or activity.\n• `userId`: the ID of the user. This value can be used to specify users in the <https://developers.HubSpot.com/docs/api/settings/user-provisioning|settings API>, but will result in an error if it is used to assign ownership.\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Sakshi Bansal",
+      "poster_handle": "sakshib103"
+    },
+    "time_stamp": "2024-03-21 09:02:02",
+    "edited": {
+      "time_stamp": "2024-03-21 09:19:33"
+    },
+    "text": "Hi can anyone help me with this link? how do we use this link and how we use it in HubSpot? i think its an internal api of HubSpot but dont know how to use this\n/_hcms/api/lexcForm",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-04-07 15:24:15"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Aitor",
+      "poster_handle": "aitor.tomas"
+    },
+    "time_stamp": "2024-03-21 10:01:36",
+    "edited": {
+      "time_stamp": "2024-03-21 10:01:52"
+    },
+    "text": "I believe that is a bug (I faced the same issue). If the custom object that you create contains a space (multi-word), then the internal name contains a `_` and you cannot reference anymore by internal name when you run API requests. For example, if instead of `Critical Events` (internal name: `critical_events`) you would have called it `CriticalEvents` (internal name: `criticalevents`), it would work."
+  },
+  {
+    "poster": {
+      "poster_name": "Aitor",
+      "poster_handle": "aitor.tomas"
+    },
+    "time_stamp": "2024-03-21 10:09:48",
+    "edited": {
+      "time_stamp": "2024-03-21 10:10:20"
+    },
+    "text": "Does anyone know how is the best way to open a bug report for the API? If I go via the normal support line, it will take me ages before it is actually properly taken.\n\nThe problem is the following:\nIf you create a custom object that contains a space in the name, then you cannot make API requests using the internal name.\nTo reproduce:\n1. Create a custom object called `My object` (internal name will be `my_objects`).\n2. Make an API call like: `GET` - <https://api.hubapi.com/crm/v3/objects/my_objects>\n3. It will return: `400` - `Unable to infer object type from: my_objects`.\nOn the other hand, if instead of calling the object `My object` we call it `MyObject` (internal name will be `myobjects`) and therefore calling `GET` - <https://api.hubapi.com/crm/v3/objects/myobjects> will return 200.",
+    "reply_count": 27,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-03-21 10:16:03"
+      },
+      {
+        "time_stamp": "2024-03-21 10:24:09"
+      },
+      {
+        "time_stamp": "2024-03-21 10:29:29"
+      },
+      {
+        "time_stamp": "2024-03-21 10:29:54"
+      },
+      {
+        "time_stamp": "2024-03-21 10:30:32"
+      },
+      {
+        "time_stamp": "2024-03-21 10:30:37"
+      },
+      {
+        "time_stamp": "2024-03-21 10:30:47"
+      },
+      {
+        "time_stamp": "2024-03-21 10:31:07"
+      },
+      {
+        "time_stamp": "2024-03-21 10:31:18"
+      },
+      {
+        "time_stamp": "2024-03-21 10:31:33"
+      },
+      {
+        "time_stamp": "2024-03-21 10:32:40"
+      },
+      {
+        "time_stamp": "2024-03-21 10:33:09"
+      },
+      {
+        "time_stamp": "2024-03-21 10:33:23"
+      },
+      {
+        "time_stamp": "2024-03-21 10:33:44"
+      },
+      {
+        "time_stamp": "2024-03-21 10:34:10"
+      },
+      {
+        "time_stamp": "2024-03-21 10:34:40"
+      },
+      {
+        "time_stamp": "2024-03-21 10:35:33"
+      },
+      {
+        "time_stamp": "2024-03-21 10:36:14"
+      },
+      {
+        "time_stamp": "2024-03-21 10:39:50"
+      },
+      {
+        "time_stamp": "2024-03-21 10:40:50"
+      },
+      {
+        "time_stamp": "2024-03-21 10:42:04"
+      },
+      {
+        "time_stamp": "2024-03-21 10:44:32"
+      },
+      {
+        "time_stamp": "2024-03-21 10:44:54"
+      },
+      {
+        "time_stamp": "2024-03-21 10:45:05"
+      },
+      {
+        "time_stamp": "2024-03-21 10:45:11"
+      },
+      {
+        "time_stamp": "2024-03-22 10:13:36"
+      },
+      {
+        "time_stamp": "2024-03-22 10:14:31"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-21 10:16:03",
+    "text": "Do me a favor and fetch the all object schemas and paste the results...\n\nGET *`/crm/v3/schemas`*"
+  },
+  {
+    "poster": {
+      "poster_name": "Aitor",
+      "poster_handle": "aitor.tomas"
+    },
+    "time_stamp": "2024-03-21 10:24:09",
+    "text": "I removed irrelevant information:\n```{\"results\"=&gt;\n  [\n    {\n      \"labels\"=&gt;{\"singular\"=&gt;\"MyObject\", \"plural\"=&gt;\"MyObjects\"},\n      \"requiredProperties\"=&gt;[\"name\"],\n      \"searchableProperties\"=&gt;[\"name\"],\n      \"primaryDisplayProperty\"=&gt;\"name\",\n      \"secondaryDisplayProperties\"=&gt;[],\n      \"description\"=&gt;nil,\n      \"archived\"=&gt;false,\n      \"restorable\"=&gt;true,\n      \"metaType\"=&gt;\"PORTAL_SPECIFIC\",\n      \"id\"=&gt;\"26293852\",\n      \"fullyQualifiedName\"=&gt;\"pXXXXXX_myobjects\",\n      \"createdAt\"=&gt;\"2024-03-21T16:17:18.934Z\",\n      \"updatedAt\"=&gt;\"2024-03-21T16:17:20.347Z\",\n      \"updatedByUserId\"=&gt;1067175,\n      \"objectTypeId\"=&gt;\"2-26293852\",\n      \"properties\"=&gt;\n        [],\n      \"associations\"=&gt;\n        [],\n      \"name\"=&gt;\"myobjects\"\n    },\n    {\n      \"labels\"=&gt;{\"singular\"=&gt;\"My object\", \"plural\"=&gt;\"My objects\"},\n      \"requiredProperties\"=&gt;[\"name\"],\n      \"searchableProperties\"=&gt;[\"name\"],\n      \"primaryDisplayProperty\"=&gt;\"name\",\n      \"secondaryDisplayProperties\"=&gt;[],\n      \"description\"=&gt;nil,\n      \"archived\"=&gt;false,\n      \"restorable\"=&gt;true,\n      \"metaType\"=&gt;\"PORTAL_SPECIFIC\",\n      \"id\"=&gt;\"26293848\",\n      \"fullyQualifiedName\"=&gt;\"pXXXXXX_my_objects\",\n      \"createdAt\"=&gt;\"2024-03-21T16:17:03.286Z\",\n      \"updatedAt\"=&gt;\"2024-03-21T16:17:04.833Z\",\n      \"updatedByUserId\"=&gt;1067175,\n      \"objectTypeId\"=&gt;\"2-26293848\",\n      \"properties\"=&gt;\n        [],\n      \"associations\"=&gt;\n        [],\n      \"name\"=&gt;\"my_objects\"}\n  ]\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Phil",
+      "poster_handle": "moneytech.ltd"
+    },
+    "time_stamp": "2024-03-21 10:24:15",
+    "text": "Ok thanks for informations"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-21 10:29:29",
+    "text": "Try to fetch the object using the \"objectTypeId\" value instead of the name"
+  },
+  {
+    "poster": {
+      "poster_name": "Aitor",
+      "poster_handle": "aitor.tomas"
+    },
+    "time_stamp": "2024-03-21 10:29:54",
+    "edited": {
+      "time_stamp": "2024-03-21 10:30:05"
+    },
+    "text": "It works in both cases, that is how I currently do it"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-21 10:30:32",
+    "text": "Based on your initial message you are calling <https://api.hubapi.com/crm/v3/objects/my_objects>"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-21 10:30:37",
+    "text": "not"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-21 10:30:47",
+    "text": "<https://api.hubapi.com/crm/v3/objects/2-26293848>"
+  },
+  {
+    "poster": {
+      "poster_name": "Aitor",
+      "poster_handle": "aitor.tomas"
+    },
+    "time_stamp": "2024-03-21 10:31:07",
+    "text": "That works, that is how I currently handle custom objects with a space in the name"
+  },
+  {
+    "poster": {
+      "poster_name": "Christensen Magtoto",
+      "poster_handle": "chris858"
+    },
+    "time_stamp": "2024-03-21 10:31:18",
+    "text": "I believe you can also do this: <https://api.hubapi.com/crm/v3/objects/pXXXXXX_myobjects>"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-21 10:31:33",
+    "text": "Agreed - the fullyQualifiedName value ^"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-21 10:32:40",
+    "text": "I think the best practice is to use internal names when calling objects.  This elliminates any issues with having a space between the name."
+  },
+  {
+    "poster": {
+      "poster_name": "Aitor",
+      "poster_handle": "aitor.tomas"
+    },
+    "time_stamp": "2024-03-21 10:33:09",
+    "text": "with fullyQuailifedName it works"
+  },
+  {
+    "poster": {
+      "poster_name": "Aitor",
+      "poster_handle": "aitor.tomas"
+    },
+    "time_stamp": "2024-03-21 10:33:23",
+    "text": "The only case in which it does not work is when using `internal name`"
+  },
+  {
+    "poster": {
+      "poster_name": "Aitor",
+      "poster_handle": "aitor.tomas"
+    },
+    "time_stamp": "2024-03-21 10:33:44",
+    "text": "For me it is clearly a bug"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-21 10:34:10",
+    "text": "Ok - good that there is a workaround for it then"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-21 10:34:40",
+    "text": "I'm not sure where you would report this and if/when it would be prioritized"
+  },
+  {
+    "poster": {
+      "poster_name": "Aitor",
+      "poster_handle": "aitor.tomas"
+    },
+    "time_stamp": "2024-03-21 10:35:33",
+    "text": "Currently I am using the IDs but it is not ideal as I have multiple portals using the same custom objects and I need to check per portal the ID (using the fullyQualifiedName also requires to add the portal ID). Ideally, accessing by name would simplify big time my code."
+  },
+  {
+    "poster": {
+      "poster_name": "Aitor",
+      "poster_handle": "aitor.tomas"
+    },
+    "time_stamp": "2024-03-21 10:36:14",
+    "edited": {
+      "time_stamp": "2024-03-21 10:36:20"
+    },
+    "text": "I identified the issue some time ago but I did not report it as I do not expect HubSpot to fix it soon"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-21 10:39:50",
+    "text": "Makes sense and can't say I didn't experience the same confusion/frustration.\n\nI would say adding code to fetch the schemas first and then filtering by your shared name would do the trick and guarantee the correct fully qualified name each time.\n\nget Schemas\nfilter where name = \"My Object\"\nreturn fullyQualifiedName"
+  },
+  {
+    "poster": {
+      "poster_name": "Aitor",
+      "poster_handle": "aitor.tomas"
+    },
+    "time_stamp": "2024-03-21 10:40:50",
+    "text": "Yes, that's a good option. It creates an additional \"unnecessary\" API request but it is a good workaround"
+  },
+  {
+    "poster": {
+      "poster_name": "Bob",
+      "poster_handle": "avpbob"
+    },
+    "time_stamp": "2024-03-21 10:41:56",
+    "text": "Is there a way to send HubSpot form data to an external API?  I've seen examples of sending external form data to HubSpot but not the other way around so far.  Thanks for any examples an or documentation you might know of.",
+    "reply_count": 9,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-03-21 10:42:34"
+      },
+      {
+        "time_stamp": "2024-03-21 10:42:57"
+      },
+      {
+        "time_stamp": "2024-03-21 10:43:46"
+      },
+      {
+        "time_stamp": "2024-03-21 10:44:14"
+      },
+      {
+        "time_stamp": "2024-03-21 10:44:28"
+      },
+      {
+        "time_stamp": "2024-03-21 10:46:51"
+      },
+      {
+        "time_stamp": "2024-03-21 10:51:37"
+      },
+      {
+        "time_stamp": "2024-03-21 11:05:21"
+      },
+      {
+        "time_stamp": "2024-03-21 11:12:51"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Christensen Magtoto",
+      "poster_handle": "chris858"
+    },
+    "time_stamp": "2024-03-21 10:42:04",
+    "text": "I think this is the baptism by fire of HubSpot to use their API. You will encounter this frustration until you figure it out that it's not the name of your object that you should use."
+  },
+  {
+    "poster": {
+      "poster_name": "Christensen Magtoto",
+      "poster_handle": "chris858"
+    },
+    "time_stamp": "2024-03-21 10:42:34",
+    "text": "Yes. I think you can do it via Workflow's webhook."
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-21 10:42:57",
+    "text": "Gotta pay for this"
+  },
+  {
+    "text": "",
+    "time_stamp": "2024-03-21 10:43:46"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-21 10:44:14",
+    "text": "Once you get Ops Hub - the amount of things you can do increases 10x"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-21 10:44:28",
+    "text": "HubSpot knows this and prices it accordingly"
+  },
+  {
+    "text": "To be honest, I would be fine if they just say \"use the ID or the fullyQualifiedName\". At least the instructions would be clear even if I do not agree with them, but literally:",
+    "time_stamp": "2024-03-21 10:44:32"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-21 10:44:54",
+    "text": "Agreed"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-21 10:45:05",
+    "text": "Gotta keep you on your toes though"
+  },
+  {
+    "poster": {
+      "poster_name": "Aitor",
+      "poster_handle": "aitor.tomas"
+    },
+    "time_stamp": "2024-03-21 10:45:11",
+    "text": "Indeed"
+  },
+  {
+    "poster": {
+      "poster_name": "Bob",
+      "poster_handle": "avpbob"
+    },
+    "time_stamp": "2024-03-21 10:46:51",
+    "text": "Thanks for the info.  I'll check that out.  I guess maybe it's possible to build a private app as well?  Not sure if we can pay for Operations Hub just yet."
+  },
+  {
+    "poster": {
+      "poster_name": "Christensen Magtoto",
+      "poster_handle": "chris858"
+    },
+    "time_stamp": "2024-03-21 10:51:37",
+    "text": "I think It's also achievable through workflow custom code. Make the trigger to when the object was created then make an HTTP request to the external API to send the HubSpot data."
+  },
+  {
+    "poster": {
+      "poster_name": "Eduardo Henrique Fernandes",
+      "poster_handle": "eduardo227"
+    },
+    "time_stamp": "2024-03-21 10:59:25",
+    "text": "anyone?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-21 11:05:21",
+    "text": "It is but this is also a paid feature"
+  },
+  {
+    "poster": {
+      "poster_name": "Bob",
+      "poster_handle": "avpbob"
+    },
+    "time_stamp": "2024-03-21 11:12:51",
+    "text": "Thanks for the input <@U05R380MLMC> <@U061DEA4H4P>.  I'll keep kicking this around and let you know how it works out.  Thanks again."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicolas Bierti",
+      "poster_handle": "nicolas.bierti"
+    },
+    "time_stamp": "2024-03-21 13:40:33",
+    "text": "<@UK277PCMP> I think you are right."
+  },
+  {
+    "poster": {
+      "poster_name": "Nooreen Ali",
+      "poster_handle": "nooreen"
+    },
+    "time_stamp": "2024-03-21 13:49:27",
+    "text": "Hey guys, I'm sure this has been asked tons before, but how would I go about filtering an API call? Specifically at this endpoint: <https://api.hubapi.com/email/public/v1/events> with the params appId={appId}&amp;eventType=DELIVERED, I want to return only \"recipients\" and \"emailCampaignId\". Adding the parameter: properties=recipient,emailCampaignId doesn't seem to do the trick."
+  },
+  {
+    "poster": {
+      "poster_name": "Eduardo Henrique Fernandes",
+      "poster_handle": "eduardo227"
+    },
+    "time_stamp": "2024-03-21 14:36:10",
+    "text": "anyone?"
+  },
+  {
+    "poster": {
+      "poster_name": "Grégory Jannin",
+      "poster_handle": "gregory.jannin"
+    },
+    "time_stamp": "2024-03-21 14:40:18",
+    "text": "Hello <@U01QVR44MEY> - I hope you are well. Have you had a chance to try it on your end?"
+  },
+  {
+    "poster": {
+      "poster_name": "Dan Robinson",
+      "poster_handle": "dan94.robinson"
+    },
+    "time_stamp": "2024-03-21 16:42:49",
+    "text": "Right on, glad to hear it Matt!"
+  }
+]

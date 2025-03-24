@@ -1,0 +1,132 @@
+[
+  null,
+  {
+    "poster": {
+      "poster_name": "Russell Benzing",
+      "poster_handle": "rbenzing"
+    },
+    "time_stamp": "2017-08-25 09:00:18",
+    "edited": {
+      "time_stamp": "2017-08-25 09:00:44"
+    },
+    "text": "Anyone know how to display a form in a design template using the export_to_template_context=True:\n{% form \"form_block_module\" form_to_use='XXXXXXX-6780-4cec-953d-8afa3fa1e538', title='Let\\'s Talk About Your Project', export_to_template_context=True %}\n\ni tried {{ widget_data.form_block_module }} but it isnt working..."
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2017-08-25 09:19:37",
+    "edited": {
+      "time_stamp": "2017-08-25 09:22:20"
+    },
+    "text": "<@U504BHZ6K> Just curious, why not just use the form module widget in the area instead of using the export_to_template_context?"
+  },
+  {
+    "poster": {
+      "poster_name": "Russell Benzing",
+      "poster_handle": "rbenzing"
+    },
+    "time_stamp": "2017-08-25 09:48:23",
+    "edited": {
+      "time_stamp": "2017-08-25 09:50:34"
+    },
+    "text": "<@U2H3TT8F2> because its in a global module and i want to change the form on a per template basis"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2017-08-25 10:11:32",
+    "text": "most i can think is using something like\n```\n{% form \"form_block_module\" form_to_use='{{ varOne }}', title='Let\\'s Talk About Your Project', export_to_template_context=True %}\n```\nthen in the edit head of the template, you set it that way using\n`{% set varOne = \"XXXXXXX-6780-4cec-953d-8afa3fa1e538\" %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Russell Benzing",
+      "poster_handle": "rbenzing"
+    },
+    "time_stamp": "2017-08-25 10:12:24",
+    "text": "ah interesting approach I would prob need to do the same to the title"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2017-08-25 10:12:38",
+    "text": "or rewriting it as a maco ... one sec"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2017-08-25 10:15:56",
+    "text": "```\n{% macro dynamicForm(title,formID)  %}\n    {% form \"form_block_module\" form_to_use='{{ formID }}', title='{{ title }} %}\n{% endmacro %}\n```\nand calling it as so in the global with a custom hubl area\n```\n{{ dynamicForm('Let\\s Talk About Your Project', 'XXXXXXX-6780-4cec-953d-8afa3fa1e538')  }}\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2017-08-25 10:17:23",
+    "text": "you could include the macro in the edit head of all the page templates or add it to a html file in the design manager and do an @import in order to add it that way so you would only ever have to edit the marco in one area"
+  },
+  {
+    "poster": {
+      "poster_name": "Russell Benzing",
+      "poster_handle": "rbenzing"
+    },
+    "time_stamp": "2017-08-25 10:18:12",
+    "text": "nice thanks i think that is the solution for sure"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2017-08-25 10:33:32",
+    "text": "<@U504BHZ6K> <@U2H3TT8F2> I pretty much exclusively run the import in all pages for a given project / initiative in a platform. One \"Macro\" file that contains all of the functions (like the one you described) just feels cleaner to me. The only issue I've run into so far seems to be when making multiple hubdb queries that feed into each other from a macro file into the template where it's @imported ... I've had what seems to be order-of-operation inconsistencies where the query would fail because a page-level variable (not present in the @imported file) doesn't evaluate in the hubdb query :X"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2017-08-25 10:35:22",
+    "text": "This is a good point on including it throughout the entire project (do you do the import in the content settings area for adding code to head?)"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2017-08-25 11:18:58",
+    "text": "I'll put it in the site / product's global header (often these macro files are for individual projects within a portal that isn't on an enterprise plan, so setting domain-specific headers like you're describing is out of the question)"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2017-08-25 11:19:50",
+    "text": "For separate blogs that need different macros, you could definitely do that (with the head HTML that applies to either/or the listing vs blog post)"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2017-08-25 11:20:02",
+    "text": "Same for sites if on enterprise and selecting the settings for that subdomain"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2017-08-25 11:20:06",
+    "text": "(or domain)"
+  }
+]

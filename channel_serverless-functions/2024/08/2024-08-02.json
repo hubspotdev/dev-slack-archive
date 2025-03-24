@@ -1,0 +1,56 @@
+[
+  {
+    "poster": {
+      "poster_name": "Andrei Axinoi",
+      "poster_handle": "andreiaxinoi"
+    },
+    "time_stamp": "2024-08-02 15:12:52",
+    "edited": {
+      "time_stamp": "2024-08-02 15:43:56"
+    },
+    "text": "Hi everyone,\nI'm facing an issue with generating a PDF in a HubSpot serverless function. I have a script that generates a PDF using the `pdf-lib` library.\nThe script works perfectly fine in my local environment. I'm able to generate and download the PDF without any issues.\nI have successfully bundled the script with Webpack, and it does generate the PDF. The script also runs well in HubSpot, as indicated by the logs. However, the PDF is not being correctly received by the client\n```.const { PDFDocument, rgb } = require('pdf-lib');\n\nasync function main(event, context, callback) {\n  try {\n    const pdfDoc = await PDFDocument.create();\n    const page = pdfDoc.addPage([600, 400]);\n    page.drawText('Hello, this is a PDF document.', {\n      x: 50,\n      y: 350,\n      size: 30,\n      color: rgb(0, 0, 0),\n    });\n\n    const pdfBytes = await pdfDoc.save();\n    const pdfBase64 = Buffer.from(pdfBytes).toString('base64');\n\n    console.log('PDF base64 length:', pdfBase64.length); // Debugging\n    console.log('PDF bytes length:', pdfBytes.length); // Debugging\n\n    callback(null, {\n      statusCode: 200,\n      headers: {\n        'Content-Type': 'application/pdf',\n        'Content-Disposition': 'attachment; filename=output.pdf',\n        'Content-Transfer-Encoding': 'base64',\n        'Content-Length': Buffer.byteLength(pdfBase64)\n      },\n      body: pdfBase64,\n      isBase64Encoded: true,\n    });\n  } catch (error) {\n    console.error('Error generating PDF:', error);\n    callback(null, {\n      statusCode: 500,\n      headers: {\n        'Content-Type': 'text/plain',\n      },\n      body: Error generating PDF: ${error.message},\n    });\n  }\n}\n\nmodule.exports = { main };```\n• The response headers and body seem to be correctly set, but the PDF is not being received by the client when the function is deployed in HubSpot.\n• The network request in the browser shows that there is no response data available.However, the script runs well in HubSpot, as indicated by the logs\n```:2024-08-02T21:00:57.948Z - SUCCESS - Execution Time: 1725ms\n2024-08-02T21:00:57.922Z        INFO    PDF base64 length: 1176\n2024-08-02T21:00:57.924Z        INFO    PDF bytes length: 880```\nIf someone wants to try it themselves, here are the steps to create the bundle using Webpack: Create a folder an run npm init\n1. *Install Dependencies*:\n```npm install pdf-lib babel-loader @babel/core @babel/preset-env webpack webpack-cli --save-dev```\n*2. Create `createPdf.js`*\n```const { PDFDocument, rgb } = require('pdf-lib');\n\nasync function main(event, context, callback) {\n  try {\n    const pdfDoc = await PDFDocument.create();\n    const page = pdfDoc.addPage([600, 400]);\n    page.drawText('Hello, this is a PDF document.', {\n      x: 50,\n      y: 350,\n      size: 30,\n      color: rgb(0, 0, 0),\n    });\n\n    const pdfBytes = await pdfDoc.save();\n    const pdfBase64 = Buffer.from(pdfBytes).toString('base64');\n\n    console.log('PDF base64 length:', pdfBase64.length);\n    console.log('PDF bytes length:', pdfBytes.length); \n\n    callback(null, {\n      statusCode: 200,\n      headers: {\n        'Content-Type': 'application/pdf',\n        'Content-Disposition': 'attachment; filename=output.pdf',\n        'Content-Transfer-Encoding': 'base64',\n        'Content-Length': Buffer.byteLength(pdfBase64)\n      },\n      body: pdfBase64,\n      isBase64Encoded: true,\n    });\n  } catch (error) {\n    console.error('Error generating PDF:', error);\n    callback(null, {\n      statusCode: 500,\n      headers: {\n        'Content-Type': 'text/plain',\n      },\n      body: `Error generating PDF: ${error.message}`,\n    });\n  }\n}\n\nmodule.exports = { main };```\n*3. Create `webpack.config.js`*:\n```const path = require('path');\n\nmodule.exports = {\n  entry: './createPdf.js',\n  target: 'node',\n  mode: 'production',\n  output: {\n    path: path.resolve(__dirname, 'dist'),\n    filename: 'bundle.js',\n    libraryTarget: 'commonjs2',\n  },\n  resolve: {\n    extensions: ['.js'],\n  },\n  module: {\n    rules: [\n      {\n        test: /\\.js$/,\n        exclude: /node_modules/,\n        use: {\n          loader: 'babel-loader',\n          options: {\n            presets: ['@babel/preset-env'],\n          },\n        },\n      },\n    ],\n  },\n};```\n4. Run Webpack\n```npx webpack```\n5. For  HubSpot deployment create  .functions  folder with 2 files in it bundle.js  generated from npx webpack and a serverless.json file\n``` {\n  \"runtime\": \"nodejs18.x\",\n  \"version\": \"1.0\",\n  \"endpoints\": {\n    \"createPdf\": {\n      \"method\": \"GET\",\n      \"file\": \"dist/bundle.js\"\n    }\n  }\n}```\n6.  Upload .files directory to HubSpot design manager  via hs upload\n7. You can access the serverless function via https://{domainName}/_hcms/api/{endpoint-name}\nI have a live example at <https://www.reination.com/_hcms/api/createPdf>\nAny insights or suggestions would be greatly appreciated!",
+    "reply_count": 13,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-08-09 10:51:34"
+      },
+      {
+        "time_stamp": "2024-08-09 12:08:55"
+      },
+      {
+        "time_stamp": "2024-08-12 08:31:02"
+      },
+      {
+        "time_stamp": "2024-08-12 14:22:30"
+      },
+      {
+        "time_stamp": "2024-08-12 14:22:39"
+      },
+      {
+        "time_stamp": "2024-08-12 14:23:09"
+      },
+      {
+        "time_stamp": "2024-08-12 14:23:35"
+      },
+      {
+        "time_stamp": "2024-08-12 14:23:54"
+      },
+      {
+        "time_stamp": "2024-08-12 14:24:00"
+      },
+      {
+        "time_stamp": "2024-08-13 08:05:29"
+      },
+      {
+        "time_stamp": "2024-08-13 08:27:19"
+      },
+      {
+        "time_stamp": "2024-08-13 09:27:34"
+      },
+      {
+        "time_stamp": "2024-08-13 09:27:46"
+      }
+    ]
+  }
+]

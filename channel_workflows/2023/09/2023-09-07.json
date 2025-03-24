@@ -1,0 +1,192 @@
+[
+  {
+    "poster": {
+      "poster_name": "Camille Biscay",
+      "poster_handle": "camille.biscay"
+    },
+    "time_stamp": "2023-09-07 02:17:57",
+    "text": "Hello everyone,\n\nI have this custom code in HS that I want to use to deduplicate contacts based on `firstname`, `lastname` and `company` properties. I keep getting errors and have run out of ideas on how to debug it, does any know?\n\n```const firstNameProperty = 'firstname';\nconst lastNameProperty = 'lastname';\nconst companyProperty = 'company';\nconst emailProperty = 'email';\n\nconst HubSpot = require('@HubSpot/api-client');\nconst email_providers = ['<http://gmail.com|gmail.com>', '<http://yahoo.com|yahoo.com>', '<http://yahoo.co.uk|yahoo.co.uk>', '<http://outlook.com|outlook.com>', '<http://icloud.com|icloud.com>', '<http://hotmail.com|hotmail.com>', '<http://hotmail.co.uk|hotmail.co.uk>']\n\n// check if contact has a professional email or not\nfunction contactHasProfessionalEmail(contact) {\n  for (let email of email_providers) {\n    if (contact.email.includes(email)) {\n      return false\n    }\n  }\n  return true\n}\n\n// merge subject contact on target contact\nasync function mergeContacts(subject, target, HubSpotClient) {          \n  const mergeResult = await HubSpotClient\n  .apiRequest({\n    method: 'POST',\n    path: `/contacts/v1/contact/merge-vids/${target.hs_object_id}`,\n    body: {\n      vidToMerge: subject.hs_object_id\n    }\n  })\n  \n  if (mergeResult.status === 200) {\n    console.log(`contact: ${subject.hs_object_id} has been merged on contact: ${target.hs_object_id}`)\n  } else {\n    console.log('something went wrong with the merging!')\n  }\n  \n  return mergeResult;\n}\n\nexports.main = async (event, callback) =&gt; {\n  // Make sure to add your API key under \"Secrets\" above.\n  const HubSpotClient = new HubSpot.Client({\n    accessToken: process.env.api_key\n  });\n\n  try {\n    const contact = await HubSpotClient.crm.contacts.basicApi.getById(event.object.objectId, [firstNameProperty, lastNameProperty, companyProperty, emailProperty])\n    const firstNameValue = contact.properties[firstNameProperty];\n    const lastNameValue = contact.properties[lastNameProperty];\n    const companyValue = contact.properties[companyProperty];\n    const emailValue = contact.properties[emailProperty];\n    \n    console.log(`Looking for duplicates based on ${firstNameProperty} = ${firstNameValue}, ${lastNameProperty} = ${lastNameValue}, ${companyProperty} = ${companyValue}, ${emailProperty} = ${emailValue}`);\n    \n    const properties = ['firstname', 'lastname', 'email', 'company', 'last_activity_date']\n    const potentialDuplicatesRaw = await HubSpotClient.crm.contacts.searchApi\n        .doSearch({\n          filterGroups: [\n            {\n              filters: [\n                {\n                  propertyName: firstNameProperty,\n                  operator: 'EQ',\n                  value: firstNameValue\n                },\n                {\n                  propertyName: lastNameProperty,\n                  operator: 'EQ',\n                  value: lastNameValue\n                },\n                {\n                  propertyName: companyProperty,\n                  operator: 'EQ',\n                  value: companyValue\n                }\n              ]\n            }\n          ],\n          properties\n        })\n    \n    const potentialDuplicates = potentialDuplicatesRaw.results.map(el =&gt; el.properties)\n    console.log(potentialDuplicates)\n    \n    // do nothing if no duplicate or abort if more than 2 similar contacts\n    if (potentialDuplicates.length &lt;= 1) {\n      console.log('No matching contact, nothing to merge');\n      return;\n    } else if (potentialDuplicates.length &gt; 2) {\n      console.log(`Found multiple potential contacts to merge`);\n    }\n    \n    const firstContact = potentialDuplicates[0]\n    const secondContact = potentialDuplicates[1]\n    \n    // merge the contact with the personal email address on the one that has a professional email\n    if (contactHasProfessionalEmail(firstContact) &amp;&amp; !contactHasProfessionalEmail(secondContact)) {\n      mergeContacts(secondContact, firstContact, HubSpotClient);\n      return;\n    } else if (!contactHasProfessionalEmail(firstContact) &amp;&amp; contactHasProfessionalEmail(secondContact)) {\n      mergeContacts(firstContact, secondContact, HubSpotClient);\n      return;\n    }\n\t\n    // if no professional email exists, merge on the one that has the most recent activity\n    const mostRecentContact = potentialDuplicates.reduce((acc, cur) =&gt; {\n      if (!acc || new Date(cur.last_activity_date) &gt; new Date(acc.last_activity_date)) {\n        return cur;\n      } else {\n        return acc;\n      }\n\t}, null);\n    const oldestContact = potentialDuplicates.find(item =&gt; item.hs_object_id !== mostRecentContact.hs_object_id)\n    \n    mergeContacts(oldestContact, mostRecentContact, HubSpotClient)\n    \n  } catch (err) {\n    console.error(err);\n    // We will automatically retry when the code fails because of a rate limiting error from the HubSpot API.\n    throw err;\n  }\n}```",
+    "reply_count": 13,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-09-07 02:36:32"
+      },
+      {
+        "time_stamp": "2023-09-07 10:09:41"
+      },
+      {
+        "time_stamp": "2023-09-07 10:09:57"
+      },
+      {
+        "time_stamp": "2023-09-07 10:10:16"
+      },
+      {
+        "time_stamp": "2023-09-07 10:10:24"
+      },
+      {
+        "time_stamp": "2023-09-07 10:15:26"
+      },
+      {
+        "time_stamp": "2023-09-07 10:15:41"
+      },
+      {
+        "time_stamp": "2023-09-07 10:22:38"
+      },
+      {
+        "time_stamp": "2023-09-07 10:22:52"
+      },
+      {
+        "time_stamp": "2023-09-07 10:29:57"
+      },
+      {
+        "time_stamp": "2023-09-07 10:30:27"
+      },
+      {
+        "time_stamp": "2023-09-07 10:30:53"
+      },
+      {
+        "time_stamp": "2023-09-08 01:01:42"
+      }
+    ]
+  },
+  {
+    "text": "I keep getting this type of error and I don't know how to resolve it",
+    "time_stamp": "2023-09-07 02:36:32"
+  },
+  {
+    "text": "Hello Everyone, while creating a workflow we used custom code with the secrets , long back now want to view those secret values but I could not view those values?",
+    "time_stamp": "2023-09-07 03:44:00",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-09-08 07:31:27"
+      },
+      {
+        "time_stamp": "2023-09-15 04:39:22"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Milis",
+      "poster_handle": "mahroucha4"
+    },
+    "time_stamp": "2023-09-07 08:49:23",
+    "text": "Hello everyone,\nI'm looking for an API that we can use to send notifications from a Laravel application to HubSpot. These notifications would then trigger HubSpot to send emails to the contacts selected in the sent notification",
+    "reply_count": 7,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-09-08 00:52:23"
+      },
+      {
+        "time_stamp": "2023-09-08 01:40:28"
+      },
+      {
+        "time_stamp": "2023-09-08 07:29:08"
+      },
+      {
+        "time_stamp": "2023-09-08 07:30:54"
+      },
+      {
+        "time_stamp": "2023-09-08 13:04:40"
+      },
+      {
+        "time_stamp": "2023-09-11 01:31:35"
+      },
+      {
+        "time_stamp": "2023-09-11 02:36:29"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-09-07 10:09:41",
+    "text": "that log you highlighted just means the text of the log is too large to fully display"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-09-07 10:09:57",
+    "text": "please copy the entire code and log here"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-09-07 10:10:16",
+    "text": "use CTRL + Shift + Enter and select 'Javascript'"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-09-07 10:10:24",
+    "text": "and it will show in a much better format"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-09-07 10:15:26",
+    "text": "also, are you SURE you want to deduplicate based on company?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-09-07 10:15:41",
+    "text": "if you do this incorrectly it will merge a lot of people who should not be merged"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-09-07 10:22:38"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-09-07 10:22:52",
+    "text": "think this should simply add logging and commenting to your code"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-09-07 10:29:57"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-09-07 10:30:27",
+    "text": "this should give you an exceptionally detailed log that will help us pinpoint the error"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-09-07 10:30:53",
+    "text": "<@U05RPJX7WQH>"
+  },
+  {
+    "poster": {
+      "poster_name": "Harun Kumar Siva",
+      "poster_handle": "harun"
+    },
+    "time_stamp": "2023-09-08 00:52:23",
+    "text": "You could use the <https://developers.HubSpot.com/docs/api/marketing/transactional-emails#:~:text=the%20password%20field-,Single%2DSend%20API,-The%C2%A0Single|Single Send API> to request HubSpot to send emails."
+  }
+]

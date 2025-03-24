@@ -1,0 +1,50 @@
+[
+  {
+    "poster": {
+      "poster_name": "Chandler Ives",
+      "poster_handle": "cives727"
+    },
+    "time_stamp": "2020-11-05 14:34:37",
+    "text": "If you have a multi-select hubdb column, using colors for example (red, blue, green) and you use `{% for choice in hubdb_table_column(&lt;table id&gt;, 3).options %}` what's the best way to return the count of rows containing \"green\""
+  },
+  {
+    "poster": {
+      "poster_name": "Daniel Wong",
+      "poster_handle": "dan.wong"
+    },
+    "time_stamp": "2020-11-05 20:09:48",
+    "text": "<@UJ3G9FH9U> you mean something like this?\n{{ hubdb_table_rows(module.doctors_table, \"&amp;colors__in=green\")|count }}"
+  },
+  {
+    "poster": {
+      "poster_name": "Adam Munns",
+      "poster_handle": "hello509"
+    },
+    "time_stamp": "2020-11-05 22:54:41",
+    "text": "<@U01DQL7AMFH> dropping one liners like a boss :raised_hands:"
+  },
+  {
+    "poster": {
+      "poster_name": "Daniel Wong",
+      "poster_handle": "dan.wong"
+    },
+    "time_stamp": "2020-11-05 22:54:59",
+    "text": "short and sweet baby"
+  },
+  {
+    "poster": {
+      "poster_name": "Daniel Wong",
+      "poster_handle": "dan.wong"
+    },
+    "time_stamp": "2020-11-05 22:56:09",
+    "text": "should actually be this: (forgot to replace some of my code)\n{{ hubdb_table_rows(module.table_id, \"&amp;colors__in=green\")|count }}"
+  },
+  {
+    "poster": {
+      "poster_name": "Daniel Wong",
+      "poster_handle": "dan.wong"
+    },
+    "time_stamp": "2020-11-05 22:58:37",
+    "text": "if you're using the table data for something else, i would suggest making it into a variable first to reduce the number of queries:\n\n{% set table_data = hubdb_table_rows(module.table_id) %}\n{{ table_data|select_attr('color', 'green')|count }}\n{% for row in table_data %}\n*do something else*\n{% endfor %}"
+  }
+]

@@ -1,0 +1,258 @@
+[
+  {
+    "poster": {
+      "poster_name": "Damien Etrillard",
+      "poster_handle": "detrillard"
+    },
+    "time_stamp": "2024-12-12 02:25:09",
+    "text": "*Hello everyone*, and thank you for accepting me on this Slack! :pray:\n\nI’m reaching out for some help regarding an issue I’m facing with the HubSpot API\nWhen I make a *GET* request to retrieve a deal, I receive the properties as expected, but for a *dropdown property*, I only get the *internal name* of the option instead of its *label*\n\nSo far, my solution is to create a correlation table to match the internal values to their corresponding labels, but this feels suboptimal\n*Is there another way to directly get the label via the API?*\nThank you so much for your help and insights! :blush:",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-12-12 02:41:36"
+      },
+      {
+        "time_stamp": "2024-12-12 02:50:41"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Zach Klein",
+      "poster_handle": "zach282"
+    },
+    "time_stamp": "2024-12-12 02:41:36",
+    "edited": {
+      "time_stamp": "2024-12-12 02:41:57"
+    },
+    "text": "Hi <@U085G36KJDN> :wave:  As far as I'm aware, that's exactly how you'll have to do it -- the property value returned by HubSpot APIs will always be the internal value for enumerated properties."
+  },
+  {
+    "poster": {
+      "poster_name": "Dev Team",
+      "poster_handle": "devteam609"
+    },
+    "time_stamp": "2024-12-12 02:49:45",
+    "text": "Hi everyone,\n\nWe are encountering an issue regarding the functionality of a custom HTML form created in PHP. Our requirement is to submit the form data and insert it into a specific form in HubSpot.\n\nBased on our research, we are using the following API endpoint to achieve this:\n\n<https://api.hsforms.com/submissions/v3/integration/submit/yourPortalId/yourFormGuid?__hstc=20629287.f70c68149a85f6a7ae5c1854438c6b27.1733977481571.1733977481571.1733981989182.2&amp;__hssc=20629287.1.1733981989182&amp;__hsfp=4200627391|API>\n\nThis API allows us to insert data into a specific form, which meets our initial requirement. However, we are now looking for a functionality that would allow us to update the inserted data by matching the email ID.\n\nIn essence, after a data entry has been inserted, we want to be able to update this data using the matching email ID as the reference point.\n\nWe have been unable to find a solution to this requirement. Could you please assist us in resolving this issue? We kindly request your prompt response to this matter.",
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-12-12 03:06:41"
+      },
+      {
+        "time_stamp": "2024-12-12 03:14:43"
+      },
+      {
+        "time_stamp": "2024-12-12 03:20:27"
+      },
+      {
+        "time_stamp": "2024-12-12 03:28:08"
+      },
+      {
+        "time_stamp": "2024-12-12 03:39:12"
+      },
+      {
+        "time_stamp": "2024-12-12 09:06:18"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Damien Etrillard",
+      "poster_handle": "detrillard"
+    },
+    "time_stamp": "2024-12-12 02:50:41",
+    "text": "<@U06TS55PT4H> Thank you for your feedback!"
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2024-12-12 03:06:41",
+    "text": "its handled automatically, you can't have 2 contacts with the same email in HS"
+  },
+  {
+    "poster": {
+      "poster_name": "Dev Team",
+      "poster_handle": "devteam609"
+    },
+    "time_stamp": "2024-12-12 03:14:43",
+    "text": "Yes, we know, but we need to manage the update and insert functionality in the custom form, not in the contacts list. The form is located in Marketing -&gt; Forms"
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2024-12-12 03:20:27",
+    "text": "I can't undestrand what you're trying to do honestly, submissions made in the forms will create or update contacts"
+  },
+  {
+    "poster": {
+      "poster_name": "Dev Team",
+      "poster_handle": "devteam609"
+    },
+    "time_stamp": "2024-12-12 03:28:08",
+    "text": "We need functionality such that when a form is submitted on the PHP end, the data is stored in a HubSpot form. If the form is updated, the data should also be updated in HubSpot. Please provide an example of how we can achieve this."
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2024-12-12 03:39:12",
+    "text": "data submitted in a HubSpot form will:\n• Create or update a HubSpot Contact (with email as primary key, that's what sales, marketers and everyone else uses)\n• Create a submission record in the form (its only use is to have an history of submissions that have been made to that form)\nI still fail to understand your end goal, when you say \"if the form is updated, the data should also be updated in HubSpot\" you mean the form schema? or a new submission has been made?"
+  },
+  {
+    "text": "I'm having trouble using the node api-client. Would anyone be able to assist?\n\nHere is my code (using version 12.0.1 of HubSpot/api-client):\n\n```import { Client } from \"@HubSpot/api-client\";\nimport config from \"../config\";\nimport { FilterOperatorEnum } from \"@HubSpot/api-client/lib/codegen/crm/contacts\";\n\nconst client = new Client({\n    accessToken: config.HubSpot_ACCESS_TOKEN,\n});\n\nexport async function getContactByEmail(email: string) {\n    const apiResponse = await client.crm.contacts.searchApi.doSearch({\n        filterGroups: [\n            {\n                filters: [\n                    {\n                        propertyName: \"email\",\n                        operator: FilterOperatorEnum.Eq,\n                        value: email,\n                    },\n                ],\n            },\n        ],\n    });\n\n    if (apiResponse.results) {\n        if (apiResponse.results.length === 0) {\n            return apiResponse.results[0];\n        } else {\n            throw new Error(`Multiple HubSpot contacts found for email: ${email}`);\n        }\n    }\n\n    return null;\n}```\nWhen I attempt to use `getContactByEmail` I am getting an error response that says \"Authentication credentials not found. This API supports OAuth 2.0 authentication...\"\n\nI have confirmed my accessToken is correct, and I've also ensured that my private app has the correct scopes enabled for this endpoint. Or at least I think I have based on the documentation. It looks like it should be possible to use this endpoint with a private app. The error message makes me think I need to be using OAuth.\n\nI'm assuming the api-client is using this endpoint under the hood:",
+    "time_stamp": "2024-12-12 05:37:23",
+    "edited": {
+      "time_stamp": "2024-12-12 08:51:33"
+    },
+    "reply_count": 5,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-12-12 08:54:09"
+      },
+      {
+        "time_stamp": "2024-12-12 08:57:13"
+      },
+      {
+        "time_stamp": "2024-12-12 09:07:33"
+      },
+      {
+        "time_stamp": "2024-12-12 09:17:37"
+      },
+      {
+        "time_stamp": "2024-12-13 13:02:33"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Rod Waynick",
+      "poster_handle": "rodwaynick"
+    },
+    "time_stamp": "2024-12-12 07:13:58",
+    "text": "This looks like it’s removing the associations between a list of records, is that correct?\n\nI’m not just wanting to remove associations between records. I want to no longer have an association between the custom object and deals, companies, and contacts."
+  },
+  {
+    "poster": {
+      "poster_name": "Loris Anobile",
+      "poster_handle": "anobileloris"
+    },
+    "time_stamp": "2024-12-12 07:15:59",
+    "text": "BTW i figured out this seems like this is a proper #bug\n\neven after manually selecting the template, the `templatePath` remains the same but it works... so before something else was wrong!"
+  },
+  {
+    "text": "Hey, bro. I don't like using this API client; I find it problematic and hard to use. So, I created my own function to perform searches within the CRM for any objects. I can filter exactly what I want, and I've never had authentication issues this way. Below is the Node.js code.\n\nIt's another way of doing things, but it works very well.\n\nThe second image shows the format of the \"filters\". The \"sort\" and \"after\" can be undefined, and the limit is a maximum of 200, which I usually use.",
+    "time_stamp": "2024-12-12 08:54:09"
+  },
+  {
+    "poster": {
+      "poster_name": "Hugo Gomes",
+      "poster_handle": "hugonovacao"
+    },
+    "time_stamp": "2024-12-12 08:57:13",
+    "text": "But if you prefer to keep using the API client, try checking if there is actually any value in the variable `config.HubSpot_ACCESS_TOKEN`."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-12-12 09:06:18",
+    "text": "Is it possible “dev team” is asking about the form fields themselves?\n\nIf the form updates then they need to change the php code to update that\n\nI see zero reason why you would build the form in php— just embed a HubSpot form and style it to match your site. \n\nThis will keep the form update ld to exactly what is in HubSpot "
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-12-12 09:07:33",
+    "text": "+1 for avoiding the node HubSpot api package — use axios or something similar and just build them out. The node wrapper has issues all over the place and will only cause you pain the longer you use it. "
+  },
+  {
+    "poster": {
+      "poster_name": "Curtis Gibson",
+      "poster_handle": "curtis.gibson"
+    },
+    "time_stamp": "2024-12-12 09:17:37",
+    "text": "Thank you guys for the responses! I'm a bit disappointed to hear about the issues with the api client. I was really hoping to take advantage of the types.\n\nI did figured out my problem! The access key wasn't being loaded into the variable I was using :man-facepalming: . It was yesterday when I checked, but I must have changed something else since then :sweat_smile:."
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-12-12 10:29:36",
+    "text": "Ok - I'm getting closer to understand what you want to do."
+  },
+  {
+    "poster": {
+      "poster_name": "Rod Waynick",
+      "poster_handle": "rodwaynick"
+    },
+    "time_stamp": "2024-12-12 12:09:00",
+    "text": "I’ve found the correct endpoint.\n\nIt’s the Schemas endpoint at /crm-object-schemas/v3/schemas/{objectType}/associations/{associationIdentifier}.\n\nI’ll still have to go through and delete any existing associations (using workflows, I’ll add an association label then remove all associations with that label).\nThen clean up any usage that may be going on (such as rollup properties)\nThen send a DEL request to that endpoint using the associationTypeId"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2024-12-12 12:24:28",
+    "text": "REQUEST: A way to override HubSpots dupe protection when using the Batch API for creation; sometimes we _do_ want dupe objects created"
+  },
+  {
+    "poster": {
+      "poster_name": "Amin",
+      "poster_handle": "amin855"
+    },
+    "time_stamp": "2024-12-12 13:27:39",
+    "text": "Hello everyone,\nIs there a specific configuration required for sequences to be fetched using the `<https://api.hubapi.com/automation/v4/sequences/>` <https://developers.HubSpot.com/beta-docs/reference/api/automation/sequences#get-%2Fautomation%2Fv4%2Fsequences%2F|endpoint>?\nI currently have multiple active sequences, but the endpoint always returns an empty array in the response.\nAdditionally, I noticed the `userId` parameter can take any random integer and still return a 200 status response. Can someone clarify what the `userId` parameter actually refers to and how it impacts the API results?\nThank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Aldo Alfaro",
+      "poster_handle": "aldo111"
+    },
+    "time_stamp": "2024-12-12 14:45:47",
+    "text": ":wave: Hello, team! Does anyone knows what is the name of the main phone field for users?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-12-18 08:58:48"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Aldo Alfaro",
+      "poster_handle": "aldo111"
+    },
+    "time_stamp": "2024-12-12 14:45:50",
+    "text": "I am looking at the documentation here: <https://developers.HubSpot.com/beta-docs/guides/api/settings/users/user-details> But it only mentions \"hs_additional_phone\"."
+  },
+  {
+    "poster": {
+      "poster_name": "Nik Patel",
+      "poster_handle": "me1438"
+    },
+    "time_stamp": "2024-12-12 20:32:11",
+    "text": "Hello All - I am trying to send a message to an existing thread through a custom channel, but continue to hit the error with sendorActorId.\n\nNo matter what IDs I try- it continue to tell that it can't find senderActorId. I have tried with A-, B-, and C-.. Tried ChannelAccountId, UserId, ContactId, etc. but nothing works."
+  },
+  {
+    "poster": {
+      "poster_name": "Nik Patel",
+      "poster_handle": "me1438"
+    },
+    "time_stamp": "2024-12-12 20:32:17",
+    "text": "Has anyone run into this or solved this?"
+  }
+]

@@ -1,0 +1,636 @@
+[
+  {
+    "poster": {
+      "poster_name": "Johannes",
+      "poster_handle": "johannes.kaupe"
+    },
+    "time_stamp": "2024-02-02 02:37:21",
+    "text": "Hi <@U05ENUJF7B5> thank you for your response! Yes, they show up underneath the company name &amp; I can work with that :slightly_smiling_face: Thank you both! Originally I was planning to make the association editable in a separate column, but it's alright - we'll just use the standard interface to manage associations. In our use case a deal can have up to 3 company associations with different labels to reflect our channel and they might need to be altered during the quoting flow (which I'm building at the moment)"
+  },
+  {
+    "text": "Hi everyone,\n\nI have created a tab and added a custom card through CRM UI extension, the cards are added under the tab but the components are not showing and error has occured.\nCan anyone help me solve this ?",
+    "time_stamp": "2024-02-02 04:44:03",
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-02-02 05:14:10"
+      },
+      {
+        "time_stamp": "2024-02-02 06:42:25"
+      },
+      {
+        "time_stamp": "2024-02-02 06:42:31"
+      },
+      {
+        "time_stamp": "2024-02-04 22:10:03"
+      },
+      {
+        "time_stamp": "2024-02-04 22:10:38"
+      },
+      {
+        "time_stamp": "2024-02-04 22:32:45"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Bashir",
+      "poster_handle": "ayo_idan"
+    },
+    "time_stamp": "2024-02-02 05:14:10",
+    "text": "What does the log say? "
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-02-02 06:42:25",
+    "text": "I would try running it in dev mode"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-02-02 06:42:31",
+    "text": "just so you can see the logs"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Jordan",
+      "poster_handle": "matthew.jordan"
+    },
+    "time_stamp": "2024-02-02 07:27:04",
+    "text": "With the openIframe JSX function, I am trying to find a list of possible argument/attributes which can be passed. I am not finding after searching for a good while any documentation.\n\nI see uri, height, width; pretty straight forward when it comes to iframes.\n\nassociatedObjectProperties?: string[] that doesn't describe what is going on with this array of strings.\n\nAnd that is all I can find for the function call...",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-02-02 07:47:17"
+      },
+      {
+        "time_stamp": "2024-02-02 11:43:11"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Jordan",
+      "poster_handle": "matthew.jordan"
+    },
+    "time_stamp": "2024-02-02 07:47:17",
+    "edited": {
+      "time_stamp": "2024-02-02 07:48:09"
+    },
+    "text": "Circular documentation references here also..\n<https://developers.HubSpot.com/docs/platform/create-ui-extensions#open-an-iframe-in-a-modal>\nAnd\n<https://developers.HubSpot.com/docs/platform/sample-projects#display-an-iframe-modal>\n\nThe GitHub example even has less properties."
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2024-02-02 08:14:58",
+    "text": "I ran into this yesterday. It would be a nice quality of life change to include a property like `.as_unix` or `.hs_date` to make it a seamless experience using this HubSpot Component with the HubSpot API."
+  },
+  {
+    "poster": {
+      "poster_name": "Mahdi Shadkam-Farrokhi",
+      "poster_handle": "mshadkam"
+    },
+    "time_stamp": "2024-02-02 08:23:02",
+    "text": "The call to `HubSpot.extend` looks off to me. If you're looking to execute a serverless function, you'll need to pass the function through the component. It would look something like this:\n```HubSpot.extend(({ context, runServerlessFunction, actions }) =&gt; (\n\t&lt;SalesPipeline\n\t\tcontext={context}\n\t\trunServerless={runServerlessFunction}\n\t/&gt;\n))```\nAnd then the component would grab `runServerless` and use is it accordingly:\n```const SalesPipeline = ({context, runServerless}) =&gt; {\n  ...\n  useEffect(() =&gt; {\n    runServerless('myFunc', {\n        propertiesToSend: ['hs_object_id'],\n      })\n      .then((response) =&gt; {\n        setStepNames(response.stepNames);\n      })\n      .catch((error) =&gt; {\n        setErrorMessage(error.message);\n      })\n      .finally(() =&gt; {\n        setLoading(false);\n      });\n  }, []);\n  ...\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Schuyler Maclay",
+      "poster_handle": "smaclay"
+    },
+    "time_stamp": "2024-02-02 08:40:09",
+    "text": "Oh awesome, thanks for the response. It seems like there are two way to do serverless calls? I started out with the way you just outlined, but then when I went through the <https://github.com/HubSpot/ui-extensions-examples/blob/main/deals-summary/src/app/extensions/DealsSummaryExampleCard.jsx|examples repo here> they are done in a different style, so I was trying to switch to the format they use there:\n```// Define the extension to be run within the HubSpot CRM\nHubSpot.extend(() =&gt; &lt;DealsSummary /&gt;);\n\n// Define the Extension component\nconst DealsSummary = () =&gt; {\n  const [loading, setLoading] = useState(true);\n  const [errorMessage, setErrorMessage] = useState('');\n  const [dealsCount, setDealsCount] = useState(0);\n  const [totalAmount, setTotalAmount] = useState(0);\n\n  useEffect(() =&gt; {\n    // Request statistics data from serverless function\n    HubSpot\n      .serverless('get-data', {\n        propertiesToSend: ['hs_object_id'],\n      })```"
+  },
+  {
+    "poster": {
+      "poster_name": "Magnus Foldager",
+      "poster_handle": "magnus"
+    },
+    "time_stamp": "2024-02-02 08:42:21",
+    "edited": {
+      "time_stamp": "2024-02-02 08:45:42"
+    },
+    "text": "Hey - trying to set up a testing environment for our developers, I keep hitting a wall on this error:\n```[beta] HubSpot projects local development\n[ERROR] The post in account XXXXXXXX was bad. The JSON in the file '/app/app.functions/serverless.json' doesn't match the associated schema. Make sure your JSON file matches the version-specific schema. Then, update the following fields and try again. \n- $.runtime: is missing but it is required ct files to YYY (XXXXXXXX)\n- $.version: is missing but it is required```\nIs there quick fix or can someone help me in the right direction so we don’t have to develop in prod (which we can’t because of the GH integration).\n\nThe content of `serverless.json` is literally\n```{\n  \"appFunctions\": {\n    \"exampleFunc\": {\n      \"file\": \"example-function.js\",\n      \"secrets\": []\n    }\n  }\n}```",
+    "reply_count": 23,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-02-02 08:50:11"
+      },
+      {
+        "time_stamp": "2024-02-02 09:04:38"
+      },
+      {
+        "time_stamp": "2024-02-02 09:04:46"
+      },
+      {
+        "time_stamp": "2024-02-02 09:11:48"
+      },
+      {
+        "time_stamp": "2024-02-02 09:13:16"
+      },
+      {
+        "time_stamp": "2024-02-02 09:13:40"
+      },
+      {
+        "time_stamp": "2024-02-02 09:14:27"
+      },
+      {
+        "time_stamp": "2024-02-02 10:12:48"
+      },
+      {
+        "time_stamp": "2024-02-02 10:18:27"
+      },
+      {
+        "time_stamp": "2024-02-02 10:19:28"
+      },
+      {
+        "time_stamp": "2024-02-02 10:32:24"
+      },
+      {
+        "time_stamp": "2024-02-02 10:32:42"
+      },
+      {
+        "time_stamp": "2024-02-02 10:33:15"
+      },
+      {
+        "time_stamp": "2024-02-02 10:36:07"
+      },
+      {
+        "time_stamp": "2024-02-02 10:39:07"
+      },
+      {
+        "time_stamp": "2024-02-02 10:39:21"
+      },
+      {
+        "time_stamp": "2024-02-02 10:39:24"
+      },
+      {
+        "time_stamp": "2024-02-02 10:39:45"
+      },
+      {
+        "time_stamp": "2024-02-02 10:40:40"
+      },
+      {
+        "time_stamp": "2024-02-02 10:44:45"
+      },
+      {
+        "time_stamp": "2024-02-02 10:47:59"
+      },
+      {
+        "time_stamp": "2024-02-02 11:39:27"
+      },
+      {
+        "time_stamp": "2024-02-05 02:34:03"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Roger Brown",
+      "poster_handle": "robrown"
+    },
+    "time_stamp": "2024-02-02 08:50:11",
+    "text": "Hey Magnus, my guess is that your hsproject.json config is set to `\"platformVersion\": \"2023.1\"`  or it isnt currently specified. We required values for both runtime and version in this older version of our serverless.json which are not in your file. Since we are no longer supporting older versions at the end of March 2024, you should update your hsproject config platformVersion to `2023.2` and try again. There is further information available about this on our document site ==&gt; <https://developers.HubSpot.com/docs/platform/platform-versioning>"
+  },
+  {
+    "poster": {
+      "poster_name": "Magnus Foldager",
+      "poster_handle": "magnus"
+    },
+    "time_stamp": "2024-02-02 09:04:38",
+    "text": "Nope\n```{\n  \"name\": \"HubSpot-react-extensions\",\n  \"srcDir\": \"src\",\n  \"platformVersion\": \"2023.2\"\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Magnus Foldager",
+      "poster_handle": "magnus"
+    },
+    "time_stamp": "2024-02-02 09:04:46",
+    "text": "I’ll check the developer docs"
+  },
+  {
+    "poster": {
+      "poster_name": "Mahdi Shadkam-Farrokhi",
+      "poster_handle": "mshadkam"
+    },
+    "time_stamp": "2024-02-02 09:08:09",
+    "text": "Hmm, I'm not familiar with that way of doing serverless calls. Perhaps that implementation is from an older version of `HubSpot`? If you're seeing the error `HubSpot.serverless is not a function` then it's not accessible."
+  },
+  {
+    "poster": {
+      "poster_name": "Magnus Foldager",
+      "poster_handle": "magnus"
+    },
+    "time_stamp": "2024-02-02 09:11:48",
+    "edited": {
+      "time_stamp": "2024-02-02 09:11:50"
+    },
+    "text": "<@U056ZR8LVJQ> read through that page and can’t find any other reason it shouldn’t work"
+  },
+  {
+    "poster": {
+      "poster_name": "Roger Brown",
+      "poster_handle": "robrown"
+    },
+    "time_stamp": "2024-02-02 09:13:16",
+    "text": "Can you share the portal id you are using? I can share with the team to take a further look. "
+  },
+  {
+    "poster": {
+      "poster_name": "Magnus Foldager",
+      "poster_handle": "magnus"
+    },
+    "time_stamp": "2024-02-02 09:13:40",
+    "text": "Sure thing - 45133736\nOur main portal is 2694217"
+  },
+  {
+    "poster": {
+      "poster_name": "Magnus Foldager",
+      "poster_handle": "magnus"
+    },
+    "time_stamp": "2024-02-02 09:14:27",
+    "text": "It works with our main portal, but fails because of the GitHub setup. But when we try `hs project dev` on the Sandbox, it fails"
+  },
+  {
+    "poster": {
+      "poster_name": "Aanchal Sheth (HubSpot PM)",
+      "poster_handle": "asheth"
+    },
+    "time_stamp": "2024-02-02 09:18:27",
+    "text": "Hi <@U034X9K26MD>, we're looking into this. Will send you an update asap. Thanks for your patience with us!"
+  },
+  {
+    "poster": {
+      "poster_name": "Schuyler Maclay",
+      "poster_handle": "smaclay"
+    },
+    "time_stamp": "2024-02-02 09:25:09",
+    "text": "<@U05KNCMAE7N> awesome, thanks. It was using the `HubSpot.serverless` style because all of the examples that use `useEffect` in the repo use that style. If there is a way to use the `runServerless` with use effect and error handling I’d happily do that, but I couldn’t find any examples"
+  },
+  {
+    "poster": {
+      "poster_name": "Danny Shekhtman",
+      "poster_handle": "dshekhtman"
+    },
+    "time_stamp": "2024-02-02 09:38:59",
+    "text": "Hey <@U034X9K26MD> can you confirm what version of `@HubSpot/ui-extensions` you're on? If you haven't updated in a while, you might not have that function yet.\n\n<https://www.npmjs.com/package/@HubSpot/ui-extensions>"
+  },
+  {
+    "poster": {
+      "poster_name": "John Mendelewski",
+      "poster_handle": "jmendelewski"
+    },
+    "time_stamp": "2024-02-02 10:12:48",
+    "text": "For completeness, could you post the output of `hs --version`?"
+  },
+  {
+    "poster": {
+      "poster_name": "Magnus Foldager",
+      "poster_handle": "magnus"
+    },
+    "time_stamp": "2024-02-02 10:18:27",
+    "text": "`4.1.8-beta.7` - is that why? :stuck_out_tongue:"
+  },
+  {
+    "poster": {
+      "poster_name": "John Mendelewski",
+      "poster_handle": "jmendelewski"
+    },
+    "time_stamp": "2024-02-02 10:19:28",
+    "edited": {
+      "time_stamp": "2024-02-02 10:25:28"
+    },
+    "text": "That’s definitely a full version behind.\nAnd what might be happening is the code isn’t sending us your platform version properly.\n\nWe have codepaths that default to 2023.1 if the CLI tool doesn’t send us a value, and that’s my hunch here.\n\nEdit: Yep, I’m now 99% confident updating the command fixes this. For those curious, the codepath for the upload of a project <https://github.com/HubSpot/HubSpot-cli/blob/3116f0d518598a1b72d07457edf2374181a8f35e/packages/cli/lib/projects.js#L311-L366|here> isn’t mentioning the platform version like I’d expect."
+  },
+  {
+    "poster": {
+      "poster_name": "Magnus Foldager",
+      "poster_handle": "magnus"
+    },
+    "time_stamp": "2024-02-02 10:32:24",
+    "text": "DIfferent error - wants me to upload the project first. Looks promising. Yep - definitely fixed it.\nThanks for the help and apologies for not updating the cli tool - the error seemed unrelated so I never thought of that."
+  },
+  {
+    "poster": {
+      "poster_name": "John Mendelewski",
+      "poster_handle": "jmendelewski"
+    },
+    "time_stamp": "2024-02-02 10:32:42",
+    "text": "oh no apologies needed. Thanks for confirming that’s the fix."
+  },
+  {
+    "poster": {
+      "poster_name": "John Mendelewski",
+      "poster_handle": "jmendelewski"
+    },
+    "time_stamp": "2024-02-02 10:33:15",
+    "text": "We’re discussing what we can do on our end to make this clearer to users.\nSome of this code did change pretty quickly over the past year."
+  },
+  {
+    "poster": {
+      "poster_name": "Magnus Foldager",
+      "poster_handle": "magnus"
+    },
+    "time_stamp": "2024-02-02 10:36:07",
+    "edited": {
+      "time_stamp": "2024-02-02 10:36:42"
+    },
+    "text": "And we are very thankful that it did! And so are the end users of all the cool things we’re creating.\n\nRelated side note:\nThe temporary error I had afterwards was because `@HubSpot/ui-extensions` was not installed locally. I already fixed it by running the installation of the required modules locally, but would you recommend keeping the package-lock in `/extensions` or adding it to our .gitignore? Not sure if it would break anything, just wanted to check what you’d recommend. --- essentially.. Will it break anything to keep it?"
+  },
+  {
+    "poster": {
+      "poster_name": "Magnus Foldager",
+      "poster_handle": "magnus"
+    },
+    "time_stamp": "2024-02-02 10:39:07",
+    "text": "I think we’ll just opt to ignore it. Seems silly to push it and update it in git every time packages are updated."
+  },
+  {
+    "poster": {
+      "poster_name": "John Mendelewski",
+      "poster_handle": "jmendelewski"
+    },
+    "time_stamp": "2024-02-02 10:39:21",
+    "edited": {
+      "time_stamp": "2024-02-02 10:40:24"
+    },
+    "text": "If anything, we tend to ignore most files we don’t care about.\nIn this case, if you pass along the lock file, your builds should go faster.\nSo I think I’m suggesting add it to git. (not ignore)\nWill confirm with team, and only reply if I need to retract my suggestion.\n\nFrom my understanding, lock files are usually meant to be shared amongst team members. For example, in our CLI code you can see <https://github.com/HubSpot/HubSpot-cli/blob/v4.1.8-beta.7/yarn.lock|we put it into source control>."
+  },
+  {
+    "poster": {
+      "poster_name": "Magnus Foldager",
+      "poster_handle": "magnus"
+    },
+    "time_stamp": "2024-02-02 10:39:24",
+    "text": "Sorry it’s 7 p.m. on a Friday and I’ve had some Friday bar beers"
+  },
+  {
+    "poster": {
+      "poster_name": "Magnus Foldager",
+      "poster_handle": "magnus"
+    },
+    "time_stamp": "2024-02-02 10:39:45",
+    "text": "Ah okay - I’ll await your response :+1:"
+  },
+  {
+    "poster": {
+      "poster_name": "Magnus Foldager",
+      "poster_handle": "magnus"
+    },
+    "time_stamp": "2024-02-02 10:40:40",
+    "text": "Specifically; the lock files in `src/app/app.functions` and `src/app/extensions`, not the main package’s lock file."
+  },
+  {
+    "poster": {
+      "poster_name": "Schuyler Maclay",
+      "poster_handle": "smaclay"
+    },
+    "time_stamp": "2024-02-02 10:43:22",
+    "text": "<@UNHBK8QNM> This was 100% it, I was at 0.8.4 in that project for some reason"
+  },
+  {
+    "poster": {
+      "poster_name": "Schuyler Maclay",
+      "poster_handle": "smaclay"
+    },
+    "time_stamp": "2024-02-02 10:44:31",
+    "text": "It is still interesting to note that the quickstart guide uses the old functions, but all of the examples in the example repo use the new functions… would be great to know whats prefered"
+  },
+  {
+    "poster": {
+      "poster_name": "Roger Brown",
+      "poster_handle": "robrown"
+    },
+    "time_stamp": "2024-02-02 10:44:45",
+    "text": "<@U02F2QPB4P8> was there a separate problem related to the GitHub integration?"
+  },
+  {
+    "poster": {
+      "poster_name": "Magnus Foldager",
+      "poster_handle": "magnus"
+    },
+    "time_stamp": "2024-02-02 10:47:59",
+    "text": "<@U056ZR8LVJQ> no, I think it was just me being silly and clicking the link that was logged to the terminal instead of going to an object page in HubSpot and I believe I saw something related to GitHub. It looks like it works on our production account as well. Either that, or updating the CLI fixed it."
+  },
+  {
+    "poster": {
+      "poster_name": "Magnus Foldager",
+      "poster_handle": "magnus"
+    },
+    "time_stamp": "2024-02-02 10:51:34",
+    "text": "<@U03FJQPSC0Y> and team any update on your thoughts on this? It’s 48 vertical pixels of really valuable real-estate :stuck_out_tongue:"
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2024-02-02 10:52:09",
+    "text": "Great call out, would also like to know the status of this"
+  },
+  {
+    "poster": {
+      "poster_name": "Danny Shekhtman",
+      "poster_handle": "dshekhtman"
+    },
+    "time_stamp": "2024-02-02 10:53:28",
+    "text": "Yes Schuyler, some of the code examples were updated a little prematurely. The feature should work but we are going to revert the updates to the example apps until we've properly documented everything. Thanks for spotting the discrepancy!"
+  },
+  {
+    "poster": {
+      "poster_name": "Danny Shekhtman",
+      "poster_handle": "dshekhtman"
+    },
+    "time_stamp": "2024-02-02 10:54:29",
+    "text": "For now you should consider the method of passing down the prop as the recommended way, as mentioned <https://HubSpotdev.slack.com/archives/C05R599UA12/p1706887382268589?thread_ts=1706822648.732659&amp;cid=C05R599UA12|here>."
+  },
+  {
+    "poster": {
+      "poster_name": "Sejal Parikh (HubSpot PM)",
+      "poster_handle": "sparikh"
+    },
+    "time_stamp": "2024-02-02 11:26:24",
+    "text": "Hey Magnus, were will consider optimizing the UX for this, however, we find it important for end users to recognize what's custom built and what's HubSpot built as things get more and more customized. So footer is here to stay. Welcome any feedback on how you think we could help you make it better."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-02-02 11:28:05",
+    "text": "What about a little blue (i) icon in the top right corner that could show that this is powered by a custom project?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-02-02 11:29:10",
+    "text": "It's like the HubSpot \"What is this?\" icon"
+  },
+  {
+    "poster": {
+      "poster_name": "John Mendelewski",
+      "poster_handle": "jmendelewski"
+    },
+    "time_stamp": "2024-02-02 11:39:27",
+    "text": "Including the lock files for the extensions and functions will both benefit your development."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Jordan",
+      "poster_handle": "matthew.jordan"
+    },
+    "time_stamp": "2024-02-02 11:43:11",
+    "text": "I think ultimately I made a work around with this.\nBut a list of available properties or attributes would be helpful.\nAnd I still can not find what associatedObjectProperties does when calling the iFrame modal.\nI've tested against the iFrame outgoing calls and I can not see anything in the request which this string array is attached to or being utilized."
+  },
+  {
+    "text": "Some of the cards we’re migrating have a lot of smaller cards in one page. This padding will take up a lot of vertical space on top of the existing.. 200-242 pixels of other stuff before the first card even starts. I know you probably don’t have a say for the top pixels, but this is what it would look like on a MacBook Air (900 vertical px) - effectively only allowing 2-3 small cards to be showed. We want to surface as much information to our reps as possible with the real estate that we have, and taking 48 px extra per card adds up.\n\nI like Carter’s suggestion - perhaps in the same place as the little “cog” button you see by “Data highlights” in this screenshot. I would even prefer the “Powered By” message in that spot, regardless of that potentially lowering character limit on titles.",
+    "time_stamp": "2024-02-02 12:29:39"
+  },
+  {
+    "poster": {
+      "poster_name": "Magnus Foldager",
+      "poster_handle": "magnus"
+    },
+    "time_stamp": "2024-02-02 12:30:58",
+    "text": "I understand that my screenshot is cluttered, but users see the alerts on top every now and again, and I am surprised about how few of them actually remove them (e.g. when we’re trialing something). I am also not sure if the “Customize tabs” part shows up for the user, but it helps my narrative :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-02-02 12:31:04",
+    "text": "Yeah I was like thinking a little higher and to the right of the cog"
+  },
+  {
+    "text": "Like this:",
+    "time_stamp": "2024-02-02 12:34:04"
+  },
+  {
+    "poster": {
+      "poster_name": "Magnus Foldager",
+      "poster_handle": "magnus"
+    },
+    "time_stamp": "2024-02-02 13:09:38",
+    "edited": {
+      "time_stamp": "2024-02-02 13:10:07"
+    },
+    "text": "Can we not create iframe buttons within React Extensions? Can’t find it anywhere on the guide.. It’s an immensely popular feature in our JS/JSON cards. :cry:",
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-02-02 13:10:59"
+      },
+      {
+        "time_stamp": "2024-02-02 13:18:28"
+      },
+      {
+        "time_stamp": "2024-02-02 13:32:51"
+      },
+      {
+        "time_stamp": "2024-02-05 02:32:32"
+      },
+      {
+        "time_stamp": "2024-02-05 07:44:18"
+      },
+      {
+        "time_stamp": "2024-03-18 10:29:50"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Aanchal Sheth (HubSpot PM)",
+      "poster_handle": "asheth"
+    },
+    "time_stamp": "2024-02-02 13:10:59",
+    "text": "<https://github.com/HubSpot/ui-extensions-examples/tree/main/display-iframe-modal|This is a way> to open iframes from the React custom cards. Is this what you're referring to?"
+  },
+  {
+    "text": "I finally had a good reason to use my $659.88/yr. Adobe CC subscription. I had to!",
+    "time_stamp": "2024-02-02 13:16:34"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-02-02 13:17:31",
+    "text": "lol, I should just share my chrome extension with you"
+  },
+  {
+    "poster": {
+      "poster_name": "Magnus Foldager",
+      "poster_handle": "magnus"
+    },
+    "time_stamp": "2024-02-02 13:18:28",
+    "text": "Oh my.. It was right there. I was looking in the props for the Button like we had in the JSON.\nThat works, thank you Aanchal!"
+  },
+  {
+    "poster": {
+      "poster_name": "Magnus Foldager",
+      "poster_handle": "magnus"
+    },
+    "time_stamp": "2024-02-02 13:19:47",
+    "text": "I am *heavily* restricted in terms of what Chrome Extensions I am allowed to install :rolling_on_the_floor_laughing:\n\nOn that topic, maybe the solution to all of this is to force-install a Chrome Extension to the browsers of our reps on an organisation basis that does nothing but remove this footer :wink:"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-02-02 13:20:21",
+    "text": ":dart:"
+  },
+  {
+    "poster": {
+      "poster_name": "Sejal Parikh (HubSpot PM)",
+      "poster_handle": "sparikh"
+    },
+    "time_stamp": "2024-02-02 13:22:03",
+    "text": "Magnus, would you send me screenshots of smaller cards that you are making? I'm generally curious to know why you decided to make these smaller cards, and what purpose would it serve to keep them separate."
+  },
+  {
+    "poster": {
+      "poster_name": "Sejal Parikh (HubSpot PM)",
+      "poster_handle": "sparikh"
+    },
+    "time_stamp": "2024-02-02 13:22:35",
+    "text": "Also, thanks for the feedback, as always. I won't make any promises, but no feedback here ever gets unnoticed."
+  },
+  {
+    "poster": {
+      "poster_name": "Magnus Foldager",
+      "poster_handle": "magnus"
+    },
+    "time_stamp": "2024-02-02 13:27:50",
+    "text": "Sure, Sejal - I’ll send in a DM. :handshake:"
+  },
+  {
+    "poster": {
+      "poster_name": "Aanchal Sheth (HubSpot PM)",
+      "poster_handle": "asheth"
+    },
+    "time_stamp": "2024-02-02 13:32:51",
+    "text": "No problem at all, glad that helped:slightly_smiling_face: would love to know more about what you're using iframes for"
+  },
+  {
+    "text": "",
+    "time_stamp": "2024-02-02 13:34:10"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-02-02 13:34:13",
+    "text": "found a better example"
+  }
+]

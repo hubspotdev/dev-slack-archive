@@ -1,0 +1,42 @@
+[
+  {
+    "poster": {
+      "poster_name": "Matt Brooking",
+      "poster_handle": "matt.brooking"
+    },
+    "time_stamp": "2021-08-13 05:11:38",
+    "text": "Hi folks,\n\nI posted this in the JS channel, how ever I feel like this is specifically a serverless function issue.\nSo I have a serverless function carrying out a post request to an API, however when I run the request I get \" \"message\": \"Request failed with status code 400\" \",\nI have checked my datasets, my headers and my authentication, and none of these seem to be the problem.\nI decided to try and get the function outside of HubSpot and run a node app from my terminal, and the request was successful.\n\nthis is my HubSpot serverless function (Auth tokens / user + passwords) are redacted\n```const axios = require('axios');\n\nexports.main = ( context, sendResponse ) =&gt; {\n    var data = JSON.stringify({\"language\":\"sv\",\"company\":{\"name\":\"Unifaun AB\",\"orgNo\":\"5565463717\",\"vatNo\":\"SE5565463717\",\"deliveryAddress\":{\"address1\":\"Skeppsbron 5-6\",\"zipcode\":\"41121\",\"city\":\"GÖTEBORG\",\"country\":\"SE\"},\"postalAddress\":{\"address1\":\"Skeppsbron 5-6\",\"zipcode\":\"41121\",\"city\":\"GÖTEBORG\",\"country\":\"SE\"},\"invoiceAddress\":{\"address1\":\"Skeppsbron 5-6\",\"zipcode\":\"41121\",\"city\":\"GÖTEBORG\",\"country\":\"SE\"},\"invoiceEmail\":\"<mailto:email@email.com|email@email.com>\",\"contact1\":{\"name\":\"Contact1\",\"phone\":\"1234567\",\"sms\":\"1234567\",\"email\":\"<mailto:contact1@email.com|contact1@email.com>\"}},\"products\":[{\"code\":\"UF-BAS-22\"}],\"partners\":[{\"code\":\"SBTL\",\"customerNumber\":\"123456\"}]});\n\n    var config = {\n        method: 'post',\n        url: url,\n        headers: { \n          'Authorization': 'Basic [token]', \n          'Content-Type': 'application/json'\n        },\n        data : data\n    };\n    axios(config)\n        .then((response) =&gt; {\n            sendResponse({\n                body: {\n                    response: response.data\n                }\n            });\n        })\n        .catch((error) =&gt; {\n            sendResponse({\n                body: { \n                    error: error\n                }\n            });\n        });\n}```\nThis is my node app running from terminal which is working correctly (again auth stuff is redacted)\n\n```var axios = require('axios');\n\nvar data = JSON.stringify({\"language\":\"sv\",\"company\":{\"name\":\"Unifaun AB\",\"orgNo\":\"5565463717\",\"vatNo\":\"SE5565463717\",\"deliveryAddress\":{\"address1\":\"Skeppsbron 5-6\",\"zipcode\":\"41121\",\"city\":\"GÖTEBORG\",\"country\":\"SE\"},\"postalAddress\":{\"address1\":\"Skeppsbron 5-6\",\"zipcode\":\"41121\",\"city\":\"GÖTEBORG\",\"country\":\"SE\"},\"invoiceAddress\":{\"address1\":\"Skeppsbron 5-6\",\"zipcode\":\"41121\",\"city\":\"GÖTEBORG\",\"country\":\"SE\"},\"invoiceEmail\":\"<mailto:email@email.com|email@email.com>\",\"contact1\":{\"name\":\"Contact1\",\"phone\":\"1234567\",\"sms\":\"1234567\",\"email\":\"<mailto:contact1@email.com|contact1@email.com>\"}},\"products\":[{\"code\":\"UF-BAS-22\"}],\"partners\":[{\"code\":\"SBTL\",\"customerNumber\":\"123456\"}]});\n\nvar config = {\n  method: 'post',\n  url: url,\n  headers: { \n    'Authorization': 'Basic [token]', \n    'Content-Type': 'application/json'\n  },\n  data : data\n};\n\naxios(config)\n.then(function (response) {\n  console.log(response.data);\n})\n.catch(function (error) {\n  console.log(error);\n});```\n",
+    "reply_count": 4,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2021-08-13 06:50:34"
+      },
+      {
+        "time_stamp": "2021-08-13 09:45:36"
+      },
+      {
+        "time_stamp": "2021-08-15 14:34:23"
+      },
+      {
+        "time_stamp": "2021-08-15 17:03:09"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Russell Benzing",
+      "poster_handle": "rbenzing"
+    },
+    "time_stamp": "2021-08-13 06:50:34",
+    "text": "I think your axios call is incorrect, check out their docs:\n<https://github.com/axios/axios>\nI use it like so for post method:\n`<http://axios.post|axios.post>(url, payload, headers).then((response) =&gt; {})`"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2021-08-13 09:45:36",
+    "text": "<@U504BHZ6K>, i just stole your answer and published on the <https://community.HubSpot.com/t5/APIs-Integrations/Request-failed-with-status-code-400-Serverless-Function/m-p/478897|community> :wink:"
+  }
+]

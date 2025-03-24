@@ -1,0 +1,38 @@
+[
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-15 08:10:32",
+    "text": ":eyes: :catcoder:"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-15 10:22:10",
+    "text": "<@U04EGUY0U06> Ok, here's the updated code. There were a couple of problems, first the getAll associated line items with just get the associated line items ids not all the properties (you specifically want hs_product_id) so you have to use the search api instead and search by associated deal (you could just loop through the line items but this way is cleaner). Next the productId is in a property called hs_product_id not productId, so I swapped that out. Also I really don't like using the SDK so I converted your code to use the endpoints instead.\n\n```const axios = require(\"axios\");\n\nexports.main = async (event, callback) =&gt; {\n  const accessToken = process.env.SECRET_NAME;\n  const dealId = event.fields.hs_object_id;\n  console.log(dealId);\n\n  try {\n    const searchRequest = {\n      filters: [\n        {\n          propertyName: \"associations.deal\",\n          operator: \"EQ\",\n          value: dealId,\n        },\n      ],\n      properties: [\"hs_product_id\"],\n    };\n    const lineItemsResponse = await <http://axios.post|axios.post>(\n      `<https://api.hubapi.com/crm/v3/objects/line_item/search>`,\n      searchRequest,\n      {\n        headers: {\n          Authorization: `Bearer ${accessToken}`,\n          \"Content-Type\": \"application/json\",\n        },\n      }\n    );\n    const lineItems = lineItemsResponse.data.results;\n    console.log(lineItems);\n\n    const dealResponse = await axios.get(\n      `<https://api.hubapi.com/crm/v4/objects/deals/${dealId}>`,\n      {\n        headers: {\n          Authorization: `Bearer ${accessToken}`,\n        },\n      }\n    );\n    const deal = dealResponse.data;\n    console.log(deal);\n\n    let increaseBy = 0;\n\n    for (const lineItem of lineItems) {\n      const productId = lineItem.hs_product_id;\n      console.log(productId);\n\n      if (productId === \"2032483348\") {\n        increaseBy = 27;\n      } else if (productId === \"2032483347\") {\n        increaseBy = 20;\n      } else if (productId === \"2032483346\") {\n        increaseBy = 15;\n      } else if (productId === \"2032203285\") {\n        increaseBy = 10;\n      } else if (productId === \"2032483344\") {\n        increaseBy = 5;\n      }\n\n      if (deal &amp;&amp; deal.properties) {\n        const IncreaseValue = deal.properties.increase_value || 0;\n        const dealUpdateRequest = {\n          properties: {\n            increase_value: IncreaseValue + increaseBy,\n          },\n        };\n        await axios.patch(\n          `<https://api.hubapi.com/crm/v4/objects/deals/${dealId}>`,\n          dealUpdateRequest,\n          {\n            headers: {\n              Authorization: `Bearer ${accessToken}`,\n              \"Content-Type\": \"application/json\",\n            },\n          }\n        );\n      }\n    }\n\n    callback({});\n  } catch (err) {\n    console.error(err);\n    throw err;\n  }\n};```\n"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-05-15 10:22:21"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-15 10:26:27",
+    "text": "Also just an FYI, this code doesn't add to the increaseBy variable it just overrides it each time (I assumed you wanted to do this but thought i would mention it), to add to the increase by variable you can change one of these lines: `increaseBy = 20;` to `increaseBy = increaseBy+20;` or `increaseBy += 20;`"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-05-15 10:30:39",
+    "text": "Also you're updating the deal for each line item but it would make a lot more sense to just update the deal once after looping through all the line items"
+  }
+]

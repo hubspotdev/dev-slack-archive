@@ -1,0 +1,30 @@
+[
+  {
+    "text": "Hi! I don't know if this is the right thread to ask this question but i will give it a try! :slightly_smiling_face:\n\nIm trying to create a custom object record through axios post but i cant seem to get it working for some reason.\n\nThis is the error code im getting:\n\n{\"status\":\"error\",\"message\":\"Error creating orderrader.  Some required properties were not set.\",\"correlationId\":\"1017b2bd-1ce1-4ccd-9024-e1f704f552c9\",\"context\":{\"properties\":[\"benamning\"]},\"category\":\"VALIDATION_ERROR\"}\n\nbenamning is a string passed from another file and ive checked that the content is correct (a string).\n\nMaybe you guys have an idea what im doing wrong. I've been checking up on the docs but i cant seem to find the problem.\n\nKind regards,\nLukas\n\n```exports.main = async (context = {}) => {\n\n  const { text, name, benamning, antalTimmar, ticketName } = context.parameters;\n\n\n  console.log(benamning); \n\n\n\n  const requestData = {\n   benamning: benamning, \n  //  anvandare: name,\n  //  antal_timmar: antalTimmar,\n  //  ticket: ticketName,\n   \n  };\n\n\n  console.log(requestData);\n\n  console.log(typeof benamning);\n  await axios.post(`${baseUrl}${endpoint}`, requestData, {\n    headers: {\n      'Authorization': `Bearer ${apiKey}`,\n      'Content-Type': 'application/json',\n    },\n  })```",
+    "time_stamp": "2023-11-30 07:48:13",
+    "edited": {
+      "time_stamp": "2023-11-30 07:49:00"
+    },
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-11-30 08:22:43"
+      },
+      {
+        "time_stamp": "2023-12-01 07:22:25"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas von Rosen",
+      "poster_handle": "lukas.von.rosen"
+    },
+    "time_stamp": "2023-11-30 08:22:43",
+    "edited": {
+      "time_stamp": "2023-11-30 08:23:13"
+    },
+    "text": "This was resolved! Big thanks to <@U04N6N424MB> !!\n\nby setting the following:\n\nlet requestData = JSON.stringify({\n    \"properties\": {\n       \"benamning\": benamning,\n    }\n  });"
+  }
+]

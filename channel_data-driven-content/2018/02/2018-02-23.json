@@ -1,0 +1,49 @@
+[
+  null,
+  {
+    "poster": {
+      "poster_name": "Andy Mc",
+      "poster_handle": "andy"
+    },
+    "time_stamp": "2018-02-23 10:05:03",
+    "text": "is there a way to query a row in HubDB other than by row id and without a for loop? basically the same as SELECT hs_title from [tableid] WHERE hs_name =\"[string]\"\nBasically I'm trying to retrieve a record, save a value to a variable and then be able to use that variable later. However it seems variables assigned in a For loop are only in scope, in that loop. There doesn't seem to be a way to set a global."
+  },
+  {
+    "poster": {
+      "poster_name": "Andy Mc",
+      "poster_handle": "andy"
+    },
+    "time_stamp": "2018-02-23 10:08:21",
+    "edited": {
+      "time_stamp": "2018-02-23 10:09:20"
+    },
+    "text": "in case there's another way, I'm trying to get around the fact that we can't specify a title tag for Blog entries individual of the header. So I'm checking if this is a listing page, if not then if it's a blog entry, finally if it's just a page display the title.  If it is a blgo entry, then I want to query HubDb to see if a record exists. If it does, then I want to use the specified seo_title column.  If not, then just display title like HS normally would.\n```\n&lt;title&gt;{% if is_listing_view %}\n            {{ page_meta.html_title }}\n        {% elif content_group_id == \"[blog_id]\" %}\n            {% set new_title = \"\" %}\n            {% for row in hubdb_table_rows([table_id]) %}\n                {% if row.hs_name == page_meta.name %}\n                   {% set new_title = row.seo_title %}\n                 {% endif %}\n            {% endfor %}\n            {% if new_title == \"\" %}\n               {{ page_meta.html_title }}\n            {% else %}\n                   {{ new_title}\n            {% endif %}\n\n        {% else %}\n            {{ page_meta.html_title }}\n        {% endif %}&lt;/title&gt;\n```",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2018-02-23 11:06:32"
+      },
+      {
+        "time_stamp": "2018-02-23 12:17:30"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-02-23 11:06:32",
+    "text": "If you take a look at the HubDb api, you can find information about builder filter query parameters. You can just dump that query string as the last arg in rows function"
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "Andy Mc",
+      "poster_handle": "andy"
+    },
+    "time_stamp": "2018-02-23 12:17:30",
+    "text": "<@U6GNQ7JBU> thanks. I'll check out those docs"
+  }
+]

@@ -1,0 +1,545 @@
+[
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-17 05:00:57",
+    "text": "Hey :slightly_smiling_face:\nI'm looking to add a search input for a HubDB table I've made and seen the following example here: <https://designers.HubSpot.com/real-estate-listing-example>\nHowever, the client only wants a search input for their table, not a filter. Can I achieve that with the above example?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-17 05:23:25",
+    "text": "```\n&lt;form id=\"form_id\" method=\"get\"&gt;\n   \n    &lt;div&gt;\n        &lt;div&gt;\n        \t&lt;input name=\"airline_name\" type=\"text\" id=\"search-by\" class=\"autocomplete\" placeholder=\"Search by Airline\"&gt;\n    \t\t&lt;/div&gt;\n        &lt;input id=\"submit-button\" type=\"submit\" value=\"search\"&gt;\n    &lt;/div&gt;\n    \n\t&lt;/form&gt;\n  \n  {% set queryparam = \"\" %}\n    {% if request.query_dict.airline_name == \"\" %}\n    \t{% set queryparam = queryparam request.query_dict.type|urlencode %}\n    {% endif %}\n    {% if request.query_dict.airline_name != \"\" %}\n        {% set queryparam = queryparam request.query_dict.type|urlencode~\"&amp;listing_address__icontains=\"~request.query_dict.listing_address|urlencode %}\n    {% endif %}\n    {% if request.query_dict.listing_address != \"\" %}\n        {% set queryparam = queryparam~\"&amp;airline_name__icontains=\"~request.query_dict.airline_name|urlencode %}\n  {% endif %}\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-17 05:24:22",
+    "text": "Dissected the Real Estate example and removed any filter data, but it's returning multiple errors (apologies my HubL knowledge is still light atm)"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-17 05:24:47",
+    "text": "I'm guessing the `queryparam request` part is incorrect here?",
+    "reply_count": 18,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2018-07-17 07:14:31"
+      },
+      {
+        "time_stamp": "2018-07-17 07:23:01"
+      },
+      {
+        "time_stamp": "2018-07-17 07:23:18"
+      },
+      {
+        "time_stamp": "2018-07-17 07:28:02"
+      },
+      {
+        "time_stamp": "2018-07-17 07:28:12"
+      },
+      {
+        "time_stamp": "2018-07-17 07:29:06"
+      },
+      {
+        "time_stamp": "2018-07-17 07:29:15"
+      },
+      {
+        "time_stamp": "2018-07-17 07:29:25"
+      },
+      {
+        "time_stamp": "2018-07-17 07:29:37"
+      },
+      {
+        "time_stamp": "2018-07-17 07:30:03"
+      },
+      {
+        "time_stamp": "2018-07-17 07:32:57"
+      },
+      {
+        "time_stamp": "2018-07-17 07:46:06"
+      },
+      {
+        "time_stamp": "2018-07-17 07:48:54"
+      },
+      {
+        "time_stamp": "2018-07-17 07:49:10"
+      },
+      {
+        "time_stamp": "2018-07-17 07:50:47"
+      },
+      {
+        "time_stamp": "2018-07-17 08:03:57"
+      },
+      {
+        "time_stamp": "2018-07-17 08:05:05"
+      },
+      {
+        "time_stamp": "2018-07-17 08:45:37"
+      }
+    ]
+  },
+  null,
+  null,
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 07:14:31",
+    "text": "You probably want to concat them with a `~`"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-17 07:23:01",
+    "text": "```\n&lt;form id=\"form_id\" method=\"get\"&gt;\n   \n    &lt;div&gt;\n        &lt;div&gt;\n        \t&lt;input name=\"airline_name\" type=\"text\" id=\"search-by\" class=\"autocomplete\" placeholder=\"Search by Airline\"&gt;\n    \t\t&lt;/div&gt;\n        &lt;input id=\"submit-button\" type=\"submit\" value=\"search\"&gt;\n    &lt;/div&gt;\n    \n\t&lt;/form&gt;\n  \n  {% set queryparam = \"\" %}\n    {% if request.query_dict.airline_name == \"\" %}\n    \t{% set queryparam = queryparam~request.query_dict.type|urlencode %}\n    {% endif %}\n    {% if request.query_dict.airline_name != \"\" %}\n        {% set queryparam = queryparam~request.query_dict.type|urlencode~\"&amp;airline_name__icontains=\"~request.query_dict.airline_name|urlencode %}\n    {% endif %}\n    {% if request.query_dict.airline_name != \"\" %}\n        {% set queryparam = queryparam~\"&amp;airline_name__icontains=\"~request.query_dict.airline_name|urlencode %}\n  {% endif %}\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-17 07:23:18",
+    "text": "Getting an error with: `Error:1:0BadRequestException: error when listing rows for datatable 844770 for portal 490937: Invalid value for filter 'icontains'`"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 07:28:02",
+    "text": "So the error is in the queryparam (obviously) after the __icontains="
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 07:28:12",
+    "text": "One (or all) of those are invalid for one reason or another"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 07:29:06",
+    "text": "I would also save yourself some headache in attempting to read all those request.query_dicts and just set airline_name as a variable somewhere above"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 07:29:15",
+    "text": "(before all of those {% if statements %}"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 07:29:25",
+    "edited": {
+      "time_stamp": "2018-07-17 07:29:55"
+    },
+    "text": "{% set airline = request.query_dict.airline_name|urlencode %}"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 07:29:37",
+    "text": "then just call ~airline in your {% if %} statements"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-17 07:30:03",
+    "text": "Hmm, yeah good point. Just followed the tutorial really. Might have to build with the filter for now and hide in CSS, not ideal, but got to have a quick turnaround on this task :grimacing:"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 07:32:57",
+    "text": "What you’re doing definitely is possible without any CSS hacks, but yeah - fast turnaround sometimes means hacking things together quickly :wink:"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-17 07:46:06",
+    "text": "I'm still trying to get my head round HubL, and the lack of online tutorials doesn't help"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 07:48:54",
+    "text": "You’re reading the docs right? That’s how I learned: <https://designers.HubSpot.com/docs/hubl/intro-to-hubl>"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 07:49:10",
+    "text": "I literally had 3-4 tabs of this documentation open during all development for about the first 6 months"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-17 07:50:47",
+    "text": "I'm understanding little bits, it's putting it all together. Would be nice if there was a HubDB search example out there for me to reference"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 08:03:57",
+    "text": "You pretty much had it (at least from an __icontains standpoint) - there’s also the option to just grab the whole table and loop it with conditional display results"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 08:05:05",
+    "text": "Try using this tutorial (<https://designers.HubSpot.com/docs/tutorials/how-to-build-a-real-estate-listing-with-hubdb>) go down to number 6 in the list"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-17 08:45:37",
+    "text": "That's the one I've used but it has a filter, I just need the search bit, hence why I was trying to butcher the above code :slightly_smiling_face:"
+  },
+  null,
+  null,
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-07-17 14:01:54",
+    "text": "is there an easy way of grabbing multiple columns in a row and placing those values into a single variable you can loop through? I have to build a slider on a dynamic page and I am going to add a few image columns to my table but I was thinking of a way to grab them all into an array so I can loop through them to make the slider. Only way I can think of is a giant IF like:\n\n```\n{% set array = [] %}\n{% if img_1 %}\n{% set array = array~img_1 %}\n{% endif %}\n--- repeat if for each col ---\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-07-17 14:02:10",
+    "text": "There has to be a way I am just not thinking of, my brain is fried at the moment lol"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-07-17 14:04:41",
+    "text": "I did something similar where I basically said```{{ set var1 = row.col1 }}{{ set var2 = row.col2 }}{{ set var3 = row.col3 }}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-07-17 14:05:13",
+    "text": "Then did ```{% set arr = [var1,var2,var3] %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-07-17 14:05:21",
+    "text": "But you know, without all the formatting errors"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-07-17 14:05:28",
+    "text": "yea thats what I am thinking I might have to do"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-07-17 14:05:50",
+    "text": "I couldn’t figure out another way to do it because you can’t change the value of variables once they are set"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-07-17 14:06:06",
+    "text": "Unless I’m missing something"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-07-17 14:07:56",
+    "text": "my only alternative was using a text field, hardcoding the directory of the file manager and then relying on the client to enter in the data correctly in the text field (basically comma sep) and keep the file manager correct. Then I would just split the text field into an array and loop it that way"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-07-17 14:08:00",
+    "edited": {
+      "time_stamp": "2018-07-17 14:08:04"
+    },
+    "text": "way too much human error available though"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-17 14:09:11",
+    "text": "What about a repeatable field for the column name?"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-07-17 14:09:47",
+    "text": "Can you explain that a bit more?"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-07-17 14:11:22",
+    "text": "as in this?\n```\n{% set my_options = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] %}\n{% for options in my_options %}\n\n{% endfor %}\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-07-17 14:12:30",
+    "text": "this is the general approach I would take, its just trying to find a way to get those image cols into the `my_option` var easier"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-07-17 14:13:32",
+    "text": "this would be output on the dynamic detail page not the listing page"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-17 14:13:59",
+    "text": "Do you only want the image columns from all columns?"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-07-17 14:14:43",
+    "text": "correct, i would be looking to grab all columns that start with a name like `slide_img_[number]`"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-07-17 14:15:02",
+    "text": "so \n```\nslide_img_1\nslide_img_2\netc...\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-17 14:15:16",
+    "text": "Why not just use `selectattr`"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-17 14:15:24",
+    "text": "On the list of columns"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-17 14:15:33",
+    "text": "<https://designers.HubSpot.com/docs/hubl/hubl-supported-filters>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-17 14:16:39",
+    "text": "Which now can be used on objects since I added <https://github.com/HubSpot/jinjava/pull/183>"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-07-17 14:20:16",
+    "edited": {
+      "time_stamp": "2018-07-17 14:20:23"
+    },
+    "text": "so how would this work in the section like so:\n```\n{% if dynamic_page_hubdb_row %}\n\n   {% for images in dynamic_page_hubdb_row|selectattr(    ) %}\n   {%endfor%}\n{%else%}\n.....\n````\nlike that?",
+    "reply_count": 14,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2018-07-17 14:21:28"
+      },
+      {
+        "time_stamp": "2018-07-17 14:21:44"
+      },
+      {
+        "time_stamp": "2018-07-17 14:32:59"
+      },
+      {
+        "time_stamp": "2018-07-17 14:33:07"
+      },
+      {
+        "time_stamp": "2018-07-17 14:33:08"
+      },
+      {
+        "time_stamp": "2018-07-17 14:35:26"
+      },
+      {
+        "time_stamp": "2018-07-17 14:35:56"
+      },
+      {
+        "time_stamp": "2018-07-17 15:03:20"
+      },
+      {
+        "time_stamp": "2018-07-18 08:06:31"
+      },
+      {
+        "time_stamp": "2018-07-18 08:06:42"
+      },
+      {
+        "time_stamp": "2018-07-18 08:06:45"
+      },
+      {
+        "time_stamp": "2018-07-18 08:12:54"
+      },
+      {
+        "time_stamp": "2018-07-18 08:14:35"
+      },
+      {
+        "time_stamp": "2018-07-18 08:14:43"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-17 14:21:28",
+    "text": "let me see if I can get a good example up"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-07-17 14:21:44",
+    "text": "That would be awesome. Thanks Matt."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-17 14:32:59",
+    "text": "`{% set img_columns = hubdb_table(848327).columns|selectattr(\"type\", \"equalto\", \"IMAGE\") %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-17 14:33:07",
+    "text": "which doesn't work right now apparently due to a BE bug"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-17 14:33:08",
+    "text": ":eyes:"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-17 14:35:26",
+    "text": "starring this for when you fix it :wink:"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-07-17 14:35:56",
+    "text": "likewise lol"
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-17 15:03:20",
+    "text": "<https://github.com/HubSpot/jinjava/pull/211>"
+  },
+  null
+]

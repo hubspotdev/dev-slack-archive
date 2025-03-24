@@ -1,0 +1,114 @@
+[
+  {
+    "text": "In our custom module we are using a <https://developers.HubSpot.com/docs/cms/building-blocks/module-theme-fields#spacing|spacing field> as follows:\n```{\n  \"name\": \"module_spacing\",\n  \"label\": \"Spacing around module\",\n  \"required\": false,\n  \"type\": \"spacing\",\n  \"limits\": {\n    \"padding\": {\n      \"top\": { \"max\": 5, \"min\": 1, \"units\": [\"rem\"] },\n      \"left\": { \"max\": 0, \"min\": 0, \"units\": [\"rem\"] },\n      \"bottom\": { \"max\": 5, \"min\": 1, \"units\": [\"rem\"] },\n      \"right\": { \"max\": 0, \"min\": 0, \"units\": [\"rem\"] }\n    },\n    \"margin\": {\n      \"top\": { \"max\": 0, \"min\": 0, \"units\": [\"rem\"] },\n      \"bottom\": { \"max\": 0, \"min\": 0, \"units\": [\"rem\"] }\n    }\n  },\n  \"default\": {\n    \"padding\": {\n      \"top\": { \"value\": 4, \"units\": \"rem\" },\n      \"left\": { \"value\": 0, \"units\": \"rem\" },\n      \"bottom\": { \"value\": 4, \"units\": \"rem\" },\n      \"right\": { \"value\": 0, \"units\": \"rem\" }\n    },\n    \"margin\": {\n      \"top\": { \"value\": 0, \"units\": \"rem\" },\n      \"bottom\": { \"value\": 0, \"units\": \"rem\" }\n    }\n  }\n}```\nAs you can see, we only allow `rem` as unit. But when you use the option \"Edit together\" and use the slider, it changes the units to `px` (see attached images).\nThe documentation says:\n```When a content creator edits all padding together, ... In addition, only the units shared by all sides will be available to the content creator.```\nIn my case, as I only have `rem` why does it change to `px`? I would say it is a bug.",
+    "time_stamp": "2023-11-15 03:33:11",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-11-15 03:37:11"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Aitor",
+      "poster_handle": "aitor.tomas"
+    },
+    "time_stamp": "2023-11-15 03:37:11",
+    "edited": {
+      "time_stamp": "2023-11-15 03:37:32"
+    },
+    "text": "Additionally, the documentation of the spacing module, for the `defaults`, it uses an Array for `units`. That seems to be incorrect, if you do so, uploading the module delivers the following error:\n```<e> [HubSpotAutoUploadPlugin] Uploading theme/modules/custom.module/fields.json failed\n<e> [HubSpotAutoUploadPlugin] internal error\n<e> [HubSpotAutoUploadPlugin] spacing field at path module_spacing has an invalid default value```\nTo fix it, `units` has to be a String."
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Swisher",
+      "poster_handle": "thomas766"
+    },
+    "time_stamp": "2023-11-15 11:52:26",
+    "edited": {
+      "time_stamp": "2023-11-15 11:55:35"
+    },
+    "text": "So, I created a child theme and moved a module over there to make it global. If I add a new page, it shows up in the “add to page” section on the front-end editor. If I open a page created before, it isn’t available. Is this how it works doesn’t seem very efficient. Even if I clone the page I can’t use it. Could this be because the page was created using the marketplace template not the child.",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-11-15 12:47:44"
+      },
+      {
+        "time_stamp": "2023-11-15 15:02:58"
+      },
+      {
+        "time_stamp": "2023-11-15 16:13:11"
+      },
+      {
+        "time_stamp": "2023-11-15 16:22:27"
+      },
+      {
+        "time_stamp": "2023-11-15 16:27:55"
+      },
+      {
+        "time_stamp": "2023-11-15 16:32:40"
+      },
+      {
+        "time_stamp": "2023-11-15 18:18:29"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2023-11-15 12:47:44",
+    "text": "Hey Thomas — Modules that are housed inside of a theme are only available on templates that are in that theme. With regards to child themes, All parent theme modules and templates are available to the child theme unless they are overridden in the child theme. However this doesn’t go the other way. Ie child theme modules are not available to the theme that they are based off of (Parent theme)\n\nIf you want to make a module accessible to all themes you would need to add it outside of a theme in DM.\n\nMaking a “Global Modules” directory and adding the module there would do the trick at a high level."
+  },
+  {
+    "text": "Thanks for the reply <@UQWGKUEN7>. I’m not sure if I’m following you. This is how it is setup with the custom module in the child theme.",
+    "time_stamp": "2023-11-15 15:02:58"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2023-11-15 16:13:11",
+    "text": "Right so modules that you add to `Power Theme - OBO` are only available on pages that use templates from `Power Theme - OBO` . However, because it is a child theme of `Power Theme`  if you build a page using a template from `Power Theme - OBO`  it _Will_ have access to modules from `Power Theme` , as child themes inherit basically everything from their parent theme by default.\n\nHowever — if you make a non-theme directory anywhere outside of a theme, `/GlobalModules`  for example, and place a module in there it will be available no matter what template or theme you use it on. `/GlobalModules/my-global-module.module` Will be available to any template."
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Swisher",
+      "poster_handle": "thomas766"
+    },
+    "time_stamp": "2023-11-15 16:22:27",
+    "edited": {
+      "time_stamp": "2023-11-15 16:27:41"
+    },
+    "text": "OK, now I’m following you. So you mean a top-level folder like in the screenshot.  Any downside to doing it like that?"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-11-15 16:27:55"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2023-11-15 16:32:40",
+    "edited": {
+      "time_stamp": "2023-11-15 16:33:21"
+    },
+    "text": "Correct — The only downside is potentially also the upside — that it shows up on every template. So if you are hosting multiple business units  and you don’t want to the module to show up in certain templates then this will sneak its way in. But I don’t think that there is anything inherently wrong with this approach by any means.\n\nAlso worth noting that in this context the global module will be “global” to the scope of your portal. Not just your theme. Ie any edits you make to the module will change the module everywhere it is located — regardless to what template, theme, etc that it is used in."
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Swisher",
+      "poster_handle": "thomas766"
+    },
+    "time_stamp": "2023-11-15 18:18:29",
+    "text": "Got it. This is my first time using a child theme, and this really helps me understand how this all works. Thank you."
+  }
+]

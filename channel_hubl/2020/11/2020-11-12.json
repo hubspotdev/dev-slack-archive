@@ -1,0 +1,53 @@
+[
+  {
+    "poster": {
+      "poster_name": "Amit Rai",
+      "poster_handle": "amit"
+    },
+    "time_stamp": "2020-11-12 14:17:46",
+    "text": "I’m trying to use get the widget value from a blog post template and use it on the listing template. However, when trying to get its value, it shows up empty. What I’ve tried:\n\n```{{ content.widgets.listing_image.body.value.src }}```\nHow can I get the widget value from another template and use it on another?\n\nFull details on this community post here: <https://community.HubSpot.com/t5/CMS-Development/Getting-image-widget-source/m-p/386188#M19560>"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Ichiriu",
+      "poster_handle": "michiriu"
+    },
+    "time_stamp": "2020-11-12 20:34:16",
+    "edited": {
+      "time_stamp": "2020-11-12 20:35:11"
+    },
+    "text": "hey there. trying to implement lazy loading for background images.  I have it working, but my solution uses Intersection Observer to toggle the div class when it’s in view.  The original module passed the `background-image` style and image source URL through Hubl like this:\n```&lt;!--original module.html--&gt;\n&lt;div class=\"background\" style=\"background-image: url({{ module.background_image.src }})\"&gt;```\nbut for the lazy implementation I have the background-image specified in the module.css:\n```&lt;!--new module.html--&gt;\n&lt;div id=\"bg-image\" class=\"background lazy\"&gt;&lt;/div&gt;```\n```&lt;!--new module.css--&gt;\n#bg-image {\n  /* calling Hubl in module.css does not work... */\n  /* background-image: url({{ module.background_image.src }});*/\n  background-image: url(&lt;img_url&gt;);\n}\n#bg-image.lazy {\n  background-image: none;\n  background-color: #F1F1FA;\n}```\nThis _works_, but I’d really like to retain the original functionality where `background-image` is passed from the webpage, and not hardcoded.  AIUI you can only use module_asset_url() inside module.css, which means it has to be a module-linked asset, which is not that much better than what I have.\n\nAny suggestions on how to get around this?",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-11-13 00:39:25"
+      },
+      {
+        "time_stamp": "2020-11-13 00:42:08"
+      },
+      {
+        "time_stamp": "2020-11-13 01:24:08"
+      },
+      {
+        "time_stamp": "2020-11-14 00:06:31"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Daniel Wong",
+      "poster_handle": "dan.wong"
+    },
+    "time_stamp": "2020-11-13 00:39:25",
+    "text": "I just use this plugin for my lazyloading:\n\n<https://appelsiini.net/projects/lazyload>\n\nset:\n\n&lt;div style=\"background-image: url()\" data-src=\"{{ module.background_image.src }}\"&gt;"
+  },
+  {
+    "poster": {
+      "poster_name": "Daniel Wong",
+      "poster_handle": "dan.wong"
+    },
+    "time_stamp": "2020-11-13 00:42:08",
+    "text": "The other option you have is to do it dynamically. In my projects, I give each seciton an ID in the template in the form of #background-section-*number*, then I use a custom module to create a repeater which spits out something like:\n```&lt;style&gt;\n{% for item in module.backgrounds %}\n#background-section-1{\n   background-image: {{ item.image.src }}\n}\n{% endfor %}\n&lt;/style&gt;```\n"
+  }
+]

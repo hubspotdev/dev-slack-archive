@@ -1,0 +1,29 @@
+[
+  {
+    "poster": {
+      "poster_name": "Scott Burton",
+      "poster_handle": "scott.burton"
+    },
+    "time_stamp": "2018-12-28 15:12:11",
+    "text": "I have a question about HubDB that <@U6GNQ7JBU> might have some insight on. Sorry in advance for the rambling:\n\nA lot of ACID-compliant databases (various SQL dbs) have a notion of locking or transactions - preventing other processes from modifying rows until the lock is released. Usually you need this when you need to make multiple queries as part of a single logical operation.\n\n\"Eventually consistent\" databases (I'm thinking MongoDB, Couch, Cassandra etc) don't usually have \"locking\", per se, because data is distributed and replicated, and you might be talking to one of any number of servers in a cluster. Instead, they use conflict resolution so that if two processes try to write the same data at nearly the same time, for example, the database decides which write is authoritative. Usually there's syntax like `UPDATE WHERE` and/or Primary Key values so that similar writes can be batched and resolved.\n\n(super big topic I'm just generalizing)\n\nHubDB seems to borrow a lot of the ACID-style operations from SQL databases, and the performance/availability characteristics of an Eventually Consistent database. I believe this makes sense for most HubSpot use cases. However, it makes automation challenging. Take this pseudocode for example:\n\n```\nfunction upsertRow(table, query, attributes) {\n  rows = table.getRows(query)\n  if (rows.length) {\n    table.updateRows(attributes)\n  } else {\n    table.createRow(attributes)\n  }\n}\n```\n\nI'm leaving a lot out for brevity, but imagine `getRows`, `createRow`, `updateRow` wrap the HubDB API. In a single-threaded context, that would work fine - calling `upsertRow` is idempotent for our purposes. However, since HubDB lacks conflict resolution (as far as I can tell), something like `Thread.new() { upsertRow(...) }` multiple times would give you multiple duplicate rows. I've tested this in various asynchronous contexts and found that nearly instantaneous simultaneous execution (within a second or so) results in duplication, because HubDB hasn't flushed the `POST` from `createRow` to disk yet.\n\n(seriously sorry to belabor this)\n\na lot of these databases use a syntax like:\n```\ncreateOrUpdate(table, primaryKey, attributes)\n```\nin order to get around this problem - this wraps an underlying conflict resolution mechanism that looks for writes on the same primary key (which is userspace-defined, not the same as `row_id`) and mark the first or (usually) last write as the winner.\n\n(seriously sorry)\n\nTL;DR is there something like an `UPDATE WHERE` syntax, or a method of resolving conflicts like this, in HubDB's API?",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2018-12-31 08:19:10"
+      },
+      {
+        "time_stamp": "2018-12-31 09:13:16"
+      },
+      {
+        "time_stamp": "2018-12-31 12:05:23"
+      },
+      {
+        "time_stamp": "2018-12-31 12:09:22"
+      },
+      {
+        "time_stamp": "2018-12-31 12:14:18"
+      }
+    ]
+  }
+]

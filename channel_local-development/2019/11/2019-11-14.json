@@ -1,0 +1,567 @@
+[
+  {
+    "poster": {
+      "poster_name": "Mattias Hagberg",
+      "poster_handle": "mattias.hagberg"
+    },
+    "time_stamp": "2019-11-14 03:50:45",
+    "text": "Hey! I'm trying to upload a \"header\" module (with basic scaffolding &lt;html&gt;, opening &lt;body&gt;, etc) but I'm getting errors. I'm guessing I need to change something in the json files?\n\n```[ERROR] Uploading file \"Site/modules/Header.module/module.html\" to \"Site/modules/Header.module/module.html\" failed\n[ERROR] internal error\n[ERROR] line 13: ':js_integration_head' is disabled in this context\n[ERROR] line 11: ':head_js' is disabled in this context\n[ERROR] line 10: ':head_css' is disabled in this context\n[ERROR] line 14: ':js_integration_body_start' is disabled in this context```"
+  },
+  {
+    "poster": {
+      "poster_name": "Mattias Hagberg",
+      "poster_handle": "mattias.hagberg"
+    },
+    "time_stamp": "2019-11-14 04:17:47",
+    "edited": {
+      "time_stamp": "2019-11-14 04:19:24"
+    },
+    "text": "Ah ok, I had to use `css_assets` in meta.json instead of including the CSS in the module.\n\nNext thing though, I created a new module locally, and when uploading it I get the following ```[ERROR] Uploading file \"Site/modules/Footer.module/module.html\" to \"Site/modules/Footer.module/module.html\" failed\n[ERROR] internal error\n[ERROR] undefined```\n\nThis seems to be caused by having `{{ standard_footer_includes }}` included in the module. But I kinda need those?"
+  },
+  {
+    "poster": {
+      "poster_name": "Mattias Hagberg",
+      "poster_handle": "mattias.hagberg"
+    },
+    "time_stamp": "2019-11-14 04:25:45",
+    "text": "Being able to use `{{ standard_header_includes }}` and `{{ standard_footer_includes }}` is kind of a big deal tbh"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 04:27:15",
+    "text": "So {{ standard_footer_includes }} as i understand it, is part of the template, not the module."
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 04:28:20",
+    "text": "are you using coded templates, or building your templates in the HubSpot design manager?"
+  },
+  {
+    "poster": {
+      "poster_name": "Mattias Hagberg",
+      "poster_handle": "mattias.hagberg"
+    },
+    "time_stamp": "2019-11-14 04:28:51",
+    "text": "Yeah, but that makes it very difficult when creating a drag and drop template"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 04:28:59",
+    "edited": {
+      "time_stamp": "2019-11-14 04:30:03"
+    },
+    "text": "It shouldnt. Those variables are just required for attached javascript and css (and other html tags)"
+  },
+  {
+    "poster": {
+      "poster_name": "Mattias Hagberg",
+      "poster_handle": "mattias.hagberg"
+    },
+    "time_stamp": "2019-11-14 04:30:48",
+    "text": "I get that, but it's also making me lose control over what's included"
+  },
+  {
+    "poster": {
+      "poster_name": "Mattias Hagberg",
+      "poster_handle": "mattias.hagberg"
+    },
+    "time_stamp": "2019-11-14 04:31:08",
+    "text": "I can't do stuff like `{{ standard_header_includes|cut('/ui/css/site.min.css') }}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Mattias Hagberg",
+      "poster_handle": "mattias.hagberg"
+    },
+    "time_stamp": "2019-11-14 04:32:33",
+    "text": "Oh, I might be thinking about this the wrong way"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 04:32:54",
+    "text": "Yeah, so the standard_*_includes"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 04:33:28",
+    "text": "does some key HubSpot stuff, like including tracking and handles processing/outputting js/css"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 04:35:32",
+    "edited": {
+      "time_stamp": "2019-11-14 04:35:36"
+    },
+    "text": "So you’re able to invoke {{ require_js(“path/to/js.js”, “head”) }}"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 04:35:50",
+    "text": "and it’ll be incl;uded where {{ standard_header_includes }} is invoked"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 04:35:52",
+    "edited": {
+      "time_stamp": "2019-11-14 04:36:01"
+    },
+    "text": "<https://designers.HubSpot.com/en/docs/hubl/hubl-supported-functions#require-js>"
+  },
+  {
+    "poster": {
+      "poster_name": "Mattias Hagberg",
+      "poster_handle": "mattias.hagberg"
+    },
+    "time_stamp": "2019-11-14 04:36:36",
+    "text": "That's true, and I also keep forgetting about the Site Header/Footer HTML in the settings"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 04:36:41",
+    "text": "exactly"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 04:36:44",
+    "edited": {
+      "time_stamp": "2019-11-14 04:37:13"
+    },
+    "text": "are you using the design manager to build your ui?"
+  },
+  {
+    "poster": {
+      "poster_name": "Mattias Hagberg",
+      "poster_handle": "mattias.hagberg"
+    },
+    "time_stamp": "2019-11-14 04:37:32",
+    "text": "I'm trying out a couple different ways, both using coded templates and drag n drop"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 04:38:11",
+    "text": "using the hubl cli?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 04:38:57",
+    "edited": {
+      "time_stamp": "2019-11-14 04:39:04"
+    },
+    "text": "but yeah - if you want more control, ie. want to be able to add extra stuff in the header/footer via a html partial when using the design manager"
+  },
+  {
+    "text": "",
+    "time_stamp": "2019-11-14 04:41:40"
+  },
+  {
+    "poster": {
+      "poster_name": "Mattias Hagberg",
+      "poster_handle": "mattias.hagberg"
+    },
+    "time_stamp": "2019-11-14 04:41:48",
+    "text": "Ah yes, that's true"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 04:42:57",
+    "edited": {
+      "time_stamp": "2019-11-14 04:47:48"
+    },
+    "text": "but yeah - with your footer module, that doesn’t really need to handle any of that output - that is the responsibility of the template (well, that’s the way i understand it!)"
+  },
+  {
+    "poster": {
+      "poster_name": "Mattias Hagberg",
+      "poster_handle": "mattias.hagberg"
+    },
+    "time_stamp": "2019-11-14 04:51:00",
+    "text": "Thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Gregory Cornelius",
+      "poster_handle": "gcornelius"
+    },
+    "time_stamp": "2019-11-14 06:42:37",
+    "edited": {
+      "time_stamp": "2019-11-14 06:45:10"
+    },
+    "text": "<@UGA6NJFUM> have you seen <https://github.com/HubSpot/cms-theme-boilerplate>? the reason that i mention it is that it can sometimes be confusing months later when a developer tries to figure out where code corresponding to a fragment of HTML for a page is coming from. One nice thing about extending a `base.html` and using blocks (and also functions like `require_js` and `require_css`) to add specific functionality on a template-by-template basis is that it is easier to understand what is going on."
+  },
+  {
+    "poster": {
+      "poster_name": "Mattias Hagberg",
+      "poster_handle": "mattias.hagberg"
+    },
+    "time_stamp": "2019-11-14 06:44:46",
+    "text": "Ah, hadn't even thought about using blocks in that way, gonna have to rethink some stuff. Thanks for pointing it out!"
+  },
+  {
+    "poster": {
+      "poster_name": "Gregory Cornelius",
+      "poster_handle": "gcornelius"
+    },
+    "time_stamp": "2019-11-14 06:44:47",
+    "text": "<@UDFTHC6PK> thanks for the feedback. i am still digesting it."
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-11-14 06:46:55",
+    "text": "no problem! We're in the learning process as well on it and digesting it on our own side."
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-11-14 06:54:30",
+    "text": "we decided that there were two points main points where this would be caused:\n1) a project that starts within the online Design Manager and then is moved to a local dev setup with multiple sandboxes used\n2) After a project is created, if tooling happens in a design manager and any local developers need to run `fetch` to pull in the changes made online"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-11-14 06:55:24",
+    "edited": {
+      "time_stamp": "2019-11-14 06:57:15"
+    },
+    "text": "It is less of an issue if the following workflow is used:\n1) Start new project in local-dev\n2) Push initial code from local-dev to git repo\n3) Any additional developers use the git repo as the source of truth and don't run fetch from their local sandbox\n4) `upload` and `watch` function fine because any of the dynamically updated `.json ids` wouldn't be changed and would still be empty for local purposes"
+  },
+  {
+    "poster": {
+      "poster_name": "Gregory Cornelius",
+      "poster_handle": "gcornelius"
+    },
+    "time_stamp": "2019-11-14 08:30:58",
+    "text": "<@U7W5SDG3D> fyi, an annotation will be available soon."
+  },
+  {
+    "poster": {
+      "poster_name": "Erik Rorstrom",
+      "poster_handle": "erik.rorstrom"
+    },
+    "time_stamp": "2019-11-14 08:31:40",
+    "text": "Awesome!"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-11-14 09:56:56",
+    "text": "Annotation is now available :slightly_smiling_face:\n<https://designers.HubSpot.com/docs/tools/local-development-reference#local-template-format>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-11-14 10:00:05",
+    "text": "When building coded templates locally there is now an annotation for `enableDomainStylesheets` enabling you to control if a coded template uses stylesheets defined under settings&gt; website &gt; pages\n<https://designers.HubSpot.com/docs/tools/local-development-reference#local-template-format>"
+  },
+  {
+    "poster": {
+      "poster_name": "Anthony Pizzurro",
+      "poster_handle": "anthonypizzurro"
+    },
+    "time_stamp": "2019-11-14 12:43:20",
+    "text": "^ this is pretty close to the workflow that we’ve been using. If you can treat your git repo as the source of truth that will prevent most conflicts.\n\nFor field `id` you can define your own id- it could simply be `id: \"button_text\"`. As long as you define them, they shouldn’t be overwritten on fetch."
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2019-11-14 12:56:45",
+    "text": "i did a test of setting my ID yesterday and it was overwritten... :shrug:"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-11-14 14:15:59",
+    "text": "`meta.json` = overwritten IDs\n`fields.json` = happy custom IDs for each custom element in the module"
+  },
+  {
+    "poster": {
+      "poster_name": "Anthony Pizzurro",
+      "poster_handle": "anthonypizzurro"
+    },
+    "time_stamp": "2019-11-14 14:18:42",
+    "text": "Which id in meta.json is getting overwritten? `module_id`?"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2019-11-14 14:20:43",
+    "text": "<@U26B530N6> yep"
+  },
+  {
+    "poster": {
+      "poster_name": "Anthony Pizzurro",
+      "poster_handle": "anthonypizzurro"
+    },
+    "time_stamp": "2019-11-14 14:26:33",
+    "text": "Gotcha. I’d recommend that you never use that property. Which means deleting it any time you fetch and never committing it in git."
+  },
+  {
+    "poster": {
+      "poster_name": "Anthony Pizzurro",
+      "poster_handle": "anthonypizzurro"
+    },
+    "time_stamp": "2019-11-14 14:27:32",
+    "text": "As long as you’re referencing your modules by path, there’s no need to maintain that value on your end"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2019-11-14 14:32:34",
+    "text": "deleting each time you fetch...sounds...fun"
+  },
+  {
+    "poster": {
+      "poster_name": "Anthony Pizzurro",
+      "poster_handle": "anthonypizzurro"
+    },
+    "time_stamp": "2019-11-14 14:35:02",
+    "text": "lol, not ideal"
+  },
+  {
+    "poster": {
+      "poster_name": "Anthony Pizzurro",
+      "poster_handle": "anthonypizzurro"
+    },
+    "time_stamp": "2019-11-14 14:35:21",
+    "text": "Are you fetching alot? What’s the use case?"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-11-14 14:43:32",
+    "text": "<@U26B530N6> this point speaks to a simplified version a bit:\n<https://HubSpotdev.slack.com/archives/CLJJXGTC0/p1573739670233600?thread_ts=1573660754.202200&amp;cid=CLJJXGTC0>"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-11-14 14:43:54",
+    "text": "as does.....here :"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-11-14 14:43:55",
+    "text": "<https://HubSpotdev.slack.com/archives/CLJJXGTC0/p1573665723204900?thread_ts=1573660754.202200&amp;cid=CLJJXGTC0>"
+  },
+  {
+    "poster": {
+      "poster_name": "Gregory Cornelius",
+      "poster_handle": "gcornelius"
+    },
+    "time_stamp": "2019-11-14 14:48:21",
+    "text": "<@UDFTHC6PK> thanks for further explaining the issue. we have a much better handle now on the problem and will work on addressing."
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2019-11-14 14:49:35",
+    "text": ":bam:"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-11-14 14:49:45",
+    "text": "As my 2006 version of myself would say, \"fo shizzle\""
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2019-11-14 14:51:02",
+    "text": "god"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2019-11-14 14:51:09",
+    "text": "you ruin everything, <@UDFTHC6PK>"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2019-11-14 14:58:25",
+    "text": "um, <@UDFTHC6PK> , you have to respond to that or i sound like a jerk"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-11-14 15:01:55",
+    "text": "hehehehe"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-11-14 15:02:03",
+    "text": "nahhhhh. Imma let you hang"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-11-14 15:02:07",
+    "text": ":smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2019-11-14 15:02:30",
+    "text": ":hotdog:"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-11-14 15:04:23",
+    "text": ":bacon:"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2019-11-14 15:04:35",
+    "text": ":slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 16:45:57",
+    "edited": {
+      "time_stamp": "2019-11-14 17:19:25"
+    },
+    "text": "I stupidly fetch on a feature branch, and now my merge is interesting :disappointed:"
+  },
+  {
+    "poster": {
+      "poster_name": "Douglas Welcome",
+      "poster_handle": "dwelcome"
+    },
+    "time_stamp": "2019-11-14 16:58:40",
+    "text": "typo on local module dev page:"
+  },
+  {
+    "poster": {
+      "poster_name": "Douglas Welcome",
+      "poster_handle": "dwelcome"
+    },
+    "time_stamp": "2019-11-14 16:58:44",
+    "text": "```}\n       \"name\" : \"text_field\",\n       \"label\" : \"Text field\",\n       \"sortable\" : false,\n       \"required\" : false,\n       \"locked\" : false,\n       \"validation_regex\" : \"\",\n       \"placeholder\" : \"isn't it neat\",\n       \"allow_new_line\" : false,\n       \"show_emoji_picker\" : false,\n       \"type\" : \"text\",\n       \"default\" : \"This is default text\"\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Douglas Welcome",
+      "poster_handle": "dwelcome"
+    },
+    "time_stamp": "2019-11-14 16:59:06",
+    "edited": {
+      "time_stamp": "2019-11-14 16:59:23"
+    },
+    "text": "should be `{` not `}` at the top. just a heads up :wink:",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-11-15 05:44:11"
+      },
+      {
+        "time_stamp": "2019-11-15 10:32:31"
+      },
+      {
+        "time_stamp": "2019-11-15 10:33:30"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-14 17:09:47",
+    "edited": {
+      "time_stamp": "2019-11-14 17:19:05"
+    },
+    "text": "because i’m lazy and don’t want to do one of these merges again I’ve just edited the HubSpot fetch command until a patch is ready. If you like to live on the edge, or just dislike large merge conflicts :smile: <https://gist.github.com/kieranja/0be668988e565bc30bc189bad26402b0>"
+  }
+]

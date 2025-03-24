@@ -1,0 +1,287 @@
+[
+  {
+    "text": "Hello everyone\nI am trying to get a contact property called \"companyName\". The internal name is \"company\", and when I try to get the information, i get an undefined error. I guess that I am not calling the field the good way. Anyone has a documentation with all the good way to call your properties ?\nI am able to get first / last name\n\nHere is my code that is not working :\n\nThank you :slightly_smiling_face:",
+    "time_stamp": "2023-07-21 04:00:34",
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-07-21 04:03:38"
+      },
+      {
+        "time_stamp": "2023-07-21 04:05:26"
+      },
+      {
+        "time_stamp": "2023-07-21 04:10:32"
+      },
+      {
+        "time_stamp": "2023-07-21 04:48:22"
+      },
+      {
+        "time_stamp": "2023-07-21 05:53:49"
+      },
+      {
+        "time_stamp": "2023-07-21 05:54:01"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Pokorniecki",
+      "poster_handle": "byron.pokorniecki.ext"
+    },
+    "time_stamp": "2023-07-21 04:03:38",
+    "text": "I am not too sure about the HubSpotClient, but in general the underlying API requires you to include all the relevant properties of an entity to also get them in the response. So you will have a set of standard properties always sent to you, but for everything else you have to include the array of properties that you want to receive."
+  },
+  {
+    "poster": {
+      "poster_name": "Thibault Brou",
+      "poster_handle": "thibault.brou"
+    },
+    "time_stamp": "2023-07-21 04:05:26",
+    "text": "Can you show me an example ? I don't really get what you mean by include the array of properties :confused:"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Pokorniecki",
+      "poster_handle": "byron.pokorniecki.ext"
+    },
+    "time_stamp": "2023-07-21 04:10:32",
+    "text": "<https://developers.HubSpot.com/docs/api/crm/contacts>\n\nI think its best to just have a quick read here.\n\nThere is an example of how you would request contacts (but the properties are empty in the example)\n\n```const HubSpot = require('@HubSpot/api-client');\n\nconst HubSpotClient = new HubSpot.Client({\"accessToken\":\"YOUR_ACCESS_TOKEN\"});\n\nconst limit = 10;\nconst after = undefined;\nconst properties = undefined;\nconst propertiesWithHistory = undefined;\nconst associations = undefined;\nconst archived = false;\n\ntry {\n  const apiResponse = await HubSpotClient.crm.contacts.basicApi.getPage(limit, after, properties, propertiesWithHistory, associations, archived);\n  console.log(JSON.stringify(apiResponse, null, 2));\n} catch (e) {\n  e.message === 'HTTP request failed'\n    ? console.error(JSON.stringify(e.response, null, 2))\n    : console.error(e)\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Harun Kumar Siva",
+      "poster_handle": "harun"
+    },
+    "time_stamp": "2023-07-21 04:48:22",
+    "text": "This is a frequently asked question here :slightly_smiling_face:.\nFrom yesterday: <https://HubSpotdev.slack.com/archives/C2YHAHB6K/p1689870743403749?thread_ts=1689868740.985979&amp;cid=C2YHAHB6K>"
+  },
+  {
+    "poster": {
+      "poster_name": "Harun Kumar Siva",
+      "poster_handle": "harun"
+    },
+    "time_stamp": "2023-07-21 04:59:01",
+    "edited": {
+      "time_stamp": "2023-07-21 04:59:17"
+    },
+    "text": "Here is an example that you can adapt for contacts search. It is essentially specifying the property name, the relational operator and value as a filter criteria in the POST request body\n\n<https://HubSpotdev.slack.com/archives/C2YHAHB6K/p1686221557533209?thread_ts=1686173467.566509&amp;cid=C2YHAHB6K>"
+  },
+  {
+    "poster": {
+      "poster_name": "Harun Kumar Siva",
+      "poster_handle": "harun"
+    },
+    "time_stamp": "2023-07-21 05:03:47",
+    "text": "An email search could look like\n\n```# Request body\n{\n    'filterGroups': [\n        {\n            'filters': [\n                {\n                    'propertyName': 'email',\n                    'operator': 'EQ',\n                    'value': '<mailto:email@example.com|email@example.com>'\n                }\n            ]\n        }\n    ]\n}```"
+  },
+  {
+    "text": "Ok thanks <@U04UF7BNBK4> :slightly_smiling_face: so in my case I would have something like this ?",
+    "time_stamp": "2023-07-21 05:53:49"
+  },
+  {
+    "poster": {
+      "poster_name": "Thibault Brou",
+      "poster_handle": "thibault.brou"
+    },
+    "time_stamp": "2023-07-21 05:54:01",
+    "text": "<@U058ZPH175H> thanks, will look for this :slightly_smiling_face:"
+  },
+  {
+    "text": "I know have a fully new function based on the API endpoint documentation. However, I have a parsing error on the first try{} line ( const apiResponse = ). The error is Parsing error : unexpected token HubSpotClient. And when I force the run, I get an ERROR Uncaught exception, \"await is only valid in async functions\".\n\nIs it the API documentation that is not up to date, or am I doing something wrong ?",
+    "time_stamp": "2023-07-21 07:45:46",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-07-21 08:46:15"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Ramos",
+      "poster_handle": "ben.ramos"
+    },
+    "time_stamp": "2023-07-21 08:34:16",
+    "text": "500 pages or records per page? <@U01QVR44MEY> also that will depend on your HubSpot account and my customer’s HubSpot’s account? As in pro vs ent vs free ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-21 08:43:10",
+    "text": "So in theory if you wanted to run a request to pull 1000 records you could, but if you wanted 1000 records and a lot of properties you couldn't do that"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-21 08:43:10",
+    "text": "<https://developers.HubSpot.com/docs/cms/data/query-HubSpot-data-using-graphql#query-complexity-and-account-limits>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-21 08:43:10",
+    "text": "associations, objects, and properties all have different point values"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-21 08:43:10",
+    "text": "but you get a lot higher limit than you get with the normal apis"
+  },
+  {
+    "poster": {
+      "poster_name": "Brad Tollett",
+      "poster_handle": "brad208"
+    },
+    "time_stamp": "2023-07-21 08:46:15",
+    "edited": {
+      "time_stamp": "2023-07-21 08:49:32"
+    },
+    "text": "You need to wrap your code in a self invoking anonymous async function at a minimum. Then I recommend researching async/await more. `(async() = { ... })();`"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-21 09:40:55",
+    "text": "can you see the app installed in the settings page?"
+  },
+  {
+    "poster": {
+      "poster_name": "Zach Ruben",
+      "poster_handle": "zach796"
+    },
+    "time_stamp": "2023-07-21 09:52:58",
+    "text": "Hmm, it desn't show up in the settings page, but using the install link it says that it successfully installs. Do you know if there is a maximum number of apps for sandboxes?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-21 10:20:38",
+    "text": "nope that shouldn't be an issue. Did you send at least one auth request?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-21 10:21:51",
+    "text": "Here's a tutorial I put together with <@UD53A9UUR> on this exact topic (installing HubSpot apps in a one off fashion (primarily for webhooks)) <https://youtu.be/j64kqwCvXWI>"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Niederberger",
+      "poster_handle": "thomas.niederberger"
+    },
+    "time_stamp": "2023-07-21 10:39:50",
+    "text": "Maybe I’m thinking in the wrong direction but what i have to do is to create a json with companies and as a nested object some values out of a custom object. Not all the companies, just some with certain criteria’s. Dataset works, but I have no API and then I thought about GraphQL or something. The main goal is for a 3rd party website to look up companies who offer certain products (based on the custom object)."
+  },
+  {
+    "poster": {
+      "poster_name": "Carolina Kauark Fontes",
+      "poster_handle": "carolina"
+    },
+    "time_stamp": "2023-07-21 11:33:39",
+    "text": "Hey guys, I have a doubt. Can we have the same id for more than one typo record in one portal? For example: If there is a contact record with id \"123\" and a company record with the same id \"123\" in the same portal?",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-07-21 12:17:13"
+      },
+      {
+        "time_stamp": "2023-07-21 12:17:33"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Zach Ruben",
+      "poster_handle": "zach796"
+    },
+    "time_stamp": "2023-07-21 12:03:51",
+    "text": "thanks! checking it out"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-21 12:04:14",
+    "text": "np!"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-21 12:17:13",
+    "text": "that really shouldn't be the case"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-21 12:17:33",
+    "text": "I've never seen it but I think it's technically possible. But would be super super rare"
+  },
+  {
+    "poster": {
+      "poster_name": "Zach Ruben",
+      "poster_handle": "zach796"
+    },
+    "time_stamp": "2023-07-21 12:20:22",
+    "text": "Figured it out! I had not set the refres token yet for the app after connecting it so it was not actually connected for the webhooks ."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-21 12:23:08",
+    "text": "yeah that will do it"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-21 12:23:14",
+    "text": "glad you got it,"
+  },
+  {
+    "poster": {
+      "poster_name": "Zach Ruben",
+      "poster_handle": "zach796"
+    },
+    "time_stamp": "2023-07-21 12:23:34",
+    "text": "thanks for the help"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-21 12:23:41",
+    "text": "of course bro"
+  },
+  {
+    "text": "Shouldn’t that be enough? to get the items?",
+    "time_stamp": "2023-07-21 12:33:37"
+  }
+]

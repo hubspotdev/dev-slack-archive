@@ -1,0 +1,73 @@
+[
+  {
+    "poster": {
+      "poster_name": "Alex Woodbridge",
+      "poster_handle": "alex.woodbridge"
+    },
+    "time_stamp": "2023-10-06 08:48:16",
+    "text": "<@U04T2CUCP8T> apologies for the delayed response - if you have some sample code code to share that would be a good start thanks"
+  },
+  {
+    "poster": {
+      "poster_name": "Diana Contreras",
+      "poster_handle": "dco"
+    },
+    "time_stamp": "2023-10-06 10:24:35",
+    "edited": {
+      "time_stamp": "2023-10-06 10:29:06"
+    },
+    "text": "HELP! So I have been trying to build out the referral program via custom code actions in a workflow from one of the HubSpot workshops that a previous account manager sent to me as a use case for Ops Hub...\n\nEverything so far has been working as expected. I have a rudimentary knowledge of JavaScript (enough to get me into trouble) I was able to debug some of the previous reference errors I was getting, but now that I have whack-a-moled my way through those I keep getting this warning:\n```WARNING: The logs for this function have exceeded the 4KB limit.```\n when I run a test on this code:\n```/*\nThis code is used to attribute a referral back to the correct contact. This is done by querying the CRM to find a contact matching\nthe referrer value associated to the enrolled contact. We then update the appropriate properties on both the referring and referred contact.\n*/\n\n//1. Import required libraries\nconst HubSpot = require('@HubSpot/api-client'); // HubSpot Node Client will allow us to make calls to HubSpot API\n\nexports.main = (event) => {\n\n    //2. Create our client\n    const HubSpotClient = new HubSpot.Client({\n        apiKey: process.env.HAPIKEY // Reference our API key - this should have been added as a secret\n    });\n\n    //3. Store the referrer ID linked to the enrolled contact in a variable\n    const referrer = event.inputFields['Referrer'];\n\n    //4. Configure our search query\n    const filterGroup = {\n        filters: [{ // filters are used to limit the results returned. We will simply filter for any contact who has a matching value for the referrer ID\n            propertyName: 'Referrer ID',\n            operator: 'EQ',\n            value: referrer\n        }]\n    };\n\n    // We specify what properties we'd like to return from this search\n    const properties = ['referrer_id', 'number_of_referrals', 'firstname', 'lastname', 'email']\n\n    // We create our search object which we will pass to our api call\n    const publicObjectSearchRequest = {\n        filterGroups: [filterGroup],\n        properties\n    };\n\n    //5. Search the CRM for the contact using the query defined above\n    HubSpotClient.crm.contacts.searchApi.doSearch(publicObjectSearchRequest).then(results => {\n\n        //6. Store data in variables\n        let contactId = results.body.results[0].id; // Id of the referring contact\n        let referred_by = results.body.results[0].properties.firstname + \" \" + results.body.results[0].properties.lastname; // full name of the referring contact\n        let totalReferrals = 0;\n\n        console.log(\"referred_by\" + referred_by);\n\n        //7. Check to see if this is their first referral. If it is we set \"totalReferrals\" property to \"0\"\n        if (results.body.results[0].properties.number_of_referrals === null || results.body.results[0].properties.number_of_referrals === undefined || results.body.results[0].properties.number_of_referrals === \"\") {\n            totalReferrals = 0;\n        } else { // Otherwise we retrieve the current number of referrals\n            totalReferrals = parseInt(results.body.results[0].properties.number_of_referrals)\n        }\n\n        let totalReferralsUpdated = totalReferrals + 1; // Increment referrals\n\n        //8. Create a new date (todays date)\n        var d = new Date();\n        d.setUTCHours(0, 0, 0, 0);\n\n        //9. Update Referred Contact's \"referred by\" property  \t\n        HubSpotClient.crm.contacts.basicApi.update(event.object.objectId, {\n            \"properties\": {\n                \"referred_by\": referred_by\n            }\n        })\n\n        //10. Update Referring Contacts \"number of referrals\" and \"recent referral date\" properties      \t\n        HubSpotClient.crm.contacts.basicApi.update(contactId, {\n            \"properties\": {\n                \"number_of_referrals\": totalReferralsUpdated,\n                \"recent_referral_date\": d\n            }\n        })\n    });\n};```",
+    "reply_count": 7,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-10-06 11:10:02"
+      },
+      {
+        "time_stamp": "2023-10-06 15:04:10"
+      },
+      {
+        "time_stamp": "2023-10-06 16:13:29"
+      },
+      {
+        "time_stamp": "2023-10-17 15:08:50"
+      },
+      {
+        "time_stamp": "2023-10-17 15:11:36"
+      },
+      {
+        "time_stamp": "2023-10-17 15:12:03"
+      },
+      {
+        "time_stamp": "2023-10-17 15:12:43"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Diana Contreras",
+      "poster_handle": "dco"
+    },
+    "time_stamp": "2023-10-06 11:10:02",
+    "edited": {
+      "time_stamp": "2023-10-06 11:10:41"
+    },
+    "text": "also posted this in the HS community in case anyone wants to get extra credit in the community forum :slightly_smiling_face: : <https://community.HubSpot.com/t5/APIs-Integrations/Getting-a-4KB-Limit-Warning/m-p/860959#M68018>"
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2023-10-06 15:04:10",
+    "text": "You’re seeing that because you’re trying to log more data than is permitted in a coded action. I’d recommend trying to be more specific in what you’re logging and/or troubleshoot by returning before all of your code executes, going step by step until you find the culprit. Bottom line being, you’re going to want to limit the amount of data being logged. Testing locally is another option. Can be a bit inconvenient."
+  },
+  {
+    "poster": {
+      "poster_name": "Diana Contreras",
+      "poster_handle": "dco"
+    },
+    "time_stamp": "2023-10-06 16:13:29",
+    "text": "that's what I feared - thanks for confirming <@U039PUBV59N>"
+  }
+]

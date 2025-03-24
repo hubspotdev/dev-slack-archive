@@ -1,0 +1,105 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jorrin Zeebregts",
+      "poster_handle": "jorrin.zeebregts"
+    },
+    "time_stamp": "2025-01-17 01:35:51",
+    "text": "Hi Zach, thank you for reaching out. this is my current code in my workflow action. The data is structured just like your example right? or am i missing something?\n```import requests\nimport json\nimport os\nimport time\n\ndef main(event):\n    HubSpot_api_token = os.environ.get(\"HubSpot_apiToken\")\n    if not HubSpot_api_token:\n        return {\n            \"outputFields\": {\n                \"error\": \"Missing HubSpot API token in environment variables.\",\n                \"status\": \"error\"\n            }\n        }\n\n    table_id = '282685677'  # Your HubDB table ID\n    base_url = f'<https://api.hubapi.com/cms/v3/hubdb/tables/{table_id}/rows>'\n    headers = {\n        'Authorization': f'Bearer {HubSpot_api_token}',\n        'Content-Type': 'application/json'\n    }\n\n    # Extract input fields from the event\n    hs_object_id = event['inputFields'].get('hs_object_id')\n    latitude = event['inputFields'].get('latitude')\n    longitude = event['inputFields'].get('longitude')\n    row_id = event['inputFields'].get('row_id')\n\n    if not hs_object_id or latitude is None or longitude is None:\n        return {\n            \"outputFields\": {\n                \"error\": \"Missing required input fields (hs_object_id, latitude, or longitude).\",\n                \"status\": \"error\"\n            }\n        }\n\n    # Prepare data for creation or update\n    data = {\n        \"values\": {\n            \"recordid\": hs_object_id,\n            \"location\": {\n                \"lat\": latitude,\n                \"long\": longitude\n            }\n        }\n    }\n\n    try:\n        # Step 1: Check or create/update the HubDB row\n        if row_id:\n            check_url = f'{base_url}/{row_id}'\n            check_response = requests.get(check_url, headers=headers)\n            if check_response.status_code == 404:\n                row_id = None  # Reset row_id to create a new row\n            elif check_response.status_code != 200:\n                raise Exception(f\"Error checking row {row_id}: {check_response.status_code} {check_response.text}\")\n\n        if row_id:\n            # Update existing row\n            update_url = f'{base_url}/{row_id}/draft'\n            response = requests.patch(update_url, headers=headers, data=json.dumps(data))\n            if response.status_code != 200:\n                raise Exception(f\"Error updating row {row_id}: {response.status_code} {response.text}\")\n        else:\n            # Create a new row\n            response = <http://requests.post|requests.post>(base_url, headers=headers, data=json.dumps(data))\n            if response.status_code != 201:\n                raise Exception(f\"Error creating new row: {response.status_code} {response.text}\")\n            row_id = response.json().get('id')\n\n        # Step 2: Immediately update the contact with the new row_id\n        update_contact_url = f'<https://api.hubapi.com/crm/v3/objects/contacts/{hs_object_id}>'\n        contact_data = {\n            \"properties\": {\n                \"hubdb__row_id\": row_id\n            }\n        }\n        contact_response = requests.patch(update_contact_url, headers=headers, data=json.dumps(contact_data))\n        if contact_response.status_code != 200:\n            raise Exception(f\"Error updating contact {hs_object_id}: {contact_response.status_code} {contact_response.text}\")\n\n        # Step 3: Publish the table (with retry logic)\n        publish_url = f'<https://api.hubapi.com/cms/v3/hubdb/tables/{table_id}/draft/publish>'\n        max_retries = 5\n        backoff_time = 5  # Start with 5 seconds\n\n        for attempt in range(max_retries):\n            publish_response = <http://requests.post|requests.post>(publish_url, headers=headers)\n            if publish_response.status_code == 200:\n                break\n            elif publish_response.status_code == 429:\n                # Raise the error to allow HubSpot to retry\n                raise Exception(f\"Rate limit reached: {publish_response.text}\")\n            elif \"Table is already locked for write operation\" in publish_response.text:\n                time.sleep(backoff_time)\n                backoff_time *= 2  # Exponential backoff\n            else:\n                raise Exception(f\"Error publishing table: {publish_response.status_code} {publish_response.text}\")\n        else:\n            raise Exception(\"Failed to publish table after retries.\")\n\n        return {\n            \"outputFields\": {\n                \"row_id\": row_id,\n                \"status\": \"success\"\n            }\n        }\n\n    except requests.exceptions.RequestException as e:\n        if e.response and e.response.status_code == 429:\n            raise e  # Allow HubSpot to retry on rate limits\n        return {\n            \"outputFields\": {\n                \"error\": f\"API request error: {str(e)}\",\n                \"status\": \"error\"\n            }\n        }\n\n    except Exception as e:\n        if \"RATE_LIMIT\" in str(e):\n            raise  # Explicitly raise rate limit errors for HubSpot to retry\n        return {\n            \"outputFields\": {\n                \"error\": str(e),\n                \"status\": \"error\"\n            }\n        }```"
+  },
+  {
+    "poster": {
+      "poster_name": "Fidel Besada Juárez",
+      "poster_handle": "fbesadajuarez"
+    },
+    "time_stamp": "2025-01-17 02:37:52",
+    "edited": {
+      "time_stamp": "2025-01-17 02:38:12"
+    },
+    "text": "Apparently they have reverted this new feature, and now we can invoke the export without the `hs_object_id` again…"
+  },
+  {
+    "poster": {
+      "poster_name": "Arnel Labastilla",
+      "poster_handle": "arnel244"
+    },
+    "time_stamp": "2025-01-17 07:38:54",
+    "text": "Hello, is this the right channel to ask questions regarding data warehouse?"
+  },
+  {
+    "poster": {
+      "poster_name": "Leandro Michelena",
+      "poster_handle": "leandro.michelena"
+    },
+    "time_stamp": "2025-01-17 08:40:35",
+    "text": ":shrug:"
+  },
+  {
+    "poster": {
+      "poster_name": "Leandro Michelena",
+      "poster_handle": "leandro.michelena"
+    },
+    "time_stamp": "2025-01-17 08:40:45",
+    "text": "Thanks for letting us know :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Katherine Taylor",
+      "poster_handle": "katherine.taylor"
+    },
+    "time_stamp": "2025-01-17 09:01:58",
+    "text": "Hi all! Newbie here. I am trying to use the Dotdigital API to sync historic opt-out data to HubSpot, and wondering if anyone had experience with this?\n\nI want to set up a sync so we capture any historic opt-outs, as we migrate contacts into HubSpot over time.\n\nI have already set up the API connection, but struggling to understand the criteria match between systems."
+  },
+  {
+    "poster": {
+      "poster_name": "Loriauna Mora",
+      "poster_handle": "loriauna"
+    },
+    "time_stamp": "2025-01-17 11:32:36",
+    "text": "Hi everyone! I'm curious to hear how others have tackled exporting all engagement data from HubSpot. I'm not an expert, so I'd love to learn from your experiences.\n\nCurrently, I’m using a Google Sheet along with a Google Apps Script to pull engagement data from the HubSpot API and log it into specific tabs in the sheet (e.g., separate tabs for calls, tasks, emails, etc.). The process works, but there’s a challenge: our client has around 90,000 engagements, and Google Apps Script times out after 30 minutes on business accounts. Because of this, I have to manually re-run the script multiple times to complete the export.\n\nTo make this slightly easier, I’ve set up a property in the script to store the latest offset value, so the process resumes where it left off. While this workaround gets the job done, it’s tedious, and I’m wondering if there’s a better way to handle large data exports like this.\n\nAny advice or insights would be much appreciated! Thanks!",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-01-20 10:20:55"
+      },
+      {
+        "time_stamp": "2025-01-20 10:25:04"
+      },
+      {
+        "time_stamp": "2025-01-20 10:27:12"
+      },
+      {
+        "time_stamp": "2025-01-20 13:17:11"
+      },
+      {
+        "time_stamp": "2025-01-20 13:36:50"
+      },
+      {
+        "time_stamp": "2025-01-21 06:23:08"
+      },
+      {
+        "time_stamp": "2025-01-21 10:47:59"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Zach Klein",
+      "poster_handle": "zach282"
+    },
+    "time_stamp": "2025-01-17 13:38:41",
+    "edited": {
+      "time_stamp": "2025-01-17 13:39:08"
+    },
+    "text": "Hi <@U089DFQK4AV> :wave:\nTry adding \"type\" to your \"location\" object on the create row call. For example:\n```{\n    \"values\": {\n        \"location\": {\n            \"lat\": 51.557,\n            \"long\": 5.056,\n            \"type\": \"location\"\n        }\n    }\n}```\nBased on my testing, you don't need to define \"type\" when updating existing rows, but you must include it when creating rows (at least where the type is \"location\")."
+  },
+  {
+    "poster": {
+      "poster_name": "Zach Klein",
+      "poster_handle": "zach282"
+    },
+    "time_stamp": "2025-01-17 13:41:34",
+    "text": "<@U07G9EST9R7> Yes, assuming you're wanting to inspect logs from within HubSpot's UI, my recommendation should still hold in this case. In terms of inspecting logs from within your backend, that'll depend on what system(s) make up your backend. Are you trying to inspect logs from within HubSpot's UI or from within your backend?"
+  }
+]

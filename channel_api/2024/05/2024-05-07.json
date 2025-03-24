@@ -1,0 +1,465 @@
+[
+  {
+    "poster": {
+      "poster_name": "Omar Tanti",
+      "poster_handle": "omar.tanti"
+    },
+    "time_stamp": "2024-05-07 01:04:12",
+    "edited": {
+      "time_stamp": "2024-05-07 01:07:38"
+    },
+    "text": "<@U06JYMDCSMN> this is usually how I set it up from my end (in terms of associations)\n\n```let associationsPerType = {\n    702: [contactId],\n    67: lineItemIds,\n    71: [companyId],\n    69: [contactId],\n    64: [dealId],\n    286: [quoteTemplateID]\n}\n\nlet associations = []\n// Loop through association type and append them to the array as per HubSpot Structure\nObject.entries(associationsPerType).forEach(([associationTypeId, objectIds]) => {\n    objectIds.forEach(objectId => {\n        associations.push({\n            to: {\n                id: objectId.toString()\n            },\n            types: [\n                {\n                    associationCategory: \"HubSpot_DEFINED\",\n                    associationTypeId: associationTypeId\n                }\n            ]\n        });\n    });\n});```"
+  },
+  {
+    "text": "Thank you so much <@U06KP87QUJW>! but What happen with multiple line-items? I used your code but doesn't work when I have multiple line items.",
+    "time_stamp": "2024-05-07 01:36:47"
+  },
+  {
+    "poster": {
+      "poster_name": "Omar Tanti",
+      "poster_handle": "omar.tanti"
+    },
+    "time_stamp": "2024-05-07 02:02:53",
+    "edited": {
+      "time_stamp": "2024-05-07 04:46:34"
+    },
+    "text": "<@U06JYMDCSMN> lineItemIds must be an array of integers, you have a comma separated string. You need to split them into an array.\n\nIf lineItemIds is an array of integers the code I provided will create 2 objects as per below:\n\n```{\n    to: {\n        id: 9247974717\n    },\n    types: [\n        {\n            associationCategory: \"HubSpot_DEFINED\",\n            associationTypeId: 67\n        }\n    ]\n},\n{\n    to: {\n        id: 9247974718\n    },\n    types: [\n        {\n            associationCategory: \"HubSpot_DEFINED\",\n            associationTypeId: 67\n        }\n    ]\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Piyush Raut",
+      "poster_handle": "piyush.raut"
+    },
+    "time_stamp": "2024-05-07 02:38:26",
+    "text": "Hey, what is the update on this issue? I am facing the same issue while installing apps."
+  },
+  {
+    "poster": {
+      "poster_name": "Omar Tanti",
+      "poster_handle": "omar.tanti"
+    },
+    "time_stamp": "2024-05-07 03:07:22",
+    "text": "can you please provide the code snippet for this? Or the whole request body?"
+  },
+  {
+    "poster": {
+      "poster_name": "Daniel Kesher",
+      "poster_handle": "dan166"
+    },
+    "time_stamp": "2024-05-07 03:10:56",
+    "text": "When using Calling Extensions SDK, does the user need to log in every time they launch HubSpot, or does HubSpot somehow remember credentials?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-07 11:27:15"
+      },
+      {
+        "time_stamp": "2024-05-09 01:56:58"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Omar Tanti",
+      "poster_handle": "omar.tanti"
+    },
+    "time_stamp": "2024-05-07 05:09:53",
+    "text": "<@UD53A9UUR> Do you have any idea if there are any Knowledge Base APIs to be released?"
+  },
+  {
+    "poster": {
+      "poster_name": "Heitor Santos",
+      "poster_handle": "heitorg33"
+    },
+    "time_stamp": "2024-05-07 05:23:31",
+    "text": "Hello, everyone.\nHas anyone ever uploaded a pdf file to a deals file property via the api?",
+    "reply_count": 8,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2024-05-07 05:43:15"
+      },
+      {
+        "time_stamp": "2024-05-07 05:51:19"
+      },
+      {
+        "time_stamp": "2024-05-07 05:57:49"
+      },
+      {
+        "time_stamp": "2024-05-07 05:58:14"
+      },
+      {
+        "time_stamp": "2024-05-07 06:06:28"
+      },
+      {
+        "time_stamp": "2024-05-07 08:09:28"
+      },
+      {
+        "time_stamp": "2024-05-07 08:10:07"
+      },
+      {
+        "time_stamp": "2025-01-22 13:30:38"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Omar Tanti",
+      "poster_handle": "omar.tanti"
+    },
+    "time_stamp": "2024-05-07 05:43:15",
+    "edited": {
+      "time_stamp": "2024-05-07 05:45:37"
+    },
+    "text": "Hi <@U046M66LWTD> You first need to upload the files with endpoint '<https://api.hubapi.com/files/v3/files>'\n\nThen create notes with endpoint '<https://api.hubapi.com/crm/v3/objects/notes>' and add the file id provided in previous response as per below:\n```$note_obj_args  = [\n\t\t\t'headers'    => [\n\t\t\t\t'Content-Type'  => 'application/json',\n\t\t\t\t'Authorization' => 'Bearer ' . $HubSpot_api_key,\n\t\t\t],\n\t\t\t'properties' => [\n\t\t\t\t\"hs_timestamp\"      => current_time( 'timestamp' ), //IN UTC\n\t\t\t\t\"hs_attachment_ids\" => $file_id,\n\t\t\t],\n\t\t\t'method'     => 'POST',\n\t\t];```\nThen you need to create an associartion between the notes and the deal. The below endpoint is not exactly what you are after since this adds the association between note and company (not deal) but to give you an idea\n\n```//190 is the reference ID for an association between a note to a company - <https://developers.HubSpot.com/docs/api/crm/associations>\n<https://api.hubapi.com/crm/v3/objects/notes/>' . $note_id . '/associations/company/' . $company_id . '/190'```"
+  },
+  {
+    "text": "Thank you for your help.\n\nAnother question, is it possible to send to the field in the image below?",
+    "time_stamp": "2024-05-07 05:51:19"
+  },
+  {
+    "poster": {
+      "poster_name": "Omar Tanti",
+      "poster_handle": "omar.tanti"
+    },
+    "time_stamp": "2024-05-07 05:57:49",
+    "edited": {
+      "time_stamp": "2024-05-07 05:58:13"
+    },
+    "text": "I would upload the file manually and do a get api call for that property to see what data it stores. Based on this documentation I think it stores a file id so you still need to first upload file and then update the property value with the file id <https://developers.HubSpot.com/docs/api/crm/properties>"
+  },
+  {
+    "text": "",
+    "time_stamp": "2024-05-07 05:58:14"
+  },
+  {
+    "poster": {
+      "poster_name": "Heitor Santos",
+      "poster_handle": "heitorg33"
+    },
+    "time_stamp": "2024-05-07 06:06:28",
+    "text": "I'll try it that way, thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Laura Alvarez",
+      "poster_handle": "lalvarez"
+    },
+    "time_stamp": "2024-05-07 06:47:59",
+    "edited": {
+      "time_stamp": "2024-05-07 06:48:21"
+    },
+    "text": "You're the best!! finally worked. <@U06KP87QUJW> THANK YOU SO MUCH!"
+  },
+  {
+    "poster": {
+      "poster_name": "Tudor Petracovici",
+      "poster_handle": "tudor.petracovici"
+    },
+    "time_stamp": "2024-05-07 06:49:52",
+    "text": "The only possible and \"easy\" way could be by creating a custom dashboard and extracting the data from it using a custom scraper. I'm going to look into that sometime in the future, coming with updates if it's doable."
+  },
+  {
+    "poster": {
+      "poster_name": "Omar Tanti",
+      "poster_handle": "omar.tanti"
+    },
+    "time_stamp": "2024-05-07 06:54:33",
+    "text": "You're welcome <@U06JYMDCSMN> :slightly_smiling_face: Glad that we managed to have it work."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Cruz",
+      "poster_handle": "matt.cruz"
+    },
+    "time_stamp": "2024-05-07 07:02:18",
+    "text": "HubSpot if you're reading this:\nMake an object called ads. Give it enough fields that you can differentiate between platforms/placements/utms etc. Then we can map our external stuff to those and we don't need to rely on 3rd parties or very cool scrapers Give it to us for free."
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2024-05-07 07:18:33",
+    "text": "<@U06KP87QUJW>, there is no timeline on this yet, but the team is taking use case examples to justify it.  I sen the above to them"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2024-05-07 07:19:42",
+    "text": "thanks for finishing the swing here, <@U06KP87QUJW>.  my 2 word “line item” question probably should have been more verbose :laughing:"
+  },
+  {
+    "poster": {
+      "poster_name": "Joshua de Leon",
+      "poster_handle": "joshua475"
+    },
+    "time_stamp": "2024-05-07 07:55:29",
+    "text": "```  const res = await HubSpotClient.crm.contacts.batchApi.update({\n    inputs: contactRequests,\n  });```"
+  },
+  {
+    "poster": {
+      "poster_name": "Joshua de Leon",
+      "poster_handle": "joshua475"
+    },
+    "time_stamp": "2024-05-07 07:57:07",
+    "text": "```contactRequests = [{id: '123456', properties: {\"total_fan_count\":1,\"emails_sent\":0,\"igdms_sent\":0,\"messages_sent\":0,\"sms_sent\":0}, ....]```"
+  },
+  {
+    "poster": {
+      "poster_name": "Joshua de Leon",
+      "poster_handle": "joshua475"
+    },
+    "time_stamp": "2024-05-07 07:57:41",
+    "text": "All the requests follow the same pattern."
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-05-07 08:09:28",
+    "text": "<@U046M66LWTD> yes - it is possible.\n\nYou just need to update the field with the file id(s) separated with a semicolon."
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-05-07 08:10:07",
+    "edited": {
+      "time_stamp": "2024-05-07 08:10:19"
+    },
+    "text": "When updating a deal, you would find the property name of the file field and the value could be \"2345;2335;4567\""
+  },
+  {
+    "poster": {
+      "poster_name": "Omar Tanti",
+      "poster_handle": "omar.tanti"
+    },
+    "time_stamp": "2024-05-07 08:14:00",
+    "text": "<@U06UMHKMP50> if you print all the array items in contactRequests, ar you sure you do not have the same internal id listed more than once? so from your example you would have 2 array items in contactRequests with internal id '123456'"
+  },
+  {
+    "poster": {
+      "poster_name": "Joshua de Leon",
+      "poster_handle": "joshua475"
+    },
+    "time_stamp": "2024-05-07 08:16:09",
+    "text": "I saw what you were getting at before you replied and checked. Turns out was doubling up entires by my own error. thanks for helping!"
+  },
+  {
+    "poster": {
+      "poster_name": "Omar Tanti",
+      "poster_handle": "omar.tanti"
+    },
+    "time_stamp": "2024-05-07 08:17:14",
+    "text": "glad it was sorted :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Omar Tanti",
+      "poster_handle": "omar.tanti"
+    },
+    "time_stamp": "2024-05-07 08:24:07",
+    "text": "thank you <@UD53A9UUR>"
+  },
+  {
+    "text": "Did not manage to find anything <@U069DHTUX3K> - what I would suggest is to create a couple of quotes from HubSpot UI with different discount options and then fetch those quotes + properties through API.\n\nI think hs_duration is related to recurring quotes and maybe you can compare the data fetch from api with article here compare to this maybe <https://knowledge.HubSpot.com/payments/understand-payment-discounts#discount-examples>\n\nWhilst hs_sort_order is mentioned here <https://developers.HubSpot.com/docs/api/crm/quotes> with definition \"You can use the `hs_sort_order` field to reorder objects of the same type\"",
+    "time_stamp": "2024-05-07 08:35:30",
+    "edited": {
+      "time_stamp": "2024-05-07 08:38:32"
+    }
+  },
+  {
+    "text": "Hi!\n\nI am creating tasks via *`/crm/v3/objects/tasks/batch/create`* and getting a success response.\nCan anyone help me why I am getting this error message?\n“The task you’re looking for does not exist or may have been deleted.”\n\nHere’s my full payload:\n```properties: {\n                hs_task_body: 'Task Body',\n                hs_task_subject: `Task Subject - ${entity.data.deal_id}`,\n                hs_task_status: 'NOT_STARTED',\n                hs_task_priority: 'LOW',\n                hs_task_type: 'TODO',\n                hs_queue_membership_ids: 'Test Queue',\n                HubSpot_owner_id:\n                  entity.data.HubSpot_owner_id ?? settings.default_reviewer,\n                hs_timestamp: dueDate.getTime(),\n                hs_task_reminders: reminderDate.getTime(),\n              },\n              associations: [\n                {\n                  types: [\n                    {\n                      associationCategory: 'HubSpot_DEFINED',\n                      associationTypeId: 204,\n                    },\n                  ],\n                  to: { id: `${entity.data.primary_applicant_contact_id}` },\n                },\n                {\n                  types: [\n                    {\n                      associationCategory: 'HubSpot_DEFINED',\n                      associationTypeId: 216,\n                    },\n                  ],\n                  to: { id: `${entity.data.deal_id}` },\n                },\n              ],```\nThanks in advance",
+    "time_stamp": "2024-05-07 08:52:16",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-09 01:01:44"
+      },
+      {
+        "time_stamp": "2024-05-09 17:42:24"
+      },
+      {
+        "time_stamp": "2024-05-09 23:13:01"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Loriauna Mora",
+      "poster_handle": "loriauna"
+    },
+    "time_stamp": "2024-05-07 10:14:37",
+    "text": "Hey HubSpotters :wave:  I have a question. We would like to sync Salesforce contacts to HubSpot and create a contact record for each email on a contact in Salesforce (ie individual contact record for email, work email). Is this possible with the current Salesforce integration on HubSpot or will it need to be developed?\n\nThe idea is to use custom API to associate both contacts together (using contact/contact associations) once they’re both in HubSpot. Client uses SF email for b2c emails and sf work email for b2b, and they want to be able to enroll both in sequences…",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-07 10:17:42"
+      },
+      {
+        "time_stamp": "2024-05-07 10:35:13"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Lauren Kennedy",
+      "poster_handle": "lauren852"
+    },
+    "time_stamp": "2024-05-07 10:17:42",
+    "text": "The native integration will only create one record from the main email on the Lead/Contact in Salesforce. This would need to be developed."
+  },
+  {
+    "poster": {
+      "poster_name": "Loriauna Mora",
+      "poster_handle": "loriauna"
+    },
+    "time_stamp": "2024-05-07 10:35:13",
+    "text": "Thank you Lauren!"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2024-05-07 11:27:15",
+    "text": "Just answered this also on the <https://youtu.be/JrW4A8mP-WU|YouTube video> comment\nit is the responsibility of the calling app to maintain the authentication.  often the app will store a cookie in a user’s local storage so they dont have to login in each time"
+  },
+  {
+    "poster": {
+      "poster_name": "Sebas202420",
+      "poster_handle": "sebastian.felipe"
+    },
+    "time_stamp": "2024-05-07 12:20:20",
+    "text": "Hello Team. There is any option to export live whatsapp conversations via API ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ace Hedger",
+      "poster_handle": "ace"
+    },
+    "time_stamp": "2024-05-07 12:22:07",
+    "edited": {
+      "time_stamp": "2024-05-07 12:22:32"
+    },
+    "text": "Is the Ecommerce bridge API still up-to-date in 2024, and is it still the best way to do abandoned cart emails?"
+  },
+  {
+    "poster": {
+      "poster_name": "Bolt",
+      "poster_handle": "bolt.shiny220"
+    },
+    "time_stamp": "2024-05-07 14:03:14",
+    "text": "Hello, Good Community :wave:\nI am working on a project to get the counts of the all tickets through api.\nThen how can I get the count through api?\nI can't find any apis regarding the getting count of all tickets in HubSpot Developer Docs. :cry:\nI would appreciate it if you could help me.",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-07 22:46:24"
+      },
+      {
+        "time_stamp": "2024-05-07 23:08:20"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Juan Felipe Aranguen",
+      "poster_handle": "juan.felipe"
+    },
+    "time_stamp": "2024-05-07 15:27:37",
+    "edited": {
+      "time_stamp": "2024-05-07 15:28:05"
+    },
+    "text": "Thanks a lot <@U06H94JKK1P>! I first implemented a variation of your solution, and then through some experiments discovered that (as long as your phone is already formatted), you can include the `+` char at the beginning of the phone string and then HubSpot will automatically do the conversion for you."
+  },
+  {
+    "text": "Hey team! :wave-yeti:\n\nI’m using the node api (basicApi) to `create` and `update` contacts. Anyone knows if it’s possible to achieve a sort of *create & update* with any method, just as it can be done via the web app “<https://knowledge.HubSpot.com/import-and-export/import-objects|file import>” process?\n(image for reference)\n\nI’m creating contacts that may already exist with same email (in which case it would throw an error), but would be fantastic if I could just update them instead (if any X custom property exists)",
+    "time_stamp": "2024-05-07 15:32:10",
+    "edited": {
+      "time_stamp": "2024-05-07 15:33:10"
+    },
+    "reply_count": 9,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2024-05-07 23:35:29"
+      },
+      {
+        "time_stamp": "2024-05-08 11:07:48"
+      },
+      {
+        "time_stamp": "2024-05-08 22:31:00"
+      },
+      {
+        "time_stamp": "2024-05-08 23:31:46"
+      },
+      {
+        "time_stamp": "2024-05-09 09:41:39"
+      },
+      {
+        "time_stamp": "2024-05-09 10:17:32"
+      },
+      {
+        "time_stamp": "2024-05-13 03:51:39"
+      },
+      {
+        "time_stamp": "2024-05-14 15:40:24"
+      },
+      {
+        "time_stamp": "2024-05-14 15:48:57"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Juan Felipe Aranguen",
+      "poster_handle": "juan.felipe"
+    },
+    "time_stamp": "2024-05-07 15:35:29",
+    "text": "Hey <@U046C9LKJP8>, I’m sorry I missed your reply.\nYes, exactly that. Update one by something different than its `contactId` . I saw the batch update allows for that, I even tested it and works, but would be simpler for me to update on a single basis"
+  },
+  {
+    "poster": {
+      "poster_name": "Tracy Cohn",
+      "poster_handle": "tracy319"
+    },
+    "time_stamp": "2024-05-07 16:53:37",
+    "text": "Hi everyone, we have a Custom Object that was created in 2021 via *API* before you could create them in the HubSpot platform.\n\nHere, we setup a *required Object Schema property*.\n• This custom field is now a legacy field that is no longer in use. \n• We want to *REMOVE* this required field from API, but we are not able to archive the field via a PATCH call. \nIs there a way to *SWAP* the required field in the Object’s Schema via API, or to *ARCHIVE* the required field without deleting the Custom Object and starting over?\n\nThank you!",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-05-08 23:51:14"
+      }
+    ]
+  },
+  {
+    "text": "<@U06LHL57QLA> have you tried the seearch tickets api? <https://developers.HubSpot.com/docs/api/crm/tickets>",
+    "time_stamp": "2024-05-07 22:46:24"
+  },
+  {
+    "poster": {
+      "poster_name": "Bolt",
+      "poster_handle": "bolt.shiny220"
+    },
+    "time_stamp": "2024-05-07 23:08:20",
+    "text": "Hi, <@U06KP87QUJW> :wave:\nThank you for your reply. :pray:\nYes, it worked, and I can get the total count of the tickets. :smiley:"
+  },
+  {
+    "poster": {
+      "poster_name": "Omar Tanti",
+      "poster_handle": "omar.tanti"
+    },
+    "time_stamp": "2024-05-07 23:35:29",
+    "text": "<@U070ATQAMJP> as far as I know you would need to do 2 separate calls for that. The way I did it was to first search contacts by email address. If the search does not return any results I create the contact, if the search returns results I update it.\n\nAnother more efficient approach to avoid doing 2 calls each time would be to keep a local copy in a database table with 2 columns - email and HubSpotId. If you find the email in the table it means it is already created and you need to updated it, if you don't find it in your table you create it and then add it in the table for future reference."
+  }
+]

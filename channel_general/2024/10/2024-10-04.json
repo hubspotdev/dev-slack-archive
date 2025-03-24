@@ -1,0 +1,96 @@
+[
+  {
+    "poster": {
+      "poster_name": "Larissa Martins",
+      "poster_handle": "larissa.martins"
+    },
+    "time_stamp": "2024-10-04 04:00:19",
+    "text": "Hello everyone,\n\nWhat is the best way to display a menu dynamically? Let me explain: we want two different menus, one for articles with the “empresas” tag and another for articles with the “particulares” tag. What is the best way to apply this to articles in HS?\n\n        `{% set article_tags = content.topic_list %}`\n        \n        `{% if \"empresas\" in article_tags %}`\n          `{% module \"Menu Blog CTT Empresas\" path=\"@HubSpot/simple_menu\" %}`\n        `{% elif \"particulares\" in article_tags %}`\n          `{% module \"Menu Blog CTT Particulares\" path=\"@HubSpot/simple_menu\" %}`\n        `{% else %}`\n          `{% module \"top_nav_menu\" path=\"@HubSpot/simple_menu\" %}`\n        `{% endif %}`\n\nI’ve tried something like this as I think HubL can already solve it and no need JS.\n\nThank you in advance"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Beisswenger",
+      "poster_handle": "bbeisswenger"
+    },
+    "time_stamp": "2024-10-04 06:32:56",
+    "edited": {
+      "time_stamp": "2024-10-04 06:33:50"
+    },
+    "text": ":wave: Hi everyone! I had a request from a team member to create a \"Community\" type site. The features would be something like:\n• ~50 people able to access the shared space\n• Basic home page, hero slider, etc with communication about what the site is for\n• Collaboration/\"post\" boards\n• File sharing\n• (Simple user authentication)\nWondering if this is a doable build using any function or framework in (or connected to) HubSpot? We just launched as our core CRM, and it would be great to build this in a connected way."
+  },
+  {
+    "poster": {
+      "poster_name": "Alberto Zordan",
+      "poster_handle": "alberto.zordan"
+    },
+    "time_stamp": "2024-10-04 07:50:25",
+    "text": "Hello everyone,\nI have a Vite project (React) deployed on HS. I created a HTML template where I link the js and css chunks of the build (the chunks of the build are uploaded in a folder inside HS Files section). So, when I deploy a new version of the app I simply run the build locally, copy the &lt;script&gt; and &lt;link&gt; tags from the generated \"index.html\" file into the HS template, upload the build's chunks to HS Files and that's it.\nVite already outputs the chunks with some sort of hashing (e.g. index-Cc6NjCyX.js), which obviously change with every build, so I would expect no cache issues on HS side. However, it seems some caching still persists for a certain amount of time after a new deployment.\nI investigated a page of the app loading it with `?hsDebugOnly=true` and I see the page is not prerendered because in the HTML template I'm using `request.remote_ip` , which invalidates HS prerendering. I also tried with `?hsPrcDebug=true` to detect partial prerendering and I see this header in the response:\n```X-Hs-Prerendered: two-phase;Fri, 04 Oct 2024 13:00:12 GMT```\nThe HS doc says that for partial prerendering the header should have `partial` in it and I can't see it here.\nSo... why my app seems to have cache issues?\nThank you.",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-10-04 07:51:44"
+      },
+      {
+        "time_stamp": "2024-10-04 10:52:20"
+      },
+      {
+        "time_stamp": "2024-10-04 11:39:00"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Alberto Zordan",
+      "poster_handle": "alberto.zordan"
+    },
+    "time_stamp": "2024-10-04 07:51:44",
+    "text": "<@U01QVR44MEY> <@U04AQA0QM8E> if you happen to have some useful insights about this, feel free to share, it'd be much appreciated.\nThank you."
+  },
+  {
+    "text": "Hi\n\nI wanted to know that why are we experiencing a high number of connection denials when calling webhooks for task status change events? this was working fine before 2 days and all of sudden its giving error.\nJust for info i am using Beta.\n\ncan anyone help on this please.",
+    "time_stamp": "2024-10-04 07:54:01"
+  },
+  {
+    "poster": {
+      "poster_name": "Anthony Perez",
+      "poster_handle": "anthony249"
+    },
+    "time_stamp": "2024-10-04 08:19:33",
+    "edited": {
+      "time_stamp": "2024-10-04 08:19:47"
+    },
+    "text": "<@UJAPS2K4N> Hiya, perhaps you can help me. I’m looking for a hubl tag to implement these multistep forms in custom modules. How would i do this or is there an alternative approach for this. Many thanks"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2024-10-04 10:52:20",
+    "edited": {
+      "time_stamp": "2024-10-04 10:54:28"
+    },
+    "text": "Interesting! Regarding the caching that you’re seeing — are you seeing the correct bundle name (`index-xxxxxxx.js`, etc.), but getting the old scripts? Or, is the old version of the bundle being served after you’ve updated the template?\n\nI’m not super familiar with the different states of `X-Hs-Prerendered` — I don’t actually see it in my response headers, even when using `hsPrcDebug`, so I can’t comment on that.\n\n_(Fair warning: this is just the understanding I’ve built from working with the platform — the real details or functionality may differ)_\n\nIf it’s the latter: HS is generally _pretty good_ about rebuilding assets when a dependency is changed, but build assets are cached in what might be described as “layers” — on the “top” layer is any prerendered page, which is built from a cached version of the page template, and then the parent template below that is also cached, and the macros/partials that make up the parent templates are also cached, etc.\n\nIn some cases, a change to one “layer” may not meet the criteria to trigger certain “higher” or “lower” layers: for example, viewing a page with `hsDebug=true` may cause the page to re-build and the page template to re-cache, but might still pull from a stale version of `base.html`. When this happens, and I need an immediate update deployment, my typical solution is to manually re-publish relevant dependencies, which will trigger a re-cache on them.\n\nSome other potential things to look into:\n• HubSpot uses Cloudflare caching by default; you might be hitting a stale version of CF-cached assets.\n• If you’re working from any sort of React starter, it’s not totally uncommon for a basic service worker to be built in for performance reasons — if that exists, it could be serving old versions of assets.\nGood luck tracking this down! As they say, there are only two hard things in computer science…"
+  },
+  {
+    "poster": {
+      "poster_name": "Alberto Zordan",
+      "poster_handle": "alberto.zordan"
+    },
+    "time_stamp": "2024-10-04 11:39:00",
+    "edited": {
+      "time_stamp": "2024-10-04 14:05:54"
+    },
+    "text": "Hello <@U04AQA0QM8E>!\nFirst of all, thank you for your thorough reply, as always from you :relieved: All that stuff about layers caching is quite interesting and I admit I'm not much informed about that.\n\nMaybe I forgot to mention a couple of details in my post that you may find useful.\n\nThe thing is that I'm not the one experiencing the issue, it's the client I built this React SPA for.\nOn my end I can see the app's latest version, no problem. However, my client complained about the fact he's still seeing the old version. So I provided him with a link using our hero `hsCacheBuster` and he can see it that way, so it's a cache issue.\n\nNow, luckily I'm still in the development stage of this app but this had me thinking about future end users who could potentially experience the same issue.\nI simply cannot accept to be so unsure about whether (and when!) they will be able to see the latest version of the app right after every new deployment I make.\nIf I release a new version clicking on \"Publish changes\", I'd hope it'd be available to end users (for the cache to be flushed, re-building assets ecc.) in say a bunch of minutes, at most. Surely not after some days :sweat_smile: And I also don't want to resort to some appalling workaround like forcing a reload with hsCacheBuster through code, I'm not gonna do that :see_no_evil:\nI hoped that using `remote_ip` would be enough to ensure the app was not cached but that apparently invalidates prerendering only, so I'm a bit at a loss as to what I could do to resolve this.\n\nMaybe it's a one-time / \"once in a while\" kind of issues but it's troubling nonetheless.\nYou said that \"when this happens, and I need an immediate update deployment, my typical solution is to manually re-publish relevant dependencies\", are you suggesting to add a simple blank space in the HTML template and click on \"Publish changes\" more than once? Again, just to be more sure the new version is served to end users but still not 100% sure, I guess :sweat_smile:"
+  },
+  {
+    "subtype": "bot_message",
+    "text": ":sparkles:Slack Tips and Best Practices:sparkles:\n\nTo get the most out the HubSpot Developer Slack, follow these best practices:\n\n• Will your post/question potentially help more than one person? Ask in a public channel instead of 1:1 DMs to help as many folks as possible. \n• Thread all replies to keep topics organized and searchable\n• Thread followup questions/comments to your original post\n• Don't post the same question in multiple channels. If you must, link to your original question in new channels.\nMore <https://slack.com/blog/collaboration/etiquette-tips-in-slack|great tips here>. Thanks for making the HubSpot Developer Slack easier to use for everyone!",
+    "username": "Slack Best Practices",
+    "time_stamp": "2024-10-04 12:05:04",
+    "edited": {
+      "time_stamp": "2024-10-04 12:05:08"
+    }
+  }
+]

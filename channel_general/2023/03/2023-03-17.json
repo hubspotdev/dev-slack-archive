@@ -1,0 +1,117 @@
+[
+  {
+    "poster": {
+      "poster_name": "James Sinnott",
+      "poster_handle": "james.sinnott"
+    },
+    "time_stamp": "2023-03-17 07:04:49",
+    "edited": {
+      "time_stamp": "2023-03-17 07:05:04"
+    },
+    "text": "<@U01QVR44MEY> When I go to the app inside my developer account, I don't see any mention of a hapikey. In the Auth section I see the following three credentials:\n• App Id\n• Client Id\n• Client Secret"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-17 07:05:22",
+    "text": "<https://legacydocs.HubSpot.com/docs/faq/developer-api-keys>"
+  },
+  {
+    "subtype": "bot_message",
+    "text": ":sparkles:Slack Tips and Best Practices:sparkles:\n\nTo get the most out the HubSpot Developer Slack, follow these best practices:\n\n• Will your post/question potentially help more than one person? Ask in a public channel instead of 1:1 DMs to help as many folks as possible. \n• Thread all replies to keep topics organized and searchable\n• Thread followup questions/comments to your original post\n• Don't post the same question in multiple channels. If you must, link to your original question in new channels.\nMore <https://slack.com/blog/collaboration/etiquette-tips-in-slack|great tips here>. Thanks for making the HubSpot Developer Slack easier to use for everyone!",
+    "username": "Slack Best Practices",
+    "time_stamp": "2023-03-17 11:05:04",
+    "edited": {
+      "time_stamp": "2023-03-17 11:05:08"
+    }
+  },
+  {
+    "text": "If anyone is wondering what the solution is, I found it. You just have to change the Directive in X-Frame Options in the HubSpot Domain security settings for your domain, from \"deny\" to \"sameorigin\".",
+    "time_stamp": "2023-03-17 11:45:59"
+  },
+  {
+    "text": "I had an issue on my Blog listing page here: <https://ontrack1-5866444.hs-sites.com/development-blog/tag/ai> - where non of tag names were coming in with the correct capitalization.\n\nDoes anyone know how to make that work? I ended up doing a code around solution but it's pretty jenky (see screenshot attached).",
+    "time_stamp": "2023-03-17 12:08:17",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-03-17 12:36:37"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2023-03-17 12:36:37",
+    "text": "You can use the |upper or |capitalize Hubl filters"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-03-17 14:22:43",
+    "text": "<@U01QVR44MEY> hey buddy, do you know what changes I'd need to make to have this do the same for companies?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Ryken",
+      "poster_handle": "jordan.ryken"
+    },
+    "time_stamp": "2023-03-17 14:22:49",
+    "text": "or is it pretty similar"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-17 14:30:19",
+    "text": "Haven't run a test but this code should work out of the box:\n```const ACCESS_TOKEN = 'ACCESS_TOKEN_GOES_HERE';\n\nfunction onOpen() {\n  const ui = SpreadsheetApp.getUi();\n  const menu = ui.createMenu('HubSpot');\n  menu.addItem('Test Merge', 'testMergeCompanies');\n  menu.addToUi();\n}\n\nfunction testMergeCompanies() {\n  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Sheet1');\n  const log = [];\n\n  const existingCompanies = getStoredCompanies(sheet);\n  const newCompanies = getAllCompanies(log);\n  const allCompanies = existingCompanies.concat(newCompanies);\n\n  storeCompanies(sheet, allCompanies);\n\n  const groupedCompanies = groupCompanies(allCompanies);\n  mergeCompanies(groupedCompanies, log);\n\n  sheet.getRange('A1').setValue(log.join('\\n'));\n}\n\nfunction callHubSpotApi(url, method = 'get', payload) {\n  const options = {\n    method,\n    headers: {\n      'Content-Type': 'application/json',\n      'Authorization': `Bearer ${ACCESS_TOKEN}`,\n    },\n    muteHttpExceptions: true,\n  };\n\n  if (payload) {\n    options.payload = JSON.stringify(payload);\n  }\n\n  const response = UrlFetchApp.fetch(url, options);\n  if (response.getResponseCode() !== 200) {\n    const responseCode = response.getResponseCode();\n    const responseText = response.getContentText();\n    const errorMessage = `HubSpot API request failed (Response Code: ${responseCode}): ${responseText}`;\n    throw new Error(errorMessage);\n  }\n\n  return JSON.parse(response.getContentText());\n}\n\nfunction getAllCompanies(log) {\n  let companies = [];\n  const batchSize = 100;\n  const checkMergesAt = 1000;\n  let companiesSinceLastMergeCheck = 0;\n  \n  const scriptProperties = PropertiesService.getScriptProperties();\n  let after = scriptProperties.getProperty('after') || '';\n\n  while (companiesSinceLastMergeCheck &lt; checkMergesAt) {\n    const apiUrl = `<https://api.hubapi.com/crm/v3/objects/companies?limit=${batchSize}&amp;properties=name,createdate,HubSpot_owner_id${after> ? `&amp;after=${after}` : ''}`; //needs to be updated\n\n    const response = callHubSpotApi(apiUrl);\n    companies = companies.concat(response.results);\n    companiesSinceLastMergeCheck += response.results.length;\n\n    if (!response.paging || !response.paging.next) {\n      break;\n    }\n    after = response.paging.next.after;\n    Utilities.sleep(500); // Adjust the delay in milliseconds according to your API rate limits\n  }\n\n  scriptProperties.setProperty('after', after);\n\n  log.push(`Retrieved companies up to the limit.`);\n  return companies;\n}\n\nfunction groupCompanies(companies) {\n  const groups = {};\n\n  companies.forEach(company =&gt; {\n    const name = company.properties.name || '';\n    //needs to be updated add whatever fields you want\n    const key = [email, firstname + ' ' + lastname, phone].join('|'); //needs to be updated\n\n    if (!groups[key]) {\n      groups[key] = [];\n    }\n\n    groups[key].push(company);\n  });\n\n  return Object.values(groups).filter(group =&gt; group.length &gt; 1);\n}\n\nfunction mergeCompanies(groups, log) {\n  for (const group of groups) {\n    group.sort((a, b) =&gt; {\n      if (a.properties.SPID &amp;&amp; !b.properties.SPID) return -1;\n      if (!a.properties.SPID &amp;&amp; b.properties.SPID) return 1;\n      return new Date(a.properties.createdate) - new Date(b.properties.createdate);\n    });\n    const primaryCompany = group.shift();\n    for (const secondaryCompany of group) {\n      log.push(`Merging contact ${secondaryCompany.id} into ${primaryCompany.id}`);\n      callHubSpotApi(`<https://api.hubapi.com/crm/v3/objects/companies/${primaryCompany.id}/merge>`, 'post', { objectId: secondaryCompany.id });\n    }\n  }\n}\n\nfunction getStoredCompanies(sheet) {\n  const data = sheet.getRange('B1:B').getValues();\n  const companies = data\n    .filter(row =&gt; row[0] !== '')\n    .map(row =&gt; JSON.parse(row[0]));\n\n  return companies;\n}\n\nfunction storeCompanies(sheet, companies) {\n  const data = companies.map(company =&gt; [JSON.stringify(company)]);\n  sheet.getRange(1, 2, data.length, 1).setValues(data);\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-17 14:30:39",
+    "text": "I marked the lines and parts that need to be updated with \"Needs to be updated comments\""
+  },
+  {
+    "poster": {
+      "poster_name": "Braden Cousin",
+      "poster_handle": "braden.cousin"
+    },
+    "time_stamp": "2023-03-17 15:21:54",
+    "text": "<@U0446K6RTGX> we were doing something like this a while back and found that HubSpot wouldn’t track the form submit on mobile because onformsubmit fires before all the data has been submitted. So it would redirect, but if they didn’t select a time on the calendar, then all the data would be lost.\n\nHave you seen anything like this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Logan Armstrong",
+      "poster_handle": "logan565"
+    },
+    "time_stamp": "2023-03-17 17:08:30",
+    "text": "Hey Braden, I ended up running into that exact problem on mobile. We fixed it by using the onformsubmit to capture the data and then onformsubmitted to redirect. We actually just posted a step-by-step guide on exactly how today. <https://emptycupdigital.com/blog/dynamically-redirect-HubSpot-forms|https://emptycupdigital.com/blog/dynamically-redirect-HubSpot-forms>"
+  },
+  {
+    "poster": {
+      "poster_name": "Braden Cousin",
+      "poster_handle": "braden.cousin"
+    },
+    "time_stamp": "2023-03-17 17:24:56",
+    "text": "Sweet! I'll take a look! Thanks. "
+  },
+  {
+    "poster": {
+      "poster_name": "Logan Armstrong",
+      "poster_handle": "logan565"
+    },
+    "time_stamp": "2023-03-17 18:40:51",
+    "text": "sure thing "
+  }
+]

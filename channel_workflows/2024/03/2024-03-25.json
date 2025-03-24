@@ -1,0 +1,55 @@
+[
+  {
+    "poster": {
+      "poster_name": "Tyler Sweeten",
+      "poster_handle": "tyler.sweeten"
+    },
+    "time_stamp": "2024-03-25 07:41:58",
+    "text": "Hey Christensen, I already have the contact and company record ID's as well as the type of engagement since they were given to me in the error message. I was wondering if you had any tips about starting the script in the workflow to help with deleting the engagement, or even just un-associating the the engagement."
+  },
+  {
+    "poster": {
+      "poster_name": "Christensen Magtoto",
+      "poster_handle": "chris858"
+    },
+    "time_stamp": "2024-03-25 08:04:15",
+    "text": "Hey Tyler, you need to get the associated engagements for the object you want to delete the engagements. Once you have the engagement ids from the association then you need to archive it, preferably using the batch API endpoint of the engagement type you are archiving.\n\nContacts (object) Engagements e.g.:  <https://api.hubapi.com/crm/v3/objects/contacts/{contactId}?associations=engagements>\nEngagement Types: <https://developers.HubSpot.com/docs/api/crm/engagements>"
+  },
+  {
+    "poster": {
+      "poster_name": "Caroline Santos",
+      "poster_handle": "caroline.santos"
+    },
+    "time_stamp": "2024-03-25 20:16:50",
+    "text": "Hi team, what could be wrong with this code i'm using the batch association api? returns error 400\n\ncode in thread",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-03-25 20:16:56"
+      },
+      {
+        "time_stamp": "2024-03-26 00:02:26"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Caroline Santos",
+      "poster_handle": "caroline.santos"
+    },
+    "time_stamp": "2024-03-25 20:16:56",
+    "edited": {
+      "time_stamp": "2024-03-26 05:58:26"
+    },
+    "text": "```const axios = require('axios');\naxios.defaults.headers.common['authorization'] = `Bearer pat-n`;\naxios.defaults.headers.common['Content-Type'] = `application/json`;\naxios.defaults.headers.put['Content-Type'] = `application/json`;\n\n\nexports.main = async (event) => {\n    const companyid = event.inputFields['companyid'];\n  \n    const clienteObjectId = await getCliente(companyid);\n    console.log(clienteObjectId.results[0].id);\n\n    const associateResult = await associateContactToCliente(event[\"object\"][\"objectId\"], clienteObjectId.results[0].id);\n    console.log(associateResult);\n  \n}\n\n//1. Get HubSpot Cliente using Company Origin ID value\nfunction getCliente (company_origin_id) {\n    let requestUrl = `<https://api.hubapi.com/crm/v3/objects/2-18613969/search>`;\n    let data = {\n        filterGroups: [{\n            filters: [{\n                propertyName: 'company_origin_id',\n                operator: 'EQ',\n                value: company_origin_id\n            }]\n        }],\n        properties: ['hs_object_id', 'company_origin_id'],\n    }\n    return new Promise((resolve) => {\n        axios.post(requestUrl, data).then(res => {\n            resolve(res.data);\n        }).catch(err => {\n            console.log(err.message)\n        });\n    });\n}\n\n//2. Associate Contact to Cliente Object\nfunction associateContactToCliente() {\n    let requestUrl = `<https://api.hubapi.com/crm/v4/associations/contacts/2-18613969/batch/create>`;\n    console.log(requestUrl);\n    return new Promise((resolve) => {\n        axios.post(requestUrl).then(res => {\n            resolve(res.data);\n        }).catch(err => {\n            console.log(err.message)\n        });\n    });\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Christensen Magtoto",
+      "poster_handle": "chris858"
+    },
+    "time_stamp": "2024-03-26 00:02:26",
+    "text": "Hello Caroline, it might be a good idea to rotate your private app key now as you posted it along with your code.\n\nYour associateContactToCliente() function don't accept parameters but  you call it in the above with a parameters included:\n\nconst associateResult = await associateContactToCliente(\n    event[\"object\"][\"objectId\"],\n    clienteObjectId.results[0].id\n  );\n\nYou've also made a post request to the batch URL without the body so you are basically sending an empty request."
+  }
+]

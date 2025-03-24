@@ -1,0 +1,20 @@
+[
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2023-01-02 07:28:54",
+    "text": "We have multiple business units (different countries and multiple locations in same country) in the same portal, they all have unique webinars.\nWe want to have a Webinar HubDB per BU, because they have different needs for columns and/or filtering options.\nAll these should generate dynamic pages.\nThis means a rather big query, with a collection per HubDB.\nHowever, with GraphQL I want to keep it simple, and not need to create a query per HubDB, furthermore not needing to create a module per HubDB.\n\n\nI dabbled a bit in child tables, but I’m simply not grasping how to generate the query, this is how far I’ve gotten so far:\nLet’s say we have “UK” as a country, this country is selected on a “Country” table, where we can select (foreign id) the child tables we need (Webinars, Seminars, you name it), for specifically UK.\nThe query would be something like:\n```query webinarsByCountry($country: String) {\n  HUBDB {\n    country_collection(filter: {country__eq: $brand}) {\n      items {\n        country\n        hs_child_table_collection {\n          ... on hubdb_courses_uk_collection {\n            items {\n              title\n            }\n          }\n        }\n      }\n    }\n  }\n}```\nSo this would show me all webinars on “UK”’s child table, however I need to hardcode the `… on` parameter.\nIs it possible to use the `$country` variable in some way to grab the child table?\n\nMaybe I’m overthinking it, maybe the solution is right under my nose. Right now I’m just not seeing it.",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-01-11 07:27:52"
+      },
+      {
+        "time_stamp": "2023-01-12 02:44:11"
+      }
+    ]
+  }
+]

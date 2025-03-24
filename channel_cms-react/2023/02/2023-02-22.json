@@ -1,0 +1,431 @@
+[
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-22 01:23:53",
+    "text": "<@UAYBXDG4U> I’ll take the Goober discussion to here.",
+    "reply_count": 18,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-02-22 01:31:26"
+      },
+      {
+        "time_stamp": "2023-02-22 01:47:47"
+      },
+      {
+        "time_stamp": "2023-02-22 02:05:56"
+      },
+      {
+        "time_stamp": "2023-02-22 02:27:03"
+      },
+      {
+        "time_stamp": "2023-02-22 04:11:39"
+      },
+      {
+        "time_stamp": "2023-02-22 05:11:31"
+      },
+      {
+        "time_stamp": "2023-02-22 05:44:30"
+      },
+      {
+        "time_stamp": "2023-02-22 05:48:12"
+      },
+      {
+        "time_stamp": "2023-02-22 06:32:12"
+      },
+      {
+        "time_stamp": "2023-02-22 06:36:00"
+      },
+      {
+        "time_stamp": "2023-02-22 06:42:16"
+      },
+      {
+        "time_stamp": "2023-02-22 06:46:13"
+      },
+      {
+        "time_stamp": "2023-02-22 07:04:34"
+      },
+      {
+        "time_stamp": "2023-02-22 09:24:34"
+      },
+      {
+        "time_stamp": "2023-02-23 11:59:43"
+      },
+      {
+        "time_stamp": "2023-02-24 05:15:21"
+      },
+      {
+        "time_stamp": "2023-02-24 06:57:41"
+      },
+      {
+        "time_stamp": "2023-03-06 00:18:29"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-22 01:31:26",
+    "edited": {
+      "time_stamp": "2023-02-22 04:14:24"
+    },
+    "text": "So there are 3 options (this prob goes to styled components as well)\n• add it on the build phase in the HubSpot\n• the ssr rendering (I’m not sure how to do that thought)\n• or added it as a wrapper on the modules (partials didn’t work)"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-22 01:47:47",
+    "text": "That prob would go through plugin like <https://vite-plugin-ssr.com/css-in-js>\nor\nwith extractCss as in here\n<https://codesandbox.io/s/7m9zzl6746?file=/src/index.js> thought I don’t know would this help, cause the styles are constructed in the components?"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-22 02:05:56",
+    "text": "Good article with styled components <https://prontopro.engineering/blog/our-journey-to-make-styled-components-work-with-server-side-rendering>"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-22 02:27:03",
+    "text": "in next <https://javascript.plainenglish.io/ssr-with-next-js-styled-components-and-material-ui-b1e88ac11dfa>"
+  },
+  {
+    "text": "<@UCY83QS6Q> I get an error when running with storybook.\n\nDoes it require you to have a deployed project or can you run that on a local project?",
+    "time_stamp": "2023-02-22 02:58:49"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-02-22 03:06:26"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-22 04:11:39",
+    "edited": {
+      "time_stamp": "2023-02-22 04:50:24"
+    },
+    "text": "Ok, thought this more.  Here is an idea how to use it. Still produces way too much css, but at least kind of works (many times needs a page reload to render the styles).\n```// layout.jsx\nimport React from 'react';\n\nimport { Theme, DefaultTheme } from '@avidly/themes';\n\n// have to pass as props, otherwise doesn't work\nexport const Layout = ({ children, styles }) =&gt; {\n  return (\n    &lt;Theme theme={DefaultTheme}&gt;\n      &lt;style type=\"text/css\"&gt;{styles}&lt;/style&gt;\n      {children}\n    &lt;/Theme&gt;\n  );\n};```\n```// modules/island-test.jsx\n\nimport React from 'react';\n\nimport { Island } from '@HubSpot/cms-components';\nimport { extractCss } from 'goober';\n\nimport Button from '../../islands/Button.jsx?island';\nimport { Container } from '@avidly/themes';\nimport { Layout } from '../../Layout.jsx';\n\nexport const Component = (props) =&gt; {\n  return (\n    &lt;Layout styles={extractCss()}&gt;\n      &lt;Container styles={{ bg: 'bg-dark' }} padding=\"2xl\"&gt;\n        Island test\n      &lt;/Container&gt;\n      &lt;Island module={Button} id=\"button-island\" hydrateOn=\"load\" /&gt;\n    &lt;/Layout&gt;\n  );\n};\n\nexport { fields } from './fields.jsx';\n\nexport const meta = {\n  label: `Button Module`,\n};```"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-22 05:11:31",
+    "text": "<@UAYBXDG4U> Another issue with Goober, when trying to deploy:\n```[ERROR] Building JS Project with error message `[vite]: Rollup failed to resolve import \"goober\" from \"/tmp/cms_ITcR78/cms-js-build/customer-package/components/modules/IslandTest/index.jsx\".\nThis is most likely unintended because it can break your application at runtime.\nIf you do want to externalize this module explicitly add it to\n`build.rollupOptions.external````"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-22 05:44:30",
+    "edited": {
+      "time_stamp": "2023-02-22 06:21:58"
+    },
+    "text": "If I move the goober to dependencies instead of devDependencies it seems to work. Now I also prob know why our libraries doesn’t work. Those are private, so the builder doesn’t have rights for them…\n```error An unexpected error occurred: \"<https://registry.yarnpkg.com/@avidly%2ftypes>: Not found\".```"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-22 05:48:12",
+    "text": "Could it be an option that the build could be done also on own local environment and then push to the CRM builds (like the old way, by using `hs-upload ./dist`). This would also help for testing and finding problems. Now it’s quite hard to understand the problems, which `deploy` gives."
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-22 05:54:22",
+    "text": "Noticed also that you need to have folder or file names in `camelCase` and can’t use `snake-case` in there.",
+    "reply_count": 4,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-02-22 07:13:12"
+      },
+      {
+        "time_stamp": "2023-02-22 07:49:06"
+      },
+      {
+        "time_stamp": "2023-02-22 07:49:46"
+      },
+      {
+        "time_stamp": "2023-02-22 09:28:16"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-02-22 06:19:51",
+    "text": "Hm, looking at that error. I suspect our code is trying to execute storybook through `yarn` but you don’t have that installed. When you run a script from package.json are you currently using `npm run …`?  /cc <@U04DVL5T2TE>"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-02-22 06:32:12",
+    "text": "I’m not sure uploading the whole built project is on the radar soon, but we may be able to something _kinda_ like that, at least for your avidly deps. I.e. some local script/build that gathers your private deps, copies them to folders inside your project, and then uses some vite `resolve.alias` config like `\"@avidly/types\": \"./private-deps/@avidly/types\"`. :thinking_face:\n\nIn theory you could put together most of that on your side, minus the vite alias part. If you’d like to experiment some there that would be great. If not we’ll try to play around with private dep workarounds soon."
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-22 06:36:00",
+    "text": "Well, this could also gives us a reason to make the packages public :wink:"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-22 06:42:16",
+    "text": "But something for testing the build before deployment would be good. Running it on local dev, doesn't show the errors, neither does linting. :thinking_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-02-22 06:46:13",
+    "text": "Yup, that is a great point. If we are always going to do the build on our servers we need to have good error messages and make the local devex as seamless/just work as possible. And right now we are quite far from that ideal :factory_worker:"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-02-22 06:54:18",
+    "text": "We’ll have to think some more on that. I think doing a little magic and assuming all components in an `../islands/` folder should automatically get the same compiler tweaks/wrapping as `?island` is possible. Though doing that (to avoid `?island`) seems like it ends up being more typing/boilerplate.\n\nA kinda halfway thought… what if your components in the islands folder looked like:\n\n```// in islands folder\n\nimport { Button as UIButton } from '@avidly/components?island';\nimport { Island } from '@HubSpot/cms-components';\n\nexport const Button = ({ id = \"button-island\", hydrateOn = \"load\", ...otherProps }) =&gt; {\n  return (\n    &lt;Island id={id} hydrateOn=\"load\" module={UIButton} {...otherProps} /&gt;\n  );\n};```\nThere you’d still be using `?island` but it would be isolated to just the `islands/` folder. And you/we could create some code snippets (or generator command?) to help put that boilerplate together more quickly."
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-02-22 06:54:41",
+    "text": "Though, looking at `'@avidly/components?island'` I think this is the first time I’ve considered that (it looks kind of awkward and I wonder if it fully works like we expect?), since I don’t think we’ve yet tried to wrap a component directly from a dependency in an island yet. :thinking_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-02-22 07:04:34",
+    "text": "<@U02LG4AU9JS> sorry I dropped off for a bit - are you all set on this thread?"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-02-22 07:13:12",
+    "edited": {
+      "time_stamp": "2023-02-22 07:50:16"
+    },
+    "text": "Could you elaborate on that? Where is ~snake-case~ kebab-case not working?"
+  },
+  {
+    "poster": {
+      "poster_name": "Erik Rorstrom",
+      "poster_handle": "erik.rorstrom"
+    },
+    "time_stamp": "2023-02-22 07:29:18",
+    "text": "<@UCY83QS6Q> Yes, running with npm"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-02-22 07:30:10",
+    "text": "K, that’s it then. We need to make sure kicking off storybook works with that as well, sorry for the oversight!"
+  },
+  {
+    "poster": {
+      "poster_name": "Erik Rorstrom",
+      "poster_handle": "erik.rorstrom"
+    },
+    "time_stamp": "2023-02-22 07:30:18",
+    "text": "Installing yarn globally did fix it"
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin.perolio"
+    },
+    "time_stamp": "2023-02-22 07:49:06",
+    "edited": {
+      "time_stamp": "2023-02-22 07:49:20"
+    },
+    "text": "Not to be a stickler, but `snake-case` is actually kebab case or slug case. :laughing: "
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-02-22 07:49:46",
+    "text": "Oh yeah, whoops :laughing:"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-02-22 09:07:47",
+    "text": "sorry about that, we’ll make it package manager agnostic!"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-22 09:20:21",
+    "text": "Could be, just throwing some ideas that we'll get some discussion going on :grin: So we can find best solutions :spock-hand:"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-22 09:24:34",
+    "text": "<@UAYBXDG4U> Well it would be awesome to get the goober styles rendering where you build or render the app. Using it inside components is a bit cumbersome and produces way too much css, and many times needs a page reload to render the styles."
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-22 09:28:16",
+    "text": "<@UCY83QS6Q> in the folder or file names in the project. At least it was throwing an error for me when trying to deploy the project. Or could be also, because of my other errors there :laughing:"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-22 09:30:28",
+    "text": "<@U03U053QC72> Do you really own a Pagani, the dev salaries seems to be quite different in USA than in Finland :sweat_smile:",
+    "reply_count": 7,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-02-22 09:31:02"
+      },
+      {
+        "time_stamp": "2023-02-22 09:32:38"
+      },
+      {
+        "time_stamp": "2023-02-22 09:34:21"
+      },
+      {
+        "time_stamp": "2023-02-22 09:40:38"
+      },
+      {
+        "time_stamp": "2023-02-22 09:43:37"
+      },
+      {
+        "time_stamp": "2023-02-22 09:44:21"
+      },
+      {
+        "time_stamp": "2023-02-22 09:46:54"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Charles Boamah",
+      "poster_handle": "cboamah"
+    },
+    "time_stamp": "2023-02-22 09:31:02",
+    "text": ":laughing: I wish"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-02-22 09:32:25",
+    "text": "we definitely should look into the NPM module situation like that, i don’t think we’ve verified that - that being said supporting that rules out using an `islands/` dir since it won’t be in there"
+  },
+  {
+    "poster": {
+      "poster_name": "Charles Boamah",
+      "poster_handle": "cboamah"
+    },
+    "time_stamp": "2023-02-22 09:32:38",
+    "text": "But I still think <@U04DVL5T2TE>’s train costs a little bit more"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-22 09:34:21",
+    "text": "Well at least we have a freezing weather here :stuck_out_tongue_winking_eye: Now it's -26 degrees"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-02-22 09:35:08",
+    "text": "in the past we had explored making anything in the `islands/` directory wrapped to work automatically, but ran into situations where something was being imported from a component that was already an island, creating nested islands, which at the time we didn’t handle. so using the import site felt more flexible"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-02-22 09:40:38",
+    "text": "Oh I am more than happy about this thread."
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-02-22 09:43:37",
+    "text": "<@U02LG4AU9JS> I must ask ... it's my understanding that Disc Golf is quite popular in Finland ... is this your experience?"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-22 09:44:21",
+    "text": "<@U03U053QC72> I guess you reference to this classic,\n\nAn Arab student e-mails his dad\nDear Dad,\n\nBerlin is wonderful, people are nice and I really like it here, but Dad, I am a bit ashamed to arrive at my college with my pure-gold Ferrari 599GTB when all my teachers and many fellow students travel by train.\n\nYour son, Nasser.\n\nThe next day, Nasser gets a reply to his e-mail from his dad:\n\nMy dear loving son,\n\nTwenty million US Dollar has just been transferred to your account. Please stop embarrassing us. Go and get yourself a train too.\n\nLove, your Dad"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-22 09:46:54",
+    "edited": {
+      "time_stamp": "2023-02-22 09:47:46"
+    },
+    "text": "<@UAYBXDG4U> yep, it's popular. Our Lions Club actually build one course (with 8 tracks) to the village that I live in. So I was also building one course."
+  }
+]

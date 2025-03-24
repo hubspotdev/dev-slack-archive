@@ -1,0 +1,261 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jeff Ausura",
+      "poster_handle": "jausura"
+    },
+    "time_stamp": "2018-05-10 07:19:12",
+    "text": "Jonathan, there are also more technical style docs on the designers site: <https://designers.HubSpot.com/docs/design-manager/ui-overview>. I would recommend those especially if you build modules since there have been some very significant changes there. The certification is still in early stages so that's going to be a little while coming..."
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-05-10 07:25:57",
+    "text": "<@U7SL518D6> did you know you're quoted in the doc?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-05-10 07:39:45",
+    "edited": {
+      "time_stamp": "2018-05-10 07:40:01"
+    },
+    "text": "I do. I was asked for permission to use my quote. I had said that in feedback to HubSpot."
+  },
+  {
+    "poster": {
+      "poster_name": "Parag",
+      "poster_handle": "parag.patel"
+    },
+    "time_stamp": "2018-05-10 07:40:13",
+    "text": "```\n&lt;script&gt;\n$.getScript(\"//js.hsforms.net/forms/v2.js\",function(){\n\thbspt.forms.create({ \n\t\tportalId: 'XXXXXXX',\n\t\tformId: 'myFormId',// Original form Id\n\t\tcss:\"\",\n\t\tformInstanceId: '1',\n\t\ttarget: '[id=code-form] .form',\n\t\tonFormSubmit: function($form) { \n\t\t//// This code is not working.\n \t\t$.ajax({url: \"<http://hubmation.com/API/check_code.php>\", \n\t\t\tsuccess: function(result){\n\t\t\t\tif(result == 'false'){\n\t\t\t\t\treturn false;\n\t\t\t\t}\n\t\t\t});\n\t\t}\n\t});\n});\n&lt;/script&gt; \n```\nAbove is my form script. `onFormSubmit` I send ajax request. Based on result I need to submit or restrict form to submit. But everytime form gets submitted. Eventhough I add `return false` in first line of `onFormSubmit: function($form) {` function. \nBasically, I have two problems \n1&gt; ajax code is not working. \n2&gt; how to restrict form to submit\n\nCan any one guide me ? Thank you in advance :slightly_smiling_face:",
+    "reply_count": 8,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2018-05-10 08:01:10"
+      },
+      {
+        "time_stamp": "2018-05-10 08:31:07"
+      },
+      {
+        "time_stamp": "2018-05-10 09:36:19"
+      },
+      {
+        "time_stamp": "2018-05-10 11:47:13"
+      },
+      {
+        "time_stamp": "2018-05-10 11:48:46"
+      },
+      {
+        "time_stamp": "2018-05-10 11:49:56"
+      },
+      {
+        "time_stamp": "2018-05-11 03:05:02"
+      },
+      {
+        "time_stamp": "2018-05-11 11:28:10"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jeffrey Vocell",
+      "poster_handle": "jvocell"
+    },
+    "time_stamp": "2018-05-10 07:48:14",
+    "text": "We made sure to ask, Jon. :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Stefen Phelps",
+      "poster_handle": "stefen"
+    },
+    "time_stamp": "2018-05-10 08:01:10",
+    "text": "ajax is not officially supported"
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "Parag",
+      "poster_handle": "parag.patel"
+    },
+    "time_stamp": "2018-05-10 08:31:07",
+    "edited": {
+      "time_stamp": "2018-05-10 08:32:57"
+    },
+    "text": "Thanks for your response.\nSo which approach I should take ? Can you please guide me ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Marco",
+      "poster_handle": "mbevacqua"
+    },
+    "time_stamp": "2018-05-10 09:36:19",
+    "text": "If I understand things correctly you would like to validate something using your API before the submissions goes through to HubSpot.\nThis scenario is not currently supported."
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-05-10 11:47:13",
+    "text": "Part of your problem is that onFormSubmit isn't actually returning false, your ajax success callback is the function that returns false. onFormSubmit returns nothing, so it just goes through"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-05-10 11:48:46",
+    "text": "I don't think you can do much about that. The trouble is that you want ajax requests to be asynchronous, which means that the rest of the script just continues on while the request is being made; it doesn't stop for the ajax request."
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-05-10 11:49:56",
+    "text": "Therefore, by the time you get a reply, the onFormSubmit function is already done. You could make it a synchronous request, but that's kind of a bad user experience because it causes everything to freeze while the request is happening."
+  },
+  {
+    "poster": {
+      "poster_name": "Jonathan Pavoni - Level 9",
+      "poster_handle": "jonathanpavoni"
+    },
+    "time_stamp": "2018-05-10 12:51:42",
+    "text": "Trying to build a Dynamic page with HubDB and bring in variables into my template for some reason I can get the image to render on the page but not the title and the description - any insights here? Here is the page I'm working on <https://web.twinstate.com/webinar-database/countdown-to-gdpr?238>"
+  },
+  {
+    "text": "<@U2LEJ045D> uploaded a file: <https://HubSpotdev.slack.com/files/U2LEJ045D/FAMM58R35/screen_shot_2018-05-10_at_2.50.42_pm.png|Screen Shot 2018-05-10 at 2.50.42 PM.png>",
+    "time_stamp": "2018-05-10 12:52:04"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonathan Pavoni - Level 9",
+      "poster_handle": "jonathanpavoni"
+    },
+    "time_stamp": "2018-05-10 12:52:23",
+    "text": "That is the screenshot of the variables I'm trying to bring in",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2018-05-10 13:11:54"
+      }
+    ]
+  },
+  {
+    "text": "<@U2LEJ045D> uploaded a file: <https://HubSpotdev.slack.com/files/U2LEJ045D/FAMQ2LC9Y/screen_shot_2018-05-10_at_2.52.37_pm.png|Here is a shot of the table I'm working with>",
+    "time_stamp": "2018-05-10 12:53:20"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-05-10 13:11:54",
+    "text": "Can you DM me a template? Also would be good to move this into <#C22PDRW72|data-driven-content>"
+  },
+  {
+    "poster": {
+      "poster_name": "Christopher Mathieu",
+      "poster_handle": "christopher.mathieu"
+    },
+    "time_stamp": "2018-05-10 14:17:12",
+    "text": "anybody ever noticed that certain portals get dinged for \"Reduce server response time\" in Google Page Speed Insights while others do not?"
+  },
+  {
+    "poster": {
+      "poster_name": "Christopher Mathieu",
+      "poster_handle": "christopher.mathieu"
+    },
+    "time_stamp": "2018-05-10 14:17:41",
+    "text": "for example our portal never seems to get dinged for that but one of my client's does every time I run the test"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-05-10 14:24:20",
+    "text": "odd, In my experience most of the HS sites i’ve worked on get dinged for server response time(though it usually is still very fast, just not fast enough to Google) \nThough I last checked months ago so for all I know that’s not the case anymore"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-05-10 14:25:20",
+    "edited": {
+      "time_stamp": "2018-05-10 14:26:12"
+    },
+    "text": "the one thing on pagespeed that bugs me personally is the jquery in the header bit. all the HS devs have chimed in on that though, it’s not as easy as just moving it to the footer. They know it’s an issue, they just want to find the best way to solve it. Where they don’t accidentally break half the websites they host."
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2018-05-10 14:36:25",
+    "text": "Generally the server response time is a factor of how much hubl and modules you have in your page. Lots of large  hubdb queries will slow down pages too."
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2018-05-10 14:37:00",
+    "text": "The jquery issue will go away soon",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2018-05-11 13:12:15"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-05-10 14:39:50",
+    "text": "I always felt Google was just being critical with their server response time bits. In other tests HS does well. I think the caching you guys are doing probably fixed the response time stuff"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2018-05-10 14:45:45",
+    "text": "yeah, if we can cache a page, server response time should be nearly 0"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-05-10 14:47:27",
+    "text": "yeah, that cloudflare magic. I swear, they must like hijack everyone’s routers and store the pages there. it’s mad fast."
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2018-05-10 22:59:35",
+    "text": "<https://uxdesign.cc/imperfect-organic-design-is-the-next-step-f16942ca79b2>",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2018-05-11 04:50:30"
+      }
+    ]
+  }
+]

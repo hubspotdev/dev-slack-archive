@@ -1,0 +1,136 @@
+[
+  {
+    "poster": {
+      "poster_name": "Madison Ashworth",
+      "poster_handle": "madison.ashworth"
+    },
+    "time_stamp": "2023-12-12 01:24:30",
+    "text": "Hi, I am having an issue with some custom code, after making a POST API call to /crm/v3/objects/line_items/search the property \"results\" returns as undefined, this does not happen for every call to this endpoint. Please could anyone help?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nazarii Bardiuk",
+      "poster_handle": "nazarii"
+    },
+    "time_stamp": "2023-12-12 02:17:10",
+    "text": "thank you, email is a good workaround. Although sometimes we don't have email for contacts or domain for companies. We have our unique id before creating objects in HubSpot, would be nice to use it as idempotency key and avoid duplicates."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2023-12-12 06:01:23",
+    "text": "make sure to set it up in HubSpot as a unique field when creating the property. \n\nthen use idProperty as part of your api calls. search for idProperty in the docs and you can see how it is used "
+  },
+  {
+    "poster": {
+      "poster_name": "TCOLINS",
+      "poster_handle": "tcolins"
+    },
+    "time_stamp": "2023-12-12 07:12:53",
+    "edited": {
+      "time_stamp": "2023-12-12 07:17:51"
+    },
+    "text": "$searchRequest->setProperties ALL\n\nI use the V3 API in PHP withe the HubSpot-api library.\nHere is a part of my code:\n\n$filterGroup = new \\HubSpot\\Client\\Crm\\Deals\\Model\\FilterGroup();\n$filterGroup->setFilters([$filter1,$filter2]);\n$searchRequest = new \\HubSpot\\Client\\Crm\\Deals\\Model\\PublicObjectSearchRequest();\n$searchRequest->setFilterGroups([$filterGroup]);\n// Get specific properties\n$searchRequest->setProperties(['hs_object_id','evenement']);\n\nIs there a way to get all the properties of the deals table ?\nSomething LIKE $searchRequest->setProperties(ALL); ?\n\nI'm trying to get the company ID in the found deal"
+  },
+  {
+    "text": "Can we update the Page Title, Page Path and Child Table column with the HubDB API? It doesn't seem those are available columns to push a csv file.",
+    "time_stamp": "2023-12-12 07:20:26",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-12-12 07:23:51"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Tim Flaspoler",
+      "poster_handle": "tflaspoehler"
+    },
+    "time_stamp": "2023-12-12 07:23:51",
+    "text": "This is in the documentation. Those have separate fields for mapping the columns."
+  },
+  {
+    "poster": {
+      "poster_name": "Giles Palmer",
+      "poster_handle": "giles"
+    },
+    "time_stamp": "2023-12-12 08:38:07",
+    "edited": {
+      "time_stamp": "2023-12-12 08:45:24"
+    },
+    "text": "Hi\n\nThe response format I get from a HubDB api call seems to have changed today!\n<https://api.hubapi.com/cms/v3/hubdb/tables/123456/rows/75297266921>\n\n    \"values\": {\n        \"membership_type_grouping\": 2,\n        \"membership_grade\": 1,\n        \"current\": 1,\n        \"membership_subscription_frequency\": 6,\n        \"year\": \"2023\",\n        \"price\": 107,\n        \"membership_add_ons\": \",1,\",\n        \"name\": \"Family - Standard - Annually \",\n        \"stripe_reference\": \"price_xxxxxxxx\",\n        \"membership_class\": 3\n    },\n\nThe response values used to look more like:\n  \"values\": {\n    \"text_column\": \"sample text value\",\n    \"number_column\": 76,\n    \"multiselect\": [\n      {\n        \"id\": \"1\",\n        \"name\": \"Option 1\",\n        \"type\": \"option\",\n        \"order\": 0\n      },\n      {\n        \"id\": \"2\",\n        \"name\": \"Option 2\",\n        \"type\": \"option\",\n        \"order\": 1\n      }\n    ]\n  },\n\nThe select columns now only give the index of the selected item instead of JSON style object.\nWhat have I missed?\n\nThanks",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-12-12 15:19:15"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2023-12-12 09:51:26",
+    "text": "yes. you can use that api. the docs page will let you know if an api is depreciated "
+  },
+  {
+    "poster": {
+      "poster_name": "Jesse Jones",
+      "poster_handle": "jjones955"
+    },
+    "time_stamp": "2023-12-12 11:53:10",
+    "text": "He all, I’m having an issue with a bulk association archive using v4. I cannot get the payload structured correctly. Any support would be appreciated.\n\ndef delete_associations(api_key, fromObjectType, toObjectType, fromObjectId, toObjectIds, batchSize):\n    headers = {\n        “Authorization”: f”Bearer {api_key}“,\n        “Content-Type”: “application/json”\n    }\n\n    for i in range(0, len(toObjectIds), batchSize):\n        batch_toObjectIds = toObjectIds[i:i + batchSize]\n        batch_payload = {\n            “inputs”: [\n                {\n                    “from”: {“id”: fromObjectId},\n                    “to”: [{“id”: toObjectId} for toObjectId in batch_toObjectIds]\n                }\n            ]\n        }\n\n        delete_url = f”{HubSpot_api}v4/associations/{fromObjectType}/{toObjectType}/batch/archive”\n\n        try:\n            response = <http://requests.post|requests.post>(delete_url, headers=headers, json=batch_payload)\n            response.raise_for_status()\n\n            # Print request and response details\n            print(f”Response Status Code: {response.status_code}“)\n            print(f”Response Content: {response.text}“)\n\n            data = response.json()\n            print(f”Succesfully deleted associations for {fromObjectType} {fromObjectId} and {toObjectType}“)\n\n        except requests.exceptions.RequestException as e:\n            print(f”Error deleting associations using the given parameters: {e}“)\n\n            # Print more information about the error if possible\n            try:\n                response_content = response.json()\n                print(“Error details:“, response_content)\n            except ValueError:\n                print(“Error details: unable to parse response content as JSON.“)\n\n    return",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-03-04 09:17:47"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Charly Lagresle",
+      "poster_handle": "charly.lagresle"
+    },
+    "time_stamp": "2023-12-12 11:59:36",
+    "text": "Hi everyone :slightly_smiling_face:\n\nDo you know if it's possible to retrieve the ID of an import made through the GUI ? I tried the endpoint <https://api.hubapi.com/crm/v3/imports/>, but I couldn't find any import IDs other than those with \"source\": \"API\" ...\n\nThanks a lot !",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-12-13 05:58:36"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Isiah Smith",
+      "poster_handle": "isiah.smith"
+    },
+    "time_stamp": "2023-12-12 12:38:46",
+    "text": "hello everyone!\nI want to pull every email we've ever sent to 3 contact lists in HubSpot. Could anyone help provide direction on the best way to make a POST API request for this? I made some attempts using Postman but didn't have any luck, thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Tyler White",
+      "poster_handle": "tyler613"
+    },
+    "time_stamp": "2023-12-12 12:49:31",
+    "text": "Hello,\nI have a question related to Non-HubSpot Forms being pushed via API. I have an account creation page form that allows users to create an account with my product (only requires a unique email) I want information from the form to create a contact in HubSpot BUT if i have the Collect data from website forms setting turned ON it puts unique emails (unique accounts) into the same contact (simply adds the new email to existing contact even though the new email is a unique contact/account in my database).\n\nBUT if i turn the Collect data from website forms setting OFF it does not track where the lead came from so i am not able to produce reporting to identify source of leads and conversions.\n\nI want to know if there is a recommended solution to this problem or if there is API documentation that outlines what fields to control tracking lead/contact sourcing that HubSpot uses from Form Submissions."
+  },
+  {
+    "poster": {
+      "poster_name": "Giles Palmer",
+      "poster_handle": "giles"
+    },
+    "time_stamp": "2023-12-12 15:19:15",
+    "text": "The response I get from a GET with Postman changes randomly from the correct format to the incorrect format:\n\nThe response from Postman is mainly an incorrect / unexpected format:\n\n```{\n    \"id\": \"75297266921\",\n    \"createdAt\": \"2023-07-26T20:29:09.966Z\",\n    \"updatedAt\": \"2023-12-04T16:18:07.534Z\",\n    \"publishedAt\": \"2023-12-12T16:23:32.431Z\",\n    \"values\": {\n        \"membership_type_grouping\": 2,\n        \"membership_grade\": 1,\n        \"current\": 1,\n        \"membership_subscription_frequency\": 6,\n        \"year\": \"2023\",\n        \"price\": 107,\n        \"membership_add_ons\": \",1,\",\n        \"name\": \"Family - Standard - Annually +Equine\",\n        \"stripe_reference\": \"price_xxxxx\",\n        \"membership_class\": 3\n    },\n    \"path\": null,\n    \"name\": null,\n    \"isSoftEditable\": false,\n    \"childTableId\": \"0\"\n}```\nThen intermittently reverts to the correct / expected format:\n\n```{\n    \"id\": \"75297266921\",\n    \"createdAt\": \"2023-07-26T20:29:09.966Z\",\n    \"updatedAt\": \"2023-12-04T16:18:07.534Z\",\n    \"publishedAt\": \"2023-12-12T16:23:32.431Z\",\n    \"values\": {\n        \"membership_type_grouping\": {\n            \"id\": \"2\",\n            \"name\": \"Membership Grouping\",\n            \"label\": \"Membership Grouping\",\n            \"type\": \"option\",\n            \"order\": 1\n        },\n        \"membership_grade\": {\n            \"id\": \"1\",\n            \"name\": \"Standard\",\n            \"label\": \"Standard\",\n            \"type\": \"option\",\n            \"order\": 0\n        },\n        \"current\": 1,\n        \"membership_subscription_frequency\": {\n            \"id\": \"6\",\n            \"name\": \"Annually\",\n            \"label\": \"Annually\",\n            \"type\": \"option\",\n            \"order\": 5\n        },\n        \"year\": \"2023\",\n        \"price\": 107,\n        \"membership_add_ons\": [\n            {\n                \"id\": \"1\",\n                \"name\": \"Equine\",\n                \"label\": \"Equine\",\n                \"type\": \"option\",\n                \"order\": 0\n            }\n        ],\n        \"name\": \"Family - Standard - Annually +Equine\",\n        \"stripe_reference\": \"price_xxxxxxx\",\n        \"membership_class\": {\n            \"id\": \"3\",\n            \"name\": \"Family\",\n            \"label\": \"Family\",\n            \"type\": \"option\",\n            \"order\": 2\n        }\n    },\n    \"path\": null,\n    \"name\": null,\n    \"isSoftEditable\": false,\n    \"childTableId\": \"0\"\n}```\nGetting the correct format is pretty important!!  Is anybody else finding this?"
+  }
+]

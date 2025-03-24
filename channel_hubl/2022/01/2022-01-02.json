@@ -1,0 +1,42 @@
+[
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2022-01-02 18:53:11",
+    "edited": {
+      "time_stamp": "2022-01-02 18:55:40"
+    },
+    "text": "Is there anyone pretty good with HubL dictionaries and loops that can help me out?\n```{% set desserts = [] %}\n{% set _desserts = [\n  {\n    name: 'pie',\n    flavor: 'cherry',\n    stuff: 'bad'\n  },\n  {\n    name: 'pie',\n    flavor: 'apple',\n    stuff: 'okay'\n  },\n  {\n    name: 'pie',\n    flavor: 'cherry',\n    stuff: 'random'\n  },\n  {\n    name: 'ice cream',\n    flavor: 'strawberry',\n    stuff: 'good'\n  }\n] %}```\nSo, I'm trying to iterate through `_desserts` and add one and only one of each dessert to `desserts` , which means if there is more than 1 flavor, we add it to an array of flavors for the dessert instead, and we only want 2 relevant properties (`name` and `flavor`). So in the above, we're trying to get `desserts` to output to\n```[\n  {\n    name: 'pie',\n    flavors: [ 'cherry', 'apple' ]\n  },\n  {\n    name: 'ice cream',\n    flavors: [ 'strawberry' ]\n  }\n]```\nThis is easy to do with JS, but it seems much harder with HubL &gt;&lt; At least for me, maybe because I'm not as experienced with it. Not being able to quickly and easily console.log in the loops makes it harder too.",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-01-02 21:06:32"
+      },
+      {
+        "time_stamp": "2022-01-02 21:19:18"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2022-01-02 21:06:32",
+    "edited": {
+      "time_stamp": "2022-01-02 21:07:26"
+    },
+    "text": "Alright, so I wrote this, and it almost works...\n```    {%- set desserts = [] -%}\n      {% set _desserts = [\n        {\n          name: 'pie',\n          flavor: 'cherry',\n          stuff: 'bad'\n        },\n        {\n          name: 'pie',\n          flavor: 'apple',\n          stuff: 'okay'\n        },\n        {\n          name: 'pie',\n          flavor: 'cherry',\n          stuff: 'random'\n        },\n        {\n          name: 'ice cream',\n          flavor: 'strawberry',\n          stuff: 'good'\n        }\n      ]\n    %}\n    {%- for _dessert in _desserts -%}\n      {%- if desserts &amp;&amp; desserts|length -%}\n        {%- for dessert in desserts -%}\n          {%- if _dessert.name == dessert.name -%}\n            {%- if _dessert.flavor is not in dessert.flavors %}\n              {%- do dessert.flavors.append(_dessert.flavor) -%}\n            {%- endif -%}\n          {%- endif -%}\n        {%- endfor -%}\n      {%- else -%}\n        {%- do desserts.append({\n            'name': _dessert.name,\n            'flavors': [ _dessert.flavor ]\n          })\n        -%}\n      {%- endif -%}\n    {%- endfor -%}```\nSo `desserts` here outputs to\n```[\n  {\n    name: 'pie',\n    flavors: [ 'cherry', 'apple' ]\n  }\n]```\nIt only works for one item. I need to somehow check if another dessert with that name already exists inside `desserts` and if not, append it, but you can't append an item to an array when you're iterating through that array, so I'm kind of lost."
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2022-01-02 21:19:18",
+    "text": "Ah, yay, figured it out. `selectattr` was what I needed, wasn't familiar with it."
+  }
+]

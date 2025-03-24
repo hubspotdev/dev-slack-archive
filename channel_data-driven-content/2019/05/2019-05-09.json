@@ -1,0 +1,487 @@
+[
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-09 06:38:01",
+    "text": "I've another ordering question for ya'll. The docs say that a reverse filtering should work with the {for row in rows} function, but I must be setting up the code incorrectly, or it doesn't seem to be working correctly when needing to do a 2-step ordering process.\n```  {% for row in hubdb_table_rows(&lt;tableID&gt; 'orderBy=date&amp;reverse') %}\n    {{row.date|datetimeformat('%Y%m%d')}}\n  {% endfor %}```\n\nI need to first sort the rows by date and then reverse that so the most recent date is looped through first.",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-05-09 06:58:32"
+      },
+      {
+        "time_stamp": "2019-05-09 07:43:29"
+      },
+      {
+        "time_stamp": "2019-05-09 07:44:05"
+      },
+      {
+        "time_stamp": "2019-05-09 07:58:12"
+      },
+      {
+        "time_stamp": "2019-05-09 08:02:17"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2019-05-09 06:58:32",
+    "edited": {
+      "time_stamp": "2019-05-09 06:59:05"
+    },
+    "text": "<@UDFTHC6PK> You can use orderBy=-date to have it sorted by date in reverse order."
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-09 07:43:29",
+    "text": "<@UG52C29EE> You are my hero. Thanks! I'm assuming '-' is the standard reversing for all of the orderBy functions?"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2019-05-09 07:44:05",
+    "text": "yes"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-09 07:58:12",
+    "edited": {
+      "time_stamp": "2019-05-09 08:02:27"
+    },
+    "text": "Okay, one last question on this. If I wanted to add a check for a boolean true:false in that same snippet, would this be the appropriate snippet? I'm seem to not quite be able to translate the documented examples into a working function with the boolean item.\n\n```{% for row in hubdb_table_rows(&lt;tableID&gt;, 'live=true&amp;orderBy=-date') %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2019-05-09 08:02:17",
+    "text": "Yes the above query looks correct."
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-09 13:35:17",
+    "edited": {
+      "time_stamp": "2019-05-09 14:38:24"
+    },
+    "text": "annnnd I'm back :joy:\n\nIn the below code set, I'm attempting to create a list of rows that I can then pull a random row item from for displaying on a page. I've been able to get happily to a date limited set of content, but am struggling to achieve a second loop through the fetched rows for selecting a random item. Would anyone know of a way to achieve this? is there a possible `{% for row in rows|random %}` that will loop through the fetched row set?\n\n```{% for row in hubdb_table_rows(&lt;tableID&gt;, 'live=true&amp;orderBy=-date') %}\n  {% if row['date']|datetimeformat('[%Y%m%d]') &lt; current_date and row['date']|datetimeformat('[%Y%m%d]') &gt;= month_date %}\n     {{ macro that pulls in my code block with hubDB references such as row.date }}\n  {% endif %}\n{% endfor %}```\n\nIn looking at the documentation here: <https://designers.HubSpot.com/docs/hubl/for-loops#nested-loops>, that is a parent&gt;child situation which doesn't seem to apply in this case. When useing the `{% set tabe = hubdb_table_rows(&lt;tableID&gt;) %}`` the column information gets lost for use and it quickly gets out of hand in trying to re-identify the columns.",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2019-05-09 14:39:12"
+      },
+      {
+        "time_stamp": "2019-05-09 14:41:52"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-09 13:35:23",
+    "text": "Any thoughts?"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2019-05-09 14:17:39",
+    "text": "what is the answer to this hubdb Gods? :point_up_2:"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-09 14:39:12",
+    "edited": {
+      "time_stamp": "2019-05-09 15:18:49"
+    },
+    "text": "for future reference something like this does not yield results: ```{% for row in hubdb_table_rows(&lt;tableID&gt;, 'live=true&amp;orderBy=-date') %}\n  {% if row['date']|datetimeformat('[%Y%m%d]') &lt; current_date and row['date']|datetimeformat('[%Y%m%d]') &gt;= month_date %}\n    {% for row in rows|random %}\n      {{ row.date }}\n    {% endfor %}\n  {% endif %}\n{% endfor %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-09 14:41:52",
+    "text": "I'm hoping that just turns into a syntax issue on the nested `{% for row in rows %} that I'm not 100% sure how to fix"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-05-09 14:43:10",
+    "text": "I would check the datetimeformat to make sure it matches the same format as current_date (also i dont think current_date is a hs var)"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-09 14:47:39",
+    "text": "It isn't -- it's a self set var on my end."
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-09 14:48:01",
+    "text": "The dates are all filtering appropriately and I'm able to generate lists within the date range desired"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-09 14:48:39",
+    "text": "It's the looping back through those date-ranged lists to select one at random that is proving to be the problem"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-05-09 14:58:35",
+    "text": "have you tried to randomize the set that you filter by?"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-05-09 14:59:01",
+    "text": "instead of randomizing the filtered content"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-05-09 14:59:16",
+    "text": "<@UDFTHC6PK>"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-09 15:01:35",
+    "text": "<@U38EZFVFE> I need to be able to do a set of recency checks (if date = today, if date &lt; today &gt; 1 week, if date &lt; today &gt; 1 month) which leads me down needing to filter through the DB by date first to check for matches (then kick out of the loop if a match is found)"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-05-09 15:01:37",
+    "text": "how many are you trying to display? just one?"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-09 15:02:15",
+    "edited": {
+      "time_stamp": "2019-05-09 15:02:29"
+    },
+    "text": "the end result would be just one, but 1 random from anything within the past week, 1 random from anything within the past month"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-05-09 15:09:10",
+    "text": "try this:"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-05-09 15:09:13",
+    "edited": {
+      "time_stamp": "2019-05-09 15:09:29"
+    },
+    "text": "```{% set query = 'live=true&amp;orderBy=-date&amp;orderBy=random()&amp;date__lt=' ~ 'current_date&amp;date__gte=' ~ month_date %}\n\n{% for row in hubdb_table_rows(&lt;tableID&gt;, query) %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-05-09 15:10:12",
+    "text": "and use date-stamps instead of formatted dates"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-05-09 15:10:16",
+    "text": "its more accurate"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-05-09 15:10:55",
+    "text": "<@UDFTHC6PK>"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-09 15:11:12",
+    "text": "Giving it a try. Thanks <@U38EZFVFE>"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-05-09 15:11:32",
+    "text": "also take a look at this `<https://developers.HubSpot.com/docs/methods/hubdb/v2/get_table_rows>`"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-09 15:11:58",
+    "text": "*sigh* I've been staring at that thing all day"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-05-09 15:12:04",
+    "text": "hahah"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-05-09 15:12:06",
+    "text": "ok"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-05-09 15:12:32",
+    "text": "you probably are going to have to remove the if statement"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-05-09 15:12:43",
+    "edited": {
+      "time_stamp": "2019-05-09 15:12:47"
+    },
+    "text": "as it wont be necessary anymore"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-09 15:15:05",
+    "text": "with that query --- when having two 'orderBy' sequentially, does that operation follow one after the other, then?"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-05-09 15:16:01",
+    "text": "it should"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-05-09 15:16:31",
+    "edited": {
+      "time_stamp": "2019-05-09 15:16:38"
+    },
+    "text": "from the page `You can include this parameter multiple times to sort by multiple columns.`"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-05-09 15:16:58",
+    "text": "in this case `date` and `random()`"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-05-09 15:24:03",
+    "text": "'live=true&amp;orderBy=-date&amp;orderBy=random()&amp;date__lt=' ~ current_date ~ '&amp;date__gte=' ~ month_date"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-05-09 15:24:10",
+    "text": "try that"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-05-09 15:24:24",
+    "text": "current_date is a variable not a string"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-09 15:25:01",
+    "text": ".... frankly, I should've caught that."
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-09 15:25:05",
+    "text": ":face_palm:"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2019-05-09 15:25:15",
+    "text": "hey. i didnt either"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-09 15:37:17",
+    "text": "bugger. Definitely a much cleaner list, but it doesn't randomize them"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-09 15:38:48",
+    "text": ":joy: time to put this to sleep for the day and to come back with a fresh head in the morrow. Thanks for the input folks"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-09 15:45:47",
+    "text": "Never mind! We have a winner! <@UD53A9UUR> the mystery is solved. (not with a nested loop... but still)\n\n`{% set query_month = 'live=true&amp;date__lt=' ~ current_date ~ '&amp;date__gt=' ~ month_date ~ '&amp;orderBy=random()' %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-09 15:46:21",
+    "text": "<@U38EZFVFE> Thanks for the tip on this. For anyone interested -- the `&amp;orderBy` needs to come last, apparently."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-05-09 15:48:09",
+    "text": "sometimes it just takes brute force trying a bunch of things till it gets unstupid lol"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-09 15:48:31",
+    "text": "...seriously..."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-05-09 15:50:18",
+    "text": "only reasoning I can think of for why that was the case with the random thing, was `(` `)` are special characters. They wouldn’t be valid in a URL(which is what that filter bit is based on) and thus if you don’t want to put it at the end you’d have to escape the characters"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-09 15:54:48",
+    "text": "ahhh... that could be"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-09 16:10:52",
+    "text": "*sidenote* The `( )` are in fact needed to make the randomization happen"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-05-09 16:12:51",
+    "text": "totally understood. was just meaning that special characters were likely the cause of the issue"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-05-09 16:13:00",
+    "text": "word"
+  }
+]

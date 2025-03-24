@@ -1,0 +1,25 @@
+[
+  {
+    "poster": {
+      "poster_name": "Chris Anoruo",
+      "poster_handle": "canoruo"
+    },
+    "time_stamp": "2024-07-11 11:39:57",
+    "text": "Hello everyone,\nI'm new to HubSpot and would appreciate some help with adding the \"unsubscribe from all\" action to the preference settings page. Could someone guide me through the process?\nThank you!",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-07-11 15:07:32"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2024-07-11 15:07:32",
+    "text": "Hi <@U0782U4PDE3>,\nIf you're using\n```{%- module \"subscription_preferences\" path=\"@HubSpot/email_subscriptions\" -%}```\nIt will automatically have the \"unsubscribe from all\" option.\n\nImportant: For many many reasons you can't really access/modify this default module (and you shouldn't try to)\n\nOne thing that is quite helpful is this piece of code:\n```// disable options if the unsubscribe option is enabled\n(function() {\n    // Variables\n  \n    var emailGlobalUnsub = document.querySelector('input[name=\"globalunsub\"]');\n  \n    // Function for executing code on document ready\n  \n    function domReady(callback) {\n      if (['interactive', 'complete'].indexOf(document.readyState) &gt;= 0) {\n        callback();\n      } else {\n        document.addEventListener('DOMContentLoaded', callback);\n      }\n    }\n  \n    // Function to disable the other checkbox inputs on the email subscription system page template\n  \n    function toggleDisabled() {\n      var emailSubItem = document.querySelectorAll('#email-prefs-form .item');\n  \n      emailSubItem.forEach(item =&gt; {\n        var emailSubItemInput = item.querySelector('input');\n  \n        if (emailGlobalUnsub.checked) {\n          item.classList.add('disabled');\n          emailSubItemInput.setAttribute('disabled', 'disabled');\n          emailSubItemInput.checked = false;\n        } else {\n          item.classList.remove('disabled');\n          emailSubItemInput.removeAttribute('disabled');\n        }\n      });\n    }\n  \n    // Execute JavaScript on document ready\n  \n    domReady(function() {\n      if (!document.body) {\n        return;\n      } else if (emailGlobalUnsub) {\n        emailGlobalUnsub.addEventListener('change', toggleDisabled);\n      }\n    });\n  })();```\nThis will disable all subscription types if the \"unsub from all\" option is enabled\n\nTip: This code is also available in the boilerplate and every default HubSpot theme like \"Growth\""
+  }
+]

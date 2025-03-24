@@ -1,0 +1,76 @@
+[
+  {
+    "text": "Hey Alyssa, you should be able to do this utilising the _title_ attribute, on the form snippet, i.e.:\n```{% form\n    form_key='{{ name }}',\n    form_to_use='{{ module.form.form_id }}',\n    title='{{ module.title }}'\n%}```\nMore info on form attributes (parameters) can be found <https://developers.HubSpot.com/docs/cms/hubl/tags#form|here>.\n\nAlso, if you edit the source of the _default HubSpot form_ at a template-editor-level, you can see all of the options available (see screenshot below)",
+    "time_stamp": "2020-07-16 04:14:31",
+    "edited": {
+      "time_stamp": "2020-07-16 04:15:22"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Dan Katz",
+      "poster_handle": "dan.katz"
+    },
+    "time_stamp": "2020-07-16 07:39:54",
+    "text": "Thanks"
+  },
+  {
+    "poster": {
+      "poster_name": "Dan Katz",
+      "poster_handle": "dan.katz"
+    },
+    "time_stamp": "2020-07-16 11:18:20",
+    "text": "Hi again everyone. We’re looking to build a simple “Tweet Card” module. Before starting from scratch, is there anything (an app or integration) that would give us a head start? <https://share.getcloudapp.com/ApuA2mNq>",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-07-16 11:18:47"
+      },
+      {
+        "time_stamp": "2020-07-16 12:29:21"
+      },
+      {
+        "time_stamp": "2020-07-16 17:42:04"
+      },
+      {
+        "time_stamp": "2020-07-16 17:42:26"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Dan Katz",
+      "poster_handle": "dan.katz"
+    },
+    "time_stamp": "2020-07-16 11:18:47",
+    "text": "Basically a couple fields on a module for headline and tweet body, and then the click to tweet button"
+  },
+  {
+    "poster": {
+      "poster_name": "Kane Small",
+      "poster_handle": "kane.small"
+    },
+    "time_stamp": "2020-07-16 12:29:21",
+    "edited": {
+      "time_stamp": "2020-07-16 12:31:05"
+    },
+    "text": "Sorry to not answer your question directly, I'm not too sure about any existing apps or, integrations that would already handle this for you but, with that said - the functionality for setting this up, should be pretty simple as you've outlined.\n\nA custom module with a few fields:\n• [Text field] - Tweet card headline\n• [Text field] - Tweet body\n• [Text field] - Button label\nThen, building up your, well module, in your HTML + HubL would look something like this:\n```&lt;div class=\"tweet-card\"&gt;\n   &lt;h3&gt;{{ module.tweet_card_headline }}&lt;/h3&gt;\n   &lt;p&gt;{{ module.tweet_body }}&lt;/p&gt;\n\n   {% set tweet_body = module.tweet_card_headline|title ~ \" \" ~ module.tweet_body %}\n   {% set tweet_url = request.full_url|urlencode %}\n   {% set newCharLimit = 280 - tweet_url|length %}\n   {% if tweet_body|length &gt; newCharLimit %}\n   {% set tweet_body = tweet_body|truncate(newCharLimit, False, '...') %}\n   {% endif %}\n\n   &lt;a href=\"<https://twitter.com/intent/tweet?url={{> tweet_url }}&amp;text={{ tweet_body }}%20{{ tweet_url }}\" target=\"_blank\"&gt;\n\t   {{ module.button_label }}\n   &lt;/a&gt;\n&lt;/div&gt;```\nIn this example I, concatenated the headline and body text together and then truncated it if, the character count exceeded the 280 - tweet_url character count. I also titlecased the headline, which you may or may not want to do.\n\nAgain, apologies if you already knew this part and did just want an app/integration but, I'm not sure if they would do much more than this anyway :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Dan Katz",
+      "poster_handle": "dan.katz"
+    },
+    "time_stamp": "2020-07-16 17:42:04",
+    "text": "Thanks!!"
+  },
+  {
+    "poster": {
+      "poster_name": "Dan Katz",
+      "poster_handle": "dan.katz"
+    },
+    "time_stamp": "2020-07-16 17:42:26",
+    "text": "cc <@U013BPMDWPN> ^^"
+  }
+]

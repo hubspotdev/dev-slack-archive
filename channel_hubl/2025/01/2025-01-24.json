@@ -1,0 +1,119 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jonas Kaas",
+      "poster_handle": "jonas.kaas"
+    },
+    "time_stamp": "2025-01-24 03:20:44",
+    "text": "Hi, new to HubSpot.\nI want to use an svg as sprite. But if I use get_assets_url the file is uploaded to the assets cdn and i get CORS problem with the file.\n\nNewbie question, but how do I get static files from my theme",
+    "reply_count": 9,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-01-24 03:36:17"
+      },
+      {
+        "time_stamp": "2025-01-24 03:43:40"
+      },
+      {
+        "time_stamp": "2025-01-24 03:52:43"
+      },
+      {
+        "time_stamp": "2025-01-24 03:58:46"
+      },
+      {
+        "time_stamp": "2025-01-24 04:02:00"
+      },
+      {
+        "time_stamp": "2025-01-24 04:04:26"
+      },
+      {
+        "time_stamp": "2025-01-24 04:13:37"
+      },
+      {
+        "time_stamp": "2025-01-24 04:19:26"
+      },
+      {
+        "time_stamp": "2025-01-24 04:21:15"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2025-01-24 03:36:17",
+    "text": "Hey <@U08A4CJ80RZ>, where would you like to use the svg? In a module/template or in the page-builder?\n\nIf module/theme, you have several possibilities here.\nI like to create a <https://developers.HubSpot.com/docs/reference/cms/hubl/variables-macros-syntax#macros|macro> for common used svg files.\nSo basically you create an empty html file in your theme structure like\n```- theme\n- - macros\n- - - svg_icons.html ```\nand structure the file like this:\n```&lt;!--\ntemplateType: \"none\"\nisAvailableForNewContent: false\n--&gt;\n\n{% macro custom_svg(svg_name) %}\n{% if svg_name == \"home\" %}\n&lt;svg ...&gt;&lt;/svg&gt; {# the whole svg code for the home icon #}\n{% elif svg_name == \"gear\" %}\n&lt;svg ...&gt;&lt;/svg&gt; {# the whole svg code for the gear icon #}\n...\n{% endif %}\n{% endmacro %}```\nThen open the module/theme file and add the icons like this\n```{% import \"./macros/svg_icons.html\" %} {# Preferably in the first line #}\n\n&lt;div class=\"card\"&gt; {# your html structure #}\n...\n{{ custom_svg(\"home\") }} {# the same name as in the \"if\"-statement inside the custom_svg macro #}\n&lt;/div&gt;```\nThe great thing is that if you do this in a custom module, you could technically add a choice field(let's call it \"Custom SVG selector\") with all the names as values and write it like this:\n```...\n{{ custom_svg(module.custom_svg_selector) }}\n...```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonas Kaas",
+      "poster_handle": "jonas.kaas"
+    },
+    "time_stamp": "2025-01-24 03:43:40",
+    "text": "my normal approach is using\n\nui.svg (sprite)\n\n&lt;svg xmlns=\"<http://www.w3.org/2000/svg>\"&gt;\n  &lt;symbol id=\"icon\" viewBox=\"0 0 32 32\"&gt;\n    &lt;path d=\"...\n  &lt;/symbol&gt;\n&lt;/svg&gt;\n\nuse in html\n&lt;svg class=\"icon\"&gt;\n    &lt;use href=\"{path to file}/ui.svg#icon\"&gt;&lt;/use&gt;\n&lt;/svg&gt;\n\nBut if I use get_assets_url, the file is uploaded to template_assets cdn and i get a cors problem with this approach.\n\nIs there a way to use the static files in the theme? Seems like a simple problem"
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2025-01-24 03:52:43",
+    "edited": {
+      "time_stamp": "2025-01-24 03:53:00"
+    },
+    "text": "You can try:\n...\n<use href=\"{{ get_asset_url(\"/path/to/file\") ~ \"#icon\" }}\"></use>\n..."
+  },
+  {
+    "poster": {
+      "poster_name": "Jonas Kaas",
+      "poster_handle": "jonas.kaas"
+    },
+    "time_stamp": "2025-01-24 03:58:46",
+    "edited": {
+      "time_stamp": "2025-01-24 03:59:16"
+    },
+    "text": "then the ui.svg is moved to {cdn}/hubfs/{id}/ and i get a \"Unsafe attempt to load URL\" the ui.svg needs to be served from the same domain as the document"
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2025-01-24 04:02:00",
+    "text": "Are you creating a custom module or theme and viewing the \"file\" via preview?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonas Kaas",
+      "poster_handle": "jonas.kaas"
+    },
+    "time_stamp": "2025-01-24 04:04:26",
+    "text": "creating a theme\n\n{theme}/assets\n   /svg\n      ui.svg\n\nI read about a function get_public_template_url that is deprecated now. I guess i can upload the ui.svg to file manager and use /hubfs/ui.svg\n\nBut using the static file directly would be better"
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2025-01-24 04:13:37",
+    "text": "yeah, the template_url is refering to the old templates that were used before themes were a thing. Can be a bit misleading in terms of naming.\n\nYou should consider uploading to the file-manager only if it's a theme for this specific portal. So most times it's not an option.\n\nJust for testing purposes:\n• Create a new module in your theme\n• Paste this code into it:\n```{% set abs_icon_path = get_asset_url(\"/path/to/file\") ~ \"#icon\" %}\n{{ abs_icon_path|pprint }}```\n• publish this module\n• open the page editor\n• create a new page(unless you already got a \"test page\")\n• select any template from your theme\n• drag&amp;drop this module somewhere into the page\n• preview the page in a new tab\n• it should\n    ◦ a) show you the correct path (you should also see this by previewing from the design-manager)\n    ◦ b) don't provide you a CORS"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonas Kaas",
+      "poster_handle": "jonas.kaas"
+    },
+    "time_stamp": "2025-01-24 04:19:26",
+    "text": "Thanks for your help. I will use file-manager for now, the file is not updated that often once all the icons are added."
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2025-01-24 04:21:15",
+    "text": "Your welcome - and think about implementing the macro solution. Will be cleaner and easier to handle in the future :wink:"
+  }
+]

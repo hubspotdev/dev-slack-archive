@@ -1,0 +1,210 @@
+[
+  {
+    "poster": {
+      "poster_name": "Mariana Forteza",
+      "poster_handle": "mariana"
+    },
+    "time_stamp": "2024-02-23 12:15:34",
+    "text": "Hello, did you find a way to make this work?\nThe same here for me, getting a PDF from an API and sending it as response in a serverless function. I can’t make it work"
+  },
+  {
+    "poster": {
+      "poster_name": "Mariana Forteza",
+      "poster_handle": "mariana"
+    },
+    "time_stamp": "2024-02-23 12:15:46",
+    "text": "Hello, did you find a way to make this work with the HubSpot serverless functions?\nThe same here for me, getting a PDF from an API and sending it as response in a serverless function. I can’t make it work"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-02-23 12:16:30",
+    "text": "You can't send anything but JSON to a serverless function that's hosted in HubSpot"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2024-02-23 12:17:57",
+    "text": "I dont remember how it works :disappointed:"
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin.perolio"
+    },
+    "time_stamp": "2024-02-23 12:34:21",
+    "edited": {
+      "time_stamp": "2024-02-23 12:38:07"
+    },
+    "text": "> You can't send anything but JSON to a serverless function that's hosted in HubSpot\nThis pretty much. HubSpot serverless functions seem pretty limited and useless overall to me. I'm just using Netlify serverless functions instead, and they work as expected."
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2024-02-23 12:35:59",
+    "text": "you have to turn that pdf into a buffer tho to get it to HubSpot"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-02-23 12:37:00",
+    "text": "I've had trouble with buffers before"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2024-02-23 12:37:38",
+    "text": "yeah"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2024-02-23 12:39:54",
+    "edited": {
+      "time_stamp": "2024-02-23 12:40:22"
+    },
+    "text": "this is what I do with PDF kit\n\n```  let buffers = [];\n\n  doc.on('data', buffers.push.bind(buffers));\n\n doc.on('end', async () => {\n    let pdfData = Buffer.concat(buffers);\n\n    var data = new FormData();\n\n    // THIS IS WHERE YOU WOULD WRITE FOR IT TO GO TO HubSpot\n    data.append('file', Buffer.from(pdfData), `Phone_Screen_${first_name}_${last_name}_${todaysDate.getMonth() + 1}-${todaysDate.getDate()}-${todaysDate.getFullYear()}_${shortid.generate()}`)\n    data.append('folderPath', '/pdfs')\n    data.append('options', '{\"access\": \"PUBLIC_NOT_INDEXABLE\", \"overwrite\": true, \"duplicateValidationScope\": \"EXACT_FOLDER\"}');\n\n    var config = {\n      method: 'post',\n      url: '<https://api.HubSpot.com/files/v3/files>',\n      headers: {\n        // INSERT KEY HERE AS BEARER\n        'Authorization': 'Bearer',\n        'Cookie': '__cf_bm=dPUFVOqSxky4VV_NiLaYokh5p90N4PVPzVkjmQoUzCk-1675345091-0-AfN7MUAmOA7T/za9as0FvTKg3O17khygO2eokZPko97xnopErhmyKhx0FeYvq6rEKTLQKJWRBQvvAh1w8zZtfPo=',\n      },\n      data: data\n    };\n\n\n    try {\n      const uploadData = await axios(config)\n      res.status(200).send({\n        message: \"SUCCESS\",\n        payload: uploadData.data\n      })\n    } catch (e) {\n      console.log(e);\n      res.status(400).send({\n        error: e.message\n      })\n    }\n\n    // IF YOU WANT TO SEND IT BACK OUT TO THE BROWSER FOR VIEWING\n    /*res.writeHead(200, {\n      'Content-Length': Buffer.byteLength(pdfData),\n      'Content-Type': 'application/pdf',\n      'Content-disposition': 'attachment;filename=test.pdf',})\n        .end(pdfData) */\n  });\n\n\n\n})```"
+  },
+  {
+    "text": "I don’t even want to save it in the file manager I just want to get it from one api and return it in the serverless function,\nI do get this as response but then I get a 406 on my react app",
+    "time_stamp": "2024-02-23 12:42:54"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2024-02-23 12:43:30",
+    "text": "like render it out of the serverless? you can do that for sure"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2024-02-23 12:43:38",
+    "text": "let me see if i still have the code"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2024-02-23 12:45:00",
+    "text": "oh i did it outside of HubSpot"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2024-02-23 12:45:20",
+    "text": "```\nrouter.get('/barcode',async (req,res,next)=&gt;{\n\n  const background = fs.readFileSync(\"public/images/bw.jpg\");\n\n  const buffer = await new AwesomeQR({\n    text: req.query.hubid,\n    size: 300,\n    backgroundImage: background\n  }).draw();\n\n  await fs.writeFileSync(`qrcode${req.query.hubid}.png`, buffer);\n\n  var img = Buffer.from(fs.readFileSync(`qrcode${req.query.hubid}.png`), 'base64');\n\n  res.set({'Content-Type': 'image/gif', 'Content-Length': img.length});\n  res.end(img);\n\n    }\n)```\nso you store the pdf in the temporal system and then buffer it and stream the buffer out"
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin.perolio"
+    },
+    "time_stamp": "2024-02-23 12:45:27",
+    "edited": {
+      "time_stamp": "2024-02-23 12:46:08"
+    },
+    "text": "The issue is that HubSpot limits your node_modules in the project, and you only have a limited return result. You can only have something dumb, like 5 mb of external dependencies. It’s been a while, I don’t remember exactly, but don’t even think about trying to use something like JSPDF with HubSpot serverless functions."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-02-23 12:46:41",
+    "text": "If you create the function via a dev project you can use any npm package you want"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-02-23 12:46:57",
+    "text": "Really nice feature"
+  },
+  {
+    "poster": {
+      "poster_name": "Mariana Forteza",
+      "poster_handle": "mariana"
+    },
+    "time_stamp": "2024-02-23 12:47:47",
+    "text": "yeah I don;t have the function through dev projects cos I needed other enterprise subscription"
+  },
+  {
+    "poster": {
+      "poster_name": "Mariana Forteza",
+      "poster_handle": "mariana"
+    },
+    "time_stamp": "2024-02-23 12:47:51",
+    "text": "only have the CMS enterprise"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2024-02-23 12:48:04",
+    "text": "if its not a big pdf I would just do it on cyclic or netsuite as dustin said"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2024-02-23 12:48:08",
+    "text": "could do it on a free account prob"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2024-02-23 12:48:14",
+    "text": "netafy not netsuite sorry"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2024-02-23 12:49:33",
+    "text": "okay I found it; that above streams a image out to HubSpot, I think Carter showed me that"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2024-02-23 12:49:44",
+    "text": "this streams a PDF out to HubSpot so when someone clicks a button it downloads the PDF"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2024-02-23 12:50:06",
+    "edited": {
+      "time_stamp": "2024-02-23 12:51:08"
+    },
+    "text": "```router.get('/print', async (req,res,next) => {\n\n  const doc = new PDFDocument({autoFirstPage: false, bufferPages: true, layout: 'landscape', size: 'A5'});\n  doc.pipe(fs.createWriteStream('public/docs/ticket.pdf'));\n\n  doc.on('data', buffers.push.bind(buffers));\n\n  doc.on('end', async () => {\n    let pdfData = Buffer.concat(buffers);\n\n    res.writeHead(200, {\n      'Content-Length': Buffer.byteLength(pdfData),\n      'Content-Type': \"application/pdf\",\n      'Content-disposition': `attachment;filename=${req.query.hubid}.pdf`,\n    })\n        .end(pdfData)\n  })\n\ndoc.addPage({\n  margins: { top: 0, left: 0, right: 0, bottom: 0},\n  layout: \"landscape\",\n  size: \"A5\"\n})\n  var img = Buffer.from(fs.readFileSync(`qrcode${req.query.hubid}.png`), 'base64');\n  doc.image(img, (doc.page.width - 900 / 2));\n  doc.fontSize(20);\n  doc.text(`${req.query.passtype}`, 0, 300, { align: 'center'})\n  doc.fontSize(15);\n  doc.text(`${req.query.firstname} ${req.query.lastname}`, {align: 'center'})\n  doc.fontSize(10);\n  doc.text(`Expires: ${month}/${day}/${year}`, {align: 'center'})\n  doc.end();\n\n  // res.send({\n  //   print: \"Your item is printing.\"\n  // })\n})```"
+  }
+]

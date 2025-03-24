@@ -1,0 +1,42 @@
+[
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2022-08-03 06:05:58",
+    "text": "Are you planning on open sourcing this? I'd love to take a look at the code to see how you're accepting forms, menus, CTAs, etc."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2022-08-03 06:08:42",
+    "text": "<@U01Q3GPCK7F> how are you passing HubL into the component?"
+  },
+  {
+    "poster": {
+      "poster_name": "Stuart Grant",
+      "poster_handle": "stuart-g"
+    },
+    "time_stamp": "2022-08-03 06:51:10",
+    "text": "I slot all Hubl content after HS generates it, then properties on the parent will determine the styling. I don't want to attempt to deconstruct the markup, for now. If HS provided a JSON format of the menus, for example, I'd shift to that and manage the markup myself. Same goes for CTAs, forms. I've standardized the way I style and manage these elements in modules, so its a matter of extraction and consolidation into web components. It will be open source once there's some more meat to it. :thumbsup:"
+  },
+  {
+    "poster": {
+      "poster_name": "Stuart Grant",
+      "poster_handle": "stuart-g"
+    },
+    "time_stamp": "2022-08-03 07:16:51",
+    "text": "Here's an example of a hero banner:\n\n```&lt;kps-hero .logoImg='{{ module.images.logo|tojson }}' .bgImg='{{ module.images.bg|tojson }}'&gt;\n  &lt;h1 slot=\"title\"&gt;{{ module.title }}&lt;/h1&gt;\n  &lt;h2 slot=\"subtitle\" class=\"flex\"&gt;{{ module.subtitle }}&lt;/h2&gt;\n  &lt;p slot=\"tagline\"&gt;{{ module.tagline }}&lt;/p&gt;\n  {% for cta in module.ctas %}\n    {% set slot = (loop.index == 1 ? 'primary' : 'secondary') ~ '-cta' %}\n    &lt;kps-button slot=\"{{ slot }}\" variant=\"outline\" color=\"primary\" cta round uppercase&gt;\n      {% cta guid=\"{{ cta.cta }}\" no_wrapper=true %}\n    &lt;/kps-button&gt;\n    {% endfor %}\n&lt;/kps-hero&gt;```\nNotice the CTA flag on the `kps-button` element, or how I pass in the image objects to manage src, alt, etc. The plan is to make the modules in the library work directly in a HS environment, while not so tightly coupled they couldn't be used elsewhere. Components, like the buttons, will have properties to HS-ify them, ensuring things like CTAs are managed properly."
+  },
+  {
+    "poster": {
+      "poster_name": "Stuart Grant",
+      "poster_handle": "stuart-g"
+    },
+    "time_stamp": "2022-08-03 07:17:19",
+    "text": "Other than that, lots of slots and standard state mgmt for scroll events and interactions."
+  }
+]

@@ -1,0 +1,85 @@
+[
+  {
+    "text": "I'm curious, how do you guys usually approach adding an icon to the HubSpot form button? :thinkonk:",
+    "time_stamp": "2024-02-07 03:58:51",
+    "reply_count": 4,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2024-02-07 04:15:11"
+      },
+      {
+        "time_stamp": "2024-02-07 06:44:42"
+      },
+      {
+        "time_stamp": "2024-02-07 21:07:15"
+      },
+      {
+        "time_stamp": "2024-02-07 23:21:46"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2024-02-07 04:15:11",
+    "text": "Usually with a pseudo element (::before or ::after)"
+  },
+  {
+    "poster": {
+      "poster_name": "Rushik vaghasia",
+      "poster_handle": "rushikvaghasiya21"
+    },
+    "time_stamp": "2024-02-07 06:44:42",
+    "text": "<@U02QF5HPBU0> The HubSpot form includes the Input tag as a submit button, making it impossible to use a pseudo-element directly on the input. To work around this, you can target the parent element of the input tag, which is likely to be .actions. Initially, set .actions with a display of inline-block and position it relatively. Afterward, you can use a pseudo-element as needed."
+  },
+  {
+    "poster": {
+      "poster_name": "Rushik vaghasia",
+      "poster_handle": "rushikvaghasiya21"
+    },
+    "time_stamp": "2024-02-07 09:14:48",
+    "text": "<@UATE4ATHP> Its selector issue, ID based selector is getting priority , So either you can remove that particular line of CSS from scope_css or you can use \"!important\" in container query css.\n\nor you can modify the selector with non existing id like\n\n.srp:not(#test) .grid-container{\n/* css code here 8?\n\n}"
+  },
+  {
+    "text": "<@U022YD6LGAU> Yes, I know that. {% scope_css %} appends the ID to all classes. But its not adding it to anything inside a container query, must be a bug with scope_css\n\nHere is the actual code.",
+    "time_stamp": "2024-02-07 09:26:11"
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2024-02-07 09:35:23",
+    "text": "Ended up just not suing scope_css and using {{ name }} instead :shrug::skin-tone-2:"
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2024-02-07 09:41:36",
+    "edited": {
+      "time_stamp": "2024-02-07 09:45:09"
+    },
+    "text": "css @scope doesn't achieve the same thing, HubSpot scope_css is for when there are multiple of the same modules, for when there is dynamic css"
+  },
+  {
+    "poster": {
+      "poster_name": "Felix",
+      "poster_handle": "felixmacaspac.freelan"
+    },
+    "time_stamp": "2024-02-07 21:07:15",
+    "text": "Thanks for that guys! really appreciate it. I actually notice that I can't use the pseudeo element because it's using the input element. I usually use javascript to implement this but I will try what you suggested. <@U022YD6LGAU> :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Vaibhav Mehta",
+      "poster_handle": "vaibhavm.wot2022"
+    },
+    "time_stamp": "2024-02-07 23:21:46",
+    "text": "<@U02QF5HPBU0>\nGive this CSS a try, it should yield the result you're aiming for.\n``` .actions {\n    display: inline-block;\n    position: relative;\n}\n\n.actions::before {\n    background-image: url(\"data:image/svg+xml;charset=utf-8,%3Csvg xmlns='<http://www.w3.org/2000/svg>' width='30' height='30' fill='none'%3E%3Cg fill='%23FEFEFE' clip-path='url(%23a)'%3E%3Cpath d='M5 15c0-.75.5-1.25 1.25-1.25h17.5c.75 0 1.25.5 1.25 1.25s-.5 1.25-1.25 1.25H6.25C5.5 16.25 5 15.75 5 15'/%3E%3Cpath d='M15 22.5c0-.375.125-.625.375-.875l7.5-7.5c.5-.5 1.25-.5 1.75 0s.5 1.25 0 1.75l-7.5 7.5c-.5.5-1.25.5-1.75 0-.25-.25-.375-.5-.375-.875'/%3E%3Cpath d='M15 7.5c0-.375.125-.625.375-.875.5-.5 1.25-.5 1.75 0l7.5 7.5c.5.5.5 1.25 0 1.75s-1.25.5-1.75 0l-7.5-7.5c-.25-.25-.375-.5-.375-.875'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='a'%3E%3Cpath fill='%23fff' d='M0 0h30v30H0z'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E\");\n    background-position: 50%;\n    background-repeat: no-repeat;\n    background-size: 20px;\n    content: \"\";\n    cursor: pointer;\n    height: 30px;\n    right: 0;\n    position: absolute;\n    top: 50%;\n    width: 30px;\n    z-index: 1;\n    transform: translateY(-50%);\n}```"
+  }
+]

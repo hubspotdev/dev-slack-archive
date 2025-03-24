@@ -1,0 +1,211 @@
+[
+  {
+    "poster": {
+      "poster_name": "Robin Charlet",
+      "poster_handle": "robin021"
+    },
+    "time_stamp": "2023-06-08 01:10:19",
+    "text": "Thanks <@U01QVR44MEY>"
+  },
+  {
+    "poster": {
+      "poster_name": "Harshit Rawat",
+      "poster_handle": "harshit.rawat"
+    },
+    "time_stamp": "2023-06-08 02:58:27",
+    "text": "Hi Team\n\nWe want to connect HubSpot with HTML form."
+  },
+  {
+    "poster": {
+      "poster_name": "Eitan Grunseid",
+      "poster_handle": "eitan.g"
+    },
+    "time_stamp": "2023-06-08 04:29:52",
+    "text": "Hi all, what's this error means?\n\nmessage\\\":\\\"Unable to summarize session metrics because they're discrete"
+  },
+  {
+    "poster": {
+      "poster_name": "Harun Kumar Siva",
+      "poster_handle": "harun"
+    },
+    "time_stamp": "2023-06-08 04:52:37",
+    "text": "1. the Tasks filter group aka search criteria is being posted\n2. by default the results array includes the id property\nPOST is just a mechanism to pass the request parameters as part of the HTTP request body.\n\nConsider a simple search request below. It would be cumbersome to pass the deep nested structure of the search criteria as a query parameter with a GET request, hence it is conventionally a POST request, so as to accommodate any level of complex search criteria payloads.\n\ncurl:\n```curl --location '<https://api.hubapi.com/crm/v3/objects/tasks/search>' \\\n--header 'Content-Type: application/json' \\\n--header 'Authorization: Bearer your-private-app-key' \\\n--data '{\n  \"filterGroups\": [\n    {\n      \"filters\": [\n        {\n          \"value\": \"2023-06-07\",\n          \"propertyName\": \"hs_createdate\",\n          \"operator\": \"LT\"\n        }\n      ]\n    }\n  ]\n}'```"
+  },
+  {
+    "poster": {
+      "poster_name": "Harun Kumar Siva",
+      "poster_handle": "harun"
+    },
+    "time_stamp": "2023-06-08 04:54:11",
+    "text": "A sample response could look like:\n```{\n    \"total\": 1,\n    \"results\": [\n        {\n            \"id\": \"31234567890\",\n            \"properties\": {\n                \"hs_createdate\": \"2023-06-05T06:18:19.601Z\",\n                \"hs_lastmodifieddate\": \"2023-06-07T10:34:37.288Z\",\n                \"hs_object_id\": \"31234567890\"\n            },\n            \"createdAt\": \"2023-06-05T06:18:19.601Z\",\n            \"updatedAt\": \"2023-06-07T10:34:37.288Z\",\n            \"archived\": false\n        }\n    ]\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Harun Kumar Siva",
+      "poster_handle": "harun"
+    },
+    "time_stamp": "2023-06-08 04:59:04",
+    "text": "you can provide a list of properties to be returned with the \"properties\" parameter.\n<https://developers.HubSpot.com/docs/api/crm/contacts#:~:text=A%20comma%20separated%20list%20of%20the%20properties%20to%20be%20returned%20in%20the%20response>."
+  },
+  {
+    "poster": {
+      "poster_name": "Ali Afzal",
+      "poster_handle": "ali.afzal"
+    },
+    "time_stamp": "2023-06-08 05:04:10",
+    "text": "Hey <@U01QVR44MEY> ! Finally I have figured out why it is happening. When we set the file name with extension like `test.jpg` then that issue is happening. We have to give name in the payload without extension like `test` to prevent the duplication. I thinks it's a illogical thing on the HubSpot's side."
+  },
+  {
+    "poster": {
+      "poster_name": "Richard Steinmetz",
+      "poster_handle": "richard236"
+    },
+    "time_stamp": "2023-06-08 05:29:14",
+    "edited": {
+      "time_stamp": "2023-06-08 05:53:16"
+    },
+    "text": "Hey folks, we have a technical issue that currently affects 1 customer and it's not apparent from the API responses how to handle it (it might be an API bug).\n\nA customer has more than 250 static lists. We try to paginate but the behavior of the offset is very strange.\n\nWith 3 records the endpoint always returns an offset of 12. Or 14 if we don't provide an offset. Or 1 if the offset is very high. Here are the example requests that we make:",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-06-08 05:29:37"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Richard Steinmetz",
+      "poster_handle": "richard236"
+    },
+    "time_stamp": "2023-06-08 05:29:37",
+    "text": "```\nirb(main):025:0&gt; Integration::HubSpot.last.service.client.request.get(\"<https://api.hubapi.com/contacts/v1/lists/static?count=1&amp;offset=1>\").parse(:json)\n\n=&gt;\n{\"offset\"=&gt;12,\n \"total\"=&gt;1,\n \"lists\"=&gt;\n  [{\"portalId\"=&gt;21303762,\n    \"listId\"=&gt;2,\n    \"createdAt\"=&gt;1649406615866,\n    \"updatedAt\"=&gt;1649406615932,\n    \"name\"=&gt;\"ali-contact-list-static\",\n    \"listType\"=&gt;\"STATIC\",\n    \"authorId\"=&gt;3969928,\n    \"filters\"=&gt;[],\n    \"metaData\"=&gt;{\"size\"=&gt;1, \"lastSizeChangeAt\"=&gt;1649426380447, \"processing\"=&gt;\"DONE\", \"lastProcessingStateChangeAt\"=&gt;1649406616513, \"error\"=&gt;\"\", \"listReferencesCount\"=&gt;nil, \"parentFolderId\"=&gt;nil},\n    \"archived\"=&gt;false,\n    \"teamIds\"=&gt;[],\n    \"ilsFilterBranch\"=&gt;\"\",\n    \"readOnly\"=&gt;false,\n    \"internal\"=&gt;false,\n    \"limitExempt\"=&gt;false,\n    \"dynamic\"=&gt;false}],\n \"has-more\"=&gt;true}\nirb(main):026:0&gt; Integration::HubSpot.last.service.client.request.get(\"<https://api.hubapi.com/contacts/v1/lists/static?count=1&amp;offset=2>\").parse(:json)\n\n\n\n=&gt;\n{\"offset\"=&gt;12,\n \"total\"=&gt;1,\n \"lists\"=&gt;\n  [{\"portalId\"=&gt;21303762,\n    \"listId\"=&gt;2,\n    \"createdAt\"=&gt;1649406615866,\n    \"updatedAt\"=&gt;1649406615932,\n    \"name\"=&gt;\"ali-contact-list-static\",\n    \"listType\"=&gt;\"STATIC\",\n    \"authorId\"=&gt;3969928,\n    \"filters\"=&gt;[],\n    \"metaData\"=&gt;{\"size\"=&gt;1, \"lastSizeChangeAt\"=&gt;1649426380447, \"processing\"=&gt;\"DONE\", \"lastProcessingStateChangeAt\"=&gt;1649406616513, \"error\"=&gt;\"\", \"listReferencesCount\"=&gt;nil, \"parentFolderId\"=&gt;nil},\n    \"archived\"=&gt;false,\n    \"teamIds\"=&gt;[],\n    \"ilsFilterBranch\"=&gt;\"\",\n    \"readOnly\"=&gt;false,\n    \"dynamic\"=&gt;false,\n    \"limitExempt\"=&gt;false,\n    \"internal\"=&gt;false}],\n \"has-more\"=&gt;true}\n\n\nirb(main):027:0&gt; Integration::HubSpot.last.service.client.request.get(\"<https://api.hubapi.com/contacts/v1/lists/static?count=1&amp;offset=0>\").parse(:json)\n\n=&gt;\n{\"offset\"=&gt;12,\n \"total\"=&gt;1,\n \"lists\"=&gt;\n  [{\"portalId\"=&gt;21303762,\n    \"listId\"=&gt;2,\n    \"createdAt\"=&gt;1649406615866,\n    \"updatedAt\"=&gt;1649406615932,\n    \"name\"=&gt;\"ali-contact-list-static\",\n    \"listType\"=&gt;\"STATIC\",\n    \"authorId\"=&gt;3969928,\n    \"filters\"=&gt;[],\n    \"metaData\"=&gt;{\"size\"=&gt;1, \"lastSizeChangeAt\"=&gt;1649426380447, \"processing\"=&gt;\"DONE\", \"lastProcessingStateChangeAt\"=&gt;1649406616513, \"error\"=&gt;\"\", \"listReferencesCount\"=&gt;nil, \"parentFolderId\"=&gt;nil},\n    \"archived\"=&gt;false,\n    \"teamIds\"=&gt;[],\n    \"ilsFilterBranch\"=&gt;\"\",\n    \"readOnly\"=&gt;false,\n    \"internal\"=&gt;false,\n    \"limitExempt\"=&gt;false,\n    \"dynamic\"=&gt;false}],\n \"has-more\"=&gt;true}\n\n\n\nirb(main):028:0&gt; Integration::HubSpot.last.service.client.request.get(\"<https://api.hubapi.com/contacts/v1/lists/static?count=1&amp;offset=100>\").parse(:json)\n\n=&gt;\n{\"offset\"=&gt;1, \"total\"=&gt;0, \"lists\"=&gt;[], \"has-more\"=&gt;false}\nirb(main):029:0&gt; Integration::HubSpot.last.service.client.request.get(\"<https://api.hubapi.com/contacts/v1/lists/static>\").parse(:json)\n\n=&gt;\n{\"offset\"=&gt;14,\n \"total\"=&gt;3,\n \"lists\"=&gt;\n  [{\"portalId\"=&gt;21303762,\n    \"listId\"=&gt;2,\n    \"createdAt\"=&gt;1649406615866,\n    \"updatedAt\"=&gt;1649406615932,\n    \"name\"=&gt;\"ali-contact-list-static\",\n    \"listType\"=&gt;\"STATIC\",\n    \"authorId\"=&gt;3969928,\n    \"filters\"=&gt;[],\n    \"metaData\"=&gt;{\"size\"=&gt;1, \"lastSizeChangeAt\"=&gt;1649426380447, \"processing\"=&gt;\"DONE\", \"lastProcessingStateChangeAt\"=&gt;1649406616513, \"error\"=&gt;\"\", \"listReferencesCount\"=&gt;nil, \"parentFolderId\"=&gt;nil},\n    \"archived\"=&gt;false,\n    \"teamIds\"=&gt;[],\n    \"ilsFilterBranch\"=&gt;\"\",\n    \"readOnly\"=&gt;false,\n    \"dynamic\"=&gt;false,\n    \"limitExempt\"=&gt;false,\n    \"internal\"=&gt;false},\n   {\"portalId\"=&gt;21303762,\n    \"listId\"=&gt;3,\n    \"createdAt\"=&gt;1686215954821,\n    \"updatedAt\"=&gt;1686215955134,\n    \"name\"=&gt;\"ali-contact-list-static (cloned)\",\n    \"listType\"=&gt;\"STATIC\",\n    \"authorId\"=&gt;45561614,\n    \"filters\"=&gt;[],\n    \"metaData\"=&gt;{\"size\"=&gt;1, \"lastSizeChangeAt\"=&gt;1686215955434, \"processing\"=&gt;\"DONE\", \"lastProcessingStateChangeAt\"=&gt;1686215955216, \"error\"=&gt;\"\", \"listReferencesCount\"=&gt;nil, \"parentFolderId\"=&gt;nil},\n    \"archived\"=&gt;false,\n    \"teamIds\"=&gt;[],\n    \"ilsFilterBranch\"=&gt;\"\",\n    \"readOnly\"=&gt;false,\n    \"dynamic\"=&gt;false,\n    \"limitExempt\"=&gt;false,\n    \"internal\"=&gt;false},\n   {\"portalId\"=&gt;21303762,\n    \"listId\"=&gt;4,\n    \"createdAt\"=&gt;1686215989072,\n    \"updatedAt\"=&gt;1686215989357,\n    \"name\"=&gt;\"ali-contact-list-static (cloned) 2\",\n    \"listType\"=&gt;\"STATIC\",\n    \"authorId\"=&gt;45561614,\n    \"filters\"=&gt;[],\n    \"metaData\"=&gt;{\"size\"=&gt;1, \"lastSizeChangeAt\"=&gt;1686215989857, \"processing\"=&gt;\"DONE\", \"lastProcessingStateChangeAt\"=&gt;1686215989473, \"error\"=&gt;\"\", \"listReferencesCount\"=&gt;nil, \"parentFolderId\"=&gt;nil},\n    \"archived\"=&gt;false,\n    \"teamIds\"=&gt;[],\n    \"ilsFilterBranch\"=&gt;\"\",\n    \"readOnly\"=&gt;false,\n    \"dynamic\"=&gt;false,\n    \"limitExempt\"=&gt;false,\n    \"internal\"=&gt;false}],\n \"has-more\"=&gt;false}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-06-08 07:45:45",
+    "text": "is there a way to add pages to the sitemap via the API? I have pages that use a query param to load unique content"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-06-08 07:45:55",
+    "text": "only the main page is showing up in google search console"
+  },
+  {
+    "poster": {
+      "poster_name": "Johan L",
+      "poster_handle": "bnjl"
+    },
+    "time_stamp": "2023-06-08 08:14:20",
+    "edited": {
+      "time_stamp": "2023-06-08 08:30:17"
+    },
+    "text": "I'm trying to find out if it's possible to add/remove associations to conversations via the API. Does anyone know and can point me in the right direction?\nEdit: To expand - I do sometimes remove the association between tickets and companies (for various reasons) through API calls - however I just found out that if the contact that is tied to the conversation (which in turn is associated with the ticket) is associated to that same company it will be re-added every time someone replies from the ticket.",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-05-01 08:19:34"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ai Kurashina",
+      "poster_handle": "akurashina"
+    },
+    "time_stamp": "2023-06-08 09:17:19",
+    "text": "Is there a more updated version for this API? GET /crm-associations/v1/associations/{objectId}/HubSpot_DEFINED/{associationType}",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-06-08 10:47:37"
+      },
+      {
+        "time_stamp": "2023-06-08 10:48:28"
+      },
+      {
+        "time_stamp": "2023-06-08 11:09:57"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ai Kurashina",
+      "poster_handle": "akurashina"
+    },
+    "time_stamp": "2023-06-08 09:17:38",
+    "text": "I'm trying to attain the assocations with a certain object ID. because the payload is unreliable"
+  },
+  {
+    "poster": {
+      "poster_name": "Ai Kurashina",
+      "poster_handle": "akurashina"
+    },
+    "time_stamp": "2023-06-08 09:53:46",
+    "text": "This was so helpful!! Thank you! The payloads for associations and contacts are separate and unreliable. so this helped me so much to attain the associations id for companies :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Cristóbal Parraguez",
+      "poster_handle": "cparraguez"
+    },
+    "time_stamp": "2023-06-08 10:47:37",
+    "text": "Here's the v4 associations API <https://developers.HubSpot.com/docs/api/crm/associations>"
+  },
+  {
+    "poster": {
+      "poster_name": "Cristóbal Parraguez",
+      "poster_handle": "cparraguez"
+    },
+    "time_stamp": "2023-06-08 10:48:28",
+    "text": "You can also get an associated record using the search API which works better if you want to retrieve data from the associated objects <https://developers.HubSpot.com/docs/api/crm/search>"
+  },
+  {
+    "poster": {
+      "poster_name": "Ai Kurashina",
+      "poster_handle": "akurashina"
+    },
+    "time_stamp": "2023-06-08 11:09:57",
+    "text": "Wow - Thank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Mike Jarvis",
+      "poster_handle": "mike.jarvis"
+    },
+    "time_stamp": "2023-06-08 12:35:34",
+    "text": "Thanks so much for your answer Harun, it was super insightful and very helpful!\nWhen you say that \"the Tasks filter group aka search criteria is being posted\" is that literally being posted somewhere in your HubSpot account? Do you know where if so?"
+  },
+  {
+    "poster": {
+      "poster_name": "Erick Salvatierra",
+      "poster_handle": "e.salvatierra"
+    },
+    "time_stamp": "2023-06-08 12:52:38",
+    "text": "Hi everyone - I'm searching for a work around associating new records to existing companies. Our team uses a lead gen form to collect leads from shows and we tend to get personal emails in addition to work emails and it often creates duplicates for contact and associated companies. My team wants to keep both personal and work emails because they have seen better response rates with personal emails. I have a work around for duplicated contacts, but not for companies.\n\nIdeally this code would be included as part of a workflow fielding form fills that include company name as a property. Here is a code that I was able to generate and clean up, but curious if anyone else has experienced this and have a solid solution.\n\nAny insight would be amazing.\n\n```import requests\n\ndef get_contact_and_search_company(input_data):\n    output = {}\n\n    # Define the API endpoint and parameters\n    contact_endpoint = \"<https://api.hubapi.com/contacts/v1/contact/email/{}/profile>\".format(input_data['email'])\n    headers = {\n        \"Authorization\": \"Bearer YOUR_HubSpot_API_KEY\"\n    }\n\n    # Send the GET request to retrieve the contact record\n    response = requests.get(contact_endpoint, headers=headers)\n\n    # Check if the request was successful\n    if response.status_code == 200:\n        contact_record = response.json()\n        company_name = contact_record['properties']['company']['value']\n\n        # Search for the company with the given name\n        company_search_endpoint = \"<https://api.hubapi.com/crm/v3/objects/companies/search>\"\n        params = {\n            \"q\": company_name,\n            \"limit\": 1\n        }\n        response = requests.get(company_search_endpoint, headers=headers, params=params)\n\n        # Check if the company was found\n        if response.status_code == 200:\n            company_search_result = response.json()\n            if company_search_result['total'] &gt; 0:\n                company_id = company_search_result['results'][0]['id']\n                # Add the company ID to the output dictionary\n                output['company_id'] = company_id\n            else:\n                # Company not found\n                output['error'] = \"Company not found\"\n        else:\n            output['error'] = \"Failed to search for company\"\n    else:\n        output['error'] = \"Failed to retrieve contact record\"\n\n    return output\n\n\ndef associate_contact_with_company(input_data):\n    output = {}\n\n    # Define the API endpoint and parameters\n    association_endpoint = \"<https://api.hubapi.com/crm/v3/objects/companies/{companyId}/associations/{toObjectType}/{toObjectId}/{associationTypeId}>\"\n    headers = {\n        \"Authorization\": \"Bearer YOUR_HubSpot_API_KEY\",\n        \"Content-Type\": \"application/json\"\n    }\n\n    # Replace placeholders with actual values\n    association_endpoint = association_endpoint.format(\n        companyId=input_data['company_id'],\n        toObjectType='contacts',\n        toObjectId=input_data['contact_id'],\n        associationTypeId=YOUR_ASSOCIATION_TYPE_ID\n    )\n\n    # Send the PUT request to associate the contact with the company\n    response = requests.put(association_endpoint, headers=headers)\n\n    # Check if the request was successful\n    if response.status_code == 200:\n        output['success'] = True\n    else:\n        output['error'] = \"Failed to associate contact with company\"\n\n    return output\n\n\ndef create_new_company(input_data):\n    output = {}\n\n    # Define the API endpoint and parameters\n    create_company_endpoint = \"<https://api.hubapi.com/crm/v3/objects/companies>\"\n    headers = {\n        \"Authorization\": \"Bearer YOUR_HubSpot_API_KEY\",\n        \"Content-Type\": \"application/json\"\n    }\n\n    # Define the request payload for creating a new company\n    company_data = {\n        \"properties\": [\n            {\n                \"name\": \"name\",\n                \"value\": input_data['company_name']\n            }\n        ]\n    }\n\n    # Send the POST request to create a new company\n    response = <http://requests.post|requests.post>(create_company_endpoint, headers=headers, json=company_data)\n\n    # Check if the request was successful\n    if response.status_code == 200:\n        company_record = response.json()\n        company_id = company_record['id']\n        # Add the company ID to the output dictionary\n        output['company_id'] = company_id\n\t\t\telse:\n    \toutput['error'] = \"Failed to create new company\"\n\nreturn output```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kobe Kapoor",
+      "poster_handle": "kobe"
+    },
+    "time_stamp": "2023-06-08 19:10:41",
+    "text": "Anyone know the difference between HubSpot.Client.create() vs HubSpot() for establishing a client?"
+  },
+  {
+    "poster": {
+      "poster_name": "Harun Kumar Siva",
+      "poster_handle": "harun"
+    },
+    "time_stamp": "2023-06-08 23:16:18",
+    "text": "A POST need not necessarily result in the posted request body being persisted anywhere.\n\nIf you are writing your own server side code, you could choose to handle a POST request to not do anything and simply respond with just a static message every time.\n\n=========\n\nWhen we use GET we are limited to passing the parameters through an URL which definitely has a finite length ( not sure, but it could be ~2000 characters, but practically it is inconvenient to use such a long url - imagine having to figure out a missing &amp; in such a long url).\n\nWith POST we are essentially overcoming this inherent limitation with large payloads, by using a designated body section that can easily accommodate a million characters and more (depending on the server configuration).\n\n&gt; ..., its the only endpoint in tasks where the scopes are \"read\" despite being a post request\nHere is another Task endpoint other than search that uses a POST and requires only a READ scope.\nPOST*`/crm/v3/objects/tasks/batch/read`*\n\nThis is the batch read tasks endpoint and returns a list of tasks given a list of ids.\nYou can see how using a POST instead of GET will be useful here given we could pass a large list of ids.\n\nAnd similarly for a search request with multiple search criteria, the request payload could get quite large and hence it is conventional to use POST so that we are not limited by the URL length as we would be with a GET request.\n\nHere is an <https://community.HubSpot.com/t5/APIs-Integrations/Maximum-length-of-GET-request-for-the-API/m-p/299963|HubSpot forum discussion about a developer running into problems using a longish GET request>"
+  }
+]

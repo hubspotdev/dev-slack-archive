@@ -1,0 +1,177 @@
+[
+  {
+    "poster": {
+      "poster_name": "James Munson",
+      "poster_handle": "james.munson"
+    },
+    "time_stamp": "2021-10-05 04:24:53",
+    "text": "Hi All - Im new to slack and new to HubSpot after being talked into it by eager account mangers! Ive been tasked with creating some dynamic pages in a member area - I’ve read the tutorials on dynamic pages and tried the car example to no joy - i want to start really simple i want a logged in use to be able to see the number of companies they have - this is stored in their profile in the crm but my issues is how do you find what each of the fields is called to then try and pull it in to a custom module? any help greatly appreciated! Thanks :slightly_smiling_face:",
+    "reply_count": 14,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2021-10-05 08:10:42"
+      },
+      {
+        "time_stamp": "2021-10-05 08:14:29"
+      },
+      {
+        "time_stamp": "2021-10-05 08:15:13"
+      },
+      {
+        "time_stamp": "2021-10-05 09:43:05"
+      },
+      {
+        "time_stamp": "2021-10-05 09:44:31"
+      },
+      {
+        "time_stamp": "2021-10-05 09:54:40"
+      },
+      {
+        "time_stamp": "2021-10-05 10:38:33"
+      },
+      {
+        "time_stamp": "2021-10-05 10:47:44"
+      },
+      {
+        "time_stamp": "2021-10-05 10:49:08"
+      },
+      {
+        "time_stamp": "2021-10-05 10:51:54"
+      },
+      {
+        "time_stamp": "2021-10-05 10:57:30"
+      },
+      {
+        "time_stamp": "2021-10-05 12:32:04"
+      },
+      {
+        "time_stamp": "2021-10-05 12:32:22"
+      },
+      {
+        "time_stamp": "2023-10-31 03:30:11"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ramzi Nahawi",
+      "poster_handle": "rnahawi"
+    },
+    "time_stamp": "2021-10-05 07:51:28",
+    "text": "Hey everyone! I’m the designer working on HubDB. We are actively looking to speak with with customers who are using HubDB, dynamic pages, and custom objects for website data. If you’re interested in providing your feedback on some future concepts, as well as speak with us about your ideas, please book some time using <https://meetings.HubSpot.com/rnahawi|this meeting link>. Thank you.",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-12-17 14:18:28"
+      },
+      {
+        "time_stamp": "2021-12-17 14:46:42"
+      },
+      {
+        "time_stamp": "2021-12-17 14:50:13"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "William Spiro",
+      "poster_handle": "wspiro"
+    },
+    "time_stamp": "2021-10-05 08:10:42",
+    "text": "Hey James! We have actually been talking about creating a tutorial explaining how to accomplish just this - a single membership page that displays data associated to the logged in contact. Happy to provide some details as to how you could accomplish this.\n\nIf you are interested, I would also love to hop on a call to learn more about the type of experience you are looking to build, and talk through how we can help enable it. Let me know if you would be interested in that!"
+  },
+  {
+    "poster": {
+      "poster_name": "William Spiro",
+      "poster_handle": "wspiro"
+    },
+    "time_stamp": "2021-10-05 08:14:29",
+    "text": "The <https://developers.HubSpot.com/docs/cms/hubl/functions#crm-associations|crm_associations HubL function> allows you to display data associated with a CRM object. In this case, we want to display information associated with the requesting contact. Rather than hard coding a contact ID into the first parameter of the function (the id of the object to get associated data for), we are going to pass in a dynamic request variable, that represents the id of the requesting contact (`request_contact.contact_vid`). This way the data fetched is dynamic to the requesting contact, rather than displaying the associated data with a hard coded contact."
+  },
+  {
+    "poster": {
+      "poster_name": "William Spiro",
+      "poster_handle": "wspiro"
+    },
+    "time_stamp": "2021-10-05 08:15:13",
+    "text": "Here is an example which would display the tickets associated with the contact logged in to the membership area\n```{# \n    DYNAMICALLY DISPLAYING TICKETS ASSOCIATED WITH A CONTACT ON A CMS MEMBERSHIPS WEBSITE PAGE\n#}\n{# Must be implemented on a page behind CMS memberships #}\n\n{# Using the CRM associations HubL function, grab the contacts associated tickets #}\n{# <https://developers.HubSpot.com/docs/cms/hubl/functions#crm-associations> #}\n{% set associated_tickets = crm_associations(\n  request_contact.contact_vid,\n  'HubSpot_DEFINED',\n  15,\n  \"limit=200\",\n  \"id, subject, createdate, hs_pipeline_stage, engagement, engagements\") \n%} \n{#\n    request_contact.contact_vid is the contact ID of the contact who logged in via CMS memberships\n    'HubSpot_DEFINED' is denoting the relationship between contacts and tickets is HubSpot defined, as opposed to a custom defined association\n    15 is the id the contact to ticket association <https://legacydocs.HubSpot.com/docs/methods/crm-associations/crm-associations-overview>\n    \"limit=200\" is the query for what tickets to be returned\n    \"id, subject, createdate, hs_pipeline_stage\" is the properties to be returned for use in rendering\n#}\n{{ associated_tickets }}\n&lt;div&gt;\n  &lt;h3&gt;Contact: &lt;a href=\"<https://app.HubSpot.com/contacts/8543690/contact/{{> contact }}/\" target=\"_blank\"&gt;{{ request_contact.contact.firstname }}&lt;/a&gt;&lt;/h3&gt;\n  &lt;h3&gt;Total Tickets: {{ associated_tickets.total }}&lt;/h3&gt;\n  {# Loop through and render tickets associated with the contact #}\n  {% for ticket in associated_tickets.results %}\n    &lt;p&gt;\n        Ticket ID: {{ ticket.id }}&lt;br&gt;\n        Ticket Subject: {{ ticket.subject }}&lt;br&gt;\n        Ticket Create Date: {{ ticket.createdate }}&lt;br&gt;\n        Ticket Status: {{ ticket.hs_pipeline_stage }}&lt;br&gt;\n      \n    &lt;/p&gt;\n  {% endfor %}\n&lt;/div&gt; ```"
+  },
+  {
+    "poster": {
+      "poster_name": "James Munson",
+      "poster_handle": "james.munson"
+    },
+    "time_stamp": "2021-10-05 09:43:05",
+    "text": "Hi <@U6W3H6YN8> Thanks for getting back to me - it sounds great happy to jump on. call them i might be able to explain what were looking to do and how we want to move it forward im in the UK so let me know a good time?  Thank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "William Spiro",
+      "poster_handle": "wspiro"
+    },
+    "time_stamp": "2021-10-05 09:44:31",
+    "text": "Sounds great, feel free to book any time that works for you here! <https://app.HubSpot.com/meetings/wspiro>"
+  },
+  {
+    "poster": {
+      "poster_name": "James Munson",
+      "poster_handle": "james.munson"
+    },
+    "time_stamp": "2021-10-05 09:54:40",
+    "text": "<@U6W3H6YN8> Thank you I have booked for the 11th I need to show some progress before then would you be ok if i ask some questions as i try the options in the link you send before hand?"
+  },
+  {
+    "poster": {
+      "poster_name": "James Munson",
+      "poster_handle": "james.munson"
+    },
+    "time_stamp": "2021-10-05 10:38:33",
+    "text": "<@U6W3H6YN8> thanks to your link ive got further in 10 mins then last ten days! can i ask a really basic question - ive used the request_contact how do i find the correct terms for each of the fields in the crm - for example we have ‘related companies’ under a company in contacts how do i echo out those ‘related companies’ or any other field? its not as easy as  {{ request_contact.contact.parent_companies }} as i assume .contact is wrong?"
+  },
+  {
+    "poster": {
+      "poster_name": "William Spiro",
+      "poster_handle": "wspiro"
+    },
+    "time_stamp": "2021-10-05 10:47:44",
+    "text": "So, you can use something like `company.name`, but, if the contact has more than one company, you will only wind up with one company getting displayed"
+  },
+  {
+    "poster": {
+      "poster_name": "William Spiro",
+      "poster_handle": "wspiro"
+    },
+    "time_stamp": "2021-10-05 10:49:08",
+    "text": "What exactly is \"Related Companies\"? Is it an association label? Or just the standard contact &gt; company relationship?"
+  },
+  {
+    "poster": {
+      "poster_name": "William Spiro",
+      "poster_handle": "wspiro"
+    },
+    "time_stamp": "2021-10-05 10:51:54",
+    "text": "You can also follow the same pattern I posted above with tickets, but for companies, with something like\n```{% set associated_companies = crm_associations(\n  request_contact.contact_vid,\n  'HubSpot_DEFINED',\n  1,\n  \"limit=200\",\n  \"name, domain\") \n%} \n{{ associated_companies }}```"
+  },
+  {
+    "text": "This might be were my terminology is wrong its in the right hand bar when you look at a company in contacts?",
+    "time_stamp": "2021-10-05 10:57:30"
+  },
+  {
+    "poster": {
+      "poster_name": "William Spiro",
+      "poster_handle": "wspiro"
+    },
+    "time_stamp": "2021-10-05 12:32:04",
+    "text": "Does\n```{% set associated_companies = crm_associations(\n  request_contact.contact_vid,\n  'HubSpot_DEFINED',\n  1,\n  \"limit=200\",\n  \"name, domain\") \n%} \n{{ associated_companies }}```\nproduce those two companies for the pictured contact?"
+  },
+  {
+    "poster": {
+      "poster_name": "William Spiro",
+      "poster_handle": "wspiro"
+    },
+    "time_stamp": "2021-10-05 12:32:22",
+    "text": "If you send me a DM of that contact record I can confirm exactly how you could fetch them"
+  }
+]

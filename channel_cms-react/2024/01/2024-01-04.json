@@ -1,0 +1,194 @@
+[
+  {
+    "poster": {
+      "poster_name": "Paul",
+      "poster_handle": "paul.buskovskij"
+    },
+    "time_stamp": "2024-01-04 01:11:03",
+    "text": "<@U04DVL5T2TE> In my case, I get “DNS_PROBE_FINISHED_NXDOMAIN” error message as soon as I use <https://my.domain.com.hslocal.net:3000>, <https://domain.com.hslocal.net:3000>, <https://hslocal.net:3000>. I suspect that it is generally related to <http://hslocal.net|hslocal.net>."
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-01-04 06:22:20",
+    "text": "Hello Liz. This is possible there is a rough edge so it's not documented quite yet.\n\nHere is how to do it.\n\nStep 1 - Add contents of `.npmrc` file to hs secrets via `hs secrets add NPM_RC` . The awkward thing here is that secrets can only take a single line string. So if you need to have multiple entries they needs to have a `\\n` character in them e.g.\n\n```//somewhere-else.com/:_authToken=MYTOKEN \\n //somewhere-else-ele.com/:_authToken=MYOTHEROKEN```\nStep 2 - add the `NPM_RC` secret key to your `cms-assets.json` - see <https://github.HubSpot.com/cms-js-building-block-examples/reference/secrets.html>\n\nNow when you `hs project upload` our build server will safely include your \"npmrc\" file during the package installing process. Please let me know if you run into any issues. (edited)"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-01-04 07:07:00",
+    "text": "Hm, I’d be curious to see what dnslookup, dig, or other dns resolution command line utils show when you try to resolve <http://hslocal.net|hslocal.net>. Also some alternatives/workarounds:\n• Use localhost:3000 instead (but this won’t work for proxying)\n• Add <http://hslocal.net|hslocal.net> to your /etc/host  file (or similar host configuration) to manually point it to 127.0.0.1 "
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-01-04 07:56:44",
+    "text": "Hi all, what's a good approach for keeping all of my packages up to date (especially HubSpot packages). I just realized I was on version 0.7 of `@HubSpot/cms-dev-server` and now we're up to 0.13.10!",
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-01-04 08:19:52"
+      },
+      {
+        "time_stamp": "2024-01-04 08:27:44"
+      },
+      {
+        "time_stamp": "2024-01-04 08:28:58"
+      },
+      {
+        "time_stamp": "2024-01-04 08:29:27"
+      },
+      {
+        "time_stamp": "2024-01-04 09:45:11"
+      },
+      {
+        "time_stamp": "2024-01-04 09:48:44"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-01-04 07:59:41",
+    "text": "<@U04DVL5T2TE> <@UCY83QS6Q> if it helps, this works for me when I run through content staging (which is how I usually do things)"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-01-04 08:19:52",
+    "text": "Some strategies include\n\n• \"Watching\" the <https://github.com/HubSpot/cms-js-building-block-examples> repo and specifically this file - <https://github.com/HubSpot/cms-js-building-block-examples/blob/main/docs/release-log.md> which we update with bug fixes / feature updates etc\n• Using something like \"<https://docs.github.com/en/code-security/dependabot/dependabot-version-updates|dependabot>\"  - I'm sure there are other libraries which essentially provide an output of if your packages are out of date or have vounerabilities.\n• Manually using things like `npm update` on some regular interval"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-01-04 08:27:44",
+    "text": "thanks, that release-log is really helpful. Looks like I missed some important updates!"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-01-04 08:28:58",
+    "text": "Definitely! (:nudge: for Byron to share a video of the sweet module validation feature he added recently)"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-01-04 08:29:27",
+    "text": ":double nudge:"
+  },
+  {
+    "poster": {
+      "poster_name": "Paul",
+      "poster_handle": "paul.buskovskij"
+    },
+    "time_stamp": "2024-01-04 08:54:42",
+    "text": "Hello,\nis there a documentation for cms-assets.json?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-01-04 09:03:45",
+    "text": "I can also confirm that this works for me when I try to proxy directly, like `<http://mysite.com.hslocal.net:3000|mysite.com.hslocal.net:3000>`"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-01-04 09:42:59",
+    "text": "Is it possible that `Attestation check for Topics on <http://my-site-example.com|my-site-example.com> failed` is related to something with HubSpot? not sure what any of that means",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-01-04 10:32:06"
+      },
+      {
+        "time_stamp": "2024-01-04 10:32:22"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-01-04 09:45:11",
+    "text": "<https://www.loom.com/share/c6c524f1037e406aa8df52449b23c40f>\n\nAlso added to the docs :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-01-04 09:48:44",
+    "text": "^ amazing. I've been slow rolling fields support for my team but looks like it's time!"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-01-04 10:13:39",
+    "text": "^ this does appear to be a server side thing...anyone else seeing this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2024-01-04 10:32:06",
+    "text": "looks like it’s something to do with chrome recently: <https://stackoverflow.com/questions/77303375/chrome-browser-error-attestation-check-for-topics-on-https-pagead2-googlesynd>"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2024-01-04 10:32:22",
+    "text": "if it’s not causing obvious issues i wouldn’t worry about it"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-01-04 14:51:07",
+    "text": "thank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Tricia Leach",
+      "poster_handle": "tleach"
+    },
+    "time_stamp": "2024-01-04 23:52:04",
+    "text": "Just wanted to thank you both for this exchange, and especially the kindness and thoroughness of responses from <@UAYBXDG4U>. I had some of the same questions and found this thread through a Slack search."
+  },
+  {
+    "poster": {
+      "poster_name": "Tricia Leach",
+      "poster_handle": "tleach"
+    },
+    "time_stamp": "2024-01-04 23:59:44",
+    "text": "Appreciate the response, thank you! Would definitely love this as a feature in future!"
+  }
+]

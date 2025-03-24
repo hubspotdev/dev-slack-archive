@@ -1,0 +1,159 @@
+[
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-08-21 02:51:39",
+    "text": "could you just nest your code in a sequence?\n```{% set default_block_presets = [{\n\t  \"padding\": 40\n\t}]\n%}```\nIt would require a bit of extra accessing things to update it but shouldn’t be too tricky"
+  },
+  {
+    "poster": {
+      "poster_name": "Vincent Dante",
+      "poster_handle": "vincent.dante96"
+    },
+    "time_stamp": "2024-08-21 04:18:25",
+    "text": "hi guys, is there a way to add inline help text for the custom module?\n`{% choice \"sample\" label=\"Choose Sample\", choices={{ sample_choices }}, export_to_template_context=True %}`",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-08-21 08:10:28"
+      },
+      {
+        "time_stamp": "2024-08-21 08:10:59"
+      },
+      {
+        "time_stamp": "2024-08-21 08:11:52"
+      },
+      {
+        "time_stamp": "2024-08-21 08:16:05"
+      },
+      {
+        "time_stamp": "2024-08-21 08:20:43"
+      },
+      {
+        "time_stamp": "2024-08-21 08:22:33"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "James Kupczak",
+      "poster_handle": "jimmykup"
+    },
+    "time_stamp": "2024-08-21 07:31:05",
+    "text": "Not working for me, but I may be doing something wrong.\n\n```{% set original_values_as_a_sequence = [{\n\t  \"padding\": 40\n\t}]\n%}\noriginal_values_as_a_sequence: {{ original_values_as_a_sequence }} // a sequence, resolves to [{padding=40}]&lt;br&gt;\n\t\n{% set custom_values = {\n\t  \"padding\": 60\n\t}\n%}\ncustom_values: {{ custom_values }} // a dict, resolves to {padding=60}&lt;br&gt;\n\t\n{% set copy_of_original_values_as_a_sequence = original_values_as_a_sequence.copy() %}\ncopy_of_original_values_as_a_sequence: {{ copy_of_original_values_as_a_sequence }} // a copied sequence, resolves to [{padding=40}]&lt;br&gt;\n\t\n{% set combined_values_as_a_dict = copy_of_original_values_as_a_sequence[0] %}\ncombined_values_as_a_dict: {{ combined_values_as_a_dict }} // a dict from a sequence, resolves to {padding=40} #}&lt;br&gt;\n\t\n{% do combined_values_as_a_dict.update(custom_values) %}\ncombined_values_as_a_dict: {{ combined_values_as_a_dict }} // a dict after update(), resolves to {padding=60}&lt;br&gt;\n\t\noriginal_values_as_a_sequence: {{ original_values_as_a_sequence }} // a sequence, resolves to [{padding=60}], but should be 40 :(```"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-08-21 07:33:54",
+    "text": "Hmm how about this\n\n```{% set default_block_presets = [{\n\t  \"padding\": 40\n\t}]\n%}\n\n{% set custom_block_presets = {\n\t\t\"padding\": 100\n} \n%}\n\n&lt;b&gt;default_block_presets:&lt;/b&gt; {{ default_block_presets|first }}&lt;br&gt;&lt;br&gt; {# resolves to 40 #}\n\n&lt;b&gt;custom_block_presets:&lt;/b&gt; {{ custom_block_presets }}&lt;br&gt;&lt;br&gt; {# resolves to 100 #}\n\n{% set bp = default_block_presets[:]|first %}\n{% do bp.update(custom_block_presets) %}\n\n&lt;b&gt;bp:&lt;/b&gt; {{ bp }}&lt;br&gt;&lt;br&gt; {# resolves to 100 #}\n\n&lt;b&gt;default_block_presets:&lt;/b&gt; {{ default_block_presets }}&lt;br&gt;&lt;br&gt; {# Should resolve to 40??? #}\n\n&lt;b&gt;custom_block_presets:&lt;/b&gt; {{ custom_block_presets }}&lt;br&gt;&lt;br&gt; {# resolves to 100 #}```\nNot tested but might work"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-08-21 07:36:27",
+    "text": "so you only set your default as the sequence but when you set the “bp” you just get the first (and only) item there"
+  },
+  {
+    "text": "You can add an inline helper text for all field types:",
+    "time_stamp": "2024-08-21 08:10:28"
+  },
+  {
+    "text": "",
+    "time_stamp": "2024-08-21 08:10:59"
+  },
+  {
+    "poster": {
+      "poster_name": "Twentyninetimes",
+      "poster_handle": "tech817"
+    },
+    "time_stamp": "2024-08-21 08:11:52",
+    "text": "Oh, right you’re dynamically adding the choice in your code?"
+  },
+  {
+    "poster": {
+      "poster_name": "Vincent Dante",
+      "poster_handle": "vincent.dante96"
+    },
+    "time_stamp": "2024-08-21 08:16:05",
+    "text": "yes since i use it on blog post."
+  },
+  {
+    "poster": {
+      "poster_name": "Twentyninetimes",
+      "poster_handle": "tech817"
+    },
+    "time_stamp": "2024-08-21 08:20:43",
+    "text": "I was looking around the forums and even asked chatGPT. For now it doesn’t seem like it, but someone else might know a trick - or how to do it"
+  },
+  {
+    "poster": {
+      "poster_name": "Vincent Dante",
+      "poster_handle": "vincent.dante96"
+    },
+    "time_stamp": "2024-08-21 08:22:33",
+    "text": "okie thanks."
+  },
+  {
+    "poster": {
+      "poster_name": "James Kupczak",
+      "poster_handle": "jimmykup"
+    },
+    "time_stamp": "2024-08-21 08:51:13",
+    "text": "Nope! :disappointed: With this code the default_block_presets is still being changed to 100."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-08-21 08:51:46",
+    "text": "Ah what a pain"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-08-21 09:20:46",
+    "edited": {
+      "time_stamp": "2024-08-21 09:27:27"
+    },
+    "text": "Thought I’d have a fiddle\nSetting the bp and then updating it with the default then the custom seems to work\n\n```{% set default_block_presets = {\n\t  \"padding\": 40\n\t}\n%}\n\n{% set custom_block_presets = {\n\t\t\"padding\": 100\n} \n%}\n\n<b>default_block_presets:</b> {{ default_block_presets }}<br><br> {# resolves to 40 #}\n\n<b>custom_block_presets:</b> {{ custom_block_presets }}<br><br> {# resolves to 100 #}\n\n{% set bp = {} %}\n{% do bp.update(default_block_presets) %}\n{% do bp.update(custom_block_presets) %}\n\n<b>bp:</b> {{ bp }}<br><br> {# resolves to 100 #}\n\n<b>default_block_presets:</b> {{ default_block_presets }}<br><br> {# resolves to 40 #}\n\n<b>custom_block_presets:</b> {{ custom_block_presets }}<br><br> {# resolves to 100 #}```"
+  },
+  {
+    "time_stamp": "2024-08-21 09:55:32",
+    "text": "mind blown"
+  },
+  {
+    "poster": {
+      "poster_name": "James Kupczak",
+      "poster_handle": "jimmykup"
+    },
+    "time_stamp": "2024-08-21 09:56:08",
+    "text": "Of course. Initially setting up the combined variable as an empty dict gets around the assignment issue."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-08-21 09:59:27",
+    "text": "Yeah it really didn’t want to play ball with the .copy() and then I was like hang on what if we set this blank first"
+  },
+  {
+    "poster": {
+      "poster_name": "James Kupczak",
+      "poster_handle": "jimmykup"
+    },
+    "time_stamp": "2024-08-21 10:01:53",
+    "text": "Thank you! :smile:"
+  }
+]

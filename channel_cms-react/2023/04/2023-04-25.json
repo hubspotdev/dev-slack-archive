@@ -1,0 +1,198 @@
+[
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-04-25 06:00:27",
+    "text": "Hey, I'm exploring the idea of using the beta for a new blog. I know react isn't always the right solution for that kind of content so is there anything I should be aware of or careful about before I begin?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-04-25 06:01:02",
+    "text": "the blog is more of a \"hub\" that combines multiple blogs together. It will rely heavily on filtering and searching",
+    "reply_count": 16,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-04-25 07:28:52"
+      },
+      {
+        "time_stamp": "2023-04-25 07:28:56"
+      },
+      {
+        "time_stamp": "2023-04-25 07:32:04"
+      },
+      {
+        "time_stamp": "2023-04-25 07:32:21"
+      },
+      {
+        "time_stamp": "2023-04-25 07:43:59"
+      },
+      {
+        "time_stamp": "2023-04-25 07:45:57"
+      },
+      {
+        "time_stamp": "2023-04-25 07:46:55"
+      },
+      {
+        "time_stamp": "2023-04-25 07:49:38"
+      },
+      {
+        "time_stamp": "2023-04-25 07:57:03"
+      },
+      {
+        "time_stamp": "2023-04-25 07:58:55"
+      },
+      {
+        "time_stamp": "2023-04-25 08:03:01"
+      },
+      {
+        "time_stamp": "2023-04-25 08:03:28"
+      },
+      {
+        "time_stamp": "2023-04-25 09:05:12"
+      },
+      {
+        "time_stamp": "2023-04-25 09:06:23"
+      },
+      {
+        "time_stamp": "2023-04-25 09:08:35"
+      },
+      {
+        "time_stamp": "2023-04-25 09:11:39"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-04-25 07:28:52",
+    "text": "I believe the more typical concern about using React for more static-y/reading content is the performance hit of having to wait for JS to download, APIs to fire, etc before the main content is visible. I.e. assuming React is done client side… but, server/build time React rendering solves that issue.\n\n(I’m also assuming the blog content you need is available on the server via HubL, but that might not be the case?)"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-04-25 07:28:56",
+    "text": "Though one tricky part to be aware of, depending on how you want to do searching and filtering, is how you will render content post filter/search interaction. Ideally, you wouldn’t trigger a full page refresh to show that content but rather do a network fetch to get just the content and then show it.\n\nThinking through some options there:\n1. Making all of the search/filter results an island component (that might be hidden at start on the page?) which can be updated by the network request. _Some other subtle concerns with this one, will come back to that._\n2. Instead of ^, don’t put the results in an island but “regular” server rendered HTML. And you have your other islands on the page (search/filter inputs and buttons) do something like `results.innerHTML = …` to update the results (especially if the network request returns plain html).\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-04-25 07:32:04",
+    "text": "Subtle issue with (1) is that our island logic will serialize all of the islands props, so if the search/filter results are server rendered with a bunch of HTML, then all of those HTML props will end up duplicated in the page load (once in the actual page and then second in island JSON in an inline script element). I think there are some tricks to avoid doing that, but I’d need to dig deeper and/or add some small API tweaks to help."
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-04-25 07:32:21",
+    "text": "(But I might be getting into the weeds a little here)"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-04-25 07:43:59",
+    "text": "before thinking through the tricky part, yes, it's all blog posts coming from HubSpot so HubL can be used in places"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-04-25 07:45:57",
+    "text": "I've always used HubL for blog content but I assume that there's a robust blog API that I have to look into"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-04-25 07:46:55",
+    "text": "so in scenario 2, if the HubSpot request returns plain html then that sounds like a decent option"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-04-25 07:49:38",
+    "text": "and should I even think about doing a serverless function or should I do a regular fetch?"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-04-25 07:57:03",
+    "text": "I might be missing some of the tradeoffs (I’m only somewhat familiar with serverless function details), but I’m thinking…\n• A serverless function will give you more flexibility (direct API calls)\n• Though a one or more calls to `{% related_blog_posts %}` in HubL might be sufficient depending on what you need to grab\n• If the main content (i.e. the blog hub index/home page) needs some searched/filtered/combined content, it will be unable to call that serverless function during the render (i.e. if you have a serverless function, some of the logic may need to be duplicated in HubL for the main/index page?)\n• I haven’t tried in a while, but to get a HubL template—i.e. the “fetch results page—to return a HTML “snippet” instead of a whole page (hiding standard header/footer includes, omitting the html/body elements, etc) might be a little tricky/hacky"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-04-25 07:58:55",
+    "text": "yea, I would need to load combined blog content on the hub index page"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-04-25 08:03:01",
+    "text": "I might have to do a serverless function API call because I have to process and mix some of the content (in places)"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-04-25 08:03:28",
+    "text": "for example, showing a list of results from 2 different blogs"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-04-25 09:05:12",
+    "text": "Can you do that by calling `related_blog_posts`  twice and joining the results? (Or passing both sets of results to a JS partial and doing the combining there?)"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-04-25 09:06:23",
+    "text": "maybe, assuming I can order the output so that it could display A B A A instead of A A A B"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-04-25 09:08:35",
+    "text": "in other words, order them based on something other than which blog they are coming from"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-04-25 09:11:39",
+    "text": "Yup, I assume that is doable with some loops in HubL (or by passing the data to JS and doing similar loops/zipping)"
+  }
+]

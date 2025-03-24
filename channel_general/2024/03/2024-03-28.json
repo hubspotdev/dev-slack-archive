@@ -1,0 +1,247 @@
+[
+  {
+    "poster": {
+      "poster_name": "Tara Flavin",
+      "poster_handle": "tara.flavin"
+    },
+    "time_stamp": "2024-03-28 03:43:37",
+    "text": "Hey, I've got a HubDB database of content, and I'd like to allow users to filter it using two drop-downs. The second drop-down should populate based on what is selected in the first. For example, if the user selects 'Cats' from the first drop-down, the second drop-down should have cat breeds as options. I'm ok with filtering the database. What I'm not sure about is how to get the currently selected option from a drop-down in HubL. I can do this in JavaScript, but then afaik I can't filter the database in JavaScript because that requires HubL which is only useable from the HTML. I need to use the currently selected option to create the filter for the database. Anonymised code below\n\n```{% set animals_table= hubdb_table_rows(12312312) %}\n&lt;label for=\"animals\"&gt;Animals&lt;/label&gt;\n  &lt;select id=\"animal-select\"&gt;\n    &lt;option value=\"_\" selected disabled&gt;Choose an animal...&lt;/option&gt;\n    {% for choice in animals_table%}\n        &lt;option class=\"animal-dropdown\" value=\"{{choice.name}}\"&gt;{{choice.name}}&lt;/option&gt;\n    {% endfor %}\n  &lt;/select&gt;\n  {% set filter = 'name__contains=' + animal-dropdown.value %} /* This part is pseudocode because I'm not sure how to get the dropdown value with HubL*/\n/* filter database by option and populate a second drop-down with those options */```"
+  },
+  {
+    "poster": {
+      "poster_name": "Tara Flavin",
+      "poster_handle": "tara.flavin"
+    },
+    "time_stamp": "2024-03-28 03:46:41",
+    "text": "<@U02162GK9SP> How can I create a product listing page with filters that renders filtered content from HubDB?"
+  },
+  {
+    "time_stamp": "2024-03-28 03:46:42",
+    "text": "In HubL you use the `hubdb_table_rows()` function to get row data from a HubDB. You can paginate this data by supplying an `offset` and `limit` in your filter query arguement. The limit is how many rows you want to get. Offset is the first row of that set of rows you want to get. More on the HubDB commands can be found at: <https://developers.HubSpot.com/docs/cms/features/hubdb>\n\nThe parameters accepted in the filter query are the same as the API: <https://legacydocs.HubSpot.com/docs/methods/hubdb/v2/get_table_rows>\n\nIf you're using JavaScript to render the data you would just use the API.\n\nAdditionally if you're looking for examples of how to write the html for pagination, the HubSpot boilerplate has a pagination module used for it's blog templates that you can draw inspiration from."
+  },
+  {
+    "poster": {
+      "poster_name": "Tara Flavin",
+      "poster_handle": "tara.flavin"
+    },
+    "time_stamp": "2024-03-28 03:47:24",
+    "text": "Ooh ok looks like I'll have to JavaScript it and use the HubDB API, nice"
+  },
+  {
+    "poster": {
+      "poster_name": "Tara Flavin",
+      "poster_handle": "tara.flavin"
+    },
+    "time_stamp": "2024-03-28 03:48:23",
+    "text": "<@U02162GK9SP> I have two drop-downs. I want the value of the first drop-down to be used to filter a database of options so that the second drop-down is populated based on the value of the first. How can I do this?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-03-28 04:06:46"
+      }
+    ]
+  },
+  {
+    "time_stamp": "2024-03-28 03:48:24",
+    "text": "Custom Objects are a way of placing custom structured data in the HubSpot CRM. One of the powerful aspects of this is that you can then assosciate that data to contacts and other CRM objects. Those associations are powerful for automation and gathering insights. <https://www.HubSpot.com/products/custom-objects>"
+  },
+  {
+    "poster": {
+      "poster_name": "Tara Flavin",
+      "poster_handle": "tara.flavin"
+    },
+    "time_stamp": "2024-03-28 03:48:35",
+    "text": "nope"
+  },
+  {
+    "poster": {
+      "poster_name": "Christensen Magtoto",
+      "poster_handle": "chris858"
+    },
+    "time_stamp": "2024-03-28 04:06:46",
+    "text": "Hey Tara, HubL is server side so it can only run once so you need to do this in JavaScript by making a filter for dropdown one that will make a call to your HubDB via the API to show the options available for 'Cats' then add it to your 2nd dropdown options via DOM manipulation."
+  },
+  {
+    "poster": {
+      "poster_name": "Tara Flavin",
+      "poster_handle": "tara.flavin"
+    },
+    "time_stamp": "2024-03-28 04:32:51",
+    "text": "Since API keys have been sunsetted, I tried to make an API request to the database in this format <https://api.hubapi.com/cms/v3/hubdb/tables/>&lt;table_id&gt;/rows?portalId=&lt;accountId&gt;&amp;filter=${encodeURIComponent('name__contains=' + selectedValue)} But got 403 forbidden. So do I actually need an API key to query the database? The documentation on API key sunsetting doesn't mention database queries directly but does say developer API keys are still supported.",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-03-28 04:42:29"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Tara Flavin",
+      "poster_handle": "tara.flavin"
+    },
+    "time_stamp": "2024-03-28 04:35:06",
+    "text": "<@U02162GK9SP> How do I make an API request to a HubDB database using my account ID via JavaScript?"
+  },
+  {
+    "time_stamp": "2024-03-28 04:35:06",
+    "text": "You can find your HubSpot Account ID in the URL while signed into HubSpot, or you can find it by looking at the navigation: <https://knowledge.HubSpot.com/account/manage-multiple-HubSpot-accounts#check-your-current-account>"
+  },
+  {
+    "poster": {
+      "poster_name": "Tara Flavin",
+      "poster_handle": "tara.flavin"
+    },
+    "time_stamp": "2024-03-28 04:35:22",
+    "text": "<@U02162GK9SP> How do I make a HubDB API requesT?"
+  },
+  {
+    "time_stamp": "2024-03-28 04:35:22",
+    "text": "You can automatically generate pages based on HubDB rows. We call these Dynamic pages. <https://developers.HubSpot.com/docs/cms/guides/dynamic-pages/hubdb>"
+  },
+  {
+    "poster": {
+      "poster_name": "Tara Flavin",
+      "poster_handle": "tara.flavin"
+    },
+    "time_stamp": "2024-03-28 04:35:30",
+    "text": "nope"
+  },
+  {
+    "poster": {
+      "poster_name": "Christensen Magtoto",
+      "poster_handle": "chris858"
+    },
+    "time_stamp": "2024-03-28 04:42:29",
+    "text": "No you need it to be published in public to access it."
+  },
+  {
+    "poster": {
+      "poster_name": "Bálint Sipos",
+      "poster_handle": "sbi85g"
+    },
+    "time_stamp": "2024-03-28 05:13:05",
+    "text": "I am trying to install the LinkedIn Insights Tag onto HubSpot pages.\n\nAny ideas why some characters in this HTML tag doesn't translate properly onto the page?\n<https://prnt.sc/KraGdsTXX-td>\n\n&lt;img height=\"1\" width=\"1\" style=\"display:none;\" alt=\"\" src=\"<https://px.ads.linkedin.com/collect/?pid=310356&amp;fmt=gif>\" /&gt;\n===&gt;\n*&lt;*img  height=\"1\" width=\"1\" style=\"display:none;\" alt=\"\" src=\"<https://px.ads.linkedin.com/collect/?pid=310356&amp;amp;fmt=gif>\"*&gt;*\n\nAll other HTML tags look fine, not sure why these have this issue? :S",
+    "reply_count": 9,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-03-28 06:48:05"
+      },
+      {
+        "time_stamp": "2024-03-28 07:12:57"
+      },
+      {
+        "time_stamp": "2024-03-28 08:40:30"
+      },
+      {
+        "time_stamp": "2024-03-28 08:41:18"
+      },
+      {
+        "time_stamp": "2024-03-28 08:41:36"
+      },
+      {
+        "time_stamp": "2024-03-28 08:42:00"
+      },
+      {
+        "time_stamp": "2024-03-28 08:42:12"
+      },
+      {
+        "time_stamp": "2024-03-28 08:43:27"
+      },
+      {
+        "time_stamp": "2024-03-28 08:44:52"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2024-03-28 06:48:05",
+    "text": "&gt; I am trying to install the LinkedIn Insights Tag onto HubSpot pages.\nhow are you doing it?"
+  },
+  {
+    "text": "adding thre script to the site header HTML",
+    "time_stamp": "2024-03-28 07:12:57"
+  },
+  {
+    "poster": {
+      "poster_name": "SJ Morris (she/her)",
+      "poster_handle": "sjmorris"
+    },
+    "time_stamp": "2024-03-28 08:00:49",
+    "text": "<@U06Q1FWGLUS>, self promotion is only permitted in <#CBNDYJJAZ|jobs> or <#C0121KGC6RM|showcase>, and I just messaged you in showcase. I’ll be deleting this post. "
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2024-03-28 08:40:30",
+    "text": "put the noscript tag and its contents in the body end html"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2024-03-28 08:41:18",
+    "text": "that is printing that way because you can’t have an img in the head of a website. I’d honestly put the entire code right before the closing body tag"
+  },
+  {
+    "poster": {
+      "poster_name": "Bálint Sipos",
+      "poster_handle": "sbi85g"
+    },
+    "time_stamp": "2024-03-28 08:41:36",
+    "text": "ahh of course. Would it work in the footer also?"
+  },
+  {
+    "text": "",
+    "time_stamp": "2024-03-28 08:42:00"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2024-03-28 08:42:12",
+    "text": "yeah there"
+  },
+  {
+    "poster": {
+      "poster_name": "Bálint Sipos",
+      "poster_handle": "sbi85g"
+    },
+    "time_stamp": "2024-03-28 08:43:27",
+    "text": "brilliant. Thanks John."
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2024-03-28 08:44:52",
+    "text": ":handshake::skin-tone-2:"
+  },
+  {
+    "time_stamp": "2024-03-28 14:14:42",
+    "text": "We have a knowledgebase article on exactly this: <https://knowledge.HubSpot.com/blog/import-your-wordpress-blog-into-HubSpot> additionally we have a smart copy tool - that may be better for situations like importing custom post types: <https://knowledge.HubSpot.com/blog/import-your-blog-from-any-cms-with-smart-copy>"
+  },
+  {
+    "subtype": "tombstone",
+    "text": "This message was deleted.",
+    "time_stamp": "2024-03-28 14:15:30",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-03-29 01:31:31"
+      }
+    ]
+  }
+]

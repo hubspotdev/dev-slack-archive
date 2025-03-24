@@ -1,0 +1,180 @@
+[
+  {
+    "poster": {
+      "poster_name": "Chris Broeders",
+      "poster_handle": "cgb"
+    },
+    "time_stamp": "2022-09-23 07:29:49",
+    "edited": {
+      "time_stamp": "2022-09-23 07:33:42"
+    },
+    "text": "Hi all - trying my luck in here too. Im trying to develop a custom code step that looks at all the associated quotes on a deal, and then do something if the quote is set as published. Now, i got some of the way there - it works if there is only 1 quote. However, if i have multiple quotes the quote ID is stored within the same variable and thus gives me an error. Does anyone know how to make it so that it processes each quote individually? i tried using the forEach statement but it still adds the ID of all the quotes in the same variable:\n```const HubSpot = require('@HubSpot/api-client');\n\nexports.main = (event, callback) =&gt; {\n\n    const HubSpotClient = new HubSpot.Client({\n        apiKey: process.env.HAPIKEY\n    });\n    \n    //First, make a call to get quote associations  \n    HubSpotClient.crm.deals.associationsApi.getAll(event.object.objectId, 'quote').then((results) =&gt; {\n\n      results.body.results.forEach(quote =&gt; {                \n         const associatedQuoteIds = results.body.results.map(quote =&gt; quote.id);\n          console.log(`The deals's associated quote IDs are ${associatedQuoteIds}`);    \n        \n      // when i have the quote ID get the quote status\n        \n       HubSpotClient.crm.quotes.basicApi.getById(associatedQuoteIds, ['hs_status'])\n         .then(quotePropertiesResults =&gt; {\n\n        // Set variables to check for quote status\n\n        const Quote_approval_status = quotePropertiesResults.body.properties.hs_status;\n        console.log(Quote_approval_status);\n\n         if(Quote_approval_status){\n           if (Quote_approval_status != \"DRAFT\") {\n            \n\n               // insert my cool code here that does stuff\n\n             \n           }\n         }\n \t})\n  })\n})\n      .catch((err) =&gt; {\n        console.error(err)\n    })\n      \n}```",
+    "reply_count": 41,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2022-09-23 19:20:58"
+      },
+      {
+        "time_stamp": "2022-09-23 19:22:00"
+      },
+      {
+        "time_stamp": "2022-09-23 19:22:12"
+      },
+      {
+        "time_stamp": "2022-09-23 19:26:45"
+      },
+      {
+        "time_stamp": "2022-09-25 20:20:44"
+      },
+      {
+        "time_stamp": "2022-09-26 01:39:32"
+      },
+      {
+        "time_stamp": "2022-09-26 01:40:01"
+      },
+      {
+        "time_stamp": "2022-09-26 03:38:39"
+      },
+      {
+        "time_stamp": "2022-09-26 03:52:33"
+      },
+      {
+        "time_stamp": "2022-09-26 04:35:53"
+      },
+      {
+        "time_stamp": "2022-09-26 04:36:06"
+      },
+      {
+        "time_stamp": "2022-09-26 04:39:15"
+      },
+      {
+        "time_stamp": "2022-09-26 04:39:45"
+      },
+      {
+        "time_stamp": "2022-09-26 04:44:42"
+      },
+      {
+        "time_stamp": "2022-09-26 04:45:50"
+      },
+      {
+        "time_stamp": "2022-09-26 04:46:17"
+      },
+      {
+        "time_stamp": "2022-09-26 04:46:24"
+      },
+      {
+        "time_stamp": "2022-09-26 04:46:29"
+      },
+      {
+        "time_stamp": "2022-09-26 04:47:35"
+      },
+      {
+        "time_stamp": "2022-09-26 04:48:14"
+      },
+      {
+        "time_stamp": "2022-09-26 04:48:45"
+      },
+      {
+        "time_stamp": "2022-09-26 04:48:48"
+      },
+      {
+        "time_stamp": "2022-09-26 04:49:01"
+      },
+      {
+        "time_stamp": "2022-09-26 05:30:07"
+      },
+      {
+        "time_stamp": "2022-09-26 06:10:40"
+      },
+      {
+        "time_stamp": "2022-09-26 06:27:03"
+      },
+      {
+        "time_stamp": "2022-09-26 06:38:25"
+      },
+      {
+        "time_stamp": "2022-09-26 06:40:05"
+      },
+      {
+        "time_stamp": "2022-09-26 06:45:29"
+      },
+      {
+        "time_stamp": "2022-09-26 06:45:40"
+      },
+      {
+        "time_stamp": "2022-09-26 06:45:43"
+      },
+      {
+        "time_stamp": "2022-09-26 06:46:49"
+      },
+      {
+        "time_stamp": "2022-09-26 06:47:11"
+      },
+      {
+        "time_stamp": "2022-09-26 06:48:44"
+      },
+      {
+        "time_stamp": "2022-09-26 06:50:20"
+      },
+      {
+        "time_stamp": "2022-09-26 06:51:52"
+      },
+      {
+        "time_stamp": "2022-09-26 06:56:09"
+      },
+      {
+        "time_stamp": "2022-09-26 06:56:57"
+      },
+      {
+        "time_stamp": "2022-09-26 06:57:18"
+      },
+      {
+        "time_stamp": "2022-09-26 17:18:51"
+      },
+      {
+        "time_stamp": "2022-09-27 06:30:09"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-09-23 19:20:58",
+    "text": "hey <@U02L2SPFJTW>, did you get this figured out?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-09-23 19:21:15",
+    "text": "sorry, I’ve been super busy all day"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-09-23 19:22:00",
+    "text": "<https://gist.github.com/NickDeckerDevs/cac3d706c59f1f0900f765d36ba970c7>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-09-23 19:22:12",
+    "text": "This is how I would implement this"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-09-23 19:26:45",
+    "text": "So, I made some adjustments here, I’m not 100% comfortable on using promises the way you are and how that all stacks up, but when doing a foreach loop with async inside, that stuff shits the bed and doesn’t work.. I always use for…of and they work\n\nSo, that is why I moved towards the way I now how to accomplish this. So I changed the module to be async and then added some comments to help guide.\n\nThis is all just code I wrote without testing, so I’m not claiming it is bulletproof or even good lol\n\nthis is how I build all my things in custom code workflows.. I hope if someone sees this and my recommendation is trash — please correct me!"
+  }
+]

@@ -1,0 +1,13 @@
+[
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2022-03-28 12:25:42",
+    "edited": {
+      "time_stamp": "2022-03-29 13:20:53"
+    },
+    "text": "Probably better sent to <#C2YH119N2|hubl>. But yes, this is possible, You could simply do a check on the `loop.index` like\n```  &lt;div class=\"row\"&gt;\n    {% for %}\n      {% if loop.index &lt;= 10 %}\n\n      {% endif %}\n    {% endfor %}\n  &lt;/div&gt;\n  &lt;div class=\"row\"&gt;\n    {% for %}\n      {% if loop.index &gt; 10 &amp;&amp; loop.index &lt;= 20 %}\n\n      {% endif %}\n    {% endfor %}\n  &lt;/div&gt;\n  &lt;div class=\"row\"&gt;\n    {% for %}\n      {% if loop.index &gt; 20 &amp;&amp; loop.index &lt;= 30 %}\n\n      {% endif %}\n    {% endfor %}\n  &lt;/div&gt;```\nPretty bad way to do it, could be more dynamic, modular, and DRY, but should work for your example, if that’s all you want to do.\n\nA better way would probably be like:\n```{% set items_per_row = 10 %}\n{% for x in y %}\n  {% if loop.index % items_per_row == 0 || loop.first %}\n    {% set base = (loop.index / items_per_row)|round(0, 'floor') * items_per_row %}\n    &lt;div class=\"row\"&gt;\n      {% for x in y %}\n        {% if loop.index &gt; base &amp;&amp; loop.index &lt;= base + items_per_row %}\n         \n        {% endif %}\n      {% endfor %}\n    &lt;/div&gt;\n  {% endif %}\n{% endfor %}```"
+  }
+]

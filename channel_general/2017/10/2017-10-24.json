@@ -1,0 +1,233 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jon Leibham",
+      "poster_handle": "jon282"
+    },
+    "time_stamp": "2017-10-24 08:44:23",
+    "text": "Anyone know a good way to compare a selected date to the current date in hubl templates? I'm trying to use and if statement with local_dt but I'm unsure how to make my own selected date comparable in the mix."
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2017-10-24 08:47:02",
+    "text": "Working with dates in HubL has always given me trouble. If I can, I usually just render the date variables into JS and process from there.",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2017-10-24 10:17:44"
+      },
+      {
+        "time_stamp": "2017-10-24 10:17:56"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Leibham",
+      "poster_handle": "jon282"
+    },
+    "time_stamp": "2017-10-24 08:49:31",
+    "text": "hm that actually makes some sense, I'm trying to dynamically change my content on a page depending if a event has ended or not. I think it would be a little cleaner if I did it with the Hubl language but JS certainly would be another option."
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2017-10-24 08:52:19",
+    "text": "have you tried the |unixtimestamp filter? You might be able to compare based on that number in HubL."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Leibham",
+      "poster_handle": "jon282"
+    },
+    "time_stamp": "2017-10-24 08:53:02",
+    "text": "ah very cool."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Leibham",
+      "poster_handle": "jon282"
+    },
+    "time_stamp": "2017-10-24 08:53:10",
+    "text": "No I hadn't heard of that before."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Leibham",
+      "poster_handle": "jon282"
+    },
+    "time_stamp": "2017-10-24 08:54:23",
+    "text": "Lol decoding the time will be a little weird but this will work."
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2017-10-24 08:55:54",
+    "text": "If you don't want to compare timestamps and instead want to compare \"pretty\" dates I have used |datetimeformat('%d %m %Y') and broken it out into months days year etc to compare with current date's month / date / year"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2017-10-24 08:56:20",
+    "text": "Looked something like this:"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2017-10-24 08:56:39",
+    "text": "{% set pubmonth = local_dt|datetimeformat(\"%m\")|multiply(30) - btest.publish_date|datetimeformat(\"%m\")|multiply(30) %}\n{% set pubday = local_dt|datetimeformat(\"%d\") - btest.publish_date|datetimeformat(\"%d\") %}"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2017-10-24 08:56:54",
+    "text": "{% if (pubmonth|add(pubday))|abs &lt;= 45 %} (sub the date range difference for the 45)"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2017-10-24 08:57:33",
+    "text": "this is a part of a recommendations algorithm I put together for a project... Basically it is a small factor in a larger weighting for recommending content to the user"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2017-10-24 08:57:58",
+    "text": "Works by comparing today's date with the publish date of the content to see if it's \"less than X days old\""
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2017-10-24 08:58:49",
+    "text": "in your case, you'd remove the |abs filter and compare against anything &gt;= 0 (0 being today's date)"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2017-10-24 08:59:05",
+    "text": "or &lt;= 0 {{do things here}}"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2017-10-24 08:59:56",
+    "text": "I'm 100% sure that timestamps are a better way to do it rather than filtering out using |datetimeformat, but I wanted to get \"human readable\" output for the age of the content"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Leibham",
+      "poster_handle": "jon282"
+    },
+    "time_stamp": "2017-10-24 09:02:04",
+    "text": "Thanks for all this, yes I was attempting to work with |datetimeformat yesterday but it seemed a bit like a headache."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Leibham",
+      "poster_handle": "jon282"
+    },
+    "time_stamp": "2017-10-24 09:03:44",
+    "edited": {
+      "time_stamp": "2017-10-24 09:04:22"
+    },
+    "text": "I was hoping to have a way to type in something like 10/17/2017 and convert it to be comparable to local_dt. I think it's probably best I just use the unixtimestamp and keep it away from my team :stuck_out_tongue:"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2017-10-24 10:17:44",
+    "text": "I convert my into js and just remove stuff as needed."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2017-10-24 10:17:56",
+    "text": "It is just so much simplier"
+  },
+  null,
+  null,
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2017-10-24 12:20:54",
+    "text": "I've got some email templates where the editor UI is broken - the buttons on the left don't appear, the fields at the top are broken, and the tabs at the top don't work the way they usually do. I narrowed it down to the presence of a hidden \"preview_text\" text module, which makes the preview text field in the editor appear. I know it definitely worked last week, because we put together an email on the same template."
+  },
+  null,
+  null,
+  null,
+  null,
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2017-10-24 14:48:18",
+    "text": "re: new version of code editor -- I have the upgrade my module to the new version for pages. I have made my updates to the module. Now in the page editor I'm unable to edit any of the fields....."
+  },
+  {
+    "text": "<@U25PYL3Q8> uploaded a file: <https://HubSpotdev.slack.com/files/U25PYL3Q8/F7Q708ELE/pasted_image_at_2017_10_24_04_49_pm.png|in page editor>",
+    "time_stamp": "2017-10-24 14:49:41"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2017-10-24 14:51:24",
+    "text": "It appears if I add the module, update the module, then I'm unable to edit the module.  Does that mean if we update a module in the future that they will become uneditable on all pages and will need to be replaced?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2017-10-24 14:52:38",
+    "text": "I'm also unable to edit the content on teh page with the code editor ugh"
+  },
+  {
+    "poster": {
+      "poster_name": "Josh Ames",
+      "poster_handle": "josh.ames"
+    },
+    "time_stamp": "2017-10-24 14:52:53",
+    "text": "Yeah there was a bug where if you upgraded an existing module to v2 then it broke it on all pages it was being used on. I stopped doing it because of this. Looks like it hasn't been fixed yet."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2017-10-24 14:56:42",
+    "text": "thanks <@U26C29XPH>"
+  }
+]

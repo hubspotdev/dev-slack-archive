@@ -1,0 +1,264 @@
+[
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2018-10-31 02:27:04",
+    "text": "Nice, thanks! "
+  },
+  {
+    "poster": {
+      "poster_name": "Shamash Athoraya",
+      "poster_handle": "shamash.athoraya"
+    },
+    "time_stamp": "2018-10-31 03:02:24",
+    "text": "Hi, don't know if this has been reported already. I have the following fields set up:\n```Select field [color, image, video]\nBoolean 1 [displayed if select field = image]\nBoolean 2 [displayed if boolean 1 = false]```\nIf I've set Boolean 1 to false, Boolean 2 shows up – just as expected. If I then change the select field to something other than _image_, Boolean 2 remains visible in the editor. The setting has no effect but is quite confusing for editors.",
+    "reply_count": 10,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2018-10-31 05:38:23"
+      },
+      {
+        "time_stamp": "2018-10-31 07:03:33"
+      },
+      {
+        "time_stamp": "2018-10-31 07:10:47"
+      },
+      {
+        "time_stamp": "2018-10-31 07:16:06"
+      },
+      {
+        "time_stamp": "2018-10-31 07:17:42"
+      },
+      {
+        "time_stamp": "2018-10-31 07:19:48"
+      },
+      {
+        "time_stamp": "2018-10-31 07:19:57"
+      },
+      {
+        "time_stamp": "2018-10-31 07:20:27"
+      },
+      {
+        "time_stamp": "2018-10-31 07:21:09"
+      },
+      {
+        "time_stamp": "2018-10-31 07:21:20"
+      }
+    ]
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-31 05:38:23",
+    "text": "The problem is that fields can currently only have 1 display condition. The work around is to group boolean 1 and 2 set the display condition for the group to be what you currently have for boolean 1.  "
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "Shamash Athoraya",
+      "poster_handle": "shamash.athoraya"
+    },
+    "time_stamp": "2018-10-31 07:03:33",
+    "text": "But if boolean 1 is disabled, any dependencies should also be disabled right? I mean, they only have one display condition each"
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-31 07:10:47",
+    "text": "no because your condition on boolean 2 isn’t checking whether boolean 1 is visible, it’s checking whether it’s set to false.\n\nThe select field’s value has no bearing on whether boolean 1 is set to false. it only controls the field’s visibility."
+  },
+  {
+    "poster": {
+      "poster_name": "Shamash Athoraya",
+      "poster_handle": "shamash.athoraya"
+    },
+    "time_stamp": "2018-10-31 07:16:06",
+    "text": "yes, I get that technically it's not doing anything wrong but I still feel that logically, an option that is not visible should be treated as a variable that is not defined, and if it's not defined the display condition for any dependecies should fail. As an editor, what I don't see, I don't want to get"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-31 07:17:42",
+    "text": "understood but that’s kind of up to us the developers to control the actual functionality and we can"
+  },
+  {
+    "poster": {
+      "poster_name": "Shamash Athoraya",
+      "poster_handle": "shamash.athoraya"
+    },
+    "time_stamp": "2018-10-31 07:19:48",
+    "text": "got it! unless we already have nested 3 groups… :wink: thanks for your input Jon!"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-31 07:19:57",
+    "text": "here’s a case where doing what you are saying would be a negative.\n\nsay you have a boolean, it’s there to show/hide some advanced options. these settings are not ones that the average editor will understand, but you still want it there because you needed them for a particular use case.\n\nWell you can have a boolean toggle the visibility of all of those options - now you can edit the settings you need and then toggle that boolean back off to hide the settings so others don’t play with them."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-31 07:20:27",
+    "text": "the settings are all still set and have values, they’re just not visibly shown"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-31 07:21:09",
+    "text": "I do agree, it would be nice to be able to nest groups to deeper levels, as that would allow for more complexity"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-31 07:21:20",
+    "text": "multiple conditions could also be pretty nice"
+  },
+  null,
+  null,
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-10-31 08:04:12",
+    "edited": {
+      "time_stamp": "2018-10-31 08:04:40"
+    },
+    "text": "I posted about this in <#C2YH119N2|hubl> yesterday but I guess it's actually more appropriate here. Further testing has revealed that it's specifically choice fields on a higher nesting level that don't work as display conditions. I've tested\n- Choice fields within the same level: works as a display condition\n- Choice fields the next level up: does not work\n- Other kinds of fields the next level up and on the same level: does work\n- Choice fields at the root level: works\n- Choice fields in non-repeating groups: works\n- Putting the display condition field in a non-repeating group: works\n\nIt looks like it's just choice fields in a repeating group, set as display conditions for a nested repeating group",
+    "reply_count": 10,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2018-10-31 08:17:07"
+      },
+      {
+        "time_stamp": "2018-10-31 08:19:27"
+      },
+      {
+        "time_stamp": "2018-10-31 08:20:02"
+      },
+      {
+        "time_stamp": "2018-10-31 08:20:49"
+      },
+      {
+        "time_stamp": "2018-10-31 08:22:51"
+      },
+      {
+        "time_stamp": "2018-10-31 08:24:40"
+      },
+      {
+        "time_stamp": "2018-10-31 08:24:55"
+      },
+      {
+        "time_stamp": "2018-10-31 08:25:44"
+      },
+      {
+        "time_stamp": "2018-10-31 08:47:49"
+      },
+      {
+        "time_stamp": "2018-10-31 08:48:08"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-10-31 08:06:15",
+    "text": "It sorta compromises the whole UI I set up for this thing :disappointed:"
+  },
+  {
+    "text": "Hey <@U3A4KEWK1>, just to make sure I understand what you mean by level depth here, are you saying that this kind of setup isn’t working for you, where `field_group.field_group_1` display condition is dependent on the value of `field_group.choice_field`?",
+    "time_stamp": "2018-10-31 08:17:07"
+  },
+  {
+    "text": "My setup is this. Both \"section\" and \"story\" are repeaters. I want the display conditions of \"number of days\" and \"original price\" (and a few other fields not shown in this screenshot) to depend on the value of \"story style\"",
+    "time_stamp": "2018-10-31 08:19:27"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-10-31 08:20:02",
+    "text": "This is a screenshot of the root level"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-10-31 08:20:49",
+    "text": "So, if I put story style in with the story group it works. If I put it out at the root, it works. If I use one of the other fields at the \"section\" level as a condition, it works."
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-10-31 08:22:51",
+    "text": "If I make story not a repeater it also works."
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin Leonard",
+      "poster_handle": "kleonard"
+    },
+    "time_stamp": "2018-10-31 08:24:40",
+    "text": "but where `section.story_style` is now, and `section.story` is a repeating group, it does not work (in neither module previewer nor content)?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-10-31 08:24:55",
+    "text": "That's correct."
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin Leonard",
+      "poster_handle": "kleonard"
+    },
+    "time_stamp": "2018-10-31 08:25:44",
+    "text": "Strange I can’t repro this in what seems like the same organization of fields. Could definitely be missing something-- if you wanted to DM me your module I can take a look"
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin Leonard",
+      "poster_handle": "kleonard"
+    },
+    "time_stamp": "2018-10-31 08:47:49",
+    "text": "After some digging, I am able to repro some unexpected behavior re: conditional fields within repeating groups based on choice fields outside of those groups. We’re going to take a deeper look on our end."
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-10-31 08:48:08",
+    "text": "Thanks for taking a look!"
+  },
+  null,
+  null
+]

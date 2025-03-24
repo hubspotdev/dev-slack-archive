@@ -1,0 +1,96 @@
+[
+  {
+    "poster": {
+      "poster_name": "Sharat Hegde",
+      "poster_handle": "sharat"
+    },
+    "time_stamp": "2022-04-26 10:41:53",
+    "text": "I need to trigger a conversion event once a meeting is booked through the HubSpot meeting request link. Since the meeting scheduling is happening in an iframe, I am finding it hard to figure out how to trigger a JavaScript piece of code for tracking conversion / booking of the meeting. Can you help provide a link to add a JavaScript specifically for booking a meeting on HubSpot?"
+  },
+  {
+    "text": "UPDATE: STILL OPEN\n\nHey ya'll, I created a custom form and button because I want it to look different for my LinkedIn campaigns.\nI understand that HubSpot has this feature built in but I want there to be a visual that goes along with it.\nI know when I fill out a form correctly and the submit button becomes active, it triggers me that I can click it now.\n\nThis is what my code looks like right now. My css is what the HubSpot has built in (too long to snapshot).\nCan someone help me create the js that would disable (gray out) a button on the form if the required fields are not filled in properly?",
+    "time_stamp": "2022-04-26 13:18:01",
+    "edited": {
+      "time_stamp": "2022-04-26 13:50:11"
+    },
+    "reply_count": 9,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-04-26 13:26:06"
+      },
+      {
+        "time_stamp": "2022-04-26 13:29:00"
+      },
+      {
+        "time_stamp": "2022-04-26 14:27:10"
+      },
+      {
+        "time_stamp": "2022-04-26 14:29:19"
+      },
+      {
+        "time_stamp": "2022-04-26 14:29:57"
+      },
+      {
+        "time_stamp": "2022-04-26 14:31:30"
+      },
+      {
+        "time_stamp": "2022-04-28 11:49:54"
+      },
+      {
+        "time_stamp": "2022-04-28 11:54:00"
+      },
+      {
+        "time_stamp": "2022-05-03 12:45:54"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Derek Cavaliero",
+      "poster_handle": "derek168"
+    },
+    "time_stamp": "2022-04-26 13:26:06",
+    "text": "Why would you need to disable the button if the form fails validation? HubSpot should prevent the form from being submitted if validation errors are present even if the button is clicked again. If this is centered around tracking conversions on linkedin for form submissions - I would not advise tethering your conversion event to a button click - instead use the global HubSpot callbacks for executing it onSubmit/onSubmitted"
+  },
+  {
+    "poster": {
+      "poster_name": "Cassandra Parisi",
+      "poster_handle": "cparisi1290"
+    },
+    "time_stamp": "2022-04-26 13:29:00",
+    "text": "Right, it's just another way to show the user needs to fill out the fields. It's for visual purposes. If the button is grayed out, the user needs to fill the fields correctly. Once all the fields are filled in correctly, the button's color will come back indicating the user can hit submit. When I fill out a form like that, it signals something in my mind"
+  },
+  {
+    "poster": {
+      "poster_name": "Derek Cavaliero",
+      "poster_handle": "derek168"
+    },
+    "time_stamp": "2022-04-26 14:27:10",
+    "text": "Unfortunately HubSpot doesn't have an easy way to hook into the validation logic via JS - but you can likely do this with some custom CSS based on how they output the \"hs_error_rollup\" message right before the submit button. So you could do something like this:\n\n```.hs_error_rollup ~ .hs_submit input[type=\"submit\"] { opacity: 0.75;  }```"
+  },
+  {
+    "poster": {
+      "poster_name": "Derek Cavaliero",
+      "poster_handle": "derek168"
+    },
+    "time_stamp": "2022-04-26 14:29:19",
+    "text": "You still want people to be able to click the button - I would not advise disabling it via pointer-events: none; or other JS overrides because you may risk the issue of the field validity getting out of sync with the submit button disable attribute and it would prevent the user from clicking it at all and completely disable the form.\n\nThe above is just a rough example, but if you're simply looking for a visual change in the button appearance when validation errors exist - this might be a way to do it"
+  },
+  {
+    "poster": {
+      "poster_name": "Cassandra Parisi",
+      "poster_handle": "cparisi1290"
+    },
+    "time_stamp": "2022-04-26 14:29:57",
+    "text": "I wasn't sure if it was something that I needed js to do or if it could be done with css. That's cool to know I can use css. I'll give this a try and let you know"
+  },
+  {
+    "poster": {
+      "poster_name": "Derek Cavaliero",
+      "poster_handle": "derek168"
+    },
+    "time_stamp": "2022-04-26 14:31:30",
+    "text": "Since the validation is handled entirely by HubSpot and all you're trying to do is change the appearance of the UI - I wouldn't reach for JS to do it unless its 100% needed. That CSS snippet should react to the error message rollup element being added/removed from the DOM based on HubSpot's real-time validation. I would definitely test it though - but it in theory should work."
+  }
+]

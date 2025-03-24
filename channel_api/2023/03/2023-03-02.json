@@ -1,0 +1,1459 @@
+[
+  {
+    "poster": {
+      "poster_name": "Evan Tan",
+      "poster_handle": "evan.tan"
+    },
+    "time_stamp": "2023-03-02 03:10:40",
+    "edited": {
+      "time_stamp": "2023-03-02 03:10:51"
+    },
+    "text": "hi, i’m trying to whitelist HubSpot so that i can send webhooks to my company’s servers, is there a *domain name* that i can whitelist? rather than whitelisting a bunch of random lambdas IPs that change super frequently.\n\nany help is greatly appreciated",
+    "reply_count": 14,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-03-02 07:37:58"
+      },
+      {
+        "time_stamp": "2023-03-02 08:15:34"
+      },
+      {
+        "time_stamp": "2023-03-02 08:16:45"
+      },
+      {
+        "time_stamp": "2023-03-02 08:18:37"
+      },
+      {
+        "time_stamp": "2023-03-02 08:26:05"
+      },
+      {
+        "time_stamp": "2023-03-02 08:31:30"
+      },
+      {
+        "time_stamp": "2023-03-02 08:31:43"
+      },
+      {
+        "time_stamp": "2023-03-02 18:41:59"
+      },
+      {
+        "time_stamp": "2023-03-02 18:42:30"
+      },
+      {
+        "time_stamp": "2023-03-03 08:16:34"
+      },
+      {
+        "time_stamp": "2023-03-14 00:33:52"
+      },
+      {
+        "time_stamp": "2023-03-14 00:33:53"
+      },
+      {
+        "time_stamp": "2023-03-14 08:09:29"
+      },
+      {
+        "time_stamp": "2023-03-15 15:04:10"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "prasad",
+      "poster_handle": "prasad.nandamuri"
+    },
+    "time_stamp": "2023-03-02 05:59:29",
+    "text": "<@U04S9RABWU9>, pls help me on this, Above API returns all deal properties (or) few main properties only?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 07:37:33",
+    "text": "is it just for one account?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 07:37:58",
+    "text": "is this for webhooks coming from workflows?"
+  },
+  {
+    "text": "Yeah so you could use this api (Get a form definition): to pull in the form you want to translate",
+    "time_stamp": "2023-03-02 07:44:50"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Fiori",
+      "poster_handle": "ericf"
+    },
+    "time_stamp": "2023-03-02 07:44:58",
+    "text": "if i want to get contact details for multiple contacts at once, do you know if this would work? CLIENT.crm.contacts.basicApi.getPage()"
+  },
+  {
+    "text": "then use this api, to create the new form with the translation (you would need to handle the translation yourself)",
+    "time_stamp": "2023-03-02 07:45:32"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 07:45:54",
+    "text": "the second api will return the form uuid and you can use that to display the form on a page"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 07:47:15",
+    "text": "sure so the code will look very similar:\n```const HubSpot = require('@HubSpot/api-client');\n\nconst HubSpotClient = new HubSpot.Client({\"accessToken\":\"YOUR_ACCESS_TOKEN\"});\n\nconst limit = 10;\nconst after = undefined;\nconst properties = [\n  \"firstname,lastname,email,customproperty\"\n];\nconst propertiesWithHistory = undefined;\nconst associations = undefined;\nconst archived = false;\n\ntry {\n  const apiResponse = await HubSpotClient.crm.contacts.basicApi.getPage(limit, after, properties, propertiesWithHistory, associations, archived);\n  console.log(JSON.stringify(apiResponse, null, 2));\n} catch (e) {\n  e.message === 'HTTP request failed'\n    ? console.error(JSON.stringify(e.response, null, 2))\n    : console.error(e)\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Fiori",
+      "poster_handle": "ericf"
+    },
+    "time_stamp": "2023-03-02 07:50:47",
+    "text": "oh, I meant, if it have the Ids of the contacts I want to fetch, would that work?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 07:51:19",
+    "text": "you said getpage before"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Fiori",
+      "poster_handle": "ericf"
+    },
+    "time_stamp": "2023-03-02 07:51:52",
+    "text": "yeah, so is it possible to pass that getPage method ids?"
+  },
+  {
+    "poster": {
+      "poster_name": "Avinash Nadabure",
+      "poster_handle": "avinash.nadabure"
+    },
+    "time_stamp": "2023-03-02 08:11:49",
+    "text": "we have multiple clients and they will come and add the api token basically depending on the subscription need to send the contact data"
+  },
+  {
+    "poster": {
+      "poster_name": "Avinash Nadabure",
+      "poster_handle": "avinash.nadabure"
+    },
+    "time_stamp": "2023-03-02 08:12:23",
+    "text": "I guess private app is better choice of implementation here since api key is going to deprecated ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 08:12:49",
+    "text": "yep so private app is going to work just like hapikeys"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 08:12:57",
+    "text": "but honestly oauth might be better"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 08:13:08",
+    "text": "so that the user can't really mess up the process"
+  },
+  {
+    "poster": {
+      "poster_name": "Avinash Nadabure",
+      "poster_handle": "avinash.nadabure"
+    },
+    "time_stamp": "2023-03-02 08:14:51",
+    "text": "oauth is it support <https://oauth.net/2/grant-types/client-credentials/|Client Credentials> ? without user interaction"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 08:15:16",
+    "text": "it would have user interaction, but the user would also have interaction is they were doing it with private apps"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 08:15:31",
+    "text": "and in the oauth option the user couldn't accidently mess something up"
+  },
+  {
+    "poster": {
+      "poster_name": "Evan Tan",
+      "poster_handle": "evan.tan"
+    },
+    "time_stamp": "2023-03-02 08:15:34",
+    "text": "yeah"
+  },
+  {
+    "poster": {
+      "poster_name": "Evan Tan",
+      "poster_handle": "evan.tan"
+    },
+    "time_stamp": "2023-03-02 08:16:45",
+    "text": "but i’ll specifically be using custom coded actions"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 08:18:37",
+    "text": "<https://HubSpotdev.slack.com/archives/C019VT42R8X/p1676588922707479> honestly the best thing for now is just to use a proxy"
+  },
+  {
+    "poster": {
+      "poster_name": "Avinash Nadabure",
+      "poster_handle": "avinash.nadabure"
+    },
+    "time_stamp": "2023-03-02 08:19:29",
+    "text": "for instance java wants to call contact api , is it token refresh or getting token is it required user interactions because all these sending data happing under the hood like Zapier automated way ... many of the HubSpot crm user wants less interaction on our app .. may just give api token"
+  },
+  {
+    "poster": {
+      "poster_name": "Evan Tan",
+      "poster_handle": "evan.tan"
+    },
+    "time_stamp": "2023-03-02 08:26:05",
+    "text": "oh damn no specific domain name i can whitelist?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 08:31:30",
+    "text": "Yeah unfortunately there isn't any way that HubSpot tell you to do it"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 08:31:43",
+    "text": "cc <@U0157R7AQ84> maybe you have some hidden info"
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Grothe",
+      "poster_handle": "christian947"
+    },
+    "time_stamp": "2023-03-02 08:34:58",
+    "edited": {
+      "time_stamp": "2023-03-02 08:36:00"
+    },
+    "text": "Hey! I have a question about the checkboxes field type. So in my HubSpot there is a custom field with this checkbox type where multiple values can be checked. How can I set these values with the api? So I made a little Wordpress Plugin to submit these values to HubSpot. But I cannot give the checkbox property an array like\n```$data = array (\n\"myCheckbox\" =&gt; array(\"valueA\", \"valueB\")\n);```\nseems like myCheckbox can just be a string. so this here works with valueA and valueB\n```$data = array (\n\"myCheckbox\" =&gt;\"valueA\"\n);```\n",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-03-02 08:37:02"
+      },
+      {
+        "time_stamp": "2023-03-02 08:41:49"
+      },
+      {
+        "time_stamp": "2023-03-02 09:23:37"
+      },
+      {
+        "time_stamp": "2023-03-02 09:24:09"
+      },
+      {
+        "time_stamp": "2023-03-02 09:24:19"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 08:37:02",
+    "edited": {
+      "time_stamp": "2023-03-02 08:37:07"
+    },
+    "text": "it's actually just going to be comma separated like this: \"valueA,valueB\""
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Grothe",
+      "poster_handle": "christian947"
+    },
+    "time_stamp": "2023-03-02 08:41:49",
+    "text": ":bulb:"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Fiori",
+      "poster_handle": "ericf"
+    },
+    "time_stamp": "2023-03-02 08:42:51",
+    "text": "When a deal reaches a specific dealstage, I'd like to somehow push customer,contact,address data to us via a webhook. It looks like workflows support custom code. Has anyone done something similar with custom code or another method?",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-03-02 08:43:33"
+      },
+      {
+        "time_stamp": "2023-03-02 08:45:17"
+      },
+      {
+        "time_stamp": "2023-03-02 08:46:13"
+      },
+      {
+        "time_stamp": "2023-03-02 08:46:33"
+      },
+      {
+        "time_stamp": "2023-03-02 08:47:31"
+      },
+      {
+        "time_stamp": "2023-03-02 09:24:00"
+      },
+      {
+        "time_stamp": "2023-03-02 09:25:01"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 08:43:33",
+    "text": "Yeah you can definitely do this with custom code and I can send over the example code to get you going but have you thought about using the webhook action?"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Fiori",
+      "poster_handle": "ericf"
+    },
+    "time_stamp": "2023-03-02 08:45:17",
+    "text": "thanks, from what I can tell that will only get my deal data, where I'm after contacts, companies, addresses.. did I miss something?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 08:46:13",
+    "text": "No you're right lots of people get the contact and company data on the other end though, either way works though"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 08:46:33",
+    "text": "And to get the company and contact data in workflows you're definitely right you'll need a little bit of custom code"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Fiori",
+      "poster_handle": "ericf"
+    },
+    "time_stamp": "2023-03-02 08:47:31",
+    "text": "ok, yeah I'm contemplating custom code, or just having our side request that once we get a webhook saying dealstage is met"
+  },
+  {
+    "poster": {
+      "poster_name": "Christian Grothe",
+      "poster_handle": "christian947"
+    },
+    "time_stamp": "2023-03-02 09:23:37",
+    "text": "its actually seperated by semicolons :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 09:24:00",
+    "text": "either are pretty good options"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 09:24:09",
+    "text": "oh sorry bro"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 09:24:19",
+    "text": "yep you're right I knew that"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Fiori",
+      "poster_handle": "ericf"
+    },
+    "time_stamp": "2023-03-02 09:25:01",
+    "text": "cool, do you have that custom code example?"
+  },
+  {
+    "poster": {
+      "poster_name": "Rhi",
+      "poster_handle": "rhian"
+    },
+    "time_stamp": "2023-03-02 09:35:39",
+    "text": "Hi - I have a client looking for the best donation integration with HubSpot. Does anyone know which of these works best with HS reporting and streamlining of donor data? Donor Box, Donately, Fundraise Up App, or Integrate Classy by SyncSmart"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 09:48:51",
+    "text": "yeah so you'll want to use the batch read endpoint for that"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 09:48:52",
+    "text": "POST*`/crm/v3/objects/contacts/batch/read`*"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-03-02 09:49:04"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Fiori",
+      "poster_handle": "ericf"
+    },
+    "time_stamp": "2023-03-02 09:50:32",
+    "text": "makes sense, thanks again"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 09:50:38",
+    "text": "of course"
+  },
+  {
+    "poster": {
+      "poster_name": "Sonny George",
+      "poster_handle": "sonnygeorge5"
+    },
+    "time_stamp": "2023-03-02 10:06:49",
+    "text": "In my case, I am specifying the properties I want to retrieve, with the arg `properties=PROPERTIES`"
+  },
+  {
+    "poster": {
+      "poster_name": "Parker Short",
+      "poster_handle": "parker"
+    },
+    "time_stamp": "2023-03-02 10:20:29",
+    "text": "I’ve been digging into the marketing events object/api. I feel crazy, but is there a way to just pull the objectID for a marketing event created in the system? I can’t export anything on marketing events, I can’t click in and get it from the URL, and the only read API wants an external ID. Curious why I can’t create an event in HS and then connect people to the event."
+  },
+  {
+    "poster": {
+      "poster_name": "Michele Herzog",
+      "poster_handle": "michele.herzog24"
+    },
+    "time_stamp": "2023-03-02 10:26:38",
+    "text": ":wave: Hey folks! Anyone having any luck using the Goals API endpoints with a private app token? The docs only refer to an API key or Oauth, and calling the endpoints with a private app gives an `INVALID_AUTHENTICATION` error. Specifically trying to use `/crm/v3/objects/goal_targets` , looks like the cURL requests all use a QA domain (`<http://api.hubapiqa.com|api.hubapiqa.com>`).",
+    "reply_count": 17,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-03-02 10:28:00"
+      },
+      {
+        "time_stamp": "2023-03-02 10:28:17"
+      },
+      {
+        "time_stamp": "2023-03-02 10:30:04"
+      },
+      {
+        "time_stamp": "2023-03-02 10:30:15"
+      },
+      {
+        "time_stamp": "2023-03-02 12:21:34"
+      },
+      {
+        "time_stamp": "2023-03-02 12:21:40"
+      },
+      {
+        "time_stamp": "2023-03-02 12:21:53"
+      },
+      {
+        "time_stamp": "2023-03-02 12:22:08"
+      },
+      {
+        "time_stamp": "2023-03-02 12:22:50"
+      },
+      {
+        "time_stamp": "2023-03-02 12:23:03"
+      },
+      {
+        "time_stamp": "2023-03-02 12:50:20"
+      },
+      {
+        "time_stamp": "2023-03-02 12:50:24"
+      },
+      {
+        "time_stamp": "2023-03-02 12:50:41"
+      },
+      {
+        "time_stamp": "2023-03-02 12:53:15"
+      },
+      {
+        "time_stamp": "2023-03-02 12:54:04"
+      },
+      {
+        "time_stamp": "2023-03-02 15:00:16"
+      },
+      {
+        "time_stamp": "2023-03-02 15:00:48"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 10:28:00",
+    "text": "All the endpoints I can see are just limited to API_Key"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-03-02 10:28:17"
+  },
+  {
+    "poster": {
+      "poster_name": "Michele Herzog",
+      "poster_handle": "michele.herzog24"
+    },
+    "time_stamp": "2023-03-02 10:30:04",
+    "text": "Yup, and since those have been sunsetted, they're not really a viable option <@U01QVR44MEY>."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 10:30:15",
+    "text": "Yeah I understand that"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2023-03-02 12:21:34",
+    "text": "yo zog!!!"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2023-03-02 12:21:40",
+    "text": "check out v4"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2023-03-02 12:21:53",
+    "text": "i havent tested.  will do soon"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2023-03-02 12:22:08",
+    "text": "*`/crm/v4/objects/goal_targets/`*"
+  },
+  {
+    "poster": {
+      "poster_name": "Michele Herzog",
+      "poster_handle": "michele.herzog24"
+    },
+    "time_stamp": "2023-03-02 12:22:50",
+    "text": "Hey Dennis! Same error unfortunately - let me know if it works from your end!"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2023-03-02 12:23:03",
+    "text": "will do later today :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 12:50:20",
+    "text": "I might be doing something wrong but I get this error:\n``` \"message\": \"Object type GOAL_TARGET is not supported by this endpoint, ```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 12:50:24",
+    "text": "<https://api.hubapi.com/crm/v4/objects/goal_targets>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 12:50:41",
+    "text": "tried with a hapikey and pat"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 12:53:15",
+    "text": "Also just an FYI <@U02NJACH5QS> that qa domain is restricted to HubSpot internal accounts"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 12:54:04",
+    "text": "(I did try using a `pat` and `hapikey` with it though, no success)"
+  },
+  {
+    "poster": {
+      "poster_name": "Mansoor Bahramand",
+      "poster_handle": "mansoor"
+    },
+    "time_stamp": "2023-03-02 14:08:43",
+    "text": "Hey everyone I am having a similar issue from a few days ago, everything seemed to be working fine when using the `IN` operator on deals but now its giving me the dreaded `operator IN requires values` when I am clearly passing in values. The previous issue was because I have provided 0 for the limit (silly me :disappointed:)? Anyone else having similar issues? The same code started failing today :disappointed:",
+    "reply_count": 41,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-03-02 14:18:25"
+      },
+      {
+        "time_stamp": "2023-03-02 14:24:55"
+      },
+      {
+        "time_stamp": "2023-03-02 14:35:20"
+      },
+      {
+        "time_stamp": "2023-03-02 14:35:42"
+      },
+      {
+        "time_stamp": "2023-03-02 14:36:33"
+      },
+      {
+        "time_stamp": "2023-03-02 14:36:54"
+      },
+      {
+        "time_stamp": "2023-03-02 14:38:04"
+      },
+      {
+        "time_stamp": "2023-03-02 14:38:23"
+      },
+      {
+        "time_stamp": "2023-03-02 14:38:42"
+      },
+      {
+        "time_stamp": "2023-03-02 14:38:49"
+      },
+      {
+        "time_stamp": "2023-03-02 14:38:51"
+      },
+      {
+        "time_stamp": "2023-03-02 14:39:17"
+      },
+      {
+        "time_stamp": "2023-03-02 14:39:20"
+      },
+      {
+        "time_stamp": "2023-03-02 14:39:43"
+      },
+      {
+        "time_stamp": "2023-03-02 14:41:11"
+      },
+      {
+        "time_stamp": "2023-03-02 14:42:08"
+      },
+      {
+        "time_stamp": "2023-03-02 14:42:14"
+      },
+      {
+        "time_stamp": "2023-03-02 14:42:40"
+      },
+      {
+        "time_stamp": "2023-03-02 14:42:52"
+      },
+      {
+        "time_stamp": "2023-03-02 14:43:03"
+      },
+      {
+        "time_stamp": "2023-03-02 14:44:17"
+      },
+      {
+        "time_stamp": "2023-03-02 14:44:38"
+      },
+      {
+        "time_stamp": "2023-03-02 14:44:42"
+      },
+      {
+        "time_stamp": "2023-03-02 14:44:45"
+      },
+      {
+        "time_stamp": "2023-03-02 14:44:57"
+      },
+      {
+        "time_stamp": "2023-03-02 14:45:19"
+      },
+      {
+        "time_stamp": "2023-03-02 14:45:29"
+      },
+      {
+        "time_stamp": "2023-03-02 14:45:31"
+      },
+      {
+        "time_stamp": "2023-03-02 14:45:41"
+      },
+      {
+        "time_stamp": "2023-03-02 14:45:46"
+      },
+      {
+        "time_stamp": "2023-03-02 14:46:11"
+      },
+      {
+        "time_stamp": "2023-03-02 14:46:14"
+      },
+      {
+        "time_stamp": "2023-03-02 14:46:25"
+      },
+      {
+        "time_stamp": "2023-03-02 14:46:30"
+      },
+      {
+        "time_stamp": "2023-03-02 14:47:03"
+      },
+      {
+        "time_stamp": "2023-03-02 14:47:42"
+      },
+      {
+        "time_stamp": "2023-03-02 14:47:45"
+      },
+      {
+        "time_stamp": "2023-03-02 14:48:29"
+      },
+      {
+        "time_stamp": "2023-03-02 14:54:28"
+      },
+      {
+        "time_stamp": "2023-03-02 14:54:43"
+      },
+      {
+        "time_stamp": "2023-03-02 14:55:04"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 14:18:25",
+    "text": "For reference this is <@U01V64R73K8> request body:\n```const PublicObjectSearchRequest = {\n      filterGroups: [\n        {\n          filters: [\n            {\n              operator: 'IN',\n              propertyName: 'dealstage',\n              values: [`2191747`]\n            }\n          ]\n        }\n      ],\n      properties: defaultOpportunityProperties,\n      limit: 50,\n      after: 0\n    };```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 14:24:55",
+    "text": "Hey <@U01V64R73K8>, I rewrote this code using axios and my own stages and I'm getting successful responses:\n```var axios = require('axios');\nvar data = JSON.stringify({\n  \"filterGroups\": [\n    {\n      \"filters\": [\n        {\n          \"operator\": \"IN\",\n          \"propertyName\": \"dealstage\",\n          \"values\": [\n            \"closedwon\",\n            \"closedlost\",\n            \"appointmentscheduled\"\n          ]\n        }\n      ]\n    }\n  ],\n  \"properties\": [\n    \"dealname\"\n  ],\n  \"limit\": 50,\n  \"after\": 0\n});\n\nvar config = {\n  method: 'post',\n  url: '<https://api.hubapi.com/crm/v3/objects/deals/search>',\n  headers: { \n    'Authorization': 'Bearer pat-na1-xxxxx', \n    'Content-Type': 'application/json'\n  },\n  data : data\n};\n\naxios(config)\n.then(function (response) {\n  console.log(JSON.stringify(response.data));\n})\n.catch(function (error) {\n  console.log(error);\n});```"
+  },
+  {
+    "poster": {
+      "poster_name": "Eric Fiori",
+      "poster_handle": "ericf"
+    },
+    "time_stamp": "2023-03-02 14:33:10",
+    "text": "what's the URL to the page in your screenshot above?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 14:34:02",
+    "text": "<https://developers.HubSpot.com/docs/api/crm/contacts>"
+  },
+  {
+    "poster": {
+      "poster_name": "Mansoor Bahramand",
+      "poster_handle": "mansoor"
+    },
+    "time_stamp": "2023-03-02 14:35:20",
+    "text": "Interesting, I was able to get it to pass but now the custom properties are note being returned"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 14:35:42",
+    "text": "what do you have for this?\n```\"properties\": [\n    \"dealname\"\n  ],```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Mansoor Bahramand",
+      "poster_handle": "mansoor"
+    },
+    "time_stamp": "2023-03-02 14:36:33",
+    "text": "Currently have the following variable `defaultOpportunityProperties`"
+  },
+  {
+    "poster": {
+      "poster_name": "Mansoor Bahramand",
+      "poster_handle": "mansoor"
+    },
+    "time_stamp": "2023-03-02 14:36:54",
+    "text": "```[\n  'dealname',\n  'dealtype',\n  'owner',\n  'address',\n  'city',\n  'state',\n  'zip_code',\n  'longitude',\n  'latitude'\n]```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 14:38:04",
+    "text": "and non of those are returning?"
+  },
+  {
+    "poster": {
+      "poster_name": "Mansoor Bahramand",
+      "poster_handle": "mansoor"
+    },
+    "time_stamp": "2023-03-02 14:38:23",
+    "text": "the only property being returned is dealname"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 14:38:42",
+    "text": "did you update the code I sent you? to include those properties?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 14:38:49",
+    "text": "currently it will just return dealname"
+  },
+  {
+    "poster": {
+      "poster_name": "Mansoor Bahramand",
+      "poster_handle": "mansoor"
+    },
+    "time_stamp": "2023-03-02 14:38:51",
+    "text": "Yes I did"
+  },
+  {
+    "poster": {
+      "poster_name": "Mansoor Bahramand",
+      "poster_handle": "mansoor"
+    },
+    "time_stamp": "2023-03-02 14:39:17",
+    "text": "This is what allowed the query to succeed"
+  },
+  {
+    "poster": {
+      "poster_name": "Mansoor Bahramand",
+      "poster_handle": "mansoor"
+    },
+    "time_stamp": "2023-03-02 14:39:20",
+    "text": "```// Sets up search for specific deals\n    const PublicObjectSearchRequest = JSON.stringify({\n      filterGroups: [\n        {\n          filters: [\n            {\n              operator: 'IN',\n              propertyName: 'dealstage',\n              values: defaultDealtypes\n            }\n          ]\n        }\n      ],\n      properties: ['dealname', 'city', 'state'],\n      limit: 50,\n      after: 0\n    });```"
+  },
+  {
+    "poster": {
+      "poster_name": "Mansoor Bahramand",
+      "poster_handle": "mansoor"
+    },
+    "time_stamp": "2023-03-02 14:39:43",
+    "text": "wrapping in `JSON.stringify`"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 14:41:11",
+    "text": "possibly try inserting the array directly"
+  },
+  {
+    "poster": {
+      "poster_name": "Mansoor Bahramand",
+      "poster_handle": "mansoor"
+    },
+    "time_stamp": "2023-03-02 14:42:08",
+    "text": "Actually looking at it now, it looked like it passed but its not actually filtering"
+  },
+  {
+    "poster": {
+      "poster_name": "Mansoor Bahramand",
+      "poster_handle": "mansoor"
+    },
+    "time_stamp": "2023-03-02 14:42:14",
+    "text": "Tried that doesn’t work"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 14:42:40",
+    "text": "do you want to run a quick test in postman"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 14:42:52",
+    "text": "just to double check you are using the correct account?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 14:43:03",
+    "text": "also have you checked that you have the correct stage ids"
+  },
+  {
+    "poster": {
+      "poster_name": "Mansoor Bahramand",
+      "poster_handle": "mansoor"
+    },
+    "time_stamp": "2023-03-02 14:44:17",
+    "text": "I am hitting the api endpoint via postman"
+  },
+  {
+    "poster": {
+      "poster_name": "Mansoor Bahramand",
+      "poster_handle": "mansoor"
+    },
+    "time_stamp": "2023-03-02 14:44:38",
+    "text": "Just did this"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 14:44:42",
+    "text": "and you're using the correct account?"
+  },
+  {
+    "poster": {
+      "poster_name": "Mansoor Bahramand",
+      "poster_handle": "mansoor"
+    },
+    "time_stamp": "2023-03-02 14:44:45",
+    "text": "```   // Sets up search for specific deals\n    const PublicObjectSearchRequest = {\n      filterGroups: [\n        {\n          filters: [\n            {\n              operator: 'EQ',\n              propertyName: 'dealtype',\n              value: defaultDealtypes[0]\n            }\n          ]\n        }\n      ],\n      properties: defaultOpportunityProperties,\n      limit: 50,\n      after: 0\n    };```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 14:44:57",
+    "text": "that wouldn't run in postman..."
+  },
+  {
+    "poster": {
+      "poster_name": "Mansoor Bahramand",
+      "poster_handle": "mansoor"
+    },
+    "time_stamp": "2023-03-02 14:45:19",
+    "text": "I am using postman to test my call"
+  },
+  {
+    "poster": {
+      "poster_name": "Mansoor Bahramand",
+      "poster_handle": "mansoor"
+    },
+    "time_stamp": "2023-03-02 14:45:29",
+    "text": "Want to jump on a quick meet?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 14:45:31",
+    "text": "and is that successful?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 14:45:41",
+    "text": "sorry I can't right now"
+  },
+  {
+    "poster": {
+      "poster_name": "Mansoor Bahramand",
+      "poster_handle": "mansoor"
+    },
+    "time_stamp": "2023-03-02 14:45:46",
+    "text": "Its okay"
+  },
+  {
+    "poster": {
+      "poster_name": "Mansoor Bahramand",
+      "poster_handle": "mansoor"
+    },
+    "time_stamp": "2023-03-02 14:46:11",
+    "text": "That call is successful, its returning all the properties and filtering correctly"
+  },
+  {
+    "poster": {
+      "poster_name": "Mansoor Bahramand",
+      "poster_handle": "mansoor"
+    },
+    "time_stamp": "2023-03-02 14:46:14",
+    "text": "however"
+  },
+  {
+    "poster": {
+      "poster_name": "Mansoor Bahramand",
+      "poster_handle": "mansoor"
+    },
+    "time_stamp": "2023-03-02 14:46:25",
+    "text": "if I wrap in JSON.stringify"
+  },
+  {
+    "poster": {
+      "poster_name": "Mansoor Bahramand",
+      "poster_handle": "mansoor"
+    },
+    "time_stamp": "2023-03-02 14:46:30",
+    "text": "like the following"
+  },
+  {
+    "poster": {
+      "poster_name": "Mansoor Bahramand",
+      "poster_handle": "mansoor"
+    },
+    "time_stamp": "2023-03-02 14:47:03",
+    "text": "```const PublicObjectSearchRequest = JSON.stringify({\n      filterGroups: [\n        {\n          filters: [\n            {\n              operator: 'EQ',\n              propertyName: 'dealtype',\n              value: defaultDealtypes[0]\n            }\n          ]\n        }\n      ],\n      properties: defaultOpportunityProperties,\n      limit: 50,\n      after: 0\n    });```"
+  },
+  {
+    "poster": {
+      "poster_name": "Mansoor Bahramand",
+      "poster_handle": "mansoor"
+    },
+    "time_stamp": "2023-03-02 14:47:42",
+    "text": "The filters and properties don’t actually get applied and only returning dealname and pipeline"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 14:47:45",
+    "text": "do you want to use the above axios code instead of the SDK"
+  },
+  {
+    "poster": {
+      "poster_name": "Mansoor Bahramand",
+      "poster_handle": "mansoor"
+    },
+    "time_stamp": "2023-03-02 14:48:29",
+    "text": "Let me try that"
+  },
+  {
+    "poster": {
+      "poster_name": "Mansoor Bahramand",
+      "poster_handle": "mansoor"
+    },
+    "time_stamp": "2023-03-02 14:54:28",
+    "text": "The same exact config using the api request fixed the issue."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 14:54:43",
+    "text": "Perfect"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 14:55:04",
+    "text": "Yep I would say away from the SDK, it's un predictable. Also hard to figure out how to send the data"
+  },
+  {
+    "poster": {
+      "poster_name": "Michele Herzog",
+      "poster_handle": "michele.herzog24"
+    },
+    "time_stamp": "2023-03-02 15:00:16",
+    "text": "Yup! Intentionally called that out because it _probably_ shouldn't be in the docs. Though I do miss my internal access some days :sprocket-dance:"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 15:00:48",
+    "edited": {
+      "time_stamp": "2023-03-02 15:00:56"
+    },
+    "text": "I don't see `qa` in the docs... where do you see that?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Lerner",
+      "poster_handle": "ben198"
+    },
+    "time_stamp": "2023-03-02 15:15:45",
+    "text": "Hey everyone, quick question here as I am not finding any documentation on this.  I am looking to Batch Update deals via a custom unique identifier.   I know it is possible for a single deal update via `<https://api.hubapi.com/crm/v3/objects/deals/1234?idProperty=my_custom_unique_id>`, but is this possible for a batch update request?   Thanks in advance.",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-10-27 12:36:20"
+      },
+      {
+        "time_stamp": "2023-10-27 12:38:02"
+      },
+      {
+        "time_stamp": "2023-10-27 12:38:03"
+      },
+      {
+        "time_stamp": "2023-10-27 12:38:18"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jessiemar Pedrosa",
+      "poster_handle": "jessie"
+    },
+    "time_stamp": "2023-03-02 18:35:49",
+    "edited": {
+      "time_stamp": "2023-03-02 18:36:30"
+    },
+    "text": "Hi everyone, anyone here have tried integrating HubSpot to <https://www.nimbleams.com/|Nimble AMS> (Association Software built on Salesforce).\nI just want to ask if\n• someone has tried working on this, \n• what are the basic things to do, setup, and configure\n• what should I need from the client side, and if can we work on staging site\n• what grade of difficulty can you provide to this type of integration from 1-10, 10 as the hardest. \nThanks!\n\nAs a NOTE:\nThis is their <https://nimbleuser.github.io/nams-api-docs/#/README|Nimble AMS API>"
+  },
+  {
+    "poster": {
+      "poster_name": "Evan Tan",
+      "poster_handle": "evan.tan"
+    },
+    "time_stamp": "2023-03-02 18:41:59",
+    "text": "<@U0157R7AQ84> please hit me with that sweet hidden info"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 18:42:30",
+    "text": "I don't think there is any hidden info... kinda just a hope"
+  },
+  {
+    "poster": {
+      "poster_name": "Nam Huynh",
+      "poster_handle": "nam"
+    },
+    "time_stamp": "2023-03-02 20:11:54",
+    "text": "Hey everyone, I’m working on integration with CRM endpoints. In the documents\n• When working with contacts / companies, the API version is v3. e.g. /crm/v3/objects/contacts/search\n• For association, it is v4. e.g. *`/crm/v4/objects/contacts/{contactId}/associations/{toObjectType}/{toObjectId}`*\nmy questions are\n• can I just use v4 for other objects endpoints? it seems we have the same endpoints for v4\n• do we have API documents like swagger?",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-03-02 20:29:01"
+      },
+      {
+        "time_stamp": "2023-03-02 20:29:28"
+      },
+      {
+        "time_stamp": "2023-03-02 20:29:29"
+      },
+      {
+        "time_stamp": "2023-03-02 20:30:09"
+      },
+      {
+        "time_stamp": "2023-03-02 20:34:40"
+      },
+      {
+        "time_stamp": "2023-03-02 20:34:50"
+      },
+      {
+        "time_stamp": "2023-03-02 20:35:01"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 20:29:01",
+    "text": "Yes and yes"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 20:29:28",
+    "text": "openapi specs"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 20:29:29",
+    "text": "<https://developers.HubSpot.com/changelog/get-all-publicly-available-open-api-specifications>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 20:30:09",
+    "text": "and yes the v4 endpoints for companies and contacts are interchangeable with the v3 ones for all intensive purposes"
+  },
+  {
+    "poster": {
+      "poster_name": "Nam Huynh",
+      "poster_handle": "nam"
+    },
+    "time_stamp": "2023-03-02 20:34:40",
+    "text": "thanks Carter for quick response. I’ll go ahead and use v4"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 20:34:50",
+    "text": "of course"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 20:35:01",
+    "text": "let me know if you run into any other issues"
+  },
+  {
+    "poster": {
+      "poster_name": "Aditya Naik",
+      "poster_handle": "anaik"
+    },
+    "time_stamp": "2023-03-02 21:54:48",
+    "text": "Ok thanks"
+  },
+  {
+    "poster": {
+      "poster_name": "Aditya Naik",
+      "poster_handle": "anaik"
+    },
+    "time_stamp": "2023-03-02 21:54:53",
+    "text": "Hi Team"
+  },
+  {
+    "poster": {
+      "poster_name": "Aditya Naik",
+      "poster_handle": "anaik"
+    },
+    "time_stamp": "2023-03-02 21:56:25",
+    "edited": {
+      "time_stamp": "2023-03-02 23:15:53"
+    },
+    "text": "I am trying to create a new variation for landing page over the API using v3/pages/landing-pages/multi-language/create-language-variation. And i have content scope already added to my APP. However i see below error while making a call\n\n{\n    “category”: “MISSING_SCOPES”,\n    “correlationId”: “b3fd5634-ad9f-4e0a-a9e0-478ef7c2254e”,\n    “errors”: [\n        {\n            “context”: {\n                “requiredScopes”: [\n                    “content”\n                ]\n            },\n            “message”: “All of the following scopes are required.”\n        }\n    ],\n    “links”: {\n        “scopes”: “<https://developers.HubSpot.com/scopes>”\n    },\n    “message”: “This app hasn’t been granted all required scopes to make this call. Read more about required scopes here: <https://developers.HubSpot.com/scopes>.“,\n    “status”: “error”\n}",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-03-02 22:55:51"
+      },
+      {
+        "time_stamp": "2023-03-02 22:56:12"
+      },
+      {
+        "time_stamp": "2023-03-02 23:14:41"
+      },
+      {
+        "time_stamp": "2023-03-02 23:16:23"
+      },
+      {
+        "time_stamp": "2023-03-02 23:16:33"
+      },
+      {
+        "time_stamp": "2023-03-02 23:16:47"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Tyler Johnson",
+      "poster_handle": "tyler511"
+    },
+    "time_stamp": "2023-03-02 22:21:37",
+    "text": "Does anybody know if there is a way to fetch the transcript of a call that has been recorded and run through HubSpot Conversational Intelligence using the API",
+    "reply_count": 4,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-03-02 22:51:10"
+      },
+      {
+        "time_stamp": "2023-03-02 22:51:28"
+      },
+      {
+        "time_stamp": "2023-03-02 22:54:58"
+      },
+      {
+        "time_stamp": "2023-03-02 22:55:30"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 22:50:57",
+    "text": "of course"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 22:51:10",
+    "text": "You can use the calls api for this"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 22:51:28",
+    "text": "<https://developers.HubSpot.com/docs/api/crm/calls>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 22:54:58",
+    "text": "didn't run a test but call body `\"hs_call_body\"` should be the property you're looking for"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 22:55:30",
+    "text": "It's also possible that the text transcription is an associated object, I can run a complete test tomorrow and let you know what I find"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 22:55:51",
+    "text": "You might need to regenerate the token"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-02 22:56:12",
+    "text": "you can't use the same token after you upgrade that scopes"
+  },
+  {
+    "poster": {
+      "poster_name": "Aditya Naik",
+      "poster_handle": "anaik"
+    },
+    "time_stamp": "2023-03-02 23:14:41",
+    "text": "ok let me check"
+  },
+  {
+    "poster": {
+      "poster_name": "Aditya Naik",
+      "poster_handle": "anaik"
+    },
+    "time_stamp": "2023-03-02 23:16:23",
+    "text": "FYI i had not upgraded the scope"
+  },
+  {
+    "poster": {
+      "poster_name": "Aditya Naik",
+      "poster_handle": "anaik"
+    },
+    "time_stamp": "2023-03-02 23:16:33",
+    "text": "it was there from the very beginning"
+  },
+  {
+    "poster": {
+      "poster_name": "Aditya Naik",
+      "poster_handle": "anaik"
+    },
+    "time_stamp": "2023-03-02 23:16:47",
+    "text": "so even when i regenerated the token it didn work"
+  }
+]

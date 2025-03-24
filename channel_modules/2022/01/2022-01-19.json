@@ -1,0 +1,72 @@
+[
+  {
+    "poster": {
+      "poster_name": "Thomas Swisher",
+      "poster_handle": "tswisher007"
+    },
+    "time_stamp": "2022-01-19 06:43:38",
+    "text": "Hello everyone got a CSS optimization question. I've built all my modules with the needed CSS in the module. I'm looking to optimize the modules now and I'm thinking this is going to add unnecessary requests. I'm thinking I probably should just create a sheet for each module and add it to the main.css. Could I get some feed back on this. Thanks",
+    "reply_count": 5,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2022-01-19 06:54:59"
+      },
+      {
+        "time_stamp": "2022-01-19 09:44:30"
+      },
+      {
+        "time_stamp": "2022-01-19 09:47:22"
+      },
+      {
+        "time_stamp": "2022-01-19 12:03:00"
+      },
+      {
+        "time_stamp": "2022-01-19 12:04:19"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2022-01-19 06:54:59",
+    "text": "I usally do the same thing, a separate css file for each module added on the main.css"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-01-19 09:44:30",
+    "text": "For what it's worth - module css files, assuming there are no errors all get bundled into one file. I believe the only time they are not is when you use hs cache buster and hsdebug "
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-01-19 09:47:22",
+    "text": "I think that there are a handful of threads on this here but the general best practice - as far as I know - is to keep css w the module if you can. This way the styles only are loaded if you need them. And when they are they are bundled. \n\nIf you load them into their own style sheets  and include them in main then they are always loaded no matter what. Extrapolate that by 20+ modules and chances are you're loading a lot that doesn't need to be there. <@UTQQ4TXCH> "
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2022-01-19 12:03:00",
+    "edited": {
+      "time_stamp": "2022-01-19 12:08:45"
+    },
+    "text": "We actually don’t combine the CSS on new CMS sites anymore as that’s not a good practice with HTTP2. Older CMS sites in some cases still have this enabled to prevent us from accidentally breaking an existing site.\n\nSeparating the stylesheets is actually more performant for modules.\n\nThe ideal solution is actually hybrid. Combine CSS for modules that re-use the same styles, or modules that are consistently always on screen together (Think headers, footers).\n\nWith HTTP2 the browser will request all of the assets before waiting for the response of a prior asset.\n\nThis means quantity of assets doesn’t matter as much anymore. It’s actually why Google changed how the recommendation of combining assets appears in lighthouse. They found folks were misunderstanding.\n\nThe old system HubSpot had combined all CSS for all modules and the templates per page. meaning a separate CSS file per page.\n\nThis helped initial page load times making your page speed insights look good, but then subsequent pages you didn’t get any caching benefit because you’d be reloading all those assets again.\n\nSimilarly if you use SCSS or HubL to combine all your CSS into 1 file. You’re doing the same thing you’re creating a monolithic CSS file.\n\nIf a single bit of that CSS needs to be updated, that whole CSS file is invalidated in browser cache and needs to be redownloaded.\n\nYou’re also loading on every page tons of CSS that never gets used on that page.\n\n\nSo a hybrid approach is actually more performant. Only load the CSS actually needed on the page. Use Module CSS or a linked/required CSS file to load CSS required for that specific module to function. That way HubSpot will load just the CSS needed for the modules that are actually used on the page."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2022-01-19 12:04:19",
+    "text": "I explained this kinda more succinctly and better here: <https://HubSpotdev.slack.com/archives/CMXUWUY5D/p1622585265042000?thread_ts=1622577827.040500&amp;cid=CMXUWUY5D>"
+  }
+]

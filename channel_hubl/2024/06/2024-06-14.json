@@ -1,0 +1,141 @@
+[
+  {
+    "text": "<@UDJV5B73R> thanks a lot for your advise. I was not aware of this command. I have tried but without any luck.\n\n<https://community.HubSpot.com/t5/Email-Marketing-Tool/Personalized-token-render-HTML-correctly-in-marketing-email/td-p/989631|Here> is a list of all the things I have tried.\n\nWith the unescape hml. This is content of custom module (drag&drop module in my email).\n```<p>Escape string:</p>\n{% set escape_string = 'Visit our &lt;a href=&quot;<https://apify.com/store&quot;&gt;Apify> Store&lt;/a&gt;' %}\n{{ escape_string|unescape_html }}\n\n<p>Escape string advisor:</p>\n{{ contact.advisor|unescape_html }}```\nI think I miss some important thing but I can't find it.\n\nI would appreciate any help!",
+    "time_stamp": "2024-06-14 03:36:34",
+    "edited": {
+      "time_stamp": "2024-06-14 03:40:11"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-06-14 04:04:02",
+    "text": "Hmm maybe the render tag is what you need first\n<https://developers.HubSpot.com/docs/cms/hubl/filters#render>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-06-14 04:04:17",
+    "text": "and then do the unescape_html"
+  },
+  {
+    "poster": {
+      "poster_name": "Jiří Spilka",
+      "poster_handle": "jiri.spilka"
+    },
+    "time_stamp": "2024-06-14 04:06:23",
+    "text": "ok, thanks, I will try that later today, I  need to step out now"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Patel",
+      "poster_handle": "ryan.patel"
+    },
+    "time_stamp": "2024-06-14 04:48:58",
+    "edited": {
+      "time_stamp": "2024-06-14 05:36:07"
+    },
+    "text": "Hello, is there any reason the below code wouldn't work on the front end of a blog listing page? It seems to work in preview module mode but not when its on the actual page\n\nIts copied straight from the docs. The Blog Recent Posts works but the Blog Recent Tags doesnt seem to. Specifically the set tags part.\n\n\n```{{ blog_recent_tag_posts(\"default\", \"download\", 5) }}\n{% set tag_posts = blog_recent_tag_posts(\"default\", [\"download\", \"net-zero\", \"podcast\"], 3, \"AND\") %}\n{% for tag_post in tag_posts %}\n    <div class=\"post-title\">{{ tag_post.name }}</div>\n{% endfor %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Yugal Patidar",
+      "poster_handle": "masteryugal1947"
+    },
+    "time_stamp": "2024-06-14 05:21:46",
+    "text": "<@U04B3M0M18E> Can you please send particular code for it ?"
+  },
+  {
+    "text": "<@UDJV5B73R> thank you but it is not working :disappointed:\n\nCustom module:\n```&lt;p&gt;Escape string:&lt;/p&gt;\n{% set escape_string = 'Visit our &lt;a href=&amp;quot;<https://apify.com/store&amp;quot;&gt;Apify> Store&lt;/a&gt;' %}\n{{ escape_string|unescape_html }}\n\n&lt;p&gt;Personalized token:&lt;/p&gt;\n{{ personalization_token(\"contact.advisor\", \"default value\")}}\n\n&lt;p&gt;Personalized token and render unescape_html:&lt;/p&gt;\n{{ personalization_token(\"contact.advisor\", \"default value\")|render|unescape_html }}```\nIt is like black box and I don't know how to debug it. Based on the documentation (and dev forum) it should work out of the box. Maybe there is some issue with the email template? But I have started with a  minimal email.",
+    "time_stamp": "2024-06-14 08:25:46"
+  },
+  {
+    "text": "and the `contact.advisor=Visit our &lt;a href=&amp;quot;<https://apify.com/store&amp;quot;&gt;Apify> Store&lt;/a&gt;`",
+    "time_stamp": "2024-06-14 08:27:39"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-06-14 08:32:22",
+    "text": "Hmm, from the documentation I thought that render thing was going to be it!, not sure what else you can try"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-06-14 08:39:33",
+    "text": "How is it stored in the property? is it escaped there too?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jiří Spilka",
+      "poster_handle": "jiri.spilka"
+    },
+    "time_stamp": "2024-06-14 08:43:27",
+    "text": "I can put whatever I want in the property. It is output of LLM. But in the email the format should be 3-4 bullet points with hyperlinks. So far I have tried HTML and escaped HTML, markdown. But I'm unable to make it work. Do u think there migth be easier way?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-06-14 08:45:08",
+    "text": "Just testing in my portal the |render|lower example from the documentation also doesn’t work"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-06-14 08:45:24",
+    "edited": {
+      "time_stamp": "2024-06-14 08:45:53"
+    },
+    "text": "Are you able to change the property to a html (richtext) property?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jiří Spilka",
+      "poster_handle": "jiri.spilka"
+    },
+    "time_stamp": "2024-06-14 08:52:43",
+    "text": "We are having it as a part of form where you can't include rich text property. But I haven't tried directly with rich text.\n\nWhat I did is to have `contact.advisor` as multi-line property in the custom module I \"copied\" the value of contact advisor into that property.\n\nIn the hubl:\n```{% inline_rich_text field=\"richtext_field\" value=\"{{ module.richtext_field }}\" %}```\nand in the rich text:\n```&lt;p&gt;Advisor:&lt;/p&gt;\n{{ contact.advisor}}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Jiří Spilka",
+      "poster_handle": "jiri.spilka"
+    },
+    "time_stamp": "2024-06-14 08:53:22",
+    "edited": {
+      "time_stamp": "2024-06-14 08:53:43"
+    },
+    "text": "I also tried all the variations you send me with `unescape_html` and `render`"
+  },
+  {
+    "poster": {
+      "poster_name": "Jiří Spilka",
+      "poster_handle": "jiri.spilka"
+    },
+    "time_stamp": "2024-06-14 09:05:00",
+    "text": "I have tried with a rich-text field as well without a luck"
+  },
+  {
+    "poster": {
+      "poster_name": "Rolando Carias",
+      "poster_handle": "rolando"
+    },
+    "time_stamp": "2024-06-14 09:52:18",
+    "edited": {
+      "time_stamp": "2024-06-14 09:54:05"
+    },
+    "text": "Hey <@U055D7MBY87>\n```{% set pageMetadata = crm_object(\"custom_page_metadata\", \"slug=\"foo\", 'page_title,page_description,page_html') %}\n{% {{ pageMetadata.page_html }} %} \n// this is supposed to be a multi line text but when it renders, some of the HTML tags get transformed in <text> or <span> blocks and others (like <header/> for example) get removed```"
+  }
+]

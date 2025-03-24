@@ -1,0 +1,637 @@
+[
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-03-01 01:59:24",
+    "text": "<@UHVJJUWFN> I have written custom while loops in HubSpot (Paged API calls), I'll happily give some input if needed"
+  },
+  {
+    "text": "As seen in the Threads above, I'd like to give some input on how I handle Error Reporting in Custom Code flows:\n\n*Custom code error reporting*\n• Creating 2 fields on contact level, Custom Code Success &amp;Custom Code Output\n• Setting the data in the Custom Code block (We have a boolean and an error message)\n```      callback({\n        outputFields: {\n          customCodeSuccess: false,\n          customCodeOutput: \"Could not set the association\"\n        }\n      });```\n• Copy over the value to the Contact fields (Screenshot 1)\n• Sending out the error and clearing the field (Screenshot 2)\nThis way, there is no need to check the error output on a daily basis for example, and for important errors, a notification is send out so your application does not break down without knowing.",
+    "time_stamp": "2023-03-01 02:03:02",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-03-01 02:04:49"
+      },
+      {
+        "time_stamp": "2023-03-01 06:15:06"
+      },
+      {
+        "time_stamp": "2023-03-01 07:08:50"
+      },
+      {
+        "time_stamp": "2023-03-01 07:09:37"
+      },
+      {
+        "time_stamp": "2023-03-01 07:21:32"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-03-01 02:04:49",
+    "text": "This also means that the error message, can be the error from a try catch as follows:\n```catch (e) {\n      e.message === 'HTTP request failed'\n        ? console.error(JSON.stringify(e.response, null, 2))\n      : console.error(e)\n      callback({\n        outputFields: {\n          customCodeSuccess: false,\n          customCodeOutput: e\n        }\n      });\n    }```"
+  },
+  {
+    "poster": {
+      "poster_name": "Javier Molina Sanz",
+      "poster_handle": "javier.molinasanz"
+    },
+    "time_stamp": "2023-03-01 02:12:10",
+    "text": "Right thanks. So for context I have created a custom action in the workflows that sends a request to my server with some information about the contact. My server then triggers SMS that are throttled by the API because otherwise the network operators can be flooded. I assume that the throughput for the custom action would be the same that for the webhook i.e up to 300 req/sec but variable, correct?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Frade",
+      "poster_handle": "jfrade"
+    },
+    "time_stamp": "2023-03-01 04:20:22",
+    "text": ":wave-yeti: Hey, I wanted to give you a heads up that we’ve added the boilerplate back into the code based on your suggestions."
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Frade",
+      "poster_handle": "jfrade"
+    },
+    "time_stamp": "2023-03-01 04:20:36",
+    "text": "Let us know if you have any more thoughts or feedback."
+  },
+  {
+    "poster": {
+      "poster_name": "Javier Molina Sanz",
+      "poster_handle": "javier.molinasanz"
+    },
+    "time_stamp": "2023-03-01 04:54:47",
+    "text": "I found this in the legacy docs <https://legacydocs.HubSpot.com/docs/methods/workflows/webhook_information#:~:text=Workflows%20will%20issue%20webhook%20attempts%20at%20up%20to%2020%20requests%20per%20second|https://legacydocs.HubSpot.com/docs/methods/workflows/webhook_information#:~:text=Workflows%20will%20issue%20[…]%20to%2020%20requests%20per%20second> I guess it is no longer the case"
+  },
+  {
+    "poster": {
+      "poster_name": "Christine Moen Watson",
+      "poster_handle": "christine.watson"
+    },
+    "time_stamp": "2023-03-01 05:49:50",
+    "text": "<@U04LRKC9WLU> Custom code, python, API,"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-01 06:07:36",
+    "text": "perfect! thank you Jason"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2023-03-01 06:13:24",
+    "text": "Arno, please do, yes. All customer information we can gather around this will make it so that we can one day release it to the public"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2023-03-01 06:15:06",
+    "text": "that’s pretty cool. Any reason why you don’t use the output of the custom code in the first screenshot along with a Value equals branch so taht you don’t need that second workflow?"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-01 06:21:32",
+    "text": "It would make life so much easier to be able to loop over a CCA until the HubSpot API behaves and/or a \"Success\" is triggered"
+  },
+  {
+    "text": "all of this could be replaced with one thing and wouldnt need any hacky set timeouts",
+    "time_stamp": "2023-03-01 06:23:47"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2023-03-01 06:25:34",
+    "text": "One concern we have is that we would need to restrict the time between iterations in a loop, otherwise it would be dangerous for our system load"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-01 06:25:43",
+    "text": "thats understandable"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-01 06:26:09",
+    "text": "honestly if we could just have a option to have objects automatically re-enroll in workflows until they succeed that would solve everything tbh"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-01 06:26:43",
+    "text": "especially when you get things like unknown application errors from the workflow engine that just passes a failure and doesn't trigger a retry...that's what i'm running into now"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2023-03-01 06:27:28",
+    "text": "oh i see, yeah the retry use case is a good one to bring up for why we’d want the While loop action cc <@U0157R7AQ84>"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-01 06:28:18",
+    "text": "right now i'm running into a issue where if HubSpot doesn't return a 429 from the API, it just produces a Unknown APplication Error and then kills the workflow entirely without any trigger to try again"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-01 06:29:29",
+    "text": "the other use case from before was to have a way to iterate over a variable until it's 0, so if we needed to do paging with a API we can set a cursor to like 10, and to keep running that CCA until the cursor is = to 0 . We ran into this before and we had to tell the client that HubSpot workflows just can't handle it without some kind of outside server"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2023-03-01 06:31:06",
+    "text": "That would be a better case for the For loop action (another one we could build) which would allow you to use an integer iterator"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-01 06:31:21",
+    "text": "yeah for sure"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-01 06:31:44",
+    "text": "I think the \"While\" would help faster in the interim....like if I could access that today I would literally cry excitement lmao"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2023-03-01 06:32:17",
+    "text": "I know what you mean"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-01 06:32:55",
+    "text": "exciting tho either way that it may come"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-03-01 07:08:50",
+    "text": "Because this way I can set some custom error messaging, as in, when I do an api call, and no result is found but a result is found, I can set the message like that.\nThe error message from the custom code block itself, just gives when an api call fails or a code error occurs. And I don't think you can overwrite it yourself?"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2023-03-01 07:09:37",
+    "text": "Ah gotcha, yeah I think you’re right"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-03-01 07:10:58",
+    "text": "The way I have set it up, is use multiple workflows and create a fake recursion that way.\nWorkflow one does the custom code, workflow 2 checks the data, and decides to move on, or to go back to workflow one if needed"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-03-01 07:12:12",
+    "text": "I'll try to get some screenshots in, to show a paged API call going over all the pages untill none are left."
+  },
+  {
+    "text": "First one:\nDaily sync on the first page, to see if there is new data coming in from third party service \"AC\"\nSets some values, first page, total pages, current page, to be used further on",
+    "time_stamp": "2023-03-01 07:15:42"
+  },
+  {
+    "text": "Second one:\nRecursive function that loads the current page and updates the data.\nIf succesfull, we go to the checker workflow",
+    "time_stamp": "2023-03-01 07:16:55"
+  },
+  {
+    "text": "Third one:\nPretty much checks the total pages vs the current page to see if we need to recurse or not.\nAlso makes sure the run stops when there are no pages left.",
+    "time_stamp": "2023-03-01 07:18:12"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-03-01 07:18:32",
+    "text": "And all the error reporting gets added to the flow described in the channel"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-03-01 07:21:32",
+    "text": "Also, the workflow is pretty much used as a global function, any errors over the whole project, run by this workflow and get send to the same email"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2023-03-01 07:21:42",
+    "text": "that’s neat. Do you have feedback on what would make this easier with newer actions or logic?"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-03-01 07:23:41",
+    "text": "The problem here was, we need a contact that triggers the daily run. Overall it's pretty ok, but having that contact to trigger it, gives a liability."
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-01 07:24:28",
+    "text": "thats a cool solution"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-01 07:25:15",
+    "text": "i've always had bad luck with the \"Enroll in another workflow\" thing"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-03-01 07:26:19",
+    "text": "Me too, that's why I opted for adding some fields, that handle the re-enrollment that way.\nAlso, this handles global variables on a contact level."
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-01 07:26:24",
+    "text": "yeah"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-03-01 07:26:57",
+    "text": "Technically, I took a contact record, made it look like a \"API Handler\" Class with those fields, and cleared it out after haha"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2023-03-01 07:27:36",
+    "text": "Could you use the Scheduled trigger setting on a workflow to trigger the workflow daily?"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2023-03-01 07:27:52",
+    "text": "or is the problem that you need a Contact to enroll"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-03-01 07:28:27",
+    "text": "Yes, you need a contact to enrol. So I use my own contact, with a \"Daily sync\" boolean field that's set to yes."
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-01 07:28:46",
+    "text": "yeah i've had to do that before also"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-01 07:28:56",
+    "text": "just a dummy record that holds like the last counter"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-03-01 07:30:16",
+    "text": "Yhea but the issue there is, this is an active \"cleaning\" HubSpot, where contacts get cleaned up quite often, and it happened only once in the past year that someone deleted the contact, cause it technically has no other activity"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-01 07:30:36",
+    "text": "yeah thats no good lol"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-03-01 07:30:49",
+    "text": "And adding (DO NOT DELETE) in front of the name doesn't do the trick apparently :joy:"
+  },
+  {
+    "text": "this is the trick i'm using now that will hopefully work",
+    "time_stamp": "2023-03-01 07:31:11"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-01 07:31:31",
+    "text": "just constantly setting a string property to something random and hoping and praying it triggers the other workflows"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-03-01 07:33:29",
+    "text": "But what's the reason why it would fail, wouldn't it be better to try to catch that instead?"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-01 07:33:55",
+    "text": "i'm having a issue where the CCA will either return a 429 or a Unknown Application Error"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2023-03-01 07:34:10",
+    "text": "We have a private beta that may alleviate some of this pain, launching…in a few minutes. Would you guys like to be included? I’m going to personally invite a few people to track feedback while we work out issues. I have to warn you, it’s very much a WIP hence the private beta, but your use cases make me feel like you’d get value out of the new functionality"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-01 07:34:16",
+    "text": "YES PLEASE"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2023-03-01 07:34:30",
+    "text": "If you DM me your portal id I’ll get you added and let you know once it’s ready"
+  },
+  {
+    "poster": {
+      "poster_name": "Arno Van de Weyer",
+      "poster_handle": "arno.vandeweyer"
+    },
+    "time_stamp": "2023-03-01 07:35:08",
+    "text": "Also, not sure if this is the right channel, but I would love a HubSpot Monthly talk about Magic workflow setups like that haha, I know Jack Coldrick (?) used to give some simple custom code ones, but I want the brain-breakers :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2023-03-01 07:36:25",
+    "text": "I agree, I’d love that as well"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2023-03-01 07:36:48",
+    "text": "Ironically, our customers are much more creative than myself or any of my engineers at creating cool workflows"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-01 07:46:19",
+    "text": "Thanks Jason"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-01 07:48:40",
+    "text": "No I think the throughput for a CCA would be higher than a webhook (running on Lambdas) I think the best option for you might just be to setup a webhook and if your server is overloaded send a 429 to HubSpot and HubSpot will retry until your server can process the info"
+  },
+  {
+    "poster": {
+      "poster_name": "Javier Molina Sanz",
+      "poster_handle": "javier.molinasanz"
+    },
+    "time_stamp": "2023-03-01 07:50:58",
+    "text": "Actually, It's not a custom code action but a custom workflow action <https://developers.HubSpot.com/docs/api/automation/custom-workflow-actions>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-01 07:55:36",
+    "text": "you can also use the 429 retry with custom workflow actions"
+  },
+  {
+    "poster": {
+      "poster_name": "Javier Molina Sanz",
+      "poster_handle": "javier.molinasanz"
+    },
+    "time_stamp": "2023-03-01 07:58:35",
+    "text": "yes, but I would like to be gentle to other APIs as well :slightly_smiling_face: so ideally I'd like to implement some kind of queueing on my side instead of having them returning a 429"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-01 08:00:14",
+    "text": "for sure, that's totally fine you just need build out the queueing functionality yourself"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-01 08:00:28",
+    "edited": {
+      "time_stamp": "2023-03-01 08:00:31"
+    },
+    "text": "HubSpot doesn't really have that option"
+  },
+  {
+    "poster": {
+      "poster_name": "Javier Molina Sanz",
+      "poster_handle": "javier.molinasanz"
+    },
+    "time_stamp": "2023-03-01 08:01:11",
+    "text": "Yes, I know. But I need to know what to expect. 50 req/sec, 2000 req/sec?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-01 08:01:27",
+    "text": "why not run a real world test"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-01 08:01:37",
+    "text": "you'll get some solid numbers"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-01 08:02:15",
+    "text": "you already have a custom action and a backend (I assume) not super hard to track the amount of data flowing through at anyone time"
+  },
+  {
+    "poster": {
+      "poster_name": "Javier Molina Sanz",
+      "poster_handle": "javier.molinasanz"
+    },
+    "time_stamp": "2023-03-01 08:04:50",
+    "text": "yes, I could do that but I feel this is something that should be documented. I would not expect developers to be bulk testing APIs at first to understand throughput, as you may choose a different architecture depending on what the throughput is. Once I've got the server ready I will do end to end testing"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-03-01 09:09:06",
+    "text": "Few more requests:\n\n1. If you click on a workflow in a contacts activity, I wish it brought you directly to that contacts details log for that workflow. Right now it retains the last thing you searched.\n2. Similar to the above, when testing CCA's and/or looking at detail logs, can we search by Record ID instead of just the value of the primary property? For example: We have a list of athletes that the primary is first name so we can have hundreds of \"Thomas\"'s and there's no way to specifically test in a CCA that record using the HubSpot UI",
+    "reply_count": 11,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-03-03 03:46:51"
+      },
+      {
+        "time_stamp": "2023-03-03 07:26:15"
+      },
+      {
+        "time_stamp": "2023-03-03 07:28:24"
+      },
+      {
+        "time_stamp": "2023-03-03 07:35:24"
+      },
+      {
+        "time_stamp": "2023-03-03 08:09:07"
+      },
+      {
+        "time_stamp": "2023-03-03 09:24:39"
+      },
+      {
+        "time_stamp": "2023-03-03 10:30:06"
+      },
+      {
+        "time_stamp": "2023-03-07 10:01:42"
+      },
+      {
+        "time_stamp": "2023-03-20 09:16:08"
+      },
+      {
+        "time_stamp": "2023-03-20 12:28:43"
+      },
+      {
+        "time_stamp": "2023-03-22 09:27:34"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Javier Molina Sanz",
+      "poster_handle": "javier.molinasanz"
+    },
+    "time_stamp": "2023-03-01 11:02:17",
+    "text": "<@U0157R7AQ84> any idea?"
+  },
+  {
+    "poster": {
+      "poster_name": "Angus Gibbs",
+      "poster_handle": "agibbs"
+    },
+    "time_stamp": "2023-03-01 13:58:14",
+    "text": "&gt; I assume that the throughput for the custom action would be the same that for the webhook i.e up to 300 req/sec but variable, correct?\nThis is correct :+1:"
+  },
+  {
+    "poster": {
+      "poster_name": "Angus Gibbs",
+      "poster_handle": "agibbs"
+    },
+    "time_stamp": "2023-03-01 13:59:04",
+    "text": "We don't have this documented because we reserve the right at this point to change that number. Longer term we'll probably make this a more adaptive limit that sense how much traffic a webhook can handle and backs off when we request too quickly, but that's just an idea at this point and not a concrete plan"
+  }
+]

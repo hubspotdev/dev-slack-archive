@@ -1,0 +1,25 @@
+[
+  {
+    "text": "The latter, font-family is selected by default and populating the inline styles in the RTE in HubDB.  There is no blank choice in the drop down for like a default type selection.  Screenshot here is right after I clicked “new row” and “edit” for the RTE column.  You can see Georgia is selected automatically.",
+    "time_stamp": "2023-11-17 08:40:00"
+  },
+  {
+    "poster": {
+      "poster_name": "Logan Allen",
+      "poster_handle": "lallen"
+    },
+    "time_stamp": "2023-11-17 09:28:36",
+    "edited": {
+      "time_stamp": "2023-11-17 09:33:31"
+    },
+    "text": "If you proceed to add text to the editor, `Georgia` should _not_ actually be applied as _inline styles_. You can confirm whether or not the HTML elements have inline styles using the devtools inspector. If it does add a `style: 'font-family: Georgia` to individual elements in the editor, then we have bug :bug: on our hands.\n\nThe reason `Georgia` is “selected” is because the Editor frame has standard styles that get applied to `body#tinymce.mce-content-body` . This font-family, however, is only temporary and should not actually be serialized to the saved HTML content.\n```body {\n    background-color: #fff;\n    margin: 6px;\n    color: #33475b;\n    font-family: Georgia,Times New Roman,serif;\n    font-size: 14px;\n    line-height: 1.7;\n}```\nThe reason for this is because we do not currently have a way to apply theme styles to this isolated editor frame (unlike when editing a RTE inline in the page editor, where the RTE elements inherit theme/template styles automatically). This is also the same behavior for expanded RTE in the page editor, or sidebar edited RTEs for custom modules."
+  },
+  {
+    "poster": {
+      "poster_name": "Logan Allen",
+      "poster_handle": "lallen"
+    },
+    "time_stamp": "2023-11-17 09:30:55",
+    "text": "I agree that the pre-selected `Georgia` is a bit misleading. Does this information help? Are you still blocked?"
+  }
+]

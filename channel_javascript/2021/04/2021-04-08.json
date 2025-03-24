@@ -1,0 +1,89 @@
+[
+  {
+    "poster": {
+      "poster_name": "Mitja Lewin",
+      "poster_handle": "m.lewin"
+    },
+    "time_stamp": "2021-04-08 04:39:34",
+    "edited": {
+      "time_stamp": "2021-04-08 04:39:38"
+    },
+    "text": "Maybe the missing url encoding:\n<https://developers.HubSpot.com/docs/cms/hubl/filters#urlencode>"
+  },
+  {
+    "poster": {
+      "poster_name": "Mitja Lewin",
+      "poster_handle": "m.lewin"
+    },
+    "time_stamp": "2021-04-08 05:46:57",
+    "text": "Its not a issue, its an feature. if you look in the javascript of the search input. you find the   `var TYPEAHEAD_LIMIT = 3;`  and its part of the _requestUrl_ query string: `&amp;limit=' + encodeURIComponent(TYPEAHEAD_LIMIT)` ."
+  },
+  {
+    "poster": {
+      "poster_name": "Mitja Lewin",
+      "poster_handle": "m.lewin"
+    },
+    "time_stamp": "2021-04-08 06:05:19",
+    "edited": {
+      "time_stamp": "2021-04-08 06:06:12"
+    },
+    "text": "Oh no! ...Here you go without the click, just prefilled hidden form field:\n\n`window.addEventListener('message', event =&gt; {`\n  `if( event.data.type === 'hsFormCallback' &amp;&amp; event.data.eventName === 'onFormReady' ){`\n      `function timemachine(){`\n           `var Today = new Date(), TimeString;` \n               `Today.setDate( Today.getDate() );`\n           `let DAY = ('0' + Today.getDate()).slice(-2),`\n               `MONTH = ('0' + (Today.getMonth()+1)).slice(-2),`\n               `YEAR = Today.getFullYear();`\n               `TimeString = MONTH +'/'+ DAY +'/'+ YEAR;`\n        `return TimeString;`\n      `};`\n      `var input = document.querySelector('input[name=\"my_time_field\"]');`\n      `if (typeof(input) != 'undefined' &amp;&amp; input != null){` \n          `input.value = timemachine();`\n          `console.log('FORM DATE: ', input, timemachine() );`\n      `};`\n  `}`\n`});`\n\n1. Listen to the Form Ready Event not the Dom. Forms are asyncron loaded.\n2. Provide your Date correctly API formatted for the date fields.\n3. Make sure your input field exist in the form.\n<@U01S9BTHS03> Just FYI, you can do the checkbox validation with a workflow. You  also can get the date of the form submission from the HubSpot properties. So maybe there is no need for a javascript solution here."
+  },
+  {
+    "poster": {
+      "poster_name": "Mitja Lewin",
+      "poster_handle": "m.lewin"
+    },
+    "time_stamp": "2021-04-08 08:40:06",
+    "edited": {
+      "time_stamp": "2021-04-08 09:39:08"
+    },
+    "text": "What does the console say to it? I guess Zapier awaits an API token or basic authentication header.\nDid you have a working Zapier fetch statement? Are you sure the Hubl variable is the problem?\n\n`async function fetchExample() {`\n    `let url = '<https://rest.api/json>';`\n    `try {`\n        `let res = await fetch(url);`\n        `return await res.json();`\n    `} catch (error) {`\n        `console.warn(error);`\n    `}`\n`}`\n\nReference: <https://zapier.com/help/create/code-webhooks>\nDid you Notice: <https://knowledge.HubSpot.com/integrations/how-to-use-zapier-and-HubSpot>"
+  },
+  {
+    "poster": {
+      "poster_name": "Sarah Cameron",
+      "poster_handle": "scameron"
+    },
+    "time_stamp": "2021-04-08 08:44:48",
+    "edited": {
+      "time_stamp": "2021-04-08 08:45:14"
+    },
+    "text": "Thanks <@UK9BKNBD5>! I did explore using a workflow, however I hit a limitation because we use this same checkbox field on multiple forms, and I want to trigger an action when someone checks the checkbox, irrespective of whether they have checked it in the past. I could not find a way around that with workflows, but perhaps I'm missing something?"
+  },
+  {
+    "poster": {
+      "poster_name": "Mitja Lewin",
+      "poster_handle": "m.lewin"
+    },
+    "time_stamp": "2021-04-08 09:24:23",
+    "edited": {
+      "time_stamp": "2021-04-08 09:30:55"
+    },
+    "text": "<@U01S9BTHS03> But if its not relevant if the contact has request a _free_trail_ in the past, then what is the _free_trial_requested_date_ for?\n\n\nYou can just trigger the Workflow for _all forms_ on _all pages_. And _free_trial_ is _true_. Do your Action and as the last step set _free_trail_ to _false_ in the same workflow. Next time the contact filled the form and not checked the input, the workflow will not be triggered.\n\n\nAnd if you want to know if the contact already requested a _free_trail_ put him on a list. You can use that list as well in the workflow as a criteria. Maybe in a  _if/else_ way to tell the contact via auto. mail that he already have a _free_trail_. And if you want to know the _free_trial_requested_date_, you can set it to the form submission date via workflow or go with the hidden JS field."
+  },
+  {
+    "poster": {
+      "poster_name": "Sarah Cameron",
+      "poster_handle": "scameron"
+    },
+    "time_stamp": "2021-04-08 10:39:31",
+    "text": "<@UK9BKNBD5>, doh! I had not considered that I could set the field to false at the end of the workflow, that does indeed seem to satisfy my requirement :smiley: That'll teach me for trying to use code instead of a declarative solution!"
+  },
+  {
+    "poster": {
+      "poster_name": "Japo Mendoza",
+      "poster_handle": "japo.mendoza"
+    },
+    "time_stamp": "2021-04-08 19:35:11",
+    "text": "I find it very hard to get form submit conversion id on success of form submit.. is there a work around to capture the response?"
+  },
+  {
+    "poster": {
+      "poster_name": "Japo Mendoza",
+      "poster_handle": "japo.mendoza"
+    },
+    "time_stamp": "2021-04-08 21:11:50",
+    "text": "<https://community.HubSpot.com/t5/APIs-Integrations/global-form-events-data-does-not-contain-file-data/m-p/336720/thread-id/32788>"
+  }
+]

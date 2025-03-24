@@ -1,0 +1,208 @@
+[
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-12-04 03:37:23",
+    "text": "Hey everyone,\nHow do people tend to build product libraries\nI have a site that i’m looking at that has a nested library of products\nIt’s multilingual\nEach product has similar data, but has things like specs tables, (these tables vary from product to product so I can’t specify labels for example)\n\nIs the best option to just create them as pages creating modules for the different sections that might be included?\nOr is there a way to use hubdb or custom objects to do it (Remembering it needs to be multi lingual)\n\nThe site has 300 products so not sure a good way for hubpsot to handle this or make the process of populating the pages easier",
+    "reply_count": 11,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-12-04 03:42:21"
+      },
+      {
+        "time_stamp": "2024-12-04 03:52:35"
+      },
+      {
+        "time_stamp": "2024-12-04 03:52:59"
+      },
+      {
+        "time_stamp": "2024-12-04 03:55:06"
+      },
+      {
+        "time_stamp": "2024-12-04 03:57:12"
+      },
+      {
+        "time_stamp": "2024-12-04 03:57:44"
+      },
+      {
+        "time_stamp": "2024-12-04 04:02:33"
+      },
+      {
+        "time_stamp": "2024-12-04 04:04:52"
+      },
+      {
+        "time_stamp": "2024-12-04 04:06:44"
+      },
+      {
+        "time_stamp": "2024-12-04 04:08:14"
+      },
+      {
+        "time_stamp": "2024-12-04 04:16:24"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2024-12-04 03:42:21",
+    "text": "If you're ok with the fact that product pages won't have a linked translation (so the language switcher will link to the products listing page) I'll go with the HubDB route"
+  },
+  {
+    "text": "Hello all\nIn our website, there is a HubSpot form for sign-up.\nI would like to take a header/payload from that page (I will be getting it from another website that will send POST request with a redirect to this page), and populate the value in one of the form's fields.\nIs it possible?\nThank you",
+    "time_stamp": "2024-12-04 03:45:08"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-12-04 03:52:35",
+    "text": "How would you handle spec tables in hubdb?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-12-04 03:52:59",
+    "text": "Just add tables to the richtext field?"
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2024-12-04 03:55:06",
+    "text": "Yes, i also usually use a marco to remove every shitty formatting that the editor adds when you literally just click on a cell (it resizes the cells randomly)"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-12-04 03:57:12",
+    "text": "Yeah I’ve done similar in the past, I’ve actually worked out a way to convert rich text tables to json :face_with_peeking_eye: before putting it back into a table"
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2024-12-04 03:57:44",
+    "text": "For reference, that's the macro i'm using:\n```{% macro render_responsive_table(table) -%}\n  {% set tb = table|regex_replace('&lt;\\\\s*(\\\\w+).*?&gt;', '&lt;$1&gt;') %}\n  {% set responsive_table = { val: tb } %}\n  {% set current_index = { val: 0 } %}\n  {% set heads = [] %}\n  {% for slice in tb|split(\"&lt;thead&gt;\") %}\n    {% if loop.index == 2 %}\n      {% for th in slice|split(\"&lt;/thead&gt;\")|first|split(\"&lt;tr&gt;\")|first|split(\"&lt;th&gt;\") %}\n        {% do heads.append(th|split(\"&lt;/th&gt;\")|first) %}\n      {% endfor %}\n    {% endif %}\n  {% endfor %}\n  {% for slice in tb|split(\"&lt;td&gt;\") %}\n    {% if loop.index != 1 %}\n      {% set value = slice|split(\"&lt;/td&gt;\")|first %}\n      {% do responsive_table.update({ val: responsive_table.val|replace(\"&lt;td&gt;\" + value + \"&lt;/td&gt;\", \"&lt;td data-title='\" + heads[current_index.val] + \"'&gt;\" + value + \"&lt;/td&gt;\") }) %} \n      {% if current_index.val + 1 == heads|length %}\n        {% do current_index.update({ val: 0 }) %}\n      {% else %}\n        {% do current_index.update({ val: current_index.val + 1 }) %}\n      {% endif %}\n    {% endif %}\n  {% endfor %}\n  {{ responsive_table.val }}\n{%- endmacro %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-12-04 04:02:33",
+    "text": "Nice!\nthis is how I convert a table to an object\n```{# Remove Default HubSpot styles and unecessary tags #}\n\t\t{% set cleanTable = module.table\n\t\t\t|regex_replace('&lt;div data-hs-responsive-table=\"true\" style=\"[^\"]*\"&gt;','')|replace('&lt;/div&gt;','')\n\t\t\t|regex_replace('table style=\"[^\"]*\"', \"table\")\n\t\t\t|regex_replace('tr style=\"[^\"]*\"', \"tr\")\n\t\t\t|regex_replace('td style=\"[^\"]*\"', \"td\")\n\t\t\t|replace('&lt;p&gt;&amp;nbsp;&lt;/p&gt;','')\n\t\t\t|replace('\\n','')\n\t\t\t|replace('&lt;tbody&gt;','')|replace('&lt;/tbody&gt;','')%}\n\t\t{# replace table elements with none-escaping strings then escape all code so we can write the data to a json string #}\n\t\t{% set escapeJsonTable = cleanTable\n\t\t\t|replace('&lt;table&gt;','ELEMENTTABLE')|replace('&lt;/table&gt;','ELEMENTCTABLE')\n\t\t\t|replace('&lt;tr&gt;','ELEMENTROW')|replace('&lt;/tr&gt;','ELEMENTCROW')\n\t\t\t|replace('&lt;td&gt;','ELEMENTTD')|replace('&lt;/td&gt;','ELEMENTCTD')\n\t\t\t|escapejson %}\n\t\t{# Create the JSON string and convert it to a HubSpot object #}\n\t\t{% set tableObject = escapeJsonTable\n\t\t\t|replace('ELEMENTTABLE','[')|replace('ELEMENTCTABLE',']')\n\t\t\t|replace('ELEMENTCROWELEMENTROW','],[')|replace('ELEMENTROW','[')|replace('ELEMENTCROW',']')\n\t\t\t|replace('ELEMENTCTDELEMENTTD','\",\"')|replace('ELEMENTTD','\"')|replace('ELEMENTCTD','\"')\n\t\t\t|fromjson\n\t\t\t %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-12-04 04:04:52",
+    "text": "The hard thing with this project is there’s 300 products with quite a lot of varying data\nand then 3 languages so that’s suddenly 900"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-12-04 04:06:44",
+    "text": "Though the spec tables aren’t translated, so it’d be nice to link them together I guess I could just have english as a master table, then for each row thats added to language table you select the english table from a foreign id. Still seems a lot of work"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-12-04 04:08:14",
+    "text": "I’ve never got second arguments to work in regex_replace\n```regex_replace('&lt;\\\\s*(\\\\w+).*?&gt;', '&lt;$1&gt;')```\nThat’s useful to know!"
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2024-12-04 04:16:24",
+    "text": "What I usually do is to first populate everything in the main language and then clone tables -&gt; export to csv and send to translation, it can get tricky when you have foreign columns because HubSpot is not smart enough to keep ids when you clone a table, a couple of years ago you could clone tables and simply replace the foreign column table with the new one, as long as row names in the new tables where the same (so basically you clone the table and don't change anything) HubSpot where smart enough to associate the new ids, sadly right now you either reconnect associations manually or build an internal tool that helps you manage these translations"
+  },
+  {
+    "poster": {
+      "poster_name": "Andoni Hernandez",
+      "poster_handle": "andoni.hernandez"
+    },
+    "time_stamp": "2024-12-04 08:18:55",
+    "text": "Hey <@U03KAK3R4GY>!\n\nWere you able to find a solutions for your issue?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nich Mueller",
+      "poster_handle": "nich"
+    },
+    "time_stamp": "2024-12-04 08:45:04",
+    "text": "What I learned from this experience– don't try to make a third party CMP play nicely with HubSpot. You can make it work, but it get's complicated. Just utilize HubSpot's in-house CMP functionalities, and follow HubSpot's documentation for <https://developers.HubSpot.com/beta-docs/reference/api/analytics-and-events/cookie-banner/cookie-banner-api|Cookie Consent Banner API>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nich Mueller",
+      "poster_handle": "nich"
+    },
+    "time_stamp": "2024-12-04 08:46:41",
+    "text": "Of course I go back there to take another look, and now HubSpot has <https://developers.HubSpot.com/beta-docs/reference/api/analytics-and-events/cookie-banner/cookie-banner-api#disable-HubSpot-cookie-banner|this>, which is new. :smirk: (wasn't there when I needed it...)"
+  },
+  {
+    "poster": {
+      "poster_name": "SJ Morris (she/her)",
+      "poster_handle": "sjmorris"
+    },
+    "time_stamp": "2024-12-04 09:03:03",
+    "text": "Hey y'all, just a reminder to *please refrain from posting the same message in multiple channels at once.* If you want to post once and try other channels, you can <https://slack.com/help/articles/203274767-Forward-messages-in-Slack|share your original post in a new channel> and ask folks to reply to the original thread. It helps keeps everything much more organized, and doesn't <https://developers.HubSpot.com/beta-docs/getting-started/slack/code-of-conduct#channel-and-user-spamming|go against our code of conduct> (channel spamming is not permitted here). Thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Larissa Martins",
+      "poster_handle": "larissa.martins"
+    },
+    "time_stamp": "2024-12-04 10:27:50",
+    "text": "Hello everyone,\n\nHow can I google gtag, snippet code, individually on 2 different pages on HubSpot Starter? They dont have the advanced option on editor.\n\nThanks!",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-12-09 06:51:31"
+      }
+    ]
+  },
+  {
+    "subtype": "bot_message",
+    "text": ":HubSpotheart:*Help your fellow HubSpot Developers!*:HubSpotheart:\n\nThis Slack lives and breathes by its community. If you're posting a question, take a moment and click around a few channels to see if there are any questions you can help answer. Instant karma!",
+    "username": "Help the Community",
+    "time_stamp": "2024-12-04 10:55:02"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Olstad",
+      "poster_handle": "chris231"
+    },
+    "time_stamp": "2024-12-04 13:47:53",
+    "text": "Hi channel! Is anyone running into problems with Gravity Forms non-HubSpot form submissions?\n\nI have a client who is using Gravity Forms for a bulk of their web submissions. Some of the forms are using the Gravity Forms/HubSpot plugin; these work fine. However, a majority of their smaller forms are simply passing data to HubSpot as a standard non-HubSpot form. For the past week or so, it seems that the submissions from the non-HubSpot forms have stopped. I’ve tested this with a demo form and HubSpot did not capture the submission.\n\nAnyone else having a similar issue?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Bell - Level 4",
+      "poster_handle": "jeffrey.bell"
+    },
+    "time_stamp": "2024-12-04 18:37:21",
+    "text": "Hey everyone. I cross-posted this in <#C26E7JT8V|ideas> so feel free to remove if this is bad form. I'm looking to get some up votes on an idea I just posted on the ideas forum:\n\nI've come across a lot of use cases where I just need a simple lookup function or switch/case statement. It could be done in workflows but you can't beat the immediacy of calculated properties! This would be especially beneficial for custom/complex integrations. For example, I have to map our \"assigned service team\" values over to a class code in QBO. It's a fairly simple lookup. So, rather than ugly nested IF statements, I'm proposing a Switch/Case function - or better yet - a HubDBLookup function.\n\n<https://community.HubSpot.com/t5/HubSpot-Ideas/Calculated-Properties-Create-a-Switch-Case-Function/idi-p/1079254#M200018>\n\nI'd love your thoughts (and, if you're so inclined, some up votes)"
+  }
+]

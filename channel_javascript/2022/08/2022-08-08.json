@@ -1,0 +1,42 @@
+[
+  {
+    "poster": {
+      "poster_name": "Joe",
+      "poster_handle": "yoseph.alemu"
+    },
+    "time_stamp": "2022-08-08 05:10:07",
+    "edited": {
+      "time_stamp": "2022-08-08 05:11:40"
+    },
+    "text": "Hi all, I have written a js code to fetch meetings and use the contact IDs to get the associated contacts and return an array of combined meeting and contacts objects, let me know if I could make it simpler or shorter, I would appreciate any suggestions,\n```import { Client } from \"@HubSpot/api-client\";\n\n\nconst HubSpotClient = new Client({\n  accessToken: \"*********************************\",\n});\n\nlet combined_meetings_contacts = [];\n\nconst response = await HubSpotClient.apiRequest({\n  method: \"get\",\n  path: \"/crm/v3/objects/meetings?limit=100&amp;properties=hs_meeting_title%2Chs_activity_type%2Chs_attendee_owner_ids&amp;associations=contact&amp;archived=false\",\n});\n\nconst { results } = await response.json();\nlet getContacts = async () =&gt; {\n  return await Promise.all(\n    results.map(async (i) =&gt; {\n      return await Promise.all(\n        i.associations.contacts.results.map(async (j) =&gt; {\n          return (async () =&gt; {\n            const responses = await HubSpotClient.apiRequest({\n              method: \"get\",\n              path: `/crm/v3/objects/contacts/${j.id}?archived=false`,\n            });\n            const res = await responses.json();\n            if (res !== undefined) {\n              const { associations, ...meeting } = await i;\n\n              combined_meetings_contacts.push({ meeting, contact: [res] });\n            }\n            return await res;\n          })().catch((err) =&gt; {\n            console.error(err);\n          });\n        })\n      );\n    })\n  );\n};\n\nawait getContacts();\n\nconst arrayHashmap = combined_meetings_contacts.reduce((obj, item) =&gt; {\n  obj[item.meeting.id]\n    ? obj[item.meeting.id].contact.push(...item.contact)\n    : (obj[item.meeting.id] = { ...item });\n  return obj;\n}, {});\n\nconst meetings= Object.values(arrayHashmap);\n\nconsole.log(JSON.stringify(meetings));```\nThe response would be something like this\n\n```[ {\n    \"meeting\": {\n      \"id\": \"1305440\",\n      \"properties\": {\n        \"hs_activity_type\": null,\n        \"hs_attendee_owner_ids\": null,\n        \"hs_createdate\": \"2022-06-30T00:08:15.099Z\",\n        \"hs_lastmodifieddate\": \"2022-06-30T00:10:05.164Z\",\n        \"hs_meeting_title\": \"test6\",\n        \"hs_object_id\": \"13054408441\"\n      },\n      \"createdAt\": \"2022-06-30T00:08:15.099Z\",\n      \"updatedAt\": \"2022-06-30T00:10:05.164Z\",\n      \"archived\": false\n    },\n    \"contact\": [\n      {\n        \"id\": \"1\",\n        \"properties\": {\n          \"createdate\": \"2022-05-06T13:01:49.622Z\",\n          \"email\": \"<mailto:emailmaria@HubSpot.com|emailmaria@HubSpot.com>\",\n          \"firstname\": \"Maria\",\n          \"hs_object_id\": \"1\",\n          \"lastmodifieddate\": \"2022-07-27T09:49:48.320Z\",\n          \"lastname\": \"Johnson (Sample Contact)\"\n        },\n        \"createdAt\": \"2022-05-06T13:01:49.622Z\",\n        \"updatedAt\": \"2022-07-27T09:49:48.320Z\",\n        \"archived\": false\n      },\n      {\n        \"id\": \"51\",\n        \"properties\": {\n          \"createdate\": \"2022-05-06T13:01:49.867Z\",\n          \"email\": \"<mailto:bh@HubSpot.com|bh@HubSpot.com>\",\n          \"firstname\": \"Brian\",\n          \"hs_object_id\": \"51\",\n          \"lastmodifieddate\": \"2022-07-26T18:03:06.504Z\",\n          \"lastname\": \"Halligan (Sample Contact)\"\n        },\n        \"createdAt\": \"2022-05-06T13:01:49.867Z\",\n        \"updatedAt\": \"2022-07-26T18:03:06.504Z\",\n        \"archived\": false\n      }\n    ]\n  },\n]```",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-08-08 12:14:38"
+      },
+      {
+        "time_stamp": "2022-08-08 19:48:07"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-08 12:14:38",
+    "text": "you could use axios to do your calls and that would get rid of the need to do those promises….\n\nYou could change the contacts\n```/crm/v3/objects/contacts/${j.id}?archived=false```\nto `HubSpotClient.crm.contacts.basicApi.getById()`"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe",
+      "poster_handle": "yoseph.alemu"
+    },
+    "time_stamp": "2022-08-08 19:48:07",
+    "edited": {
+      "time_stamp": "2022-08-08 19:49:08"
+    },
+    "text": "Good points, Thanks <@U25PYL3Q8>"
+  }
+]

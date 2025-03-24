@@ -1,0 +1,36 @@
+[
+  {
+    "poster": {
+      "poster_name": "Leo Brown",
+      "poster_handle": "leo.brown"
+    },
+    "time_stamp": "2023-11-22 01:23:58",
+    "text": "<#C2YHAHB6K|api>\nHello, Guys\nI have one problem with creating a new deal with contacts.\nThis is my codes and I am not sure which part is incorrect.\nI can  see the new deal but there is no contact information.\nI need helps.\n```public function createNewDeal($dealDetails)\n    {\n        try {\n            $searchApi = $this-&gt;hubSpot-&gt;crm()-&gt;contacts()-&gt;searchApi();\n\n            // Prepare the search query for the contact\n            $filter = new \\HubSpot\\Client\\Crm\\Contacts\\Model\\Filter();\n            $filter-&gt;setOperator('EQ')\n                -&gt;setPropertyName('email')\n                -&gt;setValue('<mailto:fotomacchinepreo@gmail.com|fotomacchinepreo@gmail.com>');\n            $filterGroup = new \\HubSpot\\Client\\Crm\\Contacts\\Model\\FilterGroup();\n            $filterGroup-&gt;setFilters([$filter]);\n            $searchRequest = new \\HubSpot\\Client\\Crm\\Contacts\\Model\\PublicObjectSearchRequest();\n            $searchRequest-&gt;setFilterGroups([$filterGroup]);\n\n            // Execute the search\n            $searchResult = $searchApi-&gt;doSearch($searchRequest);\n\n            $contactId = null;\n\n            if (count($searchResult-&gt;getResults()) &gt; 0) {\n                $contactId = $searchResult-&gt;getResults()[0]-&gt;getId();\n            } else {\n                // Contact not found, create a new one\n                $contactsApi = $this-&gt;hubSpot-&gt;crm()-&gt;contacts()-&gt;basicApi();\n                $contact = new \\HubSpot\\Client\\Crm\\Contacts\\Model\\SimplePublicObjectInput();\n                $contact-&gt;setProperties(['email' =&gt; '<mailto:lapostadikaty@yahoo.it|lapostadikaty@yahoo.it>']);\n                $contactResponse = $contactsApi-&gt;create($contact);\n                $contactId = $contactResponse-&gt;getId();\n            }\n\n            $dealsApi = $this-&gt;hubSpot-&gt;crm()-&gt;deals()-&gt;basicApi();\n\n            $deal = new \\HubSpot\\Client\\Crm\\Deals\\Model\\SimplePublicObjectInput();\n            $deal-&gt;setProperties([\n                'dealname' =&gt; $dealDetails['name'],\n                'amount' =&gt; $dealDetails['amount'],\n                'pipeline' =&gt; $dealDetails['pipeline'],\n                'dealstage' =&gt; $dealDetails['stage'],\n                'shipping_status' =&gt; $dealDetails['shippingStatus'],\n                'tracking_number' =&gt; $dealDetails['trackingNumber']\n            ]);\n            $dealResponse = $dealsApi-&gt;create($deal);\n            $dealId = $dealResponse-&gt;getId();\n\n            // Associate the contact with the deal\n            $associationsApi = $this-&gt;hubSpot-&gt;crm()-&gt;associations();\n            $association = new \\HubSpot\\Client\\Crm\\Associations\\Model\\BatchInputPublicObjectId();\n            $association-&gt;setInputs([\n                new \\HubSpot\\Client\\Crm\\Associations\\Model\\PublicObjectId([\n                    \"fromObjectId\" =&gt; $dealId,\n                    \"toObjectId\" =&gt; $contactId,\n                    \"associationType\" =&gt; \"deal_to_contact\" // Ensure this is the correct association type\n                ])\n            ]);\n            $response = $associationsApi-&gt;create($association);\n            dd($response);\n            // return $searchResult;\n        } catch (\\Exception $e) {\n            dd($e-&gt;getMessage());\n            Log::error(\"EXCEPTION\", [\n                'code' =&gt; $e-&gt;getCode(),\n                'message' =&gt; $e-&gt;getMessage(),\n            ]);\n            return null;\n        }\n    }```"
+  },
+  {
+    "poster": {
+      "poster_name": "Mike / Resonate",
+      "poster_handle": "mkruchkov"
+    },
+    "time_stamp": "2023-11-22 07:22:49",
+    "text": "Hi everyone, we have a public app that is used by 100+ portals but recently we see that 2-3 portals are getting 429 error with an error message “Exceeded Calls Per Minute allowed in your subscription. Reduce the average number of calls per minute or upgrade to a higher Subscription Plan” even though there were barely 10 requests per minute. I’m testing it on portals where I got access and it works well, we don’t capture this errors. Are there different limits for different portals?  The API that got this error last time was <https://api.hubapi.com/crm/v3/properties/[object]>. And the most weird thing is that we get this error only on a couple of connected portals.",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-11-23 04:12:40"
+      },
+      {
+        "time_stamp": "2023-11-27 18:55:13"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2023-11-22 13:33:15",
+    "text": "<@U7SL518D6> dunno if you were still looking inot this but I think I figured out the time being messed up; seems like befrore the call gets transcribed *or* the call recording hasn't associated to the call yet, the calls front end reports calls in minutes instead of milliseconds. Once its transcribed though its fixed but there could be a day between the recording hitting the instance or not\n\nThis is reproducible"
+  }
+]

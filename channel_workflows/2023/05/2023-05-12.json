@@ -1,0 +1,40 @@
+[
+  {
+    "text": "*Hello Everyone,*\n\nI am developing a Custom code that is designed to retrieve line items associated with a deal and based on certain conditions of line-item, update a specific property of the deal with an incremental value.\n\n```const HubSpot = require('@HubSpot/api-client');\n\nexports.main = async (event, callback) =&gt; {\n  const HubSpotClient = new HubSpot.Client({\n    accessToken: process.env.SECRET_NAME\n  });\n\n  const dealId = event.object.objectId; console.log(dealId);\n\n  try {\n    const lineItemsResponse = await HubSpotClient.crm.deals.associationsApi.getAll(dealId, 'line_item'); \n    const lineItems = lineItemsResponse.results; console.log(lineItems);\n\n    let increaseBy = 0;\n\n    for (const lineItem of lineItems) {\n      const productId = lineItem.productId; console.log(productId);\n\n      if (productId === \"2032483348\") {\n        increaseBy = 27;\n      } else if (productId === \"2032483347\") {\n        increaseBy = 20;\n      } else if (productId === \"2032483346\") {\n        increaseBy = 15;\n      } else if (productId === \"2032203285\") {\n        increaseBy = 10;\n      } else if (productId === \"2032483344\") {\n        increaseBy = 5;\n      }\n\n      const dealResponse = await HubSpotClient.crm.deals.basicApi.getById(dealId);\n      const deal = dealResponse.body;\n\n      if (deal &amp;&amp; deal.properties) {\n        const IncreaseValue = deal.properties.increase_value || 0;\n        const dealUpdateRequest = {\n          properties: {\n            increase_value: IncreaseValue + increaseBy\n          }\n        };\n\n        await HubSpotClient.crm.deals.basicApi.update(dealId, dealUpdateRequest);\n      }\n    }\n\n    callback({});\n  } catch (err) {\n    console.error(err);\n    throw err;\n  }\n};```\n<@U01QVR44MEY> I am able to get a list of associated Line items, but not the details of the line item (name, ProductID etc), Please let me know if you have any solutions.",
+    "time_stamp": "2023-05-12 05:29:55",
+    "edited": {
+      "time_stamp": "2023-05-12 05:40:42"
+    },
+    "reply_count": 9,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-05-15 08:10:32"
+      },
+      {
+        "time_stamp": "2023-05-15 10:22:10"
+      },
+      {
+        "time_stamp": "2023-05-15 10:22:21"
+      },
+      {
+        "time_stamp": "2023-05-15 10:26:27"
+      },
+      {
+        "time_stamp": "2023-05-15 10:30:39"
+      },
+      {
+        "time_stamp": "2023-05-16 01:23:34"
+      },
+      {
+        "time_stamp": "2023-05-16 08:21:42"
+      },
+      {
+        "time_stamp": "2023-05-17 04:51:25"
+      },
+      {
+        "time_stamp": "2023-05-17 07:37:05"
+      }
+    ]
+  }
+]

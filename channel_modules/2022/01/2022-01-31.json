@@ -1,0 +1,68 @@
+[
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-01-31 07:22:26",
+    "text": "How are you referencing it in the code?"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Lashbrook",
+      "poster_handle": "bj241"
+    },
+    "time_stamp": "2022-01-31 13:42:52",
+    "edited": {
+      "time_stamp": "2022-01-31 14:48:36"
+    },
+    "text": "```{% for item in module %}\n  {{ item.title }}\n  {{ item.content }}\n  {{ item.text_field }}\n{% endfor %}```\nEverything is consistent, though not seeing the data come through, it only happens for new fields that I add which is why I thought I could be missing a step. The module is unlocked, nothing obvious to me as to why it’s not working…"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-01-31 15:00:43",
+    "edited": {
+      "time_stamp": "2022-01-31 15:01:10"
+    },
+    "text": "Hmmm well out of the gates — this is a really odd way to reference module fields.\n\nIt actually shouldnt work.\n\nThe correct way to reference these fields, as far as I know, is by not looping through them but by referencing them via dot notation on the module object.\n\n`{{module.title}}` `{{ module.content}}`  `{{ module.text_field}}` \n\nWhat you are doing is looping through module and for each item in that dict/obj youre trying to capture the value of its title, content, and text_field\n\nWhich would be like saying `{{module.title.title}}` `{{module.title.content}}` `{{module.title.text_field}}`  which doesnt work"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-01-31 15:02:07",
+    "text": "The only time you would loop through fields is if they are part of a repeater group. Then you loop through the repeater parent to access each instance of its children"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Lashbrook",
+      "poster_handle": "bj241"
+    },
+    "time_stamp": "2022-01-31 15:15:10",
+    "text": "Yep sorry, you’re 100% right, the above was pseudo code… I am looping through grouped fields, here’s the full code as it appears in the template\n```&lt;div class=\"tabber-content\"&gt;\n  {% for item in module.add_tab %}\n  &lt;div class=\"tab-pane\"&gt;\n    &lt;div class=\"faq-acc-grp\"&gt;\n      {% for item2 in item.add_faq %}\n      &lt;div class=\"faq-acc-wrap\"&gt;\n        &lt;div class=\"faq-toggle\"&gt;\n          &lt;div class=\"toggle-title\"&gt;&lt;a&gt;{{ item2.title }}&lt;/a&gt;&lt;/div&gt;\n        &lt;/div&gt;\n        &lt;div class=\"faq-content\"&gt;\n          &lt;div class=\"faq-content-body\"&gt;{{ item2.content }}&lt;/div&gt;\n          &lt;span&gt;\n            {{ item2.text_field }}\n          &lt;/span&gt;\n        &lt;/div&gt;\n      &lt;/div&gt;\n      {% endfor %}\n    &lt;/div&gt;\n  &lt;/div&gt;\n  {% endfor %}\n&lt;/div&gt;```\nWhat I can see rendered on the front end is `item2.title` and `item2.content` render as expected (these fields were added as part of the original module, though my added field `item2.text_field` renders empty"
+  },
+  {
+    "text": "and here is the full field list",
+    "time_stamp": "2022-01-31 15:21:45"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-01-31 17:20:34",
+    "text": "Got it. That is interesting. At a quick glance it looks fine. Are you trying to render default text? Sometimes I notice if I muck with a module’s fields while it’s on a page the defaults won’t always kick in but if I just edit the field manually in the Page editor then it works.\n\nNot sure if that is what is going on here though"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Lashbrook",
+      "poster_handle": "bj241"
+    },
+    "time_stamp": "2022-01-31 17:31:45",
+    "text": "There was no default text in the `text_field` field though it exists in `title` and `content`, I’ve since added default to `text_field` though hasn’t made a difference. I agree with you, not sure that’s the issue though at this point I’m willing to try anything…!!"
+  }
+]

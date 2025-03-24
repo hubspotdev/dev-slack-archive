@@ -1,0 +1,209 @@
+[
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 07:43:22",
+    "text": "this is the basic approach on these items. Inject both sources, normalize the fields so they play nice. Some put them into a JS object then display/filter/etc"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 07:51:07",
+    "text": "using update in the sense that you are overwrites that object. You would need to use an array of objects or do something different.\n\nI’m guessing you would need to change the way your object is setup.\n\n```{ \n  \"default_padding\": 40,\n  \"override_padding\": 100\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 07:51:15",
+    "text": "this would likely be a way to work this"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 07:52:01",
+    "text": "then `{{ default_block_presets.override_padding ? default_block_presets.override_padding : default_block_presets.default_padding }}` would be the way to display this"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 07:52:50",
+    "text": "which could be achieved the same way by not even bothering with the update\n`{{ custom_block_presents.padding ? custom_block_presents.padding : default_block_presets.padding }}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 07:56:05",
+    "text": "which could be extended further to a macro\n\n```{%- macro get_custom_if_exists(property) %}\n  {{ custom_block_presets[property] ? custom_block_presets[property] : default_block_presets[property] }}\n{%- endmacro %}```\nAnd then to use this\n`{{ get_custom_if_exists('padding') }}`\n\nI’d change the name of the macro, personally"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 07:58:22",
+    "text": "OF course, your code here is reduced down, so there is a chance that I don’t understand the actual requirements or use case of what you are doing.\n\nI’m also not sure why if you set something to custom, why you need to reset to default if this is on a module level.\n\nEither way, a few options for you. If none of these fit what you are asking for, please let me know."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 08:00:13",
+    "text": "to explain what the reason it is being overwritten — you are sending the object with the key “padding” in here, so you can’t have two keys that are the same, they just replace the value. You are updating, not adding in this case"
+  },
+  {
+    "poster": {
+      "poster_name": "James Kupczak",
+      "poster_handle": "jimmykup"
+    },
+    "time_stamp": "2024-08-14 10:18:28",
+    "text": "So here’s my use case.\n\n• This is for a custom email template where the module has repeatable blocks.\n• Each block that the user adds runs its own piece of HTML and CSS that gets spit out into the email.\n• For example, they can set their block to be an “Image” block from a dropdown menu. If they do, they get new fields to set an image and change other settings. Or, they could choose a Rich Text field, or something much more custom like a “Pricing Table” that I’ve designed.\n• In the custom template I loop through all of the blocks that they’ve added. `if block_style == 'pricing_table'` it will inject the code that I’ve written for that choice. \n• Every possible block they can choose from also pulls a number of standard fields in that they all share. One example is a “Block Padding” group. They can edit the fields in this group for left, right, top, and bottom padding. Whatever they pick will apply padding to their chosen block (image, rich text, pricing table, etc.)\n• These grouped “Block Padding” fields only exist ONCE in the custom template. I don’t have it created 10 separate times for 10 separate blocks. What I have is 10 separate block options and they all look to this one “Block Padding” group of fields.\n• Since there’s only one “Block Padding” group, if I set my default values directly on the fields then that ends up applying to all of the different block styles they choose from. So to get around that, I use a dict that is specific to each block type I can then set presets for each. If they selected `pricing_table`, the dict will have a key for that that includes the padding values that are specific to the `pricing_table` . Like this:\n• `set custom_presets = { \"pricing_table\": { \"padding\": 20 }, \"image\": { \"padding\": 30} }`\n• However, I have somewhere around 40+ of these presets. And I’m trying to avoid including _all_ of them in each custom dict key. So I decided to create a separate dict with all of the global defaults that should apply to every block. And then I wanted to merge the two to create a new dict.\n• "
+  },
+  {
+    "text": "Example of the various field groups that include general settings that apply to each individual block:",
+    "time_stamp": "2024-08-14 10:20:04"
+  },
+  {
+    "text": "Example of the dropdown where they pick what they want the block to be (which piece of HTML and CSS that gets loaded):",
+    "time_stamp": "2024-08-14 10:21:07"
+  },
+  {
+    "text": "A shot of the repeatable blocks that they’ve selected:",
+    "time_stamp": "2024-08-14 10:21:31"
+  },
+  {
+    "poster": {
+      "poster_name": "James Kupczak",
+      "poster_handle": "jimmykup"
+    },
+    "time_stamp": "2024-08-14 10:23:13",
+    "text": "All of this is to reduce the amount of code I’m writing so that things are maintainable. So the macro suggestion might work for me. I’ll give that a shot."
+  },
+  {
+    "poster": {
+      "poster_name": "James Kupczak",
+      "poster_handle": "jimmykup"
+    },
+    "time_stamp": "2024-08-14 10:40:41",
+    "text": "What confuses me is that if I try to do this same thing in JavaScript it works as I expect it to. My original `default` dict/object remains unchanged. For example:\n\n<https://jsbin.com/seqemidale/1/edit?js,output>"
+  },
+  {
+    "poster": {
+      "poster_name": "James Kupczak",
+      "poster_handle": "jimmykup"
+    },
+    "time_stamp": "2024-08-14 10:41:28",
+    "text": "Obviously, HubL isn’t JavaScript. And so maybe there just isn’t a function available to do what I can do in JavaScript."
+  },
+  {
+    "poster": {
+      "poster_name": "James Kupczak",
+      "poster_handle": "jimmykup"
+    },
+    "time_stamp": "2024-08-14 10:46:55",
+    "text": "Somebody on the community forums said this:\n\n&gt; I think the issue is that you’re not creating a new dictionary; you’re creating a reference to the same dictionary in the object memory. Have you tried creating a copy of `default_dict` before updating it with `custom_dict`? To make sure that `combined_dict` is a separate dictionary, and changes won’t affect `default_dict`."
+  },
+  {
+    "poster": {
+      "poster_name": "James Kupczak",
+      "poster_handle": "jimmykup"
+    },
+    "time_stamp": "2024-08-14 10:47:12",
+    "text": "I don’t know how to make a copy of the dict. I thought that that was what I was doing already. :thinking:"
+  },
+  {
+    "poster": {
+      "poster_name": "James Kupczak",
+      "poster_handle": "jimmykup"
+    },
+    "time_stamp": "2024-08-14 10:59:43",
+    "text": "_(I’m seeing now that my confusion is that in JS all of the methods of combining objects that I’ve used, they inherently create a new object. If I follow the HubL code more closely and recreate it in JavaScript I run into the same issue there too.)_"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 11:59:10",
+    "text": "Okay interesting stuff here. Macros will help for sure. \n\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 11:59:16",
+    "text": "I see here you have this"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 11:59:18",
+    "edited": {
+      "time_stamp": "2024-08-14 12:00:00"
+    },
+    "text": "\n• `set custom_presets = { \"pricing_table\": { \"padding\": 20 }, \"image\": { \"padding\": 30} }`"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 12:00:37",
+    "text": "This is a better example vs the original and I see how this is set up"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 12:00:58",
+    "text": "So how would you set the custom definitions up here in your do update "
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 12:01:06",
+    "text": "Apologies I’m on phone rn"
+  },
+  {
+    "poster": {
+      "poster_name": "James Kupczak",
+      "poster_handle": "jimmykup"
+    },
+    "time_stamp": "2024-08-14 12:45:03",
+    "text": "`{% do combined_presets.update(custom_block_presets[item2.block_style]) %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "James Kupczak",
+      "poster_handle": "jimmykup"
+    },
+    "time_stamp": "2024-08-14 12:45:30",
+    "text": "`item2.block_style` would return `pricing_table` from the users selection, which is one of the keys."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 12:46:57",
+    "text": "Yeah without me working through this I think a macro that checks to see if this exists in the custom defined and returning default of it doesn’t exist is the way to go. \n\nThis all happens when mail is built, so the performance optimization of this is not necessary. \n\n"
+  }
+]

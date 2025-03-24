@@ -1,0 +1,131 @@
+[
+  {
+    "text": "Hello Friends,\n\nHope someone can give some idea where this issue is causing :see_no_evil:.  I created a new theme with custom modules and api's integrations as well. Right now, every time when I installed the theme at domain account , I started to get the error below, on page save. stating that \"Redirect Error\" etc.",
+    "time_stamp": "2023-09-26 02:08:01",
+    "reply_count": 8,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-09-26 07:03:24"
+      },
+      {
+        "time_stamp": "2023-09-26 07:04:55"
+      },
+      {
+        "time_stamp": "2023-09-26 10:59:38"
+      },
+      {
+        "time_stamp": "2023-09-26 11:14:49"
+      },
+      {
+        "time_stamp": "2023-09-27 11:21:43"
+      },
+      {
+        "time_stamp": "2023-09-27 14:40:22"
+      },
+      {
+        "time_stamp": "2023-09-28 03:56:33"
+      },
+      {
+        "time_stamp": "2023-09-28 03:57:21"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Zachary Leung",
+      "poster_handle": "zachary.leung"
+    },
+    "time_stamp": "2023-09-26 07:02:10",
+    "text": "Oh thanks -- I didn't know about developerMode. Just looked it up and that's amazing! Still doesn't help with the \"hide on this breakpoint\" stuff, but being able to copy a section template is super useful. Thanks :)"
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Wessolly",
+      "poster_handle": "webdesign"
+    },
+    "time_stamp": "2023-09-26 07:03:24",
+    "text": "Hi Neil, i think you can add those conditions by using the Hubl Variables listed on this page: <https://developers.HubSpot.com/changelog/march-2023-rollup#new-hubl-variables-for-detecting-when-a-page-is-viewed-in-an-editor>"
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Wessolly",
+      "poster_handle": "webdesign"
+    },
+    "time_stamp": "2023-09-26 07:04:55",
+    "text": "for example \"is_in_page_editor\" can be used like this:\n\n```{% if is_in_page_editor %}\nDisplay something slightly different to make the editor experience better\n{% endif %}\n\t ```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nathan Gifford",
+      "poster_handle": "ngifford949"
+    },
+    "time_stamp": "2023-09-26 09:55:02",
+    "text": "<@U05NR1PG32T> Yes, you can only setup one breakpoint. That's not the question on the table here though. When viewing a section or column in the editor, you have (based on that one breakpoint) the option to toggle between desktop and mobile and set padding and such. There's also a \"Hide on this breakpoint\" toggle. My original question is how to configure a theme template to already have \"hide on this breakpoint\" enabled for a section or column. No documentation for that. For padding/margin, yes. But that's it."
+  },
+  {
+    "poster": {
+      "poster_name": "Neil Junsan",
+      "poster_handle": "neiljunsan09"
+    },
+    "time_stamp": "2023-09-26 10:59:38",
+    "text": "So does it means my code from the module will be wrapped onto this {% if is_in_page_editor %} sir ?\n\nFor example this is my code below:\n\n```&lt;!--\n  templateType: page\n  isAvailableForNewContent: true\n  label: AllianceHub Dashboard\n  screenshotPath: ../images/template-previews/dashboard-home.png\n--&gt;\n{% extends \"./layouts/base.html\" %}\n\n{% block body %}\n\n\n{% dnd_area \"dnd_area\"\n  label=\"Main section\",\n  class=\"body-container body-container--home-dashboard\"\n%}\n    {% dnd_section  %} \n      {% dnd_module \n        path=\"@HubSpot/rich_text\",\n        html=\"&lt;h1 style='font-size:24px;font-weight:bold'&gt;Welcome to AllianceHub for {{ personalization_token('company.name', '') }}, {{ personalization_token('contact.firstname', '') }} :wave:&lt;/h1&gt;\"\n        offset=0,\n        width=8,\n      %}\n      {% end_dnd_module %} \n      {% dnd_module\n        path=\"../modules/button\",\n        button_text={{ context.button_text or \"Register a deal\" }},\n        styles={\n          \"alignment\": {\n            \"alignment\": {\n              \"horizontal_align\": \"CENTER\"\n            }\n          }\n        },\n        offset=8, width=4\n      %}\n      {% end_dnd_module %} \n   {% end_dnd_section %}  \n  \n    {# Dashboard Get CompanyID #}\n    \n    {% dnd_section \n       class='dashboard_getcompanyId'\n       padding={\n         'top': 0,\n         'right': 20,\n         'bottom': 0,\n         'left': 20\n       },\n       display=\"none\",\n       background_color={{ context.background_color or \"#f2f2f2\" }},\n       vertical_alignment=\"MIDDLE\"\n        %} \n          {% dnd_module \"module_16950274750569\" path=\"../modules/dashboard_companyID\", label=\"dashboard_companyID\" %}\n          {% end_dnd_module %}  \n    {% end_dnd_section %} \n\n\n    {# dashboard four cards #}  \n\n    {% dnd_section \n       class='my-dashboard-cards'\n       padding={\n         'top': 100,\n         'right': 20,\n         'bottom': 100,\n         'left': 20\n       },\n       background_color={{ context.background_color or \"#f2f2f2\" }},\n       vertical_alignment=\"MIDDLE\"\n        %}\n       {% dnd_column\n          width='3',\n          offset='0', \n          %}\n          {% dnd_row %} \n                  {% dnd_module \"module_16874284367502\"\n                     path=\"../modules/dashboard-open-deals\", label=\"dashboard-open-deals\"\n                   %}\n                  {% end_dnd_module %} \n                  \n          {% end_dnd_row %} \n           {% dnd_row %} \n                  {% dnd_module \"module_16950274750569\" path=\"../modules/dashboard_companyID\", label=\"dashboard_companyID\" %}\n                  {% end_dnd_module %}                   \n          {% end_dnd_row %} \n \n          {% end_dnd_column %}\n\n          {% dnd_column\n          width='3',\n          offset='3',\n          %}\n          {% dnd_row %}\n                {% dnd_module \"module_16874284367502\"\n                   path=\"../modules/dashboard-deal-value\", label=\"dashboard-open-deals\"\n                 %}\n                {% end_dnd_module %} \n          {% end_dnd_row %}               \n          {% end_dnd_column %}\n\n          {% dnd_column\n          width='3',\n          offset='6',\n          %}\n          {% dnd_row %}\n                {% dnd_module \"module_16874284367502\"\n                   path=\"../modules/dashboard-account-manager\", label=\"dashboard-open-deals\"\n                 %}\n                {% end_dnd_module %} \n              {% end_dnd_row %}               \n          {% end_dnd_column %}\n\n          {% dnd_column\n          width='3',\n          offset='9',\n          %}\n          {% dnd_row %}\n                {% dnd_module \"module_16874284367502\"\n                   path=\"../modules/dashboard-view-profile\", label=\"dashboard-open-deals\"\n                 %}\n                {% end_dnd_module %} \n              {% end_dnd_row %}              \n          {% end_dnd_column %}\n\n    {% end_dnd_section %}\n\n {# dashboard sales content #}\n    \n    {% dnd_section  %}        \n      {% dnd_column\n          width='12',\n          offset='0', \n          %} \n          {% dnd_row %} \n                  {% dnd_module \n                  path=\"@HubSpot/rich_text\",\n                  html={{ context.content or \"&lt;h3&gt;Sales Content&lt;/h3&gt;\" }}\n                  %}\n                  {% end_dnd_module %}\n          {% end_dnd_row %}   \n          {% dnd_row %}\n                 {% dnd_module \"module_168778828006322\"\n                      path=\"../modules/dashboard_blog\", label=\"dashboard_blog\" \n                   %}\n                  {% end_dnd_module %}\n          {% end_dnd_row %}\n      {% end_dnd_column %}               \n   {% end_dnd_section %}  \n\n \n    {#{% include_dnd_partial path=\"../sections/dashboard-cards.html\" %}  #}\n\n{% end_dnd_area %}  \n{% endblock body %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Wessolly",
+      "poster_handle": "webdesign"
+    },
+    "time_stamp": "2023-09-26 11:14:49",
+    "text": "No, that Looks like normal Template Code that would not cause such an Error to be triggered"
+  },
+  {
+    "poster": {
+      "poster_name": "Taylor O'Reilly",
+      "poster_handle": "taylor699"
+    },
+    "time_stamp": "2023-09-26 11:21:01",
+    "text": "Hey everyone. I'm working on a custom theme, and above every template, I have this string.\n\n`ExtensionResource{id=136546621039, portalId=123456, path=vandelay/templates/home.html}`\n\nI feel like there's probably a broken tag somewhere that I'm just not seeing. Has anyone seen this before?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-09-26 11:48:30"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Taylor O'Reilly",
+      "poster_handle": "taylor699"
+    },
+    "time_stamp": "2023-09-26 11:48:30",
+    "edited": {
+      "time_stamp": "2023-09-26 11:49:00"
+    },
+    "text": "I figured it out if anyone else runs across this.\n`{{ template_meta }}` \nwas being output where it shouldn't have"
+  },
+  {
+    "poster": {
+      "poster_name": "Girijesh Thodupunuri",
+      "poster_handle": "girijesh.thodupunuri"
+    },
+    "time_stamp": "2023-09-26 13:46:32",
+    "text": "Does anyone know how to make a blog page for a theme that doesn’t have blog template available?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-09-26 14:55:48"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Afron Orana",
+      "poster_handle": "afron.orana"
+    },
+    "time_stamp": "2023-09-26 14:55:48",
+    "text": "Are you using local development tools or the Design manager?"
+  }
+]

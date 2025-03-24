@@ -1,0 +1,21 @@
+[
+  {
+    "poster": {
+      "poster_name": "Manosij Roy Chowdhury",
+      "poster_handle": "manosij"
+    },
+    "time_stamp": "2020-12-15 09:58:54",
+    "edited": {
+      "time_stamp": "2020-12-15 09:59:02"
+    },
+    "text": "Hi there, I am using HubSpot api in python using HubSpot-api-client 3.4.2 from Pypi.\n I am trying to create a custom object. I am trying to create a custom object from the given example here :\n <https://developers.HubSpot.com/docs/api/crm/crm-custom-objects>\nAlthough first time my lambda failed with this Error : `Cannot deserialize instance of` java.util.ArrayList `out of START_OBJECT token`\n After that I enclosed my properties inside the ObjectSchemaEgg with [] like following:\n```from HubSpot.crm.schemas import ObjectSchema\nfrom HubSpot.crm.schemas import ObjectSchemaEgg\nfrom HubSpot.crm.schemas import CoreApi\ndef _create_catapult_sub_product_custObject_schema_hs(self):\n     HubSpot = self.get_HubSpot_client()     \n     sub_product_custObj_schema = ObjectSchemaEgg(\n               properties=[{\n                    \"name\": \"my_object\",\n                    \"labels\": {\n                        \"singular\": \"My object\",\n                        \"plural\": \"My objects\"\n                    },\n                    \"primaryDisplayProperty\": \"my_object_property\",\n                    \"requiredProperties\": [\"my_object_property\"],\n                    \"properties\": [{\n                            \"name\": \"my_object_property\",\n                            \"label\": \"My object property\",\n                            \"isPrimaryDisplayLabel\": True\n                        }\n                    ],\n                    \"associatedObjects\": [\"CONTACT\"],\n                    \"metaType\": \"PORTAL_SPECIFIC\"\n                }]\n        )\n        api_response = None\n        try:\n            api_response = HubSpot.crm.schemas.core_api.create(object_schema_egg = sub_product_custObj_schema)\n        except Exception as e:\n            print(\"API Exception Happened:\", (str(e))) \n        return api_response```\nBut again, my custom object creation is failing in lambda with `Cannot build ObjectTypePropertyCreate, some of required attributes are not set [label]\"*`\n*Expected Result:* The custom object should be created with 200 SUCCESS\n*Actual Result:* Request fails with 400 Error with final message in stacktrace: `Cannot build ObjectTypePropertyCreate, some of required attributes are not set [label]`\nVersion I am using : *HubSpot-api-client 3.4.2*"
+  },
+  {
+    "poster": {
+      "poster_name": "Deep",
+      "poster_handle": "deep"
+    },
+    "time_stamp": "2020-12-15 09:59:04",
+    "text": "Can someone please assist? CC: <@U01GA7YSTKM>"
+  }
+]

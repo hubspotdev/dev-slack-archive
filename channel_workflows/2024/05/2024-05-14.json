@@ -1,0 +1,28 @@
+[
+  {
+    "poster": {
+      "poster_name": "Maximilian Holzer",
+      "poster_handle": "maximilian.holzer"
+    },
+    "time_stamp": "2024-05-14 04:35:05",
+    "text": "<@U04C0NVUQ7Q> I tried this but there is no \"resubscribe\" endpoint and the subscribe endpoint doesnt work for resubscribing..\nIs there an Endpoint i am not seeing here/is there maybe a different link to it? Any help appreciated :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcello Jansen",
+      "poster_handle": "m.jansen"
+    },
+    "time_stamp": "2024-05-14 10:04:20",
+    "text": "Hey everyone, hope y'all are doing great!\nI need a (fairly simple?) custom code action for a workflow. Maybe someone here can help me out:\n\nBasically, I wanna add the record ID of whomever is enrolled in the workflow to a base URL \"<https://matchmaker.cbs.de/de/students/>\". I'd then like to copy the output to a property containing the now-unique link (Base URL + Record ID). I tried going back and forth with ChatGPT, which resulted in this:\n```const axios = require('axios');\n\nexports.main = (event, callback) =&gt; {\n    try {\n        const baseUrl = \"<https://matchmaker.cbs.de/de/students/>\";\n        const recordId = event.object.properties.record_id; // Assuming \"record_id\" is the property where the ID is stored\n\n        if (!recordId) {\n            throw new Error(\"Record ID not found in event object.\");\n        }\n\n        const finalUrl = baseUrl + recordId;\n\n        axios.get(finalUrl)\n            .then(response =&gt; {\n                // Construct the MatchmakerProfile output containing the final URL\n                const MatchmakerProfile = finalUrl;\n\n                // Pass the MatchmakerProfile output to the callback\n                callback(null, { MatchmakerProfile });\n            })\n            .catch(error =&gt; {\n                // Handle error\n                callback(error);\n            });\n    } catch (error) {\n        // Log and handle any unexpected errors\n        console.error(\"Error:\", error);\n        callback(error);\n    }\n};```\nAfter a handful AI-assisted edits, it still wasn't working, so I tried something else:\n\n```exports.main = (event, callback) =&gt; {\n  const matchmaker_profile = event.inputFields['matchmaker_profile'];\n  const record_id = event.inputFields['record_id'];\n  const MatchmakerProfile = `${matchmaker_profile}, ${record_id}`;\n  callback({\n    outputFields: {\n      MatchmakerProfile: MatchmakerProfile,\n    },\n  });\n};```\nThis time, I set the property to which I want to copy the value to the actual base link and included both the property as well as the record ID in the input (=Properties to include in code). The output, however, was still 'undefined'.\n\nLanguage: Node.js 20.x\nInput: hs_object_id &amp; matchmaker_profile\nOutput: String - MatchmakerProfile\n\nhs_execution_state: SUCCESS\nMatchmakerProfile: undefined, undefined\n\nGrateful for any kind of help! :slightly_smiling_face:\n\nKind regards,\nMarcello",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-05-15 06:22:35"
+      },
+      {
+        "time_stamp": "2024-05-15 06:22:45"
+      }
+    ]
+  }
+]

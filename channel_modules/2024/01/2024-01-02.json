@@ -1,0 +1,83 @@
+[
+  {
+    "poster": {
+      "poster_name": "James H",
+      "poster_handle": "jim834"
+    },
+    "time_stamp": "2024-01-02 01:37:35",
+    "text": "Still haven't solved the above... do y'all use {% linked_image %} or your own custom image module?",
+    "reply_count": 6,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2024-01-02 10:30:35"
+      },
+      {
+        "time_stamp": "2024-01-02 19:36:44"
+      },
+      {
+        "time_stamp": "2024-01-03 11:43:59"
+      },
+      {
+        "time_stamp": "2024-04-17 08:24:08"
+      },
+      {
+        "time_stamp": "2024-04-17 11:49:20"
+      },
+      {
+        "time_stamp": "2024-07-29 12:07:51"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin.perolio"
+    },
+    "time_stamp": "2024-01-02 10:06:53",
+    "text": "I've never used the `linked_image` tag directly. I use my own image in a module, like\n```&lt;img class='card__image' src='{{ card.content.image.src }}' alt='{{ card.content.image.alt }}' {{ loadingAttr }} width='{{ card.content.image.width }}' height='{{ card.content.image.height }}'&gt;```\nor I use the module in templates/sections:\n```{% dnd_module\n    path='@HubSpot/linked_image',\n    offset=0,\n    width=3,\n    horizontal_alignment='CENTER',\n    img={\n      alt: 'Keep it relevant',\n      height: 254,\n      loading: 'eager',\n      max_height: 254,\n      max_width: 199,\n      size_type: 'auto',\n      src: 'blah.png',\n      width: 199\n    }\n  %}\n  {% end_dnd_module %}```\nThis module does use `linked_image` though. I actually use a custom slightly modified version of HubSpot's `@HubSpot/linked_image` module, because it doesn't have support for `?` query parameter links, i.e. if you want the image to link to `?pie=good`. <https://developers.HubSpot.com/docs/cms/hubl/tags#linked-image|Here> is some documentation on the tag. The docs don't mention a `size_type` though.\n\nHere it is from the HubSpot core module:\n```{% linked_image\n  label='Linked Image',\n  src='{{ module.img.src }}',\n  alt='{{ module.img.alt }}',\n  width='{{ module.img.width }}',\n  height='{{ module.img.height }}',\n  link='{{ link }}',\n  target='{{ target }}',\n  open_in_new_tab='{{ target }}',\n  size_type='{{ module.img.size_type }}',\n  max_width='{{ module.img.max_width }}',\n  max_height='{{ module.img.max_height }}',\n  loading='{{ loadingAttr }}'\n%}```\nI believe the `size_type` is what you are missing. It defaults to `auto` which seems to remove the height. <https://developers.HubSpot.com/docs/cms/building-blocks/module-theme-fields#image|Here> is some documentation on the different value options for `size_type` and what each means."
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin.perolio"
+    },
+    "time_stamp": "2024-01-02 10:12:51",
+    "text": "&gt; Yet again, you’re the first to dig around and find the new thing before we’re supposed to know about it! :sweat_smile: \nHa, I try. But yeah, just doing a fetch yielded them here. Haven't been able to make use of them or figure out what they might be for yet though."
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2024-01-02 10:30:35",
+    "text": "Personally, I like to write my own `img` tag markup — the `{% linked_image %}` tag is something of a legacy feature, and tends to present more issues than it solves."
+  },
+  {
+    "poster": {
+      "poster_name": "James H",
+      "poster_handle": "jim834"
+    },
+    "time_stamp": "2024-01-02 19:35:39",
+    "text": "Yes <@U0429V78FDK>! I saw `size_type` in the fields.json for images but its use in the docs in the HubL is not consistent and I thought it was a mistake, but you are right, it's important! Thank you! I did some quick testing:\n\nI used 5 different settings hardcoded in linked_image.\nIn my fields.json for the image field I have `\"resizable\": false, \"responsive\": false` (I don't want the client to think about image sizes, everything is controlled by CSS / the theme). Here's what I tested:\n\n1. No size type at all\n2. Size type blank = size_type=''\n3. Size type auto = size_type='auto'\n4. Size type exact = size_type='exact'\n5. Size type auto custom max = size_type='auto_custom_max'\nResults\n\n1. No size type at all = srcset :white_check_mark: width :white_check_mark: height :x:\n2. Size type blank = srcset :white_check_mark: width :white_check_mark: height :x:\n3. Size type auto = srcset :x: width :x: height :x:\n4. Size type exact = srcset :white_check_mark: width :white_check_mark: height :white_check_mark:\n5. Size type auto custom max = srcset :x: width :x: height :x:\nSo using `size_type='exact'` gives the best image output from a performance/rendering perspective. This solves my issue, thanks."
+  },
+  {
+    "poster": {
+      "poster_name": "James H",
+      "poster_handle": "jim834"
+    },
+    "time_stamp": "2024-01-02 19:36:44",
+    "edited": {
+      "time_stamp": "2024-01-02 19:36:51"
+    },
+    "text": "Thanks <@U04AQA0QM8E> do you include srcset and is the approach  of using `resize_image_url` the best approach you've found for that?"
+  },
+  {
+    "poster": {
+      "poster_name": "Sasha Sosin",
+      "poster_handle": "sasha"
+    },
+    "time_stamp": "2024-01-02 20:58:21",
+    "text": "<@UJ365HH1D> did you ever figure this out?"
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "poster": {
+      "poster_name": "Charlie Stokes",
+      "poster_handle": "charlie.stokes"
+    },
+    "time_stamp": "2023-07-18 13:35:38",
+    "edited": {
+      "time_stamp": "2023-07-18 13:36:04"
+    },
+    "text": "Hey all,\n\nThis is such a stupid little thing that I am trying to do.\n\nI have a custom api built using serverless functions. Is it possible to create this .js file and import that file into all of the endpoints? The api is working completely as intended but the clutter of these 3 functions being in each of the endpoints is driving me nuts. is it possible to access these functions through a kind of require statement?\n\n`const { logYello } = require(\"./middleware.js\");`\n\nmiddleware.js :\n`const axios = require(\"axios\");`\n`module.exports = {`\n  `searchHSRecord: async (object, objectType, properties, propertiesArray) =&gt; {`\n    `let res;`\n    `let duplicates = false;`\n  \n    `for (let property of properties) {`\n      `if (!object.properties[`${property}`]) {`\n        `continue;`\n      `}`\n  \n      `let searchData = {`\n        `filterGroups: [`\n          `{`\n            `filters: [`\n              `{`\n                `value: object.properties[`${property}`],`\n                `propertyName: property,`\n                `operator: \"EQ\",`\n              `},`\n            `],`\n          `},`\n        `],`\n        `limit: 100,`\n        `properties: propertiesArray,`\n      `};`\n  \n      `let query = {`\n        `method: \"post\",`\n        `url: `<https://api.hubapi.com/crm/v3/objects/${objectType}/search>`,`\n        `headers: {`\n          `\"Content-Type\": \"application/json\",`\n          `Authorization: `Bearer ${htoken}`,`\n        `},`\n        `data: searchData,`\n      `};`\n  \n      `let response;`\n  \n      `try {`\n        `await throttle();`\n        `response = await axios(query);`\n        `// console.log(response.data);`\n      `} catch (error) {`\n        `console.error(error);`\n      `}`\n  \n      `if (response.data.total == 1) {`\n        `// console.log(\"returning, good 1 result\");`\n        `return response.data;`\n      `} else if (response.data.total &gt; 1) {`\n        `res = response.data;`\n        `duplicates = true;`\n      `}`\n    `}`\n  \n    `if (duplicates) return res;`\n    `else return \"No Match Found\";`\n  `},`\n  `addHSRecord: async (data, objectType) =&gt; {`\n    `let query = {`\n      `method: \"post\",`\n      `url: `<https://api.hubapi.com/crm/v3/objects/${objectType}>`,`\n      `headers: {`\n        `\"Content-Type\": \"application/json\",`\n        `Authorization: `Bearer ${htoken}`,`\n      `},`\n      `data: { properties: data.properties },`\n    `};`\n  \n    `let response;`\n  \n    `try {`\n      `await throttle();`\n      `response = await axios(query);`\n      `return response.data;`\n    `} catch (error) {`\n      `console.error(error);`\n    `}`\n  `},`\n  `patchHSRecord: async (data, objectType, id) =&gt; {`\n    `let query = {`\n      `method: \"patch\",`\n      `url: `<https://api.hubapi.com/crm/v3/objects/${objectType}/${id}>`,`\n      `headers: {`\n        `\"Content-Type\": \"application/json\",`\n        `Authorization: `Bearer ${htoken}`,`\n      `},`\n      `data: { properties: data.properties },`\n    `};`\n  \n    `let response;`\n  \n    `try {`\n      `await throttle();`\n      `response = await axios(query);`\n    `} catch (error) {`\n      `console.error(error);`\n    `}`\n  \n    `return response.data;`\n  `},`\n  `logYello: async () =&gt; {`\n    `console.log(\"Yello\");`\n    `return \"Yello\";`\n  `}`\n`}`",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-08-03 23:55:31"
+      }
+    ]
+  }
+]

@@ -1,0 +1,59 @@
+[
+  {
+    "poster": {
+      "poster_name": "Tal Rei",
+      "poster_handle": "tal.r"
+    },
+    "time_stamp": "2024-12-11 08:17:03",
+    "text": "Hey all!\n\ni really need your help with something that looks simple- but NOT\n\ni have a drop down, Multiple checkboxes, internal name: *test_3*\n\nAnother field, Multi-line text, internal name: *latest_campaign_tag_hs_test*\n\nMy need is to copy the _LATES_ value was chosen in the *test_3* field to the *latest_campaign_tag_hs_test* field.\n\nexample:\nDay 1:  test_3 = A      *latest_campaign_tag_hs_test = A*\nDay 2: test_3 = A , B (the B option was added at day 2)    *latest_campaign_tag_hs_test = B*\n\nI need a code for this, python 3.0 OR Node.js 20.x\n\nplease help me guys, you are the best!",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-12-11 15:02:16"
+      },
+      {
+        "time_stamp": "2024-12-12 03:12:43"
+      },
+      {
+        "time_stamp": "2024-12-12 03:13:40"
+      },
+      {
+        "time_stamp": "2024-12-12 03:23:10"
+      },
+      {
+        "time_stamp": "2024-12-12 03:23:45"
+      },
+      {
+        "time_stamp": "2024-12-12 22:49:58"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Lane",
+      "poster_handle": "thomas689"
+    },
+    "time_stamp": "2024-12-11 09:22:48",
+    "text": "Heads up for the HubSpot Team:\n\n\nthe aws-sdk still doesn't work wiht Node 20 in Workflows only Node 16.....but Node 16 is going away so the AWS-SDK doesnt work"
+  },
+  {
+    "text": "Should I remove the 'process.env.'? I tried it but I'm having an issue.",
+    "time_stamp": "2024-12-11 13:54:47"
+  },
+  {
+    "text": "I tried to capitalize the P and N but still have an issue.\nThis time it's ' Undefined Properties'",
+    "time_stamp": "2024-12-11 13:56:23",
+    "edited": {
+      "time_stamp": "2024-12-11 13:56:47"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Zach Klein",
+      "poster_handle": "zach282"
+    },
+    "time_stamp": "2024-12-11 15:02:16",
+    "text": "Hi <@U079QHR5345> :wave:\n\nHere's a quick example written in Python:\n```import HubSpot\nfrom HubSpot.crm.contacts import ApiException\nimport os\nhs_pat = os.environ[\"YOUR_SECRET_NAME\"]\n\ndef main(event):\n  client = HubSpot.Client.create(access_token=hs_pat)\n  latest_value = \"\"\n  try:\n    api_response = client.crm.contacts.basic_api.get_by_id(contact_id=event[\"object\"][\"objectId\"], properties_with_history=[\"test_3\"], archived=False)\n    \n    if len(api_response.to_dict()[\"properties_with_history\"][\"test_3\"]) == 1:\n      # test_3 has been set exactly 1 time\n      latest_value = api_response.to_dict()[\"properties_with_history\"][\"test_3\"][0].to_dict()[\"value\"]\n      \n    elif len(api_response.to_dict()[\"properties_with_history\"][\"test_3\"]) &gt; 1:\n      # test_3 has been set more than 1 time\n      # compare the 2 most recent changes only\n      current_values = api_response.to_dict()[\"properties_with_history\"][\"test_3\"][0].to_dict()[\"value\"].split(\";\")\n      previous_values = api_response.to_dict()[\"properties_with_history\"][\"test_3\"][1].to_dict()[\"value\"].split(\";\")\n      newly_added_values = []\n      for value in current_values:\n        if value not in previous_values:\n          newly_added_values.append(value)\n      latest_value = \";\".join(newly_added_values)\n    else:\n      # test_3 has never been set\n      pass\n    \n  except ApiException as e:\n    print(\"Exception when calling basic_api-&gt;get_by_id: %s\\n\" % e)\n  \n  # Return the output data that can be used in later actions in your workflow.\n  return {\n    \"outputFields\": {\n      \"latest_value\": latest_value\n    }\n  }```\nYou'd just need to configure a custom code action \"secret\" with your Private App access token and then update the \"YOUR_SECRET_NAME\" in the hs_pat variable declaration. This won't be perfect, but it should cover the example case you've described pretty well. Please also note, the code I've shared doesn't set the property value for \"latest_campaign_tag_hs_test\" -- it simply makes the \"latest_value\" available as an action output. You could use this action output to set the property value via a CRM &gt; \"Edit record\" workflow action. Hope this helps :)"
+  }
+]

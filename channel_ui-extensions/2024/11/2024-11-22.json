@@ -1,0 +1,60 @@
+[
+  {
+    "poster": {
+      "poster_name": "Erik Rorstrom",
+      "poster_handle": "erik.rorstrom"
+    },
+    "time_stamp": "2024-11-22 01:57:06",
+    "text": "You can fetch the URL from the Files API using that ID"
+  },
+  {
+    "poster": {
+      "poster_name": "Goran Ilievski",
+      "poster_handle": "goran308"
+    },
+    "time_stamp": "2024-11-22 02:17:53",
+    "text": "Yeah okay, that's a lot of API calls :grinning:\nThanks <@U7W5SDG3D>"
+  },
+  {
+    "poster": {
+      "poster_name": "Magnus Foldager",
+      "poster_handle": "magnus"
+    },
+    "time_stamp": "2024-11-22 02:42:59",
+    "text": "Did anyone run into issues with multi-line secrets in the `hs secrets` manager?\nThe local `.env` version of a private key works just fine but when added to the secrets manager (in production) it doesn’t work.",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-11-22 04:45:57"
+      },
+      {
+        "time_stamp": "2024-11-22 05:09:38"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Richard Davies",
+      "poster_handle": "richard512"
+    },
+    "time_stamp": "2024-11-22 04:26:07",
+    "text": "I have managed to resolve this, there were a couple of things tripping me up. When using `$request-&gt;getContent()` it returns a string with empty quotations `'\"\"'`\n\nThe other thing was the ordering of the query string parameters, when using `$request-&gt;fullUrl()`.\n\nMy working code example looks like this:\n```$options = [\n    'signatureVersion' =&gt; 'v3',\n    'signature' =&gt; $request-&gt;header('x-HubSpot-signature-v3'),\n    'timestamp' =&gt; $request-&gt;header('x-HubSpot-request-timestamp'),\n    'httpUri' =&gt; $request-&gt;getSchemeAndHttpHost() . $request-&gt;getRequestUri(),\n    'httpMethod' =&gt; $request-&gt;getMethod(),\n    'requestBody' =&gt; $request-&gt;getContent() == '\"\"' ? '' : $request-&gt;getContent(),\n    'secret' =&gt; config('services.HubSpot_marketplace_app.client_secret'),\n];\n\nSignature::isValid($options)```"
+  },
+  {
+    "poster": {
+      "poster_name": "Alfred Völkl Diaz",
+      "poster_handle": "alfred.voelkl"
+    },
+    "time_stamp": "2024-11-22 04:45:57",
+    "text": "Have you specified the secrets in your serverless.json?"
+  },
+  {
+    "poster": {
+      "poster_name": "Magnus Foldager",
+      "poster_handle": "magnus"
+    },
+    "time_stamp": "2024-11-22 05:09:38",
+    "text": "I have, yes. And it works when I Base64 encode/decode it as a single line instead."
+  }
+]

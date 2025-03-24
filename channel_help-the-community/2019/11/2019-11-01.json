@@ -1,0 +1,17 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jason Ng",
+      "poster_handle": "jason.ng"
+    },
+    "time_stamp": "2019-11-01 13:05:59",
+    "text": "Hi All,\n\n\nThe context is that we are hitting the HubSpot API using the form submission route, since we implement the actual sign-in form ourselves. The API we hit is here: <https://developers.HubSpot.com/docs/methods/forms/submit_form>\n\nWe call this API for two different forms (i.e. different form GUIDs) with different parameters, as they are known:\n1. We call the first form when the user signs up and fills out all of their information.\n2. We call the second form when the user confirms their email and some data on our side is created (growth_org_id) that we want to log.\n\nWe have observed in some cases that sometimes only (2) happens, and the resulting contact has no attributes except for their email and growth_org_id; the info from the first form doesn't save. We aren't noticing anything like the form submission failing, so we are surprised that the other contact info isn't always available.\n\nI'm not sure if I am misunderstanding how this API works, but we really want the info to \"stack\" or accumulate, not override. It sounds like this is how the API is supposed to work anyway, but again, we are seeing some contacts lose the extra info when (2) is submitted.\n\n\nOn further inspection, it looks like the 2nd submission (the submission of email and `growth_org_id`) does not always have the HubSpot cookie, which apparently is needed for these forms to combine (?).\n\nThis behavior seems a little strange; why would we need a cookie to track the forms? Couldn't we just configure the forms to accumulate with existing contact information keyed by email, rather than requiring either this cookie, or requiring all of the fields in the 2nd form over again?\n\nThere are some possible workarounds on our side for now, but this still feels weird. Anyway, the fix for us may be to resubmit the same fields over again in the second form.",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2019-11-05 12:43:14"
+      }
+    ]
+  }
+]

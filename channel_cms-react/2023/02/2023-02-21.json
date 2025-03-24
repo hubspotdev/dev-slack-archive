@@ -1,0 +1,392 @@
+[
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-21 03:55:16",
+    "edited": {
+      "time_stamp": "2023-02-21 06:24:23"
+    },
+    "text": "Hmm, ok now have been testing more on local dev. Some weird problems arise.\n• I’m using our private external libraries (works elsewhere) from npm, in the modules folder other works and other don’t (package.json and build folders looks equal, nodenext etc)\n```// do not work without path\nimport { Button } from '@avidly/components/dist/components/button';\n\n// works fine\nimport { Theme, Container } from '@avidly/themes';```\n• Inside islands folder the custom npm components does’t work\n```Error: Objects are not valid as a React child (found: [object Promise])```\n• Goober (similar to styled components) doesn’t work. Gives error with Islands, but renders (thought the css class name is wrong) and without doesn’t render, can I add `extractCss()` to the ssr rendering? (<https://goober.js.org/#ssr-1>)"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-21 03:56:23",
+    "edited": {
+      "time_stamp": "2023-02-21 06:15:39"
+    },
+    "text": "Some questions:\n• Do I have to use capital letters on island file names\n• Can I use named exports or only default exports?\n• Can I add anything on the vite build?\n• Do I need to always wrap the island components with `&lt;Island&gt;` Would it make sense to add that all ready to the island component?"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-02-21 05:51:02",
+    "text": "Hi Janne - is it possible to share the source for your project?"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-02-21 05:54:07",
+    "text": "Are the `@avidly` packages of your design/creation ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-02-21 05:56:40",
+    "text": "For a `js_partial` using a default export is correct.\nFor a `js_module` you need to have named exports of `Component` , `meta` and `fields` ."
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-02-21 05:58:47",
+    "text": "Currently there is no way for the developer to modify the Vite build."
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-02-21 06:00:25",
+    "text": "You do need to wrap an island module with `Island` . I'm not sure I am understanding...\n\n&gt; Would it make sense to add that all ready to the island component?"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-21 06:34:06",
+    "text": "<@UAYBXDG4U> Thanks for quick answer. Components are currently in private npm, basically I’m just trying to use those in your hello world example. I could give you access to there in npm, if that helps (there are dependencies, those are just raw tsc builds). Main issue is there with Goober and SSR I think. It renders the style tag if there is an island, but the classes doesn’t mach :slightly_smiling_face:  without it doesn’t render the styles in the head"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-02-21 06:35:13",
+    "text": "I'll take a look a the Goober package - as far as the private NPM - without looking into how it's being packaged ... I will say that i needs to support `ESM` style."
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-21 06:36:40",
+    "text": "It’s nodeNext module resolution and module and target , typescript and esm modules, works elsewhere fine."
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-21 06:38:30",
+    "text": "Funny thing is that other package with same build props works fine, could relate to Goober as well?"
+  },
+  null,
+  null,
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-02-21 07:47:25",
+    "text": "What is the error you are seeing with Goober+Islands?"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-02-21 07:50:09",
+    "edited": {
+      "time_stamp": "2023-02-21 07:54:51"
+    },
+    "text": "I did some fiddling with Goober, and yes for SSR I made use of `extractCss` to return a CSS string.\n\nShort term you can print that in a `style` tag, though in their example they have that in the head ...  which makes sense. We need to think about the best way to optimize/handle the SSR \"get style string\" use case so I don't have a good answer beyond just using `extractCss` and doing something like\n```&lt;style&gt;{style}&lt;/style&gt;```\nAhead of the HTML it relates to."
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-02-21 07:51:04",
+    "text": "My Island+Goober experiment was successful in that Goober added to the head a style tag with styles that were applied where I expected."
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-21 08:11:01",
+    "text": "Wow thanks, can you share the code? Thought the Goober is in the library, so how I could get it to work from there. My SSR knowledge is not very good :blush:"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-02-21 08:11:23",
+    "text": "Yes, I will add a branch to the hello world repo with my approach."
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-21 08:12:14",
+    "text": "Awesome :sunglasses:"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-21 08:14:05",
+    "text": "Btw, Goober is pretty awesome"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-21 08:22:14",
+    "text": "About the Island question, I mean that could we have the  ‹`Island` component all ready inside the Island component and use the component as it's children instead of passing it as a prop?"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-21 08:23:26",
+    "text": "Maybe then we wouldn't need to load the component with extra ? param in the parent. Just a thought :thinking_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-21 08:26:35",
+    "text": "Also, I would remove the need for default export, and allow named or default exports, also the file names could be consistent (lowercase) :thinking_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-21 08:28:18",
+    "text": "... and Typescript example would be awesome. I can also try that out when I get this to work :relaxed:"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-02-21 09:25:12",
+    "text": "Going to pull the Island component thoughts &amp; question into a separate thread. That’s a good one to discuss and I don’t want to lose the Goober and other issues going on above…"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-02-21 09:28:44",
+    "text": "Pulling out <@U02LG4AU9JS>’s comments on Islands from <https://HubSpotdev.slack.com/archives/C04AY1H2204/p1676992934803089?thread_ts=1676886085.806939&amp;cid=C04AY1H2204> and <https://HubSpotdev.slack.com/archives/C04AY1H2204/p1676993006702419?thread_ts=1676886085.806939&amp;cid=C04AY1H2204> to their own :thread:….",
+    "reply_count": 11,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-02-21 09:29:15"
+      },
+      {
+        "time_stamp": "2023-02-21 09:35:45"
+      },
+      {
+        "time_stamp": "2023-02-21 09:51:26"
+      },
+      {
+        "time_stamp": "2023-02-21 09:54:46"
+      },
+      {
+        "time_stamp": "2023-02-21 10:05:34"
+      },
+      {
+        "time_stamp": "2023-02-22 00:46:53"
+      },
+      {
+        "time_stamp": "2023-02-22 06:54:18"
+      },
+      {
+        "time_stamp": "2023-02-22 06:54:41"
+      },
+      {
+        "time_stamp": "2023-02-22 09:20:21"
+      },
+      {
+        "time_stamp": "2023-02-22 09:32:25"
+      },
+      {
+        "time_stamp": "2023-02-22 09:35:08"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-02-21 09:29:15",
+    "text": "Good feedback! I’m assuming that you would find it easier to do `&lt;FooBarIsland&gt;&lt;p&gt;…&lt;/p&gt;&lt;/FooBarIsland&gt;` than `import FooBarIsland  from '../FooBar?island';  /* … */ &lt;Island module={FooBarIsland} someProp={…} /&gt;` . The wrapper is certainly a little annoying, but some notes about it…"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-02-21 09:35:45",
+    "text": "One of the issues with children components—whether we had an `&lt;Island&gt;` wrapper or not—is that anything that is passed to an Island as props (including children) have to be serializable. Our server rendering needs to take those inputs, serialize them to JSON, put them into the HTML, and then pass them to the Island when it is hydrated on the client.\n\nSo if there were any children passed to an Island, it essentially would have to be static HTML and not component references or functions (we can’t serialize those “over-the-wire”). Even in Astro, if you pass children to an island made by `client:*`  those children are treated in an awkward only static kinda-way…"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-02-21 09:38:01",
+    "text": "we just pushed a change that should hopefully fix this"
+  },
+  {
+    "text": "Example messing with Astro to demonstrate some of the awkwardness of children when they are implicitly serialized to static HTML: <https://codesandbox.io/p/sandbox/astro-react-vue-svelte-counter-app-forked-eydlj1?file=%2Fsrc%2Fpages%2Findex.astro&amp;selection=%5B%7B%22endColumn%22%3A64%2C%22endLineNumber%22%3A34%2C%22startColumn%22%3A64%2C%22startLineNumber%22%3A34%7D%5D|https://codesandbox.io/p/sandbox/astro-react-vue-svelte-counter-app-forked-eydlj1?fi[…]4%2C%22startColumn%22%3A64%2C%22startLineNumber%22%3A34%7D%5D>",
+    "time_stamp": "2023-02-21 09:51:26"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-02-21 09:52:35",
+    "text": "<@U02LG4AU9JS> here is an example using Goober `css`  and `extractCss` in a partial <https://github.com/HubSpot/cms-js-building-blocks-hello-world/blob/bmatto/3rd-party-messing-public/hello-world-project/cms-assets/components/partials/Home.jsx|https://github.com/HubSpot/cms-js-building-blocks-hello-world/blob/bmatto/3rd-part[…]lic/hello-world-project/cms-assets/components/partials/Home.jsx>"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-02-21 09:53:44",
+    "text": "And here it was in an island <https://github.com/HubSpot/cms-js-building-blocks-hello-world/blob/bmatto/3rd-party-messing-public/hello-world-project/cms-assets/components/islands/TodoList.jsx#L109|https://github.com/HubSpot/cms-js-building-blocks-hello-world/blob/bmatto/3rd-part[…]/hello-world-project/cms-assets/components/islands/TodoList.jsx>"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-02-21 09:54:46",
+    "text": "Generally, I’m personally pretty concerned about developers having to understand “children are special and different in situation X”, especially for our framework that is only React. Astro is a little different with that it supports Y frameworks and already has some “you can do this in Astro server templates and not in framework components”. But for our HubSpot React setup, I suspect devs will want/assume that any JSX they write will “just work”."
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-02-21 09:56:06",
+    "text": "you may need to both re-build and deploy"
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin.perolio"
+    },
+    "time_stamp": "2023-02-21 09:58:11",
+    "edited": {
+      "time_stamp": "2023-02-21 09:58:27"
+    },
+    "text": "Having build failure issues with the unmodified hello-world starter:\n<https://cdn.vizality.com/u/Qw2HpaGKCq.png>\nTried with Node v16.13.0 and v18.1.0.",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-02-21 10:07:36"
+      },
+      {
+        "time_stamp": "2023-02-21 10:12:47"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-02-21 10:05:34",
+    "text": "Somewhat related but separate, is whether you could do without the Island wrapper. It is certainly possible. Even though we are using the Island wrapper and the `?island` import query param to automatically code split (i.e. `React.lazy(() =&gt; import(IslandComponent)` ) for you, with some more compiler “magic” we could still do that with without a wrapper.\n\nPersonally, I come from the perspective that it would be better to make Island use more explicit and less “magical”. I was a little worried that It will be too easy for devs to create Islands and forget about them and/or for their fellow devs (or future devs looking at the code) to notice island usage and the performance &amp; UX considerations that brings. And so I intentionally encouraged our team to make islands more explicit via a wrapper.\n\nHowever, I realize I am quite on the “explicit &gt; implicit/magic” side of things and many devs prefer a different trade-off (for example, prefer less boilerplate and accept some more “magic”/underlying complexity). And maybe we are choosing the wrong trade-off for some-to-many of our developers.\n\nHopefully that gives you some context. Not trying to say what we’ve chosen so far is right. And these feedback and questions are very useful. We should think through this again and consider options/creative new things/etc. But for now it would be helpful to try out the island wrappers, get more of a notion how they feel after more usage (annoyance fades some? still same? or getting more frustrating with time?). Thanks again for the feedback, looking forward to hearing more!"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-02-21 10:07:36",
+    "text": "can you try making a change equivalent to <https://github.com/HubSpot/cms-js-building-blocks-hello-world/pull/12|this PR>, running `npm install`/`yarn install` , then reuploading?"
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin.perolio"
+    },
+    "time_stamp": "2023-02-21 10:12:47",
+    "text": "Thanks, that fixed it!"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew James",
+      "poster_handle": "matthew929"
+    },
+    "time_stamp": "2023-02-21 15:48:27",
+    "text": "Are we able to link a github repository to the Developer Project?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-02-21 19:00:02"
+      },
+      {
+        "time_stamp": "2023-02-22 00:38:54"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-02-21 19:00:02",
+    "text": "Not yet. We haven’t had a chance to try and integrate github repo -&gt; Dev project integration yet for JS building blocks."
+  },
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2023-02-22 00:38:54",
+    "text": "On that note, opening up to link _any_ git repository, would be great."
+  },
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-02-22 00:46:53",
+    "edited": {
+      "time_stamp": "2023-02-22 00:53:52"
+    },
+    "text": "<@UCY83QS6Q> Wow, that was a good explanation. I’m also explicit so don’t like magical things that much :grin:. I’m just wondering that `?island`  (in typescript should we use `.js?island`), it can maybe cause some problem, maybe it would be better to assume that all of the components from islands folder would be treated as an islands (too much magic :face_with_peeking_eye:)?\n\nOR\nCould we do it like this, so we would define the `Island` all ready in the island component and do the serialisation in there (do we need to know that the component is island?):\n```// in islands folder\nimport React from 'react';\n\nimport { Button as UIButton } from '@avidly/components';\nimport { Island } from '@HubSpot/cms-components';\n\nexport const Button = (props) =&gt; {\n  return (\n    &lt;Island id=\"button-island\" hydrateOn=\"load\"&gt;\n      &lt;UIButton {...props}&gt;&lt;/UIButton&gt;\n    &lt;/Island&gt;\n  );\n};```\n```\n// using it in module\nimport React from 'react';\n\nimport { Button } from '../../islands/button.js';\nimport { Theme, theme, Container } from '@avidly/themes';\n\nexport const Component = (props) =&gt; {\n  return (\n    &lt;Theme theme={theme}&gt;\n      &lt;Button {...props}&gt;&lt;/Button&gt;\n    &lt;/Theme&gt;\n  );\n};\n\nexport { fields } from './fields.js';\n\nexport const meta = {\n  label: `Button Module`,\n};```\n"
+  }
+]

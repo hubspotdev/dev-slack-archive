@@ -1,0 +1,412 @@
+[
+  {
+    "poster": {
+      "poster_name": "Nikolas Artadi",
+      "poster_handle": "nikolas.artadi"
+    },
+    "time_stamp": "2023-12-07 01:22:40",
+    "edited": {
+      "time_stamp": "2023-12-07 01:23:15"
+    },
+    "text": "Nice! I also had a solution in place, but deleted the code :smile:.. I'm trying to figure it out as to not give an error. Will dive into it, because I need to deploy this into production\nCould you share your code to have a look at it please?"
+  },
+  {
+    "poster": {
+      "poster_name": "Noam Kashtan",
+      "poster_handle": "noam.kashtan"
+    },
+    "time_stamp": "2023-12-07 01:28:52",
+    "text": "Hi there\nDoes someone know how to get the \"contact_owner\" history in the \"contacts\" entity?"
+  },
+  {
+    "poster": {
+      "poster_name": "Aia Ichshanova",
+      "poster_handle": "aikowa.ceo"
+    },
+    "time_stamp": "2023-12-07 01:37:10",
+    "text": "Hi! Nopeee, I haven't found it. HubSpot api is so complicated"
+  },
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2023-12-07 03:52:48",
+    "text": "Here's the full code btw. I've got a CO that's associated to a Contact, and I want to fetch the Company associated to the Contact and associate the CO to the Company. Close the triangle basically:\n\n```const HubSpot = require('@HubSpot/api-client');\nconst HubSpotClient = new HubSpot.Client({accessToken: process.env.HACCESSTOKEN});\n\nexports.main = async (event, callback) =&gt; {\n  const customObjectRecordId = event.inputFields['customObjectId'];\n\n  try {\n    // Step 1: Find the contact associated with the custom object record\n    const contactId = await getAssociatedContact(customObjectRecordId);\n    if (!contactId) {\n      throw new Error('No associated contact found');\n    }\n\n    // Step 2: Find the company associated with the contact\n    const companyId = await getAssociatedCompany(contactId);\n    if (!companyId) {\n      throw new Error('No associated company found');\n    }\n\n    // Step 3: Create an association between the company and the custom object record\n    await createAssociation(companyId, customObjectRecordId);\n\n    callback({ outputFields: { result: \"Association created successfully\" } });\n  } catch (error) {\n    callback({ outputFields: { result: `Error: ${error.message}` } });\n  }\n};\n\nasync function getAssociatedContact(customObjectRecordId) {\n  \n\n  \n  const objectType = '2-8669440'; \n  const objectId = customObjectRecordId;\n  const toObjectType = 'contact';\n\n  try {\n    const apiResponse = await HubSpotClient.crm.associations.v4.batchApi.getPage(objectType, objectId, toObjectType);\n    if (apiResponse.results.length &gt; 0) {\n      const contactId = apiResponse.results[0].id;\n      console.log('Contact ID:', contactId);\n      return contactId;\n    } else {\n      console.log('No associated contact found');\n      return null;\n    }\n  } catch (e) {\n    console.error('Error fetching associated contact:', e.message);\n    return null;\n  }\n}\n\n\nasync function getAssociatedCompany(contactId) {\n \n  const objectType = 'contact'; \n  const objectId = contactId;\n  const toObjectType = 'company';\n  const limit = 1;\n\n  try {\n    const apiResponse = await HubSpotClient.crm.associations.v4.basicApi.getPage(objectType, objectId, toObjectType, limit);\n    if (apiResponse.results.length &gt; 0) {\n      const companyId = apiResponse.results[0].id;\n      console.log('Company ID:', companyId);\n      return companyId;\n    } else {\n      console.log('No associated company found');\n      return null;\n    }\n  } catch (e) {\n    console.error('Error fetching associated company:', e.message);\n    return null;\n  }\n}\n\nasync function createAssociation(companyId, customObjectRecordId) {\n \n  const fromObjectType = '2-8669440'; // Replace with your actual custom object type ID\n  const fromObjectId = customObjectRecordId;\n  const toObjectType = 'company';\n  const toObjectId = companyId;\n  \n\n  try {\n    const apiResponse = await HubSpotClient.crm.associations.v4.basicApi.createDefault(fromObjectType, fromObjectId, toObjectType, toObjectId);\n    console.log('Association successfully created');\n  } catch (e) {\n    console.error('Error creating association:', e.message);\n    throw e; // Rethrow the error to handle it in the main function\n  }\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Harun Kumar Siva",
+      "poster_handle": "harun"
+    },
+    "time_stamp": "2023-12-07 04:24:44",
+    "text": "Custom Code Actions document says:\nHubSpot Client available is ^8\n<https://developers.HubSpot.com/docs/api/workflows/custom-code-actions#:~:text=%40HubSpot/api%2Dclient%20%5E8>\n\nAssociations V4 document says: it is only available in HubSpot Client &gt;=9\n<https://developers.HubSpot.com/docs/api/crm/associations#:~:text=v4%20Associations%20API%20is%20supported%20in%20Version%209.0.0%20or%20later>"
+  },
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2023-12-07 05:10:10",
+    "text": "H-uh, well I'll be buggered. Thanks, guess I'll use V3 then"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "lchausse"
+    },
+    "time_stamp": "2023-12-07 06:17:20",
+    "text": "That's weird that it wasn't in the doc and it has been added recently. I got all exited when I saw it. And then I tried it without success...\n\nI suspect it will be available soon? Can you confirm <@UD53A9UUR>? If not, why was it added to the doc?"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-12-07 06:19:32"
+  },
+  {
+    "poster": {
+      "poster_name": "Dario",
+      "poster_handle": "dario"
+    },
+    "time_stamp": "2023-12-07 06:26:37",
+    "text": "Hello guys\nIs it difficult to associate a mail sent and it's reply outside of HubSpot with a specific ticket?",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-12-07 09:08:33"
+      },
+      {
+        "time_stamp": "2023-12-07 09:10:54"
+      },
+      {
+        "time_stamp": "2023-12-07 09:11:01"
+      },
+      {
+        "time_stamp": "2023-12-07 10:03:30"
+      },
+      {
+        "time_stamp": "2023-12-07 10:33:31"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Gabriel Francisco",
+      "poster_handle": "gabriel326"
+    },
+    "time_stamp": "2023-12-07 07:06:25",
+    "text": "Hello, I cant make the \"/automation/v4/actions/{appId}/{definitionId}/functions/{functionType}\" to work, have anyone faced this?"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2023-12-07 07:23:04",
+    "text": "it should not have been added.  i will ask if there are plans to allow post requests"
+  },
+  {
+    "poster": {
+      "poster_name": "Casper Kraken (HubDo)",
+      "poster_handle": "casper928"
+    },
+    "time_stamp": "2023-12-07 07:39:55",
+    "text": "You have to set the hs_position_on_quote property when associating the line items, if you want to control the ordering :9"
+  },
+  {
+    "poster": {
+      "poster_name": "Harun Kumar Siva",
+      "poster_handle": "harun"
+    },
+    "time_stamp": "2023-12-07 08:27:02",
+    "text": "lol. something related is brewing <https://HubSpotdev.slack.com/archives/C019VT42R8X/p1701961992590029|here>."
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2023-12-07 09:08:33",
+    "text": "“outside of HubSpot” = outgoing email sent from within HubSpot, right?\n\nIf yes, it isn’t difficult as long as there’s data within that email you can use to link it to the appropriate ticket.\n\nDepending on the specifics and the tools you have at your disposal, I’d likely start with a Conversations based workflow -&gt; create a coded action, adding the appropriate values to the “properties to include” list (or do so via the <https://developers.HubSpot.com/docs/api/conversations/conversations|Conversations API> if it isn’t available there) -&gt; track down the correct ticket using the search API if necessary -&gt; use the following <https://developers.HubSpot.com/docs/api/crm/email|endpoint>:\n`PUT /crm/v3/objects/emails/{emailId}/associations/{toObjectType}/{toObjectId}/{associationTypeId}`\nto make the connection."
+  },
+  {
+    "poster": {
+      "poster_name": "Dario",
+      "poster_handle": "dario"
+    },
+    "time_stamp": "2023-12-07 09:10:54",
+    "text": "great! thank you"
+  },
+  {
+    "poster": {
+      "poster_name": "Dario",
+      "poster_handle": "dario"
+    },
+    "time_stamp": "2023-12-07 09:11:01",
+    "text": "Are you a consultant?"
+  },
+  {
+    "poster": {
+      "poster_name": "Derrick Kwa",
+      "poster_handle": "suigeneris"
+    },
+    "time_stamp": "2023-12-07 09:48:04",
+    "text": "Hi - is there an API endpoint for Update or Create? I see one in their legacy docs, but not in the current latest documentation. Looking to basically update a contact if it exists, and create a contact if it doesn’t",
+    "reply_count": 10,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-12-07 11:50:41"
+      },
+      {
+        "time_stamp": "2023-12-07 11:52:03"
+      },
+      {
+        "time_stamp": "2023-12-07 11:52:23"
+      },
+      {
+        "time_stamp": "2023-12-07 11:53:34"
+      },
+      {
+        "time_stamp": "2023-12-07 11:53:54"
+      },
+      {
+        "time_stamp": "2023-12-07 11:55:17"
+      },
+      {
+        "time_stamp": "2023-12-07 11:55:47"
+      },
+      {
+        "time_stamp": "2023-12-07 11:56:45"
+      },
+      {
+        "time_stamp": "2023-12-07 21:27:18"
+      },
+      {
+        "time_stamp": "2023-12-11 09:32:51"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nicole Pereira",
+      "poster_handle": "nicole847"
+    },
+    "time_stamp": "2023-12-07 09:53:02",
+    "text": "anyone know if the search API can reference dynamic hubdb pages?",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-12-07 14:39:36"
+      },
+      {
+        "time_stamp": "2023-12-07 14:40:08"
+      },
+      {
+        "time_stamp": "2023-12-07 14:42:51"
+      },
+      {
+        "time_stamp": "2023-12-07 14:43:08"
+      },
+      {
+        "time_stamp": "2023-12-07 14:44:54"
+      },
+      {
+        "time_stamp": "2023-12-07 14:45:13"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2023-12-07 10:03:30",
+    "text": "np - and yep, I’m a developer at a consulting firm, Aptitude8"
+  },
+  {
+    "poster": {
+      "poster_name": "Dario",
+      "poster_handle": "dario"
+    },
+    "time_stamp": "2023-12-07 10:33:31",
+    "text": "How much it will cost to me to get you 1 hour with my developers? :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Ricky Thai",
+      "poster_handle": "ricky.thai"
+    },
+    "time_stamp": "2023-12-07 10:54:16",
+    "text": "Thank you! This was all really helpful. Will follow your strategy of reverse engineering to find more info on how to use the API"
+  },
+  {
+    "poster": {
+      "poster_name": "Ricky Thai",
+      "poster_handle": "ricky.thai"
+    },
+    "time_stamp": "2023-12-07 11:43:44",
+    "edited": {
+      "time_stamp": "2023-12-07 12:39:13"
+    },
+    "text": "For creating quotes through the API, what are the association types and categories for \"Your Information\" section? The information on the quote that displays the company and owner?\n\nI found out we could populate these fields:\n```hs_sender_company_name=\"\"\nhs_sender_company_address=\"\"\nhs_sender_company_city=\"\"\nhs_sender_company_zip=\"\"\nhs_sender_company_country=\"\"```\nBut is there any better/more automated way?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-12-08 02:41:45"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2023-12-07 11:50:41",
+    "text": "Hi Derrick, I would likely use some form of case/ next/switch/ifthenelse or for loop type structure depending on the language you are using to determine this through a set of related API calls and then do the work that way. I would likely do the \"if the contact exists\" logic first as it seems like less processing to update something then to write a new one then update it. The tool thats going to kick butt for figuring out what API works for this stuff is here: <https://developers.HubSpot.com/docs/api/crm/contacts>"
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2023-12-07 11:52:03",
+    "text": "Do you have the ContactID stored where-ever you would be checking from? If not maybe that would be a helpful set of data to start pulling when the contact is written... Hard to tell without more context. But I am thinking you would use the following SUDO code:"
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2023-12-07 11:52:23",
+    "edited": {
+      "time_stamp": "2023-12-07 11:52:53"
+    },
+    "text": "```if GET /crm/v3/objects/contacts/{contactId} = '' ```"
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2023-12-07 11:53:34",
+    "text": "```POST\n/crm/v3/objects/contacts \n{Whatever JSON}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2023-12-07 11:53:54",
+    "text": "```ELSE PATCH\n/crm/v3/objects/contacts/{contactId} {WHATEVER JSON}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Phil Glaser",
+      "poster_handle": "pdg66"
+    },
+    "time_stamp": "2023-12-07 11:55:17",
+    "text": "For what it's worth, I am using the legacy API's endpoint\n\n```POST /contacts/v1/contact/batch/```"
+  },
+  {
+    "poster": {
+      "poster_name": "Phil Glaser",
+      "poster_handle": "pdg66"
+    },
+    "time_stamp": "2023-12-07 11:55:47",
+    "text": "It's really an upsert: if the record (as identified by email or vid if you include it) exists, it's an update. else it's a create"
+  },
+  {
+    "poster": {
+      "poster_name": "Phil Glaser",
+      "poster_handle": "pdg66"
+    },
+    "time_stamp": "2023-12-07 11:56:45",
+    "text": "But there is a difficulty with this endpoint: if any one of the items in the batch has a validation error, the entire batch fails, so you have to build business logic around that."
+  },
+  {
+    "poster": {
+      "poster_name": "Craig Bosco",
+      "poster_handle": "craigbosco"
+    },
+    "time_stamp": "2023-12-07 12:03:51",
+    "text": "<@U051F1U6C31> here you go: <https://gist.github.com/craigbosco/3aeddafcae495ab813ae50551b0cc59e|https://gist.github.com/craigbosco/3aeddafcae495ab813ae50551b0cc59e>"
+  },
+  {
+    "poster": {
+      "poster_name": "Craig Bosco",
+      "poster_handle": "craigbosco"
+    },
+    "time_stamp": "2023-12-07 12:06:27",
+    "edited": {
+      "time_stamp": "2023-12-07 12:06:55"
+    },
+    "text": "This is just for the contacts API but could easily be adapted for anything. Initially I was wanting to get just the updated contacts based on a timestamp but ended up just getting all the contacts since it didn’t really take much longer. \n\nSimply call `df = get_updated_contacts()` and it’ll grab everything. "
+  },
+  {
+    "poster": {
+      "poster_name": "Craig Bosco",
+      "poster_handle": "craigbosco"
+    },
+    "time_stamp": "2023-12-07 12:17:27",
+    "text": "Hope this helps! "
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2023-12-07 14:39:36",
+    "text": "<https://HubSpotdev.slack.com/archives/C22PDRW72/p1539868843000100?thread_ts=1539868843.000100&amp;cid=C22PDRW72|https://HubSpotdev.slack.com/archives/C22PDRW72/p1539868843000100?thread_ts=1539868843.000100&amp;cid=C22PDRW72>"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2023-12-07 14:40:08",
+    "text": "I think that is what you are looking for :grinning:"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicole Pereira",
+      "poster_handle": "nicole847"
+    },
+    "time_stamp": "2023-12-07 14:42:51",
+    "text": "well heck. I guess that is a yes!? <@UD53A9UUR>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicole Pereira",
+      "poster_handle": "nicole847"
+    },
+    "time_stamp": "2023-12-07 14:43:08",
+    "text": "Seems after 5 years it should be in the api documentation :)"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2023-12-07 14:44:54",
+    "text": "Touche"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2023-12-07 14:45:13",
+    "text": "I can talk with some people :wink:"
+  },
+  {
+    "poster": {
+      "poster_name": "Derrick Kwa",
+      "poster_handle": "suigeneris"
+    },
+    "time_stamp": "2023-12-07 21:27:18",
+    "text": "Basically I’m linking to an account creation form. If there’s already an account with a matching email address, then update the HubSpot contact with the details (name, phone number) from the account on the site. If not, create a new Contact on HubSpot.\n\nI could do multiple API calls - one to check if exists, and then another to do the update/creation based on the result of the check, but having two calls feels like it’ll be slower?"
+  }
+]

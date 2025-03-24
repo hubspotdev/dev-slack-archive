@@ -1,0 +1,157 @@
+[
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2023-06-07 02:47:23",
+    "text": "Hello everyone!\n\nI have a frustrating puzzle that I can't seem to figure out. I'm not a developer per se, but I've picked up some things left and right and I can't seem to figure this bit out.\nI've got a *programmable email module* that will show a series of products, stored in a custom object, based on a module 'application' input field. It basically uses the CRM objects function and the input field changes the query variables for that function. We have a daily stock email, an email with weekly specials etc., and they all use the same module - based on the chosen option it renders the relevant CRM records.\n\nOne application I'm working on is a Winback email, where we send clients products that match their most recent purchase, i.e. it's personalized. The way this works is I have a workflow that puts the brand name of the latest machine a contact bought onto a contact property. I then figured I'd incorporate the contact property into the query like so:\n\n```{% elif module.type == \"winback\" %}\n{% set campaignname == \"Winback\" %}\n{% set querydt =\"brand=\"~contact.machine_brand~\"&amp;catalog_price__gt=0&amp;limit=3&amp;machine_status=in_stock&amp;available_on_webshop=true\" %}\n{% set machines = crm_objects(\"machine\", querydt, \"model,brand,discount,discounted_price,machine_name,machine_status,capacity,hours,catalog_price,engine_type,year_of_manufacture,usp_1,usp_2,usp_3,image_url__for_marketing_email_,image_url_b,image_url_c,image_url_d,image_url_e,mast___lifting_height,machine_url\") %}```\nBut this code errors when I try to send a test email (the error message gets truncated sadly, so no idea what's going on).\n\nI've tested and if I pprint the contact property into the email, it renders the correct brand name. So the email 'has' the correct data from the contact. If I query like this with a flat brand value, it gets me the right machines. So it's capable of running a query like that. But it seems like it can't do both.\n\nAm I running into some kind of limitation here? Or just doing this wrong? Appreciate any suggestions! :slightly_smiling_face:",
+    "reply_count": 19,
+    "reply_users_count": 5,
+    "replies": [
+      {
+        "time_stamp": "2023-06-07 02:53:20"
+      },
+      {
+        "time_stamp": "2023-06-07 04:31:44"
+      },
+      {
+        "time_stamp": "2023-06-07 04:38:22"
+      },
+      {
+        "time_stamp": "2023-06-07 04:43:14"
+      },
+      {
+        "time_stamp": "2023-06-07 06:21:02"
+      },
+      {
+        "time_stamp": "2023-06-07 06:28:04"
+      },
+      {
+        "time_stamp": "2023-06-07 06:30:16"
+      },
+      {
+        "time_stamp": "2023-06-07 06:35:01"
+      },
+      {
+        "time_stamp": "2023-06-07 06:35:30"
+      },
+      {
+        "time_stamp": "2023-06-07 06:36:17"
+      },
+      {
+        "time_stamp": "2023-06-29 09:24:22"
+      },
+      {
+        "time_stamp": "2023-06-30 06:33:32"
+      },
+      {
+        "time_stamp": "2023-06-30 07:32:17"
+      },
+      {
+        "time_stamp": "2023-06-30 11:33:02"
+      },
+      {
+        "time_stamp": "2023-06-30 14:41:57"
+      },
+      {
+        "time_stamp": "2023-07-26 05:06:42"
+      },
+      {
+        "time_stamp": "2023-07-28 04:13:56"
+      },
+      {
+        "time_stamp": "2023-08-03 02:20:04"
+      },
+      {
+        "time_stamp": "2023-08-03 07:43:27"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2023-06-07 02:53:20",
+    "text": "The whole if statement looks like this:\n\n```{% if module.type == \"daily_stock\" %}\n{% set campaignname == \"Daily%20stock\" %}\n{% set querydt =\"daily_stock_email=true&amp;catalog_price__gt=0&amp;limit=100&amp;machine_status=in_stock&amp;available_on_webshop=true\" %}\n{% set events = crm_objects(\"machine\", querydt, \"model,brand,discount,discounted_price,machine_name,machine_status,capacity,hours,catalog_price,engine_type,year_of_manufacture,usp_1,usp_2,usp_3,image_url__for_marketing_email_,image_url_b,image_url_c,image_url_d,image_url_e,mast___lifting_height,machine_url\") %}\n\n{% elif module.type == \"specials\" %}\n{% set campaignname == \"Specials\" %}\n{% set querydt =\"is_special=true&amp;limit=100&amp;machine_status=in_stock\" %}\n{% set events = crm_objects(\"machine\", querydt, \"model,brand,machine_name,machine_status,capacity,hours,catalog_price,engine_type,year_of_manufacture,usp_1,usp_2,usp_3,image_url__for_marketing_email_,image_url_b,image_url_c,image_url_d,image_url_e,mast___lifting_height,machine_url,special_start_date,special_end_date,discounted_price_number\") %}\n\n{% elif module.type == \"winback\" %}\n{% set company = crm_associations(654301,\"HubSpot_DEFINED\",\"0-2\")%}\n{% set campaignname == \"Winback\" %}\n{% set querydt =\"brand=\"~contact.machine_brand~\"&amp;catalog_price__gt=0&amp;limit=3&amp;machine_status=in_stock&amp;available_on_webshop=true\" %}\n{% set events = crm_objects(\"machine\", querydt, \"model,brand,discount,discounted_price,machine_name,machine_status,capacity,hours,catalog_price,engine_type,year_of_manufacture,usp_1,usp_2,usp_3,image_url__for_marketing_email_,image_url_b,image_url_c,image_url_d,image_url_e,mast___lifting_height,machine_url\") %}\n\n{% elif module.type == \"custom\" %}\n{% if module.campaign_name %}\n{% set campaignname == module.campaign_name %}\n{% else %}\n{% set campaignname == \"Onbekend / Niet ingevuld\" %}\n{% endif %}\n{% set querydt =\"brand=\"~module.brand_name~\"&amp;engine_type=\"~module.engine_type~\"&amp;limit=\"~module.machine_limit~\"&amp;machine_status=in_stock&amp;available_on_webshop=true&amp;order=hs_createdate\" %}\n{% set events = crm_objects(\"machine\", querydt, \"model,brand,machine_name,hs_createdate,machine_status,capacity,hours,catalog_price,engine_type,year_of_manufacture,usp_1,usp_2,usp_3,image_url__for_marketing_email_,image_url_b,image_url_c,image_url_d,image_url_e,mast___lifting_height,machine_url,special_start_date,special_end_date,discounted_price_number\") %}\n\n{% elif module.type == \"debug\" %}\n{% set querydt =\"brand=Bugatti\" %}\n{% set events = crm_objects(\"machine\", querydt, \"model,brand,discount,discounted_price,machine_name,machine_status,capacity,hours,catalog_price,engine_type,year_of_manufacture,usp_1,usp_2,usp_3,image_url__for_marketing_email_,image_url_b,image_url_c,image_url_d,image_url_e,mast___lifting_height,machine_url\") %}\n{% endif %}```\nwhich is followed by your basic for-loop that works for every other application of the module. Pretty big to share all that code here, but looks like this:\n\n```{% for machine in machines.results|batch(3) %}\n&lt; basic HTML/CSS for every product 'card' &gt;\n{% endfor %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Pokorniecki",
+      "poster_handle": "byron.pokorniecki.ext"
+    },
+    "time_stamp": "2023-06-07 04:31:44",
+    "text": "Hey, Dev here that used a fair bit of hubL before but by no means an expert, just trying to help figure it out:\n\nI dont think that you can use the comparison operator (==) in combination with set.\n\nSo campaignname = \"Winback\" would be the correct way. I dont know if this is causing your issue, but I would assume that hubL doesnt like that."
+  },
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2023-06-07 04:38:22",
+    "text": "<@U04UF7BNBK4> thanks - I don't think that's it, as the other applications all work fine. Seems that = or == both works."
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Pokorniecki",
+      "poster_handle": "byron.pokorniecki.ext"
+    },
+    "time_stamp": "2023-06-07 04:43:14",
+    "text": "hmm okay, shame, it would have been the solution why it works in the last case where you directly set the brand to the bugatti.\n(because there you dont use\n```{% set campaign == \"something\" %}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Pokorniecki",
+      "poster_handle": "byron.pokorniecki.ext"
+    },
+    "time_stamp": "2023-06-07 06:21:02",
+    "text": "Still can't find what could be the problem unfortunately.\nDid you try to pprint querydt to verify that the query is matching your expectations?\n( I know you checked for the contact property already, but running out of ideas ).\n\nOther than that there is a limitation on the use of crm_objects to 10 times per page, but that shouldnt be the case especially if all the other paths are running as intended.\n\nOther than that i would try to remove parts of the query and parts of the properties to see if this removes the issue and therefore narrow down the root cause.\n\nSorry I can't give you a clearer answer - but hopefully someone else has an idea why this happens."
+  },
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2023-06-07 06:28:04",
+    "edited": {
+      "time_stamp": "2023-06-07 06:28:26"
+    },
+    "text": "<@U04UF7BNBK4> Yeah I followed the same logic. Basically seeing how far I can come with everything, and where it messes up is merging the contact.machine_brand into the query. I even did something like this, saving the contact property into a separate variable before including it in the query:\n\n```{% set thisBrand = contact.machine_brand %}\n{{ thisBrand|pprint }}```\nthisBrand would show the name of the contact brand in the email. That just worked. So it's able to look at the contact and pull that information to display it. But then when I try the next step:\n```{% set querydt = \"brand=\"~thisBrand~\"etc.\" %}```\nIt errors out when sending the email.\n\nMy working theory is that it may have something to do with that it only does one 'pass' on the email code upon sending. So it might be able to fetch that data from the contact to print it, but isn't able to await completion of that before doing the crm_objects function."
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Pokorniecki",
+      "poster_handle": "byron.pokorniecki.ext"
+    },
+    "time_stamp": "2023-06-07 06:30:16",
+    "text": "what do you get if you remove the |pprint and just output the variable?"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Pokorniecki",
+      "poster_handle": "byron.pokorniecki.ext"
+    },
+    "time_stamp": "2023-06-07 06:35:01",
+    "edited": {
+      "time_stamp": "2023-06-07 06:35:16"
+    },
+    "text": "But you might be right with your assumption. Maybe <@U01QVR44MEY> knows something in this regard?\n\n(I have yet to see that he cannot answer a question or give very good hints where to look)"
+  },
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2023-06-07 06:35:30",
+    "text": "<@U04UF7BNBK4> I get just the value without the other info"
+  },
+  {
+    "poster": {
+      "poster_name": "Bob Balm",
+      "poster_handle": "bob209"
+    },
+    "time_stamp": "2023-06-07 06:36:17",
+    "text": "Appreciate the input. I don't think a lot of people use programmable email yet, ha! Haven't found many examples of it in the community, though I'm sure this is a pretty common use case."
+  }
+]

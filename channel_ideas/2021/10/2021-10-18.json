@@ -1,0 +1,80 @@
+[
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2021-10-18 05:22:03",
+    "text": "Just to explore the possibility:\nI think would be neat if we could potentially expand to a full control of injected HS such\n\n\n\n```{{ js_integration_head_start() }}\n{{ head_elements() }}\n{{ head_css() }}\n{{ head_js() }}\n{{ js_integration_head() }}\n\n{{ include_default_custom_css(content.include_default_custom_css, template_meta.include_default_custom_css, domain_settings.include_default_custom_css) }}\n\n{{ include_attached_css(content_group.attached_stylesheets or domain_settings.attached_stylesheets, content.enable_domain_stylesheets, template_meta.enable_domain_stylesheets, theme_meta.enable_domain_stylesheets, domain_settings.enable_domain_stylesheets) }}\n\n{{ include_attached_css(template_meta.attached_stylesheets, content.enable_layout_stylesheets) }}\n\n{{ include_attached_css(content.attached_stylesheets) }}\n\n{{ require_attached_js(template_meta.attached_js) }}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2021-10-18 05:34:24",
+    "text": "All my reasons behind are about boosting performance.\nFor example:\n`&lt;title&gt;` along with `&lt;meta name=\"viewport\" ...&gt;` should be on top of the `head`.\nThen a mix of resources of CSS &amp; JS need to be ordered properly depending on page elements (that will variate between head and footer position). And those will be a mix between custom coded and HS defaults.\nWith this extra control we can also remove unwanted/not needed JS from HS. Just to provide one example: `keyboard-accesible-menu-flyouts`  (custom menus without the HS default class won't benefit, and you may want to provide your own). And while I can use the `replace` hackish way is not ideal.\n\nMy current issues is that using directly any of the internal functions like `head_css()` won't provide enough granular control."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-10-18 09:55:15",
+    "edited": {
+      "time_stamp": "2021-10-18 09:57:02"
+    },
+    "text": "Hey Gonzalo, appreciate the detailed feedback. I’ll make sure the team sees this. Definitely want to give developers more control, there are nitty gritty aspects that could have gotchas. I have a feeling we will have some questions as we think through it and ways to address it."
+  },
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2021-10-18 09:57:18",
+    "text": "happy to jump on a call or whatever.\nNot like I am a super expert, but a bit obsessed :rolling_on_the_floor_laughing:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-10-18 10:00:14",
+    "text": "Haha, I’ll let you know if the team wants to do that. I have a feeling they’ll want to first take a little time to think and discuss it internally, so they can ask meaningful questions."
+  },
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2021-10-18 10:09:05",
+    "edited": {
+      "time_stamp": "2021-10-18 10:09:20"
+    },
+    "text": "One potential solution I could see for this is just remove the actual requirement of standard_includes in favor of a different way to handle. For example, the same way that we can check for CSS and JS attached to a page within the `template_types` or `js_head_assets` . You could add for the HS too.\nThen with a richer snippet to provide priority/order (like the early discussion on this topic) we could iterate the entries to generate our own DOM.\nSo we can have potentially full control on defering analytics integrations, removing unused JS etc.\n\nI understand this can potentially break things on HS (forms, tracking, etc), but you don't have to recomend this path, just provide the flexibility to go with the default standard_includes or a different one."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-10-18 10:51:27",
+    "text": "One thing that currently comes to mind is ensuring we at HubSpot have a means to add JS or CSS still. It’s definitely fine to offer a way to opt out of specific things. Just don’t want to create a situation where we can’t resolve an issue with older websites automatically.\n\nObviously we don’t want to go adding a ton of scripts or anything, it’s just a matter of making sure we don’t cut off that capability. Thankfully using default modules addresses a lot of that since we can update the module itself in those cases.(Though to avoid breaking CSS/JS we try not to make significant updates to them continuously after release.)"
+  },
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2021-10-18 13:32:47",
+    "text": ":100:\nI think you have missed a great opportunity to renovate the defaults providing new ones for the themes. That way the old would have been marked as incompatible to themes and at the same time solved the breaking updates for new websites built on themes.\n\nFor example the span wrappers"
+  },
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2021-10-18 13:35:13",
+    "text": "Regarding the HS updates for new elements. If we for example loop a list of ordered resources you can still inject whatever you could need im the future"
+  }
+]

@@ -1,0 +1,124 @@
+[
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2023-04-13 06:36:53",
+    "text": "Running `hsDebug`: child themes seem to take significantly longer in Total request time. Is there a way to prevent this? *And is 2+ seconds bad?*",
+    "reply_count": 9,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-04-13 06:37:14"
+      },
+      {
+        "time_stamp": "2023-04-13 06:40:06"
+      },
+      {
+        "time_stamp": "2023-04-13 08:18:21"
+      },
+      {
+        "time_stamp": "2023-04-13 08:21:17"
+      },
+      {
+        "time_stamp": "2023-04-13 08:26:29"
+      },
+      {
+        "time_stamp": "2023-04-13 08:27:45"
+      },
+      {
+        "time_stamp": "2023-04-13 08:27:55"
+      },
+      {
+        "time_stamp": "2023-04-13 08:41:59"
+      },
+      {
+        "time_stamp": "2023-04-13 08:49:58"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2023-04-13 06:37:14",
+    "text": "```Request Timing Breakdown:\nTotal Request Time: 2304 ms.\nResolve View: 510 ms. {\n\tBlog Renderer: 9 ms.\n\tPage Renderer: 500 ms. {\n\t\tMap URL to Content: 10 ms.\n\t\tCreate View: 489 ms. {\n\t\t\tCreate View: 489 ms. {\n\t\t\t\tBuild Render Context: 489 ms. {\n\t\t\t\t\tSupply Initial Context: 3 ms. {\n\t\t\t\t\t\tCheck Business Units Access: 3 ms.\n\t\t\t\t\t}\n\t\t\t\t\tGet Template: 27 ms.\n\t\t\t\t\tPopulate Time Zone Context: 2 ms.\n\t\t\t\t\tPopulate Theme Context: 453 ms. {\n\t\t\t\t\t\tLoad Theme Files: 446 ms. {\n\t\t\t\t\t\t\tLoad Theme By Asset Path: 446 ms.\n\t\t\t\t\t\t}\n\t\t\t\t\t\tLoad Theme Settings: 5 ms.\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}\nRender View: 1733 ms```"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2023-04-13 06:40:06",
+    "text": "<@U7SL518D6> is this normal? It’s worth noting we’ve been getting server response time issues for this client. But no pre-rendering error messages show :man-shrugging::skin-tone-2:"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2023-04-13 06:43:15",
+    "text": "it is worth noting if you’ve created an entire website  with the growth theme, then you will have to replicate a lot of the theme set-up process with your child theme (basically anything you’ve set up in theme settings and global partials)"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2023-04-13 08:18:21",
+    "text": "So it matters intermittently.\n\nIf prerendering is able to happen for the page the site visitor shouldn’t see slowness the overwhelming majority of the time.\n\nThe moments where someone would see a difference is where something in the page has to change so the page needs to be re-rendered."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2023-04-13 08:21:17",
+    "text": "As far as ways to prevent it. Kinda like front-end performance it kinda depends on what you need that page to do.\n\nFor example if you’re doing a lot of processing of data like sorting/filtering HubDB in HubL your render time will be higher than a simpler page that doesn’t need to do anything complicated with data other than just print it to the page."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2023-04-13 08:26:29",
+    "edited": {
+      "time_stamp": "2023-04-13 08:26:56"
+    },
+    "text": "If you truly had a ton of complicated processing happening in your template/module in HubL, it may be worthwhile to move some of it client side. Especially if that data is changing frequently.\n\nFor example if you had a CRM object type or HubDB table where the data was furiously updating, being created, deleted, etc. That means that page listing those records needs to be re-rendered frequently. Reducing the processing you’re doing in HubL, or transitioning fetching the data to clientside, can enable you to reduce that render time and deliver a faster experience to a visitor."
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2023-04-13 08:27:45",
+    "text": "This was incredibly insightful <@U7SL518D6>. Thank you :pray::skin-tone-2:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2023-04-13 08:27:55",
+    "text": ":yougotitdude:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2023-04-13 08:41:59",
+    "text": "Side note for anyone who stumbles onto this thread.\nThis kind of optimization should not be the first thing you try to optimize when you’re trying to make your site load fast.\n\nYou should definitely ensure your page can be prerendered before doing any further optimization like this. The reason is because the prerendered page will get served 90+% of the time, meaning there is no rendering time at all, the page is able to be served to the visitor right away as if it were a static html file.\n\nIf your site is prerendered but still slow the majority of the time, then optimizing the server side rendering time isn’t going to move the needle in a significant way, it will just make the worst cases less significant.\n\nThe optimizing your CMS hub site for performance guide is filled with a lot of really good optimization recommendations and you should be doing those things first as they will have the greatest impact on the loading speed of your page.\n<https://developers.HubSpot.com/docs/cms/guides/speed>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2023-04-13 08:49:58",
+    "text": "Also noting the 90+% is a guesstimate, not a direct metric. The jist is we prerender all pages as needed as quickly as we can. For most cases the real percent is likely significantly higher, but for pages where you have data that’s constantly changing it could be lower.\n\nBasically you can think of it like this: If you had financial data on the page - used for making critical business decisions, and that data gets updated every half second, and you’re using HubL to render it. Well we can try to prerender that page but it’s only useful for half a second. We have to throw out the old prerendered page every half second to generate a new one otherwise the site visitor would see stale data.\n\nMoving grabbing that small bit of data to the client side with say a serverless function in the middle, means your page is served pre-rendered all the time and the browser just requests that small bit of changed data separately. You could even make it update in real-time for the user by polling."
+  }
+]

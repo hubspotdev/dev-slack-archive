@@ -1,0 +1,137 @@
+[
+  {
+    "poster": {
+      "poster_name": "Gareth Wright",
+      "poster_handle": "garpunkal"
+    },
+    "time_stamp": "2021-02-24 02:26:38",
+    "text": "@here can anyone educate me on the best way to do multilingual on hubdb?  Language Column? different tables?",
+    "reply_count": 11,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2021-02-24 02:35:26"
+      },
+      {
+        "time_stamp": "2021-02-24 02:38:18"
+      },
+      {
+        "time_stamp": "2021-02-24 02:41:51"
+      },
+      {
+        "time_stamp": "2021-02-24 03:02:24"
+      },
+      {
+        "time_stamp": "2021-02-24 05:43:49"
+      },
+      {
+        "time_stamp": "2021-02-24 05:56:16"
+      },
+      {
+        "time_stamp": "2021-02-24 06:03:50"
+      },
+      {
+        "time_stamp": "2021-02-24 06:03:52"
+      },
+      {
+        "time_stamp": "2021-02-24 09:30:31"
+      },
+      {
+        "time_stamp": "2021-02-25 02:24:51"
+      },
+      {
+        "time_stamp": "2021-02-25 02:29:40"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-02-24 02:35:26",
+    "edited": {
+      "time_stamp": "2021-02-24 02:36:50"
+    },
+    "text": "Well, max rows per table is 10k - so it’ll need to take that into account - your expected data size * num of languages"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-02-24 02:38:18",
+    "text": "If you’re using this on a site with hubl"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-02-24 02:41:51",
+    "edited": {
+      "time_stamp": "2021-02-24 02:42:20"
+    },
+    "text": "the other, table route could look something like:\n\n```{% set tablePrefix = \"table_\" %}\n{% set tableName = tablePrefix ~ content.language.languageTag %}\n\n{% set table = hubdb_table(tableName) %}\n\n{% if table %}\n\n{% set rows = hubdb_table_rows(table.id, \"queryhere\") %}\n\n{% else %}\n// fallback to en\n{% set rows = hubdb_table_rows(tablePrefix ~ \"en\", \"queryhere\") %}\n\n{% endif %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Gareth Wright",
+      "poster_handle": "garpunkal"
+    },
+    "time_stamp": "2021-02-24 03:02:24",
+    "text": "thank you :slightly_smiling_face:"
+  },
+  {
+    "text": "This could be one solution. I used my HubDB id, so remember to change that back.",
+    "time_stamp": "2021-02-24 03:23:04"
+  },
+  {
+    "poster": {
+      "poster_name": "Tuomas Malinen",
+      "poster_handle": "tuomas.malinen"
+    },
+    "time_stamp": "2021-02-24 03:49:39",
+    "text": "Thanks a lot Sami! Perfect solution."
+  },
+  {
+    "poster": {
+      "poster_name": "Gareth Wright",
+      "poster_handle": "garpunkal"
+    },
+    "time_stamp": "2021-02-24 05:43:49",
+    "text": "<@UQERM7BLY> using\n\n`{% set tablePrefix = \"Person_\" %}`\n  `{% set tableName = tablePrefix ~ content.language.languageTag %}`\n  `{% set table = hubdb_table(tableName) %}`\n\nI get the validation error using watch:\n\n`[ERROR] Error validating template.`\n`[ERROR] line 63: Table `Person_` not found in your account.`\n\nIt's almost like the concatenation isn't happening first.\n\ncan you advise?"
+  },
+  {
+    "poster": {
+      "poster_name": "Gareth Wright",
+      "poster_handle": "garpunkal"
+    },
+    "time_stamp": "2021-02-24 05:56:16",
+    "text": "`{%  set rows = hubdb_table_rows(\"person_\" + content.language.languageTag, queryparam) %}` this fixes it"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-02-24 06:03:50",
+    "text": "sorry was afk :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-02-24 06:03:52",
+    "text": "nice!"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2021-02-24 09:30:31",
+    "text": "I’ve run into the exact same thing where variables with concatenation did not work for HubDB table calls. I had to do the same thing <@U01PDTKRGGH>"
+  }
+]

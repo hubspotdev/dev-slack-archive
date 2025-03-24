@@ -1,0 +1,226 @@
+[
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2023-03-15 06:46:07",
+    "edited": {
+      "time_stamp": "2023-03-15 06:47:19"
+    },
+    "text": "We’re looking to add some basic front-end search-functionality (query string) for filtering the data from GraphQL. Seems like a no-brainer to have something like a filter on `title_contains` but GraphQL is case-sensitive. This makes it rather unpleasant for the end user performing the search.\n\nHave any of your figured out how to circumvent this issue?",
+    "reply_count": 26,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2023-03-15 08:48:40"
+      },
+      {
+        "time_stamp": "2023-03-15 08:48:51"
+      },
+      {
+        "time_stamp": "2023-03-15 08:49:20"
+      },
+      {
+        "time_stamp": "2023-03-15 08:49:29"
+      },
+      {
+        "time_stamp": "2023-03-15 09:11:14"
+      },
+      {
+        "time_stamp": "2023-03-15 09:11:35"
+      },
+      {
+        "time_stamp": "2023-03-15 09:11:41"
+      },
+      {
+        "time_stamp": "2023-03-15 09:11:46"
+      },
+      {
+        "time_stamp": "2023-03-15 09:11:47"
+      },
+      {
+        "time_stamp": "2023-03-15 09:13:38"
+      },
+      {
+        "time_stamp": "2023-03-15 09:16:36"
+      },
+      {
+        "time_stamp": "2023-03-15 09:16:56"
+      },
+      {
+        "time_stamp": "2023-03-15 09:17:15"
+      },
+      {
+        "time_stamp": "2023-03-15 09:21:26"
+      },
+      {
+        "time_stamp": "2023-03-15 09:21:37"
+      },
+      {
+        "time_stamp": "2023-03-15 09:22:28"
+      },
+      {
+        "time_stamp": "2023-03-22 11:17:54"
+      },
+      {
+        "time_stamp": "2023-03-22 11:22:25"
+      },
+      {
+        "time_stamp": "2023-04-03 09:10:30"
+      },
+      {
+        "time_stamp": "2023-04-03 09:21:27"
+      },
+      {
+        "time_stamp": "2023-04-03 09:21:27"
+      },
+      {
+        "time_stamp": "2023-04-03 09:44:58"
+      },
+      {
+        "time_stamp": "2023-04-05 07:00:57"
+      },
+      {
+        "time_stamp": "2023-04-05 07:54:48"
+      },
+      {
+        "time_stamp": "2023-04-05 08:10:59"
+      },
+      {
+        "time_stamp": "2024-11-14 12:58:08"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-15 08:48:40",
+    "text": "Interesting I just ran this query:\n\n```query MyQuery {\n  CRM {\n    contact_collection(filter: {lastname__contains: \"mckay\"}) {\n      items {\n        firstname\n        lastname\n      }\n    }\n  }\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-15 08:48:51",
+    "text": "and got this back:\n```\"data\": {\n    \"CRM\": {\n      \"contact_collection\": {\n        \"items\": [\n          {\n            \"firstname\": \"Carter\",\n            \"lastname\": \"McKay\"\n          }\n        ]\n      }\n    }\n  }```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-15 08:49:20",
+    "text": "Little more search oriented query:\n```query MyQuery {\n  CRM {\n    contact_collection(filter: {lastname__contains: \"*mck*\"}) {\n      items {\n        firstname\n        lastname\n      }\n    }\n  }\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-15 08:49:29",
+    "text": "returns the same thing"
+  },
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2023-03-15 09:11:14",
+    "edited": {
+      "time_stamp": "2023-03-15 09:11:17"
+    },
+    "text": "```query MyQuery {\n  HUBDB {\n    courses_dk_td_collection(filter: {title__contains: \"dashboards\"}) {\n      items {\n        title\n      }\n    }\n  }\n}```\nReturns:\n```  \"data\": {\n    \"HUBDB\": {\n      \"courses_dk_td_collection\": {\n        \"items\": []\n      }\n    }\n} ```"
+  },
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2023-03-15 09:11:35",
+    "text": "With “Dashboards”:"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-15 09:11:41",
+    "text": "Ah for HubDB let me try that"
+  },
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2023-03-15 09:11:46",
+    "text": "```  \"data\": {\n    \"HUBDB\": {\n      \"courses_dk_td_collection\": {\n        \"items\": [\n          {\n            \"title\": \"&lt;p&gt;Dashboards&lt;/p&gt;\"\n          }\n        ]\n      }\n    }```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-15 09:11:47",
+    "text": "I was trying on CRM records"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-15 09:13:38",
+    "text": "Way why would I not have the HubDB option in graphiql? I have HubDB databases on this account"
+  },
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2023-03-15 09:16:36",
+    "text": "Huh, shouldn’t be a beta feature."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-15 09:16:56",
+    "text": "Yeah I've definitely used it before on other accounts but that was years ago"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-15 09:17:15",
+    "text": "oh wait sorry the browser was just updating slowly"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-15 09:21:26",
+    "text": "Yeah I'm noticing the same thing"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-15 09:21:37",
+    "text": "you also can't do wild card tokens"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-15 09:22:28",
+    "text": "<@U024L8W0MB6> I don't think it should be doing this right? This might be a bug on your guys end"
+  }
+]

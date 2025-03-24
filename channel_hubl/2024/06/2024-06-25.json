@@ -1,0 +1,48 @@
+[
+  {
+    "poster": {
+      "poster_name": "Artur Leinweber",
+      "poster_handle": "artur.leinweber"
+    },
+    "time_stamp": "2024-06-25 08:26:05",
+    "text": "Hi,\n\ni want to get all subpages of a parent page and tried to use menu() Hubl function.\n\nHow to setup the Hubl menu function to get all subpages of a specific page like\n\nparent page: /marketing\n\nall subpages like:\n/marketing/test1\n/marketing/test2\n/marketing/test3\n\nThanks"
+  },
+  {
+    "poster": {
+      "poster_name": "Paulo Barcelos",
+      "poster_handle": "paulo"
+    },
+    "time_stamp": "2024-06-25 09:29:37",
+    "text": "Hi HubSpot developers! I'm facing a challenging issue with removing the Cookiebot script from my template, and I could really use some expert insights.\n\n*The Goal:*\nI need to prevent the automatic loading of Cookiebot via the `standard_header_includes` variable, so I can manually load it with multiple domain groups.\n\n*The Problem:*\nThe `replace` filter doesn't seem to work on the Cookiebot script URL within `standard_header_includes`.\n\n*What I've Tried:*\n1. Using the replace filter:\n```   {{ standard_header_includes | replace(\"<https://consent.cookiebot.com/uc.js>\", \"\") }}```\n2. Debugging the content of `standard_header_includes`\n3. Materializing the content into a separate variable before applying the replace filter\n\n*Observations:*\n- The replace filter works for other strings within `standard_header_includes`\n- The Cookiebot script URL seems to be immune to the replace filter\n- Debugging shows the Cookiebot script is present, but can't be modified\n\n*Questions:*\n1. How exactly is `standard_header_includes` composed?\n2. Is there a special treatment for integration-added content like Cookiebot?\n3. Are there any known limitations or quirks when trying to modify integration-added scripts?\n4. Is there an alternative approach to prevent a specific integration script from loading?\n\nAny insights, workarounds, or explanations would be immensely appreciated. I'm stuck and hoping someone might have encountered (and solved) a similar issue before.\n\nThank you in advance for any help you can provide!",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-06-25 13:37:16"
+      },
+      {
+        "time_stamp": "2024-06-26 03:17:51"
+      },
+      {
+        "time_stamp": "2024-06-26 04:20:22"
+      },
+      {
+        "time_stamp": "2024-06-26 04:53:29"
+      },
+      {
+        "time_stamp": "2024-06-26 12:00:56"
+      },
+      {
+        "time_stamp": "2024-06-27 03:21:05"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2024-06-25 13:37:16",
+    "text": "I don’t know if I can give the answers to all of your questions, but I _believe_ that markup from integrations is evaluated very late in the page rendering process, so it might not be possible to modify it via HubL filters or functions.\n\nI haven’t used the Cookiebot _integration_, but I have done some manual implementation of Cookiebot — do you specifically need to _remove_ Cookiebot from those pages, or would it be suitable to just hide the consent dialogue and force-enable all scripts on that page?\n\nIf the latter, <https://www.cookiebot.com/en/developer/|the Cookiebot JS API> has some tools that might come in handy. In particular, you could listen for the `CookiebotOnLoad` event and fire the `Cookiebot.hide` and `Cookiebot.runScripts` methods within your callback.\n\nIf that doesn’t do what you need, and you _need_ to have more granular control other whether or not Cookiebot is included on a given page, it might be necessary to switch from an integration-administered implementation to a more custom implementation type."
+  }
+]

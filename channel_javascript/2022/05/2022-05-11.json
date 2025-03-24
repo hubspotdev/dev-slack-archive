@@ -1,0 +1,117 @@
+[
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2022-05-11 07:21:55",
+    "text": "Hey <@U032A8A6P1T> any chance you can send me a link (or just copy/paste) the un-minified code? It's a bit difficult to see exactly what's going on otherwise"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-05-11 09:48:23",
+    "text": "The code I am using to translate is...\n`// When the page content is ready, translate content`\n`document.addEventListener('DOMContentLoaded', () =&gt; {`\n  \n  `if(i18n_getlanguage() != 'en'){ // don't translate English since the content is already in English`\n    \n    `document`\n      `.querySelectorAll('[data-i18n-key]') // Find all elements that have the key attribute`\n      `.forEach(element =&gt; {`\n\n        `// translate each element`\n        `const key = element.getAttribute('data-i18n-key');`\n        `if(key){`\n          `const translation = i18n_getmessage(key);`\n          `if (translation &amp;&amp; translation != ''){`\n            `element.innerHTML = translation;`\n          `}`\n        `}`\n        \n      `});`\n\n  `}`\n\n  `// Runs on Load`\n  `onLoad();`\n\n`});`\n\nI have all the translations in the proper files in the module. The thing is that the code works. On the <http://babelbot.app|babelbot.app> site, it works on <https://www.babelbot.app/fr/calculatortest> , but doesn't on <https://www.babelbot.app/fr/>.  It works if I put it on <https://www.babelbot.app/fr/help/getting-started>, but not if I put it on <https://www.babelbot.app/fr/help>.  My hunch is that its conflicting with something else on the page and when I call `i18n_getmessage`, it's not looking at the correct place for language files.\n\nI emailed the support for the Theme we are using as well."
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2022-05-11 10:00:00",
+    "text": "What's the definition of `i18n_getmessage`? I see references to it, but I can't find the definition of the function"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-05-11 10:01:49",
+    "text": "<https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/i18n/getMessage> it's part of an i18n standard, i believe"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-05-11 10:02:42",
+    "text": "i believe that the way modules hold language files follows the standard."
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2022-05-11 10:55:21",
+    "text": "That looks like it's a different function, looking at the `_` vs the `.` separating the words"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2022-05-11 10:58:56",
+    "text": "Also it looks like that API is for browser extensions, not pages. Doesn't look like `i18n` is defined on the page"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-05-11 11:01:30",
+    "text": "I had found some references to these functions in the HubSpot community too. when language variations are added to a page, they are included. Mail question would be why it works on one page and not another. These are functions either that are standard or are being addd in by HubSpot for multilingual support "
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2022-05-11 11:13:11",
+    "edited": {
+      "time_stamp": "2022-05-11 11:13:15"
+    },
+    "text": "Did some digging and they are created by HubSpot. I'm not entirely clear on how they are supposed to be used so I'm doing some more research on the correct implementation. I'm hoping that reveals why this only works in some instances"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-05-11 11:14:30",
+    "text": "Ok thanks. It's possible these functions are not sanctioned/supported for external use but they do work. Just not on certain pages for some reason. "
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-05-11 11:15:45",
+    "text": "My goal is to store custom strings in the messages files and grab them via this function.  It works perfectly in another module I use for our app settings. This other one is for a pricing calculator I have on specific pages. "
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2022-05-11 11:54:12",
+    "text": "So far the only difference I can see is that the home page has the language variation and the others are just pages in a single language. There is a variable `__hs_messages` that isn't being populated on the home page, which is why the function isn't working. Still not sure that variable isn't populating but we're making some progress"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2022-05-11 11:55:03",
+    "text": "As far as being supported, it's definitely not, it's meant to be an HubSpot utility and we don't have it documented. I'd still like to figure out why this doesn't work but it's possible that everything is working as designed"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2022-05-11 12:56:30",
+    "text": "I don't have it on /help or /help/getting-started right now but I did test it on those. It worked on the latter but not on the former. Both have multi language variations "
+  }
+]

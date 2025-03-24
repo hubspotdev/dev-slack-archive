@@ -1,0 +1,167 @@
+[
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2020-04-16 02:23:57",
+    "text": "This was an earlier yo."
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2020-04-16 08:41:37",
+    "text": "This is also where my yo died"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2020-04-16 08:44:43",
+    "text": "How would one go about testing for returned results when using the `related_blog_posts` function? i.e. with the following snippet:\n```{% related_blog_posts blog_ids=\"&lt;blog_id&gt;\" limit=\"5\", tags=\"{{tagNames|join(',')}}\", post_formatter=\"related_posts\" %} ```\nI'm wanting to test for returned results and hide a containing div if it returns empty, but I'm not seeing a logical way of going about testing for those results....",
+    "reply_count": 10,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-04-16 09:21:37"
+      },
+      {
+        "time_stamp": "2020-04-16 09:22:33"
+      },
+      {
+        "time_stamp": "2020-04-16 09:23:11"
+      },
+      {
+        "time_stamp": "2020-04-16 10:32:19"
+      },
+      {
+        "time_stamp": "2020-04-16 10:33:30"
+      },
+      {
+        "time_stamp": "2020-04-16 10:37:30"
+      },
+      {
+        "time_stamp": "2020-04-16 10:38:39"
+      },
+      {
+        "time_stamp": "2020-04-16 10:41:49"
+      },
+      {
+        "time_stamp": "2020-04-16 11:11:13"
+      },
+      {
+        "time_stamp": "2020-04-16 11:11:20"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2020-04-16 09:03:29",
+    "text": "For the time being i've reverted to looping through the topic_list/setting recent tag posts per loop/ testing for the length of the returned array if it is more than itself, and then discluding the matching aboslute_url from the results after that."
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2020-04-16 09:03:54",
+    "text": "Would be good to know/have a way to test for the returned length of the recent_blog_posts array"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2020-04-16 09:07:30",
+    "text": "Ha!"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2020-04-16 09:21:37",
+    "text": "```{% set rbp = related_blog_posts blog_ids=\"&lt;blog_id&gt;\" limit=\"5\", tags=\"{{tagNames|join(',')}}\", post_formatter=\"related_posts\" %} \n{{ rbp|count }}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2020-04-16 09:22:33",
+    "text": "or is this the one with the post formatter?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2020-04-16 09:23:11",
+    "text": "if that is teh case, there are three variables you can pass to the macro to format it, one of the variables are the total amount"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2020-04-16 10:32:19",
+    "text": "It is with the macro formatter, but the item that needs to be controlled lives outside of the formatted content."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2020-04-16 10:33:30",
+    "edited": {
+      "time_stamp": "2020-04-16 10:34:40"
+    },
+    "text": "What do you mean by that? Specifically what is the item and what are you doing to control it (or trying to do)"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2020-04-16 10:37:30",
+    "text": "I've already modified the test for the related blog posts to use the `blog_recent_tag_posts` to achieve what I'm wanting, but here is an example using the `blog_recent_author_posts` + the post formatter.\n\n```{% set author_posts = blog_recent_author_posts('&lt;blogId&gt;', content.blog_post_author.slug, 10) %}\n{% if author_posts|length() &gt; 1 %}\n   &lt;div class=\"blog-more-posts\"&gt;\n   {% set name = content.blog_post_author.display_name|split(' ') %}\n   {% for piece in name %}\n   {% if loop.first %}\n   &lt;h6 class=\"tiny-title\"&gt;More From {{ piece }} &lt;/h6&gt;  &lt;-- this part lives outside of the formated loop and needs to be hidden based on the number of results of posts from the author (or in the first case, if there were returned related blog posts based on tags)\n    {% endif %}\n    {% endfor %}\n    {% related_blog_posts blog_ids=\"&lt;blogId&gt;\" limit=\"5\", blog_authors=\"{{content.blog_post_author}}\", post_formatter=\"related_posts\" %} \n  &lt;/div&gt;\n{% endif %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2020-04-16 10:38:39",
+    "text": "Ended up falling back to setting up the related posts as such:\n```{% if content.topic_list %}\n  {% for topic in content.topic_list %}\n  {% set related_posts = blog_recent_tag_posts('default', topic.slug, 5) %}\n  {% if related_posts|length() &gt; 1 %}\n  &lt;div class=\"blog-related-posts\"&gt;\n    &lt;h6 class=\"tiny-title\"&gt;Related Blog Posts&lt;/h6&gt;\n    {% for post in related_posts %}\n        {% if post.absolute_url !=  content.absolute_url %}\n        &lt;div class=\"related-post\"&gt;\n          &lt;h6&gt;{{ post.publish_date|datetimeformat('%B %e, %Y') }}&lt;/h6&gt;\n          &lt;a class=\"related-post-url\" href=\"{{ post.absolute_url }}\" class=\"post-title\"&gt;{{ post.name }}&lt;/a&gt;\n        &lt;/div&gt;\n        {% endif %}\n    {% endfor %}\n  &lt;/div&gt;\n  {% endif %}\n  {% endfor %}\n{% endif %}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2020-04-16 10:41:49",
+    "text": "So you are trying to get related posts on a topic, that are for a specific author?"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2020-04-16 11:11:13",
+    "text": "nah those two logic bits are stacked. The first section is the posts by the author and then underneath is a listing of posts related to the post you are viewing based on topics"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2020-04-16 11:11:20",
+    "text": "but they follow a similar logic pattern"
+  }
+]

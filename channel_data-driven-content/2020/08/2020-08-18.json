@@ -1,0 +1,168 @@
+[
+  {
+    "poster": {
+      "poster_name": "Rohan Sootarsing",
+      "poster_handle": "rohans"
+    },
+    "time_stamp": "2020-08-18 01:02:29",
+    "text": "i had to build the filter outside so something like\n```{% set filter = \"&amp;company_id=\" 123 %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Rohan Sootarsing",
+      "poster_handle": "rohans"
+    },
+    "time_stamp": "2020-08-18 01:03:27",
+    "text": "then\n```{% set table = hubdb_table_rows(12345, filter) %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Rohan Sootarsing",
+      "poster_handle": "rohans"
+    },
+    "time_stamp": "2020-08-18 01:03:53",
+    "text": "<@USJLWLC2V>"
+  },
+  {
+    "poster": {
+      "poster_name": "Quentin Gerard",
+      "poster_handle": "quentin"
+    },
+    "time_stamp": "2020-08-18 02:56:51",
+    "text": "So any idea how to do this? Is there something special I need to do on the request path?"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Mitchell",
+      "poster_handle": "tom.mitchell"
+    },
+    "time_stamp": "2020-08-18 03:08:23",
+    "text": "Hi <@U0177RKAS1H> thanks so much for your response"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Mitchell",
+      "poster_handle": "tom.mitchell"
+    },
+    "time_stamp": "2020-08-18 03:08:48",
+    "text": "```{% set filter = \"&amp;company_id= {{contact.company_id}}\" %}\n{% set table = hubdb_table_rows(12345, filter) %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Mitchell",
+      "poster_handle": "tom.mitchell"
+    },
+    "time_stamp": "2020-08-18 03:09:28",
+    "text": "I'm trying the above to pull in the contact's company_id value in the format you've suggested but i'm getting the following errors:\n\n1.\nError:Cannot resolve property \" hubdb_table_rows(2665370, filter) \"\n\n2.\nError:`2:0Error invoking function 'hubdb_table_rows'`"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Mitchell",
+      "poster_handle": "tom.mitchell"
+    },
+    "time_stamp": "2020-08-18 03:09:40",
+    "text": "do you have any thoughts about what i may have done wrong?"
+  },
+  {
+    "poster": {
+      "poster_name": "Rohan Sootarsing",
+      "poster_handle": "rohans"
+    },
+    "time_stamp": "2020-08-18 03:10:44",
+    "text": "you might need to do\n```{% set companyId = contact.company_id %}\n{% set filter = \"&amp;company_id=\" ~ company_id %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Mitchell",
+      "poster_handle": "tom.mitchell"
+    },
+    "time_stamp": "2020-08-18 03:21:12",
+    "text": "Thanks <@U0177RKAS1H> - I've tried:\n\n```{% set companyId = contact.company_id %}\n{% set filter = \"&amp;company_id=\" ~ companyId %}\n\n{% set table = hubdb_table_rows(12345, filter) %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Mitchell",
+      "poster_handle": "tom.mitchell"
+    },
+    "time_stamp": "2020-08-18 03:21:23",
+    "text": "but now i'm seeing:\n\nError:Cannot resolve property \"[missing {{token}} value]\"\n\n2.\nError:`1:0BadRequestException: error when listing rows for table 2665370 for portal 3854877: Invalid value '' for filter 'company_id'`"
+  },
+  {
+    "poster": {
+      "poster_name": "Rohan Sootarsing",
+      "poster_handle": "rohans"
+    },
+    "time_stamp": "2020-08-18 03:26:57",
+    "text": "show me your code?"
+  },
+  {
+    "poster": {
+      "poster_name": "Tom Mitchell",
+      "poster_handle": "tom.mitchell"
+    },
+    "time_stamp": "2020-08-18 06:28:49",
+    "text": "Ok this has now been solved using the following method:\n\n```{% set table_id = 12345 %}\n{% set company_id = contact.company_id %}\n{% for row in hubdb_table_rows(table_id) %}\n      {% if row.company_id == company_id %}\n          &lt;p&gt;Name: {{ row.name }}&lt;/p&gt;\n         {% else %}\n      {% endif %}\n{% endfor %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2020-08-18 06:40:49",
+    "text": "<@U2H3TT8F2> <@U7SL518D6> Have u seen anybody doing such thing? I can't think of a way.."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2020-08-18 07:07:59",
+    "edited": {
+      "time_stamp": "2020-08-18 08:21:25"
+    },
+    "text": "Quentin are you wanting the next/previous links on the listing or detail view for the dynamic page? Also are you wanting to do it for pages within the same HubDB?"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2020-08-18 07:55:54",
+    "text": "I don’t believe there is a way to do this if you were thinking of something like having the following:\n```Parent Page A\n-- Dynamic Page A\nParent Page B\n-- Dynamic Page B```\nThen on Dynamic Page A having a “Next” link for Dynamic Page B"
+  },
+  {
+    "text": "Hi <@U7SL518D6> I want those next/previous links on the detail view page for dynamic pages. Something like this:\nAnd it should use the same HubDB",
+    "time_stamp": "2020-08-18 12:21:04",
+    "edited": {
+      "time_stamp": "2020-08-18 12:23:35"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Quentin Gerard",
+      "poster_handle": "quentin"
+    },
+    "time_stamp": "2020-08-18 12:22:47",
+    "text": "So for example I'm on Dynamic Page B and the \"Next\" link will take me to Dynamic Page C and \"Previous\" link will take me to Dynamic Page A"
+  },
+  {
+    "text": "Hey Quentin, I don’t believe that is possible to achieve with the current state of HubDB and Dynamic Content.  With your screenshot above, have you thought about possibly refactoring the blog engine to accomplish this? When using the blog on a post page, you can use the `{{ content }}` object to grab things like below:",
+    "time_stamp": "2020-08-18 13:09:29"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2020-08-18 13:10:20",
+    "text": "This might help achieve a similar effect to what you are looking to do"
+  },
+  {
+    "poster": {
+      "poster_name": "Quentin Gerard",
+      "poster_handle": "quentin"
+    },
+    "time_stamp": "2020-08-18 23:04:54",
+    "text": "Hi <@U2H3TT8F2> I didn't know it was possible to refactor the blog engine. How would one be able to do that?"
+  }
+]

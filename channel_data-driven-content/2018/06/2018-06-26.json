@@ -1,0 +1,111 @@
+[
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2018-06-26 07:00:53",
+    "text": "Really the file column (similar to the custom module field) would be a great addition."
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-06-26 09:02:26",
+    "text": "anyone have a quick example of using the `in` filter on the table? is it just `&amp;columnName__in={{arrayVar}}`?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-06-26 09:09:39",
+    "text": "`in` only works for multiselect columns right now"
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-06-26 09:37:15",
+    "edited": {
+      "time_stamp": "2018-06-26 09:38:18"
+    },
+    "text": "Not sure if anyone has done this previously who can shed some light for me. I am trying to use a for loop to go through the tables and grab the value of \"sub_category\" for each row, but what I am trying to do is return only the unique value of the returned results. Below is what have and it seems to output is `[sub_cat1][sub_cat1][sub_cat1][sub_cat1][sub_cat2][sub_cat2][sub_cat2][sub_cat2]`\n```\n{% set linkList = hubdb_table_rows(module.db_table ,queryparam~\"&amp;orderBy=sub_category\") %}\n    {% for item in linkList %}\n    \t{% set array = array ~ item.sub_category|map('name') %}\n\t{% if loop.last %}\n    \t\n    \t    {% set subCats = array|unique %}\n    \t     loopast: {{subCats}}\n    \t\n     {% endif %}\n    {% endfor %} \n```"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-06-26 09:39:18",
+    "text": "This is correct that the 8 items are being output and their respective category for those 8 but I am simply just trying to return `sub_cat1, sub_cat2`"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-06-26 09:39:22",
+    "text": "if that makes sense"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-06-26 09:55:05",
+    "edited": {
+      "time_stamp": "2018-06-26 09:55:16"
+    },
+    "text": "got it, for anyone wondering, there was this forum post by <@U22PJPGK0> <https://community.HubSpot.com/t5/Content-Design-Questions/Pulling-a-hubdb-column-in-as-a-choice-dropdown/td-p/2267> that I used as reference but I ended up with:\n```\n{% set linkList = hubdb_table_rows(module.db_table ,queryparam~\"&amp;orderBy=sub_category\") %}\n    {% set cats = linkList|map(attribute='sub_category')%}\n    {% for item in linkList %}\n    \n\t\t\t{% if loop.last %}\n    \t\n    \tlooplast: {{cats|unique}}\n    \t\n     {% endif %}\n    {% endfor %}   \n```"
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-06-26 16:55:05",
+    "text": "Anyone know how you can get the total number of rows returns in a hubdb table call?"
+  },
+  {
+    "poster": {
+      "poster_name": "Remington Begg",
+      "poster_handle": "remingtonbegg"
+    },
+    "time_stamp": "2018-06-26 16:57:18",
+    "text": "loop.length ?"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-06-26 17:00:24",
+    "text": "im doing 5 per page so that would only return 5 correct?"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-06-26 17:03:12",
+    "text": "looks like you can get it using `{% set table_info = hubdb_table(&lt;tableId&gt;) %}` but you can't filter this so you wont be able to get a row count from filtered."
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2018-06-26 19:32:04",
+    "edited": {
+      "time_stamp": "2018-06-26 19:32:22"
+    },
+    "text": "```{% set rows = hubdb_table_rows(tableId, queryParams) %}\n{{ rows|length }}\n```"
+  },
+  null
+]

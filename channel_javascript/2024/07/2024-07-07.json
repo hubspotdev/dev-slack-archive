@@ -1,0 +1,26 @@
+[
+  {
+    "poster": {
+      "poster_name": "Awake",
+      "poster_handle": "alanka"
+    },
+    "time_stamp": "2024-07-07 11:25:53",
+    "text": "Hi <@U077H4064AV>\n I have identified some issues in the provided code, particularly with the event listener for the form submission. The form submission event is not being correctly triggered. I have made some modifications to your code to ensure it works properly. Specifically, the code now sets a cookie upon form submission, and clears all cookies on every load for testing purposes. Please modify the changes according to your needs. You can use the following code in <http://jsbin.com|jsbin.com> to quickly verify it:\n```<!DOCTYPE html>\n&lt;html&gt;\n  &lt;head&gt;\n    &lt;title&gt;JavaScript Sandbox&lt;/title&gt;\n    &lt;meta charset=\"UTF-8\" /&gt;\n  &lt;/head&gt;\n\n  &lt;body&gt;\n    &lt;div id=\"video-container\"&gt;\n      &lt;video width=\"320\" height=\"240\" controls&gt;\n        &lt;source\n          src=\"<https://videos.pexels.com/video-files/6748678/6748678-uhd_1440_2560_25fps.mp4>\"\n          type=\"video/mp4\"\n        /&gt;\n        Your browser does not support the video tag.\n      &lt;/video&gt;\n   &lt;/div&gt;\n    &lt;div class=\"post-video-form\" style=\"display:none\" &gt;\n      &lt;form action=\"#\" onsubmit=\"setCookie('formFilled',true,365)\"&gt;\n        &lt;input type=\"text\" placeholder=\"cookie-value\" /&gt;\n        &lt;button type=\"submit\"&gt;Submit&lt;/button&gt;\n      &lt;/form&gt;\n    &lt;/div&gt;\n\n    &lt;!-- &lt;script type=\"javascript\" src=\"index.js\"&gt;&lt;/script&gt; --&gt;\n    &lt;script type=\"text/javascript\"&gt;\n      function clearAllCookies() {\n        const cookies = document.cookie.split(';');\n        for (let i = 0; i &lt; cookies.length; i++) {\n          const cookie = cookies[i];\n          const eqPos = cookie.indexOf('=');\n          const name = eqPos &gt; -1 ? cookie.substr(0, eqPos) : cookie;\n          document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';\n        }\n      }\n      \n      // Function to set a cookie\n  function setCookie(name, value, days) {\n    var expires = '';\n    if (days) {\n      var date = new Date();\n      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);\n      expires = '; expires=' + date.toUTCString();\n    }\n    document.cookie = name + '=' + (value || '') + expires + '; path=/';\n  }\n      \n      document.addEventListener('DOMContentLoaded', function() {\n  // Variables\n  const form = document.querySelector('.post-video-form');\n  const videoContainer = document.getElementById('video-container');\n\n  \n\n  // Function to get a cookie\n  function getCookie(name) {\n    var nameEQ = name + '=';\n    var ca = document.cookie.split(';');\n    for (var i = 0; i &lt; ca.length; i++) {\n      var c = ca[i];\n      while (c.charAt(0) == ' ') c = c.substring(1, c.length);\n      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);\n    }\n    return null;\n  }\n\n  // Function to check if the form has been filled\n  function checkFormFilled() {\n    return getCookie('formFilled') !== null;\n  }\n\n  // Function to show the form\n  function showForm() {\n    form.style.display = 'block';\n  }\n\n  // Function to hide the form\n  function hideForm() {\n    form.style.display = 'none';\n  }\n\n  // Function to enable the video\n  function enableVideo() {\n    const videoPlayer = videoContainer.querySelector('video');\n    if (videoPlayer) {\n      videoPlayer.play();\n    }\n  }\n\n  // Function to handle form submission\n  function handleFormSubmission(event) {\n    console.log('form is submitted');\n    event.preventDefault();\n    setCookie('formFilled', 'true', 365);\n    hideForm();\n    // Refresh the page after setting the cookie\n    //window.location.reload();\n  }\n\n  // Main function to handle video click\n  function handleVideoClick() {\n    if (!checkFormFilled()) {\n      showForm();\n    } else {\n      enableVideo();\n    }\n  }\n\n  // Event listener for video click\n  videoContainer.addEventListener('click', handleVideoClick);\n\n  // Event listener for form submission\n  form.querySelector('form').addEventListener('submit', handleFormSubmission);\n\n  // On page load, check if the form is filled\n  window.onload = function() {\n    clearAllCookies();\n    if (checkFormFilled()) {\n      enableVideo();\n    } else {\n      showForm();\n    }\n  };\n});&lt;/script&gt;\n  &lt;/body&gt;\n&lt;/html&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Awake",
+      "poster_handle": "alanka"
+    },
+    "time_stamp": "2024-07-07 11:28:04",
+    "text": "I trust you understand the difference between the `window load` event and the `DOMContentLoaded` event. For a safer approach, consider using `document.readyState`."
+  },
+  {
+    "poster": {
+      "poster_name": "Awake",
+      "poster_handle": "alanka"
+    },
+    "time_stamp": "2024-07-07 11:30:24",
+    "text": "Additionally, please note that adding a backdrop to the video tag with a higher z-index may prevent the video controls from triggering events properly."
+  }
+]

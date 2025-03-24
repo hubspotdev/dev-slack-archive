@@ -1,0 +1,80 @@
+[
+  {
+    "text": "[SOLVED]\nHey guys, is there any way for us to provide the data from HubDB rows to the module?\n\nHere’s an example, I’d like to use HubDB via for loop to provide rows data to the `boxes` property, but I’m having issues with that.",
+    "time_stamp": "2022-04-14 02:23:34",
+    "edited": {
+      "time_stamp": "2022-04-14 02:44:37"
+    },
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-04-14 02:45:02"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Carlin",
+      "poster_handle": "martin264"
+    },
+    "time_stamp": "2022-04-14 02:28:20",
+    "edited": {
+      "time_stamp": "2022-04-14 02:29:30"
+    },
+    "text": "I haven't used modules yet, but something like this might work?\n\n```{% for row in hubdb_table_rows(tableId, 'active=1&amp;promoted=1') %}\n    {% module \"image-boxes\"\n        full_width=true,\n        row=row,\n        ...\n    %}\n{% endfor %}\n\ni.e. passing the `row` as a variable to be used in the module\n\nOr is it the case you need to pass all rows in to the module? Just realised that `boxes` is maybe what you need to populate.```",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-04-14 02:31:53"
+      },
+      {
+        "time_stamp": "2022-04-14 02:43:00"
+      },
+      {
+        "time_stamp": "2022-04-14 02:45:04"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Strahinja Cokić",
+      "poster_handle": "sc"
+    },
+    "time_stamp": "2022-04-14 02:31:53",
+    "text": "Yeah, I need to change the values in the boxes, since this is one Masonry Grid module and I just want to add the data for the cards/boxes inside of it"
+  },
+  {
+    "poster": {
+      "poster_name": "Strahinja Cokić",
+      "poster_handle": "sc"
+    },
+    "time_stamp": "2022-04-14 02:43:00",
+    "text": "Actually I made it work.\n\nI created an array like this\n\n```{% set boxesTest = [] %}\n  \n  {% for row in hubdb_table_rows(dynamic_page_hubdb_table_id) %}\n    {% do boxesTest.append(row.hs_name) %}\n  {% endfor %}```\nAnd then used the value in boxes like this\n```boxes={{ boxesTest }}```\nIt works now and everything is generated properly, but colour in design manager looks like it does not work"
+  },
+  {
+    "poster": {
+      "poster_name": "Strahinja Cokić",
+      "poster_handle": "sc"
+    },
+    "time_stamp": "2022-04-14 02:45:02",
+    "text": "I created an array like this\n\n```{% set boxesTest = [] %}\n  \n  {% for row in hubdb_table_rows(dynamic_page_hubdb_table_id) %}\n    {% do boxesTest.append(row.hs_name) %}\n  {% endfor %}```\nAnd then used the value in boxes like this\n```boxes={{ boxesTest }}```\nColour highlighting in design manager looks like it does not work but everything works fine."
+  },
+  {
+    "poster": {
+      "poster_name": "Martin Carlin",
+      "poster_handle": "martin264"
+    },
+    "time_stamp": "2022-04-14 02:45:04",
+    "text": "ah cool, nice job. Not sure about the colour issue though"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2022-04-14 06:42:43",
+    "text": "Meaning, do u want to access the UI sepeartely in not in-app way?"
+  }
+]

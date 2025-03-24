@@ -1,0 +1,85 @@
+[
+  {
+    "poster": {
+      "poster_name": "Dor Bar Aliya",
+      "poster_handle": "dor.bar.aliya"
+    },
+    "time_stamp": "2024-08-15 05:11:14",
+    "text": "<@U25PYL3Q8> Thanks for the reply.\n\nThe full requirement is this:\n\n• 2(or more) Deals, different pipeline: \"Pipeline A\" and \"Pipeline B\"\n• Main (\"Parent\") deal, has line items, each line item has an attribute of to which pipeplie it belongs to, e.g Line Item 1 has \"Pipeline A\" and Line Item 2 has \"Pipeline B\" \n• The code needs to run, and copy all line item from the Main deal, to the associated deals\n• Another code will run after, deleting from each deal, line items which are from a different Pipeline of that deal\nSo far, using ChatGPT, I got to this code to clone the line items.\n\nBut the problems are:\n\nLets says there are only 2 Deal, a main deal, with 2 line items, and an associated deal with 0 line items\n\n• It fetches all products instead of just the 2 line items on the 'main' deal.\n• it copies all 4 lines items (instead of just 2) to the associated deal\n• then, if I delete those line from the associated deal, and enroll the workflow again, the code think the line items are still on the associated deal, therefore does not clone any line items again.\n```const axios = require('axios');\n\nexports.main = async (event, callback) =&gt; {\n    console.log('Function started');\n    const dealId = event.inputFields['dealId'];\n    const hapikey = process.env.hapikey;\n\n    async function getLineItems(dealId) {\n        try {\n            let allLineItems = [];\n            let url = `<https://api.hubapi.com/crm/v3/objects/line_items?associations=deal&amp;dealId=${dealId}&amp;properties=line_offer,quantity,price,hs_product_id>`;\n            while (url) {\n                const response = await axios.get(url, {\n                    headers: {\n                        'Authorization': `Bearer ${hapikey}`,\n                        'Content-Type': 'application/json'\n                    }\n                });\n                console.log(`Response data for deal ${dealId}:`, response.data); // Log raw response\n                allLineItems = allLineItems.concat(response.data.results);\n                url = response.data.paging ? response.data.paging.next.link : null;\n            }\n            console.log(`Total line items retrieved for deal ${dealId}: ${allLineItems.length}`);\n            return allLineItems;\n        } catch (error) {\n            console.error(`Error while retrieving line items:`, error);\n            return [];\n        }\n    }\n\n    async function getAssociatedDeals(dealId) {\n        try {\n            const response = await axios.get(\n                `<https://api.hubapi.com/crm/v3/objects/deals/${dealId}/associations/deals>`,\n                {\n                    headers: {\n                        'Authorization': `Bearer ${hapikey}`,\n                        'Content-Type': 'application/json'\n                    }\n                }\n            );\n            console.log(`Response data for associated deals of ${dealId}:`, response.data); // Log raw response\n            return response.data.results.map(association =&gt; association.id);\n        } catch (error) {\n            console.error(`Error while retrieving associated deals:`, error);\n            return [];\n        }\n    }\n\n    async function createLineItem(dealId, lineItem) {\n        try {\n            const newLineItem = {\n                properties: {\n                    line_offer: lineItem.properties.line_offer,\n                    quantity: lineItem.properties.quantity,\n                    price: lineItem.properties.price,\n                    hs_product_id: lineItem.properties.hs_product_id,\n                },\n                associations: [\n                    {\n                        to: {\n                            id: dealId,\n                        },\n                        types: [\n                            {\n                                associationCategory: \"HubSpot_DEFINED\",\n                                associationTypeId: 20,\n                            },\n                        ],\n                    },\n                ],\n            };\n\n            const response = await <http://axios.post|axios.post>(\n                `<https://api.hubapi.com/crm/v3/objects/line_items>`,\n                newLineItem,\n                {\n                    headers: {\n                        'Authorization': `Bearer ${hapikey}`,\n                        'Content-Type': 'application/json'\n                    }\n                }\n            );\n            console.log(`Created line item ${response.data.id} for deal ${dealId}`);\n            return response.data;\n        } catch (error) {\n            console.error(`Error while creating line item for deal ${dealId}:`, error);\n            return null;\n        }\n    }\n\n    if (dealId) {\n        try {\n            const triggerLineItems = await getLineItems(dealId);\n            console.log(`Line items retrieved for triggering deal ${dealId}:`, triggerLineItems);\n\n            if (triggerLineItems.length === 0) {\n                console.error('No line items found for the deal');\n                callback({ outputFields: { message: 'No line items found for the deal' } });\n                return;\n            }\n\n            const associatedDeals = await getAssociatedDeals(dealId);\n            console.log(`Associated deals for deal ${dealId}:`, associatedDeals);\n\n            if (associatedDeals.length === 0) {\n                console.error('No associated deals found');\n                callback({ outputFields: { message: 'No associated deals found' } });\n                return;\n            }\n\n            for (const associatedDealId of associatedDeals) {\n                console.log(`Processing associated deal ${associatedDealId}`);\n                \n                const existingLineItems = await getLineItems(associatedDealId);\n                console.log(`Existing line items for deal ${associatedDealId}:`, existingLineItems);\n                \n                const existingLineItemIds = existingLineItems.map(item =&gt; item.id);\n                console.log(`Existing line item IDs in deal ${associatedDealId}: ${existingLineItemIds.join(', ')}`);\n                \n                for (const lineItem of triggerLineItems) {\n                    if (!existingLineItemIds.includes(lineItem.id)) {\n                        console.log(`Creating line item ${lineItem.id} in deal ${associatedDealId}`);\n                        await createLineItem(associatedDealId, lineItem);\n                    } else {\n                        console.log(`Line item ${lineItem.id} already exists in deal ${associatedDealId}`);\n                    }\n                }\n            }\n\n            callback({ outputFields: { message: 'Line item copying completed' } });\n        } catch (error) {\n            console.error('Error during processing:', error);\n            callback({ outputFields: { message: 'Error during processing' } });\n        }\n    } else {\n        console.log('No dealId provided');\n        callback({ outputFields: { message: 'No dealId provided' } });\n    }\n};```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-15 05:37:39",
+    "text": "Okay, so why are you copying line items and what is the purpose of parent/child deals?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-15 05:38:04",
+    "text": "I have a few calls this morning, but I’ll take a look at the code and what you laid out when I get a break"
+  },
+  {
+    "poster": {
+      "poster_name": "Dor Bar Aliya",
+      "poster_handle": "dor.bar.aliya"
+    },
+    "time_stamp": "2024-08-15 05:39:57",
+    "text": "User is adding line items to only one deal, we want to distribute those line items across other deals, according to their pipeline after the user finishes to add those lines"
+  },
+  {
+    "poster": {
+      "poster_name": "Dor Bar Aliya",
+      "poster_handle": "dor.bar.aliya"
+    },
+    "time_stamp": "2024-08-15 05:40:01",
+    "text": "thanks a lot!!"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-15 08:13:10",
+    "text": "Right, that is what HubSpot is doing. What is this business process. Why is this happening, why are there deals related to other deal?"
+  },
+  {
+    "poster": {
+      "poster_name": "Lew Talon",
+      "poster_handle": "ltalon"
+    },
+    "time_stamp": "2024-08-15 08:44:16",
+    "text": "They got back saying: \"it was due to a recent change in our public callback endpoint to validate if a callback exists upon completion of the call. It didn't work as expected, so they reverted the change.\" - hope this helps!"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Hemmeter",
+      "poster_handle": "scott362"
+    },
+    "time_stamp": "2024-08-15 09:23:11",
+    "text": "Thanks. It’s something to pass along. Much appreciated "
+  },
+  {
+    "text": "Hey all! I want a workflow to trigger when a contact has gone through an entire sequence without taking an action (was not auto unenrolled). Is this what the “sequence finished” criteria accomplishes?",
+    "time_stamp": "2024-08-15 15:52:58",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-08-15 17:30:34"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-15 17:30:34",
+    "text": "I’ve found it easier to test to see if triggers happen then wait for a response on this."
+  }
+]

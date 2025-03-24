@@ -1,0 +1,182 @@
+[
+  {
+    "poster": {
+      "poster_name": "Hailey Bugbee",
+      "poster_handle": "hailey.bugbee"
+    },
+    "time_stamp": "2022-11-30 08:23:29",
+    "text": "hi team! I am trying to extract a contact property using Python in a custom code but am having trouble doing so. The main goal is to find the earliest date that any contact at a company reached the SQL stage- specifically for companies that have multiple contacts associated. However, I'm not able to actually pull the specific property (custom_date_became_sales_qualified_lead) that I want for each of the identified contacts. My code is in the thread and the error I'm getting is `AttributeError: 'dict' object has no attribute 'custom_date_became_sales_qualified_lead'`. If anyone has any experience or insight on this, it would be greatly appreciated!\n\nHere's the gist of what I'm trying to do:\n1. Identify the Company Name of the Contact that's currently enrolled in the workflow\n2. Find all other contacts associated with that Company Name\n3. Pull the \"custom_date_became_sales_qualified_lead\" property for each of those contacts\n4. Find the minimum of each of those custom_date_became_sales_qualified_lead values\n5. Set the minimum custom_date_became_sales_qualified_lead value as a new variable (to later be copied to a Company Property in the workflow)",
+    "reply_count": 16,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-11-30 08:23:41"
+      },
+      {
+        "time_stamp": "2022-11-30 08:24:45"
+      },
+      {
+        "time_stamp": "2022-11-30 08:26:11"
+      },
+      {
+        "time_stamp": "2022-11-30 08:26:51"
+      },
+      {
+        "time_stamp": "2022-11-30 08:27:31"
+      },
+      {
+        "time_stamp": "2022-11-30 08:27:39"
+      },
+      {
+        "time_stamp": "2022-11-30 08:30:33"
+      },
+      {
+        "time_stamp": "2022-11-30 08:31:43"
+      },
+      {
+        "time_stamp": "2022-11-30 08:32:22"
+      },
+      {
+        "time_stamp": "2022-11-30 08:34:56"
+      },
+      {
+        "time_stamp": "2022-11-30 08:35:54"
+      },
+      {
+        "time_stamp": "2022-11-30 08:36:06"
+      },
+      {
+        "time_stamp": "2022-11-30 08:37:53"
+      },
+      {
+        "time_stamp": "2022-11-30 08:38:29"
+      },
+      {
+        "time_stamp": "2022-11-30 08:46:15"
+      },
+      {
+        "time_stamp": "2022-11-30 10:50:46"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Hailey Bugbee",
+      "poster_handle": "hailey.bugbee"
+    },
+    "time_stamp": "2022-11-30 08:23:41",
+    "text": "```from HubSpot import HubSpot\nfrom datetime import datetime\nimport requests\nfrom pprint import pprint\nfrom HubSpot.crm.contacts import PublicObjectSearchRequest,BatchReadInputSimplePublicObjectId,ApiException\nfrom HubSpot.crm.companies import ApiException\n\n# define a function to determine the earliest SQL date for any contact in a company\ndef main(event):\n  company_name = event.get('inputFields').get('company')\n  \n## Search for contacts within company_name, filter out any that have no orig SQL date\n  public_object_search_request = PublicObjectSearchRequest(filter_groups=[{\"filters\":[{\"value\":company_name,\"propertyName\":\"company\",\"operator\":\"EQ\"},{\"propertyName\":\"custom_date_became_sales_qualified_lead\",\"operator\":\"HAS_PROPERTY\"}]}],properties=[\"custom_date_became_sales_qualified_lead\"], limit=100)\n  try:\n      api_response = HubSpot.crm.contacts.search_api.do_search(public_object_search_request=public_object_search_request)\n      #pprint(api_response.results)\n  except ApiException as e:\n      print(\"Exception when calling search_api-&gt;do_search: %s\\n\" % e)\n\n  \n  def addition(contact):   \n    return contact.properties.custom_date_became_sales_qualified_lead\n  \n  ## Convert api_response to dictionary\n  #contact_dict = dict(api_response)\n  \n  \n  result = map(addition, api_response.results)\n  print(list(result))\n  \n\n  ## Set min_SQL_date to the minimum 'custom_date_became_sales_qualified_lead' value\n  #min_SQL_date = contact_dict[\"results\"][\"properties\"][\"custom_date_became_sales_qualified_lead\"]\n\n  \n  return {\n    \"outputFields\": {\n      \"company\": company_name\n      #\"company_SQL_date\" : min_SQL_date\n    }\n  }```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-30 08:24:45",
+    "text": "is it a contact workflow or a company workflow?"
+  },
+  {
+    "poster": {
+      "poster_name": "Hailey Bugbee",
+      "poster_handle": "hailey.bugbee"
+    },
+    "time_stamp": "2022-11-30 08:26:11",
+    "text": "it's a contact workflow, but I want to set the resulting variable to a company property (which I planned on doing in the workflow, not in the code)"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-30 08:26:51",
+    "text": "You can't set a company property in a contact workflow through the set property action you can only do it through custom code"
+  },
+  {
+    "text": "Also why don't you just include the property with the property includer",
+    "time_stamp": "2022-11-30 08:27:31"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-30 08:27:39",
+    "text": "Instead of trying to ping the api for the data"
+  },
+  {
+    "text": "okay got it, I am including the property with the property includer here:",
+    "time_stamp": "2022-11-30 08:30:33"
+  },
+  {
+    "poster": {
+      "poster_name": "Hailey Bugbee",
+      "poster_handle": "hailey.bugbee"
+    },
+    "time_stamp": "2022-11-30 08:31:43",
+    "text": "this is my first time using custom code so i'm definitely learning on the fly :smile:  but shouldn't I still be able to pull the `custom_date_became_sales_qualified_lead` from the properties for each contact in the search?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-30 08:32:22",
+    "text": "Yep so you can access that variable by using `event.fields.custom_date_became_sales_qualified_lead`"
+  },
+  {
+    "poster": {
+      "poster_name": "Hailey Bugbee",
+      "poster_handle": "hailey.bugbee"
+    },
+    "time_stamp": "2022-11-30 08:34:56",
+    "text": "okay, and would I be able to use this method to pull this field for all contacts that are associated with this company name? that's my ultimate goal here"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-30 08:35:54",
+    "text": "Nope so that's just going to pull in the property for the contact that is correctly in the workflow"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-30 08:36:06",
+    "text": "You did say it was a contact workflow, correct?"
+  },
+  {
+    "poster": {
+      "poster_name": "Hailey Bugbee",
+      "poster_handle": "hailey.bugbee"
+    },
+    "time_stamp": "2022-11-30 08:37:53",
+    "text": "yup that's right. would a company workflow be better to use in this case then?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-30 08:38:29",
+    "text": "I think it would be otherwise you'll have multiple contacts from the same company run through it"
+  },
+  {
+    "poster": {
+      "poster_name": "Hailey Bugbee",
+      "poster_handle": "hailey.bugbee"
+    },
+    "time_stamp": "2022-11-30 08:46:15",
+    "text": "gotcha, okay I can try that out! just to make sure I'm not misunderstanding, since we don't have the equivalent of the `custom_date_became_sales_qualified_lead` property on our company object, I'd still need to find that date value from each of the contacts associated with that company. then I can then set that minimum I'm looking for to the new Company property - correct?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-11-30 10:50:46",
+    "text": "Correct and to find all the contacts and then the values in the property you'll need to use the api"
+  }
+]

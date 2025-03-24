@@ -1,0 +1,76 @@
+[
+  {
+    "poster": {
+      "poster_name": "Vishal M Karnawat",
+      "poster_handle": "vishalkarnawat6"
+    },
+    "time_stamp": "2024-05-23 01:16:57",
+    "text": "<@U070SE91JTX> Replace const textToCopy = codeContent.innerText; line with _*const*_ textToCopy *=* codeContent.textContent.trim();"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam Sharples",
+      "poster_handle": "samjsharples"
+    },
+    "time_stamp": "2024-05-23 02:41:03",
+    "text": "hey <@U073LH14BJQ>. I think this may solve your problem. I append a css file to the form iframe, something like this (you may need to change the logic/IDs/names slightly as this is an old example)\n\n```onFormReady: function($form) {\n      const iframe = document.getElementById(\"hs-form-iframe-0\");\n      const innerdoc = iframe.contentDocument || iframe.contentWindow.document;\n      let otherhead = innerdoc.getElementsByTagName(\"head\")[0];\n      var css = document.createElement(\"link\");\n      css.type = \"text/css\";\n      css.rel = \"stylesheet\";\n      css.href = \"{{ get_asset_url('theme-name/css/embeded-form-styles.css') }}\";\n      otherhead.appendChild(css);\n    }```"
+  },
+  {
+    "poster": {
+      "poster_name": "Sabina Iurascu",
+      "poster_handle": "sabina240"
+    },
+    "time_stamp": "2024-05-23 04:38:52",
+    "text": "Hi <@U071D7GTMV3> do you mean like this?\n\n```hbspt.forms.create({\n    region: \"na1\",\n    portalId: \"123456\",\n    formId: \"XXXXX-XXXXX-XXXXX\",\n    onFormReady: function($form){\n        //your code goes here   \n    },\n});```\nThis doesn't work with the script provided by HubSpot for my form, which is:\n```&lt;script src=\"<https://js.hsforms.net/forms/embed/123456.js>\" defer&gt;&lt;/script&gt;\n&lt;div class=\"hs-form-frame\" data-region=\"na1\" data-form-id=\"XXXXX-XXXXX-XXXXX\" data-portal-id=\"123456\"&gt;&lt;/div&gt;```\n(123456 is the portal Id)\n\nI am using the *New Form Editor* (the multi-step one) which is still in beta.\n\nThe error I get is `hbspt is undefined`\n\nThe script for the *Legacy Form Editor* looks something like this:\n```&lt;script charset=\"utf-8\" type=\"text/javascript\" src=\"//js.hsforms.net/forms/embed/v2.js\"&gt;&lt;/script&gt;\n&lt;script&gt;\n  hbspt.forms.create({\n    region: \"na1\",\n    portalId: \"123456\",\n    formId: \"XXXXX-XXXXX-XXXXX\",\n  });\n&lt;/script&gt;```\nNote the difference in scripts between the Legacy and New Editor: the New Editor has the portal Id in the script source whereas the Legacy one doesn't."
+  },
+  {
+    "poster": {
+      "poster_name": "Brad Robertson",
+      "poster_handle": "brad329"
+    },
+    "time_stamp": "2024-05-23 14:38:06",
+    "text": "Hi all. I wondered if we have any control over the scripts that are loaded via the JS snippet. Our marketing team uses HubSpot for analytics on our sites, (tracking clicks, and where users came from, ads etc) and we're _also_ using the snippet within our own application for user-based analytics (page views etc). We don't however do any pixel tracking or interactive stuff with the HubSpot SDK and so we don't want that code running in our application.\nRight now our CSP blocks these requests. We only allow:\n```script-src\n  *.<http://hs-scripts.com|hs-scripts.com>\n  *.<http://hs-banner.com|hs-banner.com> \n  *.<http://hscollectedforms.net|hscollectedforms.net> \n  *.<http://hs-analytics.net|hs-analytics.net>```\nAnd we're seeing script loading violations to:\n```<https://js.hsadspixel.net/fb.js>\n<https://js.HubSpot.com/web-interactives-embed.js>```\nBecause we don't want anything to do with ads/facebook or interactives running in our application.\n\nIs there a way to:\n1. Globally disable those extra scripts from being loaded by HubSpot?\n2. Specifically disable those extra scripts from being loaded in our web application (preferable)",
+    "reply_count": 9,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-05-23 19:24:22"
+      },
+      {
+        "time_stamp": "2024-05-24 08:25:45"
+      },
+      {
+        "time_stamp": "2024-05-24 08:26:51"
+      },
+      {
+        "time_stamp": "2024-05-24 09:16:58"
+      },
+      {
+        "time_stamp": "2024-05-24 09:18:12"
+      },
+      {
+        "time_stamp": "2024-05-24 09:19:38"
+      },
+      {
+        "time_stamp": "2024-05-24 09:19:40"
+      },
+      {
+        "time_stamp": "2024-06-04 15:40:15"
+      },
+      {
+        "time_stamp": "2024-06-04 17:25:12"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Alex Zappa",
+      "poster_handle": "reatlat"
+    },
+    "time_stamp": "2024-05-23 19:24:22",
+    "edited": {
+      "time_stamp": "2024-05-23 19:27:15"
+    },
+    "text": "<@U0757252JC9> Facebook and other social scripts like LinkedIn and Twitter could be disabled from social sharing settings, and in my opinion, should be disabled by default!\nother scripts may come from theme template `{{ standard_footer_includes }}`\nyou can read more about this variable here <https://developers.HubSpot.com/docs/cms/hubl/variables#required-page-template-variables>"
+  }
+]

@@ -1,0 +1,130 @@
+[
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "louis.chausse"
+    },
+    "time_stamp": "2020-04-15 08:49:21",
+    "text": "<@U3A4KEWK1> don't want to be a pain here, but I would appreciate your input very much!"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2020-04-15 08:50:46",
+    "text": "Oh sorry, didn't see your message yesterday. What's your full code?"
+  },
+  {
+    "poster": {
+      "poster_name": "James Cartwright",
+      "poster_handle": "james115"
+    },
+    "time_stamp": "2020-04-15 09:10:26",
+    "text": "I've created a series of landing pages based upon a hubDB table. It has a form on the page. Is there any way to set the form redirect (on submission) to go to a unique URL which would be pulled from a HubDB table field?",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-04-15 09:21:05"
+      },
+      {
+        "time_stamp": "2020-04-15 09:21:20"
+      },
+      {
+        "time_stamp": "2020-04-15 09:21:50"
+      },
+      {
+        "time_stamp": "2020-04-15 09:22:05"
+      },
+      {
+        "time_stamp": "2020-04-15 09:46:55"
+      },
+      {
+        "time_stamp": "2020-04-15 13:37:04"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2020-04-15 09:21:05",
+    "text": "you would need to use that hubdb field as the redirect. you can do this with form module\n\n```{% form\n\tform_to_use=\"{{ module.form_field.form_id }}\"\n\tresponse_response_type=\"{{ module.form_field.response_type }}\"\n\tresponse_message=\"{{ module.form_field.message }}\"\n\tresponse_redirect_id=\"{{ module.form_field.redirect_id }}\"\n\tresponse_redirect_url=\"{{module.form_field.redirect_url}}\"\n\tgotowebinar_webinar_key=\"{{ module.form_field.gotowebinar_webinar_key }}\"\n%}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2020-04-15 09:21:20",
+    "text": "you would replace the `{{module.form_field.redirect_url}` with your item"
+  },
+  {
+    "text": "No apologies needed. Thanks for your reply. Here's the code. Sorry, there is a lot of repetition in it. Will simplify it later. Was just trying to make it work. Thanks for your help. Best. <@U3A4KEWK1>",
+    "time_stamp": "2020-04-15 09:21:21",
+    "edited": {
+      "time_stamp": "2020-04-15 09:21:54"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2020-04-15 09:21:50",
+    "text": "may need to make other a redirect id, which I think is page id, but I don't remember. you can also do this with the embed script as well"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2020-04-15 09:22:05",
+    "text": "<https://developers.HubSpot.com/docs/methods/forms/advanced_form_options>"
+  },
+  {
+    "poster": {
+      "poster_name": "James Cartwright",
+      "poster_handle": "james115"
+    },
+    "time_stamp": "2020-04-15 09:46:55",
+    "text": "Thats awesome, thanks for the reply <@U25PYL3Q8>"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2020-04-15 10:46:25",
+    "edited": {
+      "time_stamp": "2020-04-15 10:49:31"
+    },
+    "text": "Ah, well to do what you're trying to do I would suggest something more like\n```{% for auteur in dynamic_page_hubdb_row.auteurs %}\n  {% if auteur.name == 'Joanie Fontaine' %}\n    Joanie's bio goes here\n  {% elif auter.name == 'Estelle Filiatrault-Begin' %}\n    Estelle's bio goes here\n  {% elif auter.name == 'And so on' %}\n    And so forth\n  {% endif %}\n{% endfor %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2020-04-15 10:51:04",
+    "text": "Or even better, turn `auteurs` into a foreign ID column and store the metadata for them in another HubDB table. Then you just do something like this:\n```{% for auteur in dynamic_page_hubdb_row.auteurs %}\n  &lt;div gr-grid=\"row\" class=\"author\"&gt;\n    &lt;div gr-grid=\"sm-3\"&gt;\n        &lt;div class=\"author__picture\"&gt;                         \n            &lt;img src=\"{{ auteur.portrait.url|escape }}\" alt=\"{{ auteur.name|escape }}\"&gt;                          \n        &lt;/div&gt;\n    &lt;/div&gt;\n    &lt;div gr-grid=\"sm-9\"&gt;\n        &lt;h2 class=\"h2 author__title\"&gt;\n            &lt;strong&gt;{{ auteur.name }}&lt;/strong&gt;\n            &lt;br/&gt;{{ auteur.title }}\n        &lt;/h2&gt;\n        &lt;div class=\"typography author__description\"&gt;\n            {{ auteur.description }}\n        &lt;/div&gt;\n    &lt;/div&gt;\n  &lt;/div&gt;\n{% endfor %}```\nNo need to update the template whenever you want to change one of these people or add a new one or whatever"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2020-04-15 10:52:04",
+    "text": "<@UDU6KEBFB>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2020-04-15 13:37:04",
+    "text": "thank you, glad it helped"
+  }
+]

@@ -1,0 +1,62 @@
+[
+  {
+    "poster": {
+      "poster_name": "Pat Pope",
+      "poster_handle": "patrick.pope847"
+    },
+    "time_stamp": "2024-05-08 08:32:42",
+    "text": "Hey all,\n\nI have a question about using HubDB with a custom module.\n\nI am developing a custom module that pulls data from HubDB and displays as a table but I am only getting 10 rows\n\nThe goal is to make so the content editor can drop the table module onto the page and select the table. Which is working fine in terms of selecting different HubDB tables are being selected and rows are being pulled in.\n\nI can see that all row IDs from a HubDB table are being pulled in, and the HTML is rendering all the rows. However, the data from columns stops at 10. This makes me think I may be hitting some kind of call limit of 10, although I don't believe I am.\n\nHere's a quick video explaining the issue: <https://www.dropbox.com/scl/fi/tzj0r3h4u3jm1cm2bw32d/HubDB_Table.mp4?rlkey=b1gw4w731c6484aw50pmp020m&amp;st=l99685jg&amp;dl=0>\n\n```{# Table Macros #}\n{% set hubdb_table = hubdb_table(module.hubdb_tables.choose_table) %} {# Selects the table #}\n  {% set column_count = hubdb_table.columns|length %} {# Number of columns in the table #}\n    {% set skipped_column_count = column_count - 1 %} {# Skip first column (Name) #}\n      \n  {% set row_ids = [] %}\n  {% for row_id in hubdb_table_rows(hubdb_table.id) %}\n      {% set _ = row_ids.append(row_id.hs_id) %}\n  {% endfor %}\n  \n  {# Sorting based on user selection #}\n  {% if module.hubdb_tables.sort_rows == 'most_recent' %}\n      {% set sorted_row_ids = row_ids %}\n  {% elif module.hubdb_tables.sort_rows == 'oldest' %}\n      {% set sorted_row_ids = row_ids|reverse %}\n  {% else %}\n      {% set sorted_row_ids = row_ids %} {# Default to no sorting #}\n  {% endif %}\n\n\n{# HTML Starts #}\n&lt;div class=\"tabledb-wrapper_{{ name }}\"&gt;\n&lt;div class=\"tabledb-container_{{ name }}\" role=\"table\" aria-label=\"\"&gt;\n  &lt;div class=\"tabledb_{{ name }} headertb firstrow\" role=\"rowgroup\"&gt;\n    {% for i in range(1, column_count) %} {# Loop through columns, skipping the first column #}\n      {% set column_info = hubdb_table.columns[i] %}\n        &lt;div class=\"rowdb_{{ name }}{% if loop.first %} sticky {% endif %}\" role=\"columnheader\"&gt;{{ column_info.label }}&lt;/div&gt;\n    {% endfor %}\n  &lt;/div&gt;\n  {% for row_id in sorted_row_ids[:20] %} {# Tried to manually set number of rows to come in #}\n    {% set hubdb_row = hubdb_table_row(hubdb_table.id, row_id) %}\n    &lt;div class=\"tabledb_{{ name }} rowdb_{{ name }}\" role=\"rowgroup\"&gt;\n      {% for i in range(1, column_count) %} {# Loop through columns, skipping the first column #}\n        {% set column_info = hubdb_table.columns[i] %}\n        {% set value = hubdb_row[column_info.name] %}\n         {# Check if processing the first column #}\n          &lt;div class=\"rowdb_{{ name }}{% if loop.first %} sticky {% endif %}\" role=\"cell\"&gt;{{ value }}&lt;/div&gt;\n      {% endfor %}\n    &lt;/div&gt;\n  {% endfor %}\n&lt;/div&gt;\n&lt;/div&gt; ```",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-05-15 13:39:39"
+      }
+    ]
+  },
+  {
+    "text": "Hello everyone,\n\nI want to develop a custom module where it has this menu (screenshot) and that when the user clics one of the options, it should change the carousel content; the carousel content is populated by tables in hubdb. Each of it: Graduação Presencial, Graduação EAD etc has its own table in hubdb. How is the best way to implement it?\n\nThanks a lot",
+    "time_stamp": "2024-05-08 10:52:25",
+    "reply_count": 3,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-05-08 19:03:09"
+      },
+      {
+        "time_stamp": "2024-05-08 23:27:14"
+      },
+      {
+        "time_stamp": "2024-05-08 23:38:10"
+      }
+    ]
+  },
+  {
+    "text": "<@U033VNNBBBP> Running into an issue where the following steps referenced in the GraphQL doc are not available in the page editor when trying to implement the custom object GraphQL. Specifically the \"Dynamic pages\" section or \"Data source\" Am I overlooking something or has that been sunset as a feature?",
+    "time_stamp": "2024-05-08 15:21:32"
+  },
+  {
+    "poster": {
+      "poster_name": "Rushik vaghasia",
+      "poster_handle": "rushikvaghasiya21"
+    },
+    "time_stamp": "2024-05-08 19:03:09",
+    "text": "Hi Larissa,\n\nFirst way is that to pull all data from Hubdb and on click of the options filter the data, destroy the current slider and re initiate it.\n\nSecond option would be Instead of calling all data in first load you can do it with an API call to fetch Hubdb data based on selected options"
+  },
+  {
+    "poster": {
+      "poster_name": "Olia Gozha",
+      "poster_handle": "olia"
+    },
+    "time_stamp": "2024-05-08 23:27:14",
+    "text": "As <@U022YD6LGAU> said these are the two strategies here\n\n<@U06DEQHLLS1> however, I'd add that the first options is more efficient to have fewer calls on the page. HubSpot has a limit of 10 HubDB calls per page"
+  },
+  {
+    "poster": {
+      "poster_name": "Goran Ilievski",
+      "poster_handle": "goran308"
+    },
+    "time_stamp": "2024-05-08 23:38:10",
+    "text": "All of the above + I will advise you, and you might already thought of this, to use <https://developers.HubSpot.com/docs/cms/data/hubdb#join-multiple-hubdb-tables|1 main table and join the child tables within it>."
+  }
+]

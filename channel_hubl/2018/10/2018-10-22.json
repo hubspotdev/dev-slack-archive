@@ -1,0 +1,747 @@
+[
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 12:15:59",
+    "text": "Is there anyway to do the datetime filter to get a month without a zero padding? something like (1/1/1900) all i see in the docs is getting the 01, Jan, or January way of doing the month"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 12:16:49",
+    "text": "looks like only way would be stripping the zero for the month"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-22 12:16:54",
+    "text": "my memory may be wrong but I think `e` does that"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 12:17:17",
+    "text": "thats for the day portion"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-22 12:17:22",
+    "text": "ahh, nvm sorry"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 12:17:42",
+    "text": "all good, that was my first guess as well"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-22 12:18:51",
+    "edited": {
+      "time_stamp": "2018-10-22 12:19:06"
+    },
+    "text": "btw, kind of related, Mcoley added a feature to format the date/time into a different timezone. it’s a second parameter on that function. probably not in the docs, but might be useful to you"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 12:19:27",
+    "text": "I did see that in the docs, im basically just trying to expire a form and add text in its place"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 12:19:54",
+    "text": "so doing an IF where if the `local_dt` &gt; X date/time dont show it and show placeholder text instead"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-22 12:20:49",
+    "text": "actually hang on a sec. are you using the datetime filter for displaying the date or in your if statement?"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 12:21:30",
+    "text": "if statement"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-22 12:21:45",
+    "text": "because theoretically you should be able to just use the raw datetime to compare against the date you want it to expire(in that same format)"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 12:22:20",
+    "text": "Yea i just tried this:\n```\n {% if local_dt &gt;  2018-10-22 13:21:05 %}\n              \tEND\n              {% endif %}\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 12:22:24",
+    "text": "but it doesnt seem to work"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-22 12:22:59",
+    "text": "render local_dt, I think it will render in a different format"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 12:23:18",
+    "text": "for me local_dt is rendering out as that format"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-22 12:23:47",
+    "text": "let me quick check some code i have"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 12:26:28",
+    "text": "thinking maybe using unixtimestamp"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-22 12:26:43",
+    "text": "ahah\n\nAlright so my code is reverse of what you want(I was generating an eventlisting and hiding ones that have ended) that said it’s close to what you need.\n\n```\n{% set timenow = ((local_dt|datetimeformat('%Y') - 1970) * 31556926000) + ((local_dt|datetimeformat('%m') - 1) * 2629743000) + ((local_dt|datetimeformat('%d') - 1) * 86400000) %}\n\n{% set eventListing = hubdb_table_rows(module.hubdb_table,\"end_date__lte=\" ~ timenow ~ \"&amp;orderBy=end_date&amp;limit=5\")%}\n\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-22 12:26:56",
+    "text": "so here’s what you’d do different"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-22 12:28:37",
+    "text": "keep the timenow var completely as it is here.\n\nThen in your if statement\n\n`{% if timenow &gt; end_time %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-22 12:29:03",
+    "text": "hard part is you need to get end_time into that same format. I think  timenow is the unix timestamp"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-22 12:29:44",
+    "text": "I think <@U26DA9CQ0> was the one to give me that timenow bit. not 100%"
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 12:36:47",
+    "text": "so im an idiot and forgot the quotes around the date/time....\n```\n{% if local_dt &gt;  \"2018-10-22 13:21:05 \" %}\n                  END\n              {% endif %}\n```\nseems to work"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-22 12:36:54",
+    "text": "haha"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-22 12:36:56",
+    "text": "good"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-22 12:37:35",
+    "text": "I would have thought it’d treat that like a string if done that way instead of a date"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-22 12:38:02",
+    "text": "kinda makes me wanna try comparing 2 strings just to see what the result is"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-10-22 12:38:16",
+    "text": "You rang?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2018-10-22 12:39:14"
+      },
+      {
+        "time_stamp": "2018-10-22 12:40:17"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-22 12:39:14",
+    "edited": {
+      "time_stamp": "2018-10-22 12:39:27"
+    },
+    "text": "lol may not need your help anymore. I thought you were the one who gave me this code `{% set timenow = ((local_dt|datetimeformat('%Y') - 1970) * 31556926000) + ((local_dt|datetimeformat('%m') - 1) * 2629743000) + ((local_dt|datetimeformat('%d') - 1) * 86400000) %}` thought you might be able to help with this. (sorry if I remembered wrong been like 4 weeks)"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 12:39:27",
+    "text": "seems to have worked lol"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 12:39:59",
+    "text": "my only questions now, is there a way to stop the page from caching? I dont htink there is a setting like \"Dont cache this\" on the page so i need to figure out what variable to add to stop that from ahppening"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 12:40:09",
+    "text": "as caching might cause an issue here, not sure though"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-10-22 12:40:17",
+    "text": "Yeah that was me! I think I saw a new filter in the documentation that allows you to convert to epoch but I may have read it wrong."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-22 12:40:19",
+    "text": "I think if you use local_DT it prevents it"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-22 12:41:58",
+    "text": "worst case scenario, you could `&lt;!--{{local_dt}}--&gt;`"
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 12:58:01",
+    "text": "`local_dt` does not cause the cache to expire (at least from my testing of it on the page)",
+    "reply_count": 18,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2018-10-22 13:15:52"
+      },
+      {
+        "time_stamp": "2018-10-22 13:17:27"
+      },
+      {
+        "time_stamp": "2018-10-22 13:20:08"
+      },
+      {
+        "time_stamp": "2018-10-22 13:22:31"
+      },
+      {
+        "time_stamp": "2018-10-22 13:22:37"
+      },
+      {
+        "time_stamp": "2018-10-22 13:23:05"
+      },
+      {
+        "time_stamp": "2018-10-22 13:23:26"
+      },
+      {
+        "time_stamp": "2018-10-22 13:25:07"
+      },
+      {
+        "time_stamp": "2018-10-22 13:26:55"
+      },
+      {
+        "time_stamp": "2018-10-22 13:27:12"
+      },
+      {
+        "time_stamp": "2018-10-22 13:27:50"
+      },
+      {
+        "time_stamp": "2018-10-22 13:28:21"
+      },
+      {
+        "time_stamp": "2018-10-22 13:28:38"
+      },
+      {
+        "time_stamp": "2018-10-22 13:28:43"
+      },
+      {
+        "time_stamp": "2018-10-22 13:29:21"
+      },
+      {
+        "time_stamp": "2018-10-22 13:30:42"
+      },
+      {
+        "time_stamp": "2018-10-22 13:30:54"
+      },
+      {
+        "time_stamp": "2018-10-22 13:33:58"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-22 13:07:05",
+    "text": "really, even if it’s rendered to the page?"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 13:07:34",
+    "text": "yup"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 13:07:46",
+    "text": "so if you look here: <https://chicago.HubSpotusergroups.com/x/apply-to-speak>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-22 13:07:47",
+    "text": "well you can do it using `{{ request.remote_ip }}`"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 13:08:28",
+    "edited": {
+      "time_stamp": "2018-10-22 13:08:36"
+    },
+    "text": "right above the \"Speaker application\" in the code is span tag with display none"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-22 13:08:40",
+    "text": "btw HUGchiX is a funny name"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 13:09:20",
+    "text": "yea, they tried to do CHIhugX but HS wouldnt allow it lol",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2018-10-22 13:10:17"
+      },
+      {
+        "time_stamp": "2018-10-22 13:10:58"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 13:10:00",
+    "text": "but in that code, you'll see 2 spans, one has the timestamp using `local_dt` and a `contact.firstname` in the span"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-22 13:10:17",
+    "text": "weird lol you’d think that’d be more allowed than what reads as “hug chicks” but hey what do I know"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-22 13:10:30",
+    "text": "I see… hmm"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-22 13:10:46",
+    "text": "try the remote ip one"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 13:10:58",
+    "text": "lol agreed, i think the fact we did the logo they way we did made it easier though"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-22 13:11:44",
+    "text": "think MColey once warned me (paraphrased and dramatized) “If you use that I wont sleep”"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 13:12:15",
+    "text": "remote_ip is in there, but i think the page is still technically cahced as its not showing up right now"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-22 13:12:24",
+    "text": "interesting."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-22 13:12:51",
+    "text": "I think you’ll have to call in the experts -mcoley or lsong"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 13:12:58",
+    "text": "oh wait request.remote_ip"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 13:13:02",
+    "text": ":man-facepalming:"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 13:13:41",
+    "text": "but even that seems to be cached"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 13:14:43",
+    "text": "ok so going in and republishing the page"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 13:14:45",
+    "text": "that did it"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 13:15:03",
+    "text": "now with that var of the remote_ip, its not cached (plese dont kill me HS)",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2018-10-22 13:40:31"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-10-22 13:15:52",
+    "text": "<@U6TBZ66FN> seems like we should only cache these for a short period of time"
+  },
+  {
+    "poster": {
+      "poster_name": "Libo Song",
+      "poster_handle": "lsong"
+    },
+    "time_stamp": "2018-10-22 13:17:27",
+    "text": "<@U2H3TT8F2> What is you use case for local_dt? We are not looking at it now for cache invalidation."
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 13:20:08",
+    "edited": {
+      "time_stamp": "2018-10-22 13:20:14"
+    },
+    "text": "Overall, im trying to expire a form at a certain time on a page. I thought perhaps using `local_dt` I could say if whatever time it currently is, is greater than the \"expiry\" time, then expire it"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 13:22:31",
+    "text": "was doing this:\n```\n{% if local_dt &gt;  \"2018-10-22 13:21:05 \" %}\n    simple \"We are no longer accepting blah blah blah\" message\n{%else %}\n{% FORM TAG %}\n{% endif %}\n\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Libo Song",
+      "poster_handle": "lsong"
+    },
+    "time_stamp": "2018-10-22 13:22:37",
+    "edited": {
+      "time_stamp": "2018-10-22 13:22:56"
+    },
+    "text": "I see. Can you expire the whole page instead just the form on the page?"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 13:23:05",
+    "text": "we could, but they want to keep the page up for informational purposes"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 13:23:26",
+    "text": "as they may open it back up if needed"
+  },
+  {
+    "poster": {
+      "poster_name": "Libo Song",
+      "poster_handle": "lsong"
+    },
+    "time_stamp": "2018-10-22 13:25:07",
+    "text": "We do not make `local_dt` to disable cacheability because there are many pages using that just to update a timestamp."
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 13:26:55",
+    "text": "for the time being, it seems using the request for ip does the trick and then I can use local_dt in combination to expire it at the right moment. I dont believe the page is going to be high trafficked over long periods of time so I can just use this for the time being until the event is full up and then I can simply hardcode a static message in it."
+  },
+  {
+    "poster": {
+      "poster_name": "Libo Song",
+      "poster_handle": "lsong"
+    },
+    "time_stamp": "2018-10-22 13:27:12",
+    "edited": {
+      "time_stamp": "2018-10-22 13:27:54"
+    },
+    "text": "You could use JS to hide the form, and your page will be loaded faster than render it every time."
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 13:27:50",
+    "text": "true, but those who disable JS would still be able to access the form no?"
+  },
+  {
+    "poster": {
+      "poster_name": "Libo Song",
+      "poster_handle": "lsong"
+    },
+    "time_stamp": "2018-10-22 13:28:21",
+    "text": "No. Forms need JS to send all info."
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 13:28:38",
+    "text": "oh ok, then I will simply use JS to make this happen instead"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 13:28:43",
+    "text": "Thanks Libo!"
+  },
+  {
+    "poster": {
+      "poster_name": "Libo Song",
+      "poster_handle": "lsong"
+    },
+    "time_stamp": "2018-10-22 13:29:21",
+    "text": "That will be the best. You have your page cached. It will be faster for your users."
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 13:30:42",
+    "text": "Would we be able to code in Vars for using JS right? for example setting a variable then using that variable in the JS code?"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-10-22 13:30:54",
+    "text": "this way giving the user the option to choose the time from the page editor?"
+  },
+  {
+    "poster": {
+      "poster_name": "Libo Song",
+      "poster_handle": "lsong"
+    },
+    "time_stamp": "2018-10-22 13:33:58",
+    "text": "I believe you can do it. But I am not vary familiar with the editor. I can imagine that you may be able to set an arbitrary value for a hidden module, and then use your JS to access that value as the expiration time."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-22 13:40:31",
+    "text": "just dont summon the robot wizard"
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "rebecca",
+      "poster_handle": "rschmidt"
+    },
+    "time_stamp": "2018-10-22 15:58:09",
+    "text": "hello! i’m looking to reference Product table properties in an email… can i hit up anyone for some help?"
+  },
+  null
+]

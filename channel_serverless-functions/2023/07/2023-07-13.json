@@ -1,0 +1,23 @@
+[
+  {
+    "poster": {
+      "poster_name": "Giles Palmer",
+      "poster_handle": "giles"
+    },
+    "time_stamp": "2023-07-13 07:48:56",
+    "text": "Hi\nI have a serverless function which calls a Lambda function to return a pdf.  The Lambda pdf generation works fine and I can call this directly from Postman and see the pdf.  However when I try to pass the lambda response through the serverless function I only ever end up with a blank pdf.\nI am guessing it is to do with the content-type and some of encoding  but have got completely stuck on this.  This is my code:\n\n```exports.main = async (context, sendResponse) =&gt; {\n    try {\n        // Axios used to get the pdf from the lambda function\n        const pdfResponse = await requestPDF(context);\n\n        // A Buffer object is returned by the requestPDF function.\n        const pdfBuffer = pdfResponse.data;\n\n        sendResponse({\n            headers: {\n                'Content-Type': 'application/pdf;',\n                'Content-Disposition': 'attachment; filename=my.pdf',\n            },\n            statusCode: 200,\n            body: pdfBuffer,\n        }\n        );\n    } catch (error) {\n        console.log(error);\n        sendResponse({\n            statusCode: 500,\n            headers: {\n                \"content-type\": \"application/json;\",\n            },\n            body: error,\n\n        });\n    }\n}```\nShould I be converting the response body to base64 to return?  Any help much appreciated as I've hit a brick wall!",
+    "reply_count": 3,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-07-14 15:49:54"
+      },
+      {
+        "time_stamp": "2023-07-17 02:11:08"
+      },
+      {
+        "time_stamp": "2024-02-23 12:15:46"
+      }
+    ]
+  }
+]

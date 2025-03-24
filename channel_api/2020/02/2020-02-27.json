@@ -1,0 +1,159 @@
+[
+  {
+    "poster": {
+      "poster_name": "Ziberna",
+      "poster_handle": "matijazib"
+    },
+    "time_stamp": "2020-02-27 01:15:40",
+    "text": "<@UFBNA9K9A> thanks! What would be the difference between soft and hard delete. I'm interested in finding objects that have been deleted in HubSpot so I can apply the changes in BigQuery (ETL'd with Stitch)."
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2020-02-27 05:24:47",
+    "text": "A soft delete would be when someone deletes an object in the HubSpot interface and does not select a compliant delete option (for example, processing a GDPR delete request). Those can be retrieved with a the `archived` until they are removed or restored.  They will be automatically removed after 90 days  (though I need to double check that timeframe).  A hard delete would be a privacy compliant delete, those cannot be returned from the API because they do not exist anymore"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2020-02-27 05:26:48",
+    "text": "As Ed suggested that is a good place to post issues. If you haven’t posted there already, I’d be happy to look into that for you.  What was the request you made when you got that error back?"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2020-02-27 05:36:24",
+    "text": "Hey <@UDF0QRPNZ> We recently added a note here <https://developers.HubSpot.com/docs/faq/v2-request-validation> to indicate that all strings should be utf-8 encoded before the SHA-256 hash.  That should handle the special characters. Let me know if you run into any issues"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2020-02-27 06:01:26",
+    "text": "I haven’t been able to fully recreate this but I suspect this is a versioning issue.  Each action is versioned so that an integrator can’t accidentally change the behavior of a potentially business critical workflow without a customers knowledge.  If you uninstall and reinstall your app, you should see the changes in the workflow"
+  },
+  {
+    "poster": {
+      "poster_name": "Walter Gueler",
+      "poster_handle": "wgueler"
+    },
+    "time_stamp": "2020-02-27 06:05:25",
+    "text": "That's odd, I have no problems adding or removing fields (previously used actions keep the old version, new actions show the new) "
+  },
+  {
+    "poster": {
+      "poster_name": "Walter Gueler",
+      "poster_handle": "wgueler"
+    },
+    "time_stamp": "2020-02-27 06:06:03",
+    "text": "I will try a brand new demo portal and see what I get..."
+  },
+  {
+    "poster": {
+      "poster_name": "Adam Wright",
+      "poster_handle": "adam377"
+    },
+    "time_stamp": "2020-02-27 09:03:43",
+    "text": "Bumping my question from the other day: Are property versions/history no longer going to be available in CRM API v3?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-02-27 09:39:42"
+      },
+      {
+        "time_stamp": "2020-02-27 09:47:39"
+      },
+      {
+        "time_stamp": "2020-02-27 10:46:39"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ziberna",
+      "poster_handle": "matijazib"
+    },
+    "time_stamp": "2020-02-27 09:11:39",
+    "text": "Anything for Python soon or should I start learning Node.js? :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Ziberna",
+      "poster_handle": "matijazib"
+    },
+    "time_stamp": "2020-02-27 09:16:10",
+    "text": "Hmm I see. Perhaps If I could retrieve all Contact ID from HubSpot and compare it against entries in the RD.\n\nTBH, I'd need this functionality mostly for Deals. Sales are creating duplicated deals all the time which get stored to our DB even after they are removed from HS."
+  },
+  {
+    "poster": {
+      "poster_name": "Ziberna",
+      "poster_handle": "matijazib"
+    },
+    "time_stamp": "2020-02-27 09:33:23",
+    "text": "`url = '<https://api.hubapi.com/crm/v3/objects/deals/search?hapikey={}'.format(API_KEY)>`\n`headers={}`\n`headers[\"Content-Type\"]=\"application/json\"`\n`data = json.dumps({`\n    `'query':\"HY-ORDER-008953\" #Serach by Dealname#`\n`})`\n`r = <http://requests.post|requests.post>(url=url, data=data,headers=headers)`\n\n`output = r.json()`\n`print(output)`\n\nExample to query deals :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2020-02-27 09:34:45",
+    "text": "Awesome thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2020-02-27 09:35:32",
+    "text": "You can get all contact ids by paging through the get contacts endpoints"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2020-02-27 09:39:42",
+    "text": "At the moment we don’t have support for property history in those APIs.  As we consider adding those, how are you using them/planning on use them?  That would inform how we might implement this"
+  },
+  {
+    "poster": {
+      "poster_name": "Adam Wright",
+      "poster_handle": "adam377"
+    },
+    "time_stamp": "2020-02-27 09:47:39",
+    "text": "Deal stage history is one use case that’s important to us… There are limits to HubSpot’s native deal reporting that aren’t quite a fit for our needs, so we’re looking at replicating our deal data to an external system and analyzing progress through stages, time spent in stages, etc. via the property history. So, for due diligence, wanted to figure out if that’s part of the plan for v3 and/or if v2 will continue to be supported long enough that we can keep relying on that"
+  },
+  {
+    "poster": {
+      "poster_name": "Ziberna",
+      "poster_handle": "matijazib"
+    },
+    "time_stamp": "2020-02-27 10:37:49",
+    "text": "Cheers. Will do just that :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2020-02-27 10:46:39",
+    "text": "that’s super helpful context. It’s definitely in our plans ot support property history, exactly how or when is still up in the air though.  The existing APIs won’t be going anywhere soon so you can safely rely on those until v3 adds support"
+  },
+  {
+    "poster": {
+      "poster_name": "Mike Eastwood",
+      "poster_handle": "mike330"
+    },
+    "time_stamp": "2020-02-27 13:19:28",
+    "text": "Thank you Zack!"
+  }
+]

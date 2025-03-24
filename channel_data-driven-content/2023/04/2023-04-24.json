@@ -1,0 +1,164 @@
+[
+  {
+    "poster": {
+      "poster_name": "Madeleine Crespel",
+      "poster_handle": "madeleine"
+    },
+    "time_stamp": "2023-04-24 08:38:33",
+    "text": "Hey guys !\nNot sure that it is the right canal so feel free to redirect me to the right one :slightly_smiling_face:\nI have written a python function that thanks to the first name, last name and the company name of a contact, returns the linkedin url of the first contact\nThe code works correctly when I do it on my own servor, but does not work through a custom code (i'm using requests and html.parser)\n\nany idea how to do so ?",
+    "reply_count": 14,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-04-24 09:09:39"
+      },
+      {
+        "time_stamp": "2023-04-24 09:10:46"
+      },
+      {
+        "time_stamp": "2023-04-24 09:11:17"
+      },
+      {
+        "time_stamp": "2023-04-24 09:13:11"
+      },
+      {
+        "time_stamp": "2023-04-24 09:14:22"
+      },
+      {
+        "time_stamp": "2023-04-24 09:25:07"
+      },
+      {
+        "time_stamp": "2023-04-24 09:27:30"
+      },
+      {
+        "time_stamp": "2023-04-24 09:29:40"
+      },
+      {
+        "time_stamp": "2023-04-24 09:29:56"
+      },
+      {
+        "time_stamp": "2023-04-24 09:30:02"
+      },
+      {
+        "time_stamp": "2023-04-24 09:32:48"
+      },
+      {
+        "time_stamp": "2023-04-24 09:32:50"
+      },
+      {
+        "time_stamp": "2023-04-24 09:32:57"
+      },
+      {
+        "time_stamp": "2023-04-24 09:33:05"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-24 09:09:39",
+    "text": "Can you share your code?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-24 09:10:46",
+    "text": "It's most likely because you're either hitting a time out limit (either it's running too long or it's a DNS timeout (because you're requesting a page)) or HubSpot is blocking the requests to the linkedin page (or linkedin is blocking the requests)"
+  },
+  {
+    "poster": {
+      "poster_name": "Madeleine Crespel",
+      "poster_handle": "madeleine"
+    },
+    "time_stamp": "2023-04-24 09:11:17",
+    "text": "`import requests`\n`from html.parser import HTMLParser`\n\n`class LinkedInSearchParser(HTMLParser):`\n    `def __init__(self, first_name, last_name, company_name):`\n        `super().__init__()`\n        `self.search_text = f\"{first_name} {last_name} {company_name} linkedin\"`\n        `self.is_link = False`\n        `self.linkedin_url = None`\n\n    `def handle_starttag(self, tag, attrs):`\n        `if tag == 'a':`\n            `for attr in attrs:`\n                `if 'href' in attr:`\n                    `link = attr[1]`\n                    `if '<http://linkedin.com/in/|linkedin.com/in/>' in link:`\n                        `self.linkedin_url = link`\n                        `self.is_link = True`\n\n    `def handle_data(self, data):`\n        `if self.search_text in data.lower() and self.is_link:`\n            `self.is_link = False`\n\n`def get_linkedin_profile_url(first_name, last_name, company_name):`\n    `query = f\"{first_name} {last_name} {company_name} linkedin\"`\n    `headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}`\n    `search_url = f\"<https://www.google.com/search?q={query}>\"`\n    `response = requests.get(search_url, headers=headers)`\n    `parser = LinkedInSearchParser(first_name, last_name, company_name)`\n    `parser.feed(response.text)`\n    `return parser.linkedin_url`\n\n`first_name = \"firstname\"`\n`last_name = \"lastname\"`\n`company = \"company\"`\n\n`profile_url = get_linkedin_profile_url(first_name, last_name, company)`\n\n`if profile_url:`\n    `print(f\"Le premier profil LinkedIn trouvé est : {profile_url}\")`\n`else:`\n    `print(\"Aucun profil LinkedIn trouvé.\")`"
+  },
+  {
+    "poster": {
+      "poster_name": "Madeleine Crespel",
+      "poster_handle": "madeleine"
+    },
+    "time_stamp": "2023-04-24 09:13:11",
+    "text": "and here is the error message that I get :\n\n```WARNING: The logs for this function have exceeded the 4KB limit.\n...\n<https://translate.google.com/translate?hl=de&amp;sl=en&amp;u=https://ie.linkedin.com/in/agn%25C3%25A8s-vernier-35a0b064&amp;prev=search&amp;pto=aue>\nSTART RequestId: 8978388e-0a48-4b51-9299-c19a9de7123e Version: $LATEST\n[ERROR] AttributeError: module 'file' has no attribute 'main'\nTraceback (most recent call last):\n  File \"/var/task/HubSpotHandler.py\", line 4, in HubSpot_handler\n    return file.main(event)\nMemory: 51/128 MB\nRuntime: 1.93 ms```\n--&gt; it's weird because it returns a \"translate.google\" link but if I run it on my servor I have directly the right link"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-24 09:14:22",
+    "text": "Cool let me run this test"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-24 09:25:07",
+    "text": "Yeah I also just got it working and noticed a translate google url"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-24 09:27:30",
+    "text": "Updating the code to not allow that"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-24 09:29:40",
+    "text": "Boom this code will do it:\n```import requests\nfrom html.parser import HTMLParser\nfrom urllib.parse import urlparse\n\nclass LinkedInSearchParser(HTMLParser):\n    def __init__(self, first_name, last_name, company_name):\n        super().__init__()\n        self.search_text = f\"{first_name} {last_name} {company_name} from:linkedin\"\n        self.linkedin_url = None\n    \n    def handle_starttag(self, tag, attrs):\n        if tag == 'a':\n            attrs_dict = dict(attrs)\n            link = attrs_dict.get('href', '')\n            if self.is_linkedin_url(link):\n                self.linkedin_url = link\n    \n    def handle_data(self, data):\n        if self.search_text.lower() in data.lower() and self.linkedin_url:\n            return\n\n    @staticmethod\n    def is_linkedin_url(url):\n        parsed_url = urlparse(url)\n        if '<http://linkedin.com|linkedin.com>' in parsed_url.netloc and '/in/' in parsed_url.path:\n            return True\n        return False\n\ndef main(event):\n    first_name = event['fields']['first_name']\n    last_name = event['fields']['last_name']\n    company_name = event['fields']['company_name']\n    \n    query = f\"{first_name} {last_name} {company_name} from:linkedin\"\n    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}\n    search_url = f\"<https://www.google.com/search?q={query}>\"\n    \n    try:\n        response = requests.get(search_url, headers=headers)\n        response.raise_for_status()\n    except requests.RequestException as e:\n        return {\"outputFields\": {\"error\": f\"Request error: {str(e)}\"}}\n    \n    parser = LinkedInSearchParser(first_name, last_name, company_name)\n    parser.feed(response.text)\n    \n    if parser.linkedin_url:\n        return {\"outputFields\": {\"linkedin_url\": parser.linkedin_url}}\n    else:\n        return {\"outputFields\": {\"error\": \"No LinkedIn profile found.\"}}```\n"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-04-24 09:29:56"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-24 09:30:02",
+    "text": "Let me know how it goes"
+  },
+  {
+    "poster": {
+      "poster_name": "Madeleine Crespel",
+      "poster_handle": "madeleine"
+    },
+    "time_stamp": "2023-04-24 09:32:48",
+    "text": "works perfectly !!!!!!!!"
+  },
+  {
+    "poster": {
+      "poster_name": "Madeleine Crespel",
+      "poster_handle": "madeleine"
+    },
+    "time_stamp": "2023-04-24 09:32:50",
+    "text": "thank you so much !!"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-24 09:32:57",
+    "text": "of course"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-24 09:33:05",
+    "text": "let me know if you run into any other issues"
+  }
+]

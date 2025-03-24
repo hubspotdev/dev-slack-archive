@@ -1,0 +1,272 @@
+[
+  {
+    "poster": {
+      "poster_name": "Mattis Rosenkranz",
+      "poster_handle": "m.rosenkranz"
+    },
+    "time_stamp": "2024-04-22 05:08:12",
+    "edited": {
+      "time_stamp": "2024-04-22 05:08:42"
+    },
+    "text": "Hey, in graphql, is there a way to filter hubdb table rows for relations?\nFor example our website displays customer references that have a relation to technologies we provide.\nI did not find a way to filter the customer references to only those using a specific technology. For example something like this:\n```query MyQuery {\n  HUBDB {\n    references_collection(filter: {technologies_collection__technology_ids__contains: \"100504441545\"}) {\n      items {\n        customername\n        technologies_collection__technology_ids\n      }\n    }\n  }\n}```\nI also did not find a way to fetch items as a reverse relation from the other table.\nHelp would be appreciated:raised_hands::skin-tone-2: But looks like we will have to filter manually on the client side",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-04-23 09:07:13"
+      },
+      {
+        "time_stamp": "2024-04-23 09:17:12"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Mohan Balaji",
+      "poster_handle": "mohanbalaji"
+    },
+    "time_stamp": "2024-04-22 06:47:44",
+    "text": ":wave: Hello, team!\nI am a beginner with HubSpot CMS, and I have some doubts and questions.\nCan I create custom blog posts similar to *Content &gt; Blog*\nMy question is, can I create more custom posts like *Content &gt; Custom Blog 1*, *Content &gt; Custom Blog 2*, etc.? Please let me know about the possibilities.",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-04-22 08:59:55"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-04-22 08:59:55",
+    "text": "<https://knowledge.HubSpot.com/blog/create-and-publish-blog-posts>"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2024-04-22 10:24:12",
+    "text": "Did u do `?hsDebug=true`  and notice any errors in the source code?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2024-04-22 12:23:13",
+    "edited": {
+      "time_stamp": "2024-04-22 12:24:10"
+    },
+    "text": "Hey, I just got a report of a HubDB dynamic page that uses a foreign ID column to pull in content from a master table not working. It's just not pulling in the foreign ID content. The weird thing is, if I do `{{ dynamic_page_hubdb_row|tojson }}` I can see the `product_link` column in there, but if I do `{{ dynamic_page_hubdb_row.product_link|tojson }}`, it results in an empty list. Has anyone ever seen anything like this before?",
+    "reply_count": 19,
+    "reply_users_count": 7,
+    "replies": [
+      {
+        "time_stamp": "2024-04-22 12:32:50"
+      },
+      {
+        "time_stamp": "2024-04-22 12:42:34"
+      },
+      {
+        "time_stamp": "2024-04-22 12:55:59"
+      },
+      {
+        "time_stamp": "2024-04-22 12:56:25"
+      },
+      {
+        "time_stamp": "2024-04-22 13:00:35"
+      },
+      {
+        "time_stamp": "2024-04-22 13:24:22"
+      },
+      {
+        "time_stamp": "2024-04-22 13:25:59"
+      },
+      {
+        "time_stamp": "2024-04-22 13:26:51"
+      },
+      {
+        "time_stamp": "2024-04-22 14:05:00"
+      },
+      {
+        "time_stamp": "2024-04-22 14:05:47"
+      },
+      {
+        "time_stamp": "2024-04-22 14:06:47"
+      },
+      {
+        "time_stamp": "2024-04-22 14:24:31"
+      },
+      {
+        "time_stamp": "2024-04-22 14:25:16"
+      },
+      {
+        "time_stamp": "2024-04-22 14:26:56"
+      },
+      {
+        "time_stamp": "2024-04-22 14:28:57"
+      },
+      {
+        "time_stamp": "2024-04-22 14:29:57"
+      },
+      {
+        "time_stamp": "2024-04-22 14:31:34"
+      },
+      {
+        "time_stamp": "2024-04-22 15:05:27"
+      },
+      {
+        "time_stamp": "2024-04-22 15:07:31"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Bernardo Salazar",
+      "poster_handle": "bernardo"
+    },
+    "time_stamp": "2024-04-22 12:32:50",
+    "text": "I have the same error. <@U2H3TT8F2>"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2024-04-22 12:42:34",
+    "text": "Glad it's not just me, at least"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2024-04-22 12:55:59",
+    "text": "For anyone else this might be affecting, I figured out a workaround:\n• Create a proxy row with `{% set proxy_row = dynamic_page_hubdb_row|tojson|fromjson %}`\n• That'll convert your dynamic page row to a static object. However, the foreign ID column will be missing everything but its ID, so you need to go query the foreign ID table directly. Either use hubdb_table_row, or use hubdb_table_rows and filter down to the matching IDs.\n• In my case, that looked like this:\n```{% set proxy_row = dynamic_page_hubdb_row|tojson|fromjson %}\n{% set product_row_id = proxy_row.product_link[0].id %}\n{% set product = hubdb_table_row(table_id, product_row_id) %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2024-04-22 12:56:25",
+    "text": "Checking into this for ya’ll now :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2024-04-22 13:00:35",
+    "text": "Thank you!!"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2024-04-22 13:24:22",
+    "text": "<@U3A4KEWK1> Do you know if this just started this afternoon or before?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2024-04-22 13:25:59",
+    "text": "Don't know exactly when it started, but the original report I got was sent at 12:49pm (central I think - it's a forwarded email from someone in Texas)."
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2024-04-22 13:26:51",
+    "text": "I became aware at 2pm eastern. At that time they still had a couple pages that were working, which I assume means they were just still cached, so it couldn't have been going on for too long."
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2024-04-22 14:05:00",
+    "text": "Hello, do you know time to resolve issue?"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2024-04-22 14:05:47",
+    "text": "We are still looking into it. We will update you soon.."
+  },
+  {
+    "poster": {
+      "poster_name": "Angel Arteaga",
+      "poster_handle": "angel995"
+    },
+    "time_stamp": "2024-04-22 14:06:47",
+    "text": "thanks"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2024-04-22 14:24:31",
+    "text": "Can you all please DM your portal ids? We may have to purge your CDN cache.."
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2024-04-22 14:25:16",
+    "text": "I am also seeing this issue, is purging cdn cache working for everyone?"
+  },
+  {
+    "poster": {
+      "poster_name": "Angel Arteaga",
+      "poster_handle": "angel995"
+    },
+    "time_stamp": "2024-04-22 14:26:56",
+    "text": "is working now on my site"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2024-04-22 14:28:57",
+    "text": "We just reverted the change so it should be good. If you still see the issue, thats likely because of some cache and should start working soon.."
+  },
+  {
+    "poster": {
+      "poster_name": "Luis Gomez",
+      "poster_handle": "lgomez"
+    },
+    "time_stamp": "2024-04-22 14:29:57",
+    "text": "So you don’t need our portal ids?"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2024-04-22 14:31:34",
+    "text": "If still not working, we may need to flush the CDN cache, in that case you can send me the portal id and we can slush the cache by portal."
+  },
+  {
+    "poster": {
+      "poster_name": "Doug Wilhelm",
+      "poster_handle": "sarrus25"
+    },
+    "time_stamp": "2024-04-22 15:05:27",
+    "text": "What change was reverted?"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2024-04-22 15:07:31",
+    "text": "We pushed a solution to retrieve the foreign key rows in a performant way and that had a minor bug that caused issues in a few cases. So we had to revert our solution."
+  }
+]

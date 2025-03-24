@@ -1,0 +1,61 @@
+[
+  {
+    "poster": {
+      "poster_name": "Evan McCann",
+      "poster_handle": "evan.mccann"
+    },
+    "time_stamp": "2022-09-13 10:23:32",
+    "text": "Hi all! I'd love some help understanding what I'm doing wrong with a custom code workflow block using the Python API client. Following the usage instructions in the Github readme (<https://github.com/HubSpot/HubSpot-api-python>), I try to run this code:\n```import os\nfrom HubSpot import HubSpot\n        \ndef main(event):\n  api_client = HubSpot(access_token='&lt;my_access_token&gt;')\n  deal_id = event.get('object').get('objectId')\n  \n  try:\n    response = api_client.crm.associations.batch_api.read('deal', 'company', batch_input_public_object_id=deal_id)\n  except ApiException as e:\n    print(e)\n    raise```\nI then get `[ERROR] TypeError: read() missing 1 required positional argument: 'to_object_type'` . I've been reading through the source code and not sure what I'm doing wrong here. Does anyone know what my issue is?",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-09-13 10:47:08"
+      },
+      {
+        "time_stamp": "2022-09-13 10:49:10"
+      },
+      {
+        "time_stamp": "2022-09-13 11:31:04"
+      },
+      {
+        "time_stamp": "2022-09-13 11:31:33"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-09-13 10:47:08",
+    "edited": {
+      "time_stamp": "2022-09-13 10:49:20"
+    },
+    "text": "<@U01C8L4GA20> It's been a long time since I've built a CCA in python. I also don't use the Python HubSpot SDK ever so I can't confirm or deny that the above code is correct or not. You can use this code to accomplish the same thing though:\n```import os\nimport requests\ndef main(event):\n  deal_id = event.get('object').get('objectId')\n  print(deal_id)\n  url = \"<https://api.hubapi.com/crm/v4/objects/deals/>\"+str(deal_id)+\"/associations/companies\"\n  querystring = {\"limit\":\"500\"}\n  headers = {\n    'accept': \"application/json\",\n    'authorization': \"Bearer access token\"\n  }\n  response = requests.request(\"GET\", url, headers=headers, params=querystring)\n  print(response.text) ```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-09-13 10:49:10",
+    "text": "Personally I always use the endpoints instead of the SDKs because the SDKs aren't always up to date. And I just like the way the endpoints are laid out. Definitely biased though."
+  },
+  {
+    "poster": {
+      "poster_name": "Evan McCann",
+      "poster_handle": "evan.mccann"
+    },
+    "time_stamp": "2022-09-13 11:31:04",
+    "text": "Thanks a lot! This is perfect and what i should have done many hours ago"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-09-13 11:31:33",
+    "text": "For sure"
+  }
+]

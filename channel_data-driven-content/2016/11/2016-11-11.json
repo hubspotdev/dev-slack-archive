@@ -1,0 +1,189 @@
+[
+  {
+    "poster": {
+      "poster_name": "normschurdell",
+      "poster_handle": "normschurdell"
+    },
+    "time_stamp": "2016-11-11 08:49:25",
+    "text": "When running this to retrieve only one row that matches the data in the database with this unique ID passed in the query string we get a blank result, but when we hard code any ID from the database it works, any ideas?\n{% set row = hubdb_table_row(xxxxxxx, request.query_dict.id) %}\n\nEven using \"|int\" does not work\n{% set row = hubdb_table_row(xxxxxxx, request.query_dict.id|int) %}"
+  },
+  {
+    "poster": {
+      "poster_name": "normschurdell",
+      "poster_handle": "normschurdell"
+    },
+    "time_stamp": "2016-11-11 11:14:27",
+    "text": "<@U22PU4G4A> <@U22VBL87M> can you look at the above? the set table row ONLY works if we hard code a number as the ID, it won't except other system variables"
+  },
+  {
+    "poster": {
+      "poster_name": "Remington Begg",
+      "poster_handle": "remingtonbegg"
+    },
+    "time_stamp": "2016-11-11 11:22:05",
+    "text": "<@U26CZR9MW>: what if you set a variable to equal the query_dict. That is how we've set parsons for that."
+  },
+  {
+    "poster": {
+      "poster_name": "Remington Begg",
+      "poster_handle": "remingtonbegg"
+    },
+    "time_stamp": "2016-11-11 11:23:00",
+    "text": "{% set params = request.query_dict.id|int %}"
+  },
+  {
+    "poster": {
+      "poster_name": "normschurdell",
+      "poster_handle": "normschurdell"
+    },
+    "time_stamp": "2016-11-11 11:27:30",
+    "edited": {
+      "time_stamp": "2016-11-11 11:28:51"
+    },
+    "text": "<@U25C65C3S> thanks, but unfortunately that has not worked either, it is very frustrating! it is a very simple thing (we thought) but apparently its not designed to do handle anything but a hardcoded number"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2016-11-11 11:27:38",
+    "text": "<@U26CZR9MW> I'll take a look at that"
+  },
+  {
+    "poster": {
+      "poster_name": "normschurdell",
+      "poster_handle": "normschurdell"
+    },
+    "time_stamp": "2016-11-11 11:31:28",
+    "text": "<@U22PJPGK0> thanks! we've tried everything... concatenation, other built in functions, systems variables, etc. - nothing we tried works but a hard coded number :disappointed:"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2016-11-11 12:12:16",
+    "text": "<@U26CZR9MW> can you give me an example of what works and what doesn't? I'm having a hard time understanding"
+  },
+  {
+    "poster": {
+      "poster_name": "normschurdell",
+      "poster_handle": "normschurdell"
+    },
+    "time_stamp": "2016-11-11 12:35:19",
+    "text": "<@U25PYL3Q8> this format works to print data...\n{% set row = hubdb_table_row(123456, 22334455) %}\n\nAny of these variations do not work...\n{% set params = request.query_dict.id|int %}\n{% set row = hubdb_table_row(123456, params) %}\n\n{% set row = hubdb_table_row(123456, request.query_dict.id|int) %}\n\n{% set row = hubdb_table_row(123456, request.query_dict.id|encode) %}\n\n{% set row = hubdb_table_row(123456, request.query_dict.id) %}"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2016-11-11 12:37:50",
+    "text": "|urlencode"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2016-11-11 12:38:04",
+    "text": "have you tried that? That is what I'm currently using"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2016-11-11 12:38:37",
+    "text": "here is my entire query param setup on a workign one"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2016-11-11 12:38:38",
+    "text": "% set queryparams = \"\" %}\n    {% if request.query_dict.fname %}\n        {% set queryparams = queryparams ~ \"&amp;fname=\"~request.query_dict.fname|title|urlencode %}\n    {% endif %}\n    {% if request.query_dict.lname %}\n        {% set queryparams = queryparams ~ \"&amp;lname=\"~request.query_dict.lname|title|urlencode %}\n    {% endif %}\n    {% if request.query_dict.city %}\n        {% set queryparams = queryparams ~ \"&amp;city=\"~request.query_dict.city|title|urlencode %}\n    {% endif %}\n    {% set queryparams = queryparams ~ \"&amp;orderBy=lname\" %}"
+  },
+  {
+    "poster": {
+      "poster_name": "normschurdell",
+      "poster_handle": "normschurdell"
+    },
+    "time_stamp": "2016-11-11 12:44:53",
+    "text": "That worked, thanks. But even still, after the code that estables the row, if we try to print some html and hubL like &lt;a href=\"{{ row.link }}\"&gt;&lt;img src=\"{{ row.image }}\" /&gt;&lt;/a&gt; nothing prints to the page from the database...\n\n...but if we hard code a NUMBER for the ID into {% set row = hubdb_table_row(123456, 22334455) %} it works and everything prints just fine on the rest of the page"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2016-11-11 13:15:34",
+    "text": "I have a fix. It will be pushed out on Monday"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2016-11-11 13:16:27",
+    "text": "the problem was with passing in number values. Strings worked just fine."
+  },
+  {
+    "poster": {
+      "poster_name": "normschurdell",
+      "poster_handle": "normschurdell"
+    },
+    "time_stamp": "2016-11-11 13:21:52",
+    "text": "Thank you. That will help a lot!"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2016-11-11 13:31:24",
+    "text": "in the mean time you can just put it as a string"
+  },
+  {
+    "poster": {
+      "poster_name": "normschurdell",
+      "poster_handle": "normschurdell"
+    },
+    "time_stamp": "2016-11-11 13:41:29",
+    "text": "can you send an example of what we can alter it to?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2016-11-11 13:43:42",
+    "text": "|string  ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2016-11-11 13:43:50",
+    "text": "That might work for you"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2016-11-11 13:49:44",
+    "text": "Sorry I meant for parameters that were strings. Passing a string version of the rowId wouldn't work either"
+  },
+  {
+    "poster": {
+      "poster_name": "normschurdell",
+      "poster_handle": "normschurdell"
+    },
+    "time_stamp": "2016-11-11 14:11:03",
+    "text": "that didn't work either unfortunately"
+  }
+]

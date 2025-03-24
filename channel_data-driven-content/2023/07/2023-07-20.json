@@ -1,0 +1,140 @@
+[
+  {
+    "poster": {
+      "poster_name": "Marco Siegl",
+      "poster_handle": "siegl"
+    },
+    "time_stamp": "2023-07-20 03:32:54",
+    "edited": {
+      "time_stamp": "2023-07-20 09:01:54"
+    },
+    "text": "hi there, we have lots of HubSpot forms created and want to dynamically load these inside a custom module via hubdb. i tried something like this, but it's not working... I know, the expansion of a hubl variable in a hubl tag is not quite right, but just to keep it simple, it would be nice, if this was possible. did anyone have the same problem and came up with a smart solution or workaround?\n`{% if {{dynamic_page_hubdb_row.formid}} %}`\n    `{% form \"form\" %}`\n    `{% form \"dynamic_form\" form_to_use=\"{{dynamic_page_hubdb_row.formid}}\", title=\"Dynamic Form\" %}`\n`{% endif %}`\n\nthe following solution works:\n`{% if dynamic_page_hubdb_row.formid %}`\n    `{% form \"form\" %}`\n    `{% form \"dynamic_form\" form_to_use=\"{{dynamic_page_hubdb_row.formid}}\", title=\"Dynamic Form\" %}`\n`{% endif %}`",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-07-20 03:36:53"
+      },
+      {
+        "time_stamp": "2023-07-20 03:37:07"
+      },
+      {
+        "time_stamp": "2023-07-20 03:40:59"
+      },
+      {
+        "time_stamp": "2023-07-20 04:03:58"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Marco Siegl",
+      "poster_handle": "siegl"
+    },
+    "time_stamp": "2023-07-20 03:34:57",
+    "text": "the way of using a hubl variable filled with a hubdb value won't either work in the embed script code as replacement:\n`&lt;script _charset_=\"utf-8\" _type_=\"text/javascript\" _src_=\"&lt;//js-eu1.hsforms.net/forms/embed/v2.js&gt;\"&gt;&lt;/script&gt;`\n`&lt;script&gt;`\n  `hbspt.forms.create({`\n    `region: \"eu1\",`\n    `portalId: \"foo\",`\n    `formId: \"\"{{ dynamic_page_hubdb_row.formid }}\"`\n  `});`\n`&lt;/script&gt;`",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-07-20 03:51:58"
+      },
+      {
+        "time_stamp": "2023-07-20 03:59:06"
+      },
+      {
+        "time_stamp": "2023-07-20 04:00:54"
+      },
+      {
+        "time_stamp": "2023-07-20 09:04:28"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Marco Siegl",
+      "poster_handle": "siegl"
+    },
+    "time_stamp": "2023-07-20 03:36:08",
+    "text": "might the only possible solution to dynamically load the absolute form pages urls as an &lt;iframe src?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-07-20 09:05:59"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Wessolly",
+      "poster_handle": "webdesign"
+    },
+    "time_stamp": "2023-07-20 03:36:53",
+    "text": "that is because you can´t write two {{  inside the if condition"
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Wessolly",
+      "poster_handle": "webdesign"
+    },
+    "time_stamp": "2023-07-20 03:37:07",
+    "text": "same with the second example"
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Wessolly",
+      "poster_handle": "webdesign"
+    },
+    "time_stamp": "2023-07-20 03:40:59",
+    "text": "habe you tried the following code?\n\n```{% if dynamic_page_hubdb_row.formid %}\n....```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Pokorniecki",
+      "poster_handle": "byron.pokorniecki.ext"
+    },
+    "time_stamp": "2023-07-20 03:51:58",
+    "text": "In the snippet you shared there are two \" before the value you want to enter. Is that maybe the problem? Else I would try to define a variable outside of the create function.\n\n```&lt;script charset=\"utf-8\" type=\"text/javascript\" src=\"//js-eu1.hsforms.net/forms/embed/v2.js\"&gt;&lt;/script&gt;\n&lt;script&gt;\n  const formId = \"{{dynamic_page_hubdb_row.formid}}\"\n  hbspt.forms.create({\n    region: \"eu1\",\n    portalId: \"foo\",\n    formId\n  });\n&lt;/script&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Marco Siegl",
+      "poster_handle": "siegl"
+    },
+    "time_stamp": "2023-07-20 03:59:06",
+    "text": "Thank you for your help, <@U04UF7BNBK4>\nWell, I think the dynamic script solution does not work at all. While I tried to save the JS-code HubSpot stated this error message: \"HubL in your CSS or JavaScript won’t be parsed\""
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Pokorniecki",
+      "poster_handle": "byron.pokorniecki.ext"
+    },
+    "time_stamp": "2023-07-20 04:00:54",
+    "text": "I think that is only referring to the javascript module part. Inside of the html I have used hubL before to add certain values in a script tag."
+  },
+  {
+    "poster": {
+      "poster_name": "Marco Siegl",
+      "poster_handle": "siegl"
+    },
+    "time_stamp": "2023-07-20 04:03:58",
+    "text": "hi <@UBT0AHWLD>, thank you for support! you got it right! my mistake to add the double curlys around the if statement:\n`{% if {{dynamic_page_hubdb_row.formid}} %}`\nbetter do it like this\n`{% if dynamic_page_hubdb_row.formid %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Marco Siegl",
+      "poster_handle": "siegl"
+    },
+    "time_stamp": "2023-07-20 09:04:28",
+    "text": "ah, ok. you mean better use the JS in a &lt;script&gt;-tag in the module.html - will try that! thanks for pointing out, <@U04UF7BNBK4> - cheers &amp; hope that I can also return a favor soon!"
+  },
+  {
+    "poster": {
+      "poster_name": "Marco Siegl",
+      "poster_handle": "siegl"
+    },
+    "time_stamp": "2023-07-20 09:05:59",
+    "text": "this also kinda works, but lacks somekind of theme-based css formatting"
+  }
+]

@@ -1,0 +1,150 @@
+[
+  {
+    "poster": {
+      "poster_name": "Bianca",
+      "poster_handle": "bianca"
+    },
+    "time_stamp": "2025-01-14 04:08:03",
+    "text": "It doesnt ring any bells unfortunately, but i might also be a dumbass. Theres no references to FontMeta in my project either\nThis is my entire yml\n\non:\n  push:\n    branches:\n      - staging\n\njobs:\n  deploy:\n    runs-on: ubuntu-latest\n    steps:\n      - name: Checkout\n        uses: actions/checkout@v2.3.3\n        with:\n          fetch-depth: 0  # Fetch full history to allow for merging\n\n      - name: Set up Node\n        uses: actions/setup-node@v2\n        with:\n          node-version: '14'  # Or the version you need\n\n      - name: Install Dependencies\n        run: npm install  # Installs dependencies, including node_modules\n\n      - name: Install Sass\n        run: npm install -g sass\n\n      - name: Pull latest changes from staging\n        run: |\n          git pull origin staging\n\n\n      - name: Build Maritime CSS\n        run: sass maritime/css/sass/main.scss maritime/css/sass/main.css -s compressed\n\n      - name: Build Forward CSS\n        run: sass forward/sass/main.scss forward/forward.css -s compressed\n\n      - name: Build Yard CSS\n        run: sass yards/sass/main.scss yard/yard.css -s compressed\n\n\n      - name: Commit and push updated CSS\n        env:\n          GITHUB_ACTOR: ${{ github.actor }}\n        run: |\n          git add maritime/css/main.css\n          git add yards/yards.css\n          git add forward/forward.css\n          git commit --author=\"${GITHUB_ACTOR} &lt;${GITHUB_ACTOR}@users.noreply.github.com&gt;\" -m \"Auto-compile main.css from SCSS changes\"\n          git push origin staging\n        continue-on-error: true  # Prevents errors if there are no changes to commit\n\n      - name: Deploy Maritime\n        uses: HubSpot/HubSpot-cms-deploy-action@v1.7\n        with:\n          src_dir: maritime\n          dest_dir: Frydenbo\\ Maritime\\ Web\\ Staging\n          portal_id: ${{ secrets.HubSpot_portal_id }}\n          personal_access_key: ${{ secrets.HubSpot_personal_access_key }}\n\n      - name: Deploy Yards\n        uses: HubSpot/HubSpot-cms-deploy-action@v1.7\n        with:\n          src_dir: yards\n          dest_dir: Frydenbo\\ Yards\\ Web\\ Staging\n          portal_id: ${{ secrets.HubSpot_portal_id }}\n          personal_access_key: ${{ secrets.HubSpot_personal_access_key }}\n\n      - name: Deploy Forward\n        uses: HubSpot/HubSpot-cms-deploy-action@v1.7\n        with:\n          src_dir: forward\n          dest_dir: Frydenbo\\ Forward\\ Web\\ Staging\n          portal_id: ${{ secrets.HubSpot_portal_id }}\n          personal_access_key: ${{ secrets.HubSpot_personal_access_key }}"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2025-01-14 07:22:19",
+    "edited": {
+      "time_stamp": "2025-01-14 07:22:45"
+    },
+    "text": "hmm :thinking_face:.\n\nI just pushed out an update to the GH deploy action. It isn’t related to the issue you noted but if it is oddly an issue with our action it may actually fix it.\n\nunder the hood what was changed was:\n• latest node version is now used.\n• latest version of checkout is now used.\n• pinned CLI version to prevent future breaking changes\n• Changed `portal` to `account` for consistency across all of our tools.\nI haven’t announced this just yet on the developer changelog but will be doing so soon.\n\nIn the meantime you can try upgrading to it now - here are the instructions to update your yml file:\nUpdate all lines that say:\n`uses: actions/checkout@v#`\nTo:\n`uses: actions/checkout@v4`\n(ensure indentation remains the same)\nUpdate all lines that say:\n`uses: HubSpot/HubSpot-cms-deploy-action@v#`\nTo\n`uses: HubSpot/HubSpot-cms-deploy-action@v2`\n(ensure indentation remains the same as it was before)\n\nIn the `with` section of the `uses: HubSpot/HubSpot-cms-deploy-action@v2` Change `portal_id` parameter to `account_id`.\n\nIn our example here, we changed the code so that you could use a GitHub variable for account id instead of the secret - but if you don’t want to go through the trouble of changing your secret to a variable that’s fine, the secret will be used if the variable isn’t provided.\n```uses: HubSpot/HubSpot-cms-deploy-action@v2\n        with:\n          src_dir: <src> ## ex. src\n          dest_dir: <src> ## ex. my-theme\n          account_id: ${{ vars.HubSpot_account_id || secrets.HubSpot_portal_id }}\n          personal_access_key: ${{ secrets.HubSpot_personal_access_key }}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Tricia Leach",
+      "poster_handle": "tleach"
+    },
+    "time_stamp": "2025-01-14 19:29:14",
+    "edited": {
+      "time_stamp": "2025-01-14 19:31:59"
+    },
+    "text": "<@U7SL518D6> Should <https://developers.HubSpot.com/docs/guides/cms/tools/HubSpot-cli/cli-v7#environment-variables|these instructions> to use environment variables be working? I’m having trouble with my uploads too:\n\n```Error:  Unknown arguments: applications/marketing-site-app, marketing-site-app\nError: Process completed with exit code 1.```\n```jobs:\n  deploy:\n    runs-on: ubuntu-latest\n    steps:\n      - name: Checkout\n        uses: actions/checkout@v4\n      - name: Set up Node.js\n        uses: actions/setup-node@v3\n        with:\n          node-version: 18.12.0\n      - name: Install dependencies\n        env:\n          NPM_TOKEN: ${{ secrets.npm_private_package_read }}\n        run: yarn install && yarn install:app\n      - name: Build and deploy app to HubSpot\n        # --use-env allows us to use env vars instead of HubSpot.config.yml\n        # <https://developers.HubSpot.com/docs/cms/developer-reference/local-development-cli#environment-variables>\n        env:\n          HubSpot_ACCOUNT_ID: ${{ secrets.sandbox_HubSpot_portal_id }}\n          HubSpot_PERSONAL_ACCESS_KEY:\n            ${{ secrets.sandbox_HubSpot_personal_access_key }}\n        run:\n          npx --yes --package=@HubSpot/cli@latest --call='hs project upload\n          applications/marketing-site-app marketing-site-app --use-env'```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2025-01-14 20:05:28",
+    "text": "What you're doing in your setup should work. The error you're getting appears to be for the src arg and dest arg. Not certain what's causing that. Id try bumping your node version to 22.x"
+  },
+  {
+    "poster": {
+      "poster_name": "Tricia Leach",
+      "poster_handle": "tleach"
+    },
+    "time_stamp": "2025-01-14 20:13:48",
+    "text": "<@U7SL518D6> I’m getting the same error with 22. Would you be able to look into this tomorrow? This is the same workflow I’ve been using for 9 months. Thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2025-01-14 20:38:28",
+    "text": "Oh took me a min. You're doing hs project upload. The args then are unnecessary if you are indeed uploading a project.\n\nIf you are just uploading a folder of cms assets to the design manager its hs upload with your src and dest as you have it"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2025-01-14 20:38:42",
+    "text": "Sorry for formatting. Typing on my phone"
+  },
+  {
+    "poster": {
+      "poster_name": "Tricia Leach",
+      "poster_handle": "tleach"
+    },
+    "time_stamp": "2025-01-14 20:39:36",
+    "text": "How do I tell it what directory to upload without the args? `applications/marketing-site-app` <@U7SL518D6>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2025-01-14 20:40:13",
+    "text": "Projects dont live in the design manager file system so its unnecessary"
+  },
+  {
+    "poster": {
+      "poster_name": "Tricia Leach",
+      "poster_handle": "tleach"
+    },
+    "time_stamp": "2025-01-14 20:40:31",
+    "text": "I’m trying to upload to an app — developer projects. Not the file system."
+  },
+  {
+    "poster": {
+      "poster_name": "Tricia Leach",
+      "poster_handle": "tleach"
+    },
+    "time_stamp": "2025-01-14 20:41:38",
+    "edited": {
+      "time_stamp": "2025-01-14 20:41:46"
+    },
+    "text": "And actually this was the command we’ve been using for ages. I added the destination to see if it would fix the issue. <@U7SL518D6>\n\n```        run:\n          npx --yes --package=@HubSpot/cli@latest --call='hs project upload\n          applications/marketing-site-app --use-env'```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2025-01-14 20:43:33",
+    "text": "Yeah projects dont use the src and dest"
+  },
+  {
+    "poster": {
+      "poster_name": "Tricia Leach",
+      "poster_handle": "tleach"
+    },
+    "time_stamp": "2025-01-14 20:43:56",
+    "edited": {
+      "time_stamp": "2025-01-14 20:50:05"
+    },
+    "text": "If I don’t use `src` how does the command know which directory to upload? <@U7SL518D6>"
+  },
+  {
+    "poster": {
+      "poster_name": "Tricia Leach",
+      "poster_handle": "tleach"
+    },
+    "time_stamp": "2025-01-14 20:49:48",
+    "text": "This is the error with no src\n```Error:  Unable to locate a project configuration file. Try running again from a project directory, or run `hs project create` to create a new project.```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2025-01-14 20:52:54",
+    "text": "If src previously worked, it was undocumented and prone to possibly stop working.\n\nYou should be able to resolve the issue by adding a cd before the npx command to cd into your applications/marketing-site-app folder prior to running the cli command"
+  },
+  {
+    "poster": {
+      "poster_name": "Tricia Leach",
+      "poster_handle": "tleach"
+    },
+    "time_stamp": "2025-01-14 21:08:42",
+    "text": "<@U7SL518D6> I’m testing to see if that works, but begging :pray::skin-tone-2: HubSpot to review the cms-react documentation and make updates if needed. This method IS documented in the HubSpot hello-world example: <https://github.com/HubSpot/cms-react/blob/main/examples/hello-world/package.json#L21>"
+  },
+  {
+    "poster": {
+      "poster_name": "Tricia Leach",
+      "poster_handle": "tleach"
+    },
+    "time_stamp": "2025-01-14 21:28:53",
+    "text": "<@U7SL518D6> Thank you very much, that did work. But yeah, a review and updated docs would be so so so great. Every couple of months the uploads break, and the combo of cms-react + private packages is difficult to research in docs."
+  }
+]

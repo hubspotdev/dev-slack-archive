@@ -1,0 +1,111 @@
+[
+  {
+    "poster": {
+      "poster_name": "Reuben",
+      "poster_handle": "reuben.levine"
+    },
+    "time_stamp": "2022-02-24 07:58:04",
+    "text": "Hi everyone. I’m having an issue with stylesheets not being included at the page level.\nI’ve created a global module that uses `require_css` to call a stylesheet. I call that module in an html partial, and then call that partial in a coded drag and drop template. When I preview any of these (module, partial, or template) in design tools, the preview looks correct. If I create a page (using the previously mentioned template), then preview, and then inspect, the module’s stylesheet isn’t being called. I’ve also tried adding the module directly to the page, and the stylesheet isn’t included then, either.\nAm I missing something here? I’ve ensured that all items are published.",
+    "reply_count": 8,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-02-24 09:37:43"
+      },
+      {
+        "time_stamp": "2022-02-24 10:00:09"
+      },
+      {
+        "time_stamp": "2022-02-24 10:04:41"
+      },
+      {
+        "time_stamp": "2022-02-24 12:31:29"
+      },
+      {
+        "time_stamp": "2022-02-24 12:34:36"
+      },
+      {
+        "time_stamp": "2022-02-24 13:38:02"
+      },
+      {
+        "time_stamp": "2022-02-24 13:40:30"
+      },
+      {
+        "time_stamp": "2022-02-24 14:01:47"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-02-24 09:37:43",
+    "text": "It’s a bit challenging to help out without seeing any code. Can you show us what’s going on?"
+  },
+  {
+    "poster": {
+      "poster_name": "Reuben",
+      "poster_handle": "reuben.levine"
+    },
+    "time_stamp": "2022-02-24 10:00:09",
+    "edited": {
+      "time_stamp": "2022-02-24 10:14:38"
+    },
+    "text": "absolutely, <@UQWGKUEN7>! given that there are so many moving pieces, what would you like me to show? the module’s code? the partial code? the template code?"
+  },
+  {
+    "poster": {
+      "poster_name": "Reuben",
+      "poster_handle": "reuben.levine"
+    },
+    "time_stamp": "2022-02-24 10:04:41",
+    "edited": {
+      "time_stamp": "2022-02-24 11:00:47"
+    },
+    "text": "footer menu module excerpt:\n```{% import \"otc/tools/load_files_macro.html\" %} {% set module_name = \"footer-menu\" %} {{ load_files(module_name|regex_replace(\"-\", \" \")) }} ```\nload_files_macro.html excerpt:\n```{%- macro load_files(fileName) -%} {{ require_css(get_asset_url(\"otc/css/main.css\")) }} {{ require_css(get_asset_url(\"otc/css/theme-overrides.css\")) }} {{ require_css(get_asset_url(\"otc/modules/\"~fileName~\"/\"~fileName~\".css\")) }} {%- endmacro -%} ```\nfooter.html excerpt:\n```{% dnd_module path=\"../../modules/footer menu/footer menu\" is_large_text=True %} {% module_attribute \"links\" is_json=True %} [ {\"text\": \"OTC News\", \"url\":{\"href\":\"<https://www.otcindustrial.com/otc-news>\"}}, {\"text\": \"Our Companies\", \"url\":{\"href\":\"<https://www.otcindustrial.com/our-companies>\"}}, {\"text\": \"Industries Served\", \"url\":{\"href\":\"<https://www.otcindustrial.com/otc-industries-served>\"}} ] {% end_module_attribute %} {% end_dnd_module %}  ```\nbase.html excerpt:\n```{% block footer %} {% global_partial path=\"../partials/footer.html\" %} {% endblock footer %} ```\nAgain, everything works as expected everywhere except at the page level where the stylesheets aren’t called."
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-02-24 12:31:29",
+    "text": "<@UTYRPALSZ> You need to import your macro file `as` a name `{% import '../file/path' as macros %}`  and then you can access the file’s macros via that namespace. `{{macros.load_files(module_name)}}`"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-02-24 12:34:36",
+    "text": "<https://developers.HubSpot.com/docs/cms/hubl/variables-macros-syntax#import>"
+  },
+  {
+    "poster": {
+      "poster_name": "Reuben",
+      "poster_handle": "reuben.levine"
+    },
+    "time_stamp": "2022-02-24 13:38:02",
+    "text": "Thanks for your suggestion <@UQWGKUEN7>. Looks like it was some sort of internal caching issue. I came back from a brief “tear my hair out” break, and the page preview is now showing the same as the template preview.\nAlso, for what it’s worth, it looks as though the imports will work if you don’t add an `as` parameter to the call. However, adding that tag makes the calls easier to follow in the code."
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2022-02-24 13:40:30",
+    "edited": {
+      "time_stamp": "2022-02-24 13:40:58"
+    },
+    "text": "Ahh got it, there is a lot of caching that takes place with HS sites. To override them you can add `?hsCacheBuster=2938` (random number) to the url"
+  },
+  {
+    "poster": {
+      "poster_name": "Reuben",
+      "poster_handle": "reuben.levine"
+    },
+    "time_stamp": "2022-02-24 14:01:47",
+    "text": "Yeah, I’ve tried that, but to no avail with this. I think this is a deeper issue. There were issues yesterday with a global module not refreshing also."
+  }
+]

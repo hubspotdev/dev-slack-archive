@@ -1,0 +1,82 @@
+[
+  {
+    "poster": {
+      "poster_name": "Abby",
+      "poster_handle": "abby.xia"
+    },
+    "time_stamp": "2020-12-13 15:42:05",
+    "text": "Hi everyone, i am new to HubSpot."
+  },
+  {
+    "poster": {
+      "poster_name": "Abby",
+      "poster_handle": "abby.xia"
+    },
+    "time_stamp": "2020-12-13 15:42:17",
+    "edited": {
+      "time_stamp": "2020-12-13 15:42:32"
+    },
+    "text": "Can we connect Hubdb with product properties?\nie, we create a table, called \"event\", each row will have a value called \"event_id\".\nin the sales/product, we created a custom property called \"ticket_id\".\nCan we connect these two values, and display the table row when the id match?\n```{% set table = hubdb_table_rows(table_id,queryparam)%} {% set query='' %} {% set tickets = crm_objects(\"Product\", query, \"name, price, event_id, description\" ) %}Thanks Abby```",
+    "reply_count": 11,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2020-12-13 18:10:10"
+      },
+      {
+        "time_stamp": "2020-12-13 19:03:45"
+      },
+      {
+        "time_stamp": "2020-12-13 19:05:08"
+      },
+      {
+        "time_stamp": "2020-12-14 08:07:31"
+      },
+      {
+        "time_stamp": "2020-12-14 16:17:23"
+      },
+      {
+        "time_stamp": "2020-12-14 16:25:24"
+      },
+      {
+        "time_stamp": "2020-12-14 16:25:40"
+      },
+      {
+        "time_stamp": "2020-12-14 17:23:07"
+      },
+      {
+        "time_stamp": "2020-12-14 17:48:02"
+      },
+      {
+        "time_stamp": "2020-12-14 18:53:35"
+      },
+      {
+        "time_stamp": "2020-12-15 19:06:36"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2020-12-13 18:10:10",
+    "text": "You can definitely do that. what is your use case?"
+  },
+  {
+    "poster": {
+      "poster_name": "Abby",
+      "poster_handle": "abby.xia"
+    },
+    "time_stamp": "2020-12-13 19:03:45",
+    "text": "thanks, so, we need to create a Event table to save all upcoming events.  and we also need to create different types of tickets for each event. so we created those tickets in sales/product. each ticket will have member price and non member price.\nNow, we need to connect this Event table with products by same id. ie, row.id equal to the custom properties (event_id).\nonce the id matched, the event detail page will display the product properties. such as, member price, non member price. then we will be able to add purchase button on each event.\n`{% set product_categories_param = \"orderBy=id\"~dynamic_page_hubdb_row.id %}`  \n `{% for row in hubdb_table_rows(3405059, product_categories_param) %}`\n`{% set query='' %}`\n`{% set tickets = crm_objects(\"Product\", query, \"name, price, event_id, description\" ) %}`\n\n`&lt;div class=\"event-container \"&gt;`\n    `&lt;div class=\"event-card\"&gt;`\n        `&lt;div class=\"image-container\"&gt;`\n            `&lt;img src=\"{{ row.featured_image.url }}\" width=\"500\" {% if row.image.width &gt; row.image.height  %}class=\"landscape\"{% endif %} alt=\"{{ row.name }} Headshot\"&gt;`\n        `&lt;/div&gt;`\n        `&lt;div class=\"event-info\"&gt;`\n          \n            `&lt;h3&gt;{{ row.name }}&lt;/h3&gt;`\n     `{% for tickets in tickets.results %}`\n              `&lt;li&gt;Event ID: {{ tickets.event_id }}&lt;/li&gt;`\n        `{% endfor %}`\n            `&lt;p&gt;{{ row.descriptions}}&lt;/p&gt;`\n   \n       `&lt;/div&gt;`\n    `&lt;/div&gt;`\n`&lt;/div&gt;`\n\n`{% endfor %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Abby",
+      "poster_handle": "abby.xia"
+    },
+    "time_stamp": "2020-12-13 19:05:08",
+    "text": "i tried to use if to match the id, but if is not working here."
+  }
+]

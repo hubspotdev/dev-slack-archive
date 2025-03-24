@@ -1,0 +1,195 @@
+[
+  {
+    "poster": {
+      "poster_name": "Lukas Kahwe Smith",
+      "poster_handle": "lukas.smith"
+    },
+    "time_stamp": "2023-04-04 04:43:23",
+    "text": "there appears to be a bug when exporting hubdb tables (to CSV), the order of the first row is based on the current \"draft\" even when not exporting a draft version. anyone else have noticed this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2023-04-04 09:42:30",
+    "text": "Running into an issue that has me a bit stumped trying to implement OR logic on a GraphQL query of HubDB items. I’m following the docs on <https://developers.HubSpot.com/docs/cms/data/query-HubSpot-data-using-graphql#filter-and-refine-query-results|this page> and have my query structured as follows:\n\n```HUBDB {\n    example_collection(filter: {\n      OR: [\n        {column1__eq: $exampleVariable}, \n        {column2__eq: $exampleVariable}\n      ]\n    }) {\n      items {...}```\nThis seems to be how I should structure the call according to the docs, but it both errors in GraphiQl and fails validation when I try to upload via the CLI. Any thoughts? I’ve tried a few combinations of where to place the OR (apparently it depends on the GraphQL implementation used) but no dice so far.",
+    "reply_count": 15,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-04-04 09:43:41"
+      },
+      {
+        "time_stamp": "2023-04-04 09:44:10"
+      },
+      {
+        "time_stamp": "2023-04-04 09:44:30"
+      },
+      {
+        "time_stamp": "2023-04-04 09:44:41"
+      },
+      {
+        "time_stamp": "2023-04-04 09:48:53"
+      },
+      {
+        "time_stamp": "2023-04-04 09:49:18"
+      },
+      {
+        "time_stamp": "2023-04-04 09:50:25"
+      },
+      {
+        "time_stamp": "2023-04-04 09:50:49"
+      },
+      {
+        "time_stamp": "2023-04-04 09:51:15"
+      },
+      {
+        "time_stamp": "2023-04-04 09:51:19"
+      },
+      {
+        "time_stamp": "2023-04-04 09:51:20"
+      },
+      {
+        "time_stamp": "2023-04-04 09:51:25"
+      },
+      {
+        "time_stamp": "2023-04-04 09:52:39"
+      },
+      {
+        "time_stamp": "2023-04-04 09:53:15"
+      },
+      {
+        "time_stamp": "2023-04-04 10:37:28"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-04 09:43:41",
+    "text": "and basically you're trying to say for example if the contacts first name is x or if the email is y."
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2023-04-04 09:44:10",
+    "text": "correct"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2023-04-04 09:44:30",
+    "text": "actually, more like if their first name is x or email is x lol"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-04 09:44:41",
+    "text": "ah understood"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2023-04-04 09:48:53",
+    "text": "```[ERROR] The graphql file /project/graphql/example.graphql has invalid query. Errors are Invalid query. Query validations against schema failed and the errors are: `[ValidationError{validationErrorType=WrongType, queryPath=[HUBDB, example_collection], message=Validation error of type WrongType: argument 'filter' with value 'ObjectValue{objectFields=[ObjectField{name='OR', value=ArrayValue{values=[ObjectValue{objectFields=[ObjectField{name='column1__eq', value=VariableReference{name='exampleVariable'}}]}, ObjectValue{objectFields=[ObjectField{name='column2__eq', value=VariableReference{name='exampleVariable'}}]}]}}]}' contains a field not in 'hubdb_example_filter': 'OR' @ 'HUBDB/example_collection', locations=[SourceLocation{line=3, column=25}], description='argument 'filter' with value 'ObjectValue{objectFields=[ObjectField{name='OR', value=ArrayValue{values=[ObjectValue{objectFields=[ObjectField{name='column1__eq', value=VariableReference{name='exampleVariable'}}]}, ObjectValue{objectFields=[ObjectField{name='column2__eq', value=VariableReference{name='exampleVariable'}}]}]}}]}' contains a field not in 'hubdb_example_filter': 'OR''}]````"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2023-04-04 09:49:18",
+    "text": "There’s the error message I get when trying to upload from the CLI"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-04 09:50:25",
+    "text": "Ok Interesting, just ran this in the editor:\n```query MyQuery {\n  CRM {\n    contact_collection(filter: {\n    OR: [\n      {firstname__eq: \"bryan\"},\n      {email__eq: \"<mailto:bh@HubSpot.com|bh@HubSpot.com>\"}\n    ]\n    }\n    ){\n      items {\n        firstname\n        email\n      }\n    }\n  }\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-04 09:50:49",
+    "text": "worked as expected"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-04 09:51:15",
+    "text": "hubdb does filtering different though"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2023-04-04 09:51:19",
+    "text": "curious if it might be limited to HubDB, as the page docs are CRM as well"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-04 09:51:20",
+    "text": "so testing there next"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2023-04-04 09:51:25",
+    "text": "right"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-04 09:52:39",
+    "text": "strange yeah the editor doesn't even have the option for OR"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-04-04 09:53:15",
+    "text": "cc <@U024L8W0MB6> sorry to bother you but this might be similar to last weeks question, where HubDB filters don't work the same way as CRM ones"
+  },
+  {
+    "poster": {
+      "poster_name": "Stef Leitch",
+      "poster_handle": "sleitch"
+    },
+    "time_stamp": "2023-04-04 10:37:28",
+    "text": "Hey, yea HubDB doesn't support OR filters at the moment (either via the API or GraphQL). I'll see about getting the docs updated to reflect that as it's a bit misleading at the moment since we don't explicitly call that out."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Fall",
+      "poster_handle": "matthew506"
+    },
+    "time_stamp": "2023-04-04 13:34:36",
+    "text": "I’m building dynamic crm-powered pages and curious about the BEST way to store images for each custom object record that are to be used in the dynamic page template.\n\nLet’s say I have 2-3 different image sliders throughout my dynamic page template and each slider needs to pull in 5-6 images from the custom object record. What’s the best way to store these images on custom object record? Via a bunch of custom properties? Should I create a series of HubDB tables (one for each slider) that store images for the respective custom object record? I could then take the HubDB table row ID, store it on the custom object record, and reference it to then query the HubDB table of images when building a particular image slider.\n\nAny thoughts about the best way to architect something like this?"
+  }
+]

@@ -1,0 +1,99 @@
+[
+  {
+    "poster": {
+      "poster_name": "Prabu dass",
+      "poster_handle": "hello233"
+    },
+    "time_stamp": "2020-11-05 05:30:31",
+    "text": "<@UMGLMQLA0> if there are data associated with that object you can not delete the object. First delete all the records associated with that object then delete and recreate. Let me know if you need any assistance."
+  },
+  {
+    "text": "Hi all, we added a Data Layer to our HubSpot account following this article: <https://trevorfox.com/2018/09/HubSpot-gtm-data-layer/>.\n\nThat works really well, and now I want to take it one step further and also do this for the part of our website that's outside of HubSpot (but connected with the HubSpot Tracking Code). But: how can I retrieve contact and company info that needs to be sent in the Data Layer? Is it actually possible to pull in the data in the screenshot below and can this be done by for example getting the contact with its user token?",
+    "time_stamp": "2020-11-05 05:59:56",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2020-11-09 02:15:05"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Celço Chiles da Roxa Neto",
+      "poster_handle": "celco.neto"
+    },
+    "time_stamp": "2020-11-05 07:09:03",
+    "text": "Hello good day!\nI need to integrate budgets with my ERP platform, but I can't find the endpoint"
+  },
+  {
+    "poster": {
+      "poster_name": "Reg Desgroseilliers",
+      "poster_handle": "reg"
+    },
+    "time_stamp": "2020-11-05 14:53:01",
+    "text": "Is there any plans to add an image field to custom objects?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-05 18:55:44",
+    "text": "Have to dig in and see what Zapier says about callback support, before we can really help you more, plus the question <@U01DF3PNCKA> asked also applies."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-05 18:59:01",
+    "edited": {
+      "time_stamp": "2020-11-05 18:59:56"
+    },
+    "text": "I had something really odd happen to me today which never happened before <@UFBNA9K9A> <@UD53A9UUR>.\n\n```2020-11-05 17:48:16,203: cli_carrier_clearance.py: ERROR: deal to contact assoc returned status_code: 207: and payload:\n{\n    \"status\": \"COMPLETE\",\n    \"results\": [\n        {\n            \"from\": {\n                \"id\": \"2283409586\"\n            },\n            \"to\": [\n                {\n                    \"id\": \"8001\",\n                    \"type\": \"deal_to_contact\"\n                }\n            ]\n        },\n... MORE ...\n    ],\n    \"numErrors\": 1,\n    \"errors\": [\n        {\n            \"status\": \"error\",\n            \"category\": \"OBJECT_NOT_FOUND\",\n            \"subCategory\": \"crm.associations.NO_ASSOCIATIONS_FOUND\",\n            \"message\": \"No contact is associated with deal 2388651912.\",\n            \"context\": {\n                \"fromObjectId\": [\n                    \"2388651912\"\n                ],\n                \"fromObjectType\": [\n                    \"deal\"\n                ],\n                \"toObjectType\": [\n                    \"contact\"\n                ]\n            }\n        }\n    ],\n    \"startedAt\": \"2020-11-06T01:48:16.116Z\",\n    \"completedAt\": \"2020-11-06T01:48:16.141Z\"\n}```\nThese are staging IDs, so I do not care that they are not secret. This output is from /crm/v3/associations/{fromObjectType}/{toObjectType}/batch/read . The API is returning HTTP 207 Multi-Status if anything in the request hits an error, and it never used to do this, so now my code crashes, and it is not documented in the API documentation, and it did not appear when I tried searching for it, in my emails where I have the HubSpot API release notes subscribed, either.\n\nIt is bad if stuff this fundamental to the endpoints is changing and we are not updating the documentation and notifying people. If I was in prod with this code it would have caused me a major outage. Can you guys help check what might have happened here? Like, it always did it, but it was never doc'ed, or new behavior, etc,?",
+    "reply_count": 5,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2020-11-05 19:16:11"
+      },
+      {
+        "time_stamp": "2020-11-05 20:10:00"
+      },
+      {
+        "time_stamp": "2020-11-06 08:29:10"
+      },
+      {
+        "time_stamp": "2020-11-06 09:18:28"
+      },
+      {
+        "time_stamp": "2023-11-13 15:07:04"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2020-11-05 19:16:11",
+    "text": "Hey <@U012W4YEUTX> Sorry about the issue you are having.  The original intent of our Batch APIs was that we could return partial failure as an improvement from our previous APIs that would return a failure response even if partially successful.\n\nWhile technically this a bug fix on our end to properly return a 207 to a batch API, because this API had behaved improperly for so long (assuming off your extensive experience with our APIs this is going back to the launch of the API) the incorrect behavior became the expected one. This  brings to light how little guidance we offer around handling 207 responses, especially since 207s aren’t all that common. After your comment, I realized you basically have to know where to look to find that we even have a 207 response as a possibility.\n\nFor the short term, you can expect to receive a 207 multi-status response from any batch endpoint. They will become more frequent as we find more and more cases where our code is throwing an error not properly wrapped in a batch response.\n\nlonger term, I’m going to work with our UX team about how we can make this more obvious to developers when the current behavior of the API isn’t the expected one.\n\nAgain I’m sorry you ran into this issue, we will use this as a learning opportunity."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-11-05 20:10:00",
+    "text": "Perfect, all makes sense, fair points, and reasonable plan. Thanks for the quick reply."
+  },
+  {
+    "poster": {
+      "poster_name": "Emil Forsmann",
+      "poster_handle": "emil763"
+    },
+    "time_stamp": "2020-11-06 00:53:19",
+    "text": "<@UFBNA9K9A> What is the status on this one?"
+  }
+]

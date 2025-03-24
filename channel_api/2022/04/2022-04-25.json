@@ -1,0 +1,138 @@
+[
+  {
+    "poster": {
+      "poster_name": "Emilien Allemand",
+      "poster_handle": "emilien.allemand"
+    },
+    "time_stamp": "2022-04-25 01:55:08",
+    "text": "Hi All, :wave:\nWe need to create a CRM card on the HubSpot instance of one of our customers. But he refuses to allow the data manipulated in the card to be hosted on a remote server (ours) and is not able to offer server hosting on their side either.\n\n*Question* :question:*:* Is it possible to host this data on their HubDB instance, knowing that it's not just about displaying data, but also about being able to manipulate it and create new ones?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-04-25 09:33:16"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ville Pekkarinen",
+      "poster_handle": "ville"
+    },
+    "time_stamp": "2022-04-25 03:17:52",
+    "edited": {
+      "time_stamp": "2022-04-25 03:19:27"
+    },
+    "text": "Any ideas on how to handle a situation, where we have a Contact with email <mailto:dude.contact@gmail.com|dude.contact@gmail.com>, and we receive a deal from external service with email <mailto:dudecontact@gmail.com|dudecontact@gmail.com>, we search our Contacts for email, come up empty, and try to create the contact, which fails, since Dude Contact is already there, and then our deal association fails, and we make a sad face",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-04-25 09:27:28"
+      },
+      {
+        "time_stamp": "2022-04-26 00:10:32"
+      },
+      {
+        "time_stamp": "2022-04-26 01:48:25"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "William Spiro",
+      "poster_handle": "wspiro"
+    },
+    "time_stamp": "2022-04-25 07:03:27",
+    "text": "GraphQL can be used to fetch HubDB table rows - is this what you mean <@U0276HSQAE8>? More details can be found here <https://developers.HubSpot.com/docs/cms/data/query-HubSpot-data-using-graphql#query-data-from-hubdb>"
+  },
+  {
+    "poster": {
+      "poster_name": "Bradon Gamor",
+      "poster_handle": "bradongarley"
+    },
+    "time_stamp": "2022-04-25 09:00:33",
+    "edited": {
+      "time_stamp": "2022-04-25 09:00:46"
+    },
+    "text": "Hey <@U03D1S1LQGH> Can you share any of the code and can you confirm that the site also has HubSpot’s tracking script?"
+  },
+  {
+    "poster": {
+      "poster_name": "Art Hryhorian",
+      "poster_handle": "art.hryhorian"
+    },
+    "time_stamp": "2022-04-25 09:27:28",
+    "text": "hi <@UU4T3609E>, I faced the same situation and have built the solution for this:\n```first step is to use search endpoint <https://api.hubapi.com/crm/v3/objects/contacts/search>```\nthe body is:\n```{\n  \"filterGroups\": [\n    {\n      \"filters\": [\n        {\n          \"value\": \"{{$.steps.json-object-7.result[0].email}}\",\n          \"propertyName\": \"email\",\n          \"operator\": \"CONTAINS_TOKEN\"\n        }\n      ]\n    },\n    {\n      \"filters\": [\n        {\n          \"value\": \"{{$.steps.json-object-7.result[0].email}}\",\n          \"propertyName\": \"hs_additional_emails\",\n          \"operator\": \"CONTAINS_TOKEN\"\n        }\n      ]\n    },\n    {\n      \"filters\": [\n        {\n          \"value\": \"{{$.steps.json-object-7.result[0].email}}\",\n          \"propertyName\": \"work_email\",\n          \"operator\": \"CONTAINS_TOKEN\"\n        }\n      ]\n    }\n  ],\n  \"properties\": [ \"email\", \"HubSpot_owner_id\", \"hs_additional_emails\", \"work_email\", \"criteria_for_assigning_am\", \"firstname\", \"lastname\", \"number_of_inquiries\"],\n  \"sorts\": [\n      {\n        \"propertyName\": \"createdate\",\n        \"direction\": \"ASCENDING\"\n      }\n    ],\n    \"limit\": 1\n}```\nas an email could be in any of those 3 fields in HubSpot\n\nbut still, even so you might face issues with duplicated contact. so for that case I making error check for error_type = CONFLICT, and parsing id of that contact as it's provided by HubSpot in the message with regexp\n\ndats it:) hope that helps"
+  },
+  {
+    "poster": {
+      "poster_name": "Art Hryhorian",
+      "poster_handle": "art.hryhorian"
+    },
+    "time_stamp": "2022-04-25 09:33:16",
+    "text": "hi <@U02UW806PPC>\nhard to answer without more details, but depends on the data. you can enrich your CRM even directly from the product/service, without any DBs but for that approach, mentioned product/service, should have endpoints that you could use to fetch the data needed to be visible in the card"
+  },
+  {
+    "poster": {
+      "poster_name": "Dominik",
+      "poster_handle": "dominik"
+    },
+    "time_stamp": "2022-04-25 10:34:03",
+    "text": "Hi everyone, not sure if that's right section, I need help with creating form and setting specific field as required.\nIs that possible to do inside of this code:\nhbspt.forms.create({portalId: \"xxxxxxx\",formId: \"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxxx\"});"
+  },
+  {
+    "poster": {
+      "poster_name": "Dominik",
+      "poster_handle": "dominik"
+    },
+    "time_stamp": "2022-04-25 10:36:08",
+    "edited": {
+      "time_stamp": "2022-04-25 10:36:51"
+    },
+    "text": "```onFormReady: function($form, e) {\n    document.querySelector(\"[type='submit']\").addEventListener(\"click\", function(event) {\n        if (document.getElementById('LEGAL_CONSENT.subscription_type_579xxxxx-xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx').checked == false) event.preventDefault();\n    }, false);\n}```\nI created this code, that check if button is checked and if it's not it prevent submit.\nProblem with this code is it don't validate rest of the fields."
+  },
+  {
+    "text": "Hi everyone! I have created a HubSpot app and I am trying to debug a potential problem with a POST request. In order to do so I would like to see the contents of the request in question but it seems HubSpot only provides those details when a request actually fails. Does anyone know if it possible to see the contents of a successful request?",
+    "time_stamp": "2022-04-25 10:47:34",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-04-27 06:28:51"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Pierre Cléaud",
+      "poster_handle": "pierre.cleaud"
+    },
+    "time_stamp": "2022-04-25 12:28:30",
+    "text": "Hi <@UGY6JNTB4>,\n\nI am trying to track a custom behavioral event through Google Tag Manager on an external website.\n\nSetup :\n• *All pages of the website have the HubSpot tracking code*\n• I have created a manually tracked event in HubSpot\n• I have created a custom HTML tag in Google tag manager with the following code in it:\n\n```&lt;script type=\"text/javascript\"&gt;\n_hsq.push(['trackCustomBehavioralEvent',{ \n  Name: \"InternalNameOfOurCustomEvent\",\n  properties: { hs_asset_type: \"landing-page\",\n              \ths_app_name: \"NameOfOurApp\"}\n}\n]);\n&lt;/script&gt;```\n• I have created a trigger in Google Tag Manager to trigger the previous tag on certain pages of the external website\nI am not seeing any events being logged in even when I test it myself (I have authorized cookie tracking)."
+  },
+  {
+    "poster": {
+      "poster_name": "Bradon Gamor",
+      "poster_handle": "bradongarley"
+    },
+    "time_stamp": "2022-04-25 13:37:42",
+    "text": "Can you confirm that the <https://knowledge.HubSpot.com/reports/install-the-HubSpot-tracking-code|HubSot tracking script> is on the external site?\n\nYour script looks correct except the name property should be lower case."
+  },
+  {
+    "poster": {
+      "poster_name": "Merve Pinar",
+      "poster_handle": "merve.pinar"
+    },
+    "time_stamp": "2022-04-25 17:05:08",
+    "text": "any ideas?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ville Pekkarinen",
+      "poster_handle": "ville"
+    },
+    "time_stamp": "2022-04-26 00:10:32",
+    "text": "I'm having trouble repeating this problem now in my test portal but extracting the existing ID from CONFLICT should work nicely, thanks!"
+  }
+]

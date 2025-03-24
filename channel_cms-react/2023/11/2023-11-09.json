@@ -1,0 +1,192 @@
+[
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2023-11-09 06:25:46",
+    "text": "But what would be stoping me from making that api call, the components are server rendered by default anyway?"
+  },
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2023-11-09 06:26:15",
+    "edited": {
+      "time_stamp": "2023-11-09 06:26:27"
+    },
+    "text": "The api wouldnt work for a 3rd party call but it would work for calling my aws endpoint?"
+  },
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2023-11-09 06:27:16",
+    "text": "<@UCY83QS6Q> "
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-11-09 06:33:29",
+    "text": "No, it is not about what destination you are calling. It is rather the timeout length of the react server render process (in our current set up we don’t want to get into a place where our serving rendering infrastructure is sitting doing nothing for 5-10 or more seconds while an API call is resolving)\n\n_And_ not really being able yet to have a way to make your react components wait until the API response has returned before rendering (for example, useEffect is a no-op on the server)"
+  },
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2023-11-09 06:36:56",
+    "edited": {
+      "time_stamp": "2023-11-09 06:37:09"
+    },
+    "text": "But what happens then if i have to send user input data to my serverless function which takes 5-10s to process it and return a response. Will that just not work then?"
+  },
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2023-11-09 06:37:19",
+    "text": "<@UCY83QS6Q> "
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-11-09 07:00:09",
+    "text": "I was starting to get in getting into the subtlety of our current infrastructure, and explaining why something currently will not work. I don’t wanna go super deep into the details but from our perspective client-side API call to a serverless function is a different kind of thing than a render. And right now serverless functions and page renders have different limits and requirements (not perfect, but intentionally different).\n\nTo be clear, I am not saying that this current situation is exactly where we want it. But sometimes the joy of building infrastructure is you have to worry about people abusing your system, mining bitcoin, accidentally running up excessive bills when they thought they were doing something simple… or all the other fun things that happen in the wild. We’re working on it, but not there yet."
+  },
+  {
+    "poster": {
+      "poster_name": "Tim Flaspoler",
+      "poster_handle": "tflaspoehler"
+    },
+    "time_stamp": "2023-11-09 07:52:35",
+    "edited": {
+      "time_stamp": "2023-11-09 07:54:24"
+    },
+    "text": "I'm new to using HubSpot CLI but familiar with developing within the CMS. If I run this <https://github.com/HubSpot/cms-js-building-block-examples/tree/main/hello-world|Hello World Example> from the cms-js-building-block-examples and upload it to my HubSpot account, it will just create a new theme and not effect what's currently there? We're hosting a lot of subdomains and things that I don't to mess with.",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-11-09 08:42:02"
+      },
+      {
+        "time_stamp": "2023-11-09 09:12:12"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2023-11-09 07:59:49",
+    "edited": {
+      "time_stamp": "2023-11-09 08:00:33"
+    },
+    "text": "Ok so in this example where I’d need to connect multiple 3rd party services and do extensive calculations, external serverless function solution would be the right way to go and would function with js modules? <@UCY83QS6Q> "
+  },
+  {
+    "poster": {
+      "poster_name": "Tim Flaspoler",
+      "poster_handle": "tflaspoehler"
+    },
+    "time_stamp": "2023-11-09 08:42:02",
+    "text": "I can just test this locally and figure it out. :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-11-09 08:43:28",
+    "text": "you still today wouldn’t be able to call the serverless function from the server due to what tim described above, you would need to make the call from client side code, which may or may not work for your usecase"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-11-09 09:12:12",
+    "text": "Doing a project build and deploy will not touch any themes (in fact as it is now it does nothing with themes, only creates new partials/modules/assets that can be referenced outside of the context of a theme).\n\nSo the only thing a new project deploy will do is update any templates that already have HubL referring to a JS module/partial or any pages that have already dragged that JS module in a D&amp;D area."
+  },
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2023-11-09 10:03:32",
+    "text": "Why wouldnt the client side code work?"
+  },
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2023-11-09 10:05:52",
+    "text": "And does using HubSpots serverless then fix this or does that then run into the same issue?"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-11-09 10:14:55",
+    "text": "Client-side code should always “work” as in it is possible to do what you need. I think the limitations and trade-offs are things like:\n• Does the HS account you are working on have serverless functions? (enterprise only, otherwise gotta implement elsewhere)\n• How performance sensitive is the company/visitor/use-case. Because doing showing some UI client-side is going to be slower than with the initial server render\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2023-11-09 10:16:17",
+    "text": "The account doesnt have enterprise so we’d have to use serverless elsewhere. They already have a running app with a decoupled backend and they just need the frontend translated into a hs module. So yea the only change from their current frontend should be that the api calls are made client side in theory"
+  },
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2023-11-09 10:17:16",
+    "text": "Its not super perfomative sensative and the tool they are trying to translate is most likely going to be split into multiple islands and then a reducer to pass the data and the user is expecting some load times either way for the result"
+  },
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2023-11-09 10:17:39",
+    "text": "Here then we just need an abstraction layer for the client side api calls im guessing"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-11-09 10:34:06",
+    "text": "The other issue I was thinking was in case there was any authentication issue / general sensitivity with the endpoint being exposed to users "
+  },
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2023-11-09 10:38:46",
+    "text": "Yea i mean we can probobly use some cors headers or jwt here, nothing air tight but this stuff never is"
+  },
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2023-11-09 10:39:52",
+    "text": "The client would need to have a lot of traffic to justify the upgrade to enterprise"
+  }
+]

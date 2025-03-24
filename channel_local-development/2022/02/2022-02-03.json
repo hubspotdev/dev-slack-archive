@@ -1,0 +1,47 @@
+[
+  {
+    "poster": {
+      "poster_name": "Özcan Eser",
+      "poster_handle": "oezcan.eser"
+    },
+    "time_stamp": "2022-02-03 01:51:45",
+    "text": "Hey guys, is anyone here who could help me with this code or has another solution/possibility for this?\n\nconst fs = require(\"fs\");\n\nfunction jsonReader(filePath, cb) {\n  fs.readFile(filePath, \"utf8\", (err, fileData) =&gt; {\n    if (err) {\n      return cb &amp;&amp; cb(err);\n    }\n    try {\n      const object = JSON.parse(fileData);\n      return cb &amp;&amp; cb(null, object);\n    } catch (err) {\n      return cb &amp;&amp; cb(err);\n    }\n  });\n}\n\njsonReader(\"../json/_color.json\", (err, data) =&gt; {\n  if (err) {\n    console.log(err);\n  } else {\n    fs.writeFile(\"../fields.json\", JSON.stringify([data], null, 2), (err) =&gt; {\n      if (err) {\n        console.log(err);\n      }\n    });\n  }\n});\n\nOne of the most important files of a theme is the Fields.json, I find it confusing in the long run to have a whole JSON file that has all the keys and values ​​for the theme and I thought to myself, if you have several JSON files that the has key and values ​​of color eg it would be clearer."
+  },
+  {
+    "text": "Hello all! I am using SCSS in my local environment and compiling it into a file which I am then including in my HubSpot site. This is all working just fine, but I would like to use HubSpot’s brand colors in these styles, and I am not sure how to do it?\n\nScreen shot with red, green, and blue is working. But when I try to add the HubSpot color, it breaks the compiler. Anyone know if it is possible to do this and have it not break?",
+    "time_stamp": "2022-02-03 07:13:23",
+    "edited": {
+      "time_stamp": "2022-02-03 07:13:57"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Özcan Eser",
+      "poster_handle": "oezcan.eser"
+    },
+    "time_stamp": "2022-02-03 08:00:51",
+    "edited": {
+      "time_stamp": "2022-02-03 09:05:36"
+    },
+    "text": "Hi Ana, maybe it works if you put it in here first {% set yourColor = brand_settings.primaryColor %} and then $primary-color: yourColor. But I'm not certain"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2022-02-03 08:31:15",
+    "text": "HubL and SCSS is finicky at best in my experience. What I’ve done lately is assign my HubL to CSS Custom Properties in one partial, and then only reference those custom props in the majority of my code. Using this method, you could use SCSS for everything except that one one file declaring all your vars."
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2022-02-03 08:49:51",
+    "edited": {
+      "time_stamp": "2022-02-03 08:50:49"
+    },
+    "text": "Yeah, CSS variables are the definitely the best option. You can also wrap your HubL in /* */, but it can get messy and fragile. I’ve used Sass for years, and I love it, but I’ve personally just switched over to CSS for HubSpot, since the only real thing you miss out on, in my opinion, is nesting, which is slated to come to native CSS soon:tm:, and I feel like having things that need to be compiled like Sass, clashes with the concept of the design manager if other people are going to be potentially messing with the files, because then you need to lock them and hope everyone keeps everything synced and up-to-date correctly. It can’t be helped sometimes, but ideally I’d prefer to have no build tools or locked files in design manager."
+  }
+]

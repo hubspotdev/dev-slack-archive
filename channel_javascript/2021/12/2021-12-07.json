@@ -1,0 +1,141 @@
+[
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2021-12-07 02:36:56",
+    "text": "As Mark said using this sort of hubl will break caching but you can use\n```{{ request.geoip_country }}```\nIf you want to see what else you can use have a look at the Developer Info in the hubl menu (I use the JSONVue chrome extension to format the information into something readable)"
+  },
+  {
+    "poster": {
+      "poster_name": "Woodsy",
+      "poster_handle": "james.woods"
+    },
+    "time_stamp": "2021-12-07 07:11:36",
+    "text": "Hi all, I'm working on combining two HubSpot blogs into one listing. I have got both blogs showing but I need to add javascript pagination as the standard HubSpot blog pagination doesn't support combined blog listings. Could anyone share example html and JS of how to implement this please? I have included the code for the listing that I'm working on. Thanks for any help.\n\n`&lt;div class=\"blog-section\"&gt;`\n    `&lt;div class=\"blog-listing-wrapper cell-wrapper\"&gt;`\n        `{# simple_list_page indicates the \"blog/all\" page, which is a list of links to every blog post #}`\n        `&lt;div class=\"post-listing{% if simple_list_page %}-simple{% endif %}\"&gt;`\n            `{% if blog_author %}`\n                `&lt;div class=\"hs-author-profile\"&gt;`\n                    `&lt;h2 class=\"hs-author-name\"&gt;{{ blog_author.display_name }}&lt;/h2&gt;`\n                    `{% if blog_author.avatar %} &lt;div class=\"hs-author-avatar\"&gt; &lt;img width=\"35 px\" src=\"{{ blog_author.avatar }}\" loading=\"lazy\" alt=\"{{ blog_author.display_name }}\"&gt; &lt;/div&gt; {% endif %}`\n                    `&lt;div class=\"hs-author-bio\"&gt;{{ blog_author.bio }}&lt;/div&gt;`\n                    `{% if blog_author.has_social_profiles %}`\n                        `&lt;div class=\"hs-author-social-section\"&gt;`\n                            `&lt;span class=\"hs-author-social-label\"&gt;Find me on:&lt;/span&gt;`\n                            `&lt;div class=\"hs-author-social-links\"&gt;`\n                                `{% if blog_author.facebook %}`\n                                    `&lt;a href=\"{{ blog_author.facebook }}\" target=\"_blank\" class=\"hs-author-social-link hs-social-facebook fa fa-facebook\"&gt;&lt;span class=\"hs-screen-reader-text\"&gt;Facebook&lt;/span&gt;&lt;/a&gt;`\n                                `{% endif %}`\n                                `{% if blog_author.linkedin %}`\n                                    `&lt;a href=\"{{ blog_author.linkedin }}\" target=\"_blank\" class=\"hs-author-social-link hs-social-linkedin fa fa-linkedin-square\"&gt;&lt;span class=\"hs-screen-reader-text\"&gt;Linkedin&lt;/span&gt;&lt;/a&gt;`\n                                `{% endif %}`\n                                `{% if blog_author.twitter %}`\n                                    `&lt;a href=\"{{ blog_author.twitter }}\" target=\"_blank\" class=\"hs-author-social-link hs-social-twitter fa fa-twitter-square\"&gt;&lt;span class=\"hs-screen-reader-text\"&gt;Twitter&lt;/span&gt;&lt;/a&gt;`\n                                `{% endif %}`\n                                `{% if blog_author.google_plus %}`\n                                    `&lt;a href=\"{{ blog_author.google_plus }}?rel=author\" target=\"_blank\" class=\"hs-author-social-link hs-social-google-plus fa fa-google-plus-square\"&gt;&lt;span class=\"hs-screen-reader-text\"&gt;Google Plus&lt;/span&gt;&lt;/a&gt;`\n                                `{% endif %}`\n                            `&lt;/div&gt;`\n                        `&lt;/div&gt;`\n                    `{% endif %}`\n                `&lt;/div&gt;`\n                `&lt;br /&gt;`\n                `&lt;h2 class=\"hs-author-listing-header\"&gt;Recent Posts&lt;/h2&gt;`\n            `{% endif %}`\n`&lt;!-- sets a variable for a the 5 most recent posts of my default CMS blog --&gt;`\n`{% set blog_one_posts = blog_recent_posts('default', limit=3) %}`\n\n`&lt;!-- sets a variable for a the 5 most recent posts of my blog id 47082700. You can find the blog id in the URL of the blog dashboard for a particular blog--&gt;`\n`{% set blog_two_posts = blog_recent_posts('5110413671', limit=3) %}`  \n\n`&lt;!-- combines the two variables into a single variable and sorts them by publish date. Please note the sort filter requires all three parameters --&gt;`\n`{% set all_posts = (blog_one_posts + blog_two_posts) | sort(true, false, 'publish_date')  %}` \n`&lt;!-- loop through posts in custom all posts variable --&gt;`\n`{% for post in all_posts %}` \n        `&lt;div class=\"post-item\"&gt;`\n            `{% if not simple_list_page %}`\n                                                `{% if post.post_list_summary_featured_image %}`\n                                `&lt;div class=\"hs-featured-image-wrapper\"&gt;`\n                                    `&lt;a href=\"{{post.absolute_url}}\" title=\"\" class=\"hs-featured-image-link\"&gt;`\n                                        `&lt;img src=\"{{ post.post_list_summary_featured_image }}\" loading=\"lazy\" class=\"hs-featured-image\" alt=\"{{ post.featured_image_alt_text }}\"&gt;`\n                                    `&lt;/a&gt;`\n                                `&lt;/div&gt;`\n                            `{% endif %}`\n                        `&lt;div class=\"post-header clearfix\"&gt;`\n                            `&lt;h2&gt;&lt;a href=\"{{post.absolute_url}}\"&gt;{{ post.name }}&lt;/a&gt;&lt;/h2&gt;`\n                            `&lt;p id=\"HubSpot-author_data\" class=\"HubSpot-editable\" data-HubSpot-form-id=\"author_data\" data-HubSpot-name=\"Blog Author\"&gt;&lt;span class=\"fa fa-calendar\"&gt;&lt;/span&gt;`\n                               `{{ post.publish_date_localized }} / by`\n                                `{%if content.blog_post_author %}`\n                                    `&lt;a class=\"author-link\" href=\"{{ post.absolute_url }}/author/{{ post.blog_post_author.slug }}\"&gt;{{ post.blog_post_author.display_name }}&lt;/a&gt;`\n                                `{% endif %}`\n                                 `{% if content.topic_list %}`\n                             `posted in`\n                                `{% for topic in content.topic_list %}`\n                                    `&lt;a class=\"topic-link\" href=\"{{ post.absolute_url }}/topic/{{ topic.slug }}\"&gt;{{ topic.name }}&lt;/a&gt;{% if not loop.last %},{% endif %}`\n                              `{% endfor %}`\n                              `{% endif %}`\n                              \n                               `&lt;!--comments--&gt;`\n                              `&lt;span class=\"custom_listing_comments\"&gt;&lt;span class=\"fa fa-comment\"&gt;&lt;/span&gt;`\n                                  `&lt;a href=\"{{post.absolute_url}}#comments-listing\"&gt;`\n                                  `{% set comments_number =  content.comment_list|length %}`\n                                  `{% if comments_number == 1 %}`\n                                      `{% set comments_label = \"Comment\" %}`\n                                  `{% else %}`\n                                          `{% set comments_label = \"Comments\" %}`\n                                  `{% endif %}`\n                                  `{{ comments_number }} {{ comments_label }}&lt;/a&gt;`\n                              `&lt;/span&gt;`\n                            `&lt;/p&gt;`\n                    \n                        `&lt;/div&gt;`\n                        `&lt;div class=\"post-body clearfix\"&gt;`\n                            `&lt;!--post summary--&gt;`\n\n                            `{{ post.post_list_content|safe }}`\n                        `&lt;/div&gt;`\n                        `&lt;a class=\"more-link\" href=\"{{ post.absolute_url }}\"&gt;Read More &lt;/a&gt;&lt;a class=\"fa fa-chevron-right\" href=\"{{ post.absolute_url }}\"&gt;&lt;/a&gt;`\n                \n`&lt;hr &gt;`\n\n                    `{% else %}`\n                        `&lt;h2 class=\"post-listing-simple\"&gt;&lt;a href=\"{{post.absolute_url}}\"&gt;{{ content.name }}&lt;/a&gt;&lt;/h2&gt;`\n                    `{% endif %}`\n                `&lt;/div&gt;`\n            `{% endfor %}`\n        `&lt;/div&gt;`\n\n`&lt;!--Blog-Pagination--&gt;`\n     `Pagination to go here...`   \n      \n      \n      \n    `&lt;/div&gt;`\n`&lt;/div&gt;`"
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2021-12-07 07:15:26",
+    "edited": {
+      "time_stamp": "2021-12-07 07:15:38"
+    },
+    "text": "Ah, thanks for the info on cache breaking. May I ask how you guys know about that? Did you read the info somewhere or learn from experience? I’ve never used the Developer Info before, that’s super helpful. Thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Adams",
+      "poster_handle": "jason475"
+    },
+    "time_stamp": "2021-12-07 09:23:16",
+    "edited": {
+      "time_stamp": "2021-12-07 13:32:59"
+    },
+    "text": "I feel so close to solving for this, but I'm prototyping the ability to send user clicks on a page's interactive product feature page as a hidden field in a form submission. Attached is the prototyping I have, but I cannot get the hidden property to update after form is submitted! I feel like the answer is obvious, but I can't seem to get it functioning correctly :disappointed: The hidden field's internal name is \"feature_1\", which is enabled for forms. It is a checkbox field, so internal values are \"true\" and \"false\". Thanks in advance!\n```function classToggle() {\n  this.classList.toggle('active');\n  this.classList.toggle('inactive');\n}\ndocument.querySelector('#feature1').addEventListener('click', classToggle);\n\nwindow.addEventListener('message', event =&gt; {\n  if(event.data.type === 'hsFormCallback' &amp;&amp; event.data.eventName === 'onFormSubmit') {\n    console.log('Form was submitted');\n    var feature1 = document.getElementById(\"feature1\");\n    if (feature1.className = \"active\") {\n      $('input[value=\"feature_1\"]').prop('checked', true).change();\n    } else {\n      $('input[value=\"feature_1\"]').prop('checked', false).change();\n    }\n  }\n});```"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2021-12-07 09:31:23",
+    "text": "Mostly experience on my end, but there are a few KBs around performance that are worth a look:\n\n<https://developers.HubSpot.com/docs/cms/developer-reference/cdn>\n<https://developers.HubSpot.com/docs/cms/developer-reference/cdn/prerendering>\n<https://developers.HubSpot.com/docs/cms/hubl/variables#http-request-variables>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Adams",
+      "poster_handle": "jason475"
+    },
+    "time_stamp": "2021-12-07 14:39:12",
+    "text": "I got everything to work except updating the hidden field \"feature_1\" with whether the user clicked on that element or not. When I test the console.log I can verify that feature1.className does get updated correctly (active or inactive class attributed). So I'm on the final stretch here...how do I update a hidden field in HubSpot based on whether or not an element on the page has a class?",
+    "reply_count": 27,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-12-08 02:35:23"
+      },
+      {
+        "time_stamp": "2021-12-09 11:44:18"
+      },
+      {
+        "time_stamp": "2021-12-09 12:01:57"
+      },
+      {
+        "time_stamp": "2021-12-09 12:28:54"
+      },
+      {
+        "time_stamp": "2021-12-09 12:29:31"
+      },
+      {
+        "time_stamp": "2021-12-09 12:30:12"
+      },
+      {
+        "time_stamp": "2021-12-09 15:28:26"
+      },
+      {
+        "time_stamp": "2021-12-10 07:09:06"
+      },
+      {
+        "time_stamp": "2021-12-10 07:56:57"
+      },
+      {
+        "time_stamp": "2021-12-10 07:57:11"
+      },
+      {
+        "time_stamp": "2021-12-10 08:03:59"
+      },
+      {
+        "time_stamp": "2021-12-10 08:04:44"
+      },
+      {
+        "time_stamp": "2021-12-10 08:06:26"
+      },
+      {
+        "time_stamp": "2021-12-10 08:07:02"
+      },
+      {
+        "time_stamp": "2021-12-10 08:20:19"
+      },
+      {
+        "time_stamp": "2021-12-10 08:23:41"
+      },
+      {
+        "time_stamp": "2021-12-10 08:31:48"
+      },
+      {
+        "time_stamp": "2021-12-10 08:33:47"
+      },
+      {
+        "time_stamp": "2021-12-10 08:37:49"
+      },
+      {
+        "time_stamp": "2021-12-10 08:38:12"
+      },
+      {
+        "time_stamp": "2021-12-10 08:39:20"
+      },
+      {
+        "time_stamp": "2021-12-10 08:50:27"
+      },
+      {
+        "time_stamp": "2021-12-10 08:51:47"
+      },
+      {
+        "time_stamp": "2021-12-10 09:27:47"
+      },
+      {
+        "time_stamp": "2021-12-10 09:47:19"
+      },
+      {
+        "time_stamp": "2021-12-10 10:42:14"
+      },
+      {
+        "time_stamp": "2021-12-13 02:43:29"
+      }
+    ]
+  }
+]

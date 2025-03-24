@@ -1,0 +1,262 @@
+[
+  {
+    "poster": {
+      "poster_name": "Ramandeep Singh",
+      "poster_handle": "ramandeep.singh2"
+    },
+    "time_stamp": "2024-10-18 04:29:44",
+    "text": "G'day <@U07SBHTPZEZ>! Hope you are all geared up for the weekend.\n\nYes we have worked in the similar niche.\n\nOne approach could be to customize the HubSpot form to include hidden fields that capture the logged-in user's email from the Salesforce portal. We can also use Salesforce's APIs to fetch the user's information and populate the form dynamically.\n\nHave you tried this and not being successful? I would like to discuss this further and get your feedback. Sending you a DM."
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas",
+      "poster_handle": "ls831"
+    },
+    "time_stamp": "2024-10-18 04:51:40",
+    "text": "Hello everyone! If I grant a third-party app access to our Contacts object via Scopes -- and only this object -- what kind of information are they able to see and manipulate? Is it basically everything listed in the Properties settings (Settings &gt; Data management &gt; Properties) and then choose \"Contact properties\" from the \"Select an object\" dropdown?\nIf yes, this would include properties like \"Recent Deal Amount\", correct? Can see see/manipulate emails and other types of activities / engagement with that contact?"
+  },
+  {
+    "poster": {
+      "poster_name": "David Gibson",
+      "poster_handle": "david593"
+    },
+    "time_stamp": "2024-10-18 07:07:33",
+    "text": "Hey is there not a way to sort results when getting records? For example, I'm getting associated tickets from a company, but it grabs the oldest records. Is there a way to change it to order by newest records?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-10-18 08:49:50"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Mayer",
+      "poster_handle": "thomas.mayer"
+    },
+    "time_stamp": "2024-10-18 08:03:13",
+    "edited": {
+      "time_stamp": "2024-10-18 08:03:29"
+    },
+    "text": ":wave: Hello, team! We have invoices for contacts that are transferred via Stripe. The contacts also have associated deals. Is it possible to assign (associate) the invoice to the associated deals as well, over API?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2024-10-18 08:49:50",
+    "edited": {
+      "time_stamp": "2024-10-18 08:51:22"
+    },
+    "text": "are you using the ticket search endpoint? if so you can do something like this:\n\n```POST <https://api.hubapi.com/crm/v3/objects/tickets/search>\n{\n\t\"filterGroups\": [\n\t\t{\n\t\t\t\"filters\": [\n\t\t\t\t{\n\t\t\t\t\t\"value\": \"123456789\",\n\t\t\t\t\t\"propertyName\": \"associations.company\",\n\t\t\t\t\t\"operator\": \"EQ\"\n\t\t\t\t}\n\t\t\t]\n\t\t}\n\t],\n    \"sorts\": [\n      {\n        \"propertyName\": \"createdate\",\n        \"direction\": \"DESCENDING\"\n      }\n    ]\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Huff",
+      "poster_handle": "ryan687"
+    },
+    "time_stamp": "2024-10-18 10:00:43",
+    "text": "Hey all.... Wondering if anyone has a working example of the source-code upload API in JS/TS... I'm banging my head against the wall and get nothing but 400s.\n<https://developers.HubSpot.com/docs/api/cms/source-code>",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-10-18 10:08:21"
+      },
+      {
+        "time_stamp": "2024-10-18 10:42:36"
+      },
+      {
+        "time_stamp": "2024-10-18 10:43:02"
+      },
+      {
+        "time_stamp": "2024-10-18 10:44:33"
+      },
+      {
+        "time_stamp": "2024-10-18 12:48:22"
+      },
+      {
+        "time_stamp": "2024-10-18 12:48:28"
+      },
+      {
+        "time_stamp": "2024-10-18 15:04:29"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Huff",
+      "poster_handle": "ryan687"
+    },
+    "time_stamp": "2024-10-18 10:08:21",
+    "text": "I'm specifically trying to upload a zip file, which will then be extracted by the extract API"
+  },
+  {
+    "poster": {
+      "poster_name": "Zach Foster",
+      "poster_handle": "notzachfoster"
+    },
+    "time_stamp": "2024-10-18 10:23:29",
+    "text": "note this is only 1 account"
+  },
+  {
+    "poster": {
+      "poster_name": "Aldo Carrillo",
+      "poster_handle": "aldo948"
+    },
+    "time_stamp": "2024-10-18 10:42:36",
+    "edited": {
+      "time_stamp": "2024-10-18 10:44:00"
+    },
+    "text": "const axios = require('axios');\nconst FormData = require('form-data');\nconst fs = require('fs');\n\n\nasync function pushZip() {\n    try {\n        let data = new FormData();\n        data.append('file', fs.createReadStream('../Downloads/file.zip'));\n\n        let config = {\n        method: 'put',\n        maxBodyLength: Infinity,\n        url: '<https://api.hubapi.com/cms/v3/source-code/published/content/myfile.zip>', // <http://myfile.zip/|myfile.zip> is the name the file will have in hs\n        headers: {\n            'Authorization': 'Bearer my_token',\n            ...data.getHeaders()\n        },\n        data : data\n        };\n\n        const response = await axios.request(config);\n        console.log(<http://response.data/|response.data>);\n        return <http://response.data/|response.data>;\n    } catch (error) {\n        console.log(error);\n    }\n}\n\nasync function unZip() {\n    try {\n\n        const response = await axios({\n            method: 'post',\n            url: '<https://api.hubapi.com/cms/v3/source-code/extract/myfile.zip>',\n            headers: {\n                authorization: 'Bearer my_token'\n            },\n            data: {}\n        })\n\n        console.log(response);\n        return response;\n    } catch (error) {\n        console.log(error);\n    }\n\n}\n\nasync function main () {\n\n    //await pushZip();\n    await unZip();\n}\n\nmain();"
+  },
+  {
+    "poster": {
+      "poster_name": "Aldo Carrillo",
+      "poster_handle": "aldo948"
+    },
+    "time_stamp": "2024-10-18 10:43:02",
+    "text": "just a code example lol"
+  },
+  {
+    "poster": {
+      "poster_name": "Aldo Carrillo",
+      "poster_handle": "aldo948"
+    },
+    "time_stamp": "2024-10-18 10:44:33",
+    "text": "<@U07C4LW9V34>"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Huff",
+      "poster_handle": "ryan687"
+    },
+    "time_stamp": "2024-10-18 12:48:22",
+    "text": "lol"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Huff",
+      "poster_handle": "ryan687"
+    },
+    "time_stamp": "2024-10-18 12:48:28",
+    "text": "Thanks, Aldo! :wink:"
+  },
+  {
+    "poster": {
+      "poster_name": "joe conery",
+      "poster_handle": "joe277"
+    },
+    "time_stamp": "2024-10-18 13:38:24",
+    "text": "hello all... totally new here and pretty new to HubSpot as well.\nSo I hope I'm on the right channel.\nMy question is about deployment location.\nI wrote an app that synchronizes some custom tables between MSFT Dynamics and HubSpot CRM.\nI implemented it in python (node sure if I need to switch to js)\nIt's not really a specific task that gets triggered by an update.\nIt just needs to run about every 5mins, do a table comparison and update either of the tables (in HubSpot or dynamics). It's sort of like the functionality of the native integration app but for custom objects.\nI'm wondering if HubSpot has a place where I can deploy/host the app?\nThe docs on \"custom code\" and \"serverless functions\" aren't clear about just having a non UI general program the runs periodically... let alone something not implemented using node.js\nDo I need an external hosting solution like postman or AWS?\nThanks all.",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-10-18 14:47:23"
+      },
+      {
+        "time_stamp": "2024-10-18 15:07:29"
+      },
+      {
+        "time_stamp": "2024-10-18 15:09:39"
+      },
+      {
+        "time_stamp": "2024-10-18 15:10:26"
+      },
+      {
+        "time_stamp": "2024-10-18 15:39:00"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-10-18 14:47:23",
+    "text": "This sounds like it needs to be self-hosted if you are continuously pulling data from HubSpot and comparing it against MSFT.\n\nCustom Code is workflow based and serverless functions are designed for CMS/Front-end use cases.\n\nI use Render and their CRON service to host scripts and run jobs on a recurring basis."
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Huff",
+      "poster_handle": "ryan687"
+    },
+    "time_stamp": "2024-10-18 15:04:29",
+    "text": "for the next passerby... I had _almost_ exactly this... But I was passing a Buffer from the readStream into the FormData instead of the stream itself — which is delightful that it works that way."
+  },
+  {
+    "poster": {
+      "poster_name": "joe conery",
+      "poster_handle": "joe277"
+    },
+    "time_stamp": "2024-10-18 15:07:29",
+    "text": "That's the vibe I'm getting.\nI'm just digging into \"Custom workflow actions\" too but this seems very specific and UI based."
+  },
+  {
+    "poster": {
+      "poster_name": "joe conery",
+      "poster_handle": "joe277"
+    },
+    "time_stamp": "2024-10-18 15:09:39",
+    "text": "Render seems pretty cool.\nI'm doing this an integration for a client though. So I've got to see what the costs are and where they want it"
+  },
+  {
+    "poster": {
+      "poster_name": "joe conery",
+      "poster_handle": "joe277"
+    },
+    "time_stamp": "2024-10-18 15:10:26",
+    "text": "I was hoping that \"custom workflow\" would just be a small private app with my code that I could trigger on a 5min periodic timer like a lambda or a cronjob"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-10-18 15:39:00",
+    "text": "Unfortunately not.  It's designed for custom actions via workflows on object records"
+  },
+  {
+    "poster": {
+      "poster_name": "Garrett Tacoronte",
+      "poster_handle": "garrett146"
+    },
+    "time_stamp": "2024-10-18 15:58:40",
+    "text": "I've ran into an issue with the HubSpot conversations beta API that I could use some help with.",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-10-18 15:58:58"
+      },
+      {
+        "time_stamp": "2024-10-30 09:12:50"
+      },
+      {
+        "time_stamp": "2024-10-30 09:13:33"
+      },
+      {
+        "time_stamp": "2024-10-30 09:25:23"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Garrett Tacoronte",
+      "poster_handle": "garrett146"
+    },
+    "time_stamp": "2024-10-18 15:58:58",
+    "text": "I have an issue with an out of bounds integer on the <https://developers.HubSpot.com/docs/api/conversations/conversations> API.\n\nWhen I call the following endpoint <https://api.hubapi.com/conversations/v3/conversations/threads?inboxId=7952967017>\n\nI am passing the inboxId to get the threads for that inbox. But with newer inboxes, I am noticing that the inboxId is numerically out of bounds because the API is trying to parse it as an integer instead of a string. The error I am getting is\n\n%{\"correlationId\" =&gt; \"da3cc9c1-abc8-46ab-92d1-c21a5cf66aad\", \"message\" =&gt; \"Invalid input JSON on line -1, column -1: Cannot deserialize value of type `int` from String \\\"7952967017\\\": Overflow: numeric value <tel:7952967017|(7952967017>) out of range of int (-2147483648 -2147483647)\", \"status\" =&gt; \"error\"}\n\n\nAny help is appreciated!"
+  },
+  {
+    "poster": {
+      "poster_name": "Ram Almog",
+      "poster_handle": "ram.almog"
+    },
+    "time_stamp": "2024-10-19 00:10:04",
+    "text": "<@U01QVR44MEY> any ideas ?"
+  }
+]

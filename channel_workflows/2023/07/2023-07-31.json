@@ -1,0 +1,24 @@
+[
+  {
+    "text": "Example workflows (generated for testing with templates).\n\nI download workflows via API (GET <https://api.hubapi.com/automation/v3/workflows/>).\nI then create on another account via API (POST <https://api.hubapi.com/automation/v3/workflows/>).\nI noticed that the created workflows do not have actions.\nFirst issue: do I need to use \"Get a specific workflow\" (GET /automation/v3/workflows/:workflowId) to retrieve the actions?\nThat is, do I have to use get all workflows first, and then use get a specific workflow in a loop?\n\nSecond question:\nWhen I download specific workflow for action I have \"UNSUPPORTED_ACTION\" and then I can't create a new workflow? What is the cause of this?\n\n```\"name\": \"A3 Tell contact owners when leads interact with your website\",\n  \"type\": \"DRIP_DELAY\",\n  \"actions\": [\n    {\n      \"type\": \"UNSUPPORTED_ACTION\",\n      \"stepId\": 1,\n      \"actionId\": 2,\n      \"contextJson\": \"{\\\"userIds\\\":[],\\\"teamIds\\\":[],\\\"subject\\\":\\\"Reach out to lead\\\",\\\"body\\\":\\\"&lt;p&gt;Hi&amp;nbsp;{{ _0_1.HubSpot_owner_id }},&lt;/p&gt;\\\\n&lt;p&gt;This contact has viewed our pricing page 3 times so you should reach out to them.&lt;/p&gt;\\\\n&lt;p&gt;Contact: {{ _0_1.firstname }}&amp;nbsp;{{ _0_1.lastname }}&lt;/p&gt;\\\\n&lt;p&gt;Email:&amp;nbsp;{{ _0_1.email }}&lt;/p&gt;\\\",\\\"ownerProperties\\\":[\\\"HubSpot_owner_id\\\"],\\\"actionType\\\":\\\"EMAIL_NOTIFICATION\\\"}\"\n    },\n    {\n      \"type\": \"TASK\",\n      \"stepId\": 1,\n      \"dueDays\": null,\n      \"ownerId\": null,\n      \"subject\": \"Reach out to lead\",\n      \"actionId\": 1,\n      \"taskType\": \"TODO\",\n      \"dueMinutes\": null,\n      \"description\": \"\",\n      \"reminderDays\": 3,\n      \"assignCurrent\": false,\n      \"ownerProperty\": \"HubSpot_owner_id\",\n      \"dueImmediately\": true,\n      \"noReminderDate\": false,\n      \"reminderMinutes\": 480\n    }\n  ],```\n```\"name\": \"A5 Correct invalid \\\".con\\\" email addresses with \\\".com\\\"\",\n  \"type\": \"DRIP_DELAY\",\n  \"actions\": [\n    {\n      \"type\": \"UNSUPPORTED_ACTION\",\n      \"stepId\": 1,\n      \"actionId\": 1,\n      \"contextJson\": \"{\\\"variableContext\\\":[{\\\"name\\\":\\\"email\\\",\\\"value\\\":{\\\"type\\\":\\\"OBJECT_PROPERTY\\\",\\\"propertyName\\\":\\\"email\\\"}}],\\\"template\\\":\\\"{{variable.email|replace(\\\\\\\"con\\\\\\\",\\\\\\\"com\\\\\\\",1)}}\\\",\\\"languageTag\\\":\\\"en-us\\\",\\\"actionType\\\":\\\"FORMULA\\\"}\"\n    },\n    {\n      \"type\": \"UNSUPPORTED_ACTION\",\n      \"stepId\": 1,\n      \"actionId\": 2,\n      \"contextJson\": \"{\\\"targetProperty\\\":{\\\"propertyName\\\":\\\"email\\\",\\\"source\\\":\\\"OBJECT\\\"},\\\"value\\\":{\\\"type\\\":\\\"FIELD_DATA\\\",\\\"identifier\\\":{\\\"actionId\\\":1,\\\"dataKey\\\":\\\"formula_result_output\\\",\\\"type\\\":\\\"ACTION\\\"}},\\\"actionType\\\":\\\"SET_PROPERTY\\\"}\"\n    }\n  ],```",
+    "time_stamp": "2023-07-31 05:45:43",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-07-31 10:28:38"
+      },
+      {
+        "time_stamp": "2023-08-01 15:55:22"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2023-07-31 10:28:38",
+    "text": "The workflows API, in its current state, is fairly limited in what it allows for. Based on the documentation and some changelog bullets, HubSpot is in the process of updating this API across most of its endpoints.\n\nBased on the error you received and the documentation, the action you’re attempting to create isn’t currently supported by the API:\n\n<https://legacydocs.HubSpot.com/docs/methods/workflows/workflows_overview#supported-actions>\n\nThe link details what’s currently possible when creating workflows via API. It also mentions the specific error you’ve received:\n\n_When using this API, only certain actions are supported. Any actions not in the following list will be considered an UNSUPPORTED_ACTION._ \n• _When using the <https://legacydocs.HubSpot.com/docs/methods/workflows/v3/create_workflow?hsLang=en|Create a workflow API>, if an UNSUPPORTED_ACTION is included, the workflow will not be created._\n• _When using the <https://legacydocs.HubSpot.com/docs/methods/workflows/v3/get_workflow?hsLang=en|Get workflow API>, if unsupported actions are included, the action type returned will be UNSUPPORTED_ACTION._\n"
+  }
+]

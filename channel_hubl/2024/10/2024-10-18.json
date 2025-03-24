@@ -1,0 +1,62 @@
+[
+  {
+    "text": "Can someone explain why macros will render out my HTML as visible plain text in the second scenario?\n\n`test-template.html`\n```&lt;!--\n  templateType: email\n  isAvailableForNewContent: true\n  isEnabledForEmailV3Rendering: true\n--&gt;\n{% macro my_macro(text) %}\n  {% if text == 'world!' %}\n    {% set a_variable = '' %} {# if this isn't included, scenario 2 renders correctly #}\n  {% endif %}\n  &lt;strong&gt;&lt;em&gt;{{ text }}&lt;/em&gt;&lt;/strong&gt;\n{% endmacro %}\n\n{# scenario 1 - success #}\n&lt;p&gt;\n\tHello {{ my_macro('world!') }}\n\t{# ✅ returns: Hello world! #}\n&lt;/p&gt;\n\n{# scenario 2 - fail when previewing as contact #}\n{% if contact.email != '' %}\n&lt;p&gt;\n  Hello {{ my_macro('world!') }}\n\t{# ❌ returns: Hello &lt;strong&gt;&lt;em&gt;world!&lt;/em&gt;&lt;/strong&gt; #}\n&lt;/p&gt;\n{% endif %}```",
+    "time_stamp": "2024-10-18 13:50:59",
+    "reply_count": 4,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-10-18 14:57:41"
+      },
+      {
+        "time_stamp": "2024-10-22 08:30:34"
+      },
+      {
+        "time_stamp": "2024-10-29 08:39:10"
+      },
+      {
+        "time_stamp": "2024-10-29 08:43:51"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "joe conery",
+      "poster_handle": "joe277"
+    },
+    "time_stamp": "2024-10-18 14:16:31",
+    "text": "maybe because it's inside the \"if\" block???\n\n<https://developers.HubSpot.com/docs/cms/hubl>\n\"Be mindful of nesting comments in your code, as it can result in the trailing comment tag to render as text.\"",
+    "reply_count": 4,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-10-18 14:27:25"
+      },
+      {
+        "time_stamp": "2024-10-19 08:14:00"
+      },
+      {
+        "time_stamp": "2024-10-22 08:23:19"
+      },
+      {
+        "time_stamp": "2024-10-22 08:23:50"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "James Kupczak",
+      "poster_handle": "jimmykup"
+    },
+    "time_stamp": "2024-10-18 14:27:25",
+    "text": "Because the `{# comment #}` is inside the `if` block?\n\nNope. The issue is still present if I remove all comments. Here it is without any:\n\n```&lt;!--\n  templateType: email\n  isAvailableForNewContent: true\n  isEnabledForEmailV3Rendering: true\n--&gt;\n{% macro my_macro(text) %}\n  {% if text == 'world!' %}\n    {% set a_variable = '' %}\n  {% endif %}\n  &lt;strong&gt;&lt;em&gt;{{ text }}&lt;/em&gt;&lt;/strong&gt;\n{% endmacro %}\n\n&lt;p&gt;\n\tHello {{ my_macro('world!') }}\n&lt;/p&gt;\n\n{% if contact.email != '' %}\n&lt;p&gt;\n  Hello {{ my_macro('world!') }}\n&lt;/p&gt;\n{% endif %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "James Kupczak",
+      "poster_handle": "jimmykup"
+    },
+    "time_stamp": "2024-10-18 14:57:41",
+    "text": "I can reduce the test case down further by removing the `if` statement in my macro. Seems that the real culprit here is the `set` statement. The following macro renders plain text HTML when called from within an `if` statement looking at a contact property.\n\n```{% macro my_macro(text) %}\n  {% set a_variable = 'x' %}\n  &lt;strong&gt;&lt;em&gt;{{ text }}&lt;/em&gt;&lt;/strong&gt;\n{% endmacro %}\n\n{% if contact.email != '' %}\n&lt;p&gt;\n  Hello {{ my_macro('world!') }}\n&lt;/p&gt;\n{% endif %}```"
+  }
+]

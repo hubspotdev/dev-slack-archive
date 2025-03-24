@@ -1,0 +1,564 @@
+[
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-12-10 01:38:37",
+    "text": "Thanks guys for your recommendations above :ok_hand:"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-12-10 01:47:39",
+    "text": "```\n&lt;!-- Set the different query parameters using submitted input for hubdb query --&gt;\n{% set queryparam = \"\" %}\n{% if request.query_dict.type in [\"1\", \"2\", \"3\", \"4\"] and request.query_dict.listing_address == \"\" %}\n  {% set queryparam = queryparam ~ \"&amp;type=\"~request.query_dict.type|urlencode %}\n{% endif %}\n{% if request.query_dict.type in [\"1\", \"2\", \"3\", \"4\"] and request.query_dict.listing_address != \"\" %}\n  {% set queryparam = queryparam~\"&amp;type=\"~request.query_dict.type|urlencode~\"&amp;listing_address__icontains=\"~request.query_dict.listing_address|urlencode %}\n{% endif %}\n{% if request.query_dict.type == \"show-all\" and request.query_dict.listing_address != \"\" %}\n  {% set queryparam = queryparam~\"&amp;listing_address__icontains=\"~request.query_dict.listing_address|urlencode %}\n{% endif %}\n```\nHi guys, I'm following the Real Estate tutorial from HS docs and I'd like to modify it to not have the filter feature, just searching the database only\nRemoving the `request.query_dict.type` in the above snippet returns errors. Which parts do I keep in and which parts do I delete?\nHubL newb and under pressure to get this fixed :cold_sweat:"
+  },
+  null,
+  null,
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-12-10 10:37:20",
+    "text": "You'd pretty much remove all of that"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-12-10 10:38:12",
+    "text": "I assume just below is something like `{% set listings = hubdb_table_rows(tableId, queryparam) %}`. You can also remove the `, queryparam` from that."
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-12-10 10:41:06",
+    "text": "Yeah that's correct. So it's able to search without the `queryparam`?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-12-10 10:42:00",
+    "text": "Yep. The queryparam is optional"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2018-12-10 10:42:50",
+    "text": "You only need it if you want to modify the output in some way. <https://developers.HubSpot.com/docs/methods/hubdb/v2/get_table_rows> Here's all the stuff you can do with it."
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-12-10 10:43:22",
+    "text": "Ah great! Appreciate the advice, still getting to grips with HubL, learning as I go :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Furqan Asghar",
+      "poster_handle": "mfa213"
+    },
+    "time_stamp": "2018-12-10 11:36:41",
+    "text": "hey guys, i'm having trouble with the UI of the following page:"
+  },
+  {
+    "poster": {
+      "poster_name": "Furqan Asghar",
+      "poster_handle": "mfa213"
+    },
+    "time_stamp": "2018-12-10 11:36:42",
+    "text": "<http://www-datacouncil-ai.sandbox.hs-sites.com/speakers-nyc18?hs_preview=jrozJTfF-6722150466>"
+  },
+  {
+    "poster": {
+      "poster_name": "Furqan Asghar",
+      "poster_handle": "mfa213"
+    },
+    "time_stamp": "2018-12-10 11:37:01",
+    "text": "i want this to look like the following page:\n<http://www.hubmate.co/keynote/team-embed>"
+  },
+  {
+    "poster": {
+      "poster_name": "Furqan Asghar",
+      "poster_handle": "mfa213"
+    },
+    "time_stamp": "2018-12-10 11:37:31",
+    "text": "this page is a dynamic page pulling data from Hubdb so i'm not sure how to show the speaker boxes horizontally"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2018-12-10 11:48:05",
+    "text": "<@U79N5J2AU>, can you post your module code?  looks like you have some things misplaced"
+  },
+  {
+    "poster": {
+      "poster_name": "Furqan Asghar",
+      "poster_handle": "mfa213"
+    },
+    "time_stamp": "2018-12-10 11:50:09",
+    "text": "<@UD53A9UUR> <https://gist.github.com/furqan85/bfcaaa78daa02f3b2244407790d0c0e6>"
+  },
+  {
+    "poster": {
+      "poster_name": "Furqan Asghar",
+      "poster_handle": "mfa213"
+    },
+    "time_stamp": "2018-12-10 11:52:33",
+    "text": "i see that all rows gets wrapped in the module containers."
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2018-12-10 12:01:27",
+    "text": "can you start your for loop down below the next div and move your endfor up accordingly?"
+  },
+  {
+    "poster": {
+      "poster_name": "Furqan Asghar",
+      "poster_handle": "mfa213"
+    },
+    "time_stamp": "2018-12-10 12:05:16",
+    "text": "just changed that, same thing. I tried this before as well. The problem is that in my editor this is a custom module that i modified and made it dynamic. so now the module parent wraps every row in it's parent container which should not be the case. let me know if that makes sense"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2018-12-10 12:08:15",
+    "text": "strange.  i put did a test and it is working correctly for me"
+  },
+  {
+    "text": "",
+    "time_stamp": "2018-12-10 12:08:23"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2018-12-10 12:13:54",
+    "text": "anyone else have thoughts?"
+  },
+  {
+    "text": "this is what i see right now after changing the code",
+    "time_stamp": "2018-12-10 12:17:05"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2018-12-10 12:23:56",
+    "text": "and the code looks like this?"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2018-12-10 12:23:58",
+    "text": "```&lt;div class=\"hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_custom_widget\" style=\"\" data-hs-cos-general-type=\"widget\" data-hs-cos-type=\"custom_widget\"&gt;\n  {% for row in table %}\n  &lt;div class=\"fw-animated-element fadeInUp animated\" data-animation-type=\"fadeInUp\"&gt;\n&lt;div class=\"custom-module team-member\"&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2018-12-10 12:25:20",
+    "text": "and remove the 25% width from the container div"
+  },
+  {
+    "text": "here's after removing the 25% width as well",
+    "time_stamp": "2018-12-10 12:29:26"
+  },
+  {
+    "text": "",
+    "time_stamp": "2018-12-10 12:30:10"
+  },
+  {
+    "poster": {
+      "poster_name": "Tim Joyce",
+      "poster_handle": "tim"
+    },
+    "time_stamp": "2018-12-10 12:31:32",
+    "text": "I see your html structure changes so it might be $('.team-member').closest('div').each("
+  },
+  {
+    "poster": {
+      "poster_name": "Tim Joyce",
+      "poster_handle": "tim"
+    },
+    "time_stamp": "2018-12-10 12:35:57",
+    "text": "your css for .team-members .hs_cos_wrapper_type_widget_container &gt; div, .home-speakers .hs_cos_wrapper_type_widget_container &gt; div should not have float and width set"
+  },
+  {
+    "poster": {
+      "poster_name": "Tim Joyce",
+      "poster_handle": "tim"
+    },
+    "time_stamp": "2018-12-10 12:36:54",
+    "text": "then, just add another class to your &lt;div class=\"fw-animated-element fadeInUp animated\"&gt; elemnt to be &lt;div class=\"fw-animated-element fadeInUp animated span4\"&gt;"
+  },
+  {
+    "poster": {
+      "poster_name": "Furqan Asghar",
+      "poster_handle": "mfa213"
+    },
+    "time_stamp": "2018-12-10 12:37:29",
+    "text": "ok let me try"
+  },
+  {
+    "poster": {
+      "poster_name": "Furqan Asghar",
+      "poster_handle": "mfa213"
+    },
+    "time_stamp": "2018-12-10 12:38:03",
+    "text": "on a side note, why am i not seeing hubl module in the list of modules available in the editor?"
+  },
+  {
+    "poster": {
+      "poster_name": "Tim Joyce",
+      "poster_handle": "tim"
+    },
+    "time_stamp": "2018-12-10 12:38:28",
+    "text": "raw hubl is gone"
+  },
+  {
+    "poster": {
+      "poster_name": "Tim Joyce",
+      "poster_handle": "tim"
+    },
+    "time_stamp": "2018-12-10 12:38:36",
+    "text": "everything is now custom modules"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2018-12-10 12:38:41",
+    "text": "i bemoaned it yesterday :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2018-12-10 12:38:45",
+    "text": "people hated on me"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2018-12-10 12:38:59",
+    "text": "it was embarrassing"
+  },
+  {
+    "poster": {
+      "poster_name": "Tim Joyce",
+      "poster_handle": "tim"
+    },
+    "time_stamp": "2018-12-10 12:39:02",
+    "text": "lol"
+  },
+  {
+    "poster": {
+      "poster_name": "Furqan Asghar",
+      "poster_handle": "mfa213"
+    },
+    "time_stamp": "2018-12-10 12:39:04",
+    "text": "wow, it's gone ? but why ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Tim Joyce",
+      "poster_handle": "tim"
+    },
+    "time_stamp": "2018-12-10 12:39:40",
+    "text": "more reusability, cleaner code, better standards... all around removing the cowboy coding ways of the west"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2018-12-10 12:39:53",
+    "text": "saving people from dennis"
+  },
+  {
+    "poster": {
+      "poster_name": "Tim Joyce",
+      "poster_handle": "tim"
+    },
+    "time_stamp": "2018-12-10 12:39:56",
+    "text": "hahaha"
+  },
+  {
+    "poster": {
+      "poster_name": "Furqan Asghar",
+      "poster_handle": "mfa213"
+    },
+    "time_stamp": "2018-12-10 12:39:57",
+    "text": "lol :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2018-12-10 12:40:19",
+    "text": "#the_last_cowboy"
+  },
+  {
+    "poster": {
+      "poster_name": "Tim Joyce",
+      "poster_handle": "tim"
+    },
+    "time_stamp": "2018-12-10 12:40:28",
+    "text": "lonely ranger :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Furqan Asghar",
+      "poster_handle": "mfa213"
+    },
+    "time_stamp": "2018-12-10 12:40:40",
+    "text": "i'm with you dennis i want it back too :smile:"
+  },
+  {
+    "time_stamp": "2018-12-10 12:40:43",
+    "text": ""
+  },
+  {
+    "poster": {
+      "poster_name": "Tim Joyce",
+      "poster_handle": "tim"
+    },
+    "time_stamp": "2018-12-10 12:40:51",
+    "text": "bahahahahahahahah"
+  },
+  {
+    "poster": {
+      "poster_name": "Tim Joyce",
+      "poster_handle": "tim"
+    },
+    "time_stamp": "2018-12-10 12:40:55",
+    "text": "dying over here"
+  },
+  {
+    "time_stamp": "2018-12-10 12:41:19",
+    "text": ""
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2018-12-10 12:41:19",
+    "text": "i was the kid.  tim and jon were john wayne"
+  },
+  {
+    "poster": {
+      "poster_name": "Tim Joyce",
+      "poster_handle": "tim"
+    },
+    "time_stamp": "2018-12-10 12:41:32",
+    "text": "hahahahaha"
+  },
+  {
+    "poster": {
+      "poster_name": "Furqan Asghar",
+      "poster_handle": "mfa213"
+    },
+    "time_stamp": "2018-12-10 12:41:46",
+    "text": ":smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Tim Joyce",
+      "poster_handle": "tim"
+    },
+    "time_stamp": "2018-12-10 12:55:42",
+    "text": "You can't A/B test a blog post.... right?"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-12-10 12:56:50",
+    "text": "not to my knowledge you cant"
+  },
+  {
+    "poster": {
+      "poster_name": "Tim Joyce",
+      "poster_handle": "tim"
+    },
+    "time_stamp": "2018-12-10 12:59:48",
+    "text": "old builders of the blog made each blog post as a webpage and each blog post in the content editor as a gate lp"
+  },
+  {
+    "poster": {
+      "poster_name": "Tim Joyce",
+      "poster_handle": "tim"
+    },
+    "time_stamp": "2018-12-10 13:00:00",
+    "text": "now i can't test a/b test the gate"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-12-10 13:03:22",
+    "text": "could you maybe use: <https://optimize.withgoogle.com/> with the blog...",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2018-12-10 13:18:42"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-12-10 13:03:51",
+    "text": "it would def be a workaround but seems like best (free) option for the time"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-12-10 13:04:05",
+    "text": "unless HS has a beta out for this that we dont know about"
+  },
+  {
+    "poster": {
+      "poster_name": "Tim Joyce",
+      "poster_handle": "tim"
+    },
+    "time_stamp": "2018-12-10 13:09:06",
+    "text": "thank you AJ, let me look into this"
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-12-10 13:18:42",
+    "text": "… how did I not know they had a tool like this O_o"
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-12-10 13:51:43",
+    "text": "Four new HubL filters for the HubL aficionados: `strtotime`, `plus_time`, `minus_time`, and `between_times`: <https://designers.HubSpot.com/docs/hubl/hubl-supported-filters#minus_time>"
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2018-12-10 13:52:59",
+    "text": "oooo between_times"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2018-12-10 13:53:08",
+    "text": "hello, friend"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-12-10 13:54:57",
+    "text": "roflmao really covered your bases with the time units there Matt - nanos micros centuries, millenia, eras.\n\nMatt’s preparing HubSpot to last forever"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-12-10 13:56:34",
+    "text": "There is a secret `forever` value if you want to go to the end of time :sunglasses: <https://docs.oracle.com/javase/8/docs/api/java/time/temporal/ChronoUnit.html#FOREVER>"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2018-12-10 13:56:43",
+    "text": "yes!!!!"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-12-10 13:56:45",
+    "text": "hahahaha"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-12-10 13:57:43",
+    "text": "<https://media.giphy.com/media/Xpa9TmISjaaju/giphy.gif>"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2018-12-10 14:03:22",
+    "text": "<@U6GNQ7JBU> These filters are beautiful. If I didn’t know better I would think you were trying to seduce me."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-12-10 14:05:15",
+    "edited": {
+      "time_stamp": "2018-12-10 14:05:39"
+    },
+    "text": "hahah, I agree nice work Matt they will definitely come in handy.\n\nThe `forever` value makes me worried though seems like too much power. lol I feel like if I used it, it’d like crash the HS servers and open up a wormhole.\n\nIt’s like dividing by zero"
+  },
+  null,
+  null,
+  null
+]

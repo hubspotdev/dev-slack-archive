@@ -1,0 +1,40 @@
+[
+  {
+    "poster": {
+      "poster_name": "JB",
+      "poster_handle": "jb900"
+    },
+    "time_stamp": "2022-08-11 02:58:21",
+    "text": "So i am sending the form data via API since we plan to attach the generated pdf. Any idea about it based on my form submission approach\n```$( cform.s2_form_id ).validate({\n    rules: {\n      'investor-category': {\n        required: true\n      },\n    },\n    errorPlacement: function( label, element ) {\n      if( element.attr( \"name\" ) === \"investor-category\"  ) {\n        element.parent().append( label );\n      } else {\n        label.insertAfter( element );\n      }\n    },\n    submitHandler: function(form) {\n      var formStepTwo = {\n        'fields': [\n          {\n            'name': 'firstname',\n            'value':  $(cform.s2_form_id + ' input[name=\"FirstName\"]').val()\n          },\n          {\n            'name': 'lastname',\n            'value':  $(cform.s2_form_id + ' input[name=\"LastName\"]').val()\n          },\n          {\n            'name': 'phone',\n            'value':  $(cform.s2_form_id + ' input[name=\"PhoneNumber\"]').val()\n          },\n          {\n            'name': 'email',\n            'value':  $(cform.s2_form_id + ' input[name=\"Email\"]').val()\n          },\n          {\n            'name': 'qualified',\n            'value': $(cform.s2_form_id + ' input[name=\"investor-category\"]:checked').val()\n          },\n          {\n            'name': 'lead_source',\n            'value':  'PPC'\n          },\n          {\n            'name': 'hs_lead_status',\n            'value':  'NEW'\n          }\n        ],\n        'context': {\n          'hutk': hscookie,\n          'pageUri': window.location.href,\n          'pageName': 'HubSpot - Property Investments'\n        }\n      };\n\n      $.ajax({\n        url: '<https://api.hsforms.com/submissions/v3/integration/submit/'+> cform.hs_portal_id + '/' + cform.hs_form_guid,\n        type: 'POST',\n        contentType: \"application/json\",\n        dataType: \"json\",\n        headers: {\n          'Accept': 'application/json',\n          'Access-Control-Allow-Origin': '*'\n        },\n        data: JSON.stringify(formStepTwo),\n        beforeSend: function () {\n          $(form).find('input[type=\"submit\"]').attr('disabled', true);\n        },\n        success: function(response) {\n          window.location.href = cform.redirect_url;\n        },\n        complete: function() {\n          $(form).find('input[type=\"submit\"]').attr('disabled', false);\n        },\n        error: function (status, error) {\n          // console.log(error, status);\n        }\n      });\n    }\n  });```"
+  },
+  {
+    "poster": {
+      "poster_name": "Mitja Lewin",
+      "poster_handle": "m.lewin"
+    },
+    "time_stamp": "2022-08-11 03:19:00",
+    "edited": {
+      "time_stamp": "2022-08-11 03:19:22"
+    },
+    "text": "There is a *FileReader* *API* for JavaScript:\n<https://developer.mozilla.org/de/docs/Web/API/FileReader>\n\nMaybe you need to use the File as a *Blob*.\n\nAnd there is also a *DataTransfer API:*\n<https://developer.mozilla.org/de/docs/Web/API/FormData>\n\nBut guess you don't need it and it could be done with *FormData*.\n<https://developer.mozilla.org/de/docs/Web/API/FormData>\n\nLike in this *Example*:\n<https://gist.github.com/jcable/25d4c86d96d810a5498d>"
+  },
+  {
+    "poster": {
+      "poster_name": "Mitja Lewin",
+      "poster_handle": "m.lewin"
+    },
+    "time_stamp": "2022-08-11 03:55:45",
+    "edited": {
+      "time_stamp": "2022-08-11 22:17:47"
+    },
+    "text": "<@U25PYL3Q8> Position `fixed` did the job, but still need the `thead` and `tfoot` as space-keeper. And a little help of `min-height` for the `table`, as well as some `display` toggling for the spacer-elements on screen. In the end this is a practical solution:\n\n*Step1:* Create a macro as a wrapper with a `caller()` for the page content.\n```{% macro print_sheet() %}\n  &lt;header class=\"header fixed-at-print\"&gt;Header&lt;/header&gt;\n  &lt;table class=\"vh-100\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\"&gt;\n    &lt;thead class=\"d-print-only\"&gt;\n      &lt;tr&gt;\n        &lt;th&gt;&lt;div class=\"header\"&gt;&lt;!--space-keeper--&gt;&lt;/div&gt;&lt;/th&gt;\n      &lt;/tr&gt;\n    &lt;/thead&gt;\n    &lt;tbody&gt;\n      &lt;tr&gt;\n        &lt;td&gt;{{ caller() }}&lt;/td&gt;\n      &lt;/tr&gt;\n    &lt;/tbody&gt;\n    &lt;tfoot class=\"d-print-only\"&gt;\n      &lt;tr&gt;\n        &lt;td&gt;&lt;div class=\"footer\"&gt;&lt;!--space-keeper--&gt;&lt;/div&gt;&lt;/td&gt;\n      &lt;/tr&gt;\n    &lt;/tfoot&gt;\n  &lt;/table&gt;\n  &lt;footer class=\"footer fixed-at-print\"&gt;Footer&lt;/footer&gt;\n{% endmacro %}```\n*Step2*: Wrap your content, normally a `block` syntax element, with the macro.\n```{% block body %}\n  {% call print_sheet() %}\n    (...)\n  {% endcall %}\n{% endblock body %}```\n*Step4:* And now the most important part, the styling:\n```&lt;style&gt;\n    \n    /* Page Height Helper  */\n    .vh-100 {\n      min-height: 100vh;\n    }\n    \n    /* Header And Footer */\n    .header, .footer {\n      display: block; height: 100px; width: 100%;\n      background: gray;\n    }\n    \n    /* Display Helper */\n    .d-print-only { display: none; }\n    @print {\n      thead.d-print-only { display: table-header-group; }\n      tfoot.d-print-only { display: table-footer-group; }\n    }\n    \n    /* Print Position */\n    @print {\n      .header.fixed-at-print, \n      .footer.fixed-at-print { position: fixed; }  \n      .header.fixed-at-print { top: 0; }\n      .footer.fixed-at-print { bottom: 0; } \n    }\n    \n&lt;/style&gt;```\n*Step5:* _Header_ and _Footer_ can be now replaced by a globale partial or what ever. The only thing that is required is, that both, header and footer need a static height. In the example above it's 100px."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-11 07:22:08",
+    "text": "AHH I like how that space keeper works. Very creative solution. Nice work! very clean too"
+  }
+]

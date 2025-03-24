@@ -1,0 +1,193 @@
+[
+  {
+    "poster": {
+      "poster_name": "Maciej Mojsiewicz",
+      "poster_handle": "maciej.m"
+    },
+    "time_stamp": "2023-07-18 05:30:45",
+    "text": "Hi, I am having troubles with `convert_rgb` . For button module I want to reduce color picker to drop down options with Theme defined colors. In module `fields.json` I have a choice field where I am calling theme color `\"choices\" : [ [ \"{{theme.global_colors.blue.color}}\", \"Blue\" ], ...` where color is set as HEX (#9967F7). I am able to use it to style button but can't convert it  to `rgba` to set opacity for different button behaviour ie. `hoover` so this is *working* `background-color: {{ <http://module.styles.bg|module.styles.bg>_color }};`  but this one is *NOT* `background-color: rgba({{ <http://module.styles.bg|module.styles.bg>_color|convert_rgb }});` ",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-07-18 05:32:21"
+      },
+      {
+        "time_stamp": "2023-07-18 05:34:33"
+      },
+      {
+        "time_stamp": "2023-07-18 05:35:23"
+      },
+      {
+        "time_stamp": "2023-07-18 05:35:41"
+      },
+      {
+        "time_stamp": "2023-07-18 05:38:57"
+      },
+      {
+        "time_stamp": "2023-07-18 05:40:05"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Wessolly",
+      "poster_handle": "webdesign"
+    },
+    "time_stamp": "2023-07-18 05:32:21",
+    "text": "have you tried:\n``` background-color: rgba({{ module.styles.bg_color.color|convert_rgb }}); ```"
+  },
+  {
+    "poster": {
+      "poster_name": "Maciej Mojsiewicz",
+      "poster_handle": "maciej.m"
+    },
+    "time_stamp": "2023-07-18 05:34:33",
+    "text": "that gives me `#null`"
+  },
+  {
+    "poster": {
+      "poster_name": "Maciej Mojsiewicz",
+      "poster_handle": "maciej.m"
+    },
+    "time_stamp": "2023-07-18 05:35:23",
+    "text": "my choice looks like that\n```{        \n        \"label\" : \"Bg Color\",\n        \"name\" : \"bg_color\",\n        \"type\" : \"choice\",\n        \"display\" : \"select\",\n        \"multiple\":\"false\",\n        \"choices\" : [ [ \"{{theme.global_colors.blue.color}}\", \"Blue\" ], [ \"{{theme.global_colors.red.color}}\", \"Red\" ], [ \"{{theme.global_colors.yellow.color}}\", \"Yellow\" ], [ \"{{theme.global_colors.green.color}}\", \"Green\" ], [\"{{theme.global_colors.violet.color}}\", \"Violet\" ], [ \"{{theme.global_colors.darkblue.color}}\", \"Dark blue\" ] ],\n        \"default\" : \"{{theme.global_colors.blue.color}}\"\n     }```"
+  },
+  {
+    "poster": {
+      "poster_name": "Andreas Wessolly",
+      "poster_handle": "webdesign"
+    },
+    "time_stamp": "2023-07-18 05:35:41",
+    "text": "to help bugfix stuff like this \"|pprint\"  an be helpful"
+  },
+  {
+    "poster": {
+      "poster_name": "Maciej Mojsiewicz",
+      "poster_handle": "maciej.m"
+    },
+    "time_stamp": "2023-07-18 05:38:57",
+    "text": "This\n```&lt;script&gt;\nconsole.log(rgba({{ module.styles.bg_color|convert_rgb }}))\n&lt;/script&gt;```\ngives me this\n```&lt;script&gt;\nconsole.log(rgba(##110A3A))\n&lt;/script&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Maciej Mojsiewicz",
+      "poster_handle": "maciej.m"
+    },
+    "time_stamp": "2023-07-18 05:40:05",
+    "text": "and this\n```&lt;script&gt;\nconsole.log({{ module.styles.bg_color}})\n&lt;/script&gt;```\ngives me this\n```&lt;script&gt;\nconsole.log(#110A3A)\n&lt;/script&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrés Mauricio Hernández Serna",
+      "poster_handle": "andres.h"
+    },
+    "time_stamp": "2023-07-18 07:45:21",
+    "text": "*Short question:*\n\n*Is it possible to create a conditional statement in this HubSpot code to render a different header and footer based on the current page's URL, specifically when the page is in Spanish (e.g., /es)?*\n\n```&lt;body&gt;\n    &lt;div class=\"body-wrapper {{ builtin_body_classes }} font-Montserrat\"&gt;\n      {% block header %}\n        {% global_partial path=\"../partials/header.html\" %}\n      {% endblock header %}\n\n      {# The main-content ID is used for the navigation skipper in the header.html file. More information on the navigation skipper can be found here: <https://github.com/HubSpot/cms-theme-boilerplate/wiki/Accessibility> #}\n\n      &lt;main id=\"main-content\" class=\"body-container-wrapper\"&gt;\n        {% block body %}\n        {% endblock body %}\n      &lt;/main&gt;\n\n      {% block footer %}\n        {% global_partial path=\"../partials/footer.html\" %}\n      {% endblock footer %}\n    &lt;/div&gt;```\n",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-07-18 07:48:33"
+      },
+      {
+        "time_stamp": "2023-07-18 07:49:16"
+      },
+      {
+        "time_stamp": "2023-07-18 08:03:20"
+      },
+      {
+        "time_stamp": "2023-07-18 09:01:39"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2023-07-18 07:48:33",
+    "text": "{% if request.path is string_containing '/es/' %}\n\n\n\n{% endif %}"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrés Mauricio Hernández Serna",
+      "poster_handle": "andres.h"
+    },
+    "time_stamp": "2023-07-18 07:49:16",
+    "text": "the url is the request. path?\n\nThanks a lot Bradley! could u tell me where you get this info, is in the documentation? really thnkss"
+  },
+  {
+    "poster": {
+      "poster_name": "Bradley",
+      "poster_handle": "bradley554"
+    },
+    "time_stamp": "2023-07-18 08:03:20",
+    "text": "Yep, CMS docs\n\n<https://developers.HubSpot.com/docs/cms/hubl/variables>"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrés Mauricio Hernández Serna",
+      "poster_handle": "andres.h"
+    },
+    "time_stamp": "2023-07-18 09:01:39",
+    "text": "thanks"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2023-07-18 09:58:32",
+    "text": "I’m looking a way to filter a blog post `tag_list` to exclude certain tags that are used for internal organization.\n\nRight now I’m doing this:\n```{% for tag in post.tag_list %}\n  {% if loop.first %}\n\t{% if tag == \"featured in hero\" %}\n\t{% elif tag == \"In the News\" %}\n    {% elif tag == \"featured in nav\" %}\n    {% else %}\n\t{{ tag }}\n\t{% endif%}\n  {% endif %}\n{% endfor %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2023-07-18 10:00:06",
+    "text": "But I would prefer to be doing this:\n```{% for tag in post.tag_list|filter to exclude tags|random %}\n  {% if loop.first %}\n    {{ tag }}\n  {% endif %}\n{% endfor %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2023-07-18 10:00:40",
+    "text": "just need help with the “filter to exclude tags” part",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-07-19 08:34:32"
+      },
+      {
+        "time_stamp": "2023-07-25 07:27:17"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jason P",
+      "poster_handle": "info097"
+    },
+    "time_stamp": "2023-07-18 14:10:31",
+    "text": "I have an if/else statement using unixtimestamp, seen here:  `{% if  unixtimestamp(local_dt) &gt; project.bid_date %}`\n\nIt works great but I'm trying alter my if statement if my project's bid date is within 14 days. The problem is the format of my bid date is like: 07/19/2023 so I'm not sure how to actually format it to do -14 days if that makes sense.\n\nAny suggestions?"
+  },
+  {
+    "poster": {
+      "poster_name": "Caitlin McDonald",
+      "poster_handle": "caitlin160"
+    },
+    "time_stamp": "2023-07-18 23:28:33",
+    "text": "Hello everyone, I am not able to fetch the objects from the dynamic company ID in a loop. If I pass the static ID into code then it works can you please help me out! can you tell me why it is happening?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-08-02 08:15:05"
+      }
+    ]
+  }
+]

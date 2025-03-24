@@ -1,0 +1,210 @@
+[
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2024-08-27 12:25:04",
+    "text": "<@U05KNCMAE7N> and/or team. How do I get these CRM components in my Figma account? I'm enrolled in the beta, I'm using UI Components/CRM Development already. I just don't see a download link or a way to add them to Figma anywhere."
+  },
+  {
+    "poster": {
+      "poster_name": "Aanchal Sheth (HubSpot PM)",
+      "poster_handle": "asheth"
+    },
+    "time_stamp": "2024-08-27 12:26:23",
+    "text": "<@U05HCD9ET7X> have DM'ed you earlier today"
+  },
+  {
+    "poster": {
+      "poster_name": "Brad Tollett",
+      "poster_handle": "brad208"
+    },
+    "time_stamp": "2024-08-27 12:28:51",
+    "text": "Thank you, I missed that. Just responded :)"
+  },
+  {
+    "poster": {
+      "poster_name": "Ace Hedger",
+      "poster_handle": "ace"
+    },
+    "time_stamp": "2024-08-27 14:55:08",
+    "edited": {
+      "time_stamp": "2024-08-27 14:57:11"
+    },
+    "text": "*Subject:* Need Help with Persistent 403 Error When Creating Deal Associations in UI Extensions Using Associations v4 API\n*Body:*\nHey HubSpot Devs,\nI’m running into a frustrating `403 Forbidden` error when trying to create a custom deal-to-deal association using the Associations v4 API in my serverless function. I’ve been digging through logs and trying to troubleshoot, but I’m still stuck. Hoping someone here can point me in the right direction!\n*Here’s What’s Happening:*\n1. *Deal Creation:*\n    ◦ I’m able to create a new deal without any issues. It’s working perfectly, and I’m getting a valid `dealId`.\n2. *The Problem:*\n    ◦ When I try to create an association between this new deal and another deal using a custom `USER_DEFINED`association type (`associationTypeId: 3`), I get a `403 Forbidden` response.\n    ◦ Here’s a snippet of my code for the association request:\n```async function createDealAssociation(parentDealId, newDealId) {\n  console.log(`Creating association between parentDealId: ${parentDealId} and newDealId: ${newDealId}`);\n\n  const HubSpotClient = new HubSpot.Client({\n    accessToken: process.env[\"PRIVATE_APP_ACCESS_TOKEN\"],\n  });\n\n  const AssociationSpec = [\n    {\n      associationCategory: \"USER_DEFINED\",\n      associationTypeId: 3, // Adjust this ID to match the correct association type\n    },\n  ];\n\n  try {\n    if (!parentDealId) {\n      throw new Error(\"[createDealAssociation] Parent Deal ID is missing.\");\n    }\n\n    const requestDetails = {\n      method: 'PUT',\n      url: `/crm/v4/objects/deal/${parentDealId}/associations/deal/${newDealId}`,\n      body: {\n        AssociationSpec: AssociationSpec,\n      },\n      headers: {\n        Authorization: `Bearer ${process.env[\"PRIVATE_APP_ACCESS_TOKEN\"]}`,\n        'Content-Type': 'application/json',\n      }\n    };\n\n    // Log the request details before making the API call\n    console.log(\"[createDealAssociation] Association Request Details:\", JSON.stringify(requestDetails, null, 2));\n\n    // Make the API call\n    const apiResponse = await HubSpotClient.apiRequest({\n      method: 'PUT',\n      url: requestDetails.url,\n      data: requestDetails.body,\n      headers: requestDetails.headers,\n    });\n\n    // Log the full response: status, headers, and body\n    console.log(\"[createDealAssociation] API response status:\", apiResponse.status);\n    console.log(\"[createDealAssociation] API response headers:\", JSON.stringify(apiResponse.headers, null, 2));\n    console.log(\"[createDealAssociation] API response body:\", JSON.stringify(apiResponse.data, null, 2));\n\n    if (apiResponse && apiResponse.data) {\n      console.log(\"[createDealAssociation] Association creation response:\", JSON.stringify(apiResponse.data, null, 2));\n    } else {\n      console.log(\"[createDealAssociation] No data in the API response.\");\n    }\n\n    return \"[createDealAssociation] Association created successfully\";\n\n  } catch (error) {\n    console.error(\"[createDealAssociation] Error creating association:\", error.message);\n    \n    // Log the detailed error response if available\n    if (error.response) {\n      console.error(\"[createDealAssociation] Error status:\", error.response.status);\n      console.error(\"[createDealAssociation] Error headers:\", JSON.stringify(error.response.headers, null, 2));\n      console.error(\"[createDealAssociation] Error body:\", JSON.stringify(error.response.data, null, 2));\n    } else {\n      console.error(\"[createDealAssociation] Error details:\", error.message);\n    }\n    \n    throw new Error(\"[createDealAssociation] Failed to create the association.\");\n  }\n}```\n1. *The 403 Error:*\n    ◦ Every time, the API responds with `403 Forbidden`, and there’s no data in the response body to give me more clues. Here’s what I’m seeing in the logs:\n```2024-08-27T20:41:54.954Z INFO - [createDealAssociation] API response status: 403\n2024-08-27T20:41:54.954Z INFO - [createDealAssociation] API response headers: {}\n2024-08-27T20:41:54.954Z INFO - [createDealAssociation] API response body: undefined\n2024-08-27T20:41:54.954Z INFO - [createDealAssociation] No data in the API response.```\n*What I’ve Tried:*\n• *Logging:* I’ve logged everything I can think of—request headers, body, response status, and response body. Still getting the `403`.\n• *API Scopes:* I’ve double-checked that my private app has the `crm.objects.deals.write` scope, which I believe should cover this.\n• *Association Type ID:* I’m using `associationTypeId: 3` for my custom association. I’ve verified that it’s set up correctly in HubSpot.\n• *Client Version:* I’m using the latest version (9.0.0) of the HubSpot NodeJS client, which supports Associations v4.\n*Questions:*\n1. *Am I missing any specific scopes or permissions that could be causing this?*\n2. *Is there a way to get more detailed error info from the HubSpot API?*\n3. *Could there be an issue with my custom `associationTypeId: 3`, and how can I check it?*\n4. *Has anyone run into a similar issue and found a workaround?*\nI’m really hoping someone here has seen this before and can offer some advice. This error is driving me nuts, and I’d love to get it sorted out!\nThanks a ton!",
+    "reply_count": 16,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-08-27 14:57:29"
+      },
+      {
+        "time_stamp": "2024-08-27 14:59:34"
+      },
+      {
+        "time_stamp": "2024-08-27 15:00:08"
+      },
+      {
+        "time_stamp": "2024-08-27 15:00:33"
+      },
+      {
+        "time_stamp": "2024-08-27 15:00:38"
+      },
+      {
+        "time_stamp": "2024-08-27 15:04:24"
+      },
+      {
+        "time_stamp": "2024-08-27 15:05:52"
+      },
+      {
+        "time_stamp": "2024-08-27 15:05:54"
+      },
+      {
+        "time_stamp": "2024-08-27 15:06:01"
+      },
+      {
+        "time_stamp": "2024-08-27 15:06:26"
+      },
+      {
+        "time_stamp": "2024-08-27 15:06:34"
+      },
+      {
+        "time_stamp": "2024-08-27 15:08:04"
+      },
+      {
+        "time_stamp": "2024-08-27 15:09:19"
+      },
+      {
+        "time_stamp": "2024-08-27 15:10:25"
+      },
+      {
+        "time_stamp": "2024-08-27 15:11:07"
+      },
+      {
+        "time_stamp": "2024-08-27 17:40:06"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-08-27 14:57:29",
+    "text": "Is this only a problem when you're running in dev mode? Did you setup a .env file in the .functions folder?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-08-27 14:59:34",
+    "text": "also the deal to deal association is: 451, not 3 so that should also be swapped out if you want to do the deal to deal associations"
+  },
+  {
+    "poster": {
+      "poster_name": "Ace Hedger",
+      "poster_handle": "ace"
+    },
+    "time_stamp": "2024-08-27 15:00:08",
+    "text": "I'm not currently running it in dev mode. It's user defined."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-08-27 15:00:33",
+    "text": "ah gotcha! let me keep looking"
+  },
+  {
+    "poster": {
+      "poster_name": "Ace Hedger",
+      "poster_handle": "ace"
+    },
+    "time_stamp": "2024-08-27 15:00:38",
+    "text": "BTW, thanks for the quick responses."
+  },
+  {
+    "text": "So I just created a custom deal to deal association and when I created it and checked the api details I saw a pretty big number (242), what do you see in your api details?",
+    "time_stamp": "2024-08-27 15:04:24"
+  },
+  {
+    "poster": {
+      "poster_name": "Ace Hedger",
+      "poster_handle": "ace"
+    },
+    "time_stamp": "2024-08-27 15:05:52",
+    "text": "{\n  \"label\": \"Project\",\n  \"name\": \"change_order_project\",\n  \"maxToObjectIds\": 50000,\n  \"category\": \"USER_DEFINED\",\n  \"id\": 3\n}"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-08-27 15:05:54",
+    "text": "Also I would maybe recommend turning on deal.read access and seeing if that has any affect."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-08-27 15:06:01",
+    "text": "Very interesting."
+  },
+  {
+    "poster": {
+      "poster_name": "Ace Hedger",
+      "poster_handle": "ace"
+    },
+    "time_stamp": "2024-08-27 15:06:26",
+    "text": "These are the current scopes:\n\"scopes\": [\n    \"crm.objects.contacts.read\",\n    \"crm.objects.contacts.write\",\n    \"tickets\",\n    \"crm.objects.deals.write\",\n    \"crm.schemas.deals.write\",\n    \"crm.objects.owners.read\",\n    \"crm.schemas.deals.read\",\n    \"crm.objects.deals.read\",\n    \"crm.objects.custom.write\",\n    \"crm.objects.custom.read\"\n  ],"
+  },
+  {
+    "poster": {
+      "poster_name": "Ace Hedger",
+      "poster_handle": "ace"
+    },
+    "time_stamp": "2024-08-27 15:06:34",
+    "text": "deal.read is in there."
+  },
+  {
+    "poster": {
+      "poster_name": "Ace Hedger",
+      "poster_handle": "ace"
+    },
+    "time_stamp": "2024-08-27 15:08:04",
+    "text": "Maybe I didn't log it right?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-08-27 15:09:19",
+    "text": "have you tested this API request in postman yet? I would recommend doing that just as a sanity check"
+  },
+  {
+    "poster": {
+      "poster_name": "Ace Hedger",
+      "poster_handle": "ace"
+    },
+    "time_stamp": "2024-08-27 15:10:25",
+    "text": "I did try it, but I'm still pretty new to Postman."
+  },
+  {
+    "poster": {
+      "poster_name": "Ace Hedger",
+      "poster_handle": "ace"
+    },
+    "time_stamp": "2024-08-27 15:11:07",
+    "text": "I'll try using it again."
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Ainslie",
+      "poster_handle": "rainslie"
+    },
+    "time_stamp": "2024-08-27 17:40:06",
+    "text": "<@U05A5G5QVP1> not sure if this is your issue, but you’re probably passing the authorization twice - once in the client instantiation and once in the “request details” header. Maybe try removing the “headers” object?"
+  }
+]

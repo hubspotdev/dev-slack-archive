@@ -1,0 +1,45 @@
+[
+  {
+    "poster": {
+      "poster_name": "Rodrigo",
+      "poster_handle": "rodrigo.castro"
+    },
+    "time_stamp": "2021-05-10 07:06:52",
+    "text": "Hi @everyone! I came across a situation where I have buttons with a specified class (“.button-primary”) that I know that I can apply in the edit menu when creating a new CTA. Well, it seems I can’t find a way of doing it with a submit button when doing a form. You “can” style it in the UI editor but you can’t apply a global variable class that you might have declared. Does anyone know how to work around this? Thanks in advance :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-05-10 07:50:15",
+    "text": "<@U01T4LC601X> take a look here: <https://developers.HubSpot.com/docs/cms/features/hubdb>"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-05-10 07:50:33",
+    "text": "the key function you’re going to need is\n```hubdb_table_rows```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-05-10 07:51:55",
+    "edited": {
+      "time_stamp": "2021-05-10 07:59:45"
+    },
+    "text": "The second param is where you’ll write your queries - for a simple text search:\n```\"columnname__icontains=hello\"```\nso:\n```{% set results = hubdb_table_rows(\"vehicles\", \"manufacturer__eq=vauxhall&amp;model__eq=corsa\") %}```\nbut really for any filtering it’s usually best to pull ALL the results and filter them using selectattr. This gives you a bunch more flexibility.\n\n```// Get them all.\n{% set original_results = hubdb_table_rows(\"vehicles\") %}\n\n{% if request.query_dict.make %}\n  {% set results = original_results|selectattr(\"model\", \"string__containing\", request.query_dict.make) %}\n{% endif %}\n\netc...```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Oscar Sidebo",
+      "poster_handle": "sideboo"
+    },
+    "time_stamp": "2021-05-10 20:30:09",
+    "text": "Hi everyone – when you use the menu() inside a custom module to get the menu items, how do make this work with multiple languagues?"
+  }
+]

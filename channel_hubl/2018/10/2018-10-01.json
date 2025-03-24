@@ -1,0 +1,62 @@
+[
+  null,
+  null,
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-01 07:27:31",
+    "edited": {
+      "time_stamp": "2018-10-01 13:02:12"
+    },
+    "text": "UPDATE: THIS IS SOLVED, DON’T NEED FURTHER HELP, JUST KEEPING MESSAGE HERE IN-CASE ANYONE IS DOING SOMETHING SIMILAR.\n\ngot a really tricky weird hubl question for you guys: I have a flex column, wrapped in an if statement.\n\n```\n{% if user_validated %}\n\n{% widget_container \"module_14420109561952738\" overrideable=true, wrapping_html='', label='Page Modules' %}\n  {% widget_block custom_widget \"module_15263968942091106\" module_id=1155240, overrideable=true, per_widget_wrapper_html='', widget_name='Section Header', wrapping_html='', label='Section Header' %}\n  {% end_widget_block %}\n  {% widget_block custom_widget \"module_15263967124981054\" module_id=2878407, overrideable=true, per_widget_wrapper_html='', widget_name='Floating Graphic', wrapping_html='', label='Floating Graphic' %}\n  {% end_widget_block %}\n\n{% end_widget_container %}\n{% endif %}\n```\n\nuser_validated is set to true based on:\n``` {%- set user_validated = false -%}\n{%- set is_editor = false %}\n{%- if request.domain == \"<http://preview.hs-sites.com|preview.hs-sites.com>\" %}{% set is_editor = true -%}{%- endif -%}\n{%- if request.cookies.jf_token || request.domain == \"<http://preview.hs-sites.com|preview.hs-sites.com>\" -%}\n\t{%- set salt=\"jF8\"%}{% set d=local_dt|date('%Y-%m-%d')%}{%- set hash_string=content.widgets.password.body.value+d+salt -%}{%- set hash_string_admin=\"adminJF414\"+d+salt -%}\n\t{%- if (request.cookies.jf_token == hash_string|md5 || request.cookies.jf_token == hash_string_admin|md5 || request.domain == \"<http://preview.hs-sites.com|preview.hs-sites.com>\") -%}\n\t\t{%- set user_validated=true -%}\n\t{%- endif -%}\n{%- endif -%} ```\nWhen printed user_validated definitely is true.\n\nhowever you can’t edit the flex column in the page editor, you can only view it’s output.\n\nNow here’s the weird part, if in the if statement you replace user_validated with true directly, the flex column is now editable.\n\nI’m guessing the problem is the order of when certain functions run or something  when the server is outputting the page for the page editor.\n\nAnyone got ideas for a work around? I can’t print the flex column to the page if it’s false, it’s not an acceptable fallback"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-01 09:17:39",
+    "text": "Okay I think I found my problem."
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2018-10-01 10:24:31",
+    "text": "`And you cant extend a flex column can you?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-01 10:40:56",
+    "edited": {
+      "time_stamp": "2018-10-01 10:41:05"
+    },
+    "text": "nope, you can’t extend a flex column. I think the ultimate problem was how I was generating one of my variables I was checking against.\n\nThe other problem is that in order to get the page editor to see the flex column the if statement has to be defaulted to true.\n\n\nin pseudo code\n```variable = true\nif conditions\n    set variable= false\nendif\nIf variable\n\nFlex column\nendif\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-01 10:41:41",
+    "text": "something about how requests works the page editor didn’t like. but if you default it to true then you’re fine"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-10-01 10:42:57",
+    "edited": {
+      "time_stamp": "2018-10-01 10:48:17"
+    },
+    "text": "if anyone ever inherits this project down the road they’re going to look at it and go “there’s some crazy :robot_face: :mage:  stuff going on, I don’t want to touch this.”\n\nbasic jist of what I’m finishing is a user management system on the front end of HS that’s actually fairly secure, and the client can create “normal” hs pages meant for individual frontend users.\n\nWould I throw out an open challenge to break in - no, but it’s probably secure enough for what the client needs, and the data isn’t that big of a deal if someone somehow got in."
+  },
+  null
+]

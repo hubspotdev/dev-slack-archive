@@ -1,0 +1,427 @@
+[
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-18 14:27:59",
+    "text": "<@U6GNQ7JBU> <@U22PJPGK0> hey guys sorry i've been traveling and haven't been able to test this.  I just did and it appears to work, but while it return 6 decimal places, the last 3 are always \"000\""
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-18 14:28:38",
+    "text": "`21:26:13.436000`  is the result from `{%- set _time_stamp_str = unixtimestamp()|datetimeformat(\"%H:%M:%S.%f\") -%}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-18 14:29:10",
+    "text": "but this is totally fine for my needs -- can't thank you enough!!"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2020-02-18 14:29:36",
+    "text": "yeah, that’s expected when the timestamp is from the `unixtimestamp` function. See <https://github.com/HubSpot/jinjava/pull/399>"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-18 14:30:14",
+    "text": "gotcha"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2020-02-18 14:30:31",
+    "text": "As far as performance goes, we’re looking at that, but it seems to be mostly a factor of the number of macros you’re calling. Some macros call several other macros in sequence."
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-18 14:31:02",
+    "text": "yes i have been able to profile now and i know exactly where my problem is so thank again!"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2020-02-18 14:31:09",
+    "text": "Is this a framework you built yourself or something you ported from elsewhere?"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-18 14:31:29",
+    "text": "i built for myself"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2020-02-18 14:31:37",
+    "text": "impressive"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2020-02-18 14:32:10",
+    "text": "what did your profiling tell you to optimize?"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-18 14:33:21",
+    "edited": {
+      "time_stamp": "2020-02-18 14:33:33"
+    },
+    "text": "thanks i would love to demo it too you soon.. i'm very close to having it all working...the goal is to be able to create landing pages super easy (initially based on design modo's SF3 designs, and it will create a standardized module that represents any \"block\" so you can change the block design without having to re-enter/change the text copy"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-18 14:34:03",
+    "text": "but i've created this so i can add in many other design kits"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-18 14:35:01",
+    "text": "i ended up creating this entire stack trace/logging system because when there was a typo or bug somewhere i would end up spending hours trying to track it down since HubSpot designer doesn't have breakpoints and debugging capabilities"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2020-02-18 14:36:02",
+    "text": "I’m curious how you decided to build a module system vs using HubSpot Custom Modules"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-18 14:37:16",
+    "text": "to answer your question on where my issue was, there is a bug/issue in jinjava that i finally realized was causing a lot of heartache for me in that if you have params for a macro that don't get passed in, if there happens to be a variable used prior to the call that has the same name as a param, jinjava will use that as a default value (even if i assign the default value = none)"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-18 14:38:04",
+    "text": "this page shows tests that i wrote to demonstrate the issue"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-18 14:38:05",
+    "text": "<https://app.HubSpot.com/content/6514425/edit/25031881535/content>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2020-02-18 14:38:10",
+    "text": "yeah, the scope is inherited"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-18 14:39:06",
+    "text": "(btw, those tests also show test for a update_dict macro i created because currently hubl doesn't allow updating a dict using a dynamic key value)"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-18 14:40:15",
+    "text": "anyway, to fix the param issue, i created a macro (see run under method.html) that will allow you to specifiy none as a default and it won't \"leak\" in values"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-18 14:40:44",
+    "text": "i ended up using this as an opportunity to log stack tracing calls"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-18 14:40:55",
+    "text": "but all this overhead is causing my bottleneck"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2020-02-18 14:41:29",
+    "text": "ok, so all you need is for this to work ? `set dict[\"key1\"] = \"changed it through different syntax\"`"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-18 14:41:40",
+    "text": "so i'm looking at having a debug version of my code, and a production version so i can get benefits of debugging but at production won't have perf issues"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-18 14:44:18",
+    "text": "that code did not work for me"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-18 14:44:24",
+    "text": "i just tried it again"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2020-02-18 14:44:36",
+    "text": "right"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-18 14:44:55",
+    "text": "i had asked on slack and was told it wasn't currently supported"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-18 14:45:09",
+    "text": "oh you're confirming that's what i wanted to do?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2020-02-18 14:45:15",
+    "text": "yes"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-18 14:45:47",
+    "text": "yes... any type of syntax i.e. `dict.update({\"key1\": \"value\"})`"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2020-02-18 14:46:41",
+    "text": "`{% do VAR[key].update('STRING') %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2020-02-18 14:47:32",
+    "text": "i know im not in the convo, bt this look similarly what we do for updating variables outside a loop"
+  },
+  {
+    "poster": {
+      "poster_name": "Trey",
+      "poster_handle": "trey185"
+    },
+    "time_stamp": "2020-02-18 14:50:13",
+    "text": "i tried that  just now didn't work for me... not sure if that's what you were suggesting?  `{% do call[\"end_time_str\"].update(_time_stamp_str) %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2020-02-18 14:50:49",
+    "text": "no just a syntax posibility"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2020-02-18 14:58:33",
+    "text": "I see that `dict.update({\"key1\": \"value\"})` works but `dict.update({keyName: \"value\"})` does not"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2020-02-18 15:06:01",
+    "text": "looks like variable names in maps are not interpreted, just treated as strings"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2020-02-18 15:43:54",
+    "text": "Yea this is a known issue unfortunately :disappointed:"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2020-02-18 15:47:26",
+    "text": "From my research, this wasn’t implemented in Jinja since the creators did not want the templating language to be used in this way"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2020-02-18 16:06:53",
+    "text": "<https://github.com/HubSpot/jinjava/pull/403>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2020-02-18 16:07:15",
+    "text": "Does it not work in Jinja?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2020-02-18 16:23:33",
+    "text": "It does work.\n```&gt;&gt;&gt; Template('Hello {% set d = {key: \"val\" } %} {{ d[\"key1\"] }}').render(key=\"key1\")\nu'Hello  val'```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2020-02-18 16:25:24",
+    "text": "yeah, works for lists too"
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2020-02-18 16:33:02",
+    "edited": {
+      "time_stamp": "2020-02-18 16:33:10"
+    },
+    "text": "#needtodocumentthat"
+  },
+  {
+    "poster": {
+      "poster_name": "Vladimir M",
+      "poster_handle": "vladimirzoyan"
+    },
+    "time_stamp": "2020-02-18 17:01:24",
+    "text": "hi everyone"
+  },
+  {
+    "poster": {
+      "poster_name": "Vladimir M",
+      "poster_handle": "vladimirzoyan"
+    },
+    "time_stamp": "2020-02-18 17:01:34",
+    "text": "I have a newbie question regarding filtering"
+  },
+  {
+    "poster": {
+      "poster_name": "Vladimir M",
+      "poster_handle": "vladimirzoyan"
+    },
+    "time_stamp": "2020-02-18 17:01:36",
+    "edited": {
+      "time_stamp": "2020-02-18 17:03:18"
+    },
+    "text": "{{content.topic_list}}  gives me [partner-only, Webinars, private]"
+  },
+  {
+    "poster": {
+      "poster_name": "Vladimir M",
+      "poster_handle": "vladimirzoyan"
+    },
+    "time_stamp": "2020-02-18 17:02:25",
+    "edited": {
+      "time_stamp": "2020-02-18 17:02:35"
+    },
+    "text": "{% unless content.topic_list is containing 'partner-only' %}",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-02-19 08:33:18"
+      },
+      {
+        "time_stamp": "2020-02-19 08:35:52"
+      },
+      {
+        "time_stamp": "2020-02-19 13:20:32"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Vladimir M",
+      "poster_handle": "vladimirzoyan"
+    },
+    "time_stamp": "2020-02-18 17:02:47",
+    "text": "doesn't seem to work ... any ideas on what i'm doing wrong here?"
+  }
+]

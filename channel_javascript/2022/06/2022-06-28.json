@@ -1,0 +1,13 @@
+[
+  {
+    "poster": {
+      "poster_name": "Mitja Lewin",
+      "poster_handle": "m.lewin"
+    },
+    "time_stamp": "2022-06-28 05:50:25",
+    "edited": {
+      "time_stamp": "2022-06-30 01:47:51"
+    },
+    "text": "<@U0336QCR2FQ>\n\nDo you forgot to change the module id?\n`{% module \"my_uniq_module_id\" path=\" (...)\" %}`\n\nIf the module is used inside a loop, it need the attribute:\n`unique_in_loop=True`\n\nTo address a slider in JS use the `{{ name }}` variable of the module, it's uniq.\n```&lt;div class=\"slider\" id=\"{{ name }}\"&gt;(...)&lt;/div&gt;\n&lt;script&gt;\n  var id = {{ '\"'~ name ~'\"' }},\n  selector = document.getElementById( id );\n&lt;/script&gt;```\nOr if you want to use it later in another script file:\n```&lt;script&gt;\n  window.slider_container = window.slider_container || {};\n  window.slider_container[ id ] = {\n   'config': { ... }\n  };\n&lt;/script&gt;```\nAnd then, something like that:\n```var container = window.slider_container || {};\nfor (var id in container) {\n  var selector = document.getElementById( id );\n  if( selector !== null &amp;&amp; typeof(selector) !== 'undefined'){\n    var obj = container[ id ];\n    new slider(selector, obj.config);\n  }\n}```\nFor Stylesheets you can go with `{{ scope_css }}` . It place the module ID in front of every CSS declaration inside the scope syntax, like this:\n```{% require_css %}\n  &lt;style&gt;\n    {% scope_css %} .slider { ... } {% end_scope_css %}\n  &lt;/style&gt;\n{% end_require_css %}```"
+  }
+]

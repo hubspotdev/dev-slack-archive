@@ -1,0 +1,90 @@
+[
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-05-30 01:50:55",
+    "text": "Hi guys!\nI'm having some issues with HubSpot's validation of an autocomplete form made using jQuery UI. In the example below, the Hotel Name returns data from an endpoint with a City and Country type.\nThe issue I'm having is when you type a name into the Hotel Name field, eg. _Hotel_, and you select a hotel from the dropdown, it autopopulates the City and Country fields as expected, however, it still set to `false` in HubSpot's validation (see screengrab)\nHow do I get round this problem as the user is unable to submit the form unless they change the Country manually in the select box?\n\nURL: <https://preview.hs-sites.com/_hcms/preview/template/multi?is_buffered_template_layout=true&amp;portalId=3988515&amp;tc_deviceCategory=undefined&amp;template_layout_id=5799802055&amp;updated=1527642830259>",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2018-05-30 04:11:27"
+      },
+      {
+        "time_stamp": "2018-05-30 19:16:04"
+      }
+    ]
+  },
+  {
+    "text": "<@U9MAWTESW> uploaded a file: <https://HubSpotdev.slack.com/files/U9MAWTESW/FAZDG3171/screen_shot_2018-05-30_at_08.49.20.png|Screen Shot 2018-05-30 at 08.49.20.png>",
+    "time_stamp": "2018-05-30 01:51:08"
+  },
+  {
+    "poster": {
+      "poster_name": "Ramon Iglesias",
+      "poster_handle": "ramoniglesias_"
+    },
+    "time_stamp": "2018-05-30 03:46:01",
+    "text": "hi, I have a question about old \"Edit post template\"/\"Edit listing template\" functionality. ¿How can I edit theese templates in the new editor?  thanks in advance"
+  },
+  {
+    "text": "<@U401USQPP> uploaded a file: <https://HubSpotdev.slack.com/files/U401USQPP/FAY7DQT0C/image.png|:sweat: I have found it>",
+    "time_stamp": "2018-05-30 03:49:43"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-05-30 04:11:27",
+    "text": "JS code:\n\n```\n&lt;script src=\"https://code.jquery.com/ui/1.12.1/jquery-ui.min.js\"&gt;&lt;/script&gt;\n&lt;script&gt;\n  $(window).load(function() {\n\n    $(\".hs_hotel_name__c input\").autocomplete({\n      source: function(request, response) {\n        $.ajax({\n          url: \"<https://app.otainsight.com/ajax_select/ajax_lookup/publichotelinfochannel>\",\n          dataType: \"json\",\n          data: {\n            term: request.term\n          },\n          success: function(data) {\n            // response(data);   \n            response($.map(data, function(item) {\n              return {\n                label: <http://item.pk|item.pk>,\n                value: item.match,\n                city: item.city,\n                country: item.country_name\n              }\n            }));\n            // console.log(data);\n            if (!$.trim(data)) {\n              $(\".hs_pk_value input\").val(\"null\");\n              $(\".hs_city input\").val(\"null\");\n              $(\".hs_country select\").val(\"\");\n            }\n          },\n          error: function(data) {\n            console.log(\"error\");\n          }\n        });\n      },\n      minLength: 3,\n      select: function(event, ui, item) {\n        var name = ui.item.value;\n        var pk = ui.item.label;\n        var city = ui.item.city;\n        var country = ui.item.country;\n        $(\".hs_hotel_name__c input\").val(name);\n        $(\".hs_pk_value input\").val(pk);\n        $(\".hs_city input\").val(city).prop('type', 'text').change();\n        $('.hs_city').css('display', 'block');\n        $(\".hs_country select\").val(country);\n        return false;\n      }\n    }).data(\"ui-autocomplete\")._renderItem = function(ul, item) {\n      return $(\"&lt;li&gt;\").data(\"ui-autocomplete-item\", item).append(item.value).appendTo(ul);\n    };\n\n  });\n&lt;/script&gt;\n```"
+  },
+  {
+    "text": "A file, which can't be shown because your team is past the free storage limit, was commented on.",
+    "time_stamp": "2018-05-30 07:20:47"
+  },
+  {
+    "text": "A file, which can't be shown because your team is past the free storage limit, was commented on.",
+    "time_stamp": "2018-05-30 07:23:52"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-05-30 07:25:21",
+    "text": "What are the correct permissions for a custom API integration with HS ? Does it depend on what the integration needs to do?"
+  },
+  {
+    "poster": {
+      "poster_name": "Alex Girard",
+      "poster_handle": "alexg"
+    },
+    "time_stamp": "2018-05-30 07:35:11",
+    "text": "Hi all, a quick update that A/B Testing Website pages is now live for all Professional and Enterprise users! <https://www.HubSpot.com/product-updates/in-beta-a/b-test-web-pages>"
+  },
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  {
+    "poster": {
+      "poster_name": "Karl Fischmann",
+      "poster_handle": "karl"
+    },
+    "time_stamp": "2018-05-30 19:07:35",
+    "text": "+1... HubSpot needs better regex support in general. COS Redirect tool, I'm looking at you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Karl Fischmann",
+      "poster_handle": "karl"
+    },
+    "time_stamp": "2018-05-30 19:16:04",
+    "text": "Try changing \"$(\".hs_country select\").val(country);\" to $(\".hs_country select\").val(country).change();\". Often HubSpot's validation code relies on change events being explicitly triggered."
+  }
+]

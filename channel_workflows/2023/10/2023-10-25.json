@@ -1,0 +1,58 @@
+[
+  {
+    "poster": {
+      "poster_name": "Alberto Zordan",
+      "poster_handle": "alberto.zordan"
+    },
+    "time_stamp": "2023-10-25 03:34:31",
+    "text": "Hello everyone,\nI set up a workflow that gets triggered whenever a certain deal property is known, runs a custom code and then send an email.\nThe custom code serves the purpose of taking 3 deal properties (of type number currency), formatting them in a special way (that is, having a dot as thousands separator and a comma as decimals separator, with two decimals digits) and saving these formatted values into 3 new single-line text properties, in order to read them as they are in the email body as personalization tokens.\nThe code seems to be working fine except for one of the 3 props: for some reason this prop doesn’t get copied onto the corresponding text prop.\nAny insights about this weird behavior?\nThank you",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-10-25 03:35:56"
+      },
+      {
+        "time_stamp": "2023-10-25 15:35:14"
+      },
+      {
+        "time_stamp": "2023-10-25 16:30:25"
+      },
+      {
+        "time_stamp": "2023-10-25 16:39:54"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Alberto Zordan",
+      "poster_handle": "alberto.zordan"
+    },
+    "time_stamp": "2023-10-25 03:35:56",
+    "text": "Here's the custom code\n```const HubSpot = require(\"@HubSpot/api-client\");\nconst HubSpotClient = new HubSpot.Client({\n  accessToken: \"xxx\",\n});\n\nexports.main = async (event, callback) =&gt; {\n  console.log(\"event\", event);\n  /*****\n    Use inputs to get data from any action in your workflow and use it in your code instead of having to use the HubSpot API.\n  *****/\n  const offer_amount = event.inputFields[\"offer_amount\"];\n  const total_credit_amount = event.inputFields[\"total_credit_amount\"];\n  const offer_installments_amount = event.inputFields[\"offer_installments_amount\"];\n  const dealObj = {\n    id: event.object.objectId,\n    properties: {\n      offer_amount_template_email: offer_amount\n        ? Number(parseFloat(offer_amount).toFixed(2)).toLocaleString(\"de-DE\", {\n            minimumFractionDigits: 2,\n            maximumFractionDigits: 2,\n          })\n        : undefined,\n      total_credit_amount_template_email: total_credit_amount\n        ? Number(parseFloat(total_credit_amount).toFixed(2)).toLocaleString(\n            \"de-DE\",\n            {\n              minimumFractionDigits: 2,\n              maximumFractionDigits: 2,\n            },\n          )\n        : undefined,\n    },\n    offer_installments_amount_template_email: offer_installments_amount\n      ? Number(parseFloat(offer_installments_amount).toFixed(2)).toLocaleString(\n          \"de-DE\",\n          {\n            minimumFractionDigits: 2,\n            maximumFractionDigits: 2,\n          },\n        )\n      : undefined,\n  };\n\n  await HubSpotClient.crm.deals.batchApi.update({ inputs: [dealObj] });\n  /*****\n    Use the callback function to output data that can be used in later actions in your workflow.\n  *****/\n  callback({\n    outputFields: {\n      offer_amount: offer_amount,\n      total_credit_amount: total_credit_amount,\n      offer_installments_amount: offer_installments_amount,\n    },\n  });\n};```"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-10-25 15:35:14",
+    "text": "Looks like a bracketing error to me. `offer_installments_amount_email` isn’t inside the `properties` object like the other two are.\n\nTime to go get that auto-formatter and bracket colorizer tuned up. ;~)"
+  },
+  {
+    "poster": {
+      "poster_name": "Alberto Zordan",
+      "poster_handle": "alberto.zordan"
+    },
+    "time_stamp": "2023-10-25 16:30:25",
+    "text": "I can't believe it... And to think that I even prettified that code with a well-known online tool just to be sure it was correct. So dumb of me I'd like to cry :joy: :see_no_evil:\nWhat can I say... huge thanks <@U04AQA0QM8E>! :hugging_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-10-25 16:39:54",
+    "text": "We’ve all been there. I’ve lost more hours than I’d like to recognize to formatting errors and typos. I had to pull it into my own IDE and check the bracket colors to spot it."
+  }
+]

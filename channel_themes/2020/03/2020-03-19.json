@@ -1,0 +1,206 @@
+[
+  {
+    "text": "Does anyone know if there is a way to include CONDITIONAL LOGIC inside of a theme file?   I’m trying to re-create something like this where I can hide/show fields based on a choice or boolean field type.",
+    "time_stamp": "2020-03-19 05:17:31",
+    "reply_count": 17,
+    "reply_users_count": 6,
+    "replies": [
+      {
+        "time_stamp": "2020-03-19 05:57:26"
+      },
+      {
+        "time_stamp": "2020-03-19 05:57:41"
+      },
+      {
+        "time_stamp": "2020-03-19 05:58:06"
+      },
+      {
+        "time_stamp": "2020-03-19 06:04:52"
+      },
+      {
+        "time_stamp": "2020-03-19 07:27:21"
+      },
+      {
+        "time_stamp": "2020-03-19 07:27:29"
+      },
+      {
+        "time_stamp": "2020-03-19 07:27:46"
+      },
+      {
+        "time_stamp": "2020-03-19 07:27:53"
+      },
+      {
+        "time_stamp": "2020-03-19 07:28:07"
+      },
+      {
+        "time_stamp": "2020-03-19 07:53:18"
+      },
+      {
+        "time_stamp": "2020-03-19 07:55:03"
+      },
+      {
+        "time_stamp": "2020-03-19 07:56:31"
+      },
+      {
+        "time_stamp": "2020-03-19 07:58:09"
+      },
+      {
+        "time_stamp": "2020-03-19 11:38:32"
+      },
+      {
+        "time_stamp": "2020-03-20 07:10:05"
+      },
+      {
+        "time_stamp": "2020-03-20 10:07:50"
+      },
+      {
+        "time_stamp": "2020-03-23 00:52:07"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2020-03-19 05:57:26",
+    "text": "Which theme is this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2020-03-19 05:57:41",
+    "text": "You can use `visibility` rules for theme fields"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2020-03-19 05:58:06",
+    "text": "`\n```\"visibility\": { \"controlling_field_path\": \"&lt;path&gt;\", \"operator\": \"EQUAL\", \"controlling_value_regex\": \"&lt;value&gt;\" }```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin Fremon",
+      "poster_handle": "kevin"
+    },
+    "time_stamp": "2020-03-19 06:04:52",
+    "edited": {
+      "time_stamp": "2020-03-19 06:05:49"
+    },
+    "text": "Hey <@U6GNQ7JBU> this is my CLEAN 6 template series. I rolled my own “theme” custom module about a year ago.\n\nThanks for the tip about the visibility rules. I’ll have to play with that.  I guess the second challenge would be how it extends to the CSS file.  Right now, I’m using conditional logic inside of a HTML+HubL area to print CSS properties."
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Rosa",
+      "poster_handle": "jasonrosa"
+    },
+    "time_stamp": "2020-03-19 07:27:21",
+    "text": "Hey Kevin! Here is an example of how this might be used (if the border is set to anything besides \"none\" the width setting would appear). Then an example of how you might use those values in the HTML/HubL/CSS."
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Rosa",
+      "poster_handle": "jasonrosa"
+    },
+    "time_stamp": "2020-03-19 07:27:29",
+    "text": "```{\n  \"label\": \"Border\",\n  \"name\": \"border\",\n  \"type\": \"group\",\n  \"children\": [\n    {\n      \"label\": \"Style\",\n      \"name\": \"style\",\n      \"id\": \"border.style\",\n      \"type\": \"choice\",\n      \"choices\": [\n        [ \"none\", \"None\" ],\n        [ \"solid\", \"Solid\" ],\n        [ \"dotted\", \"Dotted\" ],\n        [ \"dashed\", \"Dashed\" ],\n        [ \"double\", \"Double\" ],\n        [ \"groove\", \"Groove\" ],\n        [ \"ridge\", \"Ridge\" ],\n        [ \"inset\", \"Inset\" ],\n        [ \"outset\", \"Outset\" ]\n      ],\n      \"display\": \"select\",\n      \"default\": \"solid\"\n    },\n    {\n      \"label\": \"Width\",\n      \"name\": \"width\",\n      \"type\": \"number\",\n      \"help_text\": \"Value is in pixels\",\n      \"visibility\": {\n        \"controlling_field\": \"border.style\",\n        \"controlling_value_regex\": \"none\",\n        \"operator\": \"NOT_EQUAL\"\n      },\n      \"display\": \"slider\",\n      \"max\": 100,\n      \"min\": 1,\n      \"step\": 1,\n      \"default\": 1\n    }\n  ]\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Rosa",
+      "poster_handle": "jasonrosa"
+    },
+    "time_stamp": "2020-03-19 07:27:46",
+    "text": "```{% if theme.border.style.width %}\n  do this \n{% else %}\n  do this\n{% endif %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Rosa",
+      "poster_handle": "jasonrosa"
+    },
+    "time_stamp": "2020-03-19 07:27:53",
+    "text": "OR:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Rosa",
+      "poster_handle": "jasonrosa"
+    },
+    "time_stamp": "2020-03-19 07:28:07",
+    "text": "```{% if theme.border.style != 'none' %}\n  do this \n{% else %}\n  do this\n{% endif %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin Fremon",
+      "poster_handle": "kevin"
+    },
+    "time_stamp": "2020-03-19 07:53:18",
+    "text": "<@U26AKMZ19> this is super helpful man. Thank you!  Just to clarify… In theme-overrides.css file we’re able to use conditional statements??  If, else, elif, etc."
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Rosa",
+      "poster_handle": "jasonrosa"
+    },
+    "time_stamp": "2020-03-19 07:55:03",
+    "text": "<@UA5DFM7CK> no problem! Yes that is correct, just like you're able to use the theme variables to print out theme values in theme-overrides.css you can also use them as conditional statements where needed."
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin Fremon",
+      "poster_handle": "kevin"
+    },
+    "time_stamp": "2020-03-19 07:56:31",
+    "text": "<@U26AKMZ19> Rad!!  You know I should have figured.  Now I’m pumped."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2020-03-19 07:58:09",
+    "text": "We will soon support downloading the default HubSpot themes through the CLI, and eventually show them through the Design Manager UI"
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin Fremon",
+      "poster_handle": "kevin"
+    },
+    "time_stamp": "2020-03-19 11:38:32",
+    "text": "Awesome <@U6GNQ7JBU> - <@U26AKMZ19> btw… Worked like a charm. Thanks again!"
+  },
+  {
+    "text": "I’m assuming the new Themes rollout will inherit this new CMS style with the accordions, right?!?!  It’s super dope and so much better!!!",
+    "time_stamp": "2020-03-19 11:56:30",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-03-19 13:01:02"
+      },
+      {
+        "time_stamp": "2020-03-19 16:55:42"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Katie Tade",
+      "poster_handle": "ktade"
+    },
+    "time_stamp": "2020-03-19 13:01:02",
+    "text": "Yes sir! These new patterns are rolling out alongside themes!"
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin Fremon",
+      "poster_handle": "kevin"
+    },
+    "time_stamp": "2020-03-19 16:55:42",
+    "text": "<@U8THBCFC4> Awesome!"
+  }
+]

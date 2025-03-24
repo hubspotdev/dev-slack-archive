@@ -1,0 +1,691 @@
+[
+  null,
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-10 04:25:48",
+    "text": "Hey guys,\nHas anyone ever built a Google Maps search feature which links up to your HubDB and outputs the results in text and a map before?\nI've managed to manipulate the below tutorial and got results and a map to display based on the user's geolocation but the client prefers if the user searched for a location instead\n<https://designers.HubSpot.com/docs/tutorials/lets-build-a-page-with-a-map-with-hubdb>\nI've not entered this part of JS before, any ideas how I can approach this with HubDB?",
+    "reply_count": 23,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2018-07-10 06:34:13"
+      },
+      {
+        "time_stamp": "2018-07-10 06:48:36"
+      },
+      {
+        "time_stamp": "2018-07-10 06:48:50"
+      },
+      {
+        "time_stamp": "2018-07-10 06:48:50"
+      },
+      {
+        "time_stamp": "2018-07-10 06:49:13"
+      },
+      {
+        "time_stamp": "2018-07-10 06:49:45"
+      },
+      {
+        "time_stamp": "2018-07-10 07:46:51"
+      },
+      {
+        "time_stamp": "2018-07-10 07:47:12"
+      },
+      {
+        "time_stamp": "2018-07-10 07:47:26"
+      },
+      {
+        "time_stamp": "2018-07-10 07:47:54"
+      },
+      {
+        "time_stamp": "2018-07-10 07:49:49"
+      },
+      {
+        "time_stamp": "2018-07-10 07:51:59"
+      },
+      {
+        "time_stamp": "2018-07-10 07:53:00"
+      },
+      {
+        "time_stamp": "2018-07-10 07:55:20"
+      },
+      {
+        "time_stamp": "2018-07-10 07:59:49"
+      },
+      {
+        "time_stamp": "2018-07-10 08:03:38"
+      },
+      {
+        "time_stamp": "2018-07-10 08:27:28"
+      },
+      {
+        "time_stamp": "2018-07-10 08:29:19"
+      },
+      {
+        "time_stamp": "2018-07-10 08:29:58"
+      },
+      {
+        "time_stamp": "2018-07-10 08:30:26"
+      },
+      {
+        "time_stamp": "2018-07-10 08:30:49"
+      },
+      {
+        "time_stamp": "2018-07-10 08:31:13"
+      },
+      {
+        "time_stamp": "2018-07-10 08:35:00"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-10 06:34:13",
+    "text": "As in they type in their location on the map and you display the closest stores?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-10 06:48:36",
+    "text": "Yeah pretty much"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-10 06:48:50",
+    "text": "```\n{% set table_id = 848197 %}\n  \n{% if request.query_dict['row_id'] %}\n\t{% set row = hubdb_table_row(table_id, request.query_dict['row_id']) %}\n  &lt;h1&gt;{{ row.name }}&lt;/h1&gt;\n  &lt;p&gt;{{ row.location['lat'] }}, {{ row.location['lon'] }}&lt;/p&gt;\n\t{% elif request.query_dict['lat'] %}\n    &lt;style&gt;\n      #map {\n        float: right;\n        height: 896px;\n        margin-top: 40px;\n        width: 50%;\n      }\n    &lt;/style&gt;\n\n\t\t{% set params = \"orderBy=geo_distance(location,\" ~ request.query_dict['lat'] ~ \",\" ~ request.query_dict['lon'] ~ \")\" %}\n    {% set params = \"geo_distance(location,\" ~ request.query_dict['lat'] ~ \",\" ~ request.query_dict['lon'] ~ \",mi)__lt=200.0&amp;limit=8&amp;\" ~ params %}\n \n    &lt;div class=\"store-locator\"&gt;\n      {% for row in hubdb_table_rows(table_id, params) %}\n        &lt;div class=\"store-locator__item\"&gt;\n          &lt;h3&gt;{{ row.name }}&lt;/h3&gt;\n          &lt;p&gt;{{ row.address }}&lt;/p&gt;\n          &lt;p&gt;{{ row.description }}&lt;/p&gt;\n          &lt;p&gt;{{ row.location|geo_distance(request.query_dict['lat'], request.query_dict['lon'], \"mi\")|round(0) }} mi away&lt;/p&gt;\n          &lt;p&gt;&lt;a href=\"{{ row.url }}\"&gt;{{ row.url }}&lt;/a&gt;&lt;/p&gt;\n        &lt;/div&gt;\n      {% endfor %}\n    &lt;/div&gt;\n\n\t\t&lt;div id=\"map\" height=\"700\"&gt;&lt;/div&gt;\n\n    &lt;script&gt;\n      var map, infoWindow;\n      function initMap() {\n        map = new google.maps.Map(document.getElementById('map'), {\n          center: {lat: 55.3781, lng: 3.4360}, zoom: 8\n        });\n\n        infoWindow = new google.maps.InfoWindow;\n\n      // Try HTML5 geolocation.\n      if (navigator.geolocation) {\n        navigator.geolocation.getCurrentPosition(function(position) {\n          var pos = {\n            lat: position.coords.latitude,\n            lng: position.coords.longitude\n          };\n\n          infoWindow.setPosition(pos);\n          infoWindow.setContent('You are here.');\n          infoWindow.open(map);\n          map.setCenter(pos);\n        }, function() {\n          handleLocationError(true, infoWindow, map.getCenter());\n        });\n      } else {\n        // Browser doesn't support Geolocation\n        handleLocationError(false, infoWindow, map.getCenter());\n      }\n\n      var marker_origin = new google.maps.Marker({\n         map: map,\n         title: \"you are here\",\n         icon: { scaledSize: {width:45, height:45}, url: \"<http://maps.google.com/mapfiles/kml/paddle/blu-blank.png>\"},\n         position: {lat: {{ request.query_dict['lat'] }}, lng: {{ request.query_dict['lon'] }}}\n      });\n\n    {% for row in hubdb_table_rows(table_id) %}         \n      var marker_{{ row.hs_id }} = new google.maps.Marker({\n          map: map,\n          position: {lat: {{ row.location[\"lat\"] }}, lng: {{ row.location[\"lon\"] }}},\n          title: \"{{ row.name }}\",\n          icon: { scaledSize: {width:45, height:45}, url: \"<https://cdn2.HubSpot.net/hubfs/3893470/Chameleon%20Website%20Assets/Store%20Locator/store-locator@2x-1.png>\"}\n      });\n\n      marker_{{ row.hs_id }}.addListener('click', function() {\n        new google.maps.InfoWindow({\n            content: \"&lt;div&gt; {{ row.name }} is {{ row.location|geo_distance(request.query_dict['lat'], request.query_dict['lon'], \"mi\")|round(0) }} miles away&lt;/div&gt;\"\n        }).open(map, marker_{{ row.hs_id }});\n      });\n    {% endfor %}\n      }\n    &lt;/script&gt;\n\n    &lt;script src=\"<https://maps.googleapis.com/maps/api/js?key=AIzaSyAwsy-70zo70lhZFQTFFz0K4teAu34phik&amp;callback=initMap>\" async defer&gt;&lt;/script&gt;\n\n  {% else %}\n\t\t&lt;p class=\"align-center\"&gt;Please allow us to read your location so we can show you the closest Chameleon stores.&lt;/p&gt;\n    &lt;script&gt;\n      navigator.geolocation.getCurrentPosition(function(position) {\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-10 06:48:50",
+    "text": "        window.location = window.location.href.split('?')[0] + \"?lat=\" + position.coords.latitude + \"&amp;lon=\" + position.coords.longitude;\n      });\n    &lt;/script&gt;\n{% endif %}\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-10 06:49:13",
+    "text": "That's my HubL code so far"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-10 06:49:45",
+    "text": "I've researched the Google Search on the API but not sure how I'd get that to also change the results along with the map"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-10 07:46:51",
+    "text": "There seems to be two ways to do it"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-10 07:47:12",
+    "text": "Either when you search, reload the page with the lat/lon values as query params"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-10 07:47:26",
+    "text": "Where the lat/lon are taken from the google API"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-10 07:47:54",
+    "text": "Or load the data async on the page using the api <https://developers.HubSpot.com/docs/methods/hubdb/hubdb_overview>"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-10 07:49:49",
+    "text": "Would be good if I could reload the page with the lat/lon values but not sure how to approach this"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-10 07:51:59",
+    "text": "<https://developers.google.com/maps/documentation/geocoding/intro#geocoding>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-10 07:53:00",
+    "text": "<@U2H3TT8F2> has a site example that does this"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-10 07:55:20",
+    "text": "Okay, will try get my head round how it works, thanks :thumbsup:"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-10 07:59:49",
+    "text": "Basically you need `geocoder = new google.maps.Geocoder();` and can call the functions you need there"
+  },
+  {
+    "text": "<@U9MAWTESW> here is how we handled getting input from a text field (like a zip code) then passing it to Google GeoCode and posting it to the url with the params appended. Hopefully this helps.",
+    "time_stamp": "2018-07-10 08:02:19"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-10 08:03:38",
+    "text": "Just been looking at that, this is with the Google Maps API search box yeah?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-10 08:04:08",
+    "text": "That's perfect, thanks a lot <@U2H3TT8F2> :star2:"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-10 08:06:17",
+    "text": "How would people feel about a HubDB JS client that can be used to load table data asynchronously on the page?"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-07-10 08:07:51",
+    "text": "I could see this being beneficial"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McIlwain",
+      "poster_handle": "ian-mcilwain"
+    },
+    "time_stamp": "2018-07-10 08:08:48",
+    "text": "I like the sound of that"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-10 08:08:58",
+    "edited": {
+      "time_stamp": "2018-07-10 08:09:24"
+    },
+    "text": "So instead of reloading the page with the data encoded in query params you would be able to easily make a JS call like `var rows = hubdb.listRows(portalId, tableId, queryParam)`"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-07-10 08:09:23",
+    "text": "That sounds pretty cool."
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2018-07-10 08:14:30",
+    "text": "for production use, or more similar to the hot-reloading previews in the new DM?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-10 08:25:00",
+    "text": "Production use so you can use in custom modules"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-10 08:26:44",
+    "text": "The inspiration was the google's geocoder: <https://developers.google.com/maps/documentation/javascript/geocoding>"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-10 08:27:28",
+    "text": "<@U9MAWTESW> you can go see an example I built here: <https://go.saniflo.com/find-dealer?ref=bathrooms>"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-10 08:29:19",
+    "text": "I have a table for each of the zip code ranges in the US (starting with 0, starting with 1, etc…) and each row that matches a zip has the lat,lon pair as a location"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-10 08:29:58",
+    "text": "That's ace, pretty much what I'm after :open_mouth:"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-10 08:30:26",
+    "text": "basically what happens is the user enters a zip, it finds the zip in the DB, grabs the lat,lon then looks up results in a dealer / installer DB table and uses the geo_distance   function (or w/e it’s called i forget) to list them in order"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-10 08:30:49",
+    "text": "I also use a macro to output the array of pins to a JS variable, which then is loaded into the google map"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-10 08:31:13",
+    "text": "if you want the zip code tables I’ll export them for you"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2018-07-10 08:33:34",
+    "text": "that's sick. Using that as a hot-reloading VueJS data object would be AWESOME. Need to invent more time to build stuff....."
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-10 08:33:48",
+    "text": "I want that… it would make DB use much more accessible for our front-end peeps"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-10 08:34:19",
+    "text": "as it stands, they have to rely on someone (me) with more templating experience to hook in the dynamic data"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-10 08:35:00",
+    "text": "That would be really helpful if you could :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2018-07-10 08:36:33",
+    "text": "I concur with Mark, it’d make it so creating more progressive web appy experiences would be possible, with more ease than how we’ve done it in the past"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-10 08:37:00",
+    "text": ":+1: I will put up an issue"
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2018-07-10 08:37:49",
+    "text": "while we're at it, would be pretty sick for blog listings too... just throwing that out there... lol"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2018-07-10 09:02:03",
+    "text": "Yea I would imagine a long-term solution to have a JS client for non-authorized public facing API's."
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-07-10 09:14:30",
+    "text": "So here's a question I am 99% sure can't be done on HS alone but curious if others may have done it. Star ratings with posts. Has anyone built a rating system purely on HS or do you use any third party apps to make one?",
+    "reply_count": 11,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2018-07-10 09:15:13"
+      },
+      {
+        "time_stamp": "2018-07-10 09:15:23"
+      },
+      {
+        "time_stamp": "2018-07-10 09:17:22"
+      },
+      {
+        "time_stamp": "2018-07-10 09:27:59"
+      },
+      {
+        "time_stamp": "2018-07-10 09:29:44"
+      },
+      {
+        "time_stamp": "2018-07-10 09:30:08"
+      },
+      {
+        "time_stamp": "2018-07-10 09:30:42"
+      },
+      {
+        "time_stamp": "2018-07-10 13:43:55"
+      },
+      {
+        "time_stamp": "2018-07-10 13:50:05"
+      },
+      {
+        "time_stamp": "2018-07-10 14:06:13"
+      },
+      {
+        "time_stamp": "2018-07-10 14:23:14"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-10 09:15:13",
+    "text": "i.e. someone can rate the post and have the values averaged / stored on the post for use in listings / detail?"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-07-10 09:15:23",
+    "text": "yup"
+  },
+  {
+    "text": "Anyone know why I'm having to go into the HubDB and remove the capital letters in order for the console error to disappear?",
+    "time_stamp": "2018-07-10 09:17:08"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-10 09:17:22",
+    "text": "When you say “HS alone” does that include the API or are you talking HubL + HubDB exclusively"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-10 09:17:51",
+    "text": "There's about 3500 entries in this db, just want to know if there's a way to character escape in HubL to prevent me going into the db and manually correcting all of these",
+    "reply_count": 11,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2018-07-10 09:18:30"
+      },
+      {
+        "time_stamp": "2018-07-10 09:19:22"
+      },
+      {
+        "time_stamp": "2018-07-10 09:19:50"
+      },
+      {
+        "time_stamp": "2018-07-10 09:19:55"
+      },
+      {
+        "time_stamp": "2018-07-10 09:20:14"
+      },
+      {
+        "time_stamp": "2018-07-10 09:20:25"
+      },
+      {
+        "time_stamp": "2018-07-10 09:20:48"
+      },
+      {
+        "time_stamp": "2018-07-10 09:21:01"
+      },
+      {
+        "time_stamp": "2018-07-10 09:21:27"
+      },
+      {
+        "time_stamp": "2018-07-10 09:22:28"
+      },
+      {
+        "time_stamp": "2018-07-10 09:23:40"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-10 09:18:30",
+    "text": "What’s the error?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-10 09:19:22",
+    "text": "Unexpected token"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-10 09:19:50",
+    "text": "I think the problem is the broken lines there"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-10 09:19:55",
+    "text": "When I go into the db and reformat the text, it corrects that error and moves onto the next entry with capital letters in :confused:"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-10 09:20:14",
+    "text": "I know in PHP you can character escape but this is a new one on me :scream:"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-10 09:20:25",
+    "edited": {
+      "time_stamp": "2018-07-10 09:20:52"
+    },
+    "text": "Ah, yes yes yes you can escape in HubL — at least, you can urlencode"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-10 09:20:48",
+    "text": "The CSV file we've been given is littered with grammatical errors tbf"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-10 09:21:01",
+    "text": "you can also replace chars with escaped versions"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-10 09:21:27",
+    "text": "Check this out: <https://designers.HubSpot.com/docs/hubl/hubl-supported-filters#escapejs>"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-10 09:22:28",
+    "text": "Just look through those escape filters (there’s also |escape |escapejson and |urlencode )"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2018-07-10 09:23:40",
+    "text": "Brill, thanks :thumbsup:"
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-07-10 09:27:59",
+    "text": "I was trying to think of a way to do it without having to use the api but I dont think there is a way. Using the API you could def do it, but you'd have to host the script elsewhere so you dont expose the api key in HS"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-10 09:29:44",
+    "text": "Yep - I was about to suggest something using the API but it exposes the key:  here’s what I had typed before you replied :wink: ``` row in HubDB for every rating that includes a col for the blog post id + a col for the rating &gt;&gt;&gt; on the post detail template, query the HubDB for the total rating counts / values and put that value in a custom widget on the blog post.```"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-10 09:30:08",
+    "text": "you’d submit a new row via AJAX using the hapikey on the request"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-07-10 09:30:42",
+    "text": "yup, that was my thought pattern as well"
+  },
+  {
+    "poster": {
+      "poster_name": "Catherine G",
+      "poster_handle": "catherineg"
+    },
+    "time_stamp": "2018-07-10 10:15:13",
+    "text": "That worked! Thank you!!!!!!"
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-07-10 13:43:55",
+    "text": "perhaps <@U22PJPGK0> might be able to chime in on this. How does HubSpot do the ratings for the agency directory?"
+  },
+  null,
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2018-07-10 13:50:05",
+    "text": "I know they use the sign in with linked in stuff, but how do you do the submitting of the reviews, is this via some hidden jinjava stuff we dont know?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2018-07-10 14:06:13",
+    "text": "the reviews are submitted to a separate service and the average ratings are calculated and synced to a hubdb table"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Grubbs",
+      "poster_handle": "mgrubbs"
+    },
+    "time_stamp": "2018-07-10 14:23:14",
+    "text": "Seems like the consensus then is to use a “service” (endpoint elsewhere) and make that API call either to a HubDB table (with a row for each blog post) or to update a blog post widget with the average"
+  },
+  null,
+  null,
+  null,
+  null
+]

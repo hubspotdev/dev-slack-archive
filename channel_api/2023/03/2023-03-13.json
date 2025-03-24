@@ -1,0 +1,757 @@
+[
+  {
+    "poster": {
+      "poster_name": "Simon Lait",
+      "poster_handle": "simon.lait"
+    },
+    "time_stamp": "2023-03-13 03:38:21",
+    "text": "Hey, when using HubSpot SDK, is there any way to set a certificate chain path?"
+  },
+  {
+    "poster": {
+      "poster_name": "Bo Høirup Pedersen",
+      "poster_handle": "bohoirup"
+    },
+    "time_stamp": "2023-03-13 03:51:02",
+    "text": "Hey, new to HubSpot and was wondering if anyone could help me get the sample Oauth node app started locally\nI am running Node and Yarn and trying to follow this <https://app-eu1.HubSpot.com/developer/27073155/application/1499332/sample-app-checklist>\n\nBut yarn start just gives me an error:  Couldn't find a package.json file in \"..\\\\HubSpot_Oauth\""
+  },
+  {
+    "poster": {
+      "poster_name": "David Roma",
+      "poster_handle": "droma"
+    },
+    "time_stamp": "2023-03-13 04:25:05",
+    "edited": {
+      "time_stamp": "2023-03-13 04:26:11"
+    },
+    "text": "I’m building my first <https://developers.HubSpot.com/docs/api/automation/custom-workflow-actions|Custom Workflow Action> which will run when a Contact is added to an Active List.\nI want to dynamically append the Contact’s email address to the actionUrl so it can be sent to a 3rd party service.\nI’ve had no issue testing with a static URL but I’m not sure exactly how to (or best practice for) dynamically appending the email to the actionUrl - something like this :point_down::skin-tone-3:\n```{\n  \"actionUrl\": \"<https://webhook.site/000-000-000?email={email}>\",\n  \"published\": true,\n  \"objectTypes\":[\n    \"CONTACT\"\n  ],\n...\n}```\nWas thinking maybe I can use the PRE_FETCH_OPTIONS function to append the user’s email to the static URL and return the modified actionURL, but have not been able to get that to work yet.\nAny advice here will be super helpful\nThanks!",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-03-15 04:45:45"
+      },
+      {
+        "time_stamp": "2023-03-15 06:35:24"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Richard Andersson",
+      "poster_handle": "richard168"
+    },
+    "time_stamp": "2023-03-13 04:31:39",
+    "edited": {
+      "time_stamp": "2023-03-13 04:32:59"
+    },
+    "text": "Hello everyone,\n\nThis weekend one of our api connections towards HubSpot stoped working. Might be due to your upgrade to use app specific keys:\n```        @curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Authorization: Bearer ' . hapikey));```\nThis is the code (PHP) that stoped working.\n```public function searchContactInHubSpot($email = \"needed\"){\n   $hubSpot = \\HubSpot\\Factory::createWithApiKey(hapikey);\n   $filter = new \\HubSpot\\Client\\Crm\\Contacts\\Model\\Filter();\n   $filter\n      -&gt;setOperator('EQ')\n      -&gt;setPropertyName('email')\n      -&gt;setValue($email);\n\n   $filterGroup = new \\HubSpot\\Client\\Crm\\Contacts\\Model\\FilterGroup();\n   $filterGroup-&gt;setFilters([$filter]);\n\n   $searchRequest = new \\HubSpot\\Client\\Crm\\Contacts\\Model\\PublicObjectSearchRequest();\n   $searchRequest-&gt;setFilterGroups([$filterGroup]);\n\n   // @var CollectionResponseWithTotalSimplePublicObject $contactsPage\n   $contactsPage = $hubSpot-&gt;crm()-&gt;contacts()-&gt;searchApi()-&gt;doSearch($searchRequest);\n   $tmp = (array) $contactsPage[\"results\"][0];\n   foreach($tmp as $name =&gt; $contact_details){}\n   return $contact_details;\n}```\nThis is the error we got:\n``` PHP Fatal error:  Uncaught HubSpot\\Client\\Crm\\Contacts\\ApiException: [4            01] Client error: `POST <https://api.hubapi.com/crm/v3/objects/contacts/search?hapikey=b59f6dd0-2b08-4a23-ac0>            6-4601d20725d0` resulted in a `401 Unauthorized` response:\n{\"status\":\"error\",\"message\":\"The API key used to make this call is expired. View or manage your API key here            : <https://ap> (truncated...)\n in /home/debian/vendor/HubSpot/api-client/codegen/Crm/Contacts/Api/SearchApi.php:151\nStack trace:\n#0 /home/debian/vendor/HubSpot/api-client/codegen/Crm/Contacts/Api/SearchApi.php(129): HubSpot\\Client\\Crm\\Co            ntacts\\Api\\SearchApi-&gt;doSearchWithHttpInfo()\n#1 /home/debian/www/backend/classes/users.php(260): HubSpot\\Client\\Crm\\Contacts\\Api\\SearchApi-&gt;doSearch()\n#2 /home/debian/www/backend/classes/users.php(285): Users-&gt;searchContactInHubSpot()```\nWe are using mainly V1 in our code (except this newer V3 one). The older V1 that uses plain Curl we did make the adjustments needed by adding:\n```        @curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Authorization: Bearer ' . hapikey));```\ninto the curl calls.\n\nBut this V3 uses your new library.\nIs there a simple method to call where we can add the Authorization: Bearer for this?\n\nI assume just adding that will solve the issue. But I am open for suggestions :slightly_smiling_face:",
+    "reply_count": 14,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-03-13 06:37:43"
+      },
+      {
+        "time_stamp": "2023-03-13 06:39:02"
+      },
+      {
+        "time_stamp": "2023-03-13 06:40:00"
+      },
+      {
+        "time_stamp": "2023-03-13 06:58:38"
+      },
+      {
+        "time_stamp": "2023-03-13 06:59:01"
+      },
+      {
+        "time_stamp": "2023-03-13 06:59:05"
+      },
+      {
+        "time_stamp": "2023-03-13 06:59:13"
+      },
+      {
+        "time_stamp": "2023-03-13 07:00:06"
+      },
+      {
+        "time_stamp": "2023-03-13 07:02:07"
+      },
+      {
+        "time_stamp": "2023-03-13 07:03:11"
+      },
+      {
+        "time_stamp": "2023-03-13 07:05:14"
+      },
+      {
+        "time_stamp": "2023-03-13 07:08:16"
+      },
+      {
+        "time_stamp": "2023-03-13 07:08:27"
+      },
+      {
+        "time_stamp": "2023-03-13 07:09:11"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Julian Purser",
+      "poster_handle": "juliangd"
+    },
+    "time_stamp": "2023-03-13 05:32:04",
+    "text": "Hi All, The following code was setup on a site I am now working on and it is currently throwing me an error and will no longer compile. It was working last week and nothing has changed in the base code. Is this due to the new private app coming in?\n\n```&lt;form action=\"<https://api.hsforms.com/submissions/v3/integration/submit/:portalId/:formGuid>\"&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Dmitry Shepelev",
+      "poster_handle": "dmitry.shepelev"
+    },
+    "time_stamp": "2023-03-13 05:39:38",
+    "edited": {
+      "time_stamp": "2023-03-13 05:40:17"
+    },
+    "text": "Hi guys, could someone from tech HubSpot team explain me such behaviour in HubSpot &lt;-&gt; Whatsapp integration. Iâm trying to send message in WhatsApp like `Example +++` , where `+` is `+` in unicode,\nbut from HubSpot Api `<https://api.HubSpot.com/conversations/v3/conversations/threads/{thread_id}/messages>` I got message with really strange and unexpected format like\n```\"text\":\"Example \\+\\+\\+\"```\nWhy does it work so? Why does HubSpot change the original message in Whatsapp for API???",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-03-13 07:11:24"
+      },
+      {
+        "time_stamp": "2023-03-13 07:12:36"
+      },
+      {
+        "time_stamp": "2023-03-13 07:13:02"
+      },
+      {
+        "time_stamp": "2023-03-14 05:27:22"
+      },
+      {
+        "time_stamp": "2023-03-14 08:09:10"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 06:37:43",
+    "text": "So this is actually the only line that needs to be changed:\n\n```$hubSpot = \\HubSpot\\Factory::createWithApiKey(hapikey);```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Richard Andersson",
+      "poster_handle": "richard168"
+    },
+    "time_stamp": "2023-03-13 06:39:02",
+    "text": "<@U01QVR44MEY> Yes but into what? :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Richard Andersson",
+      "poster_handle": "richard168"
+    },
+    "time_stamp": "2023-03-13 06:40:00",
+    "text": "```createWithAccessToken```\n?"
+  },
+  {
+    "poster": {
+      "poster_name": "Simon Lait",
+      "poster_handle": "simon.lait"
+    },
+    "time_stamp": "2023-03-13 06:58:38",
+    "text": "I had same issue, Factory::createWithAccessToken works, but we are also get curl certificate errors"
+  },
+  {
+    "poster": {
+      "poster_name": "Simon Lait",
+      "poster_handle": "simon.lait"
+    },
+    "time_stamp": "2023-03-13 06:59:01",
+    "text": "so I had to use"
+  },
+  {
+    "poster": {
+      "poster_name": "Simon Lait",
+      "poster_handle": "simon.lait"
+    },
+    "time_stamp": "2023-03-13 06:59:05",
+    "text": "```$clientInterface = new GuzzleHttp\\Client(['verify' =&gt; $cabundle]);\n\t\t\t$this-&gt;client = Factory::createWithAccessToken($this-&gt;apiKey,$clientInterface);```"
+  },
+  {
+    "poster": {
+      "poster_name": "Simon Lait",
+      "poster_handle": "simon.lait"
+    },
+    "time_stamp": "2023-03-13 06:59:13",
+    "text": "and link to our certificate bundle"
+  },
+  {
+    "poster": {
+      "poster_name": "Richard Andersson",
+      "poster_handle": "richard168"
+    },
+    "time_stamp": "2023-03-13 07:00:06",
+    "text": "Thanks. Will try that right away"
+  },
+  {
+    "poster": {
+      "poster_name": "Richard Andersson",
+      "poster_handle": "richard168"
+    },
+    "time_stamp": "2023-03-13 07:02:07",
+    "text": "Thanks, that solved it."
+  },
+  {
+    "poster": {
+      "poster_name": "Simon Lait",
+      "poster_handle": "simon.lait"
+    },
+    "time_stamp": "2023-03-13 07:03:11",
+    "text": "their documentation is questionable to say the least!!"
+  },
+  {
+    "poster": {
+      "poster_name": "Richard Andersson",
+      "poster_handle": "richard168"
+    },
+    "time_stamp": "2023-03-13 07:05:14",
+    "text": "For sure.\nAt the same time. Big project and I know personaly how hard it is to document everything.\n\nbut this was really helpful for me. thanks ! :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 07:08:16",
+    "text": "Sorry <@U04NRP72V61> and <@U04TD336CDQ> my mac died right after sending that"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 07:08:27",
+    "text": "Thanks for stepping in <@U04TD336CDQ>"
+  },
+  {
+    "poster": {
+      "poster_name": "Richard Andersson",
+      "poster_handle": "richard168"
+    },
+    "time_stamp": "2023-03-13 07:09:11",
+    "text": "Thanks !"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 07:11:24",
+    "text": "It does that so it's string safe"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 07:12:36",
+    "text": "In normal javascript that code might try to add up the sequences of the string, but the \\ make it safe to process"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 07:13:02",
+    "text": "HubSpot isn't changing the original message they are just making it safe to process"
+  },
+  {
+    "poster": {
+      "poster_name": "Aditya Naik",
+      "poster_handle": "anaik"
+    },
+    "time_stamp": "2023-03-13 08:21:10",
+    "text": "Hi All\nI am not able to clone a Blog email over the API. I always get this error “A instant blog email id *********** already exist for the blog ************“, and when i query for email with cloned email there isnt any"
+  },
+  {
+    "poster": {
+      "poster_name": "Aditya Naik",
+      "poster_handle": "anaik"
+    },
+    "time_stamp": "2023-03-13 08:21:45",
+    "text": "is this a restriction from HubSpot for not allowing cloning of blog emails"
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Johansson",
+      "poster_handle": "anton.johansson"
+    },
+    "time_stamp": "2023-03-13 08:32:27",
+    "text": "Hello people! I'm looking to integrate HubSpot into our application. We have a list of contacts where we send product news to. This is a static list that we maintain ourselves. Now, we also want to send these product news to the users of our application. So I'm thinking API calls such as these:\n• Send email addresses to HubSpot for those that want product news.\n• Send email addresses to HubSpot for those that no longer want product news.\n• Fetch recent opt-outs from HubSpot, so we can update the checkbox in our application, to keep them in sync.\nCould anyone point me in the right direction here? Which API methods are most suited?",
+    "reply_count": 15,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-03-13 10:13:04"
+      },
+      {
+        "time_stamp": "2023-03-13 10:13:05"
+      },
+      {
+        "time_stamp": "2023-03-13 10:13:27"
+      },
+      {
+        "time_stamp": "2023-03-13 10:13:38"
+      },
+      {
+        "time_stamp": "2023-03-13 11:58:08"
+      },
+      {
+        "time_stamp": "2023-03-13 12:12:19"
+      },
+      {
+        "time_stamp": "2023-03-13 14:49:02"
+      },
+      {
+        "time_stamp": "2023-03-13 14:57:09"
+      },
+      {
+        "time_stamp": "2023-03-13 14:57:36"
+      },
+      {
+        "time_stamp": "2023-03-13 14:57:38"
+      },
+      {
+        "time_stamp": "2023-03-13 15:27:59"
+      },
+      {
+        "time_stamp": "2023-03-13 15:32:08"
+      },
+      {
+        "time_stamp": "2023-03-13 15:37:50"
+      },
+      {
+        "time_stamp": "2023-03-13 15:38:14"
+      },
+      {
+        "time_stamp": "2023-03-13 15:39:36"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Oğuzhan Aydın",
+      "poster_handle": "oguzhan.aydin"
+    },
+    "time_stamp": "2023-03-13 10:05:34",
+    "text": "Hey there,I'm working on integrating the HubSpot Engagment Email API into my project. Which enpoint should I request for the analytical information of the mail I created with the */`crm/v3/objects/emails`* endpoint (click, open, count etc.)",
+    "reply_count": 26,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-03-13 10:09:57"
+      },
+      {
+        "time_stamp": "2023-03-13 10:10:31"
+      },
+      {
+        "time_stamp": "2023-03-13 10:47:47"
+      },
+      {
+        "time_stamp": "2023-03-13 10:53:34"
+      },
+      {
+        "time_stamp": "2023-03-13 10:53:54"
+      },
+      {
+        "time_stamp": "2023-03-13 10:56:02"
+      },
+      {
+        "time_stamp": "2023-03-13 10:56:42"
+      },
+      {
+        "time_stamp": "2023-03-13 11:17:13"
+      },
+      {
+        "time_stamp": "2023-03-13 11:22:36"
+      },
+      {
+        "time_stamp": "2023-03-13 11:23:24"
+      },
+      {
+        "time_stamp": "2023-03-13 11:23:30"
+      },
+      {
+        "time_stamp": "2023-03-13 11:25:13"
+      },
+      {
+        "time_stamp": "2023-03-13 11:47:51"
+      },
+      {
+        "time_stamp": "2023-03-13 12:06:26"
+      },
+      {
+        "time_stamp": "2023-03-13 12:08:00"
+      },
+      {
+        "time_stamp": "2023-03-13 12:09:28"
+      },
+      {
+        "time_stamp": "2023-03-13 12:10:18"
+      },
+      {
+        "time_stamp": "2023-03-13 12:10:34"
+      },
+      {
+        "time_stamp": "2023-03-13 12:11:01"
+      },
+      {
+        "time_stamp": "2023-03-13 12:12:31"
+      },
+      {
+        "time_stamp": "2023-03-13 12:13:17"
+      },
+      {
+        "time_stamp": "2023-03-13 12:13:21"
+      },
+      {
+        "time_stamp": "2023-03-13 12:13:25"
+      },
+      {
+        "time_stamp": "2023-03-13 12:13:46"
+      },
+      {
+        "time_stamp": "2023-03-13 12:14:26"
+      },
+      {
+        "time_stamp": "2023-03-13 12:14:44"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 10:09:57",
+    "text": "You'll want to use this endpoint: <https://legacydocs.HubSpot.com/docs/methods/cms_email/get-the-statistics-for-a-marketing-email?_ga=2.189438379.1657864066.1678715556-1670133696.1678592529|https://legacydocs.HubSpot.com/docs/methods/cms_email/get-the-statistics-for-a-marketing[…]a=2.189438379.1657864066.1678715556-1670133696.1678592529>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 10:10:31",
+    "text": "Stats returned:\n```\"stats\": {\n    \"counters\": {\n      \"sent\": 30,\n      \"open\": 15,\n      \"delivered\": 30,\n      \"bounce\": 0,\n      \"unsubscribed\": 0,\n      \"click\": 7,\n      \"dropped\": 1,\n      \"selected\": 31,\n      \"spamreport\": 0,\n      \"suppressed\": 0,\n      \"hardbounced\": 0,\n      \"softbounced\": 0,\n      \"pending\": 0,\n      \"contactslost\": 0,\n      \"notsent\": 1\n    },```"
+  },
+  {
+    "text": "I honestly would setup an active list that just works off of properties in the contact record. Then you would just update one contact record for each of the conditions (Product news property, with the values: Send, Don't Send) and then update the property through this api:",
+    "time_stamp": "2023-03-13 10:13:04"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 10:13:05",
+    "text": "<https://developers.HubSpot.com/docs/api/crm/contacts>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 10:13:27",
+    "text": "you can update using email if you attach ?idProperty=email to the end of the request url"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 10:13:38",
+    "text": "and then replace contactid with the contact email"
+  },
+  {
+    "poster": {
+      "poster_name": "Oğuzhan Aydın",
+      "poster_handle": "oguzhan.aydin"
+    },
+    "time_stamp": "2023-03-13 10:47:47",
+    "text": "I want to create a log record for email. I want to be able to mirror this to the hotspot dashboard"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 10:53:34",
+    "text": "Ok understood, what is the issue with the above endpoint?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 10:53:54",
+    "text": "that api wil pull all the relevant info"
+  },
+  {
+    "text": "I can't see click and count information on the dashboard",
+    "time_stamp": "2023-03-13 10:56:02"
+  },
+  {
+    "poster": {
+      "poster_name": "Oğuzhan Aydın",
+      "poster_handle": "oguzhan.aydin"
+    },
+    "time_stamp": "2023-03-13 10:56:42",
+    "text": "open and see information"
+  },
+  {
+    "text": "the result I expected",
+    "time_stamp": "2023-03-13 11:17:13"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 11:22:36",
+    "text": "Oh understood, you asked for the api endpoint to get this info, but I think you want the UI one?"
+  },
+  {
+    "poster": {
+      "poster_name": "Oğuzhan Aydın",
+      "poster_handle": "oguzhan.aydin"
+    },
+    "time_stamp": "2023-03-13 11:23:24",
+    "text": "Which endpoint should I request to see this in the UI?"
+  },
+  {
+    "poster": {
+      "poster_name": "Oğuzhan Aydın",
+      "poster_handle": "oguzhan.aydin"
+    },
+    "time_stamp": "2023-03-13 11:23:30",
+    "text": "Yes"
+  },
+  {
+    "poster": {
+      "poster_name": "Oğuzhan Aydın",
+      "poster_handle": "oguzhan.aydin"
+    },
+    "time_stamp": "2023-03-13 11:25:13",
+    "text": "I use this endpoint to create email record \"crm/v3/objects/emails\""
+  },
+  {
+    "poster": {
+      "poster_name": "Oğuzhan Aydın",
+      "poster_handle": "oguzhan.aydin"
+    },
+    "time_stamp": "2023-03-13 11:47:51",
+    "text": "<https://developers.HubSpot.com/docs/api/crm/email>"
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Johansson",
+      "poster_handle": "anton.johansson"
+    },
+    "time_stamp": "2023-03-13 11:58:08",
+    "text": "Ah, that's awesome, thanks <@U01QVR44MEY>. Any insights on opt-outs? I'm assuming you can opt-out from the emails directly via the email, and we'd need to catch those opt-outs. :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 12:06:26",
+    "text": "endpoint are just for backend processes, ui urls (i guess you could call them this) are for the actual ui view of the data"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 12:08:00",
+    "text": "You can see the performance of the email on this url:\n```<https://app.HubSpot.com/email/{portalId}/details/{emailID}/performance>```\njust replace the portalid and email id with the relevant data on your end"
+  },
+  {
+    "poster": {
+      "poster_name": "Oğuzhan Aydın",
+      "poster_handle": "oguzhan.aydin"
+    },
+    "time_stamp": "2023-03-13 12:09:28",
+    "text": "For the logged mail I created, I need to enter click and open information, it should actually be an API."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 12:10:18",
+    "text": "so this isn't a marketing email that you want to track?"
+  },
+  {
+    "poster": {
+      "poster_name": "Oğuzhan Aydın",
+      "poster_handle": "oguzhan.aydin"
+    },
+    "time_stamp": "2023-03-13 12:10:34",
+    "text": "Yes it is"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 12:11:01",
+    "text": "then use the email endpoint I sent you that will pull all the information on the opens and clicks and everything else"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 12:12:19",
+    "text": "Yeah so for contacts that don't want to receive emails any more they could use the unsubscribe button at the bottom of the email and they wouldn't receive those emails anymore"
+  },
+  {
+    "poster": {
+      "poster_name": "Oğuzhan Aydın",
+      "poster_handle": "oguzhan.aydin"
+    },
+    "time_stamp": "2023-03-13 12:12:31",
+    "text": "The endpoint you sent is the GET method, I think a POST operation is required for this to be able to see it on the HubSpot Dashboard"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 12:13:17",
+    "text": "So you're trying to put this info into HubSpot not pull this info from HubSpot?"
+  },
+  {
+    "text": "on this page",
+    "time_stamp": "2023-03-13 12:13:21"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 12:13:25",
+    "text": "you aren't sending emails from HubSpot?"
+  },
+  {
+    "poster": {
+      "poster_name": "Oğuzhan Aydın",
+      "poster_handle": "oguzhan.aydin"
+    },
+    "time_stamp": "2023-03-13 12:13:46",
+    "text": "Yes"
+  },
+  {
+    "poster": {
+      "poster_name": "Oğuzhan Aydın",
+      "poster_handle": "oguzhan.aydin"
+    },
+    "time_stamp": "2023-03-13 12:14:26",
+    "text": "I am adding log to HubSpot"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 12:14:44",
+    "text": "Yeah unfortunately you can't create a marketing email in HubSpot and send of the stats to it. Those stats are just for emails that HubSpot was tracking"
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Johansson",
+      "poster_handle": "anton.johansson"
+    },
+    "time_stamp": "2023-03-13 14:49:02",
+    "text": "Yeah that makes sense. But is it possible to fetch recent \"opt outs\", so we can synchronize it on our end? To make sure we have the correct status as well. Maybe a webhook, or something like that?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 14:57:09",
+    "text": "Yeah you can use this api to get recent opt outs: <https://legacydocs.HubSpot.com/docs/methods/email/get_subscriptions_timeline>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 14:57:36",
+    "text": "You can use the changeType parameter to filter by just opt outs"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-03-13 14:57:38"
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Johansson",
+      "poster_handle": "anton.johansson"
+    },
+    "time_stamp": "2023-03-13 15:27:59",
+    "text": "Ah, that looks very interesting, thanks! Is \"legacy\" something to worry about? Legacy as in \"will be removed soon\"?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 15:32:08",
+    "text": "No legacy just means that there might be a newer endpoint that you should use"
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Johansson",
+      "poster_handle": "anton.johansson"
+    },
+    "time_stamp": "2023-03-13 15:37:50",
+    "text": "Allright, I'll see if I can find one. Otherwise, this one looks promising.\n\nThanks for the assistance!"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-13 15:38:14",
+    "text": "Yeah there isn't a v3/4 one so you really don't need to look"
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Johansson",
+      "poster_handle": "anton.johansson"
+    },
+    "time_stamp": "2023-03-13 15:39:36",
+    "text": "Allright! :star2:"
+  },
+  {
+    "poster": {
+      "poster_name": "Evan Tan",
+      "poster_handle": "evan.tan"
+    },
+    "time_stamp": "2023-03-14 00:33:52",
+    "text": "<@U0157R7AQ84> is there any way you could configure a static IP? we are trying to send HubSpot webhooks to our internal services behind a gateway and we need to whitelist either a domain name or static IP"
+  },
+  {
+    "poster": {
+      "poster_name": "Evan Tan",
+      "poster_handle": "evan.tan"
+    },
+    "time_stamp": "2023-03-14 00:33:53",
+    "text": "please help"
+  }
+]

@@ -1,0 +1,56 @@
+[
+  {
+    "poster": {
+      "poster_name": "Stu Goymer",
+      "poster_handle": "stu"
+    },
+    "time_stamp": "2020-07-13 04:53:01",
+    "text": "Hoping someone help me with this issue I have. We have a page with Tabs within Tabs (secondary tabs).\n\nThe secondary tabs have an optional image slider (Lightslider)\n\nI'm trying to get multiple sliders to work on the same page and I'm using {{ name }} expecting a custom ID for each slider instance.\n\n### problem = is that I only get one ID for the module and not different ones as I thought\n\n*Could anyone adjust my code so that a unique ID (or class) can be rendered so I can get multiple slides working across the different secondary tabs?  Is this even possible?*\n\n```{% if item2.slider_required_ %}\n\n\n{# Start Image Slider =================== #}\n\n\n&lt;div id=\"{{ name }}\" class=\"thumbnail-blog-wrapper\"&gt;\n\n  &lt;div class=\"page-center\"&gt;\n    &lt;div class=\"thumbnail-slider\"&gt;\n      &lt;ul class=\"slider-wrapper\"&gt;\n\n        {% for item3 in item2.slider_image %}\n        &lt;li data-thumb=\"{{ item3.src }}\" class=\"lslide\"&gt;\n\n          {#  &lt;div class=\"image-slide\"&gt;&lt;img src=\"{{ item3.src }}\"/&gt;&lt;/div&gt;#}\n          &lt;div class=\"image-slide\" style=\"background-image:url({{ item3.src }})\"&gt;&lt;/div&gt;\n\n        &lt;/li&gt;\n        {% endfor %}\n\n      &lt;/ul&gt;\n    &lt;/div&gt;\n  &lt;/div&gt;\n&lt;/div&gt;\n\n\n\n{% require_js %}\n&lt;script&gt;\n  $(document).ready(function() {\n    $('#{{ name }} .thumbnail-blog-wrapper .slider-wrapper').lightSlider({\n      gallery: true,\n      item: 1,\n      thumbItem: 3,\n      slideMargin: 0,\n      speed: 2000,\n      auto: false,\n      loop: true,\n      onSliderLoad: function() {\n        $('.slider-wrapper').removeClass('cS-hidden');\n      }\n    });\n  });\n&lt;/script&gt;\n\n{% end_require_js %}\n\n\n\n{# End Image Slider =================== #}\n{% endif %}```",
+    "reply_count": 4,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2020-07-14 00:03:56"
+      },
+      {
+        "time_stamp": "2020-07-14 00:35:13"
+      },
+      {
+        "time_stamp": "2020-07-14 05:28:43"
+      },
+      {
+        "time_stamp": "2020-07-16 06:31:59"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Stu Goymer",
+      "poster_handle": "stu"
+    },
+    "time_stamp": "2020-07-13 04:54:44",
+    "text": "I cant get {{ name }} to work in the module JS so have added into HTML"
+  },
+  {
+    "poster": {
+      "poster_name": "Mitja Lewin",
+      "poster_handle": "m.lewin"
+    },
+    "time_stamp": "2020-07-14 00:03:56",
+    "edited": {
+      "time_stamp": "2020-07-14 02:35:22"
+    },
+    "text": "You can use the random filter: <https://developers.HubSpot.com/docs/cms/hubl/filters#random>\n\nTo get an uniq ID (uuid) with the random filter please take a look at Jonathans Jinja Template example from GitHub: <https://gist.github.com/hijonathan/5db3d8ec64e267d06c32>"
+  },
+  {
+    "poster": {
+      "poster_name": "Vesa Poikajärvi",
+      "poster_handle": "vesa.poikajarvi"
+    },
+    "time_stamp": "2020-07-14 00:35:13",
+    "edited": {
+      "time_stamp": "2020-07-14 00:48:37"
+    },
+    "text": "You don’t need to use the `id` of the `div` in the JS code. As you know, you can have multiple instances of same custom module on a page, and the JS is loaded once only (at least if you put the JS in the `module.js` section). In you JS code, just go through each instance and assign the `lightSlider` to them:\n\n```$(document).ready(function() {\n  $('.thumbnail-blog-wrapper .slider-wrapper').each(function(index, sliderWrapper) {\n    $(sliderWrapper).lightSlider({\n      ....\n    });\n  });\n});  ```\nAnd if `lightSlider` needs unique ID for the HTML element it is assigned to just add eg. `&lt;ul class=\"slider-wrapper\" id=\"{{ name ~ '_slider' }}\"&gt;` to have a non-conflicting ID for each of the elements"
+  }
+]

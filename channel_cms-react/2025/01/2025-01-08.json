@@ -1,0 +1,177 @@
+[
+  {
+    "poster": {
+      "poster_name": "Stephen Hominick",
+      "poster_handle": "never.go.hollow.trill"
+    },
+    "time_stamp": "2025-01-08 10:36:59",
+    "text": "Just ran into this too. I recommend improving that error message for people who don't know why this changed. Luckily I knew about this slack community and came looking to see if anybody else had run into this. Others may not be so fortunate! :grin:"
+  },
+  {
+    "poster": {
+      "poster_name": "Don Denton",
+      "poster_handle": "don.denton"
+    },
+    "time_stamp": "2025-01-08 10:42:00",
+    "edited": {
+      "time_stamp": "2025-01-08 10:42:18"
+    },
+    "text": "Perhaps the status has improved since last I looked, but I could not find any informative documentation on `module_id`, which is why we thought we should/could be supplying it if we wanted stability or to be able to reference it."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Miller",
+      "poster_handle": "jon894"
+    },
+    "time_stamp": "2025-01-08 10:57:34",
+    "text": "<@U076VNTNUSH> great callout :+1:. To be clear, the requirement to not include `module_id` in the meta has not changed, we just added validation. Previously, these set `module_id`'s were ignored and periodically caused other issues that were harder to debug.\n\nAs for the error message suggestions, the message seems clear as it describes the issue: `*Module ID cannot be set in project modules` . Would it be helpful if this error was adjusted to mention that you can't set this value in the `meta` of the project module?\n\n<@U07A0FAALSY> That is a good callout. We could/should add a note in our docs around not explicitly setting this value in a cms react module. With HubL modules, was explicitly setting a `module_id` a common practice for you all?"
+  },
+  {
+    "poster": {
+      "poster_name": "Don Denton",
+      "poster_handle": "don.denton"
+    },
+    "time_stamp": "2025-01-08 10:57:37",
+    "text": "“Informative” meaning “why/how we should use this data”"
+  },
+  {
+    "poster": {
+      "poster_name": "Don Denton",
+      "poster_handle": "don.denton"
+    },
+    "time_stamp": "2025-01-08 10:57:52",
+    "text": "Heh, you beat me to it!"
+  },
+  {
+    "poster": {
+      "poster_name": "Don Denton",
+      "poster_handle": "don.denton"
+    },
+    "time_stamp": "2025-01-08 11:00:12",
+    "text": "&gt; With HubL modules, was explicitly setting a `module_id` a common practice for you all?\nIt was a common practice for the developers we inherited some code from, and since we couldn’t find the relevant info in the docs, we continued providing it (in legacy HubL modules and going forward in React ones) and sure didn’t want to experiment with removal in production."
+  },
+  {
+    "poster": {
+      "poster_name": "Don Denton",
+      "poster_handle": "don.denton"
+    },
+    "time_stamp": "2025-01-08 11:01:20",
+    "text": "If the docs ever mentioned something like, “this is not developer writable and will be ignored if attempting to set”, that’d be an insta-PR for deleting some useless code!"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Miller",
+      "poster_handle": "jon894"
+    },
+    "time_stamp": "2025-01-08 11:03:37",
+    "text": "Interesting, I am not sure what the value of hardcoding that value is for a hubl module (since it is a generated UUID on our side). I will fact find a little here to see what I am missing on the hubl use case."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Miller",
+      "poster_handle": "jon894"
+    },
+    "time_stamp": "2025-01-08 11:04:30",
+    "edited": {
+      "time_stamp": "2025-01-08 11:04:56"
+    },
+    "text": "cc <@UQWGKUEN7> Any insight here on why it would be valuable to hardcode a module_id on a hubl module?"
+  },
+  {
+    "poster": {
+      "poster_name": "Don Denton",
+      "poster_handle": "don.denton"
+    },
+    "time_stamp": "2025-01-08 11:04:55",
+    "text": "(In general, the way that _content_ works seems very much like a black box. What meta details affect it, what is the timeline for deletion if you change a meta value that forces all old content to be dereferenced, etc. We assumed that this id was somehow tied to it and didn’t want user content to vanish just in case that was true.)"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Hominick",
+      "poster_handle": "never.go.hollow.trill"
+    },
+    "time_stamp": "2025-01-08 11:09:31",
+    "edited": {
+      "time_stamp": "2025-01-08 11:10:24"
+    },
+    "text": "I think, warranted or not, working with the projects feature comes with a healthy dose of fear. It's a relatively new system and I've run into some weird failure modes with islands, for example, where I took down production because I had some cyclic dependencies across island boundaries, or something. This was months ago so I'm not sure what it was. Things worked locally and then didn't when I deployed. The production env is, necessarily, a bit of a black box. The rollback system is awesome and I got production back up quickly, but still.\n\nI think you're right that that message is perfectly clear. Since I'm coming at this with 60+ modules in production through a project, though, it made me scared. :sweat_smile: If I remove all of those, is something going to break? Am I doing the right thing?\n\nYour explanation here about what changed and why (validation, those were always ignored, etc.) makes it perfectly clear. Maybe other devs won't have the same experience as me, and coming to slack is the right thing and the message should stay as-is. :shrug:"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2025-01-08 11:11:01",
+    "text": "I’ve never hardcoded any module id’s in anything in my partner days. Are you seeing these on react modules as well as hubl modules?\n\nI don’t think that hardcoding them is actually doing anything as Jon mentioned."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Miller",
+      "poster_handle": "jon894"
+    },
+    "time_stamp": "2025-01-08 11:12:21",
+    "text": "<@U076VNTNUSH> No doubt, totally hear you. We are actively working on improved documentation that should hopefully ease some of that fear and uncertainty when running into build/deploy failures or _new_ bugs (relative to the HubL mechanics). Appreciate you calling these things out in the dev slack for us to see! Please continue to report issues as they come up :raised_hands:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Miller",
+      "poster_handle": "jon894"
+    },
+    "time_stamp": "2025-01-08 11:13:09",
+    "edited": {
+      "time_stamp": "2025-01-08 11:13:25"
+    },
+    "text": "Lots going on in this thread, want to make sure <@U07A0FAALSY> sees BJ's comment above :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Hominick",
+      "poster_handle": "never.go.hollow.trill"
+    },
+    "time_stamp": "2025-01-08 11:14:09",
+    "edited": {
+      "time_stamp": "2025-01-08 11:14:27"
+    },
+    "text": "Re module_ids, in the past I've created a Hubl module through the web interface and then exported what was generated to a repo for further refinement. That export came with a module_id, so when I went to start using projects, I thought they were required. Or that if I edited that exported value, things would break. I don't work with those anymore, we're all in on projects, but I made some assumptions about how that'd be required for project modules too."
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2025-01-08 11:17:57",
+    "text": "They are generated by HS. However they are reserved as far as I know. Because I believe they are all stored in a single db. So while a module is is required I don’t believe you can make your own as it could be identical to one in another portal or your own. "
+  },
+  {
+    "poster": {
+      "poster_name": "Don Denton",
+      "poster_handle": "don.denton"
+    },
+    "time_stamp": "2025-01-08 11:19:48",
+    "text": "Here is a link to the weird islands thing that Stephen mentioned: <https://HubSpotdev.slack.com/archives/C04AY1H2204/p1719434954126079?thread_ts=1719434863.201469&amp;cid=C04AY1H2204>"
+  },
+  {
+    "poster": {
+      "poster_name": "Stephen Hominick",
+      "poster_handle": "never.go.hollow.trill"
+    },
+    "time_stamp": "2025-01-08 11:20:25",
+    "text": "Makes sense! And I don't see how, especially with the older hubl module workflow, that could have been clearer except through hard to write docs that people probably wouldn't read, so, no easy answer here, development against complex systems is hard. :stuck_out_tongue_winking_eye:"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2025-01-08 11:22:49",
+    "text": "It gets especially complicated when we need to build default assets that are served to every portal. :thonk-intense: "
+  },
+  {
+    "text": "Looking back on the docs, here is probably where I made the disconnect in the react docs (first pic) which then goes to the older CMS docs (second pic).\n\nIn the react perspective, module_id shouldn't exist, not \"can\" exist. Hope this helps :slightly_smiling_face:",
+    "time_stamp": "2025-01-08 11:24:51"
+  },
+  {
+    "text": "(would help to include the second pic)",
+    "time_stamp": "2025-01-08 11:25:13"
+  }
+]

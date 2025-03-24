@@ -1,0 +1,66 @@
+[
+  {
+    "poster": {
+      "poster_name": "Amanda White",
+      "poster_handle": "amanda.white"
+    },
+    "time_stamp": "2024-12-06 10:41:32",
+    "edited": {
+      "time_stamp": "2024-12-06 10:42:19"
+    },
+    "text": "Hi everyone! Does anyone know of a way to trigger a workflow after a certain date has passed? :spiral_calendar_pad: For example, we have a Custom Object called \"Supplier Documentation\" and each record has both an Effective Date and an Expiration Date. I need to be able to change the object's status to \"Expired\" and alert the correct HubSpot user that the document has expired, based on that Expiration Date property passing. Is this possible? And if so, how? Thanks! :pray: <#C019VT42R8X|workflows>",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-12-06 14:22:22"
+      },
+      {
+        "time_stamp": "2024-12-06 14:22:49"
+      },
+      {
+        "time_stamp": "2024-12-06 14:34:24"
+      }
+    ]
+  },
+  {
+    "text": "<@U01QVR44MEY> I am trying to implement something similar to the above in a custom coded workflow action. The attached screenshot shows the code that works when I do a test run, but when I try to save the step HubSpot throws an error. Any ideas?\n```var count = 0;\nexports.main = async (event, callback) =&gt; {\n  count = count+1\n  const isGreater = count &gt;= 55;\n  callback({\n    outputFields: {\n     count:count,\n     isGreater:isGreater\n    }\n  });\n}```",
+    "time_stamp": "2024-12-06 12:51:43"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe Agnelli",
+      "poster_handle": "joeyagnelli"
+    },
+    "time_stamp": "2024-12-06 14:22:22",
+    "text": "as far as I know, there is no way to trigger a workflow when a date from a custom object matches the current date.\nHowever - you can trigger a workflow to run each day and add criteria to check if the record's expiration date is more than 0 days ago."
+  },
+  {
+    "text": "My object here is called 'shows' but it's the same setup",
+    "time_stamp": "2024-12-06 14:22:49"
+  },
+  {
+    "poster": {
+      "poster_name": "Amanda White",
+      "poster_handle": "amanda.white"
+    },
+    "time_stamp": "2024-12-06 14:34:24",
+    "text": "<@U083V0LNEFK> thank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Niederberger",
+      "poster_handle": "thomas.niederberger"
+    },
+    "time_stamp": "2024-12-06 15:12:16",
+    "text": "That is the final code I did use:\n```var axios = require('axios');\n\nexports.main = async (event, callback) =&gt; {\n \nvar config = {\n  method: 'get',\n  url: '<https://domain.com/counter.php>',\n  headers: { \n    'Content-Type': 'application/json'\n  }\n};\n\naxios(config)\n.then(function (response) {\n  console.log(JSON.stringify(response.data));\n   callback({\n    outputFields: {\n     count:response.data.count,\n     is_winner:Number.isInteger(response.data.count/300)\n    }\n  });\n})\n.catch(function (error) {\n  console.log(error);\n});\n\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Niederberger",
+      "poster_handle": "thomas.niederberger"
+    },
+    "time_stamp": "2024-12-06 15:12:59",
+    "text": "and that is the PHP file for it:\n```&lt;?php\n\t$file = 'counter.txt';\n\t$fdata = file_get_contents ( $file );\n\t$fdata = intval($fdata) + 1;\n\t$value = $fdata;\n\tfile_put_contents($file, $fdata);\n\n\t$array = Array (\n\t\t\"count\" =&gt; \"$value\"\n\t);\n\n\t$json = json_encode($array);\n\techo json_encode($array);\n?&gt;```"
+  }
+]

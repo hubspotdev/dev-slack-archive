@@ -1,0 +1,140 @@
+[
+  {
+    "poster": {
+      "poster_name": "Pascal Kremp",
+      "poster_handle": "pascal558"
+    },
+    "time_stamp": "2024-10-20 07:57:29",
+    "edited": {
+      "time_stamp": "2024-10-20 08:00:57"
+    },
+    "text": "Hey all, using <https://github.com/HubSpot/HubSpot-api-php|HubSpot-api-php>, at least trying something new… :smile:\n\n```    public function getPage($objectId)\n    {\n        try {\n            return $this->client->cms()->pages()->sitePagesApi()->getById($objectId);\n        } catch (ApiException $e) {\n            echo 'Exception when calling site_pages_api->get_by_id: ', $e->getMessage();\n        }\n    }\n\n    public function updatePage($objectId, Page $page)\n    {\n        try {\n            return $this->client->cms()->pages()->sitePagesApi()->update($objectId, $page);\n        } catch (ApiException $e) {\n            return $e->getResponseBody();\n            //            echo 'Exception when calling site_pages_api->update: ', $e;\n        }\n    }\n\n    //.....\n\n    $hubSpot = hubSpot();\n\n    $objectId = 1234;\n\n    $page = $hubSpot->getPage($objectId);\n    $page->setSlug('test-123');\n    $page->setHtmlTitle('test-123');\n\n    return $hubSpot->updatePage($objectId, $page);```\nreceiving this error:\n\n```{\ncorrelationId: \"08261c4d-cae8-49da-9600-8d5e3c738850\",\nerrorTokens: {\nfieldValue: [\n\"[]\"\n],\njsonPath: [\n\"translations\"\n],\nobjType: [\n\"page\"\n]\n},\nerrorType: \"INVALID_JSON_VALUE\",\nmessage: \"Unable to set value for translations on page from JSON: {\"publishDate\":\"2024-10-10T10:02:30+00:00\",\"attachedStylesheets\":[],\"publishImmediately\":true,\"htmlTitle\":\"test-123\",\"translations\":[],\n....\n..```\nIs there a bug, or am I doing something wrong? I don’t need any translations, this is why the translations field is an empty array. Any idea how to fix it?\n\n!THX!"
+  },
+  {
+    "poster": {
+      "poster_name": "joe conery",
+      "poster_handle": "joe277"
+    },
+    "time_stamp": "2024-10-20 08:01:32",
+    "text": "the problem is that you're working with php :stuck_out_tongue_winking_eye:\nIn order to debug, I would say to first just get it as a regular string, then in your browser just good for online json linters and paste the text into it.\nA lot of times the problem is that there's some header info at the beginning that isn't json or you're trying to start with a dict but the top level is an array, etc.\nAnother possibility is that there are characters that need to be escaped like using a backslash before a double quote",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-10-20 08:05:14"
+      },
+      {
+        "time_stamp": "2024-10-20 11:35:04"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Pascal Kremp",
+      "poster_handle": "pascal558"
+    },
+    "time_stamp": "2024-10-20 08:05:14",
+    "text": "Thanks. This was not helpfull :stuck_out_tongue:"
+  },
+  {
+    "poster": {
+      "poster_name": "joe conery",
+      "poster_handle": "joe277"
+    },
+    "time_stamp": "2024-10-20 11:32:51",
+    "edited": {
+      "time_stamp": "2024-10-20 11:33:16"
+    },
+    "text": "In my googling I'm seeing some old Q&As that don't seem to work anymore.\nThis api does not seem to be written for engineers...\nI'm trying to get 2 things:\n\n1. I would like to retrieve the schema of standard and custom objects. ( I might do this to programmatically check on data type for custom mappings)\n2. I would like a way to return all properties of an object row...Do I really need to manually list every property? Or can I just do ?properties=all or something. If you don't specify any properties, you don't get much"
+  },
+  {
+    "poster": {
+      "poster_name": "joe conery",
+      "poster_handle": "joe277"
+    },
+    "time_stamp": "2024-10-20 11:35:04",
+    "text": "you couldn't tell from printing the string?\ncopy/paste the start of it here"
+  },
+  {
+    "poster": {
+      "poster_name": "joe conery",
+      "poster_handle": "joe277"
+    },
+    "time_stamp": "2024-10-20 11:44:46",
+    "text": "this returns an empty set:\n```crm/v3/schemas?includeStandard=true```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-10-20 13:46:13",
+    "text": "<@U07SKR0FZNW> - what I do is I'll get the properties of the object first and then pass the array to my get record call.\n\nThere is an endpoint for properties which returns all properties for the object type and you can filter the response to contain the internal names."
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-10-20 13:47:03",
+    "text": "There is no shortcut that I am aware of for specifying all properties of a record without setting them explicitly in your request"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-10-20 13:48:42",
+    "text": "<https://developers.HubSpot.com/docs/api/crm/properties|https://developers.HubSpot.com/docs/api/crm/properties>"
+  },
+  {
+    "poster": {
+      "poster_name": "joe conery",
+      "poster_handle": "joe277"
+    },
+    "time_stamp": "2024-10-20 13:50:58",
+    "text": "thanks... yeah, but you've got to manually write them all down, then you don't know if that's the display name or actual api name, but I found a decent url if you pass in the name of the table:\n```<https://api.hubapi.com/crm-object-schemas/v3/schemas/companies>```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-10-20 14:11:14",
+    "edited": {
+      "time_stamp": "2024-10-20 14:13:27"
+    },
+    "text": "You can get a list of all objectTypes from the /schemas endpoint and then loop through each entity and get all properties using this\n\nEvery account with have contacts, companies, deals, tickets.\n\nCustom schemas can be found here GET*`/crm-object-schemas/v3/schemas`*\n\nGET *`/crm/v3/properties/{objectType}`*"
+  },
+  {
+    "text": "",
+    "time_stamp": "2024-10-20 14:14:23"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-10-20 14:15:10",
+    "edited": {
+      "time_stamp": "2024-10-20 14:15:18"
+    },
+    "text": "I don't think you will need to write them all down - getting all the objectTypes programmatically along with their properties can be done via API entirely"
+  },
+  {
+    "poster": {
+      "poster_name": "joe conery",
+      "poster_handle": "joe277"
+    },
+    "time_stamp": "2024-10-20 16:04:52",
+    "text": "exactly.. yeah. That's the url I posted just above yours"
+  },
+  {
+    "poster": {
+      "poster_name": "Ram Almog",
+      "poster_handle": "ram.almog"
+    },
+    "time_stamp": "2024-10-21 00:13:14",
+    "text": "Just to let you know I found the issue. I was using the wrong end point to send single marketing email.\nThe scope I needed was indeed marketing-email but the endpoint should have been: <https://api.hubapi.com/marketing/v4/email/single-send>\n\nThe docs are quite confusing as they don't indicate that the other endpoint requires a different HubSpot license (one with transactional emails)."
+  }
+]

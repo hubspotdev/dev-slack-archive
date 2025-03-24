@@ -1,0 +1,67 @@
+[
+  {
+    "poster": {
+      "poster_name": "Dharmendra Joshi",
+      "poster_handle": "dharmendra.joshi"
+    },
+    "time_stamp": "2022-05-26 06:46:28",
+    "text": "Hello Everyone\nIs there a way to update CTA URL on Dynamic page bind from HubDB ?\nI have created dynamic page by HubDB table and want to add Download PDF button as CTA button for tracking and every HubDB record has different PDF URL. or Is any other tracking option available then please suggest.\n\nThanks",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-05-26 11:03:17"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Adams",
+      "poster_handle": "jasonadams.sales"
+    },
+    "time_stamp": "2022-05-26 10:09:41",
+    "text": "<@UP2ESHDGX> stumbled across your hack on checkbox handling when each option has the same name with different values. I'm trying to make it work, but failing. The query parameter that generates duplicates the \"&amp;name=\" portion of the submit. I'm not able to parse the multiple checkbox submit into being a string of values concatenated with commas. I feel like your original hack would be close to an answer, as query_dict is not behaving as expected. So I'd like to know what your code looked like after discovering query_dict. I know this is a shot in the dark!"
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Adams",
+      "poster_handle": "jasonadams.sales"
+    },
+    "time_stamp": "2022-05-26 11:03:17",
+    "text": "Are you updating the URL for tracking or to point to a different PDF asset? Just wondering! In HubDB, you can create a column called \"download slug\" or something like that, and for each row you put in the final slug for the downloadable (my%20first%20product.pdf). Then in your template, you code in the CTA something like:\n`&lt;a href=\"<http://www.mywebsite.com/{{row.download_slug}}|www.mywebsite.com/{{row.download_slug}}>\"&gt;Download PDF&lt;/a&gt;`"
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Adams",
+      "poster_handle": "jasonadams.sales"
+    },
+    "time_stamp": "2022-05-26 11:15:22",
+    "text": "I feel so close to getting a multicheckbox filter to work. So so so close. Why is this not working?\n```{% set querytype = \"\" %}\n    {% if request.query_dict.product_type in [\"Arm TV\", \"Touchscreen\", \"Wall TV\", \"Arm Mount\", \"Cart\", \"Mideast\"] %}\n      {% set search = request.query|replace('&amp;product_type=', ',') %}\n      {% set querytype = \"&amp;product_type__contains=\"~search|urlencode %}\n    {% endif %}\n\n{% set primary_products = hubdb_table_rows(xxxxxxx, querytype) %}\n    {% if primary_products == [] %}\n      &lt;p class='align-center'&gt;Sorry, no listings found for that Search. Try changing your filter and search again.&lt;/p&gt;\n    {% else %}\n        &lt;ul&gt;\n          {% for row in primary_products %}\n          &lt;li&gt;&lt;a href=\"{{ request.path }}/{{ row[\"hs_path\"] }}\"&gt;{{ row[\"name\"] }}&lt;/a&gt;&lt;/li&gt;    \n          {% endfor %}\n        &lt;/ul&gt;\n    {% endif %}\n\n{% endif %}```",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-05-26 11:18:00"
+      },
+      {
+        "time_stamp": "2022-05-26 11:18:54"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Adams",
+      "poster_handle": "jasonadams.sales"
+    },
+    "time_stamp": "2022-05-26 11:18:00",
+    "text": "When I print `{{ search|pprint }}` I get what I expect. So if I were to select \"arm TV\" and \"mideast\", what prints is `product_type=Arm+TV,Mideast` but my URL shows `<http://url.com/products?product_type=Arm+TV&amp;product_type=Mideast|url.com/products?product_type=Arm+TV&amp;product_type=Mideast>`. If I manually type in what I want `<http://url.com/products/product_type=Arm+TV,Mideast|url.com/products/product_type=Arm+TV,Mideast>` nothing is displayed :disappointed: ."
+  },
+  {
+    "poster": {
+      "poster_name": "Jason Adams",
+      "poster_handle": "jasonadams.sales"
+    },
+    "time_stamp": "2022-05-26 11:18:54",
+    "text": "Printing `{{ request_query_dict }}` when I select two options only prints out the first value, not the second."
+  }
+]

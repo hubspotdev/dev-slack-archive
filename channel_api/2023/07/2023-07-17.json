@@ -1,0 +1,800 @@
+[
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2023-07-17 01:12:02",
+    "text": "Aha ok thanks, could I ask what alternatives would you recommend here?"
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2023-07-17 01:16:43",
+    "text": "I use storyblok when I need a headless CMS, the free version is more than enough for simple websites"
+  },
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2023-07-17 01:21:34",
+    "text": "Thanks I’ll give it a look"
+  },
+  {
+    "poster": {
+      "poster_name": "Lalarukh Mansoor",
+      "poster_handle": "lalarukh.osama"
+    },
+    "time_stamp": "2023-07-17 04:47:49",
+    "text": "Hi all,\n\nhas anyone tried to integrate <http://copy.ai|copy.ai> with HubSpot through API?"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2023-07-17 07:22:06",
+    "text": "It should work fine going forward. Sorry for the noise as this was a bug that we created while trying to fix some other issues on the endpoint."
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "lchausse"
+    },
+    "time_stamp": "2023-07-17 07:47:19",
+    "edited": {
+      "time_stamp": "2023-07-17 07:47:58"
+    },
+    "text": "There is something wrong with association api v4 documentation\n\n<https://developers.HubSpot.com/docs/api/crm/associations>\n\nNodeJS docs says that we should use this path:\n\n`HubSpotClient.crm.associations.v4.batchApi.create`\n\nbut this return this error:\n\n`TypeError: Cannot read properties of undefined (reading 'batchApi')`\n\nI also tried\n\n`HubSpotClient.crm.v4.associations.batchApi.create`\n\nand\n\n`HubSpotClient.crm.associations.v4.batch.create`\n\nand\n\n`HubSpotClient.crm.v4.associations.batch.create`\n\nI also tried to do the call from HubSpot Client V8 and V3\n\nNothing works\n\nThis api was working well when the documentation was refering to use http to make the request, but since it is refering to node js HubSpot api client it doesnt work anymore.\n\nHere's my full code:\n\n```const HubSpot = require('@HubSpot/api-client');\n\nexports.main = async (event) =&gt; {\n\n//define variables\nconst token = process.env.custom_code_actions_access_token\nconst hiringClientContactId = event.inputFields['hiringClientContactId'];\nconst contractorContactId = event.inputFields['contractorContactId'];\nconst ticketId = event.inputFields['hs_object_id'];\nconst contractorLabel = process.env.TICKETS_TO_CONTACTS_CONTRACTOR\nconst hiringClientLabel = process.env.TICKETS_TO_CONTACTS_HIRING_CLIENT\nconst HubSpotClient = new HubSpot.Client({\"accessToken\":token});\nconst inputs = `[\n{\"_from\":{\"id\":${ticketId}},\"to\":{\"id\":${hiringClientContactId}},\"types\":[{\"associationCategory\":\"USER_DEFINED\",\"associationTypeId\":${hiringClientLabel}}]}\n{\"_from\":{\"id\":${ticketId}},\"to\":{\"id\":${contractorContactId}},\"types\":[{\"associationCategory\":\"USER_DEFINED\",\"associationTypeId\":${contractorLabel}}]}\n]`\n\n// define createAssociation function\n\nconst BatchInputPublicAssociationMultiPost = { inputs: inputs };\nconst fromObjectType = \"tickets\";\nconst toObjectType = \"contacts\";\n\ntry {\nconst apiResponse = await HubSpotClient.crm.associations.v4.batchApi.create(fromObjectType, toObjectType, BatchInputPublicAssociationMultiPost);\nconsole.log(JSON.stringify(apiResponse, null, 2));\n} catch (e) {\ne.message === 'HTTP request failed'\n? console.error(JSON.stringify(e.response, null, 2))\n: console.error(e)\n}\n}```\nThis is used in a custom coded workflow action.",
+    "reply_count": 6,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2023-07-17 08:13:32"
+      },
+      {
+        "time_stamp": "2023-07-17 08:54:41"
+      },
+      {
+        "time_stamp": "2023-07-17 09:24:09"
+      },
+      {
+        "time_stamp": "2023-07-17 09:24:35"
+      },
+      {
+        "time_stamp": "2023-07-17 09:34:58"
+      },
+      {
+        "time_stamp": "2023-07-17 09:59:56"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-07-17 08:13:32",
+    "text": "What do you mean when it was referring to http ? The documentation still shows all the available endpoints at <https://developers.HubSpot.com/docs/api/crm/associations> under the association endpoints tab. I would use those, the HubSpot api client is horrible and poorly documented."
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Niederberger",
+      "poster_handle": "thomas.niederberger"
+    },
+    "time_stamp": "2023-07-17 08:30:23",
+    "text": "Has anyone ever experience the issue if you let the customer upload a file over the form that this file is not publicly accessible. I probably need that file to be public to attach the file to a note over the API (<https://api.hubapi.com/files/v3/files/import-from-url/async>).",
+    "reply_count": 11,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-07-17 09:03:17"
+      },
+      {
+        "time_stamp": "2023-07-17 11:30:19"
+      },
+      {
+        "time_stamp": "2023-07-17 11:30:40"
+      },
+      {
+        "time_stamp": "2023-07-17 11:34:40"
+      },
+      {
+        "time_stamp": "2023-07-17 11:39:44"
+      },
+      {
+        "time_stamp": "2023-07-17 11:40:11"
+      },
+      {
+        "time_stamp": "2023-07-17 11:43:41"
+      },
+      {
+        "time_stamp": "2023-07-17 11:51:22"
+      },
+      {
+        "time_stamp": "2023-07-18 15:07:56"
+      },
+      {
+        "time_stamp": "2023-07-18 15:08:42"
+      },
+      {
+        "time_stamp": "2023-07-18 15:14:05"
+      }
+    ]
+  },
+  {
+    "text": "When you go to Node, the examples shows the HubSpot client now. No mention of http anymore. I know I can still use http (or axios which i prefer) with the url listed in the doc, but I wanted to pointed out that the exact code in the example doesn't work and someone at HubSpot should act on it.",
+    "time_stamp": "2023-07-17 08:54:41",
+    "edited": {
+      "time_stamp": "2023-07-17 08:55:16"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-07-17 09:03:17",
+    "text": "You can attach a private file to a note via API, just not in the HubSpot interface."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-17 09:24:09",
+    "text": "Yeah I would definitely not use the SDK"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-17 09:24:35",
+    "text": "I only use the endpoints. I use postman to test them and then use the generate code in postman to get the nodejs axios code. Such a clean workflow for me"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-17 09:25:24",
+    "text": "using the custom code actions would be the best workaround"
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "lchausse"
+    },
+    "time_stamp": "2023-07-17 09:34:58",
+    "text": "Yes I should use postman more often. It is in fact a clean workflow. But still, just wanted to bring to the attention to someone at HubSpot that there doc is not valid for Association API. <@UD53A9UUR> Can you let someone know?"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2023-07-17 09:59:56",
+    "text": "on it, boss!"
+  },
+  {
+    "poster": {
+      "poster_name": "Zak Jacobson",
+      "poster_handle": "zak682"
+    },
+    "time_stamp": "2023-07-17 10:16:45",
+    "text": "I’ve been trying to figure out how to get the company owner’s name in a company search. I can get the `hs_all_owner_ids` but would also like the name. Is there a way to get the owner name along with the company or do I need to make an extra call to `crm/v3/owners/`?",
+    "reply_count": 23,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2023-07-17 10:39:27"
+      },
+      {
+        "time_stamp": "2023-07-17 10:39:45"
+      },
+      {
+        "time_stamp": "2023-07-17 10:40:17"
+      },
+      {
+        "time_stamp": "2023-07-17 10:40:33"
+      },
+      {
+        "time_stamp": "2023-07-17 10:40:37"
+      },
+      {
+        "time_stamp": "2023-07-17 10:41:30"
+      },
+      {
+        "time_stamp": "2023-07-17 10:43:49"
+      },
+      {
+        "time_stamp": "2023-07-17 10:46:55"
+      },
+      {
+        "time_stamp": "2023-07-17 10:46:59"
+      },
+      {
+        "time_stamp": "2023-07-17 10:49:38"
+      },
+      {
+        "time_stamp": "2023-07-17 10:49:52"
+      },
+      {
+        "time_stamp": "2023-07-17 10:49:55"
+      },
+      {
+        "time_stamp": "2023-07-17 10:54:47"
+      },
+      {
+        "time_stamp": "2023-07-17 10:55:08"
+      },
+      {
+        "time_stamp": "2023-07-17 10:57:24"
+      },
+      {
+        "time_stamp": "2023-07-17 10:59:46"
+      },
+      {
+        "time_stamp": "2023-07-17 11:00:01"
+      },
+      {
+        "time_stamp": "2023-07-17 11:04:39"
+      },
+      {
+        "time_stamp": "2023-07-17 11:05:13"
+      },
+      {
+        "time_stamp": "2023-07-17 11:05:54"
+      },
+      {
+        "time_stamp": "2023-07-17 11:07:08"
+      },
+      {
+        "time_stamp": "2023-07-17 11:07:29"
+      },
+      {
+        "time_stamp": "2023-07-19 08:53:40"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Pedro Caseiro",
+      "poster_handle": "pedroc"
+    },
+    "time_stamp": "2023-07-17 10:19:46",
+    "edited": {
+      "time_stamp": "2023-07-17 10:19:58"
+    },
+    "text": "If I'm setting up a webhook integration that I've created, and after I'm done with the OAuth2 process, I won't need to use the refresh and access tokens as I won't be doing any API calls right? Only waiting for my webhook to be triggered"
+  },
+  {
+    "poster": {
+      "poster_name": "Aaron Gutierrez",
+      "poster_handle": "aaron.gutierrez"
+    },
+    "time_stamp": "2023-07-17 10:39:27",
+    "text": "Yup, extra call."
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2023-07-17 10:39:45",
+    "text": "Company owner field is `HubSpot_owner_id`"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2023-07-17 10:40:17",
+    "text": "and yes, with a second api call to match it up"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2023-07-17 10:40:33",
+    "text": "if your account has access to GraphQL."
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2023-07-17 10:40:37",
+    "text": "you can do it with a single call."
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2023-07-17 10:41:30",
+    "text": "Query:\n```query GetCompanyOwner {\n  CRM {\n    company(uniqueIdentifier: \"id\", uniqueIdentifierValue: \"{{companyID}}\") {\n      HubSpot_owner_id\n    }\n  }\n}```\n\nResponse:\n```\"data\": {\n    \"CRM\": {\n      \"company\": {\n        \"HubSpot_owner_id\": {\n          \"firstname\": \"Justin\",\n          \"owner_id\": 18357213,\n          \"email\": \"<mailto:justin@imageinabox.com|justin@imageinabox.com>\",\n          \"lastname\": \"Givens\"\n        }\n      }\n    }\n  }\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Zak Jacobson",
+      "poster_handle": "zak682"
+    },
+    "time_stamp": "2023-07-17 10:43:49",
+    "text": "What’s the difference between `HubSpot_owner_id` and  `hs_all_owner_ids`? I see that `hs_all_owner_ids` is a list, and I assume that `HubSpot_owner_id`  - other than that, is there any significant difference?"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2023-07-17 10:46:55",
+    "text": "The description of `hs_all_owner_ids` is :\n&gt; The value of all owner referencing properties for this object, both default and custom\nHAHA which doesn’t help much! :smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2023-07-17 10:46:59",
+    "text": "testing something."
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2023-07-17 10:49:38",
+    "text": "`HubSpot_owner_id`  is simply\n&gt; The owner of the company.\nAgain, not much differences but I did notice that sometimes hs_all_owner_ids is an array and sometimes a simple int."
+  },
+  {
+    "poster": {
+      "poster_name": "Zak Jacobson",
+      "poster_handle": "zak682"
+    },
+    "time_stamp": "2023-07-17 10:49:52",
+    "text": "I noticed that too"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2023-07-17 10:49:55",
+    "text": "HubSpot_owner_id is always an integer"
+  },
+  {
+    "poster": {
+      "poster_name": "Zak Jacobson",
+      "poster_handle": "zak682"
+    },
+    "time_stamp": "2023-07-17 10:54:47",
+    "text": "I do have graphlql access so maybe that’s the better route to take for my task"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2023-07-17 10:55:08",
+    "text": "awesome!"
+  },
+  {
+    "poster": {
+      "poster_name": "Zak Jacobson",
+      "poster_handle": "zak682"
+    },
+    "time_stamp": "2023-07-17 10:57:24",
+    "text": "I just noticed in <#C22PDRW72|data-driven-content> that graphql doesn’t currently support mutations - I was hoping I could achieve my goal in one step… which is to create a deal for a company and assign the deal to the company owner (which I think I can do via a company lookup and using `HubSpot_owner_id`, but I want to have a friendlier UI that shows the name."
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2023-07-17 10:59:46",
+    "text": "Just do. two axios calls within a single custom code action."
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2023-07-17 11:00:01",
+    "text": "get the owner, then create the deal and assign the owner on the create deal function."
+  },
+  {
+    "poster": {
+      "poster_name": "Zak Jacobson",
+      "poster_handle": "zak682"
+    },
+    "time_stamp": "2023-07-17 11:04:39",
+    "text": "that sounds like my plan (though at the moment this is a Python server integration — the UI is just a log until that requirement changes :smirk:).\nMy plan is to do a company search (`crm.companies.search_api.do_search`) to get the `HubSpot_owner_id` and then pass that along on the create deal call (`crm.deals.basic_api.create`)"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2023-07-17 11:05:13",
+    "text": "yup, looks great."
+  },
+  {
+    "poster": {
+      "poster_name": "Zak Jacobson",
+      "poster_handle": "zak682"
+    },
+    "time_stamp": "2023-07-17 11:05:54",
+    "text": "thanks for the validation - always good to know the current path sounds sane to someone who knows more!"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2023-07-17 11:07:08",
+    "text": "oh your welcome!!"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2023-07-17 11:07:29",
+    "text": "happy to assist!"
+  },
+  {
+    "poster": {
+      "poster_name": "Alex Schwage",
+      "poster_handle": "alex.schwager"
+    },
+    "time_stamp": "2023-07-17 11:09:03",
+    "text": "Hello,\nFinally just moved to the new API ;-(\ngetting an error :\n{\"status\":\"error\",\"message\":\"Invalid input JSON on line 1, column 192: Cannot deserialize value of type `java.lang.String` from Array value (token `JsonToken.START_ARRAY`)\",\"correlationId\":\"96b61ab3-2733-4003-9b3c-ec9f5d9df3bc\"}",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-07-17 11:17:08"
+      },
+      {
+        "time_stamp": "2023-07-17 13:49:13"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-07-17 11:17:08",
+    "text": "Can you share the call you are using and the request body you sent (removing any sensitive information?)"
+  },
+  {
+    "poster": {
+      "poster_name": "Lucas Oliveri",
+      "poster_handle": "loliveri"
+    },
+    "time_stamp": "2023-07-17 11:17:24",
+    "text": "Hello everyone! I would like to use the Deals Object endpoint (`/crm/v3/objects/deals`) to bring me all the changes for the last hour.  This was possible previously by using the recent modified endpoint (`deals/v1/deal/recent/modified`) but I’m not sure how to recreate that functionality with v3. Anyone know?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-07-18 02:42:29"
+      }
+    ]
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-07-17 11:30:19"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Niederberger",
+      "poster_handle": "thomas.niederberger"
+    },
+    "time_stamp": "2023-07-17 11:30:40",
+    "text": "That’s how i do it right now:\nto: <https://api.hubapi.com/files/v3/files/import-from-url/async>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-07-17 11:34:40",
+    "text": "That’s fine, you can attach a private file to a note via API"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-07-17 11:39:44",
+    "text": "oh"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-07-17 11:40:11",
+    "text": "I don’t think I understand the issue"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-07-17 11:43:41",
+    "text": "you are trying to sync a file into the file manager from a file uploaded via form? Isn’t the file already in the file manager after it’s uploaded?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Ramos",
+      "poster_handle": "ben.ramos"
+    },
+    "time_stamp": "2023-07-17 11:48:27",
+    "text": "<@U01QVR44MEY> hiya! it’s been a while. I was going back to my old HubSpot project to try and see if i could pull any sequence related info…I just tried this and am getting error messages saying that SEQUENCE is not supported?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Ramos",
+      "poster_handle": "ben.ramos"
+    },
+    "time_stamp": "2023-07-17 11:48:35",
+    "text": "I’m guessing it was a bug then? :thinking_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-07-17 11:51:22",
+    "edited": {
+      "time_stamp": "2023-07-17 11:51:39"
+    },
+    "text": "do `*GET /files/v3/files/search?name=*c24de18e-6419-4086-8faf-59882f53efda-TICKET.application_cv.pdf` then add `results[0].id` to `properties.hs_attachment_ids` in the request body of creating a note, then associate the note to a contact or company etc"
+  },
+  {
+    "poster": {
+      "poster_name": "Edward Lin",
+      "poster_handle": "edward.l"
+    },
+    "time_stamp": "2023-07-17 12:17:18",
+    "text": "Does anyone know if there is a API for login/signup which will help authenticate users and return a token for a customer portal. (Not talking about the HubSpot customer portal which only allows customers to send messages)",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-07-18 10:34:21"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-17 13:06:21",
+    "text": "Yeah it was a bug/security issue. They patched it."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-07-17 13:06:42",
+    "edited": {
+      "time_stamp": "2023-07-17 13:06:45"
+    },
+    "text": "<@U046MB5T9LH> it has been a little bit man, how are things going?"
+  },
+  {
+    "poster": {
+      "poster_name": "Trish Hinojosa",
+      "poster_handle": "trish.hinojosa"
+    },
+    "time_stamp": "2023-07-17 13:09:09",
+    "text": "Hello all,\n\nSearched the channel but couldn't find a previous thread. Has anyone exported data using _Google Collab_? Do you have a template or resource that could help me create one?\n\nI need to export all company and associated deal property data (for companies that meet certain criteria) on a weekly basis.  I'm totally new to APIs (and HS private apps), but I know enough to wrangle the data once I finally get it.\n\nAppreciate you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Alex Schwage",
+      "poster_handle": "alex.schwager"
+    },
+    "time_stamp": "2023-07-17 13:49:13",
+    "text": "Thank you <@U038DUUV3GE> - I actually found my issue, went back to the API doc :disappointed: was missing the association !"
+  },
+  {
+    "poster": {
+      "poster_name": "Brad Tollett",
+      "poster_handle": "brad208"
+    },
+    "time_stamp": "2023-07-17 15:59:39",
+    "text": "Anyone know how to pull all notes from a deal using the Node HubSpot Client v8? I'm trying the following, but it's telling me `cannot read properties of undefined getAll`\n\n`const notes = await HubSpotClient.crm.deals.associationsApi.getAll(currentDealId, 'notes');`\n\nMy end goal is to clone a Deal in its entirety, including all notes, line items, associations, properties, etc., inside of a Custom Code workflow action. Hitting a number of issues though, like not all properties are listed for deals, only some are. The issue above, can't grab items, etc."
+  },
+  {
+    "poster": {
+      "poster_name": "Dan Robinson",
+      "poster_handle": "dan94.robinson"
+    },
+    "time_stamp": "2023-07-17 18:08:20",
+    "text": "hey guys! I’m able to get access and refresh tokens successfully after a user installs my app, but I am doing that in my backend and need to store those in my DB to associate them with the correct user and then store them in localstorage in the user’s browser. after looking through the api docs i didn’t see what endpoint i can hit with an access token to get the userId that that access token is associated with. do you guys know where i should go for this? or maybe there’s a better solution than the one i’m thinking of?",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-07-17 18:16:10"
+      },
+      {
+        "time_stamp": "2023-07-17 18:19:45"
+      },
+      {
+        "time_stamp": "2023-07-17 18:36:20"
+      },
+      {
+        "time_stamp": "2023-07-17 18:37:10"
+      },
+      {
+        "time_stamp": "2023-07-17 18:37:33"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-07-17 18:16:10",
+    "text": "I don’t think you want to store a HubSpot api access token in a browser… what are you trying to do ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Dan Robinson",
+      "poster_handle": "dan94.robinson"
+    },
+    "time_stamp": "2023-07-17 18:19:45",
+    "text": "apologies, just meant storing them in the DB. i have a users table in my db where i’ll keep track of user info and just need to be able to know which user each access token i have should be associated with"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-07-17 18:36:20",
+    "text": "<https://legacydocs.HubSpot.com/docs/methods/oauth2/get-access-token-information>"
+  },
+  {
+    "poster": {
+      "poster_name": "Dan Robinson",
+      "poster_handle": "dan94.robinson"
+    },
+    "time_stamp": "2023-07-17 18:37:10",
+    "text": "thank you Jacob! Really appreciate it :slightly_smiling_face: hope your day’s going well!"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-07-17 18:37:33",
+    "text": "As good as can be :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "John Alfie Machica",
+      "poster_handle": "jcmachica"
+    },
+    "time_stamp": "2023-07-17 20:06:42",
+    "text": "hi guys. i've been experimenting HubSpot api for python, how do i get the \"closed_date\" property for the ticket object?",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-07-17 20:12:33"
+      },
+      {
+        "time_stamp": "2023-07-17 20:12:44"
+      },
+      {
+        "time_stamp": "2023-07-17 20:13:20"
+      },
+      {
+        "time_stamp": "2023-07-17 20:14:06"
+      },
+      {
+        "time_stamp": "2023-07-17 20:32:56"
+      }
+    ]
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-07-17 20:12:33"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-07-17 20:12:44",
+    "text": "<https://developers.HubSpot.com/docs/api/crm/tickets>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-07-17 20:13:20",
+    "text": "Typing in the left side will update the example code on the right"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2023-07-17 20:14:06",
+    "text": "Note that the default properties that are returned won’t be returned unless you specify them as well"
+  },
+  {
+    "poster": {
+      "poster_name": "John Alfie Machica",
+      "poster_handle": "jcmachica"
+    },
+    "time_stamp": "2023-07-17 20:32:56",
+    "text": "worked ok with my code, thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Brad Tollett",
+      "poster_handle": "brad208"
+    },
+    "time_stamp": "2023-07-17 21:48:22",
+    "text": "Is associationApi deprecated now? \n\nHubSpotClient.crm.deals.associationsApi.getAll(dealId) throws an error when I call it.\n\nHubSpotClient.crm.associations.v4.getPage is the only get method I can find?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-07-18 10:29:29"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Aditya Naik",
+      "poster_handle": "anaik"
+    },
+    "time_stamp": "2023-07-17 22:50:47",
+    "text": "Hi Team\nI was just using Email clone API and saw style naming convention is different in clone Email then the one original one. Does someone know how we can avoid it? For example\nOriginal Email has\n                    `\"style\": {`\n                        `\"backgroundColor\": \"#ffffff\",`\n                        `\"backgroundType\": \"CONTENT\",`\n                        `\"paddingBottom\": \"10px\",`\n                        `\"paddingTop\": \"10px\"`\n                    `}`",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-07-17 22:51:13"
+      },
+      {
+        "time_stamp": "2023-07-17 22:51:29"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Aditya Naik",
+      "poster_handle": "anaik"
+    },
+    "time_stamp": "2023-07-17 22:51:13",
+    "text": "And the Clone email has\n        `\"style\": {`\n                        `\"background_color\": \"#ffffff\",`\n                        `\"background_type\": \"CONTENT\",`\n                        `\"padding_bottom\": \"10px\",`\n                        `\"padding_top\": \"10px\"`\n                    `}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Aditya Naik",
+      "poster_handle": "anaik"
+    },
+    "time_stamp": "2023-07-17 22:51:29",
+    "text": "can someone help me as to how i can avoid it"
+  }
+]

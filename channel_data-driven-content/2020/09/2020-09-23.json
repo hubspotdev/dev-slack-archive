@@ -1,0 +1,70 @@
+[
+  {
+    "poster": {
+      "poster_name": "Aaron Pedro",
+      "poster_handle": "aaron353"
+    },
+    "time_stamp": "2020-09-23 12:03:34",
+    "text": "Seem to be running into an issue where I can't update a cell in a table through a serverless api call. I've searched through the slack channel, did a bunch of googling and have tried brute force. I get an empty object as a response but nothing changes in the HubDB table. Help please.\n```exports.main = (context, sendResponse) =&gt; {\n  const axios = require('axios');\n  const UpdateHubDB = `<https://api.hubapi.com/hubdb/api/v2/tables/${context.params.table_id[0]}/rows/${context.params.row_id[0]}/cells/${context.params.cell_id[0]}>`\n  const PublishTrigger = `<https://api.hubapi.com/hubdb/api/v2/tables/${context.params.table_id[0]}/publish?hapikey=${process.env.apiKey}>`;\n  \n  async function updateHubDBData() {\n    try{\n      const resp = await axios.put(UpdateHubDBData,{ value : JSON.parse(context.params.newval[0]) });\n      const info = resp.data;\n      return info;\n    }catch(err){\n        return err;\n    }\n    finally{\n     //Publish\n      try{\n        const resp = await axios.put(PublishTrigger);\n      } catch (err){\n        return err;\n      }\n    }\n  }\n  \nupdateHubDBData()\n.then(res =&gt; sendResponse({body: res, statusCode: 200}));\n\n  };```",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-09-23 12:44:07"
+      },
+      {
+        "time_stamp": "2020-09-23 12:57:17"
+      },
+      {
+        "time_stamp": "2020-09-23 13:16:43"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2020-09-23 12:44:07",
+    "text": "`await axios.put(UpdateHubDBData,{ value : JSON.parse(context.params.newval[0]) });`  shouldn't the first param be `UpdateHubDB` instead of ``UpdateHubDBData``?"
+  },
+  {
+    "poster": {
+      "poster_name": "Aaron Pedro",
+      "poster_handle": "aaron353"
+    },
+    "time_stamp": "2020-09-23 12:57:17",
+    "text": "omg.."
+  },
+  {
+    "poster": {
+      "poster_name": "Aaron Pedro",
+      "poster_handle": "aaron353"
+    },
+    "time_stamp": "2020-09-23 13:16:43",
+    "text": "So I solved it... The UpdateHubDBData thing in the put call and i forgot to add the api key in the actual endpoint call."
+  },
+  {
+    "poster": {
+      "poster_name": "Aaron Pedro",
+      "poster_handle": "aaron353"
+    },
+    "time_stamp": "2020-09-23 19:41:22",
+    "text": "Big Question here:\nI am currently hitting HubSpot API endpoint for get_table_rows and i'm passing an hs_id to search for in the table i'm hitting. It seems to be skipping some of the data on return and I don't know what is happening.\n\nThe structure is: Table1 has a foreign id field that's comprised of rows from Table2. Table2 has a foreign Id that's comprised of rows from Table 3 and so on.. When I query Table 2 with the foreign ids of a row in Table 1 the results don't show the foreign ids for Table 3.\n\nHere's what I mean:\n\nThe field we're looking for is \"lessons\". This query without the foreign id returns everything from that table. Which will prove detrimental to the performance of the application.\nWithout hs_id__eq=31335634930:\n``` {\n          \"id\": \"31331838165\",\n          \"createdAt\": \"2020-06-09T18:42:44.676Z\",\n          \"values\": {\n            \"meta_description\": \"META Description\",\n            \"rich_text_area\": \"&lt;p&gt;Rich Text Area Dynamic&lt;/p&gt;\",\n            \"module_description\": \"&lt;p&gt;&lt;span&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam blandit scelerisque gravida. Aliquam in mi et lorem feugiat gravida.&lt;/span&gt;&lt;/p&gt;\",\n            \"instructor\": [\n              {\n                \"id\": \"30320234455\",\n                \"type\": \"foreignid\"\n              },\n              {\n                \"id\": \"30322881005\",\n                \"type\": \"foreignid\"\n              }\n            ],\n            \"course\": [\n              {\n                \"id\": \"31335634921\",\n                \"type\": \"foreignid\"\n              },\n              {\n                \"id\": \"33877133225\",\n                \"type\": \"foreignid\"\n              }\n            ],\n            \"module_name\": \"C1 Module A\",\n            \"published\": 1,\n            \"canonical_url\": \"Canon URL\",\n            \"featured_image\": {\n              \"url\": \"<https://cdn2.HubSpot.net/hubfs/6670407/gray_placholder.png>\",\n              \"width\": 360,\n              \"height\": 270,\n              \"type\": \"image\"\n            },\n            \"lessons\": [\n              {\n                \"id\": \"31331838167\",\n                \"type\": \"foreignid\"\n              },\n              {\n                \"id\": \"31331838168\",\n                \"type\": \"foreignid\"\n              },\n              {\n                \"id\": \"31331838169\",\n                \"type\": \"foreignid\"\n              },\n              {\n                \"id\": \"31335634931\",\n                \"type\": \"foreignid\"\n              },\n              {\n                \"id\": \"31335634932\",\n                \"type\": \"foreignid\"\n              }\n            ],\n            \"order\": 1\n          },\n          \"path\": \"c1-module-a\",\n          \"name\": \"Module A\",\n          \"childTableId\": \"2625405\"\n        },```\nWith hs_id__eq=31335634930\n``` {\n          \"id\": \"31335634929\",\n          \"createdAt\": \"2020-06-09T18:42:44.676Z\",\n          \"values\": {\n            \"meta_description\": \"META Description\",\n            \"rich_text_area\": \"&lt;p&gt;Rich Text Area Dynamic&lt;/p&gt;\",\n            \"module_description\": \"&lt;p&gt;&lt;span&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam blandit scelerisque gravida. Aliquam in mi et lorem feugiat gravida.&lt;/span&gt;&lt;/p&gt;\",\n            \"instructor\": [\n              {\n                \"id\": \"30320234455\",\n                \"type\": \"foreignid\"\n              }\n            ],\n            \"course\": [\n              {\n                \"id\": \"31335634923\",\n                \"type\": \"foreignid\"\n              }\n            ],\n            \"module_name\": \"C5 Module H\",\n            \"published\": 1,\n            \"canonical_url\": \"Canon URL\",\n            \"featured_image\": {\n              \"url\": \"<https://cdn2.HubSpot.net/hubfs/6670407/gray_placholder.png>\",\n              \"width\": 360,\n              \"height\": 270,\n              \"type\": \"image\"\n            },\n            \"order\": 1\n          },\n          \"path\": \"c5-module-h\",\n          \"name\": \"Module H\",\n          \"childTableId\": \"2625405\"\n        }```",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2020-09-24 05:49:31"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Aaron Pedro",
+      "poster_handle": "aaron353"
+    },
+    "time_stamp": "2020-09-23 19:41:22",
+    "text": "\nNotice the lack of \"lessons\" field in the second query? Here we're only presented with the one row I queried for, but there are missing fields. This is optimal for scale, but i need those fields. I have no idea how to solve this issue. Right now i'm going to rely on re-querying the data and using a different identifier in the row. But that can only be done after the limited data query."
+  }
+]

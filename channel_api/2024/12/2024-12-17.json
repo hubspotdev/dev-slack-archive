@@ -1,0 +1,109 @@
+[
+  {
+    "text": "Hi folks,\n\nDoes anyone have experience associating inbox conversations with contacts through API? While it can be done quickly via GUI, making the associated contact appear in the left panel via API seems impossible.\n<@U7SL518D6> Is it possible?",
+    "time_stamp": "2024-12-17 04:28:58"
+  },
+  {
+    "poster": {
+      "poster_name": "new test",
+      "poster_handle": "t.new.test12"
+    },
+    "time_stamp": "2024-12-17 06:50:06",
+    "text": "Hello folks,\nPlease help me on this, How can I filter deleted task records in this API /CRM/v3/objects/tasks/search?"
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Henson",
+      "poster_handle": "brian.henson"
+    },
+    "time_stamp": "2024-12-17 09:59:54",
+    "text": "*My Goal:*\n• Query all contacts that have been updated since `x` date.\n• Contacts that have had an event added to their timeline should be included in this list.\n*What I have tried:*\n• I am trying to use the `<https://api.hubapi.com/crm/v3/objects/contacts/search>` endpoint to query all contacts that have been updated since `2024-12-13`. The body of my POST request looks like:\n```{\n  \"query\": \"updatedAt&gt;=2024-12-14\"\n}```\n• The documentation around search queries is not phenomenal. Does anybody have experience with the `query` parameter for this or similar endpoints?\n*Questions:*\n1. When a contact has an event added to their timeline, is the contact's \"updatedAt\" timestamp also updated?\n2. Is this the best endpoint/method to obtain the records for updated contacts?\n3. What is the proper format/syntax for the query value in the JSON body?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-12-17 13:05:53"
+      },
+      {
+        "time_stamp": "2024-12-17 13:07:25"
+      },
+      {
+        "time_stamp": "2024-12-17 13:07:41"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jordan Tucker",
+      "poster_handle": "jordan.tucker"
+    },
+    "time_stamp": "2024-12-17 12:18:16",
+    "text": "Hi everyone, our engineering team is wanting to set up an integration from our customer portal application to HubSpot so that we can create new contacts in HubSpot to communicate and market to them. We also want to sync unsubscribes back from HubSpot to our applications so that we are maintaining their subscription status in both HubSpot and our app.\n\nAt first glance, we considered creating a private app and scoping it to read/write the contact CRM object. How does this sound? Is there a typical approach and any supporting documentation you can share with us regarding APIs, etc?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-12-17 16:58:52"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Zach Klein",
+      "poster_handle": "zach282"
+    },
+    "time_stamp": "2024-12-17 12:41:42",
+    "text": "Hi <@U04HSBLHAJZ> :wave:\nAs a starting point, I recommend creating a workflow via HubSpot's web UI that resembles what you're trying to create via API. Then retrieve that workflow (GET /automation/v4/flows/:FLOW_ID). Then use that response as your starting point. For example, here's a workflow that updates a Contact's email address to _{{firstname}}.{{lastname}}@gmail.com_\n```{\n    \"isEnabled\": false,\n    \"flowType\": \"WORKFLOW\",\n    \"name\": \"Example workflow #2\",\n    \"startActionId\": \"1\",\n    \"nextAvailableActionId\": \"2\",\n    \"actions\": [\n        {\n            \"actionId\": \"1\",\n            \"actionTypeVersion\": 0,\n            \"actionTypeId\": \"0-5\",\n            \"fields\": {\n                \"property_name\": \"email\",\n                \"value\": {\n                    \"staticValue\": \"{{ enrolled_object.firstname }}.{{ enrolled_object.lastname }}@gmail.com\",\n                    \"type\": \"STATIC_VALUE\"\n                }\n            },\n            \"type\": \"SINGLE_CONNECTION\"\n        }\n    ],\n    \"enrollmentCriteria\": {\n        \"shouldReEnroll\": true,\n        \"listFilterBranch\": {\n            \"filterBranches\": [\n                {\n                    \"filterBranches\": [],\n                    \"filters\": [\n                        {\n                            \"property\": \"firstname\",\n                            \"operation\": {\n                                \"operator\": \"IS_KNOWN\",\n                                \"includeObjectsWithNoValueSet\": false,\n                                \"operationType\": \"ALL_PROPERTY\"\n                            },\n                            \"filterType\": \"PROPERTY\"\n                        },\n                        {\n                            \"property\": \"lastname\",\n                            \"operation\": {\n                                \"operator\": \"IS_KNOWN\",\n                                \"includeObjectsWithNoValueSet\": false,\n                                \"operationType\": \"ALL_PROPERTY\"\n                            },\n                            \"filterType\": \"PROPERTY\"\n                        }\n                    ],\n                    \"filterBranchType\": \"AND\",\n                    \"filterBranchOperator\": \"AND\"\n                }\n            ],\n            \"filters\": [],\n            \"filterBranchType\": \"OR\",\n            \"filterBranchOperator\": \"OR\"\n        },\n        \"unEnrollObjectsNotMeetingCriteria\": false,\n        \"reEnrollmentTriggersFilterBranches\": [\n            {\n                \"filterBranches\": [],\n                \"filters\": [\n                    {\n                        \"property\": \"lastname\",\n                        \"operation\": {\n                            \"operator\": \"IS_KNOWN\",\n                            \"includeObjectsWithNoValueSet\": false,\n                            \"operationType\": \"ALL_PROPERTY\"\n                        },\n                        \"filterType\": \"PROPERTY\"\n                    }\n                ],\n                \"filterBranchType\": \"AND\",\n                \"filterBranchOperator\": \"AND\"\n            },\n            {\n                \"filterBranches\": [],\n                \"filters\": [\n                    {\n                        \"property\": \"firstname\",\n                        \"operation\": {\n                            \"operator\": \"IS_KNOWN\",\n                            \"includeObjectsWithNoValueSet\": false,\n                            \"operationType\": \"ALL_PROPERTY\"\n                        },\n                        \"filterType\": \"PROPERTY\"\n                    }\n                ],\n                \"filterBranchType\": \"AND\",\n                \"filterBranchOperator\": \"AND\"\n            }\n        ],\n        \"type\": \"LIST_BASED\"\n    },\n    \"timeWindows\": [],\n    \"blockedDates\": [],\n    \"customProperties\": {},\n    \"dataSources\": [],\n    \"crmObjectCreationStatus\": \"COMPLETE\",\n    \"suppressionListIds\": [],\n    \"canEnrollFromSalesforce\": false,\n    \"type\": \"CONTACT_FLOW\",\n    \"objectTypeId\": \"0-1\"\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Lerner",
+      "poster_handle": "ben198"
+    },
+    "time_stamp": "2024-12-17 12:59:13",
+    "text": "Zach - yea I was attempting to use that as a starting off point as well - I actually think I found the main cause of the 500 Error.  Whenever I would have `isEnabled : true` it would always throw back an error.   Once I set to false, everything seems to be working.  Thanks bud!"
+  },
+  {
+    "poster": {
+      "poster_name": "Zach Klein",
+      "poster_handle": "zach282"
+    },
+    "time_stamp": "2024-12-17 13:05:53",
+    "edited": {
+      "time_stamp": "2024-12-17 13:07:02"
+    },
+    "text": "Hi <@U081J6MHW2K> :wave:\nThe CRM Search API \"query\" feature won't work in this case. It's only relevant if you're querying one of the \"Default searchable properties\", as specified in this <https://developers.HubSpot.com/docs/guides/api/crm/search|API doc>. In your case, you'll need to construct a request something like this:\n```{\n    \"limit\": 100,\n    \"sorts\": [\n        {\n            \"propertyName\": \"lastmodifieddate\",\n            \"direction\": \"DESCENDING\"\n        }\n    ],\n    \"properties\": [\n        \"email\",\n        \"firstname\",\n        \"lastname\"\n    ],\n    \"filterGroups\": [\n        {\n            \"filters\": [\n                {\n                    \"propertyName\": \"lastmodifieddate\",\n                    \"operator\": \"GTE\",\n                    \"value\": \"2024-12-13\"\n                }\n            ]\n        }\n    ]\n}```\nIn response to your questions:\n1. If you're referring to custom behavioural events, no (at least based on some quick testing). If you're referring to engagements (e.g. calls, notes, meetings etc.), yes.\n2. Yes, the CRM Search API is a good fit for the use case you've described.\n3. The \"query\" search feature is effectively a keyword search, relevant to a small number of properties per object type. For Contacts, the default searchable properties relevant to the \"query\" feature are:\n```firstname,lastname,email,phone,hs_additional_emails,fax,mobilephone,company,hs_marketable_until_renewal```\nHope that helps :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Henson",
+      "poster_handle": "brian.henson"
+    },
+    "time_stamp": "2024-12-17 13:07:25",
+    "text": "Super helpful! Thank you so much for the thorough response. I'm confident this will get me across the finish line on this integration!"
+  },
+  {
+    "poster": {
+      "poster_name": "Zach Klein",
+      "poster_handle": "zach282"
+    },
+    "time_stamp": "2024-12-17 13:07:41",
+    "text": "Awesome, happy to help :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Zach Klein",
+      "poster_handle": "zach282"
+    },
+    "time_stamp": "2024-12-17 13:09:11",
+    "text": "<@U04HSBLHAJZ> All good, happy building :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-12-17 16:58:52",
+    "text": "Creating a private app with the appropriate read/write permissions for the Contact CRM object is indeed a solid starting point. This ensures that you have a secure, controlled means of authenticating and interacting with HubSpot’s APIs. With a private app, you’ll have a dedicated access token and can scope the permissions as narrowly as possible, which is both a best practice and a security measure.\n\nBefore moving forward, however, consider how you will reliably match and maintain data consistency between your customer portal and HubSpot. Identifying a unique, persistent key—such as a customer ID or an email address that’s guaranteed to be unique—will help prevent duplicate or mismatched contacts. This unique identifier should be agreed upon early in the integration planning process to avoid data quality issues down the line.\n\nYou’ll also need to address the sync logic for unsubscribes. Once a customer unsubscribes in HubSpot, that status should flow back into your application in near-real-time, ensuring both systems remain aligned. This may involve leveraging HubSpot’s Webhooks API or periodically polling for changes to ensure your unsubscribe data is always up-to-date.\nFor more guidance, consider reviewing HubSpot’s documentation and sample code. There’s a helpful repository that demonstrates various sync scenarios and best practices here: <https://github.com/HubSpotdev/crm-object-sync/tree/main>. It outlines patterns for object synchronization and provides useful references as you implement your integration.\n\nIn summary:\n1. Start with a private app scoped to read/write Contacts.\n2. Establish a unique identifier to prevent duplicates and ensure data consistency.\n3. Define a robust synchronization strategy for handling unsubscribes and other status updates.\n4. Leverage HubSpot’s APIs, Webhooks, and available example code to guide your development process.\n"
+  }
+]

@@ -1,0 +1,45 @@
+[
+  {
+    "poster": {
+      "poster_name": "Ezra Rabinsky",
+      "poster_handle": "ezra.rabinsky"
+    },
+    "time_stamp": "2024-09-16 18:48:38",
+    "text": "<@U06FT8U7HV3> unfortunately I haven’t yet :confused:"
+  },
+  {
+    "poster": {
+      "poster_name": "Ezra Rabinsky",
+      "poster_handle": "ezra.rabinsky"
+    },
+    "time_stamp": "2024-09-16 18:49:39",
+    "text": "<@U07LH26HQEM> I do; however, I requested to join the beta about a month ago and still haven’t gotten approval"
+  },
+  {
+    "poster": {
+      "poster_name": "Ezra Rabinsky",
+      "poster_handle": "ezra.rabinsky"
+    },
+    "time_stamp": "2024-09-16 18:50:41",
+    "edited": {
+      "time_stamp": "2024-09-16 18:50:58"
+    },
+    "text": "my company’s hs rep said that the developers told her it was due to a bug they were fixing which they were hoping to have fixed soon, but it’s been a little while now"
+  },
+  {
+    "poster": {
+      "poster_name": "anup Chauhan",
+      "poster_handle": "anup.chauhan"
+    },
+    "time_stamp": "2024-09-16 21:09:03",
+    "text": ":wave: Hello, team!"
+  },
+  {
+    "poster": {
+      "poster_name": "anup Chauhan",
+      "poster_handle": "anup.chauhan"
+    },
+    "time_stamp": "2024-09-16 21:12:56",
+    "text": "Hello Team,\n\nCan you please let me why workflow is working partial when i run workflow if count is &gt; 2k then some document miss out this.\n\nwe are doing running workflow using custom code to add (+1 space and hyphen eg 4043990296 this no i am change <tel:+14043990296|+1 (404) 399-0296> this type ) this type of formatted in existing contact\n\nbut the work flow not running properly\n\nhere is i am using this code\n\n\nconst HubSpot = require('@HubSpot/api-client');\n\nconst PHONE_NUMBER_PROP = 'phone';\n\nexports.main = async (event, callback) =&gt; {\n  try {\n    const result = await processEvent(event);\n    callback(null, result);\n  } catch (error) {\n    callback(error);\n  }\n};\n\nasync function processEvent(event) {\n  const HubSpotClient = new HubSpot.Client({ accessToken: process.env.Formateedphone });\n  let contactId = event.object.objectId;\n\n  try {\n    console.log(\"Phone number:\", PHONE_NUMBER_PROP);\n    // Get the current contact details including the phone number\n   const results = await HubSpotClient.crm.contacts.basicApi.getById(contactId, [PHONE_NUMBER_PROP]);\n  //  const results = await HubSpotClient.crm.contacts.basicApi.getById(event.object.objectId, [[PHONE_NUMBER_PROP]]);\n    console.log(\"All contact properties:\", results.properties);\n\n\n    let phone = results.properties[PHONE_NUMBER_PROP];\n\n    if (!phone) {\n      throw new Error(`Phone number not found for contactId: ${contactId}`);\n    }\n\n    // Log the phone number before formatting\n    console.log(`Original phone number: ${phone}`);\n\n    // Format the phone number\n    let formattedPhone = formatPhoneNumber(phone);\n console.log(`Original phone number: ${formattedPhone}`);\n    // Update the contact with the formatted phone number\n    await HubSpotClient.crm.contacts.basicApi.update(contactId, {\n      properties: {\n        [PHONE_NUMBER_PROP]: formattedPhone\n      }\n    });\n\n    return { message: \"Phone number updated successfully.\" };\n  } catch (error) {\n    console.error(`Error updating contact ${contactId}:`, error);\n    throw error;\n  }\n}\n\nfunction formatPhoneNumber(phoneNumber) {\n  let cleaned = phoneNumber.replace(/\\D/g, '').trim();\n\n  // Remove leading 1 if it's already part of the number (in cases like +1 or 1XXXXXXXXXX)\n  if (cleaned.length === 11 &amp;&amp; cleaned[0] === '1') {\n    cleaned = cleaned.substring(1);\n  }\n\n  let match = cleaned.match(/^(\\d{3})(\\d{3})(\\d{4})$/);\n  if (match) {\n    // Format as +1 (XXX) XXX-XXXX\n    return '+1 (' + match[1] + ') ' + match[2] + '-' + match[3];\n  }\n\n  // Return the original phone number if it doesn't match the expected format\n  return phoneNumber;\n}\n\n\nCan please let me know why not runnig on running all contact but it update partialy."
+  }
+]

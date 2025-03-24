@@ -1,0 +1,588 @@
+[
+  {
+    "poster": {
+      "poster_name": "Luc Benayoun",
+      "poster_handle": "luc"
+    },
+    "time_stamp": "2024-02-28 05:46:31",
+    "text": "<@UAYBXDG4U> <@U04DLJH3W94> please if you have any clue :slightly_smiling_face:"
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2024-02-28 05:55:41",
+    "edited": {
+      "time_stamp": "2024-02-28 05:56:06"
+    },
+    "text": "Hey! Are we still recommended to use the import solution with `js_partial` for CSS? The CSS is not getting minified, how can we solve that?"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-02-28 07:18:20",
+    "text": "Hello,\n\nThis is information we need to bootstrap any React code we have on the client side so all the APIs, such as Islands, work properly and we can provide more functionality"
+  },
+  {
+    "poster": {
+      "poster_name": "Luc Benayoun",
+      "poster_handle": "luc"
+    },
+    "time_stamp": "2024-02-28 07:19:44",
+    "edited": {
+      "time_stamp": "2024-02-28 07:31:15"
+    },
+    "text": "Hi <@U04DLJH3W94> :slightly_smiling_face: Okay I was wondering if it could make the pagespeed code lower? Do you know if there is any impact? Also we planned to use this way of coding themes for customers, is it safe to display portalIds and stuff inside the code?"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-02-28 07:40:46",
+    "text": "Our CMS has long shown the hubid/portalid in the page source (`hsVars` , some asset URLS, etc). I admit it is kind of messy, but nothing new/different/or problematic here (in my humble opinion).\n\nThe only real concern I know of inline scripts in general is that they are “render blocking” and there can be issues with interleaving inline scripts between stylesheets… but I believe that isn’t a significant issue here with the inline script being so small and doing nothing except a few global sets (and that they are not in the head and put before the actual module html)."
+  },
+  {
+    "poster": {
+      "poster_name": "Luc Benayoun",
+      "poster_handle": "luc"
+    },
+    "time_stamp": "2024-02-28 07:43:01",
+    "text": "Hi <@UCY83QS6Q> :slightly_smiling_face: No problem I was just checking if everything is okay. For example on this page I used 8 rich text and 2 logos modules generated with React: <https://25969523.hs-sites-eu1.com/>\n\nFor each module I got a script generated, is it normal or do I miss something?"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-02-28 07:48:00",
+    "text": "We’re hitting a remote API to validate the module (the same logic that would be running during the build) and trying to pass trough the specific error messages from that.  I think we’d need to look more at the specific module fields to see where specifically we can make this better"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-02-28 08:04:41",
+    "text": "There are two things going on here. One is Vite dev-only behavior that has the inline style and linked stylesheet. That is not present when deployed to prod. (I’d like to check in what we can do to make this less different, but I’m yet sure if there is much we can do).\n\nThe second thing that does lead to some duplicated CSS in prod (but in a different way) is that `todo.module.css` is imported from both `Button.jsx` and `TodoList.jsx`. And that creates two separate duplicate CSS files (one named after button and one named after todolist). That can be worked around by refactoring `todo.module.css` into two separate files, but really you should not have to worry about that. I believe we can fix that, I’ll put that on our list."
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-02-28 08:09:46",
+    "text": "The CSS should be minified when deployed. Though I see that is not always the case. Hmm…\n\nFor example\n<https://qa-pages.timmfin.net/hubfs/build_assets/hello-world-project/124/js_client_assets/assets/Layout-d908af6d.css>\n<https://qa-pages.timmfin.net/hubfs/build_assets/hello-world-project/124/js_client_assets/assets/TodoList-be8b702a.css>"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-02-28 08:14:31",
+    "text": "This is the best place for now. And to double check, this is specifically <https://HubSpotdev.slack.com/archives/C04AY1H2204/p1708965639089149?thread_ts=1708960465.396299&amp;cid=C04AY1H2204> ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-02-28 08:18:26",
+    "text": "It is normal in terms that it is “known”, but yeah it is excessive for us to write out `window.__hsEnvConfig` , `window.__hsServerPageUrl` , and `window.__hsBasePath` for every island. Its on the list to improve, but behind other more impactful things. Thanks for the reminder."
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-02-28 08:22:22",
+    "text": "Don’t think the encoding is the problem. For example `<https://registry.npmjs.org/@HubSpot%2Fcms-dev-server>` works fine"
+  },
+  {
+    "poster": {
+      "poster_name": "Luc Benayoun",
+      "poster_handle": "luc"
+    },
+    "time_stamp": "2024-02-28 08:22:33",
+    "text": "Thanks for the details :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-02-28 08:26:41",
+    "text": "And I don’t think we can do any more debugging on our side for a private package that isn’t found.\n\nI’d recommend trying to do some debugging with npm locally to see if you can find that specific package version. Like via `npm info &lt;package&gt;` and `npm view &lt;package&gt; versions`"
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2024-02-28 09:20:47",
+    "text": "Note, we have a fix for CSS not being minified when deployed in progress. Looks like it was something that used to work but we accidentally broke it at some point. I’ll respond back here when it is ready, though I’ll be rolling this out incrementally (and need specific hub ids from folx who want the change enabled for new builds… before we turn it on for everyone)"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-02-28 10:46:48",
+    "text": "Pulling out conversation from ^ into a separate thread. We have deployed fixes that ensures CSS assets are minified (and also fixes the duplication issue <https://HubSpotdev.slack.com/archives/C04AY1H2204/p1709132681963779?thread_ts=1709030342.141349&amp;cid=C04AY1H2204|mentioned here>), but at the moment they are “gated” and that fix is not on by default.\n\nPlease reach out to me (DMs are fine if preferred) with your hub/portal IDs if you would like to enable that. ( I assume we can quickly roll it out to everyone quickly, but would like to triple-check things first)."
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-02-28 10:48:14",
+    "text": "FYI, <https://HubSpotdev.slack.com/archives/C04AY1H2204/p1709142408658869> … I believe we’ve fixed the prod duplication (i.e. no need to refactor `todo.module.css` as I mentioned ^). If you’d like, could you share me the hub id you’re using so I can turn the fix on for you?"
+  },
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2024-02-28 10:54:31",
+    "edited": {
+      "time_stamp": "2024-02-28 10:54:41"
+    },
+    "text": "I'm having an issue where the hublData loads incorrectly on the live page but works just fine on preview mode, anyone else experiencing this?",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-02-28 12:11:42"
+      },
+      {
+        "time_stamp": "2024-02-29 00:03:15"
+      },
+      {
+        "time_stamp": "2024-02-29 00:04:05"
+      },
+      {
+        "time_stamp": "2024-02-29 10:33:27"
+      },
+      {
+        "time_stamp": "2024-02-29 10:37:10"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Marcus Shannon",
+      "poster_handle": "mshannon"
+    },
+    "time_stamp": "2024-02-28 12:11:42",
+    "text": "Can you provide a live page link?\n\nAnd hubl data template you are trying to use?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-02-28 12:50:44",
+    "text": "can't find where we discussed this but...I can pass an id and class prop to an island right? was it called something like `idWrapper`?",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-02-28 12:52:27"
+      },
+      {
+        "time_stamp": "2024-02-28 13:11:58"
+      },
+      {
+        "time_stamp": "2024-02-28 13:12:11"
+      },
+      {
+        "time_stamp": "2024-02-28 13:12:36"
+      },
+      {
+        "time_stamp": "2024-02-28 13:13:37"
+      },
+      {
+        "time_stamp": "2024-02-28 13:21:32"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-02-28 12:52:27",
+    "text": "<https://www.npmjs.com/package/@HubSpot/cms-components?activeTab=code> `id`, `wrapperClassName`, `wrapperStyle`"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-02-28 13:11:58",
+    "text": "<@UCY83QS6Q> adding an `id=\"whatever\"` to my Island component did not work"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-02-28 13:12:11",
+    "text": "the island has an id, but it is not the id that I set"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-02-28 13:12:36",
+    "text": "```export const Component = () =&gt; {\n  return &lt;Island module={TopLevelSiteNavigation} id=\"theme-assets\" /&gt;;\n};```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-02-28 13:13:37",
+    "text": "```&lt;div data-hs-island=\"true\" id=\"island-5f5e32i1R0\"&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-02-28 13:21:32",
+    "edited": {
+      "time_stamp": "2024-02-28 13:40:12"
+    },
+    "text": "~^ looks like this did in fact work but broke the site~ it did work but I made a mistake in naming it the same as an existing id on the body"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-02-28 14:09:11",
+    "edited": {
+      "time_stamp": "2024-02-28 14:22:51"
+    },
+    "text": "the `npm install` process that happens during the upload is no longer picking up the `.npmrc`. i was able to install the package locally with no issues with `npm install` and a `.npmrc`"
+  },
+  {
+    "poster": {
+      "poster_name": "Tricia Leach",
+      "poster_handle": "tleach"
+    },
+    "time_stamp": "2024-02-28 14:22:01",
+    "edited": {
+      "time_stamp": "2024-02-28 14:22:09"
+    },
+    "text": "<@UAYBXDG4U> <@UCY83QS6Q> Wondering if this thread is same issue we are having. This is within the timeframe that it stopped working for us too.\n\n<https://HubSpotdev.slack.com/archives/C04AY1H2204/p1708108558041179>"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-02-28 14:23:09",
+    "text": "i was able to see the package information using the commands above as well"
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2024-02-28 14:26:52",
+    "text": "re-posting in the channel for more visibility - we are having issues installing a private package during the HubSpot build process. we were using an `.npmrc` that was injected using a secret but that is no longer working. curious if there was a breaking change that was released recently - this is crucial for our build. thanks for your help! cc: <@U066BM0FLH0> <@UAYBXDG4U> <@UCY83QS6Q>"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-02-28 14:30:06",
+    "text": "also, `hs secrets list` no longer returns a list of secrets",
+    "reply_count": 25,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-02-28 15:06:43"
+      },
+      {
+        "time_stamp": "2024-02-28 15:07:32"
+      },
+      {
+        "time_stamp": "2024-02-28 15:07:57"
+      },
+      {
+        "time_stamp": "2024-02-28 15:08:18"
+      },
+      {
+        "time_stamp": "2024-02-28 15:08:27"
+      },
+      {
+        "time_stamp": "2024-02-28 15:08:53"
+      },
+      {
+        "time_stamp": "2024-02-28 15:09:18"
+      },
+      {
+        "time_stamp": "2024-02-28 15:09:32"
+      },
+      {
+        "time_stamp": "2024-02-28 15:09:41"
+      },
+      {
+        "time_stamp": "2024-02-28 15:10:00"
+      },
+      {
+        "time_stamp": "2024-02-28 15:10:15"
+      },
+      {
+        "time_stamp": "2024-02-28 15:10:31"
+      },
+      {
+        "time_stamp": "2024-02-28 15:12:08"
+      },
+      {
+        "time_stamp": "2024-02-28 15:12:28"
+      },
+      {
+        "time_stamp": "2024-02-28 15:12:45"
+      },
+      {
+        "time_stamp": "2024-02-28 15:12:49"
+      },
+      {
+        "time_stamp": "2024-02-28 15:12:53"
+      },
+      {
+        "time_stamp": "2024-02-28 15:14:16"
+      },
+      {
+        "time_stamp": "2024-02-28 15:15:25"
+      },
+      {
+        "time_stamp": "2024-02-28 15:16:20"
+      },
+      {
+        "time_stamp": "2024-02-28 15:16:27"
+      },
+      {
+        "time_stamp": "2024-02-28 15:16:47"
+      },
+      {
+        "time_stamp": "2024-02-28 15:16:51"
+      },
+      {
+        "time_stamp": "2024-02-29 08:14:33"
+      },
+      {
+        "time_stamp": "2024-02-29 12:11:37"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-02-28 15:06:43",
+    "text": "Are you still able to add any secrets?"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-02-28 15:07:32",
+    "text": "i'm not able to do much with `hs` right now, a lot is returning nothing back. i'm going to try to uninstall and reinstall and see if it fixes things"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-02-28 15:07:57",
+    "text": "`hs init` and `hs secrets add` both did not return anything"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-02-28 15:08:18",
+    "text": "i was able to upload a theme though"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-02-28 15:08:27",
+    "text": "Ok, hm. Reinstalling is a good thing to try. And see if you can figure out the version it is (`hs --version`)"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-02-28 15:08:53",
+    "text": "the version was `2.0.1`"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-02-28 15:09:18",
+    "text": "I know our cli team had several issues relating to platform version and old (4.x.x?) version… yeah, definitely update. The latest is 5.x.x"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-02-28 15:09:32",
+    "text": "```lizbanach marketing-site (develop) 🌸 npm install -g @HubSpot/cli@latest\nnpm WARN deprecated source-map-url@0.4.1: See <https://github.com/lydell/source-map-url#deprecated>\nnpm WARN deprecated request-promise-native@1.0.9: request-promise-native has been deprecated because it extends the now deprecated request package, see <https://github.com/request/request/issues/3142>\nnpm WARN deprecated urix@0.1.0: Please see <https://github.com/lydell/urix#deprecated>\nnpm WARN deprecated har-validator@5.1.5: this library is no longer supported\nnpm WARN deprecated abab@2.0.6: Use your platform's native atob() and btoa() methods instead\nnpm WARN deprecated resolve-url@0.2.1: <https://github.com/lydell/resolve-url#deprecated>\nnpm WARN deprecated source-map-resolve@0.5.3: See <https://github.com/lydell/source-map-resolve#deprecated>\nnpm WARN deprecated domexception@2.0.1: Use your platform's native DOMException instead\nnpm WARN deprecated w3c-hr-time@1.0.2: Use your platform's native performance.now() and performance.timeOrigin.\nnpm WARN deprecated sane@4.1.0: some dependency vulnerabilities fixed, support for node &lt; 10 dropped, and newer ECMAScript syntax/features added\nnpm WARN deprecated uuid@3.4.0: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See <https://v8.dev/blog/math-random> for details.\nnpm WARN deprecated request@2.88.2: request has been deprecated, see <https://github.com/request/request/issues/3142>\nnpm ERR! code EEXIST\nnpm ERR! path /Users/lizbanach/.nvm/versions/node/v20.10.0/bin/hs\nnpm ERR! EEXIST: file already exists\nnpm ERR! File exists: /Users/lizbanach/.nvm/versions/node/v20.10.0/bin/hs\nnpm ERR! Remove the existing file and try again, or run npm\nnpm ERR! with --force to overwrite files recklessly.\n\nnpm ERR! A complete log of this run can be found in: /Users/lizbanach/.npm/_logs/2024-02-28T21_34_53_640Z-debug-0.log```"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-02-28 15:09:41",
+    "text": "this is what happened when i tried to upgrade"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-02-28 15:10:00",
+    "text": "i'm going to just uninstall it entirely and see if that helps with the command issues i'm seeing"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-02-28 15:10:15",
+    "text": "Also I think --force would be similar to removing and re-installing"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-02-28 15:10:31",
+    "text": "ok! i can try that"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-02-28 15:12:08",
+    "text": "that worked. i'm now on v `5.1.3`"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-02-28 15:12:28",
+    "text": ":crossed_fingers: … can you atleast list/create secrets now?"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-02-28 15:12:45",
+    "text": "i can see the secrets now"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-02-28 15:12:49",
+    "text": "that all seems to be resolved"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-02-28 15:12:53",
+    "text": "thank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-02-28 15:14:16",
+    "text": "That’s a good start. But I figure you still have builds _not_ doing what you expect with the npmrc (and correctly getting access to private packages?)\n\n… unless there was a specific change you needed to make to that npmrc secret to get things to work again? (and now you can?)"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-02-28 15:15:25",
+    "edited": {
+      "time_stamp": "2024-02-28 15:15:34"
+    },
+    "text": "correct - the `.npmrc`issue is still happening"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-02-28 15:16:20",
+    "text": "yeah, i just wanted to check to see if the secret still existed and just confirm it was correct and it is"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-02-28 15:16:27",
+    "text": "just troubleshooting"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-02-28 15:16:47",
+    "text": "Could you DM me the hub/portal id and the project name for this build?"
+  },
+  {
+    "poster": {
+      "poster_name": "liz banach",
+      "poster_handle": "liz.banach"
+    },
+    "time_stamp": "2024-02-28 15:16:51",
+    "text": "yup!"
+  },
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2024-02-29 00:03:15",
+    "edited": {
+      "time_stamp": "2024-02-29 00:03:23"
+    },
+    "text": "Sure however its locked behind a login wall since its using login data: <https://illumine8test.net/saved-floorplans>\n\n```{% set isLoggedIn = request_contact.is_logged_in %}\n  {% set savedHomes = [] %}\n  {% set contactVid = null %}\n  {% if isLoggedIn %}\n    {% set contactVid = request.contact.contact_vid %}\n    {% set savedHomes = crm_associations(contactVid, \"USER_DEFINED\", 72, \"limit=50\", \"config, hs_object_id\") %}\n  {% endif %}\n  {% set hublData = {\n    \"isLoggedIn\": isLoggedIn,\n    \"contactVid\": contactVid,\n    \"savedHomes\": savedHomes,\n  } %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Anze",
+      "poster_handle": "anzekopko2002"
+    },
+    "time_stamp": "2024-02-29 00:04:05",
+    "edited": {
+      "time_stamp": "2024-02-29 00:04:20"
+    },
+    "text": "It works just fine on preview and on live the hublData if pasted into the HTML template renders correctly it just doesn't pass it to the module for some reason"
+  }
+]

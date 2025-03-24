@@ -1,0 +1,204 @@
+[
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 08:02:03",
+    "text": "overall using a custom form is going to be easier, but if you want to, you could create some sort of event listener on the property, and upon click, count the number of checked items, and if it has too many, prevent it"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 08:04:09",
+    "text": "I am not sure how this HubSpot cta / form setup is, but if you have the ability to turn off the default HubSpot styling and turn it into a raw/html form, that should prevent the iframe from happening.\n\nI could be wrong as this could be something special that these HubSpot cta popups do.\n\nGenerally I write my own popup/exit intent stuff if the default HubSpot stuff doesn’t work —"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 08:06:52",
+    "text": "If the code was here I could solve this very quickly, but because you have this behind a dm, I can’t commit to when you decide to get back to me.\n\nConsidering this was yesterday you asked this question, it doesn’t show you online… your question goes unanswered."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 08:07:43",
+    "text": "If this is causing you a problem use the forms api. You can submit a form via the client side with no api key. You can do all of your own validation on it and dress it up however you want"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 08:10:52",
+    "text": "Your question is confusing\n\n“However, I know the validation works on a form, it just doesn’t seem to work for the Embed code. Can I get someone to look at my code? Please DM me so I can send the code.”\n\nSo you are sayign that the validation done, the code aspect, works, but you can’t figure out how to make it work in HubSpot?\n\nthe question above you has an answer that outlines how to update fields, I wonder if you could take this ad make this work for you"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 08:10:52",
+    "text": "<https://gist.github.com/robertainslie/32d786d7254ec7bc6cbbff3d1e292cd4>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 08:11:27",
+    "text": "<https://legacydocs.HubSpot.com/docs/methods/forms/advanced_form_options>\n\nUsing onformsubmit and then putting your script to validate here, returning false"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 08:12:16",
+    "text": "onfromready happens BEFORE the form render.  If you are creating event listeners at this point, this is before the form is rendered, you could be trying to attach an event listener before it is there"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Orthbandt",
+      "poster_handle": "thomas.orthbandt"
+    },
+    "time_stamp": "2024-08-14 10:34:17",
+    "edited": {
+      "time_stamp": "2024-08-14 10:58:03"
+    },
+    "text": "Thanks <@U25PYL3Q8>\n\nBefore coming to this Slack, I also tried using `onFormSubmit`.  This led me to believe that my insertion of the JS inside the *Embed Code* was malformed.  For what it’s worth, this is my first time trying to add JS to an Embed Form, we recently migrated from Marketo to HubSpot.\n\nBelow is the code I’m adding to our webpage:\n`<script charset=\"utf-8\" type=\"text/javascript\" src=\"<//js.hsforms.net/forms/embed/v2.js>\"></script>`\n`<script>`\n    `hbspt.forms.create({`\n       `region: \"na1\",`\n       `portalId: \"44150209\",`\n       `formId: \"14871a5b-69b4-48a5-a24b-667ac7938e8e\",`\n\n       `onFormReady: function($form) {`\n         `const emailField = $form.querySelector('input[name=\"most_recent_referrer_email_address\"]'); //targeting this input text field name`\n\n         `// Function to validate the email field`\n         `function validateEmailField() {`\n           `const emailValue = emailField.value.trim();`\n           `const errorMsg = document.createElement('ul');`\n           `errorMsg.classList.add('hs-input', 'invalid', 'error');`\n           `errorMsg.setAttribute('role', 'alert');`\n\n           `const errorItem = document.createElement('li');`\n           `errorItem.innerHTML = '<label class=\"hs-error-msg hs-main-font-element\">Email must be formatted correctly.</label>';`\n\n           `// Email validation regex`\n           `const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/;`\n\n           `// Remove previous error message if it exists`\n           `const previousError = emailField.parentElement.querySelector('.hs-error-msgs');`\n           `if (previousError) {`\n             `previousError.remove();`\n           `}`\n\n           `if (!emailPattern.test(emailValue)) {`\n             `// Add error message below the email field`\n             `errorMsg.appendChild(errorItem);`\n             `emailField.parentElement.appendChild(errorMsg);`\n\n             `// Add error class to the field`\n             `emailField.classList.add('invalid', 'error');`\n             `errorMsg.appendChild(errorItem);`\n             `emailField.parentElement.appendChild(errorMsg);`\n           `} else {`\n             `// Remove error class if the email is valid`\n             `emailField.classList.remove('invalid', 'error');`\n             `return true; // Valid email`\n           `}`\n        `}`\n\n        `// Validate on blur (when moving to the next field)`\n        `emailField.addEventListener('blur', validateEmailField);`\n\n        `// Validate on form submission`\n        `$form.addEventListener('submit', function(event) {`\n          `const isValid = validateEmailField();`\n          `if (!isValid) {`\n            `// Prevent form submission if the email is invalid`\n            `event.preventDefault();`\n          `}`\n        `});`\n      `}`\n    `});`\n`</script>`"
+  },
+  {
+    "text": "This screenshot is also what I meant when I tested the above code on a local html file, seems to show the error but when I copy/paste it to our webpage, the validation for the “Your Email Address” doesn’t validate.",
+    "time_stamp": "2024-08-14 10:59:07"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 12:02:27",
+    "text": "I’m currently away from computer atm. Do you have error message that happens when you attempt this in embed? "
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Orthbandt",
+      "poster_handle": "thomas.orthbandt"
+    },
+    "time_stamp": "2024-08-14 12:08:29",
+    "text": "No, when I run the code on the website and test for the “Your Email Address” field, the only thing it tests against is if there are any characters since it’s a required field from HubSpot, this isn’t from my JS.\n\nHere’s a test page I created - <https://www.pipefy.com/test-page/>"
+  },
+  {
+    "text": "",
+    "time_stamp": "2024-08-14 12:09:13"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 12:10:51",
+    "text": "Okay perfect. When I get home I’ll play with this to see what I can do to help. \n"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Orthbandt",
+      "poster_handle": "thomas.orthbandt"
+    },
+    "time_stamp": "2024-08-14 12:14:35",
+    "text": "Thank you <@U25PYL3Q8> for your support."
+  },
+  {
+    "text": "",
+    "time_stamp": "2024-08-14 13:09:10"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 13:09:14",
+    "text": "$form is a jquery thing according to the docs"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 13:09:18",
+    "text": "I have no clue how you use that"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 13:09:27",
+    "edited": {
+      "time_stamp": "2024-08-14 13:09:36"
+    },
+    "text": "I would just use document.querySelector() in there"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Orthbandt",
+      "poster_handle": "thomas.orthbandt"
+    },
+    "time_stamp": "2024-08-14 14:57:53",
+    "text": "Thank you <@U25PYL3Q8>- that was meant to be (form) without the '$', thanks for catching this as I may have tried multiple ways to see what would stick.\n\nValidation now works on blur, but I need to fix the 'submit' validation, which I'm using the `document.addEventListener ('submit', function(event)`\n\nThanks for your help"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 15:21:09",
+    "text": "I’m unclear if you need more assistance or if you got it from here?!"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Orthbandt",
+      "poster_handle": "thomas.orthbandt"
+    },
+    "time_stamp": "2024-08-14 15:25:49",
+    "text": "Thanks, I see that the error shows when I click the submit that the field needs to be formatted correctly but still allows the form to be submitted.  So the error shows but submit goes through.  I need to fix this so that the form can't be submitted until the email field if correctly formatted."
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Orthbandt",
+      "poster_handle": "thomas.orthbandt"
+    },
+    "time_stamp": "2024-08-14 15:26:31",
+    "text": "I'm working on it, but if you have a suggestion, that would be appreciated.  Thank you"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas Orthbandt",
+      "poster_handle": "thomas.orthbandt"
+    },
+    "time_stamp": "2024-08-14 15:26:51",
+    "text": "Need the code again that is formatted correctly?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 16:01:13",
+    "text": "In the onform submit thing, you would `return false`"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2024-08-14 16:01:22",
+    "text": "that should prevent the function from continuing on"
+  }
+]

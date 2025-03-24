@@ -1,0 +1,10 @@
+[
+  {
+    "poster": {
+      "poster_name": "Nicholas Zmudzinski",
+      "poster_handle": "nzmudzinski"
+    },
+    "time_stamp": "2024-01-16 10:32:29",
+    "text": "Hi all, I've created a custom module in Design Tools for use in programmable email to test some new HubL logic on an existing module. The new HubL logic relies on two new properties in our custom Projects object - called 'project.project_status__checkbox_' and 'project.project_campaign_ids' and evaluate certain conditions against values stored in those properties. After testing the code and ruling out that logic is wrong, there a syntax error, etc., I realized the HubL code is simply having no effect on the output of the modules in a test email. When I used the |pprint filter on the entire Projects object as a debug in my module code, it returns the following result: \"(SizeLimitingPyMap: {summary=CONTENT, project_page_url=CONTENT, image_url=CONTENT, organization_id=CONTENT, name=CONTENT, country_name=CONTENT, primary_theme=CONTENT organization_name=CONTENT, id=CONTENT})\" (where CONTENT represents some actual value from that property). Additionally, when I |pprint project.project_status__checkbox_, which is a new property, it returns a null value. Notably, the two new properties do not appear in the result of using |pprint on the entire object that is called in the crm_object function. I didn’t think we’d have to do anything special with new properties to be able to retrieve them via crm_object. In the module code, the only CRM call is {% set project = crm_object(\"project\",'project_id='~project_id) %} and this clearly does not specify what properties to retrieve, but is being selective about which it does retrieve.\n\nDoes anyone know what I might be doing wrong that is preventing the two new properties from being queried by crm_object?"
+  }
+]

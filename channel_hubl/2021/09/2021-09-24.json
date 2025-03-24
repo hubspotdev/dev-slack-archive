@@ -1,0 +1,88 @@
+[
+  {
+    "poster": {
+      "poster_name": "Gonzalo Torreras",
+      "poster_handle": "gonzalo"
+    },
+    "time_stamp": "2021-09-24 03:20:56",
+    "edited": {
+      "time_stamp": "2021-09-24 03:21:45"
+    },
+    "text": "you are looking for:\n```{% do myList.append({\"prop\":\"val\" %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Bhréin Brannick",
+      "poster_handle": "bhreinb"
+    },
+    "time_stamp": "2021-09-24 08:10:59",
+    "edited": {
+      "time_stamp": "2021-09-24 08:12:09"
+    },
+    "text": "Hi there\n\nI’m looking at how exceptions are caught and re-thrown in `JinJava` . For example when an invocation to a function happens which fails it is caught as either a\n\n`IllegalAccessException` or `InvocationTargetException` within `<http://jinjava.de|jinjava.de>.odysseus.el.tree.impl.ast#eval`\nwhich is re-thrown as an `ELException` .  So far so good.\n\nThis gets caught in class `com.HubSpot.jinjava.el.ExpressionResolver#resolveExpression` which ultimately gets caught again and gets re-thrown as a `TemplateSyntaxException` via line 188\n\n```      } else {\n        interpreter.addError(\n          TemplateError.fromException(\n            new TemplateSyntaxException(\n              expression,\n              e.getMessage(),\n              interpreter.getLineNumber(),\n              e\n            )\n          )\n        );\n      }```\nit would be nice if the `TemplateSyntaxException` included the original exception message that caused the problem perhaps? Namely\n\n```      } else {\n        interpreter.addError(\n          TemplateError.fromException(\n            new TemplateSyntaxException(\n              expression,\n              String.format(\"%s%nOriginal Failure:%n%s\" e.getMessage(), e.getCause().getMessage())\n              interpreter.getLineNumber(),\n              e\n            )\n          )\n        );\n      }```\nor something along those lines. Thoughts?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-09-24 08:21:32"
+      },
+      {
+        "time_stamp": "2021-09-24 08:24:49"
+      },
+      {
+        "time_stamp": "2021-09-24 10:42:42"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2021-09-24 08:21:32",
+    "text": "That's a fair point, feel free to open an issue or PR about that"
+  },
+  {
+    "poster": {
+      "poster_name": "Bhréin Brannick",
+      "poster_handle": "bhreinb"
+    },
+    "time_stamp": "2021-09-24 08:24:49",
+    "text": "I can try both…I haven’t submitted to `JinJava` codebase before so the latter may take some more time but will try for sure. Thank you that’s brilliant."
+  },
+  {
+    "poster": {
+      "poster_name": "Bhréin Brannick",
+      "poster_handle": "bhreinb"
+    },
+    "time_stamp": "2021-09-24 10:42:42",
+    "text": "<https://github.com/HubSpot/jinjava/issues/752>\n\n<https://github.com/HubSpot/jinjava/pull/753>"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2021-09-24 13:21:34",
+    "text": "this is why HubSpot dev community is amazing :fire:"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2021-09-24 13:21:50",
+    "text": "thanks <@UCJANAW1Y>!"
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2021-09-24 13:26:38",
+    "edited": {
+      "time_stamp": "2021-09-24 13:27:07"
+    },
+    "text": ":+1: It should work for either of you now. It's been deployed to our HubL engine"
+  }
+]

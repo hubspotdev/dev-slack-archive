@@ -1,0 +1,47 @@
+[
+  {
+    "poster": {
+      "poster_name": "Emily Bierek",
+      "poster_handle": "emily.bierek"
+    },
+    "time_stamp": "2019-12-18 05:10:05",
+    "edited": {
+      "time_stamp": "2019-12-18 05:42:31"
+    },
+    "text": "Hi, are the CTAs created in HubSpot always converted to an image in HubSpot-emails? Or is there another solution we can look at? They get very \"blurry\" as images. Thanks for any advice :pray::skin-tone-5:",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-12-18 08:10:39"
+      },
+      {
+        "time_stamp": "2019-12-18 18:11:48"
+      },
+      {
+        "time_stamp": "2019-12-18 18:18:39"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2019-12-18 08:10:39",
+    "text": "As far as I'm aware they're always rendered as images, but I'll take 1x images over Outlook issues any day..."
+  },
+  {
+    "poster": {
+      "poster_name": "Steven Hambleton",
+      "poster_handle": "steven994"
+    },
+    "time_stamp": "2019-12-18 18:11:48",
+    "text": "You can use a macro to return the relevant tracking details and insert into your button HTML code as variables.\n\nI'm going to write an article about it soon!"
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2019-12-18 18:18:39",
+    "text": "Here's a quick overview -\n\nCreate a partial using this code -\n```{#\n====================================================\nUSE THIS AT THE TOP OF ANY TEMPLATE THAT USES A BUTTON \nSO YOU CAN PASS THROUGH A FULL TRACKABLE URL -\n{% import 'Email/Partials/cta_id_macro.html' as cta_id %}\n\nTHE HREF VALUE SHOULD LOOK LIKE THIS -\n&lt;a href=\"{{ cta_id.id('{{ module.name_of_module_field }}') }}\"&gt;\n====================================================\n#}\n\n{% macro id(cta_id) %}\n<https://cta-image-cms2.HubSpot.com/ctas/v2/public/cs/ci/?pg=>{{ cta_id }}&amp;pid=YOUR_HubSpot_ID&amp;ecid={{encrypted_contact_id}}&amp;hseid={{email_campaign_id}}&amp;hsic={{impersonated_contact}}\n{% endmacro %}```\nThen add this code to the top of any template using this CTA method -\n```{% import 'Email/Partials/cta_id_macro.html' as cta_id %}```\nHere's the button code -\n```&lt;div&gt;\n\t&lt;!--[if mso]&gt;\n\t&lt;v:roundrect xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:w=\"urn:schemas-microsoft-com:office:word\" href=\"{{ cta_id.id('{{ module.cta_field }}') }}\" style=\"height:64px;v-text-anchor:middle;width:195px;\" arcsize=\"50%\" stroke=\"f\" fillcolor=\"#7c21cc\"&gt;\n\t&lt;w:anchorlock/&gt;\n\t&lt;center&gt;\n\t&lt;![endif]--&gt;\n\t&lt;a class=\"button\" href=\"{{ cta_id.id('{{ module.cta_field }}') }}\" style=\"background-color:#7c21cc; border-radius:34px; color:#f2f2f2;display:inline-block;font-family:{{ globals.font_stack }}; font-size: 18px;font-weight:600;text-align:center;text-decoration:none;width:195px;-webkit-text-size-adjust:none;padding:21px 0px;text-decoration:none;\"&gt;{{ module.cta_label }}&lt;/a&gt;\n\t&lt;!--[if mso]&gt;\n\t&lt;/center&gt;\n\t&lt;/v:roundrect&gt;\n\t&lt;![endif]--&gt;\n&lt;/div&gt;```\nPS. I created a CTA field called `{cta_field}` and a CTA Label field called `{cta_label}` also I put my font stack in a global variable which I define in a global partial template.\n\nHope that helps!"
+  }
+]

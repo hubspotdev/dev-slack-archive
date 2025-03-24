@@ -1,0 +1,601 @@
+[
+  {
+    "poster": {
+      "poster_name": "Nikita Shuvalov",
+      "poster_handle": "n.shuvalov"
+    },
+    "time_stamp": "2024-03-22 04:22:29",
+    "text": "Hi everyone,\nI would like to know if it's possible to whitelist HubSpot IPs used on the workflows?",
+    "reply_count": 4,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-03-22 07:19:09"
+      },
+      {
+        "time_stamp": "2024-03-24 23:37:20"
+      },
+      {
+        "time_stamp": "2024-03-24 23:37:40"
+      },
+      {
+        "time_stamp": "2024-03-26 08:09:15"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andrew Smeallie",
+      "poster_handle": "andrew431"
+    },
+    "time_stamp": "2024-03-22 07:19:09",
+    "text": "Hi <@U06A0AANDK6> - if you're talking about emails/notifications sent via the workflow tools, then yes there are instructions on how to do this (article below).\n\n<https://knowledge.HubSpot.com/marketing-email/not-receiving-HubSpot-system-or-notification-emails>"
+  },
+  {
+    "poster": {
+      "poster_name": "Caroline Santos",
+      "poster_handle": "caroline.santos"
+    },
+    "time_stamp": "2024-03-22 07:53:40",
+    "text": "Thanks jocob, didn't work\nI found a way with python code\n```# Importando a biblioteca de datas\nfrom datetime import datetime\n\ndef main(event):\n    # Função para comparar ambas as datas\n    def days_between(d1, d2):\n        return abs((d2 - d1).days)\n\n    # Importar e formatar campos de data do registro do HubSpot\n    creationDate = int(event.get('inputFields').get('data_abertura_conta'))\n    creationDate_s = datetime.fromtimestamp(creationDate / 1000)\n    \n    # Obtendo a data atual\n    current_date = datetime.now()\n\n    # Calculando a diferença em dias entre a data de criação e a data de hoje\n    lifeTimeDuration = days_between(creationDate_s, current_date)\n\n    # Saída do cálculo das diferenças em dias.\n    return {\n        \"outputFields\": {\n            \"lifeTimeDuration\": lifeTimeDuration,\n        }\n    }```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Davis",
+      "poster_handle": "jdavis"
+    },
+    "time_stamp": "2024-03-22 07:54:07",
+    "text": "Oh nice! good thinking :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Tyler Sweeten",
+      "poster_handle": "tyler.sweeten"
+    },
+    "time_stamp": "2024-03-22 08:07:45",
+    "text": "Hello everyone, I recently got a notification that I was reaching association limits for engagements on a contact and company. I reached out to support and they suggested going through a custom code action in a workflow to help delete/ unassociate these from the initial object. I was wondering if anyone here has had experience doing this and had some tips to get started?\nThanks",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-03-22 08:38:42"
+      },
+      {
+        "time_stamp": "2024-03-25 07:41:58"
+      },
+      {
+        "time_stamp": "2024-03-25 08:04:15"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Stacey Thomas",
+      "poster_handle": "stacey.thomas"
+    },
+    "time_stamp": "2024-03-22 08:37:06",
+    "text": "Hi all! Bit of a random one but i'm looking for possible suggestions on how to handle a specific workflow. We have a workflow that runs custom coded actions and sends data from HubSpot to a 3rd party software via API, returning details or catching an error if there was a problem. Unfortunately (due to user error) there are quite often errors where mandatory data is not filled in before enrolling a contact into the workflow. These errors usually then persist of 'XXX is mandatory' and so on - so it's pretty clear what the issue was and how to resolve it.\nMy current way of handling this is to branch within the workflow based on an error being known after the custom coded action, and then create a task in a shared queue with the error reason in the body of the task.\nUnfortunately again, due to user error, these tasks are being overlooked as they often do not show up on the contact record until a refresh - and I dont think i can allocate the task to the user who enrolled the workflow either (they are not the same as the record owner).\nDoes anyone have any better suggestions (except on educations users...) on how to handle this? I did look at the possibility of using Alerts but considering the tasks are being missed, chances are the alert messages/pop-ups will also be missed or overlooked",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-03-22 08:47:52"
+      },
+      {
+        "time_stamp": "2024-03-22 08:56:14"
+      },
+      {
+        "time_stamp": "2024-03-22 09:28:40"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Christensen Magtoto",
+      "poster_handle": "chris858"
+    },
+    "time_stamp": "2024-03-22 08:38:42",
+    "text": "Hello Tyler, you need to identify the association you want to delete in the first place then make a script that will do the actual work for you for all the contacts that you want to delete any engagement."
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-22 08:47:52",
+    "edited": {
+      "time_stamp": "2024-03-22 08:48:56"
+    },
+    "text": "How does the workflow get triggered? Do you have any internal communication tool like Slack where a notification can be sent to the contact owner?  HubSpot also has a conditional properties so if you update one field you must complete the defined additional fields before saving, preventing errors.\n\nI check that I have the required values and if I don't I raise an exception and create a note on the record and send slack notifications."
+  },
+  {
+    "poster": {
+      "poster_name": "Stacey Thomas",
+      "poster_handle": "stacey.thomas"
+    },
+    "time_stamp": "2024-03-22 08:56:14",
+    "edited": {
+      "time_stamp": "2024-03-22 08:56:46"
+    },
+    "text": "Thanks Ryan! So the workflow is triggered manually via a date field (date data sent to 3rd party software) so we've got a record of it. I plan to move that to a button which is in the works on my sandbox account currently.\n\nThe issue I guess here is with checking the data before firing the workflow... One team take the contact details, and then a separate team check them over on the record, fill in the blanks as needed, and kickstart the workflow. So it could be one of 15 people who start that workflow, who are a separate team to those who entered the data initially. It's where that 'fill in the blanks' bit isn't done properly that the downfall is. Overall it is a very simple flow, and causing me quite a bit of frustration that the data isn't being checked properly before enrollment, and then that these tasks are being left and piling up or just not ticked off by accident... (sorry small rant there).\n\nWe don't use Slack and unfortunately it's probably not a possibility for us to do so. Along with that, any notifications to the record owner would be unnecessary as it wouldn't be them that need to be notified, rather whoever started the workflow by updating the date which is the workflow trigger.\n\nI'm just trying to troubleshoot any other potential ideas so that those who don't spot the task straight away, get some kind of idea that they need to go and correct the data and try again.\n\nPerhaps this already is the best solution and I just need to go back to square one with user training?"
+  },
+  {
+    "poster": {
+      "poster_name": "Caroline Santos",
+      "poster_handle": "caroline.santos"
+    },
+    "time_stamp": "2024-03-22 09:10:19",
+    "text": "Hi team!\n\nI need to create a calculated property that aggregates the sum from another field, for example: I have two different records that have the same field, and these two records have a value property, I need to sum this value, aggregating by this equal field, the only way I can imagine this being done is through Python code, but the code is not running correctly, has anyone gone through this and know where to go?\nDoes anyone have an example of how to do this",
+    "reply_count": 44,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-03-22 09:40:57"
+      },
+      {
+        "time_stamp": "2024-03-22 09:41:31"
+      },
+      {
+        "time_stamp": "2024-03-22 09:43:03"
+      },
+      {
+        "time_stamp": "2024-03-22 10:36:27"
+      },
+      {
+        "time_stamp": "2024-03-22 10:50:48"
+      },
+      {
+        "time_stamp": "2024-03-22 10:52:07"
+      },
+      {
+        "time_stamp": "2024-03-22 10:52:44"
+      },
+      {
+        "time_stamp": "2024-03-22 12:10:07"
+      },
+      {
+        "time_stamp": "2024-03-22 12:24:59"
+      },
+      {
+        "time_stamp": "2024-03-22 12:25:19"
+      },
+      {
+        "time_stamp": "2024-03-22 12:26:12"
+      },
+      {
+        "time_stamp": "2024-03-22 12:26:28"
+      },
+      {
+        "time_stamp": "2024-03-22 12:33:03"
+      },
+      {
+        "time_stamp": "2024-03-22 12:33:19"
+      },
+      {
+        "time_stamp": "2024-03-22 12:33:39"
+      },
+      {
+        "time_stamp": "2024-03-22 12:34:16"
+      },
+      {
+        "time_stamp": "2024-03-22 12:35:33"
+      },
+      {
+        "time_stamp": "2024-03-22 12:35:55"
+      },
+      {
+        "time_stamp": "2024-03-22 12:36:01"
+      },
+      {
+        "time_stamp": "2024-03-22 12:36:14"
+      },
+      {
+        "time_stamp": "2024-03-22 12:36:42"
+      },
+      {
+        "time_stamp": "2024-03-22 12:36:52"
+      },
+      {
+        "time_stamp": "2024-03-22 12:37:07"
+      },
+      {
+        "time_stamp": "2024-03-22 12:37:18"
+      },
+      {
+        "time_stamp": "2024-03-22 12:38:12"
+      },
+      {
+        "time_stamp": "2024-03-22 12:38:36"
+      },
+      {
+        "time_stamp": "2024-03-22 12:38:40"
+      },
+      {
+        "time_stamp": "2024-03-22 12:38:44"
+      },
+      {
+        "time_stamp": "2024-03-22 12:39:10"
+      },
+      {
+        "time_stamp": "2024-03-22 12:39:31"
+      },
+      {
+        "time_stamp": "2024-03-22 12:40:10"
+      },
+      {
+        "time_stamp": "2024-03-22 12:40:23"
+      },
+      {
+        "time_stamp": "2024-03-22 12:40:25"
+      },
+      {
+        "time_stamp": "2024-03-22 12:41:22"
+      },
+      {
+        "time_stamp": "2024-03-22 12:43:57"
+      },
+      {
+        "time_stamp": "2024-03-22 12:44:12"
+      },
+      {
+        "time_stamp": "2024-03-22 12:46:21"
+      },
+      {
+        "time_stamp": "2024-03-22 12:48:12"
+      },
+      {
+        "time_stamp": "2024-03-22 12:48:21"
+      },
+      {
+        "time_stamp": "2024-03-22 12:53:18"
+      },
+      {
+        "time_stamp": "2024-03-22 12:53:25"
+      },
+      {
+        "time_stamp": "2024-03-22 12:53:45"
+      },
+      {
+        "time_stamp": "2024-03-22 12:54:36"
+      },
+      {
+        "time_stamp": "2024-03-22 12:55:06"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-22 09:28:40",
+    "text": "Try using a playbook to trigger the workflow"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-22 09:40:57",
+    "text": "Share your code and let's take a look"
+  },
+  {
+    "poster": {
+      "poster_name": "Caroline Santos",
+      "poster_handle": "caroline.santos"
+    },
+    "time_stamp": "2024-03-22 09:41:31",
+    "text": "```def main(event, callback):\n    data = [\n        {'grupo': 'A', 'tpv_mtd_cartao': 100},\n        {'grupo': 'B', 'tpv_mtd_cartao': 200},\n        {'grupo': 'A', 'tpv_mtd_cartao': 150},\n        {'grupo': 'B', 'tpv_mtd_cartao': 250},\n        {'grupo': 'A', 'tpv_mtd_cartao': 120},\n    ]\n    \n    # Dicionário para armazenar a soma de tpv_mtd_cartao por grupo\n    group_totals = {}\n\n    for row in data:\n        grupo = row['grupo']\n        tpv = row['tpv_mtd_cartao']\n        # Se o grupo ainda não existe no dicionário, crie uma entrada com o valor atual\n        if grupo not in group_totals:\n            group_totals[grupo] = tpv\n        # Se o grupo já existe, adicione o valor atual ao total existente\n        else:\n            group_totals[grupo] += tpv\n\n    # Imprime os totais de cada grupo\n    for grupo, total in group_totals.items():\n        print(f'Grupo {grupo}: Total {total}')\n\n    # Se precisar retornar os totais para uso posterior, pode fazê-lo assim:\n    callback({\n        'outputFields': {\n            'group_totals': group_totals\n        }\n    })```"
+  },
+  {
+    "poster": {
+      "poster_name": "Caroline Santos",
+      "poster_handle": "caroline.santos"
+    },
+    "time_stamp": "2024-03-22 09:43:03",
+    "text": "erro:\n```LAMBDA_WARNING: Unhandled exception. The most likely cause is an issue in the function code. However, in rare cases, a Lambda runtime update can cause unexpected function behavior. For functions using managed runtimes, runtime updates can be triggered by a function change, or can be applied automatically. To determine if the runtime has been updated, check the runtime version in the INIT_START log entry. If this error correlates with a change in the runtime version, you may be able to mitigate this error by temporarily rolling back to the previous runtime version. For more information, see <https://docs.aws.amazon.com/lambda/latest/dg/runtimes-update.html>\n[ERROR] TypeError: main() missing 1 required positional argument: 'callback'\nTraceback (most recent call last):\n  File \"/var/task/HubSpotHandler.py\", line 6, in HubSpot_handler\n    return file.main(event)\nMemory: 31/128 MB\nRuntime: 28.72 ms```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Caroline Santos",
+      "poster_handle": "caroline.santos"
+    },
+    "time_stamp": "2024-03-22 10:36:27",
+    "text": "<@U05R380MLMC> can you help me? I have no idea if it's right"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-22 10:50:48",
+    "text": "I stepped away from my computer but will follow up"
+  },
+  {
+    "poster": {
+      "poster_name": "Caroline Santos",
+      "poster_handle": "caroline.santos"
+    },
+    "time_stamp": "2024-03-22 10:52:07",
+    "text": "```// Definindo uma variável para armazenar o TPV por grupo fora da função main\nlet tpvPorGrupo = {};\n\nexports.main = async (event, callback) =&gt; {\n  /*****\n    Use entradas para obter dados de qualquer ação em seu fluxo de trabalho e use-os em seu código em vez de usar a API da HubSpot.\n  *****/\n  let grupo = event.inputFields['grupo'];\n  let tpv = parseFloat(event.inputFields['tpv']); // Convertendo para float para garantir cálculos corretos\n  \n  // Verificando se o grupo já existe no objeto tpvPorGrupo\n  if (tpvPorGrupo[grupo]) {\n    // Se já existe, adicionamos o TPV atual ao TPV existente\n    tpvPorGrupo[grupo] += tpv;\n  } else {\n    // Se não existe, criamos uma nova entrada para o grupo\n    tpvPorGrupo[grupo] = tpv;\n  }\n\n  callback({\n    outputFields: tpvPorGrupo // Retornando o TPV por grupo\n  });\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Caroline Santos",
+      "poster_handle": "caroline.santos"
+    },
+    "time_stamp": "2024-03-22 10:52:44",
+    "text": "I found this way but it doesn't return the sum correctly, but the code compiles <@U05R380MLMC>"
+  },
+  {
+    "poster": {
+      "poster_name": "Caroline Santos",
+      "poster_handle": "caroline.santos"
+    },
+    "time_stamp": "2024-03-22 12:10:07",
+    "text": "<@U05R380MLMC> "
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-22 12:24:59",
+    "text": "I'm sorry...just got back from a walk."
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-22 12:25:19",
+    "text": "I'll take a look shortly"
+  },
+  {
+    "poster": {
+      "poster_name": "Caroline Santos",
+      "poster_handle": "caroline.santos"
+    },
+    "time_stamp": "2024-03-22 12:26:12",
+    "text": "Thanks Ryan, thank you very much"
+  },
+  {
+    "poster": {
+      "poster_name": "Caroline Santos",
+      "poster_handle": "caroline.santos"
+    },
+    "time_stamp": "2024-03-22 12:26:28",
+    "text": "I really don't know how to do it"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-22 12:33:03",
+    "text": "Ok - question for you.\n\nAre you using Node or Python?"
+  },
+  {
+    "poster": {
+      "poster_name": "Caroline Santos",
+      "poster_handle": "caroline.santos"
+    },
+    "time_stamp": "2024-03-22 12:33:19",
+    "text": "I prefer Python"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-22 12:33:39",
+    "text": "Ok.\n\nCan you take a screenshot of your Custom Code Action Flyout?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-22 12:34:16",
+    "text": "If you are using python, you don't need to add a \"callback\" into your main function."
+  },
+  {
+    "text": "",
+    "time_stamp": "2024-03-22 12:35:33"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-22 12:35:55",
+    "text": "Idioma should say Python then"
+  },
+  {
+    "text": "",
+    "time_stamp": "2024-03-22 12:36:01"
+  },
+  {
+    "text": "",
+    "time_stamp": "2024-03-22 12:36:14"
+  },
+  {
+    "poster": {
+      "poster_name": "Caroline Santos",
+      "poster_handle": "caroline.santos"
+    },
+    "time_stamp": "2024-03-22 12:36:42",
+    "text": "is better using Python ou Node.JS?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-22 12:36:52",
+    "text": "It doesn't matter"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-22 12:37:07",
+    "text": "your first code you provide was written in python but your selected language is Node"
+  },
+  {
+    "poster": {
+      "poster_name": "Caroline Santos",
+      "poster_handle": "caroline.santos"
+    },
+    "time_stamp": "2024-03-22 12:37:18",
+    "text": "example node.js, the code compiles but returns zero"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-22 12:38:12",
+    "text": "Understood but let's begin at the top - pick your preferred language.\n\nDo you want to use Python or Node?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-22 12:38:36",
+    "text": "I'm going to rebuild the same code on my side"
+  },
+  {
+    "poster": {
+      "poster_name": "Caroline Santos",
+      "poster_handle": "caroline.santos"
+    },
+    "time_stamp": "2024-03-22 12:38:40",
+    "text": "Python"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-22 12:38:44",
+    "text": "Ok"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-22 12:39:10",
+    "text": "Select Python as the language\n\nand then update this code\n\n```def main(event, callback):\n    data = [\n        {'grupo': 'A', 'tpv_mtd_cartao': 100},\n        {'grupo': 'B', 'tpv_mtd_cartao': 200},\n        {'grupo': 'A', 'tpv_mtd_cartao': 150},\n        {'grupo': 'B', 'tpv_mtd_cartao': 250},\n        {'grupo': 'A', 'tpv_mtd_cartao': 120},\n    ]\n    \n    # Dicionário para armazenar a soma de tpv_mtd_cartao por grupo\n    group_totals = {}\n\n    for row in data:\n        grupo = row['grupo']\n        tpv = row['tpv_mtd_cartao']\n        # Se o grupo ainda não existe no dicionário, crie uma entrada com o valor atual\n        if grupo not in group_totals:\n            group_totals[grupo] = tpv\n        # Se o grupo já existe, adicione o valor atual ao total existente\n        else:\n            group_totals[grupo] += tpv\n\n    # Imprime os totais de cada grupo\n    for grupo, total in group_totals.items():\n        print(f'Grupo {grupo}: Total {total}')\n\n    # Se precisar retornar os totais para uso posterior, pode fazê-lo assim:\n    callback({\n        'outputFields': {\n            'group_totals': group_totals\n        }\n    })```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-22 12:39:31",
+    "text": "1.) remove \"callback\" from the def main function"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-22 12:40:10",
+    "text": "2.) replace\n\n``` callback({\n        'outputFields': {\n            'group_totals': group_totals\n        }```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-22 12:40:23",
+    "text": "with"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-22 12:40:25",
+    "edited": {
+      "time_stamp": "2024-03-22 12:40:40"
+    },
+    "text": "``` return {\n    \"outputFields\": {\n      \"group_totals\": group_totals\n    }\n  }```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-22 12:41:22",
+    "text": "Let me know once that is done."
+  },
+  {
+    "poster": {
+      "poster_name": "Caroline Santos",
+      "poster_handle": "caroline.santos"
+    },
+    "time_stamp": "2024-03-22 12:43:57",
+    "text": "the code compiled, but the data already passes the values, when texting with a record the values come from the data, it should come from the sum of tpv card aggregated by the group field if it's the same"
+  },
+  {
+    "text": "",
+    "time_stamp": "2024-03-22 12:44:12"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-22 12:46:21",
+    "text": "Understood.\n\nI don't see where you are getting the value tpv.\n\nyou will want to add inside the function.\n\ntpv = event[\"inputFields\"][\"tpv\"]\n\nand then\n\nprint(tpv)"
+  },
+  {
+    "text": "These values get passed to the event",
+    "time_stamp": "2024-03-22 12:48:12"
+  },
+  {
+    "text": "example\ncustomer with the same group field should add the tpv through the code",
+    "time_stamp": "2024-03-22 12:48:21"
+  },
+  {
+    "text": "",
+    "time_stamp": "2024-03-22 12:53:18"
+  },
+  {
+    "poster": {
+      "poster_name": "Caroline Santos",
+      "poster_handle": "caroline.santos"
+    },
+    "time_stamp": "2024-03-22 12:53:25",
+    "text": "```def main(event):\n    data = [\n        {'grupo': 'A', 'tpv_mtd_cartao': 100},\n        {'grupo': 'B', 'tpv_mtd_cartao': 200},\n        {'grupo': 'A', 'tpv_mtd_cartao': 150},\n        {'grupo': 'B', 'tpv_mtd_cartao': 250},\n        {'grupo': 'A', 'tpv_mtd_cartao': 120},\n    ]\n    \n    # Dicionário para armazenar a soma de tpv_mtd_cartao por grupo\n    group_totals = {}\n    \n    tpv = event[\"inputFields\"][\"tpv_mtd_cartao\"]\n\n    for row in data:\n        grupo = row['grupo']\n        tpv = row['tpv_mtd_cartao']\n        # Se o grupo ainda não existe no dicionário, crie uma entrada com o valor atual\n        if grupo not in group_totals:\n            group_totals[grupo] = tpv\n        # Se o grupo já existe, adicione o valor atual ao total existente\n        else:\n            group_totals[grupo] += tpv\n\n    # Imprime os totais de cada grupo\n    for grupo, total in group_totals.items():\n        print(f'Grupo {grupo}: Total {total}')\n\n    # Se precisar retornar os totais para uso posterior, pode fazê-lo assim:\n    return {\n        'outputFields': {\n            'group_totals': group_totals\n        }\n    }```"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-22 12:53:45",
+    "text": "I think there is a lot going on here"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-22 12:54:36",
+    "text": "1.) I don't fully understand your use case\n2.) You are defining input variables but also creating your own data object in the code."
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-03-22 12:55:06",
+    "text": "Let's move this to a DM"
+  }
+]

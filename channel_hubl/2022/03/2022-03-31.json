@@ -1,0 +1,94 @@
+[
+  {
+    "poster": {
+      "poster_name": "Enrico Bollen",
+      "poster_handle": "e.bollen"
+    },
+    "time_stamp": "2022-03-31 04:42:50",
+    "edited": {
+      "time_stamp": "2022-03-31 05:37:29"
+    },
+    "text": "# SOLVED #\n\nHello,\nI’m trying to set a variable within a for loop.\n\nLike this:\n\n```{% for item in MY_ITEMS %}\n  {% if item['name'] == 'Hello' %}\n\n    {% set MY_VAR = item['name'] %}\n\n  {% endif %}\n{% endfor %}\n\n{{MY_VAR}} ```\nWhere `MY_VAR` shall contain the name i set within my for loop and if condition.\nSomehow the variable is always empty.\nIs there a solution for such a problem?",
+    "reply_count": 5,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2022-03-31 04:49:10"
+      },
+      {
+        "time_stamp": "2022-03-31 04:53:05"
+      },
+      {
+        "time_stamp": "2022-03-31 04:57:41"
+      },
+      {
+        "time_stamp": "2022-03-31 05:55:26"
+      },
+      {
+        "time_stamp": "2022-03-31 09:12:00"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Joe O'Hara",
+      "poster_handle": "johara"
+    },
+    "time_stamp": "2022-03-31 04:49:10",
+    "text": "You should first define MY_VAR outside of the for loop"
+  },
+  {
+    "poster": {
+      "poster_name": "Enrico Bollen",
+      "poster_handle": "e.bollen"
+    },
+    "time_stamp": "2022-03-31 04:53:05",
+    "edited": {
+      "time_stamp": "2022-03-31 04:54:55"
+    },
+    "text": "I tried that, but then it stays at that original value\n\n```{% set MY_VAR = 'world' %}\n\n{% for item in MY_ITEMS %}\n  {% if item['name'] == 'Hello' %}\n\n    {% set MY_VAR = item['name'] %}\n    &lt;p&gt;Test is there one?&lt;/p&gt;\n\n  {% endif %}\n{% endfor %}\n\n{{MY_VAR}} ```\nMY_VAR is always `world` instead of `hello` eventhough i can see the “is there one?” string"
+  },
+  {
+    "poster": {
+      "poster_name": "Enrico Bollen",
+      "poster_handle": "e.bollen"
+    },
+    "time_stamp": "2022-03-31 04:57:41",
+    "edited": {
+      "time_stamp": "2022-03-31 05:37:03"
+    },
+    "text": "~Ah i think i got it … i need to use the `do MY_VAR.update()`  inside the loop.~\n\n~edit: unfortunately, this didn’t work~ :disappointed:\n\nedit: got it working!\n`update` is working, but only with this “object notation” … appearently you cannot set variables and update them in loops, only if they’re an object … idk…\n\nSo my code above is not working, but when i replace the value of MY_VAR with something like `MY_VAR = {val: 0}` and then `{% do MY_VAR.update({val: 1} %}` it works."
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2022-03-31 05:55:26",
+    "text": "Exactly, the other option would be converting the variable to an array and appending a value, then referencing it with `{{ my_var[0] }}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2022-03-31 09:12:00",
+    "text": "The reason that you cannot set values in a for loop is because the for loop is a child-scoped context so you only set the value in that loop's child scope. Once you exit the for loop, the value gets garbage collected.\nBut if you set a value outside of the for loop and then update it, it will reference the value on the outer scoped context and modify that.\n\nThe best way would probably be to use namespaces.\n```{% set ns = namespace() %}\n{% for item in MY_ITEMS %}\n  ...\n  {% set ns.MY_VAR = item['name'] %}\n  ...\n{% endfor %}\n{{ ns.MY_VAR }}```"
+  },
+  {
+    "poster": {
+      "poster_name": "robert sampang",
+      "poster_handle": "imjackfrost1997"
+    },
+    "time_stamp": "2022-03-31 09:41:38",
+    "text": "Hi, how to do a condition on a module (Date and Time) if my set date and time has passed i want to display a the event is ended. Is this possible on HubSpot?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonny MacEachern",
+      "poster_handle": "maceachern.jonny"
+    },
+    "time_stamp": "2022-03-31 13:59:39",
+    "text": "What are the unique names given to HubL tags used for? for example, “*my_cta*” in this case:\n\n```{% cta \"my_cta\" guid=\"{{ module.cta }}\" %}```"
+  }
+]

@@ -1,0 +1,150 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-12-05 10:37:56",
+    "edited": {
+      "time_stamp": "2023-12-05 10:38:24"
+    },
+    "text": "Hey, are islands able to take child components?\n```<Island\n  module={MyComponent}\n  hydrateOn=\"load\"\n  {...fieldValues}\n>\n  <Child />\n  <Child />\n  <Child />\n</Island>```",
+    "reply_count": 11,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-12-05 11:10:33"
+      },
+      {
+        "time_stamp": "2023-12-05 11:46:55"
+      },
+      {
+        "time_stamp": "2023-12-05 11:48:53"
+      },
+      {
+        "time_stamp": "2023-12-05 11:50:22"
+      },
+      {
+        "time_stamp": "2023-12-05 11:51:25"
+      },
+      {
+        "time_stamp": "2023-12-05 11:52:46"
+      },
+      {
+        "time_stamp": "2023-12-05 11:53:43"
+      },
+      {
+        "time_stamp": "2023-12-05 11:53:58"
+      },
+      {
+        "time_stamp": "2023-12-05 11:54:27"
+      },
+      {
+        "time_stamp": "2023-12-05 11:55:47"
+      },
+      {
+        "time_stamp": "2023-12-05 11:59:00"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2023-12-05 11:10:33",
+    "edited": {
+      "time_stamp": "2023-12-05 11:10:43"
+    },
+    "text": "Nope.\n\nThe basic limitation is we can’t serialize functions and “send them” to the browser to be rendered later (same reason you can’t send a function as a prop to an island).\n\nTheoretically, we could try and do something to either render each child to HTML and pass that along. Or try and do some magic to under the covers to code split `Child`, serialize its props, etc.\n\n… but we’re not sure its worth it too helpful at this point. Any specific use cases where passing children to islands is needed (or helpful)?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-12-05 11:46:55",
+    "text": "I've built a carousel component that accepts children, I was hoping to just loop through the repeater field and add children to the `&lt;Island&gt;`.\n\nCouple options I'm playing with:\n1. Pass children as props, refactor component :disappointed: \n2. Add HOC as the island, that then passes children prop as actual children\nLeaning towards 2, unless you've got a more elegant solution in mind that i've not thought of yet"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-12-05 11:48:53",
+    "edited": {
+      "time_stamp": "2023-12-05 11:49:13"
+    },
+    "text": "i’m not sure either of those are going to work - if the items are sourced from outside of the island, the components will need to be rendered from within the island. instead of passing children could you pass the data to the island that you’re using to render them higher up currently, and do the rendering within the carousel?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-12-05 11:50:22",
+    "edited": {
+      "time_stamp": "2023-12-05 11:50:36"
+    },
+    "text": "passing the children as some other prop isn’t meaningfully different from passing them through as JSX children"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-12-05 11:51:25",
+    "text": "Ya, just realized that won't work"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-12-05 11:52:46",
+    "text": "I think 2 will work as it'll just be data being passed.\n\n`index {field values} -&gt; hoc?island -&gt; carousel`"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-12-05 11:53:43",
+    "text": "hmm possibly, i think i’d have to see a more concrete example to know"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-12-05 11:53:58",
+    "text": "but as long as you’re not passing down the result of JSX as a prop to `Island` you’re probably right"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-12-05 11:54:27",
+    "text": "Ya, i'll try and circle back."
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-12-05 11:55:47",
+    "edited": {
+      "time_stamp": "2023-12-05 11:55:57"
+    },
+    "text": "for some background on the problem, the `?island` import passed to `<Island />` creates a code split of client code to then hydrate on the browser. if the children are passed in dynamically then the browser doesn’t have those components to render on the client side in that code split"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2023-12-05 11:59:00",
+    "text": "Ya, I realize that after it erroring out. I tried to compose a component within the module index and use that, but it obviously got upset without the `?island` , which makes sense now"
+  }
+]

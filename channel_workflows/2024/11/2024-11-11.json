@@ -1,0 +1,200 @@
+[
+  {
+    "poster": {
+      "poster_name": "Raya Gerdzhikova",
+      "poster_handle": "raya.gerdzhikova"
+    },
+    "time_stamp": "2024-11-11 05:02:05",
+    "text": "Hi there,\n\nI'm working with a custom object that integrates with various APIs.\n\nI'm encountering an issue where, while the contact-to-campaign associations are working correctly, a second workflow meant to count contacts with specific values isn't functioning properly. Both logics are implemented through custom code.\n\nHas anyone else experienced similar issues or can offer guidance?\n\nThanks!",
+    "reply_count": 13,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-11-11 07:32:11"
+      },
+      {
+        "time_stamp": "2024-11-11 07:33:36"
+      },
+      {
+        "time_stamp": "2024-11-11 08:19:04"
+      },
+      {
+        "time_stamp": "2024-11-11 08:19:36"
+      },
+      {
+        "time_stamp": "2024-11-11 09:00:17"
+      },
+      {
+        "time_stamp": "2024-11-11 10:31:16"
+      },
+      {
+        "time_stamp": "2024-11-11 10:33:48"
+      },
+      {
+        "time_stamp": "2024-11-11 10:33:54"
+      },
+      {
+        "time_stamp": "2024-11-11 10:35:57"
+      },
+      {
+        "time_stamp": "2024-11-11 10:36:36"
+      },
+      {
+        "time_stamp": "2024-11-11 10:37:42"
+      },
+      {
+        "time_stamp": "2024-11-11 10:40:20"
+      },
+      {
+        "time_stamp": "2024-11-12 07:50:21"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Maximilian Holzer",
+      "poster_handle": "maximilian.holzer"
+    },
+    "time_stamp": "2024-11-11 05:15:30",
+    "text": "Important can someone help me and tell me why my code isn't working properly?\n```const HubSpot = require('@HubSpot/api-client');\n\nconst HubSpotClient = new HubSpot.Client({\"accessToken\":\"YOUR_ACCESS_TOKEN\"});\n\nconst BatchInputSimplePublicObjectInputForCreate = { inputs: [{\"associations\":[{\"types\":[{\"associationCategory\":\"HubSpot_DEFINED\",\"associationTypeId\":127}],\"to\":{\"id\":\"19644463596\"}}],\"properties\":{\"ausschreibewert_zahl\":\"51\",\"ausschreibewertdatum\":\"1582416000000\",\"ausschreibewerte_id\":\"253\",\"ausschreibewertname\":\"test-70\"}}] };\nconst objectType = \"2-135572951\";\n\ntry {\n  const apiResponse = await HubSpotClient.crm.objects.batchApi.create(objectType, BatchInputSimplePublicObjectInputForCreate);\n  console.log(JSON.stringify(apiResponse, null, 2));\n} catch (e) {\n  e.message === 'HTTP request failed'\n    ? console.error(JSON.stringify(e.response, null, 2))\n    : console.error(e)\n}```\ntrying to create a custom object and then associate it to a deal but it gives me this error message:\nHTTP 400\n\n{\n  \"status\": \"error\",\n  \"message\": \"invalid from object type 2-135572951 for associations to be created. expected: 0-38\",\n  \"correlationId\": \"38dc5a46-f8c5-48f9-8021-4eb2b3411184\",\n  \"category\": \"VALIDATION_ERROR\"\n}\n\nwhich makes no sense i checked the associationtypeid from this object to deal and its 127 &gt;.&lt;\ni got it with this get request: <https://api.hubapi.com/crm/v4/associations/{fromObjectType}/{toObjectType}/labels>\n\nHTTP 200\n\n{\n  \"results\": [\n    {\n      \"category\": \"USER_DEFINED\",\n      \"typeId\": 127,\n      \"label\": null\n    }\n  ]\n}\n\ncan someone please help me quickly?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-11-11 05:17:39"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Maximilian Holzer",
+      "poster_handle": "maximilian.holzer"
+    },
+    "time_stamp": "2024-11-11 05:17:39",
+    "text": "solved whoops:\ni didnt put user_defined :skull:"
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-11-11 07:32:11",
+    "text": "can you share your code?"
+  },
+  {
+    "poster": {
+      "poster_name": "Raya Gerdzhikova",
+      "poster_handle": "raya.gerdzhikova"
+    },
+    "time_stamp": "2024-11-11 07:33:36",
+    "text": "```const HubSpot = require('@HubSpot/api-client');\n\n// Initialize a single HubSpot client\nconst HubSpotClient = new HubSpot.Client({\n  accessToken: process.env.TOKEN\n});\n\n// Function to wait a specific number of milliseconds\nconst wait = (ms) =&gt; new Promise(resolve =&gt; setTimeout(resolve, ms));\n\n// Function to throttle API calls with a 150 ms delay\nconst throttle = async (delayMs = 150) =&gt; {\n  await wait(delayMs);\n};\n\n// Exponential backoff for retrying on rate limits\nconst exponentialBackoff = async (attempt) =&gt; {\n  const backoffTime = Math.min(Math.pow(2, attempt) * 100, 5000);\n  await wait(backoffTime);\n};\n\n// Increment provenance property\nconst incrementProvenanceProperty = async (client, campaignObject, latestProvenance) =&gt; {\n  if (!latestProvenance) {\n    await updateContactCount(client, campaignObject, 'other_contacts', 1);\n    return;\n  }\n\n  let property;\n  switch (latestProvenance) {\n    case 'Paid': \n      property = 'paid_contacts'; \n      break;\n    case 'Inbound': \n      property = 'organic_contacts'; \n      break;\n    case 'Outbound': \n      property = 'outbound_contacts'; \n      break;\n    case 'Partners': \n      property = 'partner_contacts'; \n      break;\n    default: \n      property = 'other_contacts';\n  }\n\n  await updateContactCount(client, campaignObject, property, 1);\n};\n\n// Increment origin property based on inbound or outbound\nconst incrementOriginProperty = async (client, campaignObject, latestOrigin) =&gt; {\n  if (!latestOrigin) {\n    await updateContactCount(client, campaignObject, 'empty_enrolled', 1);\n    return;\n  }\n\n  let property;\n  \n  // Check if origin is inbound\n  switch (latestOrigin) {\n    // Inbound mappings\n    case 'Inbound Demo':\n      property = 'demo_request_enrolled';\n      break;\n    case 'Inbound Events': \n      property = 'events_enrolled'; \n      break;\n    case 'Inbound Freebie': \n      property = 'freebie_enrolled'; \n      break;\n    case 'Inbound Webinar': \n      property = 'webinar_enrolled'; \n      break;\n    case 'Signup':\n    case 'Signup completed Desky':\n    case 'Signup Uncompleted':\n    case 'Desky Signup Uncompleted':\n      property = 'signup_enrolled';\n      break;\n    case 'Blog':\n    case 'Channel inbound':\n    case 'Community':\n    case 'Customer':\n    case 'Desky contact sales':\n    case 'Hr Course':\n    case 'HR Job Portal':\n    case 'Inbound Call':\n    case 'Inbound Chat':\n    case 'Inbound Contact Sales':\n    case 'Inbound Email':\n    case 'Marketing Affiliates':\n      property = 'other_inbound';\n      break;\n\n    // Outbound mappings\n    case 'Genesy': \n      property = 'genesy_enrolled'; \n      break;\n    case 'Outbound Linkedin': \n      property = 'linkedin_enrolled'; \n      break;\n    case 'Cognism': \n      property = 'cognism_enrolled'; \n      break;\n    case 'Gartner': \n      property = 'gartner_enrolled'; \n      break;\n    case 'Zoom Info': \n      property = 'zoominfo_enrolled'; \n      break;\n    case 'Manually added by sales':\n    case 'Manually sourced':\n    case 'Sales integration outbound':\n      property = 'manually_sourced_enrolled';\n      break;\n    case 'Apollo':\n    case 'Channel outbound':\n    case 'DealFront Web Visitors':\n    case 'Echobot':\n    case 'Fuel to Fly (Apollo)':\n    case 'Lusha':\n    case 'Manually sourced CX':\n    case 'Manually sourced partners':\n    case 'Migration':\n    case 'Old Inbound':\n    case 'Outbound Event':\n    case 'Partner database':\n    case 'Referral':\n    case 'Unknown':\n      property = 'other_outbound';\n      break;\n\n    // Defaults based on category type\n    default:\n      property = latestOrigin.startsWith('Inbound') ? 'other_inbound' : 'other_outbound';\n  }\n\n  await updateContactCount(client, campaignObject, property, 1);\n};\n\n// Main function\nexports.main = async (event, _callback) =&gt; {\n  try {\n    const {\n      object: { objectId: contactId },\n      inputFields: {\n        factorial_campaign_name_dropdown: campaignName,\n        createdate: contactCreateDate,\n        latest_lead_provenance: latestProvenance,\n        latest_lead_origin: latestOrigin\n      }\n    } = event;\n\n    if (!campaignName?.trim()) {\n      throw new Error(\"Invalid campaign name provided.\");\n    }\n\n    const filterCampaignByName = createCampaignFilter(campaignName);\n    const maxRetries = 5;\n    let retryCount = 0;\n\n    while (retryCount &lt; maxRetries) {\n      try {\n        // Search for the campaign\n        const { results } = await HubSpotClient.crm.objects.searchApi.doSearch(\n          'p4960096_marketing_campaings',\n          filterCampaignByName\n        );\n\n        if (results.length === 0) {\n          _callback({ outputFields: { error: 'Campaign not found.' } });\n          return;\n        }\n\n        const campaignObject = results[0];\n        const todaysDateFormat = getFormattedDate(new Date());\n        const contactCreateDateFormat = getFormattedDate(new Date(Number(contactCreateDate)));\n\n        // Update 'new_contacts' ONLY if the contact is new\n        if (contactCreateDateFormat === todaysDateFormat) {\n          await throttle();\n          await updateContactCount(HubSpotClient, campaignObject, 'new_contacts', 1);\n        }\n\n        // Always update provenance and origin properties\n        await throttle();\n        await incrementProvenanceProperty(HubSpotClient, campaignObject, latestProvenance);\n\n        await throttle();\n        await incrementOriginProperty(HubSpotClient, campaignObject, latestOrigin);\n\n        console.log(`Updated provenance and origin counts for Contact ID: ${contactId} in campaign: ${campaignName}`);\n        break;\n\n      } catch (e) {\n        if (e.response?.status === 429) {\n          console.log(`Rate limit hit on attempt ${retryCount + 1}, retrying...`);\n          await exponentialBackoff(retryCount++);\n        } else if (e.code === 'ENETUNREACH') {\n          console.error(\"Network issue encountered. Please check your internet connection.\");\n          _callback({ outputFields: { error: 'Network issue encountered.' } });\n          return;\n        } else if (e.response?.status &gt;= 500) {\n          console.error(\"Server error encountered. Retrying...\");\n          await exponentialBackoff(retryCount++);\n        } else {\n          console.error(\"API or other error: \", e.message);\n          throw e;\n        }\n      }\n    }\n\n    if (retryCount &gt;= maxRetries) {\n      console.error(`Max retry attempts reached for Contact ID: ${contactId}`);\n      _callback({ outputFields: { error: 'Max retry attempts reached.' } });\n    }\n\n  } catch (e) {\n    console.error(`An error occurred: ${e.message}`);\n    _callback({ outputFields: { error: 'An error occurred during processing.' } });\n  }\n};\n\n// Helper functions\nconst createCampaignFilter = (campaignName) =&gt; ({\n  filterGroups: [{\n    filters: [{\n      value: campaignName,\n      propertyName: 'campaign_name',\n      operator: 'EQ'\n    }]\n  }],\n  properties: [\n    'new_contacts', 'paid_contacts', 'organic_contacts', 'outbound_contacts', 'partner_contacts', 'other_contacts',\n    'demo_request_enrolled', 'events_enrolled', 'freebie_enrolled', 'webinar_enrolled', 'signup_enrolled', 'other_inbound',\n    'genesy_enrolled', 'linkedin_enrolled', 'cognism_enrolled', 'gartner_enrolled', 'zoominfo_enrolled',\n    'manually_sourced_enrolled', 'other_outbound', 'empty_enrolled'\n  ]\n});\n\nconst getFormattedDate = (date) =&gt; {\n  const day = String(date.getDate()).padStart(2, '0');\n  const month = String(date.getMonth() + 1).padStart(2, '0');\n  const year = date.getFullYear();\n  return `${month}/${day}/${year}`;\n};\n\nconst updateContactCount = async (client, campaignObject, property, increment) =&gt; {\n  const currentCount = Number(campaignObject.properties[property] || 0);\n  const updatedCount = currentCount + increment;\n\n  const propertiesToUpdate = { \n    [property]: updatedCount,\n    counter_outcome: 'yes' // Set counter_outcome to \"yes\" when a contact is counted\n  };\n\n  try {\n    // Attempt to update the campaign object with the new counts and properties\n    await client.crm.objects.basicApi.update(\n      'p4960096_marketing_campaings',\n      campaignObject.id,\n      { properties: propertiesToUpdate }\n    );\n    console.log(`Updated ${property} to ${updatedCount} and set counter_outcome to \"yes\" for campaign ID: ${campaignObject.id}`);\n    \n  } catch (error) {\n    console.error(`Failed to update ${property} for campaign ID: ${campaignObject.id}. Setting counter_outcome to \"no\". Error: ${error.message}`);\n    \n    // If the update fails, set counter_outcome to \"no\"\n    await client.crm.objects.basicApi.update(\n      'p4960096_marketing_campaings',\n      campaignObject.id,\n      { properties: { counter_outcome: 'no' } }\n    );\n    console.log(`Set counter_outcome to \"no\" for campaign ID: ${campaignObject.id}`);\n  }\n};```"
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-11-11 08:19:04",
+    "text": "```// If the update fails, set counter_outcome to \"no\"\n    await client.crm.objects.basicApi.update(\n      'p4960096_marketing_campaings',\n      campaignObject.id,```\nI think this is the issue… In this code ^ you are updating with campaignObject.id but when you get the campaignObject you don’t get the HubSpot id..\n```// Helper functions\nconst createCampaignFilter = (campaignName) =&gt; ({\n  filterGroups: [{\n    filters: [{\n      value: campaignName,\n      propertyName: 'campaign_name',\n      operator: 'EQ'\n    }]\n  }],\n  properties: [\n    'new_contacts', 'paid_contacts', 'organic_contacts', 'outbound_contacts', 'partner_contacts', 'other_contacts',\n    'demo_request_enrolled', 'events_enrolled', 'freebie_enrolled', 'webinar_enrolled', 'signup_enrolled', 'other_inbound',\n    'genesy_enrolled', 'linkedin_enrolled', 'cognism_enrolled', 'gartner_enrolled', 'zoominfo_enrolled',\n    'manually_sourced_enrolled', 'other_outbound', 'empty_enrolled'\n  ]\n});```\nto this:\n```// Helper functions\nconst createCampaignFilter = (campaignName) =&gt; ({\n  filterGroups: [{\n    filters: [{\n      value: campaignName,\n      propertyName: 'campaign_name',\n      operator: 'EQ'\n    }]\n  }],\n  properties: [\n    'new_contacts', 'paid_contacts', 'organic_contacts', 'outbound_contacts', 'partner_contacts', 'other_contacts',\n    'demo_request_enrolled', 'events_enrolled', 'freebie_enrolled', 'webinar_enrolled', 'signup_enrolled', 'other_inbound',\n    'genesy_enrolled', 'linkedin_enrolled', 'cognism_enrolled', 'gartner_enrolled', 'zoominfo_enrolled',\n    'manually_sourced_enrolled', 'other_outbound', 'empty_enrolled', 'hs_object_id'\n  ]\n});```\nand change `campaignObject.id` to `campaignObject.hs_object_id`"
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-11-11 08:19:36",
+    "text": "Let me know if that works or not"
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-11-11 08:22:36",
+    "text": "Copying this from hs community: <https://community.HubSpot.com/t5/Tickets-Conversations/How-to-copy-the-value-of-a-sensitive-property-to-a-non-sensitive/m-p/1065876|it’s against HubSpot’s TOS to store sensitve data in a non-sensitive property>"
+  },
+  {
+    "text": "You can’t assign a task to a team in a workflow, a hack is to add the task to a queue.. and in Tasks assign the queue to the specific users.. (unfortunately a queue cannot be assigned to a team either if will need to be manually updated with the users).",
+    "time_stamp": "2024-11-11 08:23:12"
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-11-11 08:30:09",
+    "text": "In Settings &gt; Integrations: Connected Apps &gt; Microsoft Teams &gt; Webinars &gt; My settings - what does it say here?"
+  },
+  {
+    "poster": {
+      "poster_name": "Raya Gerdzhikova",
+      "poster_handle": "raya.gerdzhikova"
+    },
+    "time_stamp": "2024-11-11 09:00:17",
+    "text": "Thank you! Testing now :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Adan Ortiz",
+      "poster_handle": "adan.moises.ortiz"
+    },
+    "time_stamp": "2024-11-11 10:29:46",
+    "text": "Has anyone figured out how to sync HubSpot Campaigns into for example a Google sheet using app script. So it spits out all campaings with marketing tactic associated with it? For example if i click on a campaign (parent) I want to populate all information you typically see after that - emails, webinars, events, etc associated with that parent"
+  },
+  {
+    "poster": {
+      "poster_name": "Raya Gerdzhikova",
+      "poster_handle": "raya.gerdzhikova"
+    },
+    "time_stamp": "2024-11-11 10:31:16",
+    "text": "Hey Amalia, it didn't work. Can you tell me why I should change `campaignObject.id` to `campaignObject.hs_object_id` ? Isn't this `campaignObject.id` what the HubSpot API expects when updating a campaign object?"
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-11-11 10:33:48",
+    "text": "hmm in your code it didn’t look like you got the record id, HubSpot does expect it"
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-11-11 10:33:54",
+    "text": "do you wanna hop on a call?"
+  },
+  {
+    "poster": {
+      "poster_name": "Raya Gerdzhikova",
+      "poster_handle": "raya.gerdzhikova"
+    },
+    "time_stamp": "2024-11-11 10:35:57",
+    "text": "Yes, can I book a time with you tomorrow? I had to leave the office already"
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-11-11 10:36:36",
+    "text": "sure"
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-11-11 10:37:42",
+    "text": "<https://amalia.codes/meetings/o-o/quick-call>"
+  },
+  {
+    "poster": {
+      "poster_name": "Raya Gerdzhikova",
+      "poster_handle": "raya.gerdzhikova"
+    },
+    "time_stamp": "2024-11-11 10:40:20",
+    "text": "Booked, thank you! :slightly_smiling_face:"
+  }
+]

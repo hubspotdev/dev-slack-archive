@@ -1,0 +1,111 @@
+[
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2021-04-09 07:26:20",
+    "text": "That could mean that the shape of the default data is incorrect. The editor may be more forgiving and convert it into the correct format on first edit by a user. Which field are you using and what is the default data?"
+  },
+  {
+    "text": "Wahhhh? Is this for adding potential units as a content editor?! (this is a number field)",
+    "time_stamp": "2021-04-09 08:52:22",
+    "edited": {
+      "time_stamp": "2021-04-09 08:52:39"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2021-04-09 08:53:38",
+    "text": "Yep. Dollar sign, pc, rem",
+    "reply_count": 5,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2021-04-09 09:28:37"
+      },
+      {
+        "time_stamp": "2021-04-09 09:29:23"
+      },
+      {
+        "time_stamp": "2021-04-09 09:29:38"
+      },
+      {
+        "time_stamp": "2021-04-09 09:34:26"
+      },
+      {
+        "time_stamp": "2021-04-09 09:35:18"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Mitja Lewin",
+      "poster_handle": "m.lewin"
+    },
+    "time_stamp": "2021-04-09 08:55:11",
+    "edited": {
+      "time_stamp": "2021-04-09 09:02:42"
+    },
+    "text": "<@U012F502T62> Try it this way:\n```\n{# GET OBJECT FROM QUERY URL #}\n{# -------------------------------------------------------------------- #}\n\n{# Convert Query To Array #}\n{% set query_parts = request.query|split('&amp;', 44) %}\n{% set query_object = {} %}\n\n{# Loop Throw Array #}\n{% for query in query_parts %}\n\n  {# Get Key And Value For Each Query #}\n  {% set key = query|split('=')|first %}\n  {% set val = query|split('=')|last %}\n\n  {# If Key Exist #}\n  {% if key in query_object %}\n\n    {# Extend Existing Array #}\n    {% if query_object[key] and query_object[key] is iterable  %}\n\n        {# Extend The Array #}\n        {% do query_object[key].append( val ) %}\n\n    {# Create New Array For Value #}\n    {% else %} \n        \n        {# Add Existing And Current Value To Array #}\n        {% set obj = ('{\"'~ key ~'\":[\"'~ query_object[key] ~'\",\"'~ val ~'\"]}')|fromjson %}\n        {% do query_object.update( obj ) %}\n  \n    {% endif %}\n\n  {# Else Create A New Entry #}\n  {% else %}\n\n    {# Make Object From String #}\n    {% set obj = ('{\"'~ key ~'\":\"'~ val ~'\"}\"')|fromjson %}\n    {% do query_object.update( obj ) %}\n\n  {% endif %}\n\n{% endfor %}\n\n\n{# DEBUG HELPER #}\n{# -------------------------------------------------------------------- #}\n\n&lt;script&gt; console.log( {{ query_object|tojson }} ); &lt;/script&gt;\n{% for key, value in query_object.items() %}\n  {{ loop.index }} | {{ key }} | {{ value }}&lt;br&gt;\n{% endfor %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2021-04-09 09:25:56",
+    "text": "How do we access that suffix? It looks like it doesnt print automatically with the number field"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2021-04-09 09:26:05",
+    "text": "But I cant seem to find it in the docs"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-04-09 09:28:37",
+    "text": "sort-of\n\nIt’s for you the developer to display the unit. This does not give a content creator a choice in which unit to use."
+  },
+  {
+    "poster": {
+      "poster_name": "Chad Pierce",
+      "poster_handle": "chadbluleadz"
+    },
+    "time_stamp": "2021-04-09 09:29:23",
+    "text": "No. It's for the dev.... Sorry."
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2021-04-09 09:29:38",
+    "text": "<@U7SL518D6> Does it simply display the unit in the content editor? Or is there a way to print this value?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2021-04-09 09:34:26",
+    "text": "It does display in the page editor.\n\nIt’s an uneditable string for them.\n\nIt gives you a way to show sizing context to the content creator\n\nfor example if you’re using ems to actually size something they can see that what they’re adjusting is the em value.\n\nIf you’re providing px you can show px. That can be useful to someone as to how the units scale.\n\nAfterall if you use rems and your base font size is say 16px, that means 1 rem = 16px.  if you had left that with a null default value and no suffix, the user likely would think they’re sizing with px and be very confused as to why when they enter 16 into the field they get something like 256px"
+  },
+  {
+    "poster": {
+      "poster_name": "BJ Szyjakowski",
+      "poster_handle": "bj.s"
+    },
+    "time_stamp": "2021-04-09 09:35:18",
+    "text": "make sense - very cool"
+  }
+]

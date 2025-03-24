@@ -1,0 +1,69 @@
+[
+  {
+    "poster": {
+      "poster_name": "Derek Gervais",
+      "poster_handle": "dgervais"
+    },
+    "time_stamp": "2020-06-22 12:10:03",
+    "edited": {
+      "time_stamp": "2020-06-22 12:10:09"
+    },
+    "text": "Hey <@U0133U3RYE8>, can you elaborate a bit on what you’re using express for here? At this time, HubSpot serverless functions only support a limited number of preloaded packages out of the box: <https://developers.HubSpot.com/docs/cms/features/serverless-functions/reference#preloaded-packages>"
+  },
+  {
+    "poster": {
+      "poster_name": "Derek Gervais",
+      "poster_handle": "dgervais"
+    },
+    "time_stamp": "2020-06-22 12:11:09",
+    "text": "If you need to include any other packages, the way to do that is to use webpack to bundle your dependencies into your function file."
+  },
+  {
+    "poster": {
+      "poster_name": "David F Jones",
+      "poster_handle": "david568"
+    },
+    "time_stamp": "2020-06-22 12:44:47",
+    "text": "Hey <@U9F22AQH5>, so I'm trying to use the serverless functions to make a POST API call, following the instructions in the HubSpot academy api video here - <https://app.HubSpot.com/academy/1842589/tracks/71/592/2966>\n\nThis is what my serverless function currently looks like -\n`exports.main = (context, sendResponse) =&gt; {`\n  `// your code called when the function is executed`\n\n`console.log(\"This is my create lesson script that will use api calls to update user properties for lesson progress\");`\n\n`const request = require('request');`\n\n`const express = require('express');`\n`const axios = require('axios');`\n\n`const app = express();`\n\n`app.get('/contacts', async (req, res) =&gt; {`\n    `const contacts = `<https://api.hubapi.com/contacts/v1/lists/all/contacts/recent?hapikey=${process.env.apiKey}>`;`\n\n    `var functionResponse = \"Congrats! You've just deployed a Serverless Function.\"`\n    `try{`\n        `const resp = await axios.get(contacts);`\n        `const date = resp.data;`\n        `console.log(data);`\n        `functionResponse = data;`\n    `}catch(err){`\n        `console.error(err);`\n    `}`\n`});`\n\n  `// sendResponse is a callback function you call to send your response.`\n  `sendResponse({body: functionResponse, statusCode: 200});`\n`};`"
+  },
+  {
+    "poster": {
+      "poster_name": "Derek Gervais",
+      "poster_handle": "dgervais"
+    },
+    "time_stamp": "2020-06-22 13:55:03",
+    "text": "Ok so for this, you don’t need `express` and you only need `request` or `axios`, not both. With serverless functions you only need to write the specific code you want executed: HubSpot manages defining the endpoint, accepting requests, and sending the response to the client for you (which is the reason we don’t need `express`)\n\nYour function could instead look something like this (I haven’t tested this, so be sure to check my work):\n```exports.main = (context, sendResponse) =&gt; {\n  // your code called when the function is executed\nconsole.log(\"This is my create lesson script that will use api calls to update user properties for lesson progress\");\nconst axios = require('axios');\nconst contacts = `<https://api.hubapi.com/contacts/v1/lists/all/contacts/recent?hapikey=${process.env.apiKey}>`;\nasync function getContact() {\n  try{\n      const resp = await axios.get(contacts);\n      return resp.data;\n  }catch(err){\n      return err;\n  }\n}\n  sendResponse({body: getContact(), statusCode: 200});\n};```"
+  },
+  {
+    "poster": {
+      "poster_name": "David F Jones",
+      "poster_handle": "david568"
+    },
+    "time_stamp": "2020-06-22 14:30:23",
+    "text": "So this all makes sense so far, but when I try to run this I am getting an empty json object returned. The weird thing about this is that if I go into my integrations section in HubSpot I can see the request was made and was apparently successful\n\n`200    GET    /contactslistseg/v1/lists/all/contacts/recent   June 22, 2020 2:18 PM` "
+  },
+  {
+    "poster": {
+      "poster_name": "Derek Gervais",
+      "poster_handle": "dgervais"
+    },
+    "time_stamp": "2020-06-22 14:58:32",
+    "text": "Not totally sure what’s going on there, but it might be one of the following:\n• The portal associated with the hapikey you’re using doesn’t have any contacts (new test portal?)\n• The `getContact()` function isn’t properly returning the body of the request\n• I did `async/await` wrong (very possible)"
+  },
+  {
+    "poster": {
+      "poster_name": "David F Jones",
+      "poster_handle": "david568"
+    },
+    "time_stamp": "2020-06-22 15:59:29",
+    "text": "So I've been playing around with it and it seems like it is an issue related to the async function. When I change the code to this -\n\n`exports.main = (context, sendResponse) =&gt; {`\n  `// your code called when the function is executed`\n`console.log(\"This is my create lesson script that will use api calls to update user properties for lesson progress\");`\n`const axios = require('axios');`\n`const contacts = `<https://api.hubapi.com/contacts/v1/lists/all/contacts/all?hapikey=${process.env.apiKey}&amp;count=2>`;`\n`function testing(){`\n  `return \"pizza\";`\n`}`\n`async function getContact() {`\n  `return \"test\";`\n  `try{`\n      `const resp = await axios.get(contacts);`\n      `const data = resp.data;`\n      `return data;`\n  `}catch(err){`\n      `return err;`\n  `}`\n`}`\n`sendResponse({body: testing(), statusCode: 200});`\n`};`\n\nI get the response pizza back. However if I change the last line to\n\n`sendResponse({body: getContact(), statusCode: 200});`\n\nAn empty object is returned. This is despite that fact that at the start of the getContact function I am immediately returning a string \"test\"."
+  },
+  {
+    "poster": {
+      "poster_name": "David F Jones",
+      "poster_handle": "david568"
+    },
+    "time_stamp": "2020-06-22 16:43:58",
+    "text": "I have since gotten the serverless function to work on it's own url with the following -\n`exports.main = (context, sendResponse) =&gt; {`\n  `// your code called when the function is executed`\n`console.log(\"This is my create lesson script that will use api calls to update user properties for lesson progress\");`\n`const axios = require('axios');`\n`const contacts = `<https://api.hubapi.com/contacts/v1/lists/all/contacts/all?hapikey=${process.env.apiKey}&amp;count=15>`;`\n`async function getContact() {`\n  `try{`\n      `const resp = await axios.get(contacts);`\n      `const data = resp.data;`\n      `sendResponse({body: data, statusCode: 200});`\n  `}catch(err){`\n      `return err;`\n  `}`\n`}`\n`getContact();`\n`};` (I don't think there is anything wrong with the way this was written?)\nHowever, I'm having issues getting the serverless function to return a response from a seperate page.\n\nOn my seperate page I have the following function -\n`var requestOptions = {`\n      `'method': 'POST',`\n      `'headers': {`\n      `'Content-Type': 'application/json',`\n      `}`\n    `};`\n    `var data = \"testing\";`\n    `async function lessonResponse(){`\n      `try{`\n      `const resp = await fetch(\"<https://www.example.com/_hcms/api/createProperty>\", requestOptions);`\n      `data = await resp;`\n      `return data;`\n      `}catch(err){`\n          `return err;`\n      `}`\n    `}`\n    `lessonResponse()`\n      `.then(data =&gt; console.log(data));` (with <http://example.com|example.com> swapped out for my domain).\n\nThis code is currently returning a response with a status of 400"
+  }
+]

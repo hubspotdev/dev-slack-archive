@@ -1,0 +1,125 @@
+[
+  {
+    "poster": {
+      "poster_name": "Marc Ollmann",
+      "poster_handle": "mollmann"
+    },
+    "time_stamp": "2023-07-25 02:15:43",
+    "text": "<@U050B0DMAE7> can you tell me more what you would like that company workflow to do so I learn more about the requirement?\n\nFeel free to upvote (and comment if you like) <https://community.HubSpot.com/t5/HubSpot-Ideas/Add-behavioral-events-Events-API-to-company-timeline-and-company/idi-p/382020|this ideas forum post >to raise more awareness of this lacking feature."
+  },
+  {
+    "poster": {
+      "poster_name": "Anthony Ledru",
+      "poster_handle": "anthony388"
+    },
+    "time_stamp": "2023-07-25 02:20:49",
+    "text": "Hello <@U05H3C4GDMX>, I wanna be able to use the data contained into the timeline events inside my workflow to update properties, send email based on data, create task etc.. We can have many use cases"
+  },
+  {
+    "poster": {
+      "poster_name": "Marc Ollmann",
+      "poster_handle": "mollmann"
+    },
+    "time_stamp": "2023-07-25 03:15:41",
+    "text": "I will definitely take this under advice for future developments, thanks for sharing.\n\nDepending on your exact use case (especially the enrolment criteria), you might be able to use the contacts object as an alternative."
+  },
+  {
+    "poster": {
+      "poster_name": "Antoine Ravet",
+      "poster_handle": "aravet"
+    },
+    "time_stamp": "2023-07-25 03:47:27",
+    "text": "Yes"
+  },
+  {
+    "poster": {
+      "poster_name": "Antoine Ravet",
+      "poster_handle": "aravet"
+    },
+    "time_stamp": "2023-07-25 03:47:32",
+    "text": "It’s currently in beta"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-07-25 03:48:20"
+  },
+  {
+    "poster": {
+      "poster_name": "Antoine Ravet",
+      "poster_handle": "aravet"
+    },
+    "time_stamp": "2023-07-25 03:49:12",
+    "text": "Has anyone triggered a custom object workflow on a custom behavioral event ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Antoine Ravet",
+      "poster_handle": "aravet"
+    },
+    "time_stamp": "2023-07-25 03:49:19",
+    "text": "Working well for contacts workflows"
+  },
+  {
+    "poster": {
+      "poster_name": "German",
+      "poster_handle": "geuxxor"
+    },
+    "time_stamp": "2023-07-25 13:46:00",
+    "text": "I'm new to HubSpot and trying to create a quote in a workflow. I understand this is only possible using \"custom code\" so I have created this custom code in a workflow and I have 2 issues.\n*First an authentication 401 error* \n```const HubSpot = require('@HubSpot/api-client');\nconst DEAL_STAGE_ID = 'appointmentscheduled';\nconst PIPELINE_ID = 'default';\nconst QUOTE_TEMPLATE_ID = 'MODERN'\n\nexports.main = async (event, callback) =&gt; {\n  const dealName = event.inputFields['dealName'];\n  const ownerID = event.inputFields['HubSpot_owner_id'];\n  const companyId = event.inputFields['company_id']\n  try {\n  const HubSpotClient = new HubSpot.Client({\n    accessToken: 'CJKbnf.....'\n  });\n      \n  const results = await HubSpotClient.crm.deals.basicApi.getById(event.object.objectId)\n  let objectId = results.properties.hs_object_id\n  let contract_length = results.properties.contract_length;\n  let amount = results.properties.amount;\n  let closedate = results.properties.closedate;\n\n  const newQuote = await HubSpotClient.crm.quotes.basicApi.create({\n    properties: {\n    \ths_title: dealName,\n  \t\ths_expiration_date: \"2023-08-30\",\n  \t\tHubSpot_owner_id: ownerID,\n      \ths_status: \"APPROVAL_NOT_NEEDED\",\n        hs_language: \"en\",\n        hs_sender_email: \"<mailto:email@domain.com|email@domain.com>\",\n        hs_template: QUOTE_TEMPLATE_ID,\n        hs_template_type: \"CUSTOMIZABLE_QUOTE_TEMPLATE\",\n        hs_slug: \"some_slug\",\n        hs_domain: \"USER_DEFINED\",\n        hs_currency: \"USD\",    \n    }\n  })\n  const quoteID = newQuote.id\n  \ncallback({\n    outputFields: {\n      quoteID: quoteID\n    }\n  })\n    } catch(error) {\n    console.log(error.body || error)\n  }\n}```\nI have created a Private App and all that, but how do I get authenticated in an automated way through \"custom code\", do I need to create my own server to handle that? if so how should I call my server and handle the authentication from custom code?\n\n*Second, I continuously get the following error when trying through Postman*\nRequest\n```{\n    \"properties\": {\n        \"hs_title\": \"test\",\n  \t    \"hs_expiration_date\": \"2023-08-22\",\n  \t    \"HubSpot_owner_id\": \"681670393\",\n        \"hs_status\": \"APPROVAL_NOT_NEEDED\",\n        \"hs_template_type\": \"CUSTOMIZABLE_QUOTE_TEMPLATE\",\n        \"hs_language\": \"en\",\n        \"hs_slug\": \"some_slug\",\n        \"hs_domain\": \"<http://baba.com|baba.com>\"\n    }\n}```\nResponse\n```\"subCategory\": \"INVALID_DOMAIN\",\n            \"message\": \"Quote with 'portalId' of 26845465 failed create validation. Please correct the errors and then re-submit : 'hs_domain' was not a valid domain for this portal because NOT_FOUND_ON_PORTAL. Provided an invalid hs_domain: '<http://baba.com|baba.com>'.\",\n            \"context\": {portalId\": [26845465\"\n                \"domain\": [<http://baba.com|baba.com>\"],\n                \"invalidReason\": [NOT_FOUND_ON_PORTAL\"]```\nWhat domain is this referring to? where do I set this up?\nYour help is appreciated. Thanks",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-07-25 22:18:47"
+      },
+      {
+        "time_stamp": "2023-07-25 22:19:36"
+      },
+      {
+        "time_stamp": "2023-07-26 05:25:56"
+      },
+      {
+        "time_stamp": "2023-07-26 05:26:43"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Harun Kumar Siva",
+      "poster_handle": "harun"
+    },
+    "time_stamp": "2023-07-25 22:18:47",
+    "text": "<https://knowledge.HubSpot.com/quotes/use-quotes#:~:text=applies%20if%20you're%20using>"
+  },
+  {
+    "poster": {
+      "poster_name": "Harun Kumar Siva",
+      "poster_handle": "harun"
+    },
+    "time_stamp": "2023-07-25 22:19:36",
+    "text": "per this documentation\n```Domain: this setting only applies if you're using a customized quote template. The domain is set by the quote template you selected.```"
+  },
+  {
+    "poster": {
+      "poster_name": "Grady",
+      "poster_handle": "grady"
+    },
+    "time_stamp": "2023-07-26 00:01:39",
+    "text": "Hi I am working on some custom workflow actions. I am trying delete a custom workflow action and I can't because it is being used by some portal but I cannot work out which one it is. In the api response it says to 'contact HubSpot developer support' where do I go to do this.",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-07-26 00:02:46"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Grady",
+      "poster_handle": "grady"
+    },
+    "time_stamp": "2023-07-26 00:02:46",
+    "text": "I meant to mention also that this is only a test app and so I know that it is not being used by anyone that wants it. I just need it deleted."
+  }
+]

@@ -1,0 +1,300 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jay Bharadiya",
+      "poster_handle": "jay.r.b"
+    },
+    "time_stamp": "2025-01-20 03:21:36",
+    "text": "I am not able verify HubSpot v2 signature. I did all the steps that mentioned in the HubSpot docs. Please tell me should I missed something\nHere is steps that I have done:\n*1. Understand the Signature Generation*\nHubSpot generates a V2 signature using the following process:\n1. Concatenate the following components in this exact order:\n    ◦ *App Client Secret* (your private key from HubSpot)\n    ◦ *HTTP Method* (uppercase, e.g., `GET` or `POST`)\n    ◦ *Request URI* (includes the full URL path and query parameters, excluding the host and protocol)\n2. Example concatenation:\n     {client_secret}{http_method}{request_uri}\n\n 3*.  SHA-256 hash* of the concatenated string.\n 4.  Encode the hash in hexadecimal format.\n\nCould you please confirm if there are any additional steps, specific encoding requirements, or potential issues in my approach?\n\n*Looking forward to your guidance.*",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-01-20 03:40:48"
+      },
+      {
+        "time_stamp": "2025-01-20 12:39:33"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2025-01-20 03:40:48",
+    "text": "One problem i faced when I first implemented this was that query parameters where re-ordered in a different way than on HubSpot so I had to restructure the url manually (so remove query parameters and re-add them in the correct order) or the signature validation failed"
+  },
+  {
+    "text": "Hello! We are trying to set up API import to HubSpot, but our dates columns can't get properly parsed. We have checked the format, so looks like it's a correct one. Also, seems like part of the values were imported. Any chances anyone can assist with this?",
+    "time_stamp": "2025-01-20 09:52:03",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-01-20 10:06:28"
+      },
+      {
+        "time_stamp": "2025-01-20 10:07:58"
+      },
+      {
+        "time_stamp": "2025-01-20 10:52:14"
+      },
+      {
+        "time_stamp": "2025-01-21 04:03:48"
+      },
+      {
+        "time_stamp": "2025-01-21 06:27:42"
+      }
+    ]
+  },
+  {
+    "time_stamp": "2025-01-20 10:00:15",
+    "text": "Reminder: *Want to be the first to know when a new API is available or an existing API has a new version?*  We publish all of that on our <https://developers.HubSpot.com/changelog|Developer Changelog>.  While we do our best to avoid <https://developers.HubSpot.com/docs/breaking-change-definition|breaking changes> to our APIs, sometimes for security, and reliability we have to. The Changelog is where we’ll post announcements ahead of time about it. <https://developers.HubSpot.com/changelog|Subscribe to the Developer Changelog> to stay up-to-date on what’s happening in the world of HubSpot development."
+  },
+  {
+    "poster": {
+      "poster_name": "Shar Ghavami",
+      "poster_handle": "sghavami"
+    },
+    "time_stamp": "2025-01-20 10:06:28",
+    "text": "hi Yura. th date needs to b formatted as an ISO 8601 date string (YYYY-MM-DD for date only or YYYY-MM-DDTHH:mm:ss.sTZD with time) or a Unix timestamp (milliseconds from Jan 1, 1970)"
+  },
+  {
+    "poster": {
+      "poster_name": "Shar Ghavami",
+      "poster_handle": "sghavami"
+    },
+    "time_stamp": "2025-01-20 10:07:58",
+    "text": "<https://developers.HubSpot.com/docs/guides/api/crm/properties>\n\nsee undr field type"
+  },
+  {
+    "poster": {
+      "poster_name": "Shar Ghavami",
+      "poster_handle": "sghavami"
+    },
+    "time_stamp": "2025-01-20 10:20:55",
+    "edited": {
+      "time_stamp": "2025-01-20 10:22:04"
+    },
+    "text": "Hi Loriauna. Smart way to do this via Google App Script!!\n\nWe use a python service and HubSpot's python abstraction to query the database via API v3 methods. Example of getting analytics events for a given contact. HS python lib takes care of pagination when needed and by default return data in chunk of 100 per page/call:\n```response = HubSpot.events.events_api.get_page(object_type=\"Contact\", object_id=x[0]) \nresponse = response.results\nif len(response) == 0: continue\nfor y in response:\n  y = y.to_dict() # important to cast HS's ResponseSimplePublicObjectWithAssociation to a workable type like dicts\n  [then we parse and track in a pandas dataframe)```\nand once done, the etl script persists the data frame to a MySQL table and/or a csv file in our data lake."
+  },
+  {
+    "poster": {
+      "poster_name": "Shar Ghavami",
+      "poster_handle": "sghavami"
+    },
+    "time_stamp": "2025-01-20 10:25:04",
+    "edited": {
+      "time_stamp": "2025-01-20 10:25:30"
+    },
+    "text": "and just scanning Google documentation, you may be able to extend what you have by simply adding a time based trigger in your sheet to resume execution of your script based on the last offset value:\n\n<https://developers.google.com/apps-script/reference/script>"
+  },
+  {
+    "poster": {
+      "poster_name": "Shar Ghavami",
+      "poster_handle": "sghavami"
+    },
+    "time_stamp": "2025-01-20 10:27:12",
+    "text": "example of a 10-min trigger compliments of <http://Perplexity.ai|Perplexity.ai>:\n\n```function createTrigger() {\n  ScriptApp.newTrigger('myFunction')\n    .timeBased()\n    .everyMinutes(10)\n    .create();\n}\n\nfunction myFunction() {\n  // Your code to be executed every 10 minutes goes here\n  Logger.log('This function runs every 10 minutes');\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Yura Alyabyev",
+      "poster_handle": "yura.alyabyev"
+    },
+    "time_stamp": "2025-01-20 10:52:14",
+    "text": "We'll try it, thank you :saluting_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Camilo Castellanos",
+      "poster_handle": "camilo"
+    },
+    "time_stamp": "2025-01-20 11:38:51",
+    "edited": {
+      "time_stamp": "2025-01-20 11:44:23"
+    },
+    "text": "Hola buenas tardes, alguien me puede ayudar referente a una duda que tengo.\n\nResulta que estoy utilizando la propiedad acumulativa donde me funciono hasta cierto requerimiento el cual necesitaba sumar el valor de los deal que estuvieron en la etapa aprobado hasta hay funciona perfectamente, pero ahora requiero agregarle otra variable la cual es la etapa y otra propiedad que tengo que es personalizada como el tipo de venta, pero al momento de realizarlo la propiedad acumulativa no permite generar doble condición.\n\nLa pregunta es si por medio de WF puedo utilizar algún nodo que me sume propiedades. el ejemplo es el siguiente\n\nse tiene 3 deal los cuales se ven así:\n\nDeal 1\nEtapa: Aprobado\nTipo de venta: Carne\nValor carne $500\nTipo de venta: Pollo\nValor pollo $300\n\nDeal 2\nEtapa: Aprobado\nTipo de venta: Carne\nValor carne $300\n\nDeal 2\nEtapa: Aprobado\nTipo de venta: Pollo\nValor Pollo $300\n\nEn contacto se creara un campo el cual sumara estos valores en este ejemplo debe pasar lo siguiente:\n\nValor total carne: $500 + $300 = $800 (este es el valor que debe salir) si llega otro deal con otro valor debe seguir sumando\n\nValor total pollo: $300 + $300 = $600 (este es el valor que debe salir) si llega otro deal con otro valor debe seguir sumando\n\nNo se si alguien me puede despejar la duda si existe algún nodo en el WF que me pueda hacer esto o si tendría que realizar por medio de código personalizado en un  JS"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2025-01-20 12:39:33",
+    "text": "Any reason why you aren’t using v3?"
+  },
+  {
+    "poster": {
+      "poster_name": "Loriauna Mora",
+      "poster_handle": "loriauna"
+    },
+    "time_stamp": "2025-01-20 13:17:11",
+    "text": "Hi <@U089FSD6JM6> Thank you so much for the advice! I’ll definitely look into setting up the 10-minute triggers for my current Apps Script build. I’m also really curious to learn more about your ETL script, if you don’t mind sharing :blush:\n\nDo you typically run it with something like Airflow, or is it hosted on a cloud-based platform (if so, which do you recommend?)? Do you have any tool recommendations that you normally use to help with exporting large chunks of data? I am very new to utilizing HS API for bulk migrations, so I appreciate all of the advice and your time!"
+  },
+  {
+    "poster": {
+      "poster_name": "Shar Ghavami",
+      "poster_handle": "sghavami"
+    },
+    "time_stamp": "2025-01-20 13:36:50",
+    "edited": {
+      "time_stamp": "2025-01-20 13:37:09"
+    },
+    "text": "absolutely. Happy to be of help when possible.  Today is a holiday for me but I can edit out our private info from one of the scripts before sharing with you tomorrow (Tuesday).\n\nWe use Amazon Web Services for all our data needs. For HubSpot data ingestions you can do serverless (called lambda functions in their platform) if the execution time is within a min or two to save money. For us, we have a virtual box (called an EC2 instance) that runs all our data lake custom code as cron jobs. That would be a little more expensive. The processed data is also kept there in a MYSQL database and as raw CSV files."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-01-20 15:11:06",
+    "text": "I can’t figure out how to create an email engagement via the api and make sure that the email shows up in the inbox of the HubSpot user I’m sending it to.\n\n```const emailHeaders = {\n      \"from\": {\n        \"email\": details.fromEmail,\n        \"firstName\": details.fromFirstName,\n        \"lastName\": details.fromLastName\n      },\n      \"to\": [\n        {\n          \"email\": details.toEmail,\n          \"firstName\": details.toFirstName,\n          \"lastName\": details.toLastName\n        }\n      ]\n    }\n    const payload = {\n      properties: {\n        HubSpot_owner_id: details.ownerId,\n        hs_email_html: details.htmlBody,\n        hs_email_text: details.htmlBody.replace(/&lt;[^&gt;]*&gt;/g, ''),\n        hs_email_headers: JSON.stringify(emailHeaders),\n        hs_timestamp: new Date().toISOString(),\n        hs_email_direction: 'EMAIL',\n        hs_email_subject: 'Partner Portal Support'\n      },\n      associations: [\n        {\n          \"to\": {\n            \"id\": details.ticketId\n          },\n          \"types\": [\n            {\n              \"associationCategory\": \"HubSpot_DEFINED\",\n              \"associationTypeId\": 224\n            }\n          ]\n        }\n      ]\n    }```",
+    "reply_count": 8,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-01-20 15:11:23"
+      },
+      {
+        "time_stamp": "2025-01-20 15:11:55"
+      },
+      {
+        "time_stamp": "2025-01-20 15:12:39"
+      },
+      {
+        "time_stamp": "2025-01-20 17:30:01"
+      },
+      {
+        "time_stamp": "2025-01-20 17:30:51"
+      },
+      {
+        "time_stamp": "2025-01-20 17:32:04"
+      },
+      {
+        "time_stamp": "2025-01-20 18:14:24"
+      },
+      {
+        "time_stamp": "2025-01-20 20:32:39"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-01-20 15:11:23",
+    "text": "`<https://api.hubapi.com/crm/v3/objects/emails>`"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-01-20 15:11:55",
+    "text": "That is what im doing — the owner id is the HubSpot id from the owners api"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-01-20 15:12:39",
+    "text": "The outcome of this should be that the HubSpot user receives an email directly — but I can’t figure that out. Is this something I have to use v1 of this for?"
+  },
+  {
+    "poster": {
+      "poster_name": "Leandro Michelena",
+      "poster_handle": "leandro.michelena"
+    },
+    "time_stamp": "2025-01-20 15:25:13",
+    "text": "Hi <@U078E6XUQPL>! I have a similar question.\n\nWhen creating new records of custom object types through forms, I'm not seeing the option to associated these with the form contact.\nWere you able to figure this one out? Thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Pieter",
+      "poster_handle": "pieter.detroyer"
+    },
+    "time_stamp": "2025-01-20 15:58:47",
+    "text": "hi, if I create a public website page and publish it, then fetch it with the CMS API, there is a property present 'publicAccessRules' which has as a value an empty array. Now when I change the access to the page, e.g. setting a password on it, the property is unchanged. Next I remove the access restriction, restoring the public access, the property nog reads `[{}]` (an array with an empty object). Where should we report this kind of API inconsistencies?"
+  },
+  {
+    "poster": {
+      "poster_name": "Pieter",
+      "poster_handle": "pieter.detroyer"
+    },
+    "time_stamp": "2025-01-20 16:00:44",
+    "text": "the problem I bump into is that I can create a page if that property is an empty array, but not when it is an array with an empty object. The API endpoint complains that this is invalid as the object needs a 'type' property. I'm using the javascript sdk and I can't figure out how to force reset that property value. Assigning a new value seems to have no effect.",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2025-01-20 16:52:11"
+      },
+      {
+        "time_stamp": "2025-01-21 00:35:00"
+      },
+      {
+        "time_stamp": "2025-01-21 05:35:53"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-01-20 16:52:11",
+    "text": "if this is the sdk you can do soem sort of bugreport on node of the git library..\n\nI think after a while people stop using the sdk as it just sucks and axios and understanding what youa re doing just makes more sense.. good luck"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2025-01-20 17:30:01",
+    "text": "Email engagements will just log the engagement not actually create a real email"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2025-01-20 17:30:51",
+    "text": "I could be wrong on this but I think to create the real email and to get it to show up in the inbox you have to actually send an email into the inbox"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2025-01-20 17:32:04",
+    "text": "That's the only way I know how to do it. The other option would be to setup a custom channel using the new custom channels api and create engagements that way but it wouldn't be an email engagement but it would show up in the inbox tool (not the email inbox but like how facebook messenger shows up)"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2025-01-20 18:14:24",
+    "text": "lol Carter I just attempted like 25 different attempts while this message was waiting for me. I had just realized that it is just logging it after using my brain"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2025-01-20 20:32:39",
+    "text": "UPDATE: remembered that there's actually a way to do this with a form that's connected to the inbox tool and you submit the form using the forms api to create a thread."
+  },
+  {
+    "poster": {
+      "poster_name": "Pieter",
+      "poster_handle": "pieter.detroyer"
+    },
+    "time_stamp": "2025-01-21 00:35:00",
+    "text": "feel the same. Bumped into issues while using the PHP sdk, so jumped to try my luck using the javascript, but they all seem to suck at some point or another."
+  }
+]

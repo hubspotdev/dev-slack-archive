@@ -1,0 +1,229 @@
+[
+  {
+    "poster": {
+      "poster_name": "Justine Mignot",
+      "poster_handle": "justine.mignot"
+    },
+    "time_stamp": "2022-08-29 02:37:05",
+    "edited": {
+      "time_stamp": "2022-08-29 02:37:18"
+    },
+    "text": "Sorry for the delay, I was off on Friday. The point which is really strange, is that when I use Postman, for example, to try to reproduce the error (calling the API with same properties) the API call works, I receive a 200. That’s why I am a bit stuck in this investigation and asked for help :disappointed:"
+  },
+  {
+    "poster": {
+      "poster_name": "Linda Lee",
+      "poster_handle": "hsiang"
+    },
+    "time_stamp": "2022-08-29 02:50:58",
+    "text": "Hi! Seeking for some tips here.. We created a custom workflow action that will send objectID to an actionURL, are there any chance we can execute a code to notify the admin if the actionURL is not working anymore? can we control or limit the number of 429 retries?",
+    "reply_count": 7,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2022-08-29 02:55:49"
+      },
+      {
+        "time_stamp": "2022-08-29 06:33:01"
+      },
+      {
+        "time_stamp": "2022-08-29 06:34:46"
+      },
+      {
+        "time_stamp": "2022-08-29 06:40:53"
+      },
+      {
+        "time_stamp": "2022-08-29 20:02:11"
+      },
+      {
+        "time_stamp": "2022-08-29 20:05:58"
+      },
+      {
+        "time_stamp": "2022-08-30 02:34:21"
+      }
+    ]
+  },
+  {
+    "text": "it will keep retrying",
+    "time_stamp": "2022-08-29 02:55:49"
+  },
+  {
+    "poster": {
+      "poster_name": "Anders Jürisoo",
+      "poster_handle": "anders.jurisoo"
+    },
+    "time_stamp": "2022-08-29 03:41:05",
+    "text": "Im so puzzled about the search query below.\nIt returns only 4 contacts, even though 9,459 out of 11,247 records does have the property populated.\n\n```const publicObjectSearchRequest = {\n    filterGroups: [{ filters: [\n        { propertyName: 'lime_id', operator: 'HAS_PROPERTY' } as Filter\n    ] }],\n    sorts: [],\n    query: 'test',\n    properties: ['lime_id'],\n    limit: 100,\n    after: 0,\n}\n\nHubSpot().crm.contacts.searchApi\n    .doSearch(publicObjectSearchRequest)\n    .then(r =&gt; console.log(r.results.length)) // only 4!!!! Expected 100!```\nWhats also interesting, changing to 'firstname', does give 100 records...\nSo I was thinking if I got something messed up with my custom property definition.\nBut its a very simple Number field, and the data is showing in the table view.\nIs this a bug or am I missing something?",
+    "reply_count": 3,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2022-08-29 06:04:09"
+      },
+      {
+        "time_stamp": "2022-08-29 06:08:50"
+      },
+      {
+        "time_stamp": "2022-08-29 06:34:22"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matthias Amelung",
+      "poster_handle": "m.amelung"
+    },
+    "time_stamp": "2022-08-29 05:43:21",
+    "text": "Is anyone else experiencing <https://community.HubSpot.com/t5/APIs-Integrations/contacts-v1-lists-pagination-does-not-work-for-Endpoint-quot/td-p/683281|false pagination> on the \"get recently added contacts from a list\" endpoint?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthias Amelung",
+      "poster_handle": "m.amelung"
+    },
+    "time_stamp": "2022-08-29 06:04:09",
+    "text": "I think you have to remove the `query: 'test'` -line from your request. It will only return you contacts with a text property containing \"test\". (<https://developers.HubSpot.com/docs/api/crm/search#search-default-searchable-properties|source>)"
+  },
+  {
+    "poster": {
+      "poster_name": "Anders Jürisoo",
+      "poster_handle": "anders.jurisoo"
+    },
+    "time_stamp": "2022-08-29 06:08:50",
+    "text": "Thank you <@U04049XPH5H> !! Ofcourse :smile: I thought that was just some name. Now works like a charm :thumbsup:"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-29 06:33:01",
+    "text": "it eventually stops. I’m not 100% on this — but I think you could do some try/catches to determine your error and handle them yourself. Not sure if this would prevent normal HubSpot behavior.\n\nDoing so, you could output a variable in your custom code to help trigger a notification email in the workflow to the admin"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-29 06:34:22",
+    "text": "They should really remove that from showing up in the documentation, I see this issue all the time in this channel"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthias Amelung",
+      "poster_handle": "m.amelung"
+    },
+    "time_stamp": "2022-08-29 06:34:46",
+    "text": "Are you using a try-catch-block? <https://developers.HubSpot.com/docs/api/workflows/custom-code-actions#:~:text=Retries,error%20in%20the%20catch%20block|Altering the catch should stop the retries>. I haven't run into a similar issue but maybe using a counter variable in the catch-block and using callback-outputs (like <@U25PYL3Q8> mentioned) could help."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-29 06:37:12",
+    "text": "Hey Justine — if it is wroking in postman, I would suspect that the version of the api wrapper you are using has a bit different syntax, causing an issue. When I have issues like this I try to figure out what version I’m using, make sure I have hiting on and make adjustments, if I still have an error here, then I just use axios and send the request as I would on postman"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-08-29 06:40:53",
+    "text": "thanks for posting that link — I forgot that existed in the docs"
+  },
+  {
+    "time_stamp": "2022-08-29 10:00:22",
+    "text": "Reminder: *Want to be the first to know when a new API is available or an existing API has a new version?*  We publish all of that on our <https://developers.HubSpot.com/changelog|Developer Changelog>.  While we do our best to avoid <https://developers.HubSpot.com/docs/breaking-change-definition|breaking changes> to our APIs, sometimes for security, and reliability we have to. The Changelog is where we’ll post announcements ahead of time about it. <https://developers.HubSpot.com/changelog|Subscribe to the Developer Changelog> to stay up-to-date on what’s happening in the world of HubSpot development."
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin Prather",
+      "poster_handle": "kprather"
+    },
+    "time_stamp": "2022-08-29 10:33:48",
+    "text": "When creating an app is it possible to force-create fields or buttons on certain tables for people who have installed? Example: On sales records a button that will trigger code / webhook to sync to another system\n\nIf theres documentation on this topic I missed I would love to be linked so I can investigate",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-08-29 10:35:21"
+      },
+      {
+        "time_stamp": "2022-08-29 10:35:35"
+      },
+      {
+        "time_stamp": "2022-08-29 10:36:25"
+      },
+      {
+        "time_stamp": "2022-08-29 10:58:38"
+      },
+      {
+        "time_stamp": "2022-08-29 10:59:57"
+      },
+      {
+        "time_stamp": "2022-08-29 11:00:14"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-08-29 10:35:21",
+    "text": "Technically this is possible with Custom Cards also with the new Developer Project Beta"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-08-29 10:35:35",
+    "text": "Not the cleanest way to do it but does technically work"
+  },
+  {
+    "text": "I've created chrome extensions for my company that will add buttons to the action bar.",
+    "time_stamp": "2022-08-29 10:36:25"
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin Prather",
+      "poster_handle": "kprather"
+    },
+    "time_stamp": "2022-08-29 10:58:38",
+    "text": "<@U01QVR44MEY> Interesting! Could I trouble you for a very basic gloss-over of that process so that I could look into recreating?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-08-29 10:59:57",
+    "text": "Sure do you want to hop on a call?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin Prather",
+      "poster_handle": "kprather"
+    },
+    "time_stamp": "2022-08-29 11:00:14",
+    "text": "That works for me yeah"
+  },
+  {
+    "poster": {
+      "poster_name": "Linda Lee",
+      "poster_handle": "hsiang"
+    },
+    "time_stamp": "2022-08-29 20:02:11",
+    "text": "Hi guys! thanks for sharing these tips and  information, it's very helpful :slightly_smiling_face: Let me try it on my side."
+  },
+  {
+    "poster": {
+      "poster_name": "Linda Lee",
+      "poster_handle": "hsiang"
+    },
+    "time_stamp": "2022-08-29 20:05:58",
+    "text": "Oh just make sure I didn't miss out any, what we did was created a custom workflow action (like extension), instead of custom code actions (because the client didn't purchase operation hub), does Matthias solution also apply to this?"
+  }
+]

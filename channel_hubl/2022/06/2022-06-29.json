@@ -1,0 +1,57 @@
+[
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2022-06-29 05:30:19",
+    "edited": {
+      "time_stamp": "2022-06-29 05:31:15"
+    },
+    "text": "In a HubDB dynamic page template, why does this work\n```{% if true %}\n  {% dnd_section %}\n    {% dnd_column %}\n      {% dnd_row %}\n        {% dnd_module path='@HubSpot/rich_text' %}\n          {% module_attribute 'html' %}\n            &lt;p&gt;{{ dynamic_page_hubdb_row.test }}&lt;/p&gt;\n          {% end_module_attribute %}\n        {% end_dnd_module %}\n      {% end_dnd_row %}\n    {% end_dnd_column %}\n  {% end_dnd_section %}\n{% endif %}```\nbut this doesn’t?\n```{% if dynamic_page_hubdb_row.test %}\n  {% dnd_section %}\n    {% dnd_column %}\n      {% dnd_row %}\n        {% dnd_module path='@HubSpot/rich_text' %}\n          {% module_attribute 'html' %}\n            &lt;p&gt;{{ dynamic_page_hubdb_row.test }}&lt;/p&gt;\n          {% end_module_attribute %}\n        {% end_dnd_module %}\n      {% end_dnd_row %}\n    {% end_dnd_column %}\n  {% end_dnd_section %}\n{% endif %}```\nIn the 2nd, it seems to be saying `dynamic_page_hubdb_row.test` is false, but it logs the expected string appropriately, and outputs the string in the first one.",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-06-29 11:30:51"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin305"
+    },
+    "time_stamp": "2022-06-29 05:48:34",
+    "edited": {
+      "time_stamp": "2022-06-29 05:49:37"
+    },
+    "text": "I’m trying to add a gradient background and padding to `{% dnd_section %}`’s in a dynamic HubDB page template, and HubSpot is adding the classes (i.e. `row-0-background-gradient`, `row-1-padding`, etc.) but it’s not actually adding the styles for them. It's not just those either, I can't even add a simple background color. Is this a bug, or does anyone have any idea?\n```{% dnd_section\n  background_linear_gradient={\n    'direction': 'to bottom',\n    'colors': [\n      '#1EB6C3',\n      '#2A2859'\n    ]\n  },\n  padding={\n    'top': 200,\n    'bottom': 200,\n    'left': 200,\n    'right': 200\n   }\n%}```",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-06-29 07:22:21"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Mitja Lewin",
+      "poster_handle": "m.lewin"
+    },
+    "time_stamp": "2022-06-29 07:22:21",
+    "edited": {
+      "time_stamp": "2022-06-29 07:26:05"
+    },
+    "text": "<@U021H3TV338> Code looks fine to me, maybe it's the DnD. The template object in the page is a clone of the on in the template. Better avoid any modules or DnD syntax in dyn. pages, because the user input on the page has always the highest priority, and data passed from HubDB to module will get lost, if the user do changes to modules in the page editor. This is the case always for DnD areas."
+  },
+  {
+    "poster": {
+      "poster_name": "Mark Ryba",
+      "poster_handle": "mryba"
+    },
+    "time_stamp": "2022-06-29 11:30:51",
+    "text": "My guess would be it’s a lifecycle issue, like dynamic_page_hubdb_row isn’t evaluated until a later time and therefore is false when it’s currently being triggered."
+  }
+]

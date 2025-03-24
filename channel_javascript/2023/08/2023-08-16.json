@@ -1,0 +1,58 @@
+[
+  {
+    "poster": {
+      "poster_name": "Logan Armstrong",
+      "poster_handle": "logan565"
+    },
+    "time_stamp": "2023-08-16 06:45:09",
+    "text": "Awesome, thanks Evelynn! This is on a CMS hosted landing page so I will give this a shot."
+  },
+  {
+    "poster": {
+      "poster_name": "Logan Armstrong",
+      "poster_handle": "logan565"
+    },
+    "time_stamp": "2023-08-16 07:08:56",
+    "text": "Although, this would only be applicable if the property is known when the contact first visits the page, is that correct?"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-08-16 08:42:14",
+    "text": "Yes, that’s correct. Since a contact record is created on submit, you might be able to implement a workaround like the one I mentioned in this comment, but with two intermediary redirects: <https://HubSpotdev.slack.com/archives/C22PJ878V/p1691029503326479?thread_ts=1690990461.109959&amp;cid=C22PJ878V>"
+  },
+  {
+    "poster": {
+      "poster_name": "Logan Armstrong",
+      "poster_handle": "logan565"
+    },
+    "time_stamp": "2023-08-16 08:46:10",
+    "text": "Got it, yeah I was thinking the same thing of adding an intermediary redirect. Appreciate you sharing that thread as well, it's a similar problem to what we're facing."
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-08-16 09:05:49",
+    "text": "Having slept on this, I may actually recommend the route including the intermediary redirect page even if you could reliably ensure you’ve got the personalization data on the landing page. Using the `contact` object on your landing page will prevent it from pre-rendering/caching, which could mean a potential performance and SEO hit — externalizing the rendered-on-request stuff to a secondary page will circumvent that."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2023-08-16 09:48:46",
+    "text": "in node, what's the best way to check to see if a contact already exists based on their email address?"
+  },
+  {
+    "poster": {
+      "poster_name": "Chris Maki",
+      "poster_handle": "chris.maki"
+    },
+    "time_stamp": "2023-08-16 10:56:33",
+    "text": "I’d appreciate some guidance here. I created an html form in a HubSpot module, and added javascript code to handle the submission. When submit is pressed, I need it to take the json object and send it to an external API endpoint.\n\nHiding some obvious credentials for privacy, here is the HTML:\n\n&lt;form class=“form-bs” method=“post” sandbox=“allow-forms”&gt;\n\n   &lt;div&gt;\n      &lt;label for=“email”&gt; Email &lt;/label&gt;\n      &lt;input type=“email” placeholder=“email” id=“email” name=“email” value=“” required /&gt;\n    &lt;/div&gt;\n\n   &lt;div&gt;\n      &lt;label for=“username”&gt; Username &lt;/label&gt;\n      &lt;input type=“text” placeholder=“username” id=“username” name=“username” value=“” required /&gt;\n    &lt;/div&gt;\n\n    &lt;div&gt;\n      &lt;label for=“first_name”&gt; First Name &lt;/label&gt;\n      &lt;input type=“text” placeholder=“first name” id=“first_name” name=“name_first” value=“” /&gt;\n    &lt;/div&gt;\n\n      &lt;div&gt;\n      &lt;label for=“last_name”&gt; Last Name &lt;/label&gt;\n      &lt;input type=“text” placeholder=“last name” id=“last_name” name=“name_last” value=“” /&gt;\n    &lt;/div&gt;\n\n      &lt;div&gt;\n      &lt;label for=“organization_name”&gt; Organization &lt;/label&gt;\n      &lt;input type=“text” placeholder=“organization name” id=“organization_name” name=“organization_name” value=“” /&gt;\n    &lt;/div&gt;\n\n      &lt;div&gt;\n      &lt;label for=“job_title”&gt; Job Title &lt;/label&gt;\n      &lt;input type=“text” placeholder=“Job Title” id=“job_title”  name=“job_title” value=“”/&gt;\n    &lt;/div&gt;\n\n   &lt;div&gt;\n     &lt;input type=“submit” value=“Create” /&gt;\n    &lt;/div&gt;\n\n&lt;/form&gt;\n\nAnd here is the JS:\n\nconst formstuff = document.querySelector(“.form-bs”);\nformstuff.setAttribute(‘sandbox’, ‘allow-forms’);\nformstuff.addEventListener(“submit”, async (event) =&gt; {\n  event.preventDefault();\n  const formData = new FormData(event.target);\n  const data = Object.fromEntries(formData.entries());\n  const headers = new Headers();\n\n  headers.append(“Accept”, “application/json”);\n  headers.append(“Content-Type”, “application/json”);\n  headers.append(“Authorization”, “Bearer *OMITTED* “);\n\n  try {\n    await fetch(“*OMITTED*”, {\n        method: “POST”,\n        mode: “no-cors”,\n        credentials: “include”,\n        headers: headers,\n        body: JSON.stringify(data)\n      }).then(() =&gt; {\n        console.log(‘good’);\n      }).catch((error) =&gt; {\n        console.log(‘error’, error);\n      });\n  } catch (error) {\n    // handle error\n    console.log(‘error’, error);\n  }\n});\n\nWith this code, it console logs correctly but with a network POST error of 500. I’ve tried removing mode: no-cors, and other stuff here and there. The data when console logged is the JSON object I want to send, and the request hits the endpoint to the external API, but then does not add the contact as intended to the external API, instead returning that error."
+  }
+]

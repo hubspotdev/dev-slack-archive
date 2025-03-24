@@ -1,0 +1,203 @@
+[
+  {
+    "poster": {
+      "poster_name": "Wilbert Muza",
+      "poster_handle": "titusmuza"
+    },
+    "time_stamp": "2019-12-18 11:04:07",
+    "text": "Can someone help how to fix this error `\"1576676552000 is at 13:42:32.0 UTC, not midnight!\\\",\\\"error\\\":\\\"INVALID_DATE\\\"`  I am trying to convert the callrail date `2019-12-18T05:58:57.496-05:00`  to *HubSpot UNIX formatted timestamps in milliseconds..* Please... I am using javascript"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-12-18 11:57:25",
+    "text": "what is the code that is creating this error?"
+  },
+  {
+    "poster": {
+      "poster_name": "Wilbert Muza",
+      "poster_handle": "titusmuza"
+    },
+    "time_stamp": "2019-12-18 11:59:48",
+    "text": "<@U25PYL3Q8> `new Date(\"2019-12-18T05:58:57.496-05:00\").getTime()`"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-12-18 12:04:18",
+    "text": "do you have a chunk of code, that isn't actually the error ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-12-18 12:04:24",
+    "text": "the error should have a line number"
+  },
+  {
+    "text": "",
+    "time_stamp": "2019-12-18 12:04:38"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-12-18 12:04:40",
+    "text": "that works properly..."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-12-18 12:04:44",
+    "text": "and returns that"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-12-18 12:04:57",
+    "text": "so you are doing something else to that to get an error"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-12-18 12:06:13",
+    "edited": {
+      "time_stamp": "2019-12-18 12:07:00"
+    },
+    "text": "If you want to convert a date to be used in HubSpot, you’ll need to use strtotime"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-12-18 12:06:22",
+    "text": "eg.\n```{{ \"2018-07-14T14:31:30+0530\"|strtotime(\"yyyy-MM-dd'T'HH:mm:ssZ\")|unixtimestamp }}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-12-18 12:06:43",
+    "edited": {
+      "time_stamp": "2019-12-18 12:06:50"
+    },
+    "text": "See: <https://designers.HubSpot.com/docs/hubl/hubl-supported-filters#strtotime>"
+  },
+  {
+    "text": "Ok so I am updating the contact details via the API and it is failing because of this error. Let me give you the whole error code below:\n\nI am updating the date property",
+    "time_stamp": "2019-12-18 12:07:41"
+  },
+  {
+    "poster": {
+      "poster_name": "Wilbert Muza",
+      "poster_handle": "titusmuza"
+    },
+    "time_stamp": "2019-12-18 12:09:07",
+    "text": "<@UQERM7BLY> thanks but I am using nodejs on the server side to handle the API so I cannot access the hubl code"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-12-18 12:10:08",
+    "edited": {
+      "time_stamp": "2019-12-18 12:13:37"
+    },
+    "text": "Yeah, so this is more of an API question - I’m taking a guess that you’re updating a custom property (of a date format) on a contact? I wonder if the timestamp is in milliseconds, as you are using JS - so maybe divide by 1000?"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-12-18 12:14:44",
+    "text": "There are two potential solutions to this issue. The first is to remove the “time” part of the datetime, aka set it to UTC midnight. That’s what the original error that <@URQV7LU79> posted means, this is becaue by default, teh date properties are just for dates, not datetimes.  The second is to change the property youare trying to dupate the falue for (in this case `callrail_date_of_most_recent_call`  to be a datetime property. You can do that by updating the property using this api <https://developers.HubSpot.com/docs/methods/contacts/v2/update_contact_property> setting the `type` property to `datetime` instead of `date`"
+  },
+  {
+    "poster": {
+      "poster_name": "Wilbert Muza",
+      "poster_handle": "titusmuza"
+    },
+    "time_stamp": "2019-12-18 12:14:46",
+    "text": "<@UQERM7BLY> thats exactly what I am doing, let me try to devide by 1000. Here is the date that I am getting from CallRail API `\"created_at\": \"2019-12-18T05:58:57.496-05:00\",`"
+  },
+  {
+    "poster": {
+      "poster_name": "Wilbert Muza",
+      "poster_handle": "titusmuza"
+    },
+    "time_stamp": "2019-12-18 12:16:57",
+    "text": "<@UFBNA9K9A> you might be right, let me give it a try"
+  },
+  {
+    "poster": {
+      "poster_name": "Wilbert Muza",
+      "poster_handle": "titusmuza"
+    },
+    "time_stamp": "2019-12-18 12:34:22",
+    "text": "Thanks <@U25PYL3Q8>, <@UQERM7BLY> and champ <@UFBNA9K9A> the solution provided by <@UFBNA9K9A> worked when I updated the Contact property type from `date`  to `datetime` but nevertheless I feel like HubSpot should add an option to easily change this from the CMS instead of doing it only via the API.\n\nThank you all once again",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-12-18 12:35:20"
+      },
+      {
+        "time_stamp": "2019-12-18 12:37:36"
+      },
+      {
+        "time_stamp": "2019-12-18 12:40:34"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-12-18 12:35:20",
+    "text": "Totally agree on that feedback for our UI.  It’s been relayed to the PM for properties and while it’s still a ways out, it’s definitely something we want to do"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-12-18 12:35:22",
+    "edited": {
+      "time_stamp": "2019-12-18 12:35:29"
+    },
+    "text": "Once zack chimed in I realized this had something to do with the api -- glad he was here, thanks"
+  },
+  {
+    "poster": {
+      "poster_name": "Wilbert Muza",
+      "poster_handle": "titusmuza"
+    },
+    "time_stamp": "2019-12-18 12:37:36",
+    "text": "Thanks Zack, I would be happy if this is done of even provide an error with the suggestion of changing the type"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-12-18 12:40:34",
+    "text": "Updating the error message might be something i can convince someone to do sooner rather than later. Let me file a ticket and see if I can bribe anyone. It could make it more useable"
+  }
+]

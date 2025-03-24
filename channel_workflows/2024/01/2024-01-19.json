@@ -1,0 +1,28 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2024-01-19 11:23:57",
+    "text": "Hey, I'm looking to build some automation for our CMS instance, that listens for content publish events, then leverages API to write to hubdb. I'm trying to investigate if Workflows w/ custom code to solve this, but there seems to be no events associated with CMS. Anyone have suggestions on what might be a good way to go around listening/subscribing to CMS events, then triggering code? Is such a thing even possible? Thanks in advance!!",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-01-22 21:42:24"
+      },
+      {
+        "time_stamp": "2024-01-23 01:06:01"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Rob Ernstsen",
+      "poster_handle": "rernstsen"
+    },
+    "time_stamp": "2024-01-19 15:45:01",
+    "text": "Hello - New to this community and to developing in HubSpot. I'm trying to run a workflow to de-dupe contacts. I used the node.js code provided in the Programmable Automations use case library, and it didn't work. I then found a community post that had some additional code that indicated it fixed the problem. That also didn't work. I thought I'd try to post the code I grabbed from the Community page in here and see if anyone has any ideas. Thank you in advance.\n\nconst DEDUPE_PROPERTY = 'firstname';\nconst HubSpot = require('@HubSpot/api-client');\n\nexports.main = (event, callback) =&gt; {\n  // Make sure to add your API key under \"Secrets\" above.\n  const HubSpotClient = new HubSpot.Client({\n    accessToken: process.env.secretName\n  });\n\n  HubSpotClient.crm.contacts.basicApi\n    .getById(event.object.objectId, [DEDUPE_PROPERTY])\n    .then(contactResult =&gt; {\n      let dedupePropValue = contactResult.body.properties[DEDUPE_PROPERTY];\n\n      console.log(`Looking for duplicates based on ${DEDUPE_PROPERTY} = ${dedupePropValue}`);\n      HubSpotClient.crm.contacts.basicApi\n    .getById(event.object.objectId, [DEDUPE_PROPERTY])\n    .then(contactResult =&gt; {\n        // ...\n    })\n    .catch(err =&gt; {\n        console.error('Error getting contact by ID:', err);\n        callback(err);\n        .doSearch({\n          filterGroups: [{\n            filters: [{\n              propertyName: DEDUPE_PROPERTY,\n              operator: 'EQ',\n              value: dedupePropValue\n            }]\n          }]\n        })\n        .then(searchResults =&gt; {\n          let idsToMerge = searchResults.body.results\n            .map(object =&gt; object.id)\n            .filter(vid =&gt; Number(vid) !== Number(event.object.objectId));\n\n          if (idsToMerge.length == 0) {\n            console.log('No matching contact, nothing to merge');\n            return;\n          } else if (idsToMerge.length &gt; 2) {\n            console.log(`Found multiple potential contact IDs ${idsToMerge.join(', ')} to merge`);\n            throw new Error(\"Ambiguous merge; more than one matching contact\");\n          }\n\n          let idToMerge = idsToMerge[0];\n          console.log(`Merging enrolled contact id=${event.object.objectId} into contact id=${idToMerge}`);\n          HubSpotClient\n            .apiRequest({\n              method: 'POST',\n              path: `/contacts/v1/contact/merge-vids/${idToMerge}`,\n              body: {\n                vidToMerge: event.object.objectId\n              }\n            })\n            .then(mergeResult =&gt; {\n              console.log('Contacts merged!');\n            });\n        });\n    });\n};"
+  }
+]

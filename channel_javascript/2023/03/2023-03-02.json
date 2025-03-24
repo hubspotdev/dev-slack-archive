@@ -1,0 +1,10 @@
+[
+  {
+    "poster": {
+      "poster_name": "Tobias Balmer",
+      "poster_handle": "tobias497"
+    },
+    "time_stamp": "2023-03-02 06:13:30",
+    "text": "Hi folks, I'm trying to set the values for some form fields of a HubSpot form with javascript. But the values gets deleted after validation (or in this case after input/change event). I remember that this used to work (and it's also the solutions in a lot of posts and in the <https://legacydocs.HubSpot.com/docs/methods/forms/advanced_form_options|HubSpot api documentation>). Has anyone an idea what could be the problem? Or am I doing something wrong?\n\n```window.addEventListener('message', event =&gt; {\n  \n  const formId = \"MY_FORM_ID\";\n  \n  if(event.data.type === 'hsFormCallback' &amp;&amp; event.data.eventName === 'onFormReady' &amp;&amp; event.data.id === formId) {\n    \n    const form = document.querySelector(`[data-form-id=\"${event.data.id}\"]`);\n    \n    // doesn't work - triggers validation without setting the value\n    const emailfield = form.elements.email;\n    emailfield.value = \"<mailto:myemail@address.com|myemail@address.com>\";\n    emailfield.dispatchEvent(new Event('input', { 'bubbles': true }));\n    \n    const companyfield = form.elements.company;\n    companyfield.value = \"MyCompanyName\";\n    companyfield.dispatchEvent(new Event('input', { 'bubbles': true }));\n    \n    const adressfield = form.elements.address;\n    adressfield.value = \"MyAddress\";\n    adressfield.dispatchEvent(new Event('input', { 'bubbles': true }));\n    \n    // doesn't work the jquery way either\n    //$(companyfield).val(\"MyCompanyName\").change();\n    \n  }\n  \n});```"
+  }
+]

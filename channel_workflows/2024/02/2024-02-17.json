@@ -1,0 +1,152 @@
+[
+  {
+    "poster": {
+      "poster_name": "Carlsson Elkins",
+      "poster_handle": "carlsson.e"
+    },
+    "time_stamp": "2024-02-17 07:31:08",
+    "text": "Hello! :wave: :slightly_smiling_face:\n\nI'm trying to create a custom code workflow action to extract meaningful data from the following string:\n\n```[{\"image\":<https://assets.josephgiles.com/m/72d8d29f4291b87f/webimage-Bespoke-Cube-Door-Pull-DP1009-PSS-on-Shower-Door-jpg.png>,\"quantity\":1,\"childProductName\":\"'ARNOLD' Solid brass glass shower door pull handles 244mm (225mm c/c)\",\"name\":\"'ARNOLD' Solid brass glass shower door pull handles\",\"id\":\"42533\",\"product_code\":\"BA1007\",\"parameters\":[{\"valueName\":\"PMB\",\"name\":\"FINISHING\",\"value\":\"320\"}],\"slug\":\"arnold-solid-brass-glass-shower-door-pull-handles\"}]```\nI've had a go (using GPT4) but when I try to use it in the custom code action it's erroring due to the logs being too large.\n\n```# Sample data in JSON-like format\ndata = [{\n    \"image\": \"<https://assets.josephgiles.com/m/72d8d29f4291b87f/webimage-Bespoke-Cube-Door-Pull-DP1009-PSS-on-Shower-Door-jpg.png>\",\n    \"quantity\": 1,\n    \"childProductName\": \"'ARNOLD' Solid brass glass shower door pull handles 244mm (225mm c/c)\",\n    \"name\": \"'ARNOLD' Solid brass glass shower door pull handles\",\n    \"id\": \"42533\",\n    \"product_code\": \"BA1007\",\n    \"parameters\": [{\"valueName\": \"PMB\", \"name\": \"FINISHING\", \"value\": \"320\"}],\n    \"slug\": \"arnold-solid-brass-glass-shower-door-pull-handles\"\n}]\n\n# Function to convert the original data into a human-friendly format\ndef convert_to_human_friendly(data):\n    human_friendly_output = []\n    for item in data:\n        # Find the parameter for finishing, assuming there might be more than one and we need the one named \"FINISHING\"\n        finishing_param = next((param for param in item[\"parameters\"] if param[\"name\"] == \"FINISHING\"), None)\n        finishing_value = finishing_param[\"valueName\"] if finishing_param else \"N/A\"  # Use the valueName instead of value\n\n        product_details = {\n            \"Product Name\": item[\"name\"],\n            \"Quantity\": item[\"quantity\"],\n            \"Child Product Name\": item[\"childProductName\"],\n            \"Product Code\": item[\"product_code\"],\n            \"Finishing\": f\"FINISHING: {finishing_value}\",  # Updated to use valueName\n            \"Image URL\": item[\"image\"],\n            \"Product URL\": f\"<https://www.josephgiles.com/products/{item['slug']}>\"\n        }\n        human_friendly_output.append(product_details)\n    return human_friendly_output\n\n# Convert the data\nhuman_friendly_data = convert_to_human_friendly(data)\n\n# Print the converted data\nfor product in human_friendly_data:\n    for key, value in product.items():\n        print(f\"{key}: {value}\")\n    print()  # Add an empty line for better readability between products```\nI asked HubSpot support and they pointed me to you gurus over here! Would anyone be happy to lend me a hand please? :slightly_smiling_face:",
+    "reply_count": 38,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-02-17 13:47:42"
+      },
+      {
+        "time_stamp": "2024-02-19 01:29:45"
+      },
+      {
+        "time_stamp": "2024-02-19 06:26:36"
+      },
+      {
+        "time_stamp": "2024-02-19 06:28:53"
+      },
+      {
+        "time_stamp": "2024-02-19 07:00:02"
+      },
+      {
+        "time_stamp": "2024-02-19 07:01:06"
+      },
+      {
+        "time_stamp": "2024-02-19 07:01:27"
+      },
+      {
+        "time_stamp": "2024-02-19 07:01:36"
+      },
+      {
+        "time_stamp": "2024-02-19 07:43:36"
+      },
+      {
+        "time_stamp": "2024-02-19 07:43:57"
+      },
+      {
+        "time_stamp": "2024-02-19 07:46:29"
+      },
+      {
+        "time_stamp": "2024-02-20 01:36:06"
+      },
+      {
+        "time_stamp": "2024-02-20 05:16:45"
+      },
+      {
+        "time_stamp": "2024-02-20 05:17:18"
+      },
+      {
+        "time_stamp": "2024-02-20 08:51:07"
+      },
+      {
+        "time_stamp": "2024-02-20 09:12:05"
+      },
+      {
+        "time_stamp": "2024-02-26 02:24:34"
+      },
+      {
+        "time_stamp": "2024-02-26 17:02:59"
+      },
+      {
+        "time_stamp": "2024-02-29 21:13:55"
+      },
+      {
+        "time_stamp": "2024-02-29 21:14:03"
+      },
+      {
+        "time_stamp": "2024-02-29 21:14:14"
+      },
+      {
+        "time_stamp": "2024-02-29 21:14:27"
+      },
+      {
+        "time_stamp": "2024-02-29 21:15:08"
+      },
+      {
+        "time_stamp": "2024-02-29 21:16:12"
+      },
+      {
+        "time_stamp": "2024-02-29 21:17:51"
+      },
+      {
+        "time_stamp": "2024-02-29 21:19:39"
+      },
+      {
+        "time_stamp": "2024-02-29 21:20:17"
+      },
+      {
+        "time_stamp": "2024-02-29 21:23:55"
+      },
+      {
+        "time_stamp": "2024-03-07 13:47:23"
+      },
+      {
+        "time_stamp": "2024-03-26 01:20:51"
+      },
+      {
+        "time_stamp": "2024-03-26 01:20:56"
+      },
+      {
+        "time_stamp": "2024-03-26 01:21:20"
+      },
+      {
+        "time_stamp": "2024-03-26 08:05:36"
+      },
+      {
+        "time_stamp": "2024-04-08 20:10:09"
+      },
+      {
+        "time_stamp": "2024-05-10 03:22:22"
+      },
+      {
+        "time_stamp": "2024-05-10 03:23:03"
+      },
+      {
+        "time_stamp": "2024-05-10 03:23:27"
+      },
+      {
+        "time_stamp": "2024-05-10 08:10:05"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Delali Dzirasa",
+      "poster_handle": "ddzirasa"
+    },
+    "time_stamp": "2024-02-17 13:15:29",
+    "text": "Thanks so much!"
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2024-02-17 13:47:42",
+    "text": "If you want I'll hop on with you and help you out. Once you extract the data, what is your goal with it? Do you want to put it into properties in HubSpot? Do you want them to go into a database? Or maybe a single property value? Also where is the data coming from?"
+  },
+  {
+    "poster": {
+      "poster_name": "Bill Barlas",
+      "poster_handle": "bbarlas"
+    },
+    "time_stamp": "2024-02-17 13:50:56",
+    "text": "This is a problem for a business rules engine (or something similar using if statements in node or python) so that you dont run into the combinitorial explosion problem you are talking about. Can you mock up what you want it to look like on a spreadsheet or write it down in more detail and maybe I can help!"
+  }
+]

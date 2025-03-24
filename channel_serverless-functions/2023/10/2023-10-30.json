@@ -1,0 +1,10 @@
+[
+  {
+    "poster": {
+      "poster_name": "Binod Manandhar",
+      "poster_handle": "binod"
+    },
+    "time_stamp": "2023-10-30 06:17:40",
+    "text": "Hi there,\nI am getting error as `axios.get is not a function` goes to catch block when I tried to get contacts using token. What could be issue here\n```const axios = require('axios');\n\nexports.main = (context, sendResponse) =&gt; {\n  const token = process.env['HubSpot_API_KEY'];\n  const url = '<https://api.hubapi.com/crm/v3/objects/contacts>';\n  const params = {\n    limit: 2,\n    archived: false,\n  };\n\n  const getContacts = async () =&gt; {\n    const params = {\n      limit: 2,\n      archived: false,\n    };\n\n    const response = await axios.get(url, {\n      headers: {\n        \"Content-type\": \"application/json\",\n        \"Authorization\": `Bearer ${token}`,\n      },\n      params: params,\n    });\n    if (response.status != 200) {\n      sendResponse({\n        statusCode: 500,\n        body: { message: response }\n      });\n    }\n    return response.data.results;\n  };\n\n  (async () =&gt; {\n    try {\n      const contactData = await getContacts();\n      sendResponse({\n        body: contactData,\n        statusCode: 200,\n      });\n    } catch (e) {\n      sendResponse({\n        statusCode: 500,\n        body: {\n          message: \"There was a problem fetching contact records\",\n          error: e.message\n        }\n      });\n    }\n  })();\n};```"
+  }
+]

@@ -1,0 +1,58 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jake Lett",
+      "poster_handle": "jacoblett"
+    },
+    "time_stamp": "2023-10-26 12:31:16",
+    "text": "I am new to graphql. Does it allow you to do api calls in HubSpot cms without having to worry about private apps and oauth? I am trying to query a static list and determine how many contacts are in it. If the list has 10 people I would like to hide a form on a landing page. So I could restrict event registrations to a certain number. Would this be possible?",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-10-26 13:33:43"
+      },
+      {
+        "time_stamp": "2023-10-26 13:35:38"
+      },
+      {
+        "time_stamp": "2023-10-26 13:36:03"
+      },
+      {
+        "time_stamp": "2023-10-26 14:46:39"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2023-10-26 13:33:43",
+    "text": "The answer to the bulk of your questions is “yes”. However, I don’t think lists have been exposed via graphql quite yet. I did a quick search, and couldn’t find any indication of list membership on the contact records themselves either.\n\nHighly recommend navigating to <http://app.HubSpot.com/graphiql/{{portalId}}|app.HubSpot.com/graphiql/{{portalId}}> and mess with the explorer a bit. Can be quite helpful in constructing queries.\n\nI suppose it’s possible you’ll be able to access more recently added tables outside of the Explorer tool…but I wouldn’t be overly optimistic.\n\nLikelihood you’re able to replicate your list membership criteria with filters however, is much higher…which I’m sure you’d have considered anyway."
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Lett",
+      "poster_handle": "jacoblett"
+    },
+    "time_stamp": "2023-10-26 13:35:38",
+    "text": "thanks Niko"
+  },
+  {
+    "poster": {
+      "poster_name": "Jake Lett",
+      "poster_handle": "jacoblett"
+    },
+    "time_stamp": "2023-10-26 13:36:03",
+    "text": "can list filters have a counter to set a limit on the number of people in the list?"
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2023-10-26 14:46:39",
+    "text": "Do you mean within the list functionality itself? If so, I’m not sure. I don’t use lists very often.\n\nIf you’re responding to my comment regarding filters, I just want to clarify that I meant filters when constructing your graphql query, e.g. If you list within the CRM contained a filter along the lines of “Last Name is any of ‘Lett’ “”, you could make sure you’re grabbing those Contacts, without referring to the list itself:\n\n```query MyQuery {\n  CRM {\n    contact_collection(filter: {lastname__eq: \"Lett\"}) {\n      items {\n        associatedcompanyid\n        firstname\n        lastname\n      }\n    }\n  }\n}```\nThen again, maybe your list membership is based upon conditions that can’t be transferred to query filters, in which case - graphql might not be the solution."
+  }
+]

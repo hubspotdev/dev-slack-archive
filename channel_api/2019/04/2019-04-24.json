@@ -1,0 +1,153 @@
+[
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2019-04-24 10:46:27",
+    "text": "I have an API form on one of my HubSpot landing pages and it isn’t recording submissions when I look at page performance. Has anyone dealt with this before?",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-04-24 11:38:32"
+      },
+      {
+        "time_stamp": "2019-04-24 12:00:20"
+      },
+      {
+        "time_stamp": "2019-04-24 12:05:51"
+      },
+      {
+        "time_stamp": "2019-04-24 12:08:00"
+      },
+      {
+        "time_stamp": "2019-04-24 12:11:24"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "walter lentfert",
+      "poster_handle": "walter"
+    },
+    "time_stamp": "2019-04-24 10:52:40",
+    "text": "the timeline API seems like a great way to retrieve HubSpot native events and insert third party interactions associated with the VID, the documentation is very limited as I can t seem to find a way to retrieve the event-type-id and or the event id, can anyone tell me if this API will allow me to pull page views and sessions for a VID? if so how?",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-04-24 11:39:31"
+      },
+      {
+        "time_stamp": "2019-04-24 11:40:32"
+      },
+      {
+        "time_stamp": "2019-04-24 11:53:12"
+      },
+      {
+        "time_stamp": "2019-04-24 11:54:11"
+      },
+      {
+        "time_stamp": "2019-04-24 13:04:18"
+      },
+      {
+        "time_stamp": "2019-04-24 13:07:42"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-04-24 11:38:32",
+    "text": "It’s not really documented (because it’s not officially supported) but you _could_ include the internal page id in the `hs_context` or `context`  if you are using v2 or v3.  I suggest embedding a form on the page and inspecting the element to see how it should be structured"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-04-24 11:39:31",
+    "text": "<@UCE3D677X> the Timeline API actually more intended to push information into the timeline. You can pull events out, but only those created by your application (hence you would already know their ids)"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-04-24 11:40:32",
+    "text": "There isn’t an API that allows you to retrieve page views and sessions for a contact. Only the aggregate numbers are available through the Analytics API <https://developers.HubSpot.com/docs/methods/analytics/analytics-overview>"
+  },
+  {
+    "poster": {
+      "poster_name": "walter lentfert",
+      "poster_handle": "walter"
+    },
+    "time_stamp": "2019-04-24 11:53:12",
+    "edited": {
+      "time_stamp": "2019-04-24 11:53:44"
+    },
+    "text": "Thank you Zack, I am assisting a customer with the implementation of a BI tool, and the journey (ie. all interactions) that impacted decisions down the line. is this planned for the future?  seems weird to push all the info aggregated in the platform, not to be able to retrieve it"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-04-24 11:54:11",
+    "text": "It’s definitely something we want to do, but it wasn’t how the systems were originally constructed (we’ve changed philosophies over time) so the migration to be able to properly support this for external consumers is not a trivial one"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2019-04-24 12:00:20",
+    "text": "Thanks <@UFBNA9K9A> after digging around I saw that pageId value in there. I put it in and I’m still not seeing the submissions count in the backend. This is what I have going on:\n\n```\nvar HubSpotData = {\n          \"submittedAt\": Date.now(),\n          \"fields\": [\n            {\n              \"name\": \"firstname\",\n              \"value\": $('#firstName').val() ? $('#firstName').val() : ''\n            },\n            {\n              \"name\": \"lastname\",\n              \"value\": $('#lastName').val() ? $('#lastName').val() : ''\n            },\n            {\n              \"name\": \"email\",\n              \"value\": $('#emailAddress').val() ? $('#emailAddress').val() : ''\n            },\n            {\n              \"name\": \"company\",\n              \"value\": $('#companyName').val() ? $('#companyName').val() : ''\n            },\n            {\n              \"name\": \"phone\",\n              \"value\": $('#phone').val() ? $('#phone').val() : ''\n            },\n            {\n              \"name\": \"number_of_endpoints\",\n              \"value\": $('#nodesNumber').val() ? $('#nodesNumber').val() : ''\n            },\n            {\n              \"name\": \"terms_of_service\",\n              \"value\": $('#termsBox').is(\":checked\") ? true : false\n            },\n            {\n              \"name\": \"pricing_tier\",\n              \"value\": $('#pt').val() ? $('#pt').val() : ''\n            },\n            {\n              \"name\": \"most_recent_acquisition_source\",\n              \"value\": $('#most_recent_acquisition_source').val() ? $('#most_recent_acquisition_source').val() : 'Website'\n            },\n            {\n              \"name\": \"most_recent_content_category\",\n              \"value\": $('#most_recent_content_category').val() ? $('#most_recent_content_category').val() : ''\n            },\n            {\n              \"name\": \"most_recent_content_asset\",\n              \"value\": \"Free Account\"\n            },\n            {\n              \"name\": \"adwords_keyword\",\n              \"value\": $('#adwords_keyword').val() ? $('#adwords_keyword').val() : ''\n            },\n            {\n              \"name\": \"match_type\",\n              \"value\": $('#match_type').val() ? $('#match_type').val() : ''\n            },\n            {\n              \"name\": \"free_account_signup_date\",\n              \"value\": $('#free_account_signup_date').val() ? $('#free_account_signup_date').val() : ''\n            },\n            {\n              \"name\": \"free_account_expiration_date\",\n              \"value\": $('#free_account_expiration_date').val() ? $('#free_account_expiration_date').val() : ''\n            },\n            {\n              \"name\": \"unique_id\",\n              \"value\": uniqid()\n            }\n            // {\n            //   \"name\": \"free_trial_problem_identification\",\n            //   \"value\": problemID\n            // }\n          ],\n          \"context\": {\n            \"hutk\": window.getCookie(\"HubSpotutk\"), // include this parameter and set it to the HubSpotutk cookie value to enable cookie tracking on your submission\n            \"pageUri\": \"<http://www.someurl.com.com/signup|www.someurl.com.com/signup>\",\n            \"pageName\": \"Sign Up\",\n            \"pageId\": 7104210509\n          }\n        };\n\n        var HubSpot_data = JSON.stringify(HubSpotData)\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-04-24 12:05:51",
+    "edited": {
+      "time_stamp": "2019-04-24 12:07:23"
+    },
+    "text": "try setting the the `contentType` param and put the `pageId` value in quotes, just trying to mimic what I see generated from the embed code"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2019-04-24 12:08:00",
+    "text": "I’ll try that, thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Emerson",
+      "poster_handle": "pete-the-balls-guy"
+    },
+    "time_stamp": "2019-04-24 12:11:24",
+    "text": "ID in quotes worked! The forum answers I had seen indicated otherwise. Thanks so much for your help Zack."
+  },
+  {
+    "poster": {
+      "poster_name": "walter lentfert",
+      "poster_handle": "walter"
+    },
+    "time_stamp": "2019-04-24 13:04:18",
+    "text": "as a developer/partner I would like to be on the alpha/beta track for this. is there any indication for the timing?"
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2019-04-24 13:07:42",
+    "text": "We are still in the scoping stage so it’s hard to offer any kind of timeline. We’ll announce any betas here <https://developers.HubSpot.com/changelog> though so that’s the best place to stay up to date on this."
+  }
+]

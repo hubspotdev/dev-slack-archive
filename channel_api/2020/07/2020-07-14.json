@@ -1,0 +1,204 @@
+[
+  {
+    "text": "sorry for annoying\ndo you mean this step?\nlet me understand, we creating one connected app in the developer account and can use it for many customers' accounts?",
+    "time_stamp": "2020-07-14 02:41:13"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Duane",
+      "poster_handle": "sduane"
+    },
+    "time_stamp": "2020-07-14 08:30:45",
+    "text": "No worries, OAuth was pretty confusing for me the first time I reviewed it. But it’s the standard so, at least we only need to get the gist of it once"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Duane",
+      "poster_handle": "sduane"
+    },
+    "time_stamp": "2020-07-14 08:30:53",
+    "text": "That’s the step I mean, yes"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Duane",
+      "poster_handle": "sduane"
+    },
+    "time_stamp": "2020-07-14 08:31:07",
+    "text": "and yes, you are creating one app, that can be connected to many accounts"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Duane",
+      "poster_handle": "sduane"
+    },
+    "time_stamp": "2020-07-14 08:33:17",
+    "text": "Here’s another way to think about it:\n\nThe user of an account, the person who wants to install your app, is initiating the OAuth flow. OAuth starts as a web browser based action.\nLooking again at: <https://developers.HubSpot.com/docs/api/oauth-quickstart-guide>\n\n&gt;  Step 1: Create the authorization URL and direct the user to HubSpot’s OAuth 2.0 server\nThis would be what the user is doing. Most apps have a website, and a button, and that button is this\n```<https://app.HubSpot.com/oauth/authorize>```\nurl, with your apps clientId and redirect url. A user clicks that, and then gets pulled into step 2 where they go through the app install flow"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Duane",
+      "poster_handle": "sduane"
+    },
+    "time_stamp": "2020-07-14 08:35:01",
+    "text": "At the end of the whole flow, `step 4`, your server will have an `access_token`\n\nThis `access_token` is specific to the users account (portalId) that started the flow.\n\nSo if a user on a separate account installed your app, a new and seperate `acess_token` would be created"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Duane",
+      "poster_handle": "sduane"
+    },
+    "time_stamp": "2020-07-14 08:36:21",
+    "text": "Because there are many accounts, and because access tokens expire and need refreshing, most apps have a database where they store everything, an example schema:\n```portalId, accessToken, refreshToken```\nMost apps then set up their client call so that if it ever fails with the “access code expired” error, it pulls the refresh token and updates."
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Duane",
+      "poster_handle": "sduane"
+    },
+    "time_stamp": "2020-07-14 08:36:45",
+    "text": "But before figuring all that out, I would just get it working without any database or refreshing, and just redo the auth flow every time you test"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Duane",
+      "poster_handle": "sduane"
+    },
+    "time_stamp": "2020-07-14 08:36:59",
+    "text": "What helped me was to do this OAuth flow manually the first time, I would reccomend that"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Duane",
+      "poster_handle": "sduane"
+    },
+    "time_stamp": "2020-07-14 08:37:39",
+    "text": "The link I provided should give you the api you need to call in each step, and you can fill in the blanks for clientId, clientSecret, code…"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Duane",
+      "poster_handle": "sduane"
+    },
+    "time_stamp": "2020-07-14 08:40:26",
+    "text": "Like I mentioned, the first step is not an api call, but a url you plug into your web browser.\n\nYou can really quickly generate this URL from your app settings page:\n`<https://app.HubSpot.com/developer/>&lt;portalId&gt;/application/&lt;appId&gt;`\n\nGo to the `Auth` tab.\nFor now, put in a bogus `RedirectURL`, like `<http://www.google.com|www.google.com>`.\nYou’ll need at least one `Scopes` set, like `contacts`\n\nOnce you save, you should see the `OAuth URL` part filled in with this url, which is the url for `Step 1`"
+  },
+  {
+    "text": "",
+    "time_stamp": "2020-07-14 08:41:29"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Duane",
+      "poster_handle": "sduane"
+    },
+    "time_stamp": "2020-07-14 08:42:31",
+    "text": "copy, plug that into your web browser (and take a look at the query params that were set)\n\nYou’re now the user. Choose your account, agree to install the app.\nWhen done, it redirects to your redirect url - in this case `google`. In the url, you’ll see a new `code` query param added, with the code you need for the next step"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Duane",
+      "poster_handle": "sduane"
+    },
+    "time_stamp": "2020-07-14 08:42:46",
+    "text": "after that it’s all api calls, I use Postman or something similar"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Duane",
+      "poster_handle": "sduane"
+    },
+    "time_stamp": "2020-07-14 08:44:15",
+    "text": "The quickstart doc is explaining how to set up your server, and you’re just doing the servers steps manually.\n\nOnce you get through it all, the whole OAuth flow should make a bit more sense.\n\nOnce you have an access_token, the app will be installed"
+  },
+  {
+    "poster": {
+      "poster_name": "GustavoN",
+      "poster_handle": "gnarcisi"
+    },
+    "time_stamp": "2020-07-14 09:50:09",
+    "edited": {
+      "time_stamp": "2020-07-14 09:50:17"
+    },
+    "text": "Hi all, please upvote for a C# / .NET SDK: <https://community.HubSpot.com/t5/APIs-Integrations/NET-SDK/m-p/354271#M34784>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-07-14 10:01:36",
+    "text": "I don't think they have that... but the API documentation is Swagger, so I would parse it out of there."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Hall",
+      "poster_handle": "mhall"
+    },
+    "time_stamp": "2020-07-14 10:04:53",
+    "text": "What about the last-used timestamp on various API keys they have issued themselves? Ugly but might give some insight. Otherwise, maybe have to raise a support ticket to get somebody to check something in the backend..."
+  },
+  {
+    "poster": {
+      "poster_name": "Ranga",
+      "poster_handle": "ranganathan.mohanraj"
+    },
+    "time_stamp": "2020-07-14 11:06:47",
+    "edited": {
+      "time_stamp": "2020-07-14 11:07:23"
+    },
+    "text": "Hi All, I am new to HubSpot. Currently I need to integrate COntacts between HubSpot and Netsuite. Anybody can help me on this.",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2020-07-15 17:39:26"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nicole Kuong",
+      "poster_handle": "nicole.kuong"
+    },
+    "time_stamp": "2020-07-14 11:28:08",
+    "text": "When would the recording of the webinar be released? I missed half of it and would like to watch it again. Could you please share the link once it’s released. Thanks."
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2020-07-14 11:55:40",
+    "text": "Hey Nicole, we will make sure to share a recording of the Webinar :slightly_smiling_face: Stay tuned!"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2020-07-14 12:37:51",
+    "text": "Hey <@U016VSHUBC6> a quick update, the link will be sent out to all those who attended via email and there will also be a follow up blog post on our <https://developers.HubSpot.com/blog|developer blog >posted with a link to it as well. This should all happen within the next week / week and a half."
+  },
+  {
+    "poster": {
+      "poster_name": "Anna Shapovalova",
+      "poster_handle": "anna211"
+    },
+    "time_stamp": "2020-07-14 13:59:14",
+    "text": "Hi All, could you help me. How can I get HubSpotutk value for my API form.",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-07-15 08:23:50"
+      },
+      {
+        "time_stamp": "2020-07-15 08:24:23"
+      },
+      {
+        "time_stamp": "2020-11-11 16:24:05"
+      }
+    ]
+  }
+]

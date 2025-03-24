@@ -1,0 +1,28 @@
+[
+  {
+    "poster": {
+      "poster_name": "Tyler Sweeten",
+      "poster_handle": "tyler.sweeten"
+    },
+    "time_stamp": "2024-04-10 12:48:35",
+    "text": "Hello, I am trying to use node.js in a workflow custom code module to help with engagements. The issue that I am trying to fix is that I am nearing the association limit for a certain contact and emails. The code I have now works, but the problem I have is that there is a limit of 100 un-associations per execution. I have tried to expand on the code by adding for/ while loops, if/else commands, and while commands with a nested if statement but nothing is working. I wondering if anyone had any experience with node.js for a similar issue? I have added the base code in the comments below, before any attempts at looping through the results to get more than 100 results. Thanks",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-04-10 12:48:57"
+      },
+      {
+        "time_stamp": "2024-04-11 06:14:15"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Tyler Sweeten",
+      "poster_handle": "tyler.sweeten"
+    },
+    "time_stamp": "2024-04-10 12:48:57",
+    "text": "const HubSpot = require('@HubSpot/api-client');\nconst axios = require('axios');\n\nexports.main = async (event, callback) =&gt; {\n\n\n  const HubSpotClient = new HubSpot.Client({\n    accessToken: process.env.PrivateAppKey\n  });\n\n  const exclusions = ['<mailto:remove@email.com|remove@email.com>'];\n  const objectType = 'contacts';\n  const objectId = event.inputFields['hs_object_id'];\n  const toObjectType = 'emails';\n  const after = undefined;\n  const limit = 500;\n\n\n  try {\n    const allEmails = await HubSpotClient.crm.associations.v4.basicApi.getPage(objectType, objectId, toObjectType, after, limit);\n    const allEmailsArray = allEmails.results.map(e =&gt; {return {\"id\": e.toObjectId.toString()}});\n    //console.log(allEmailsArray);\n\n    const emailRead = {inputs: allEmailsArray, properties: [\"hs_email_from_email\"] };\n    const archived = false;\n\n    try {\n      const apiResponse = await HubSpotClient.crm.objects.emails.batchApi.read(emailRead, archived);\n     // console.log(JSON.stringify(apiResponse, null, 2));\n\n      const filteredEmails = apiResponse.results.filter(e =&gt; exclusions.includes(e.properties.hs_email_from_email));\n     // console.log(filteredEmails);\n\n      filteredEmails.forEach(async (e) =&gt; {\n        console.log(e.id);\n\n        try {\n           const deleteResponse = await HubSpotClient.crm.associations.v4.basicApi.archive(objectType, objectId, toObjectType, e.id);\n        }\n        catch (err) {\n          console.error(err);\n          throw err;\n        }\n      });\n\n\n    } catch (e) {\n      e.message === 'HTTP request failed'\n        ? console.error(JSON.stringify(e.response, null, 2))\n      : console.error(e)\n    }\n\n  } catch (err) {\n    console.error(err);\n    throw err;\n  }\n\n  callback({\n    outputFields: {\n    }\n  });\n};"
+  }
+]

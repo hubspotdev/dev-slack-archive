@@ -1,0 +1,629 @@
+[
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2019-02-19 01:38:28",
+    "text": "Nice! I'll try this out, cheers :thumbsup:"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Pupaza",
+      "poster_handle": "robert.pupaza"
+    },
+    "time_stamp": "2019-02-19 02:24:41",
+    "edited": {
+      "time_stamp": "2019-02-19 02:25:04"
+    },
+    "text": "Is there any particular reason why I can't create breadcrumb navigation with the default menu inside a custom module?"
+  },
+  {
+    "poster": {
+      "poster_name": "Saurabh Upadhyay",
+      "poster_handle": "saurabhupadhyay42"
+    },
+    "time_stamp": "2019-02-19 03:04:41",
+    "edited": {
+      "time_stamp": "2019-02-19 03:05:33"
+    },
+    "text": "{% for row in hubdb_table_rows(dynamic_page_hubdb_table_id) %}\n          {% if row.active == 1 %}\n            &lt;div class=\"blog-excerpt comment more\"&gt;\n                    &lt;button class=\"open\"&gt;Read Job Description&lt;/button&gt;\n             &lt;/div&gt;\n\n               &lt;div class=\"popup-overlay\"&gt;\n                   &lt;div class=\"popup-content\"&gt;\n                        &lt;p&gt;{{ row.desc }}&lt;/p&gt;\n                        &lt;button class=\"close\"&gt;Close&lt;/button&gt;\n                   &lt;/div&gt;\n                &lt;/div&gt;\n       {% endif %}\n  {% endfor %}\n\n=========================here is my js=========================\n&lt;script&gt;\n   //appends an \"active\" class to .popup and .popup-content when the \"Open\" button is clicked\n     $(\".open\").on(\"click\", function(){\n       $(\".popup-overlay, .popup-content\").addClass(\"active\");\n     });\n     //removes the \"active\" class to .popup and .popup-content when the \"Close\" button is clicked\n     $(\".close, .popup-overlay\").on(\"click\", function(){\n       $(\".popup-overlay, .popup-content\").removeClass(\"active\");\n     });\n &lt;/script&gt; (edited)\nafter click the button showing all the description row but i want just one description on click ??\ncheck the attached Link : <https://prnt.sc/mn3cgj>"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Pupaza",
+      "poster_handle": "robert.pupaza"
+    },
+    "time_stamp": "2019-02-19 03:15:44",
+    "edited": {
+      "time_stamp": "2019-02-19 03:16:12"
+    },
+    "text": "Hi <@UFEK2AS87> the problem is in the JS and a bit of HTML, you have to specifically tell it which popup to open.\nBasically, in the JS on the open class click function you have to say something like this:\n1. $(this) - check the button that you clicked (because you have multiple buttons with the same class)\n2. ask it to find the parent with the Class 'item-wrapper' and the inside that parent, find the popup and add the class active.\n\nI wrapped your code into a div item-wrapper in order to be able to find the specific popup as the button is not in the same wrapper as the popup, is not easy to target that specific one.\n\nhope that helps.\n\n\nHTML\n```\n  {% for row in hubdb_table_rows(dynamic_page_hubdb_table_id) %}\n         {% if row.active == 1 %}\n&lt;div class=\"item-wrapper\"&gt;\n           &lt;div class=\"blog-excerpt comment more\"&gt;\n                   &lt;button class=\"open\"&gt;Read Job Description&lt;/button&gt;\n            &lt;/div&gt;\n\n              &lt;div class=\"popup-overlay\"&gt;\n                  &lt;div class=\"popup-content\"&gt;\n                       &lt;p&gt;{{ row.desc }}&lt;/p&gt;\n                       &lt;button class=\"close\"&gt;Close&lt;/button&gt;\n                  &lt;/div&gt;\n               &lt;/div&gt;\n&lt;/div&gt;\n      {% endif %}\n {% endfor %}\n```\nJS\n```\n&lt;script&gt;\n  //appends an \"active\" class to .popup and .popup-content when the \"Open\" button is clicked\n    $(\".open\").on(\"click\", function(){\n       $(this).parents('.item-wrapper').find('.popup-overlay').addClass(\"active\");\n    });\n    //removes the \"active\" class to .popup and .popup-content when the \"Close\" button is clicked\n    $(\".close, .popup-overlay\").on(\"click\", function(){\n      $(\".popup-overlay, .popup-content\").removeClass(\"active\");\n    });\n&lt;/script&gt;\n\n```\n\nHaven't tested it, if anything I can help you further with that",
+    "reply_count": 21,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-02-19 03:29:49"
+      },
+      {
+        "time_stamp": "2019-02-19 03:30:58"
+      },
+      {
+        "time_stamp": "2019-02-19 03:31:39"
+      },
+      {
+        "time_stamp": "2019-02-19 03:31:51"
+      },
+      {
+        "time_stamp": "2019-02-19 03:32:08"
+      },
+      {
+        "time_stamp": "2019-02-19 03:32:13"
+      },
+      {
+        "time_stamp": "2019-02-19 03:32:56"
+      },
+      {
+        "time_stamp": "2019-02-19 03:33:28"
+      },
+      {
+        "time_stamp": "2019-02-19 03:33:43"
+      },
+      {
+        "time_stamp": "2019-02-19 03:34:05"
+      },
+      {
+        "time_stamp": "2019-02-19 03:34:39"
+      },
+      {
+        "time_stamp": "2019-02-19 03:34:51"
+      },
+      {
+        "time_stamp": "2019-02-19 03:37:53"
+      },
+      {
+        "time_stamp": "2019-02-19 03:37:58"
+      },
+      {
+        "time_stamp": "2019-02-19 03:38:44"
+      },
+      {
+        "time_stamp": "2019-02-19 03:43:08"
+      },
+      {
+        "time_stamp": "2019-02-19 03:49:58"
+      },
+      {
+        "time_stamp": "2019-02-19 03:59:43"
+      },
+      {
+        "time_stamp": "2019-02-19 04:05:00"
+      },
+      {
+        "time_stamp": "2019-02-19 04:05:07"
+      },
+      {
+        "time_stamp": "2019-02-19 04:59:59"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Saurabh Upadhyay",
+      "poster_handle": "saurabhupadhyay42"
+    },
+    "time_stamp": "2019-02-19 03:29:49",
+    "text": "Hello Robert,\nThanks for sharing the code suggestions but it will not help me"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Pupaza",
+      "poster_handle": "robert.pupaza"
+    },
+    "time_stamp": "2019-02-19 03:30:58",
+    "text": "what is the problem? is it not working or there are other criteria that needs to be met?"
+  },
+  {
+    "poster": {
+      "poster_name": "Saurabh Upadhyay",
+      "poster_handle": "saurabhupadhyay42"
+    },
+    "time_stamp": "2019-02-19 03:31:39",
+    "edited": {
+      "time_stamp": "2019-02-19 03:40:13"
+    },
+    "text": "&lt;div class=\"job-main-listing\"&gt;\n {% set dynamic_page_hubdb_table_id = 1036339 %}\n {% if dynamic_page_hubdb_table_id %}\n\n{% for row in hubdb_table_rows(dynamic_page_hubdb_table_id) %}\n  {% if row.active == 1 %}\n      &lt;div class=\"jobs-profile\"&gt;\n          &lt;div class=\"feature-img\"&gt;\n              &lt;p class=\"icons\"&gt;\n              &lt;img src=\"{{ row.image.url }}\" width=\"100\" {% if row.image.width &gt; row.image.height  %}class=\"landscape\"{% endif %} alt=\"{{ row.name }} Headshot\"&gt;\n              &lt;/p&gt;\n          &lt;/div&gt;\n\n            &lt;div class=\"job-list-description\"&gt;\n              &lt;h6&gt;{{ row.hs_name }}&lt;/h6&gt;\n              &lt;div class=\"blog-excerpt comment more\"&gt;\n                &lt;button class=\"open\"&gt;Read Job Description&lt;/button&gt;\n              &lt;/div&gt;\n            &lt;/div&gt;\n\n            &lt;div class=\"job-location\"&gt;\n              &lt;p&gt;Location&lt;/p&gt;\n              &lt;p&gt;{{ row.location }}&lt;/p&gt;\n            &lt;/div&gt;\n\n              &lt;div class=\"job-timing\"&gt;\n                &lt;p&gt;Duration&lt;/p&gt;\n                &lt;p&gt;{{ row.duration }}&lt;/p&gt;\n              &lt;/div&gt;\n\n              &lt;div class=\"job-timing\"&gt;\n                &lt;p&gt;Experience&lt;/p&gt;\n                &lt;p&gt; {{ row.experience }}&lt;/p&gt;\n              &lt;/div&gt;\n\n                  &lt;div class=\"Button-cta\"&gt;\n                    &lt;a href=\"https://www.abc.com/careers#interviews\" class=\"hs-button\"&gt;SCHEDULE INTERVIEW&lt;/a&gt;\n                  &lt;/div&gt;\n   &lt;/div&gt;\n                &lt;div class=\"popup-overlay\"&gt;\n                    &lt;div class=\"popup-content\"&gt;\n                         &lt;p&gt;{{ row.desc }}&lt;/p&gt;\n                         &lt;button class=\"close\"&gt;Close&lt;/button&gt;\n                    &lt;/div&gt;\n                &lt;/div&gt;\n\n   {% endif %}\n   {% endfor %}\n  &lt;script&gt;\n  //appends an \"active\" class to .popup and .popup-content when the \"Open\" button is clicked\n    $(\".open\").on(\"click\", function(){\n        $(\".popup-overlay, .popup-content\").addClass(\"active\");\n      });\n      //removes the \"active\" class to .popup and .popup-content when the \"Close\" button is clicked\n      $(\".close, .popup-overlay\").on(\"click\", function(){\n        $(\".popup-overlay, .popup-content\").removeClass(\"active\");\n      });\n&lt;/script&gt;\n   {% endif %}\n   &lt;/div&gt;"
+  },
+  {
+    "poster": {
+      "poster_name": "Saurabh Upadhyay",
+      "poster_handle": "saurabhupadhyay42"
+    },
+    "time_stamp": "2019-02-19 03:31:51",
+    "text": "that is my whole code"
+  },
+  {
+    "poster": {
+      "poster_name": "Saurabh Upadhyay",
+      "poster_handle": "saurabhupadhyay42"
+    },
+    "time_stamp": "2019-02-19 03:32:08",
+    "text": "and this is the link\n<https://preview.hs-sites.com/_hcms/preview/template/multi?domain=undefined&amp;portalId=3074142&amp;tc_deviceCategory=undefined&amp;template_file_path=saurabh/JobHubldb.html&amp;updated=1550572221536>"
+  },
+  {
+    "poster": {
+      "poster_name": "Saurabh Upadhyay",
+      "poster_handle": "saurabhupadhyay42"
+    },
+    "time_stamp": "2019-02-19 03:32:13",
+    "text": "please check"
+  },
+  {
+    "poster": {
+      "poster_name": "Saurabh Upadhyay",
+      "poster_handle": "saurabhupadhyay42"
+    },
+    "time_stamp": "2019-02-19 03:32:56",
+    "text": "the read more button and the description data is appear under the for loop"
+  },
+  {
+    "poster": {
+      "poster_name": "Saurabh Upadhyay",
+      "poster_handle": "saurabhupadhyay42"
+    },
+    "time_stamp": "2019-02-19 03:33:28",
+    "text": "i just want every single read more click single description value not all"
+  },
+  {
+    "poster": {
+      "poster_name": "Saurabh Upadhyay",
+      "poster_handle": "saurabhupadhyay42"
+    },
+    "time_stamp": "2019-02-19 03:33:43",
+    "text": "could you please help me to resolved it"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Pupaza",
+      "poster_handle": "robert.pupaza"
+    },
+    "time_stamp": "2019-02-19 03:34:05",
+    "text": "do you think you can add the popup div for each item into the jobs-profile?"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Pupaza",
+      "poster_handle": "robert.pupaza"
+    },
+    "time_stamp": "2019-02-19 03:34:39",
+    "text": "for example after the div with 'button-cta'"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Pupaza",
+      "poster_handle": "robert.pupaza"
+    },
+    "time_stamp": "2019-02-19 03:34:51",
+    "text": "assuming that is position absolute, should not take space"
+  },
+  {
+    "poster": {
+      "poster_name": "Saurabh Upadhyay",
+      "poster_handle": "saurabhupadhyay42"
+    },
+    "time_stamp": "2019-02-19 03:37:53",
+    "text": "Yes you are right but it is showing all the div value"
+  },
+  {
+    "poster": {
+      "poster_name": "Saurabh Upadhyay",
+      "poster_handle": "saurabhupadhyay42"
+    },
+    "time_stamp": "2019-02-19 03:37:58",
+    "text": "i just want one"
+  },
+  {
+    "poster": {
+      "poster_name": "Saurabh Upadhyay",
+      "poster_handle": "saurabhupadhyay42"
+    },
+    "time_stamp": "2019-02-19 03:38:44",
+    "text": "<https://prnt.sc/mn3uyk>"
+  },
+  {
+    "poster": {
+      "poster_name": "Saurabh Upadhyay",
+      "poster_handle": "saurabhupadhyay42"
+    },
+    "time_stamp": "2019-02-19 03:43:08",
+    "text": "Do you have any suggestion ??"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Pupaza",
+      "poster_handle": "robert.pupaza"
+    },
+    "time_stamp": "2019-02-19 03:49:58",
+    "text": "yep, just a bit, I am creating a code for you"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Pupaza",
+      "poster_handle": "robert.pupaza"
+    },
+    "time_stamp": "2019-02-19 03:59:43",
+    "text": "check this fiddle, I hope is going to help you <https://jsfiddle.net/pupazarobert/zs8a1rn0/1/>"
+  },
+  {
+    "poster": {
+      "poster_name": "Saurabh Upadhyay",
+      "poster_handle": "saurabhupadhyay42"
+    },
+    "time_stamp": "2019-02-19 04:05:00",
+    "text": "Thanks Mate the issue has been resolved"
+  },
+  {
+    "poster": {
+      "poster_name": "Saurabh Upadhyay",
+      "poster_handle": "saurabhupadhyay42"
+    },
+    "time_stamp": "2019-02-19 04:05:07",
+    "text": ":+1:"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Pupaza",
+      "poster_handle": "robert.pupaza"
+    },
+    "time_stamp": "2019-02-19 04:59:59",
+    "text": "you are welcome :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Ron",
+      "poster_handle": "ron"
+    },
+    "time_stamp": "2019-02-19 05:20:06",
+    "text": "Please consider upvoting this and saving many Salesforce / HubSpot admins many hours of their respective lives:\n<https://community.HubSpot.com/t5/HubSpot-Ideas/Assignments-can-be-made-to-paid-Professional-seats-only/idi-p/253945#M29839>",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2019-02-19 10:32:13"
+      },
+      {
+        "time_stamp": "2019-02-19 10:33:03"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ron",
+      "poster_handle": "ron"
+    },
+    "time_stamp": "2019-02-19 05:20:08",
+    "text": "Thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Alexander Hjelmqwist",
+      "poster_handle": "alexander.hjelmqwist"
+    },
+    "time_stamp": "2019-02-19 05:56:59",
+    "text": "What's the best template pack based solely on flex-columns and custom modules along with global header/footer?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonathan Pavoni - Level 9",
+      "poster_handle": "jonathanpavoni"
+    },
+    "time_stamp": "2019-02-19 06:50:09",
+    "text": "I’m having an issue with slick slider on a site that I’m building out for a client. The slider is overset and I’m not sure how to fix it. Any insights here? Here is the page I’m working on: <http://sambica-5386250.hs-sites.com/home>",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-02-19 08:03:09"
+      },
+      {
+        "time_stamp": "2019-02-19 08:05:33"
+      },
+      {
+        "time_stamp": "2019-02-19 09:49:33"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ankit Patel",
+      "poster_handle": "ankit.patel"
+    },
+    "time_stamp": "2019-02-19 07:15:27",
+    "text": "We are HubSpot agency based in Germany. We have a customer who needs to have an integration between HubSpot and SAP C4C/Hybris. Can anyone help us with this please? Thanks.",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-02-19 20:18:31"
+      },
+      {
+        "time_stamp": "2019-02-21 06:44:47"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-02-19 08:03:09",
+    "text": "are you referring to the arrows in the bottom where the left arrow in on the right and vice-versa"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-02-19 08:05:33",
+    "text": "I see you have two slicks on there so not sure exactly which one. Also got a screenshot?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2019-02-19 08:12:10",
+    "text": "Anyone know how to successfully pull in featured images from a WordPress blog export? (if this at all possible)",
+    "reply_count": 6,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2019-02-19 08:40:44"
+      },
+      {
+        "time_stamp": "2019-02-19 08:43:41"
+      },
+      {
+        "time_stamp": "2019-02-19 08:47:25"
+      },
+      {
+        "time_stamp": "2019-02-19 08:47:28"
+      },
+      {
+        "time_stamp": "2019-02-19 20:17:24"
+      },
+      {
+        "time_stamp": "2019-02-20 02:01:26"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2019-02-19 08:40:44",
+    "text": "this article indicates that it will pull in the featured image `<https://knowledge.HubSpot.com/articles/kcs_article/cos-blog/import-your-wordpress-blog-posts-into-your-HubSpot-blog?_ga=2.69439317.416710490.1550498973-1899483066.1539193210>`"
+  },
+  {
+    "poster": {
+      "poster_name": "William Spiro",
+      "poster_handle": "wspiro"
+    },
+    "time_stamp": "2019-02-19 08:43:41",
+    "text": "You typically need to use the \"export all\" functionality in wordpress (not just export blog posts) for the \"featured images\" to be included in the export"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2019-02-19 08:47:25",
+    "text": "Ah okay, I just tried the Posts. Will try \"Export All\" and see what happens"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Noon",
+      "poster_handle": "ryan.noon"
+    },
+    "time_stamp": "2019-02-19 08:47:28",
+    "text": "Cheers guys :thumbsup:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jonathan Pavoni - Level 9",
+      "poster_handle": "jonathanpavoni"
+    },
+    "time_stamp": "2019-02-19 09:49:33",
+    "text": "figured it out - thanks <@U2H3TT8F2>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-02-19 10:32:13",
+    "text": "I'm trying to understand the goal you have here. I'm looking at this workflow, and you are attempting to assign the contact owner."
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2019-02-19 10:33:03",
+    "text": "You are saying that before you could assign an email address, but now you can't? IS UOMQLLeads a specific user that has different settings in SF --?"
+  },
+  {
+    "poster": {
+      "poster_name": "AJ LaPorte",
+      "poster_handle": "ajlaporte"
+    },
+    "time_stamp": "2019-02-19 12:16:02",
+    "edited": {
+      "time_stamp": "2019-02-19 12:20:37"
+    },
+    "text": "So has anyone seen major inconsistencies with GA pageview data vs HS pageview data? (GA is reporting over ~100 more pageviews), ignore this, found this here: <https://knowledge.HubSpot.com/articles/kcs_article/reports/why-do-HubSpot-and-google-analytics-not-match>"
+  },
+  {
+    "poster": {
+      "poster_name": "Melissa Smith",
+      "poster_handle": "msmith"
+    },
+    "time_stamp": "2019-02-19 16:37:37",
+    "text": "how do you get the MP4 link for HubSpot-Vidyard Video in the file manager? would like to make the video lightbox",
+    "reply_count": 20,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2019-02-19 16:56:21"
+      },
+      {
+        "time_stamp": "2019-02-19 16:57:54"
+      },
+      {
+        "time_stamp": "2019-02-19 16:59:01"
+      },
+      {
+        "time_stamp": "2019-02-19 17:11:18"
+      },
+      {
+        "time_stamp": "2019-02-19 17:20:44"
+      },
+      {
+        "time_stamp": "2019-02-19 17:21:14"
+      },
+      {
+        "time_stamp": "2019-02-19 17:21:46"
+      },
+      {
+        "time_stamp": "2019-02-19 17:23:47"
+      },
+      {
+        "time_stamp": "2019-02-19 20:15:41"
+      },
+      {
+        "time_stamp": "2019-02-26 13:44:27"
+      },
+      {
+        "time_stamp": "2019-02-26 13:45:58"
+      },
+      {
+        "time_stamp": "2019-02-26 13:46:22"
+      },
+      {
+        "time_stamp": "2019-02-26 13:48:47"
+      },
+      {
+        "time_stamp": "2019-02-26 15:37:18"
+      },
+      {
+        "time_stamp": "2019-02-26 15:37:51"
+      },
+      {
+        "time_stamp": "2019-02-26 15:38:23"
+      },
+      {
+        "time_stamp": "2019-02-26 15:38:41"
+      },
+      {
+        "time_stamp": "2019-02-26 15:39:14"
+      },
+      {
+        "time_stamp": "2019-02-26 15:39:58"
+      },
+      {
+        "time_stamp": "2019-02-26 15:42:03"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-02-19 16:56:21",
+    "text": "If you use a file picker field yes you get the mp4 file and you need to make your own player. If you use the vidyard embed code the safest wat to use it right now is in a rich text field"
+  },
+  {
+    "text": "so if i was the owner of this video i could get the mp4 link from the file manager?",
+    "time_stamp": "2019-02-19 16:57:54"
+  },
+  {
+    "poster": {
+      "poster_name": "Melissa Smith",
+      "poster_handle": "msmith"
+    },
+    "time_stamp": "2019-02-19 16:59:01",
+    "text": "or are you saying in the custom module i have to change the field type to be a file in order to get that url to show"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-02-19 17:11:18",
+    "text": "I'll show you. Just going to be a little bit gotta pull out my laptop"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-02-19 17:20:44",
+    "text": "so you either grab the mp4 url from the file manager\n<https://spin.d.pr/H0dMyM+>\n\nOr you add file fields to your custom module, and users can upload or pick from videos in your file manager.\n<https://spin.d.pr/IwmTTK+>\n\nIf you do this, you need to do the video html yourself though.\n\nIf you want to do the vidyard player, then the current best way to do it is to create a rich text field and have someone use the insert video button to generate the tags. wherver you want the player output the value of that rich text field.\n\nNote: your portal must have a Pro or Enterprise plan or you need to use HubSpot starter(looks like this is your situation)"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-02-19 17:21:14",
+    "text": "Option 2, the file input field may be a work-around for you if you cant get the mp4 url in the file manager"
+  },
+  {
+    "poster": {
+      "poster_name": "Melissa Smith",
+      "poster_handle": "msmith"
+    },
+    "time_stamp": "2019-02-19 17:21:46",
+    "text": "than you.. will let you know if i need anything else"
+  },
+  {
+    "poster": {
+      "poster_name": "Melissa Smith",
+      "poster_handle": "msmith"
+    },
+    "time_stamp": "2019-02-19 17:23:47",
+    "edited": {
+      "time_stamp": "2019-02-19 17:23:57"
+    },
+    "text": "just seems like since we are a partner with the company we don’t have ownership to do anything with the vidyard videos. we will have our client see and check his vidyard level"
+  },
+  {
+    "poster": {
+      "poster_name": "Luke Summerfield",
+      "poster_handle": "lukesummerfield"
+    },
+    "time_stamp": "2019-02-19 20:15:41",
+    "text": "Thanks for the help here <@U7SL518D6>"
+  },
+  {
+    "poster": {
+      "poster_name": "Luke Summerfield",
+      "poster_handle": "lukesummerfield"
+    },
+    "time_stamp": "2019-02-19 20:17:24",
+    "text": "I've heard <@U6W3H6YN8>’s HubXML works much better than the standard HubSpot WP importer... it was getting featured images.\n\nCheck it out <@U9MAWTESW> <https://github.com/williamspiro/hubXml>"
+  },
+  {
+    "poster": {
+      "poster_name": "Luke Summerfield",
+      "poster_handle": "lukesummerfield"
+    },
+    "time_stamp": "2019-02-19 20:18:31",
+    "edited": {
+      "time_stamp": "2019-02-19 20:21:43"
+    },
+    "text": "Hey <@UBQSVT1HA> - I'd post in <#CBNDYJJAZ|jobs> and see what comes up.\n\nOtherwise, you could check with <https://www.sideclick.co.za/> or <https://www.bedrockdata.com/HubSpot> as they have done some similar integrations I believe."
+  }
+]

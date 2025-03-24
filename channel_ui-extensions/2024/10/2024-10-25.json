@@ -1,0 +1,239 @@
+[
+  {
+    "text": "Hi everyone, is there a way to add a description in the app card modules that appear for public apps?\nIt would be nice to give users an indication of what each app card does since we redirect them to the settings on install :slightly_smiling_face:",
+    "time_stamp": "2024-10-25 08:22:42",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-11-14 13:13:11"
+      },
+      {
+        "time_stamp": "2024-11-14 23:39:15"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Joe Yeager",
+      "poster_handle": "jyeager"
+    },
+    "time_stamp": "2024-10-25 09:45:42",
+    "text": "Hi <@U01GW2U4WMA> :wave:, trying to get to the bottom of this.  Is your public app backend by chance running on port 8080?"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-10-25 11:05:55",
+    "text": "<@U04HLBUT9QC> Yes it is"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-10-25 11:06:53",
+    "text": "the backend is still just on my local - not hosted elsewhere yet"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-10-25 11:07:14",
+    "text": "and the error doesn't seem to cause any other issues"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe Yeager",
+      "poster_handle": "jyeager"
+    },
+    "time_stamp": "2024-10-25 11:15:07",
+    "text": "Thanks for confirming <@U01GW2U4WMA>.  I believe there is a port collision.  The CLI starts up a service on port 8080 and tries to make calls to that service on shutdown and it appears to be calling your service instead, causing a 404.\n\nIf you don't mind, could you try starting and stopping the `hs project dev` command with your service running on a different port to confirm this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-10-25 11:15:37",
+    "text": "sure thing"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-10-25 11:35:11",
+    "text": "fun stuff, numerous things didn't like my port change - took care of all that, restarted my backend on port 8081, reset my front-end local.json to point to that, ran hs project dev again - project started up by the dev server did not and failed with this error:  [ERROR] Failed to start local dev server: Unable to start because port 5174 is already in use"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-10-25 11:36:01",
+    "text": "do I need to maybe just restart my local machine - maybe delete the project off my developer site, maybe something else?"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe Yeager",
+      "poster_handle": "jyeager"
+    },
+    "time_stamp": "2024-10-25 11:38:13",
+    "text": "Restarting machine might help out, you might have a dev server process running in the background"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-10-25 11:38:26",
+    "text": "I will try that"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-10-25 12:05:27",
+    "text": "that worked, and now when I exit it does it cleanly"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe Yeager",
+      "poster_handle": "jyeager"
+    },
+    "time_stamp": "2024-10-25 12:06:56",
+    "text": "Thank you so much for confirming that <@U01GW2U4WMA>, I appreciate it!  I will log an issue on our end to address the log message and to more gracefully handle the collision"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-10-25 12:07:15",
+    "text": "I have a couple other questions if you don't mind"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-10-25 12:09:50",
+    "text": "first one is my ui-extensions never are called when I am on my VPN - and others at my workplace same issue when they are in the building - the app shows up but only shows the title and Powered-By footer - nevery fire the backend regardless of private app with serverless or public with backend"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe Yeager",
+      "poster_handle": "jyeager"
+    },
+    "time_stamp": "2024-10-25 12:14:42",
+    "text": "The extensions are served from a different domain (`<http://HubSpot-extensions.com|HubSpot-extensions.com>` ), my best guess is you might have troubles resolving that domain when on the VPN.  You can possibly confirm this by checking the network tab in your browser dev console and seeing if the requests to `<http://HubSpot-extensions.com|HubSpot-extensions.com>` are succeeding"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe Yeager",
+      "poster_handle": "jyeager"
+    },
+    "time_stamp": "2024-10-25 12:15:48",
+    "text": "In the past less permissive firewalls have blocked the domain, and it needed to be allowlisted"
+  },
+  {
+    "text": "hmmm not sure where to look in my network tab: red circles show nothing populating in the cards when on vpn",
+    "time_stamp": "2024-10-25 12:22:07"
+  },
+  {
+    "text": "also what is raven?  I see this all the time whether on or off vpn",
+    "time_stamp": "2024-10-25 12:23:51"
+  },
+  {
+    "text": "You can clear the filter I highlighted with the green box and type in `<http://HubSpot-extensions.com|HubSpot-extensions.com>`",
+    "time_stamp": "2024-10-25 12:25:34"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe Yeager",
+      "poster_handle": "jyeager"
+    },
+    "time_stamp": "2024-10-25 12:28:15",
+    "text": "Raven is a tool we use for error monitoring and reporting, those seem unrelated to the issues you are experiencing"
+  },
+  {
+    "text": "I figured that was unrelated because the extensions work fine - except for vpn :slightly_smiling_face:  here is the filter removed",
+    "time_stamp": "2024-10-25 12:29:45"
+  },
+  {
+    "text": "sorry, meant to show the filter",
+    "time_stamp": "2024-10-25 12:31:44"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-10-25 12:33:03",
+    "text": "I appreciate your help for this - hard to demo anything for my stakeholder at work when they can't see the extensions at work :wink:"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe Yeager",
+      "poster_handle": "jyeager"
+    },
+    "time_stamp": "2024-10-25 12:33:52",
+    "text": "No problem!\n\nOk, so those are the symptoms I was looking for.  It appears that something is blocking that URL, possibly a firewall.  You might need to work with your IT department to get that domain allowlisted"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-10-25 12:34:48",
+    "text": "ok good enough - I will have to go back and find where I asked that question before here and elsewhere because no one seemed to have an answer"
+  },
+  {
+    "text": "<@U04HLBUT9QC> I am guessing built-in extensions by HubSpot - Data Highlights, Association Cards and the like - are not served from that domain and that is why those work on vpn - just not the Apps Cards?",
+    "time_stamp": "2024-10-25 13:00:28"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe Yeager",
+      "poster_handle": "jyeager"
+    },
+    "time_stamp": "2024-10-25 13:17:54",
+    "text": "Yep, I believe that is the case."
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Anderson",
+      "poster_handle": "banderson"
+    },
+    "time_stamp": "2024-10-25 14:31:13",
+    "text": "&gt; I am guessing built-in extensions by HubSpot - Data Highlights, Association Cards and the like - are not served from that domain and that is why those work on vpn - just not the Apps Cards?\n<@U01GW2U4WMA> Yes, that is definitely true, we only use that domain for app cards since they have to run in a sandboxed iframe for security. The built-in cards don't need this extra sandboxing step."
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Anderson",
+      "poster_handle": "banderson"
+    },
+    "time_stamp": "2024-10-25 14:36:45",
+    "edited": {
+      "time_stamp": "2024-10-25 14:39:54"
+    },
+    "text": "From what I can see in your screenshot, this is specifically a `ERR_CERT_AUTHORITY_INVALID` error, so your vpn and/or firewall doesn't trust the ssl cert."
+  },
+  {
+    "text": "I double checked to make sure the cert hadn't expired or anything like that, but it all looks correct to me. And since it works correctly with vpn turned off, that seems to indicate to me that the cert is valid. I would think it would fail in both cases if the cert was indeed bad.",
+    "time_stamp": "2024-10-25 14:39:34"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Anderson",
+      "poster_handle": "banderson"
+    },
+    "time_stamp": "2024-10-25 14:40:35",
+    "text": "Do you know which vpn you're running?"
+  }
+]

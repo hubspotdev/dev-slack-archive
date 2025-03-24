@@ -1,0 +1,249 @@
+[
+  {
+    "poster": {
+      "poster_name": "Bryan Paterson",
+      "poster_handle": "bryan582"
+    },
+    "time_stamp": "2022-03-24 07:18:03",
+    "text": "For HubDB, based on the documentation I know that I can filter results based on field values. I’ve got a project where the client wants to have filtering options (text and select inputs at the top of the page) that would show results based on the selections made. Anyone have an idea on how such a system would work? Is there a way to use POST or GET values in a HUBL module? Is there another way to do it, given that there’s a limit of 10 queries to HUBDB on a page?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2022-03-24 11:11:18",
+    "text": "When I do `crm_associations` for contact-to-company on a private page, it only seems to pull the primary company. Is there any way to get all companies associated with a contact? My code is simply:\n```{% set query = crm_associations(\n  contact.id,\n  \"HubSpot_DEFINED\",\n  ASSOCIATION_IDS.CONTACT_TO_COMPANY,\n  'limit=100',\n  '',\n  false\n) %}\n{{ query|tojson }}```\n`ASSOCIATION_IDS` is a little dict that just stores association IDs - the value here is `1`. There should be 2 companies on the contact I'm checking, but it only pulls the primary one (and if I change which one is primary, it pulls the other one). I could do this with a serverless function, but if possible I'd rather use HubL.",
+    "reply_count": 7,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-03-24 11:27:55"
+      },
+      {
+        "time_stamp": "2022-03-24 11:28:21"
+      },
+      {
+        "time_stamp": "2022-03-24 11:28:31"
+      },
+      {
+        "time_stamp": "2022-03-24 11:28:42"
+      },
+      {
+        "time_stamp": "2022-03-24 11:29:05"
+      },
+      {
+        "time_stamp": "2022-03-24 11:29:43"
+      },
+      {
+        "time_stamp": "2022-03-24 11:30:34"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2022-03-24 11:27:55",
+    "text": "hey Ian!\nthat association is 1:1\nyou will want to use `279`"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2022-03-24 11:28:21",
+    "text": "you can always poll the associations endpoint to get the id and name"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2022-03-24 11:28:31",
+    "text": "in this instance:\n`<https://api.hubapi.com/crm/v3/associations/contact/company/types>`"
+  },
+  {
+    "poster": {
+      "poster_name": "dennis edson",
+      "poster_handle": "dennis261"
+    },
+    "time_stamp": "2022-03-24 11:28:42",
+    "text": "more info <https://developers.HubSpot.com/docs/api/crm/associations|here>"
+  },
+  {
+    "text": "",
+    "time_stamp": "2022-03-24 11:29:05"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2022-03-24 11:29:43",
+    "text": "Ah! It worked, thank you!"
+  },
+  {
+    "time_stamp": "2022-03-24 11:30:34",
+    "text": "it's alive"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2022-03-24 13:46:18",
+    "text": "Is there any documentation on how to use *`hubbd_table_rows()`*\n\nThere are some issues I see with this that are causing me some problems.  It appears the only thing you can select from the module field is the table row. You can’t select columns, or the table (<https://share.getcloudapp.com/6quZe1By>) Is that a bug or as designed?\n\nWhen I loop through the results of this `hubdb_table_rows()` it displays in any order that it feels.  How am I suppsoed to use the `{{ module.product_comparison_header.columns }}` item? Is that a way to do this correctly? Anyone that has used this or has some insight or an example — please let me know.\n\nOne last item --&gt; In the process of displaying whatever it displays in any order, it randomaly throws in some long types (I am looping and have a |pprint: <https://share.getcloudapp.com/04uEqnAb>)\n\n```{% set header_data = hubdb_table_rows(module.product_comparison_header.table_id, module.product_comparison_header.id) %}\n\n{% for row in header_data %}\n  &lt;ul&gt;\n    {% for item in row %}\n      &lt;li&gt;{{ item|pprint }}&lt;/li&gt;\n    {% endfor %}\n  &lt;/ul&gt;\n{% endfor %}```\nI have a workaround for the issues with long showing up, I can do a `{% if item is string %}` to fix that — But I guess I’m using this very wrong Is someone able to assist? here is my current live readout <https://hancockwhitney-1765103.hs-sites.com/product-comparison-test?hs_preview=RgxqwjUr-68242680454>",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-03-25 12:06:48"
+      },
+      {
+        "time_stamp": "2022-03-29 08:58:05"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Aguinaga",
+      "poster_handle": "sean.aguinaga"
+    },
+    "time_stamp": "2022-03-24 17:10:25",
+    "text": "Is there a possibility to subscribe to data changes either via graphql or webhook? From CRM or HubDB?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-03-24 17:17:11"
+      },
+      {
+        "time_stamp": "2022-03-24 17:23:18"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Zach K",
+      "poster_handle": "zach482"
+    },
+    "time_stamp": "2022-03-24 17:17:11",
+    "text": "check out the webhook docs here - <https://developers.HubSpot.com/docs/api/webhooks>. There’s a bunch of CRM events you can listen to"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Aguinaga",
+      "poster_handle": "sean.aguinaga"
+    },
+    "time_stamp": "2022-03-24 17:23:18",
+    "text": "Beautiful, thank you"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Aguinaga",
+      "poster_handle": "sean.aguinaga"
+    },
+    "time_stamp": "2022-03-24 17:24:35",
+    "edited": {
+      "time_stamp": "2022-03-24 17:25:23"
+    },
+    "text": "Can you query what \"stage\" a deal is on a custom pipeline?\n\nI am seeing that integer IDs are created for each stage, and you can query \"time in this stage\" but just seeing what \"stage\" the deal is currently in is what I am after",
+    "reply_count": 9,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-03-24 17:25:45"
+      },
+      {
+        "time_stamp": "2022-03-24 17:26:46"
+      },
+      {
+        "time_stamp": "2022-03-24 17:29:47"
+      },
+      {
+        "time_stamp": "2022-03-24 17:34:11"
+      },
+      {
+        "time_stamp": "2022-03-24 17:37:48"
+      },
+      {
+        "time_stamp": "2022-03-24 17:38:13"
+      },
+      {
+        "time_stamp": "2022-03-24 17:38:37"
+      },
+      {
+        "time_stamp": "2022-03-24 18:45:52"
+      },
+      {
+        "time_stamp": "2022-03-24 19:46:41"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Aguinaga",
+      "poster_handle": "sean.aguinaga"
+    },
+    "time_stamp": "2022-03-24 17:25:45",
+    "text": "dealstage?"
+  },
+  {
+    "text": "I am certain this has a human typed name on it, is there a way to get the GUI to apply that to this?",
+    "time_stamp": "2022-03-24 17:26:46"
+  },
+  {
+    "text": "some get the label, and some don't",
+    "time_stamp": "2022-03-24 17:29:47"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2022-03-24 17:34:11",
+    "text": "HubSpot created ones have labels that are represented with words, custom stages are represented with numbers as far as I know"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Aguinaga",
+      "poster_handle": "sean.aguinaga"
+    },
+    "time_stamp": "2022-03-24 17:37:48",
+    "text": "ahhh okay"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Aguinaga",
+      "poster_handle": "sean.aguinaga"
+    },
+    "time_stamp": "2022-03-24 17:38:13",
+    "text": "I guess I could just keep a map/record and convert between the two"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Aguinaga",
+      "poster_handle": "sean.aguinaga"
+    },
+    "time_stamp": "2022-03-24 17:38:37",
+    "text": "Wish I they would be strings - if it's the HubSpot UI maybe its possible"
+  },
+  {
+    "poster": {
+      "poster_name": "Jacob Jennings",
+      "poster_handle": "jacob550"
+    },
+    "time_stamp": "2022-03-24 18:45:52",
+    "text": "I haven’t been able to set an identifier for deal stages as custom strings :neutral_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Sean Aguinaga",
+      "poster_handle": "sean.aguinaga"
+    },
+    "time_stamp": "2022-03-24 19:46:41",
+    "text": "dang"
+  }
+]

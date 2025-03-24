@@ -1,0 +1,77 @@
+[
+  {
+    "text": "Hey all, I'm experimenting with the programmable email functionality and I'm running into an issue. I'm trying to show a content block if the price of a deals associated line item is greater than 0. The below works fine:\n\n```{% set x = crm_associations(5304469720, \"HubSpot_DEFINED\", 19, \"\", \"price\", false) %} \n{% if x.results[0].price &gt; 0 %}\n  price is greater than 0\n{% endif %}```\nHowever, the below does not, I'd like to just loop through associated line items to the deal and include this module in an email being sent from a deal based workflow:\n\n```  {% email_each list=\"deal.line_items\" item=\"line_item\" %}\n    {% if line_item.price &gt; 0 %}\n      price is greater than 0\n    {% endif %}\n  {% endemail_each %}```\nYou'll see a screenshot of the error below, appreciate any insights at all!",
+    "time_stamp": "2022-08-18 10:41:32",
+    "edited": {
+      "time_stamp": "2022-08-18 10:47:48"
+    },
+    "reply_count": 8,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2022-08-18 11:40:21"
+      },
+      {
+        "time_stamp": "2022-08-18 11:43:22"
+      },
+      {
+        "time_stamp": "2022-08-18 12:24:34"
+      },
+      {
+        "time_stamp": "2022-08-18 12:26:09"
+      },
+      {
+        "time_stamp": "2022-08-18 12:27:51"
+      },
+      {
+        "time_stamp": "2022-08-19 02:59:05"
+      },
+      {
+        "time_stamp": "2022-08-19 08:05:36"
+      },
+      {
+        "time_stamp": "2022-11-09 18:03:13"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2022-08-18 11:40:21",
+    "text": "Hey <@U03RQLHTW9Z> Try the float <https://private.hubteam.com/atlas/internal/scopes/1377/HubSpotters|filter> on the `line_item.price` that way it’s not a string"
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Coldrick",
+      "poster_handle": "jack101"
+    },
+    "time_stamp": "2022-08-18 11:43:22",
+    "text": "Worked a charm thanks Zack! :thumbsup:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Coldrick",
+      "poster_handle": "jack101"
+    },
+    "time_stamp": "2022-08-18 12:24:34",
+    "text": "Hey Zack, I'm still running into a few issues with this ... From searching through previous threads it seems that `email_each` is a workaround that predates programmable email which now allows us to use more advanced hubl in custom modules. See <https://HubSpotdev.slack.com/archives/CJ5DN6RKP/p1644206821670899|here>.\n\nHowever, I'm struggling to find a way to reference the deal ID in order to use the `crm_assocations` function so I can loop through line items.\n\nEssentially I want to create a module that will loop through associated line items and I can output various properties in the body of the email as required."
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2022-08-18 12:26:09",
+    "text": "You should just be able to say `deal.hs_object_id` to get the deal ID"
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Coldrick",
+      "poster_handle": "jack101"
+    },
+    "time_stamp": "2022-08-18 12:27:51",
+    "text": "Thanks (_again_) Zack. Worked perfectly :ok_hand:"
+  }
+]

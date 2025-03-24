@@ -1,0 +1,86 @@
+[
+  {
+    "poster": {
+      "poster_name": "Brennan Sieck",
+      "poster_handle": "brennan"
+    },
+    "time_stamp": "2020-05-07 11:05:18",
+    "text": "Hello again!  I am looking for some help understanding what this error message is describing `{\"message\":\"Json node is missing child properties\"}`. My serverless function is trying to update a contact's properties, so I am working with a few different JSON objects and so Im confused as to whether this message is referring to something in my code, or something related to Node. Anyways, if anyone can help me dig into this error, that would be amazing! Apologies for posting so much in this channel, the HubSpot team has been great at helping me finding solutions to the issues I have been facing and I am not quite sure where else to ask about questions like this",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2020-05-07 11:44:53"
+      },
+      {
+        "time_stamp": "2020-05-07 11:45:42"
+      },
+      {
+        "time_stamp": "2020-05-07 11:52:56"
+      },
+      {
+        "time_stamp": "2020-05-07 11:57:56"
+      },
+      {
+        "time_stamp": "2020-05-07 11:58:19"
+      },
+      {
+        "time_stamp": "2020-05-07 12:17:24"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Krainer",
+      "poster_handle": "bkrainer"
+    },
+    "time_stamp": "2020-05-07 11:44:53",
+    "text": "what is the json you are sending to the contacts api?"
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Krainer",
+      "poster_handle": "bkrainer"
+    },
+    "time_stamp": "2020-05-07 11:45:42",
+    "text": "i think this may be an error from the contacts API. could you post the full output you're seeing?"
+  },
+  {
+    "poster": {
+      "poster_name": "Brennan Sieck",
+      "poster_handle": "brennan"
+    },
+    "time_stamp": "2020-05-07 11:52:56",
+    "text": "<@UEKMY50SU> This is the response I get from the logs\n```[2020-05-07T17:08:15.151Z] SUCCESS (Execution Time: 806ms)\n{ body: { message: 'Json node is missing child properties' }, statusCode: 500 }```\nThe function using the sample JSON I am sending to the contacts API. This is just a chunk of a larger JSON object that will be sent once the function is successfully updating 1 property.\n```const updateContact = async () =&gt; {\n  \n      const { statusCode, body } = await request({\n        method: 'POST',\n        json: true,\n        simple: true,\n        uri: post_url,\n        body: {\n          fields: [\n            {\n              name: 'estated_street_address',\n              value: '123 street',\n            }\n          ]\n        },\n      });\n  \n      if (statusCode != 200) {\n        sendResponse({\n          statusCode: 500,\n          body: { message: body.message },\n        });\n      }\n  \n      return body;\n    };```"
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Krainer",
+      "poster_handle": "bkrainer"
+    },
+    "time_stamp": "2020-05-07 11:57:56",
+    "edited": {
+      "time_stamp": "2020-05-07 12:06:57"
+    },
+    "text": "so yeah, that message is because you received a non-200 response, and you're returning `body: { message: body.message }` which is just passing along the error message from contacts. I think the contacts API is expecting a `properties` key in the post body. it should also be `PATCH` rather than `POST`"
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Krainer",
+      "poster_handle": "bkrainer"
+    },
+    "time_stamp": "2020-05-07 11:58:19",
+    "edited": {
+      "time_stamp": "2020-05-07 12:04:34"
+    },
+    "text": "the example from <https://developers.HubSpot.com/docs/api/crm/contacts>:\n```var options = {\n  method: 'PATCH',\n  url: '<https://api.hubapi.com/crm/v3/objects/contacts/contactId>',\n  qs: {hapikey: 'YOUR_HubSpot_API_KEY'},\n  headers: {accept: 'application/json', 'content-type': 'application/json'},\n  body: {\n    properties: {\n      property_number: '17',\n      property_dropdown: 'choice_b',\n      property_radio: 'option_1',\n      property_string: 'value',\n      property_multiple_checkboxes: 'chocolate;strawberry',\n      property_checkbox: 'false',\n      property_date: '1572480000000'\n    }\n  },\n  json: true\n};\n\nrequest(options, function (error, response, body) {\n  if (error) throw new Error(error);\n\n  console.log(body);\n});```"
+  },
+  {
+    "poster": {
+      "poster_name": "Brennan Sieck",
+      "poster_handle": "brennan"
+    },
+    "time_stamp": "2020-05-07 12:17:24",
+    "text": "<@UEKMY50SU> Thank you!! This is very helpful. I am going to make these changes and see if I can move past these errors and check back in"
+  }
+]

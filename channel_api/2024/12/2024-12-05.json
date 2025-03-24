@@ -1,0 +1,231 @@
+[
+  {
+    "poster": {
+      "poster_name": "Raza",
+      "poster_handle": "raza.ataki"
+    },
+    "time_stamp": "2024-12-05 01:23:29",
+    "text": "<#C2YHAHB6K|api>\n\nAny one can help me:\n\nI have created a custom webhook in wordpress and trying get response from HubSpot but still not getting any response\n\n```add_action('rest_api_init', function () {\n    register_rest_route('HubSpot/v1', '/webhook/', array(\n        'methods'  =&gt; 'POST',\n        'callback' =&gt; 'handle_HubSpot_webhook',\n        'permission_callback' =&gt; '__return_true',\n    ));\n});\n\nfunction handle_HubSpot_webhook(WP_REST_Request $request) {\n    // Get the raw body payload and headers\n    $payload = $request-&gt;get_body(); // Raw body to calculate signature\n    $headers = $request-&gt;get_headers(); // Get all headers\n    $HubSpot_signature = $headers['x-HubSpot-signature'][0] ?? ''; // Get the signature header\n    \n    // Generate the hash using the secret key and payload\n    $calculated_signature = hash_hmac('sha256', $payload, HubSpot_CLIENT_SECRET);\n\n    // Check if headers have already been sent\n    if (headers_sent()) {\n        // Log the error if headers are already sent\n        error_log('Headers already sent, unable to send WP_REST_Response.');\n        return; // Exit the function without sending a response\n    }\n\n    // Compare signatures to verify authenticity\n    if (!is_string($HubSpot_signature) || !is_string($calculated_signature)) {\n        error_log('Invalid signature or payload');\n        return new WP_REST_Response([\n            'status'  =&gt; 'error',\n            'message' =&gt; 'Invalid signature or payload.',\n        ], 403);\n    }\n\n    // Check if the calculated signature matches the HubSpot signature\n    if (hash_equals($calculated_signature, $HubSpot_signature)) {\n        error_log('Valid HubSpot webhook');\n        return new WP_REST_Response([\n            'status'  =&gt; 'success',\n            'message' =&gt; 'Valid webhook received and processed.',\n        ], 200);\n    }\n\n    error_log('Invalid webhook signature');\n    return new WP_REST_Response([\n        'status'  =&gt; 'error',\n        'message' =&gt; 'Invalid webhook signature.',\n    ], 403);\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Masanori Ikeda",
+      "poster_handle": "masanori.ikeda"
+    },
+    "time_stamp": "2024-12-05 01:35:12",
+    "text": "The response below was returned when I attempted to create 201 contacts in a single request:\n```{\n    \"status\": \"error\",\n    \"message\": \"The maximum number of inputs supported in a batch is 100. Please reduce the number of items and try again\",\n    \"correlationId\": \"a975fe8b-a6c8-40ab-bca2-548dcbd949e3\",\n    \"category\": \"VALIDATION_ERROR\"\n}```\nIs the maximum batch size limited to 100 contacts?"
+  },
+  {
+    "poster": {
+      "poster_name": "Zach Klein",
+      "poster_handle": "zach282"
+    },
+    "time_stamp": "2024-12-05 02:00:13",
+    "edited": {
+      "time_stamp": "2024-12-05 02:00:42"
+    },
+    "text": "Yes that's right, most batch endpoints are currently limited to 100 records per request (as per <https://developers.HubSpot.com/beta-docs/guides/apps/api-usage/usage-details|this doc>) <@U083CDMKZT4>"
+  },
+  {
+    "poster": {
+      "poster_name": "Masanori Ikeda",
+      "poster_handle": "masanori.ikeda"
+    },
+    "time_stamp": "2024-12-05 02:02:43",
+    "text": "<@U06TS55PT4H>\nThank you!\nI understand."
+  },
+  {
+    "poster": {
+      "poster_name": "Masanori Ikeda",
+      "poster_handle": "masanori.ikeda"
+    },
+    "time_stamp": "2024-12-05 02:09:51",
+    "text": "Hello!\nI read the<https://developers.HubSpot.com/beta-docs/guides/apps/api-usage/usage-details#error-responses| Error Responses>.\nWhat happens if the number of errors exceeds 5% of the total daily requests?\n\n&gt; Any app or integration exceeding its rate limits will receive a `429` error response for all subsequent API calls. Requests resulting in an error response shouldn’t exceed 5% of your total daily requests. If you plan on listing your app in the <https://ecosystem.HubSpot.com/marketplace/apps|HubSpot App Marketplace>, it must stay under this 5% limit to be certified.\n",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-12-08 23:26:02"
+      },
+      {
+        "time_stamp": "2024-12-09 02:58:35"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Stacey Thomas",
+      "poster_handle": "stacey.thomas"
+    },
+    "time_stamp": "2024-12-05 02:44:41",
+    "text": "Thanks Zach! I think i'm stuck using V2 for now as i've not seen a V4 of the 'enrol contact into workflow' endpoint yet :("
+  },
+  {
+    "poster": {
+      "poster_name": "Vitalii Sili",
+      "poster_handle": "v.sili"
+    },
+    "time_stamp": "2024-12-05 03:57:37",
+    "text": "it is the problem is in documentation, there is a mistake in example they use hs_object_id for product but should be hs_product_id, With hs_product_id the line item get properties from product like price. I tested it today and it works"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-12-05 05:57:15",
+    "text": "Nice!!"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-12-05 05:58:52",
+    "text": "You could report this in the <#C06S581J2AZ|developer-docs-beta> channel and it might get fixed."
+  },
+  {
+    "poster": {
+      "poster_name": "phlp",
+      "poster_handle": "philip.braeunlich"
+    },
+    "time_stamp": "2024-12-05 06:18:52",
+    "edited": {
+      "time_stamp": "2024-12-05 06:19:05"
+    },
+    "text": "Hi.\nI want to search pages AND in specific blogs.\nSo I made this request:\n`<https://api.hubapi.com/cms/v3/site-search/search?q=searchterm&type=SITE_PAGE&type=BLOG_POST&groupId=93918783936>`\nBut I only get results for BLOG_POSTs not SITE_PAGEs.\nIs there any way I can search what I want?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-12-05 06:24:21"
+      },
+      {
+        "time_stamp": "2024-12-05 06:29:48"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Max Shuter",
+      "poster_handle": "max.shuter"
+    },
+    "time_stamp": "2024-12-05 06:24:21",
+    "text": "Not sure if it's relevant, but I recently exported all the CMS pages of every type and the website and landing pages were marked like this:\n\nSTANDARD_PAGE\nLANDING_PAGE\n\nso maybe try those instead of \"SITE_PAGE\" in your URL extension / string?"
+  },
+  {
+    "poster": {
+      "poster_name": "phlp",
+      "poster_handle": "philip.braeunlich"
+    },
+    "time_stamp": "2024-12-05 06:29:48",
+    "text": "sadly this doesn’t help: `\"ContentTypeError.INVALID_CONTENT_TYPE\"`"
+  },
+  {
+    "text": "I have a question wrt association between conversation and contact - it seems the server doesn't recognize it?",
+    "time_stamp": "2024-12-05 08:47:19",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-12-05 10:20:46"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Evelyn Johnson",
+      "poster_handle": "evelyn616"
+    },
+    "time_stamp": "2024-12-05 09:26:18",
+    "text": "Hi!\n\n<#C2YHAHB6K|api> I am writing a custom integration using the the `v3/objects/contacts/batch/upsert` endpoint via axios. I am receiving a 200 response and the contact is getting created in HubSpot, but none of the properties are being set. The same thing happened when I tested it in Postman with this body:\n```{\n  \"inputs\": [\n    {\n        \"id\": \"<mailto:evelyn+12.4T3.31@rubywell.com|evelyn+12.4T3.31@rubywell.com>\",\n        \"idProperty\": \"email\",\n        \"properties\": {\n            \"form_submitted_at\": \"2024-12-04T20:31:52Z\",\n            \"HubSpot_owner_id\": 435674098,\n            \"cr_state\": \"Pennsylvania\"\n      }\n    }\n  ]\n}```\nIs the structure off? What could be happening?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-12-05 12:41:28"
+      },
+      {
+        "time_stamp": "2024-12-05 12:49:48"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Erik Kokalj",
+      "poster_handle": "erik.kokalj4"
+    },
+    "time_stamp": "2024-12-05 09:46:15",
+    "text": "<@U04B32JHTUZ> another request is associate customer with a conversation (basically <https://community.HubSpot.com/t5/APIs-Integrations/Associate-a-conversation-thread-with-a-contact/m-p/1026269#M76549|this forum thread>). Any updates on refactor, or should i go ahead and reverse engineer yet another api call?"
+  },
+  {
+    "poster": {
+      "poster_name": "Erik Kokalj",
+      "poster_handle": "erik.kokalj4"
+    },
+    "time_stamp": "2024-12-05 10:15:30",
+    "edited": {
+      "time_stamp": "2024-12-05 10:15:59"
+    },
+    "text": "<@U04B32JHTUZ> fwiw <http://ably.io|ably.io> (used for realtime messaging) also allows POST requests (not just websockets, see <https://github.com/Erol444/HubSpot-api/blob/master/HubSpot_api/private_api/classes/ably.py#L84|example here>), so it would be fairly simple to integrate a \"REST bridge\" (between your API platform and <http://ably.io|ably.io>) for these missing features. If yall are hiring I could add all of these features in a week"
+  },
+  {
+    "poster": {
+      "poster_name": "Erik Kokalj",
+      "poster_handle": "erik.kokalj4"
+    },
+    "time_stamp": "2024-12-05 10:20:46",
+    "text": "nvm this falls under conversations, which has terrible api support. followup here: <https://HubSpotdev.slack.com/archives/C2YHAHB6K/p1733417175455679?thread_ts=1727274837.457329&amp;cid=C2YHAHB6K>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jun Luo",
+      "poster_handle": "jun.luo"
+    },
+    "time_stamp": "2024-12-05 10:28:09",
+    "text": "Hi,\nHow to get the submissions of a form? <https://developers.HubSpot.com/beta-docs/reference/api/marketing/forms/v3> does not provide any API to get the submissions. find the API in v1, <https://developers.HubSpot.com/beta-docs/reference/api/marketing/forms/v1>. Could I use the v1 API? Any suggestion?"
+  },
+  {
+    "poster": {
+      "poster_name": "An Le",
+      "poster_handle": "an.le"
+    },
+    "time_stamp": "2024-12-05 12:41:28",
+    "text": "make sure those properties exist or are valid properties and values"
+  },
+  {
+    "poster": {
+      "poster_name": "An Le",
+      "poster_handle": "an.le"
+    },
+    "time_stamp": "2024-12-05 12:44:38",
+    "text": "`v3/objects/contacts/batch/upsert`\nIm having issue with this endpoint as well. We randomly get this error: `API Error: {\"status\":\"error\",\"message\":\"Contact already exists\"}` I thought upsert is supposed to create or update? how could it ever return this error?\n\nwe have an api call that creates a custom event right before this, and then a api call that makes an upsert. Could it be that running these 2 api calls too close to one another will cause this problem if the contact initially didn’t exist?"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelyn Johnson",
+      "poster_handle": "evelyn616"
+    },
+    "time_stamp": "2024-12-05 12:48:59",
+    "edited": {
+      "time_stamp": "2024-12-05 12:49:20"
+    },
+    "text": "`v3/objects/contacts/batch/upsert`\n\nTo add to my previous post and to <@U083XS3129J>’s upon further testing, a test call in the <https://developers.HubSpot.com/beta-docs/reference/api/crm/objects/contacts#post-%2Fcrm%2Fv3%2Fobjects%2Fcontacts%2Fbatch%2Fupsert|API Endpoints documentation> returned the following error, which directly contradicts what is in the <https://developers.HubSpot.com/beta-docs/guides/api/crm/objects/contacts#upsert-contacts|API guid>e. Looking for any clarity on this endpoint!! Thank you :slightly_smiling_face:\n```HTTP 400\n\n{\n  \"status\": \"error\",\n  \"message\": \"Cannot upsert a CONTACT when idProperty is set to email.\",\n  \"correlationId\": \"de34944e-935c-43f1-939a-06db352f755b\",\n  \"category\": \"VALIDATION_ERROR\"\n} ```"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelyn Johnson",
+      "poster_handle": "evelyn616"
+    },
+    "time_stamp": "2024-12-05 12:49:48",
+    "text": "<@U083XS3129J> they are!"
+  },
+  {
+    "poster": {
+      "poster_name": "Afron Orana",
+      "poster_handle": "afron.orana"
+    },
+    "time_stamp": "2024-12-05 15:48:12",
+    "text": "Hi all, is there an api i can create reports?\nI am using the default search module:\n\n```{% module \"search_input\" path=\"@HubSpot/search_input\" %}```\nAnd I need to see what the visitors on a site are searching in the search module?  Seeing the `search terms` would give me a lot of insight, so I am thinking if there is no default fucntionality, I can recreate the search results page and push the search params to the API. If there is one"
+  }
+]

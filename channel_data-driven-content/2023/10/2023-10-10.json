@@ -1,0 +1,50 @@
+[
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "lchausse"
+    },
+    "time_stamp": "2023-10-10 13:54:42",
+    "text": "Hello there :wave:\n\n\nI am having a hard time with a hubdbrow type field in a module for which I am trying to pass data\n\nIn the section .html file:\n\nThis work:\n```{% dnd_module\npath=\"/my-theme/modules/my_module\",\ntool_a={ \"id\" :  137685482772 },\n%}\n{% end_dnd_module %}```\nThis doesn't work:\n```{% dnd_module\npath=\"/my-theme/modules/my_module\",\ntool_a={{ context.toolAId || { \"id\" : 137685482772 } }}\n%}\n{% end_dnd_module %}```\nIn the template .html file:\n\nThe toolAId variable is set like this:\n```{% set toolAId = \"{ &amp;quot;id&amp;quot; : {{toolA.id}} }\" %}```\nWhen printing it on the template like this `{{ context.toolAId }}`  it prints the expected JSON: `{ \"id\" : 137685482772 }` , but for some reason it is not taken by the hubdbrow type field...\n\nI tried to add many filters `|tojson` , `|fromjson` , `|escapejson`,`|forceescape` and it didn't fix it....\n\nThanks for your help!",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-10-10 14:07:08"
+      },
+      {
+        "time_stamp": "2023-10-10 16:40:19"
+      },
+      {
+        "time_stamp": "2023-10-10 16:58:30"
+      },
+      {
+        "time_stamp": "2023-10-11 08:34:44"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Louis Chaussé",
+      "poster_handle": "lchausse"
+    },
+    "time_stamp": "2023-10-10 14:07:08",
+    "text": "<@UGDF9EBPW> your expert eye :eye: would be really appreciated on this one :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-10-10 16:40:19",
+    "text": "Is there a particular reason that you’re formatting `toolAId` as a string, rather than actually using a HubL dict?\n```{# Stored as string #}\n{% set toolAId = \"{ \\\"id\\\": {{toolA.id}} }\" %}\n\n{# Stored as dict #}\n{% set toolAId = { \"id\": toolA.id } %}```\nI imagine that string -&gt; dict conversion is what’s going to be giving you trouble — especially when you start throwing HTML entities in there."
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-10-10 16:58:30",
+    "text": "Oh, just spotted a second issue: you’re using double brackets directly inside of a HubL tag. Everything inside of a set of tag brackets (`{% %}`) is interpreted as HubL, so you don’t need double brackets (`{{ }}`) to refer to HubL variables unless you’re interpolating into a string.\n\nTo give practical examples:\n```{# Correct ways to set properties #}\n{% dnd_module\n   path=\"/path/to/module\"\n   set_directly=22,\n   reference_variable=variable_name.property,\n   interpolate_string=\"Widget count: {{ widgets|length }}\",\n   dict_value={\n      \"fizz\": \"buzz\",\n      \"stored_value\": variable_name\n   }\n%}\n\n{# Invalid #}\n{% dnd_module\n   path=\"/path/to/module\"\n   redundant_brackets={{ variable_name }},\n   unquoted_string=Foo Bar,\n   dict_value.fizz=\"buzz\"\n%}```\nFor your specific example, you’d probably have better luck doing something like:\n```{% dnd_module\npath=\"/my-theme/modules/my_module\",\ntool_a={\n  \"id\": toolA.id|default(137685482772)\n}\n%}```"
+  }
+]

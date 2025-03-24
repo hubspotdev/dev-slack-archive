@@ -1,0 +1,69 @@
+[
+  {
+    "poster": {
+      "poster_name": "Nick Cabugos",
+      "poster_handle": "cabugosb3"
+    },
+    "time_stamp": "2023-12-13 10:01:11",
+    "edited": {
+      "time_stamp": "2023-12-13 10:02:49"
+    },
+    "text": "Hi everyone I need some help with a custom module. I can't figure out what the problem is. It seems the data is being pulled correctly from HubDB, but for some reason it is not displaying on the homepage (<https://www.montecitovillagetravel.com/>).\n\nHere's the module html + HubL:\n```\n{% set dynamic_page_hubdb_table_id = module.hubdb_advisors  %}\n{% unless dynamic_page_hubdb_row %}\n{% set filter = \"hs_id__in=\" + module.agent_id|join(',') %}\n{% set agents = hubdb_table_rows(dynamic_page_hubdb_table_id, filter)  %}\n\n\n<div class=\"travelAdvisors-section {{ module.tam_class }}\">\n  <div class=\"page-center\">\n\n    <div class=\"section-header\">\n      <h2 class=\"h2 section-title c-dark ta-center\">{{ module.tam_sec_title }}</h2>\n    </div>\n\n    <div id=\"featured-advisors\" class=\"featured-advisors\">\n    </div>\n\n    <div class=\"fa-cta-wrap ta-center\">\n      <a target=\"_blank\" class=\"btn c-orange bd-orange\" href=\"{{ module.fa_cta_url.href }}\"><span></span>Find an Agent</a>\n    </div>\n  </div>\n</div>\n\n<script>\n\n\t\tconst agents = []\n\n\t\t$(document).ready(function() {\n\n\t\t\t{% for agent in agents %}\n\t\t\t{% set destinations = agent.destination_area|default('')|split(';') %}\n\t\t\t{% set partners = agent.partners|default('')|split(';') %}\n\t\t\t{% set specialties = agent.qf_travel_interests|default('')|split(';') %}\n\t\t\tagents.push({\n\t\t\t\t\"name\": \"{{ agent.first_name|default('')|escapejson }} {{ agent.last_name|default('')|escapejson }}\",\n        \"bio\": \"{{ agent.bio|default('')|escapejson }}\",\n\t\t\t\t\"url\": \"/agents/{{ agent.hs_path|default('')|escapejson }}\",\n\t\t\t\t\"headshot\": \"{{ resize_image_url(agent.profile_image.url, 540, 350, 0, False, False)|default('<https://cdn2.HubSpot.net/hubfs/6509886/default-profile.png')%7Cescapejson> }}\",\n\t\t\t\t\"location\": \"{{ agent.city|default('')|escapejson }}, {{ agent.state|default('')|escapejson }}\",\n\t\t\t\t\"service_area\": \"{{ agent.state|trim|default('')|escapejson }}\",\n\t\t\t\t\"destination_areas\": [\"{% for destination in destinations %}{{ destination|trim|escapejson }}{% unless loop.last %}\", \"{% endunless %}{% endfor %}\"],\n\t\t\t\t\"partners\": [\"{% for partner in partners %}{{ partner|trim|escapejson }}{% unless loop.last %}\", \"{% endunless %}{% endfor %}\"],\n\t\t\t\t\"specialties\": [\"{% for specialty in specialties %}{{ specialty|trim|escapejson }}{% unless loop.last %}\", \"{% endunless %}{% endfor %}\"]\n\t\t\t})\n\n\t\t\t{% endfor %}\n\t\t})\n\n\t</script>\n\n{% raw %}\n\t<script type=\"text/x-template\" id=\"agent_list\">\n\t\t{{#each this}}\n    <span class=\"fa-wrap\">\n        <div class=\"fa-block\">\n\n          {{#if headshot }}\n          <div class=\"fa-img-wrapper\">\n            <a target=\"_blank\" href=\"{{ url }}\" title=\"\" class=\"fa-img-link\">\n              <img  class=\"fa-img\" src=\"{{ headshot }}\" alt=\"{{ name }}\">\n            </a>\n          </div>\n          {{/if}}\n          <div class=\"fa-details bg-white\">\n            <h5 class=\"h5 fa-name\"><a href=\"{{ url }}\">{{ name }}</a></h5>\n            <span class=\"fa-location\">{{ location }}</span>\n            <div class=\"fa-desc\">{{ eleLength bio }}</div>\n          </div>\n\n        </div>\n      </span>\n\n\t\t{{else}}\n\t\t\t<div class=\"col-noresults\">Sorry, but there are no results matching that criteria.</div>\n\t\t{{/each}}\n\n\t</script>\n\t{% endraw %}\n\n{% endunless %}```\nAnd the js being used handlebars and slick slider:\n\n```$(document).ready(function(){\n\n  Handlebars.registerHelper('eleLength', function(str) {\n    if (str.length > 60)\n      return str.substring(0,60) + '...';\n    return str;\n  });\n\n  // init handlebar\n  let pagination = new BlogPagination({\n    'posts': agents,\n    'postLen': 10,\n    '$handlebarsTemp': $('#agent_list'),\n    '$list': $('#featured-advisors')\n  })\n\n  pagination.init()\n\n   // init slick slider\n  $('#featured-advisors').slick({\n    slidesToShow: 3,\n    autoplay: true,\n    autoplaySpeed: 3000,\n    dots: false,\n    centerMode: true,\n    focusOnSelect: true,\n    centerPadding: '0',\n    arrows:true,\n    responsive: [\n      {\n        breakpoint: 920,\n        settings: {\n          centerPadding: '50px',\n          arrows:false,\n          dots: true,\n        }\n      },\n      {\n        breakpoint: 767,\n        settings: {\n          centerPadding: '70px',\n          slidesToShow: 1,\n          arrows:false,\n          dots: true,\n        }\n      }\n    ]\n  });\n\n\n});```",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-12-13 10:01:55"
+      },
+      {
+        "time_stamp": "2023-12-13 18:25:12"
+      },
+      {
+        "time_stamp": "2023-12-14 11:08:04"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nick Cabugos",
+      "poster_handle": "cabugosb3"
+    },
+    "time_stamp": "2023-12-13 10:01:55",
+    "text": "It is the Featured Advisors Module on the homepage, can anyone help me troubleshoot this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Goran Ilievski",
+      "poster_handle": "goran308"
+    },
+    "time_stamp": "2023-12-13 18:25:12",
+    "text": "Hey <@U069X5KU3MK> did you fix it because I can see the agents"
+  },
+  {
+    "poster": {
+      "poster_name": "Alana Caporale",
+      "poster_handle": "alana"
+    },
+    "time_stamp": "2023-12-13 20:31:23",
+    "text": "Hey all, i have a video box in one of my modules, and it works on desktop, but doesnt play on mobile... anyone have an idea on why this is??",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-12-14 06:35:27"
+      },
+      {
+        "time_stamp": "2023-12-14 06:38:56"
+      },
+      {
+        "time_stamp": "2023-12-14 12:33:41"
+      },
+      {
+        "time_stamp": "2023-12-14 13:35:50"
+      },
+      {
+        "time_stamp": "2023-12-14 13:35:59"
+      }
+    ]
+  }
+]

@@ -1,0 +1,219 @@
+[
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-07-30 06:54:32",
+    "text": "hey all, question about mapping date values from hubDB -- I'm attempting to use this snippet `{% set dates = rows|map(attribute='date|datetimeformat(\"%Y\")') %}` to get a happy list of the year values associated with row items. With this snippet, I receive back a `null` value.\n\nIf I attempt to use a shortened version of the snippet without the date format `{% set dates = rows|map(attribute='date') %}` I am getting the following errors:\n\n```1.\nError:Cannot resolve property \" rows|map(attribute=&amp;#x27;date&amp;#x27;) \"\n2.\nError:4:0com.HubSpot.jinjava.interpret.InterpretException: Input to function must be a date object, was: class com.HubSpot.content.hubl.functions.HubDbTableRowMapFacadeImpl```",
+    "reply_count": 18,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-07-30 13:48:08"
+      },
+      {
+        "time_stamp": "2019-07-30 13:49:19"
+      },
+      {
+        "time_stamp": "2019-07-30 13:49:34"
+      },
+      {
+        "time_stamp": "2019-07-30 13:49:50"
+      },
+      {
+        "time_stamp": "2019-07-30 13:50:20"
+      },
+      {
+        "time_stamp": "2019-07-30 13:50:39"
+      },
+      {
+        "time_stamp": "2019-07-30 13:51:40"
+      },
+      {
+        "time_stamp": "2019-07-30 13:52:18"
+      },
+      {
+        "time_stamp": "2019-07-30 13:52:20"
+      },
+      {
+        "time_stamp": "2019-07-30 13:52:29"
+      },
+      {
+        "time_stamp": "2019-07-30 14:19:21"
+      },
+      {
+        "time_stamp": "2019-07-30 14:25:46"
+      },
+      {
+        "time_stamp": "2019-08-01 09:56:38"
+      },
+      {
+        "time_stamp": "2019-08-01 09:58:05"
+      },
+      {
+        "time_stamp": "2019-08-01 09:59:15"
+      },
+      {
+        "time_stamp": "2019-08-05 10:02:54"
+      },
+      {
+        "time_stamp": "2019-08-05 10:03:43"
+      },
+      {
+        "time_stamp": "2019-08-05 11:51:21"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-07-30 06:55:45",
+    "text": "(it is getting angry at both single and double quotes in the editor)\n\nAnyone have any thoughts on why it's borking out my quotes? Does the map function not allow for date values?"
+  },
+  {
+    "text": "Does anyone know why when I loop through blog posts its throwing 2 of the 3 in a `&lt;strong&gt;` ? I am simply running this ```{% for post in posts %}``` and its wrapping it in a strong tag.",
+    "time_stamp": "2019-07-30 13:45:22",
+    "edited": {
+      "time_stamp": "2019-07-30 13:46:15"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-07-30 13:48:08",
+    "text": "`rows|map(attribute='date|datetimeformat(\"%Y\")')` looks a little suspect :eyes:"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-07-30 13:49:19",
+    "text": "Since `'date|datetimeformat(\"%Y\")'` is a combo of an attribute and filter"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-07-30 13:49:34",
+    "text": "fair, but it also hates just 'date'"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-07-30 13:49:50",
+    "text": "the errors are on  the second snippet"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-07-30 13:50:20",
+    "text": "What if you do `rows|map('date')`"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-07-30 13:50:39",
+    "text": "testing now - will report back"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-07-30 13:51:40",
+    "text": "Actually the issue is here <https://github.com/HubSpot/jinjava/blob/master/src/main/java/com/HubSpot/jinjava/lib/filter/MapFilter.java#L44>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-07-30 13:52:18",
+    "text": "Since `date` is the name of a filter it thinks you want a filter instead of an attribute despite specifying the attribute keyword"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-07-30 13:52:20",
+    "text": "Let me fix this bug"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-07-30 13:52:29",
+    "text": "thank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-07-30 14:19:21",
+    "text": "<https://github.com/HubSpot/jinjava/pull/356>"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-07-30 14:25:46",
+    "text": "You join <@U2H3TT8F2> in getting the 'yer a peach' award for the day :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2019-07-30 14:54:04",
+    "text": "That looks like you've got an unclosed tag somewhere in your loop"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2019-07-30 14:54:32",
+    "text": "That'd be my guess"
+  },
+  {
+    "poster": {
+      "poster_name": "Ian McNair",
+      "poster_handle": "ianrmcnair"
+    },
+    "time_stamp": "2019-07-30 14:54:43",
+    "text": "Or an extra closing tag, one of the two"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Miller",
+      "poster_handle": "jon748"
+    },
+    "time_stamp": "2019-07-30 15:40:42",
+    "text": "interesting. I wonder why that is throwing wrappers around it"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Miller",
+      "poster_handle": "jon748"
+    },
+    "time_stamp": "2019-07-30 15:40:44",
+    "text": "thank!!"
+  }
+]

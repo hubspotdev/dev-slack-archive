@@ -1,0 +1,96 @@
+[
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-05-01 05:21:33",
+    "text": "Can you provide a link to the page where the form is?  Are you getting any errors?  I would guess you might be getting cross-origin errors maybe.  I am not the best person to help you solve this but providing more info may allow other here to help."
+  },
+  {
+    "poster": {
+      "poster_name": "Gunnar Normand",
+      "poster_handle": "gunnarnormand"
+    },
+    "time_stamp": "2024-05-01 06:35:43",
+    "text": "Page: <https://www.sandtech.com/private_events/sand-technologies-smart-cities-innovation-summit-raleigh/>\nForm: <https://app-eu1.HubSpot.com/submissions/26610434/form/352c7dc1-27e4-490a-9554-ec055220e8a6/performance?redirectUrl=https%3A%2F%2Fapp-eu1.HubSpot.com%2Fforms%2F26610434%2F|https://app-eu1.HubSpot.com/submissions/26610434/form/352c7dc1-27e4-490a-9554-ec055220[…]Url=https%3A%2F%2Fapp-eu1.HubSpot.com%2Fforms%2F26610434%2F>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Zimo",
+      "poster_handle": "matt_zimo"
+    },
+    "time_stamp": "2024-05-01 07:24:06",
+    "edited": {
+      "time_stamp": "2024-05-01 07:24:27"
+    },
+    "text": "Hello, I'm getting an error when I run this custom code  in a workflow. Can you help me figure out what's up? The code is:\n```const axios = require('axios');\n\n\nvar data = '{\"organizationId\": 24178}';\n\nvar config = {\n  method: 'post',\nmaxBodyLength: Infinity,\n  url: '<https://api-east.mymazevo.com/api/PublicOrganization/Organizations>',\n  headers: { \n    'X-API-Key': 'xxxxxx'\n  },\n  data : data\n};\n\naxios(config)\n.then(function (response) {\n  console.log(JSON.stringify(response.data));\n})\n.catch(function (error) {\n  console.log(error);\n});```",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-01 07:24:56"
+      },
+      {
+        "time_stamp": "2024-05-01 14:54:25"
+      },
+      {
+        "time_stamp": "2024-05-01 14:55:09"
+      },
+      {
+        "time_stamp": "2024-05-02 08:17:22"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Zimo",
+      "poster_handle": "matt_zimo"
+    },
+    "time_stamp": "2024-05-01 07:24:56",
+    "text": "and the error I get is:\n```19:56.509Z\tERROR\tInvoke Error \t{\"errorType\":\"TypeError\",\"errorMessage\":\"customerPayload.main is not a function\",\"stack\":[\"TypeError: customerPayload.main is not a function\",\"    at exports.HubSpot_handler [as handler] (/var/task/HubSpotHandler.js:7:21)\",\"    at Runtime.handleOnceNonStreaming (file:///var/runtime/index.mjs:1173:29)\"]}\n\nMemory: 83/128 MB\nRuntime: 59.22 ms```"
+  },
+  {
+    "text": "Like I said, I am not the right person to help figure this out - but I don't see this form inside an iframe (see the screen shot).  I can't get to the second link you provided to the form -= that is inside your HubSpot portal.",
+    "time_stamp": "2024-05-01 11:17:43"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Ainslie",
+      "poster_handle": "rainslie"
+    },
+    "time_stamp": "2024-05-01 14:54:25",
+    "text": "<@U04NQ0Z32GK> - assuming that this is the entirety of your code, it looks like you're not wrapping your code in an `exports.main =&gt;{}` function\n\n• That is a required syntax, <https://developers.HubSpot.com/docs/api/workflows/custom-code-actions|as shown in the documentation>\n• You can see an example of a well-formed custom coded action payload in the Use Case library - <https://www.HubSpot.com/programmable-automation-use-cases>"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Ainslie",
+      "poster_handle": "rainslie"
+    },
+    "time_stamp": "2024-05-01 14:55:09",
+    "text": "Generally, you declare your package requirements outside of the exports.main, and then the rest of your code completes inside this function"
+  },
+  {
+    "text": "Hi everyone,\nI have a form that has some javascript to redirect to a different page, I can see that they submitted it, but the form submission was never captured.\n\nI attached a screenshot where you can see the form was submitted through hotjar screen recording.\n\nI’ve tested it on my own machine, and there have been a number of people who have submitted so far without issue, has anyone else had issues like this? I’ve added the code below removing the URLs from the redirect rules\n\n&lt;script&gt;\n  //Hide email if prefilled\n  window.addEventListener(‘message’, event =&gt; {\n    if(event.data.type === ‘hsFormCallback’ &amp;&amp; event.data.eventName === ‘onFormReady’) {\n      //console.log(“Form Loaded!“);\n      var prefemail = document.getElementsByName(‘email’);\n      for (var i = 0; i &lt; prefemail.length; i++) {\n        //console.log(prefemail[i].value);\n        let emailvalue = prefemail[i].value;\n        if (emailvalue.includes(‘@’)) {\n          var elements = document.getElementsByClassName(“hs_email”);\n          for (var j = 0; j &lt; elements.length; j++) {\n            elements[j].style.display = ‘none’;\n          }\n        }\n      }\n    }\n  });\n\n  // Define a callback function for the mutation observer\n  var callback = function(mutationsList, observer) {\n    for (var mutation of mutationsList) {\n      if (mutation.type === ‘childList’) {\n        var radioButtons = document.querySelectorAll(‘input[type=“radio”][name=“gl_payment_option_thermal”], input[type=“radio”][name=“gl_payment_option”]’);\n        if (radioButtons.length &gt; 0) {\n          console.log(‘Radio buttons found:’, radioButtons.length);\n          observer.disconnect();\n        }\n      }\n    }\n  };\n\n  // Create a new mutation observer\n  var observer = new MutationObserver(callback);\n\n  // Start observing the document with the configured parameters\n  observer.observe(document.body, { childList: true, subtree: true });\n\n  // Define the URLs for redirection\n  var redirectUrlsThermal = {\n    ‘Bank Transfer’: ‘URL’,\n    ‘Online Payment’: ‘URL’,\n    ‘Payment Plan’: ‘URL’’\n  };\n\n  var redirectUrlsUltrasonic = {\n    ‘Bank Transfer’: ‘URL’,\n    ‘Online Payment’: ‘URL’,\n    ‘Payment Plan’: ‘URL’\n  };\n\n  // Listen for the form submission message event\n  window.addEventListener(‘message’, function(event) {\n    if (event.data.type === ‘hsFormCallback’ &amp;&amp; event.data.eventName === ‘onFormSubmit’) {\n      var formId = event.data.id;\n      var selectedPaymentOption, redirectUrl;\n\n      // Extract the email from the event data\n      var emailInput = document.querySelector(‘#hsForm_’ + formId + ' input[name=“email”]’);\n      var emailValue = emailInput ? ‘prefilled_email=’ + emailInput.value : ‘’;\n      console.log(“email:” + emailValue);\n\n      if (formId === ‘c32f9b0c-2834-4c0c-9da5-12ce2f0dec11’) {\n        selectedPaymentOption = document.querySelector(‘#hsForm_’ + formId + ' input[type=“radio”][name=“gl_payment_option_thermal”]:checked’).value;\n        redirectUrl = redirectUrlsThermal[selectedPaymentOption] + emailValue;\n      } else if (formId === ‘3fcdb358-6067-4311-8f66-bbc9e3f312ed’) {\n        selectedPaymentOption = document.querySelector(‘#hsForm_’ + formId + ' input[type=“radio”][name=“gl_payment_option”]:checked’).value;\n        redirectUrl = redirectUrlsUltrasonic[selectedPaymentOption] + emailValue;\n      }\n\n      console.log(redirectUrl);\n      if (redirectUrl) {\n        window.location.href = redirectUrl;\n      }\n    }\n\n  });\n&lt;/script&gt;",
+    "time_stamp": "2024-05-02 00:59:02",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-05-03 13:37:09"
+      },
+      {
+        "time_stamp": "2024-05-03 13:37:26"
+      },
+      {
+        "time_stamp": "2024-05-03 13:38:03"
+      },
+      {
+        "time_stamp": "2024-05-03 13:38:18"
+      },
+      {
+        "time_stamp": "2024-05-05 18:21:59"
+      }
+    ]
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2020-03-04 05:12:29",
+    "text": "<@U3T21PDBK> Yes but it’s not the easiest to implement.  The `HubSpotutk` will be dropped on `<http://domain.com|domain.com>` so it be accessed by code serving `*.<http://domain.com|domain.com>` , including `<http://shop.domain.com|shop.domain.com>`. In order to get information about that contact, the server that’s responding to `<http://shop.domain.com|shop.domain.com>` request could look at the cookies of the incoming requests and grab the `HubSpotutk` from there.  Note that it needs to be server side so you can make an authenticated request to HubSpot. You can then use this <https://developers.HubSpot.com/docs/methods/contacts/get_contact_by_utk|API> to get the contact information. The complication arises with rate limiting. If you simply made this request on every visit you would almost certainly hit the HS rate limits.  Not to mention, waiting to load a page until you get a response back from an external API is not best practice.  So realistically what you could do is not actually make the request but kick off another background process and make the requests using the <https://developers.HubSpot.com/docs/methods/contacts/get_batch_by_user_token|batch API>. This means you can’t use the contact information on that first visit but you could use it on any subsequent visit (assuming you store it on your server somewhere). I’m assuming your end goal here is to offer some level of personalization to your visitors based on what you’ve collected in HubSpot hosted pages. If you have some different use case, definitely let me know and we can see if there is a better way to think about getting this info."
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2020-03-04 11:32:18",
+    "text": "Thanks <@UFBNA9K9A>. That was super helpful. We have a client whose pricing is based on zip codes and it would be nice to have their stuff pre-filled when they go to the shop.\n\nIn order to keep all of the work on the front end for a quick fix, I guess I could just set a custom cookie via the CMS and set it to the contact’s postal code property. The only catch is that customers would have to visit the main site in order to get the new cookie."
+  },
+  {
+    "poster": {
+      "poster_name": "Zack Wolfson",
+      "poster_handle": "zwolfson"
+    },
+    "time_stamp": "2020-03-04 11:43:21",
+    "text": "Yup, that sounds like a good quick solution."
+  }
+]

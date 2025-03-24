@@ -1,0 +1,74 @@
+[
+  {
+    "poster": {
+      "poster_name": "Marieke Westerterp",
+      "poster_handle": "marieke423"
+    },
+    "time_stamp": "2024-09-25 08:14:28",
+    "text": "Hi All, please help, Related_blog_posts doesn't work with a second tag. Does anyone have experienced this before?\n      {% related_blog_posts\n       blog_ids=\"{{ module.blog_field }}\",\n       limit=\"{{ module.amount }}\",\n       tags=\"Oracle, Kotlin\",\n       tag_boost=\"1000\",\n       post_formatter=\"formatter\",\n       no_wrapper=\"true\"\n     %}",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-09-25 08:16:51"
+      },
+      {
+        "time_stamp": "2024-09-25 08:18:00"
+      },
+      {
+        "time_stamp": "2024-09-25 08:20:30"
+      },
+      {
+        "time_stamp": "2024-09-25 09:03:06"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Sébastien Rochon",
+      "poster_handle": "srochon"
+    },
+    "time_stamp": "2024-09-25 08:16:51",
+    "text": "Hi, did you try removing the space you have between tag name like so :\ntags=\"Oracle,Kotlin\""
+  },
+  {
+    "poster": {
+      "poster_name": "Sébastien Rochon",
+      "poster_handle": "srochon"
+    },
+    "time_stamp": "2024-09-25 08:18:00",
+    "text": "tags is a string type : <https://developers.HubSpot.com/beta-docs/reference/cms/hubl/tags/standard-tags#blog-related-posts>"
+  },
+  {
+    "poster": {
+      "poster_name": "Sébastien Rochon",
+      "poster_handle": "srochon"
+    },
+    "time_stamp": "2024-09-25 08:20:30",
+    "text": "If you want to use array apply filter |join(\",\") like this :\ntags={{[\"Oracle\", \"Kotlin\"]|join(\",\")}} or tags={{ module.tags|join(\",\") }}"
+  },
+  {
+    "poster": {
+      "poster_name": "Marieke Westerterp",
+      "poster_handle": "marieke423"
+    },
+    "time_stamp": "2024-09-25 09:03:06",
+    "text": "Thanks <@U0682QW2QN7> I am going to try these."
+  },
+  {
+    "poster": {
+      "poster_name": "Lauren Grassello",
+      "poster_handle": "lgrassello"
+    },
+    "time_stamp": "2024-09-25 12:45:10",
+    "text": "Hello! I am trying to update this template and am trying to calculate the total for the deal amount. But I am getting a syntax error. What is the best way to calculate the total? Which would essentially be 'result' but for all line items?                             `{% set deal_amount = deal.amount | replace('$', '') | float %} &lt;!-- Initialize deal_amount as a float --&gt;`\n\n                            `{% for line_item in deal.line_items %}`\n                                `{% set tcv_float = line_item.hs_tcv | replace('$', '') | float %}`\n                                `{% set result = tcv_float * line_item.quantity %}`\n                          \n                                `&lt;tr&gt;`\n                                    `&lt;td&gt;`\n                                        `&lt;table style=\"border:0;width:100%;background-color:#eee;\"&gt;`\n                                            `&lt;tr&gt;`\n                                                `&lt;td height=\"16\" style=\"padding: 0px; font-size: 0px;\"&gt; &lt;/td&gt;`\n                                                `&lt;td height=\"16\" style=\"padding: 0px; font-size: 0px;\"&gt; &lt;/td&gt;`\n                                            `&lt;/tr&gt;`\n                                            `&lt;tr&gt;`\n                                                `&lt;td style=\"font-weight:bold;margin: 0px 10px;\"&gt;`\n                                                    `&lt;p style=\"margin:0 10px\"&gt;`\n                                                        `{{ line_item.name }}`\n                                                    `&lt;/p&gt;`\n                                                `&lt;/td&gt;`\n                                                `&lt;td style=\"font-weight:bold;margin: 0px 10px; text-align:right;\"&gt;`\n                                                    `&lt;p style=\"margin:0 10px\"&gt;`\n                                                        `{{ line_item.hs_tcv }} x {{ line_item.quantity }}` \n                                                        `${{ result | round(2) }}`\n                                                    `&lt;/p&gt;`\n                                                `&lt;/td&gt;`\n                                            `&lt;/tr&gt;`\n                                            `&lt;tr&gt;`\n                                                `&lt;td height=\"16\" style=\"padding: 0px; font-size: 0px;\"&gt; &lt;/td&gt;`\n                                                `&lt;td height=\"16\" style=\"padding: 0px; font-size: 0px;\"&gt; &lt;/td&gt;`\n                                            `&lt;/tr&gt;`\n                                        `&lt;/table&gt;`\n                                    `&lt;/td&gt;`\n                                `&lt;/tr&gt;`\n                                `&lt;tr&gt;`\n                                    `&lt;td height=\"20\" style=\"padding: 0px; font-size: 0px;\"&gt; &lt;/td&gt;`\n                                `&lt;/tr&gt;`\n                            `{% endfor %}`\n\n                            `&lt;tr&gt;`\n                                `&lt;td&gt;`\n                                    `&lt;table style=\"border:0;width:100%;background-color:#fff;\"&gt;`\n                                        `&lt;tr&gt;`\n                                            `&lt;td style=\"font-weight:bold;margin: 0px 10px;\"&gt;`\n                                                `&lt;p style=\"margin:0 10px\"&gt;Total&lt;/p&gt;`\n                                            `&lt;/td&gt;`\n                                            `&lt;td style=\"font-weight:bold;margin: 0px 10px; text-align:right;\"&gt;`\n                                                `&lt;p style=\"margin:0 10px; color:#000\"&gt;`\n                                                    `${{ deal_amount | round(2) }}`\n                                                `&lt;/p&gt;`\n                                            `&lt;/td&gt;`\n                                        `&lt;/tr&gt;`\n                                    `&lt;/table&gt;`\n                                `&lt;/td&gt;`\n                            `&lt;/tr&gt;`"
+  },
+  {
+    "poster": {
+      "poster_name": "Dan Katz",
+      "poster_handle": "dan.katz"
+    },
+    "time_stamp": "2024-09-25 18:45:30",
+    "text": "Hi everyone, we are having a crazy issue with encoding/decoding of special characters in query strings. The issue we are having is using the crm_objects function of the hubl language. We are passing a query from the url params, the url is structured as such: <https://www.oppermansales.com/admin/inventory?make=J+%26+L>, the param is being encoded before being passed in the query, we have tried several ways using the filters urlecode or urldecode, but the query comes back empty.\n\nThe property \"make\" is on the Product object in the CRM and the \"J &amp; L\"  value is the one in question. Using the HubSpot UI we are able to retrieve the records, but using our custom module the dataset is not retrieved, hoping someone could shed some light on this.\n\n<@U016JF1DWSX>"
+  }
+]

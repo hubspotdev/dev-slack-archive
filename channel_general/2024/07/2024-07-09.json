@@ -1,0 +1,118 @@
+[
+  {
+    "poster": {
+      "poster_name": "John Carl Macasero",
+      "poster_handle": "jcpmacasero"
+    },
+    "time_stamp": "2024-07-09 01:28:20",
+    "text": "Is there a way to persist state in HubSpot? I am creating a custom CRM card and integrating our app. I want to persist some data so that when a user refreshes the page, the data isn't lost and can be retrieved from local storage instead of making another API request."
+  },
+  {
+    "poster": {
+      "poster_name": "Falk",
+      "poster_handle": "falk.hermann"
+    },
+    "time_stamp": "2024-07-09 02:57:08",
+    "text": "Hi\n\nwhen creating a new Contact and providing the company name (Contact Property), the automatically created company does not have the provided company name. Instead it uses the domain :confused:\n\nIMO: When a company name is provided with the contact, the company name should be used for a newly created company.  How might we fix / change this?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-07-09 02:59:18"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Falk",
+      "poster_handle": "falk.hermann"
+    },
+    "time_stamp": "2024-07-09 02:59:18",
+    "text": "btw.: The underlying goal is, to create contact and company with a single form in HS. Maybe there is another way to achive this."
+  },
+  {
+    "poster": {
+      "poster_name": "Kaushik",
+      "poster_handle": "kaushik.abhicenation"
+    },
+    "time_stamp": "2024-07-09 06:35:30",
+    "text": "Hello everyone\nI need a solution,\nI'm using the HubSpot meeting scheduler embed code and after booking a meeting I need to add a parameter to my location URL, is there any way how to add a parameter to booking a meeting."
+  },
+  {
+    "poster": {
+      "poster_name": "Viviana Cardenas",
+      "poster_handle": "vcardenas"
+    },
+    "time_stamp": "2024-07-09 08:52:27",
+    "text": "Hi team, does anybody now if its possible to see the api usage for public apps in HubSpot, i'm able to see it for private apps, but is it possible to see it for the other apps?"
+  },
+  {
+    "subtype": "bot_message",
+    "text": ":orange_heart:*Please take a moment to review our Code of Conduct*:orange_heart:\n\nWe want the HubSpot Developer community to be inclusive and welcoming. By following our Code of Conduct, you can help ensure that's the case.\n\nTL;DR:\n• Be respectful\n• Be inclusive (try not to say, \"Hey guys, hey boys, hey [any specific group]\")\n• No self promotion, except for <#C0121KGC6RM|showcase> and <#CBNDYJJAZ|jobs> \n• No unsolicited DMs\nRead the <https://developers.HubSpot.com/slack/code-of-conduct|whole thing here> - and thanks for being a part of the HubSpot Developer Community!\n\nWant to report a violation? DM <@UQNEXHW14> or fill out the <https://form.asana.com/?k=p7aM0fpd3G4JGETDL_nYXg&amp;d=8587152060687|anonymous form here>.",
+    "username": "Code of Conduct Reminder",
+    "time_stamp": "2024-07-09 09:00:05",
+    "edited": {
+      "time_stamp": "2024-07-09 09:00:13"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Neil Junsan",
+      "poster_handle": "neiljunsan09"
+    },
+    "time_stamp": "2024-07-09 09:03:59",
+    "text": "<@U01GW2U4WMA> hello sir, my response was perfect. here's my code:\n\nI forgot i tried to insert associations on the deal data this line:\n```associations: [\"companies\", \"contact\"]```\nBut it still now showing on response is there a way how to include associations on search filter  sir?\n\n```const axios = require(\"axios\");\n\nexports.main = async (context, sendResponse) =&gt; { \n    const baseUrl = '<https://api.hubapi.com/crm/v3/objects/deals/search>';\n    const limit = 100;\n\n    async function fetchDeals(after = null, accumulatedDeals = []) {\n        const data = {\n            properties: [\n                \"HubSpot_owner_id\",\n                \"dealtype\",\n                \"dealname\",\n                \"amount\",\n                \"dealstage\",\n                \"createdate\"\n            ],\n            filters: [\n                {\n                    propertyName: \"pipeline\",\n                    operator: \"EQ\",\n                    value: 8244623, // Replace with the pipeline ID you want to filter by\n                }\n            ],\n            limit,\n            associations: [\"companies\", \"contact\"]\n        };\n        if (after) {\n            data.after = after;\n        }\n\n        try {\n            const response = await <http://axios.post|axios.post>(baseUrl, data, {\n                headers: {\n                    Authorization: `Bearer ${process.env.HubSpot_API_KEY}`,\n                    'Content-Type': 'application/json',\n                },\n            });\n\n            const { results, paging } = response.data;\n            const newAccumulatedDeals = accumulatedDeals.concat(results);\n\n            if (paging &amp;&amp; paging.next &amp;&amp; paging.next.after) {\n                return fetchDeals(paging.next.after, newAccumulatedDeals);\n            } else {\n                return newAccumulatedDeals;\n            }\n        } catch (error) {\n            console.error('Error fetching deals:', error);\n            return [];\n        }\n    }\n\n    try {\n        const allDeals = await fetchDeals();\n        sendResponse({\n            statusCode: 200,\n            body: JSON.stringify(allDeals),\n        });\n    } catch (error) {\n        console.error('Error in main function:', error);\n        sendResponse({\n            statusCode: 500,\n            body: JSON.stringify({ message: 'Internal Server Error' }),\n        });\n    }\n  \n    function getContactAssociation(contactId) {\n    return axios({\n      method: \"get\",\n      url: `<https://api.hubapi.com/crm/v3/objects/contacts/${contactId}?properties=HubSpot_owner_id&amp;properties=name&amp;associations=companies&amp;archived=false>`,\n      headers: {\n        Authorization: \"Bearer pat-na1-79e06f05-3aff-49c1-8edd-f96deee673d6\",\n      },\n    }).then((response) =&gt; response.data);\n  }\n\n  getContactAssociation(context.contact.vid)\n    .then((contact) =&gt; {\n      const company = contact?.associations?.companies?.results?.find(\n        (item) =&gt; item.type === \"contact_to_company\"\n      );\n      return company?.id;\n    })\n    .then((companyId) =&gt;\n      <http://axios.post|axios.post>(\n        \"<https://api.hubapi.com/crm/v3/objects/deals/search>\",\n        {\n          properties: [\n            \"HubSpot_owner_id\",\n            \"dealtype\",\n            \"dealname\",\n            \"amount\",\n            \"dealstage\",\n          ],\n          filters: [\n            {\n              propertyName: \"associations.company\",\n              operator: \"EQ\",\n              value: companyId,\n            },\n          ],\n        },\n        {\n          headers: {\n            Authorization:\n              \"Bearer yes\",\n          },\n        }\n      )\n    )\n    .then(async function (response) {\n      const getAssociationData = response.data.results.map((item) =&gt;\n        getDealAssociation(item.id)\n      );\n\n      const result = await Promise.all(getAssociationData);\n\n      sendResponse({ body: result, statusCode: 200 });\n    })\n    .catch(function (error) {\n      console.log(error);\n      sendResponse({ body: error, statusCode: 400 });\n    });\n};```"
+  },
+  {
+    "poster": {
+      "poster_name": "Alana Caporale",
+      "poster_handle": "alana"
+    },
+    "time_stamp": "2024-07-09 15:46:52",
+    "text": "anyone run into problems where modules disappear from the drag and drop list?",
+    "reply_count": 7,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-07-09 23:54:52"
+      },
+      {
+        "time_stamp": "2024-07-10 06:47:22"
+      },
+      {
+        "time_stamp": "2024-07-10 06:50:01"
+      },
+      {
+        "time_stamp": "2024-07-10 06:50:28"
+      },
+      {
+        "time_stamp": "2024-07-10 06:52:16"
+      },
+      {
+        "time_stamp": "2024-07-10 08:13:35"
+      },
+      {
+        "time_stamp": "2024-07-10 08:14:19"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Aire (pocketpros.​io)",
+      "poster_handle": "matthewaire.consultin"
+    },
+    "time_stamp": "2024-07-09 22:42:24",
+    "edited": {
+      "time_stamp": "2024-07-09 22:42:36"
+    },
+    "text": "Thanks <@U07B5K5E458> and then what would be the steps to push this into meta?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kunal Rwt",
+      "poster_handle": "jagmohanrwt1210"
+    },
+    "time_stamp": "2024-07-09 23:54:52",
+    "text": "no have not noticed yet"
+  }
+]

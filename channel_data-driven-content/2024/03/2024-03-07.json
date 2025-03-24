@@ -1,0 +1,131 @@
+[
+  {
+    "poster": {
+      "poster_name": "Robert Gotzen",
+      "poster_handle": "gotzen.robert"
+    },
+    "time_stamp": "2024-03-07 01:29:47",
+    "edited": {
+      "time_stamp": "2024-03-07 01:30:44"
+    },
+    "text": "Hi *!\n\nQuick question: Is there a pre/suffix to foreign keys required when using GraphQL? I'm trying to just get the value of a foreign key field without resolving the relation in an association.\nI tried the fields name but that doesn't seem to work. That results in an Validation error 'cause the field is undefined.",
+    "reply_count": 10,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-03-07 05:49:11"
+      },
+      {
+        "time_stamp": "2024-03-07 05:50:33"
+      },
+      {
+        "time_stamp": "2024-03-07 07:59:24"
+      },
+      {
+        "time_stamp": "2024-03-07 08:05:30"
+      },
+      {
+        "time_stamp": "2024-03-07 08:09:37"
+      },
+      {
+        "time_stamp": "2024-03-07 08:10:25"
+      },
+      {
+        "time_stamp": "2024-03-07 08:26:10"
+      },
+      {
+        "time_stamp": "2024-03-07 08:27:33"
+      },
+      {
+        "time_stamp": "2024-03-07 08:48:42"
+      },
+      {
+        "time_stamp": "2024-03-08 08:27:50"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-03-07 05:49:11",
+    "text": "I think this is what you’re referring to, but unsure:\n```const axios = require(\"axios\");\n\nfunction exampleQuery({ testNumber, testString }) {\n  const data = JSON.stringify({\n    operationName: \"exampleQuery\",\n    query: `query exampleQuery($testNumber: Number, $testString: String) {\n      CRM {\n        p_locations_collection(filter: {testProperty1__gt: $testNumber, testProperty2__eq: $testString}, limit: 500) {\n          items {\n            hs_object_id\n            associations {\n              p_custom_object {\n                items {\n                  hs_object_id\n                }\n             }\n            }\n          }\n        }\n      }\n    }`,\n    variables: {\n      \"testNumber\": testNumber,\n      \"testString\": testString,\n    }\n  });\n\n  const config = {\n    method: 'post',\n    url: '<https://api.hubapi.com/collector/graphql>',\n    headers: {\n      'Content-Type': 'application/json',\n      'Authorization': 'Bearer ' + process.env['PRIVATE_APP_ACCESS_TOKEN'],\n    },\n    data: data,\n    maxBodyLength: Infinity\n  };\n\n  return axios.request(config);\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-03-07 05:50:33",
+    "text": "Your field value need to be passed as variables in the query and you need to declare the variables. Hope this helps."
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Gotzen",
+      "poster_handle": "gotzen.robert"
+    },
+    "time_stamp": "2024-03-07 07:59:24",
+    "edited": {
+      "time_stamp": "2024-03-07 08:03:13"
+    },
+    "text": "<@U04FNHJ0U2J> thanks a lot for your input. But sadly that's not quite what i meant. Also and even more sadly I think what I want to do is not possible in GraphQL\n\nHere is the example Query I am trying to run:\n\n```query AllAgendaItems {\n  HUBDB {\n    agenda_collection {\n      items {\n        id: hs_id\n        customer\n        day\n        description\n        downtime\n        name\n        product\n        sector\n        time\n        associations {\n          speakers_collection__speaker {\n            items {\n              hs_id\n            }\n          }\n          stages_collection__stage {\n            items {\n              hs_id\n            }\n          }\n        }\n      }\n    }\n  }\n}```\nThis does not work for me because it blows right through the Query Limit. I have about 150 Agenda type entries. When resolving the associations i can get about 50 before the single query limit is reached.\n\nMy Idea was: If i could only get the ID of the associated field (like what i would get in a REST API Call) I could query all 3 tables by themself and map the associations myself after the query"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Gotzen",
+      "poster_handle": "gotzen.robert"
+    },
+    "time_stamp": "2024-03-07 08:05:30",
+    "text": "Something allong those lines:\n\nNot Working:\n```query AllAgendaItems {\n  HUBDB {\n    agenda_collection {\n      items {\n        id: hs_id\n        customer\n        day\n        description\n        downtime\n        name\n        product\n        sector\n        time\n        speaker_id &lt;- not working\n\t\tstage_id &lt;- not working\n    }\n    speakers_collection { ... }\n\tstages_collection { ... }\n  }\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-03-07 08:09:37",
+    "edited": {
+      "time_stamp": "2024-03-07 08:09:47"
+    },
+    "text": "<@U06FU3LSPDM> oh I see.. I think you can do something like this:\n```query AllAgendaItems {\n  HUBDB {\n    agenda_collection(limit: 2, offset: 2, orderBy: hs_object_id__asc) {\n      items {\n        associations {\n          speakers_collection\n        }\n        hs_object_id\n      }\n    }\n  }\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-03-07 08:10:25",
+    "text": "I think you can use limit and offset, to sending multiple api calls to query the results until you get it all.. lemme find the api docs for this"
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-03-07 08:26:10",
+    "edited": {
+      "time_stamp": "2024-03-07 08:26:33"
+    },
+    "text": "oh sorry I saw your message after.. the speaker id is not working and stages id is not working.. but is that id in the associations of the agenda? or are you storing it on the agenda <@U06FU3LSPDM>"
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-03-07 08:27:33",
+    "edited": {
+      "time_stamp": "2024-03-07 08:28:18"
+    },
+    "text": "```query AllAgendaItems {\n  HUBDB {\n    agenda_collection {\n      items {\n        id: hs_id\n        customer\n        day\n        description\n        downtime\n        name\n        product\n        sector\n        time\n        associations {\n          speakers_collection__speaker {\n            items {\n              hs_id <-- this is the speaker id\n            }\n          }\n          stages_collection__stage {\n            items {\n              hs_id  <-- this is the stage id\n            }\n          }\n        }\n      }\n    }\n  }\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Robert Gotzen",
+      "poster_handle": "gotzen.robert"
+    },
+    "time_stamp": "2024-03-07 08:48:42",
+    "text": "I just found the HubSpot schema inspector. What I am trying to do is indeed not possible. As you mentioned earlier I would have to paginate my queries to not breach my single-query limit.\n\nLet's just leave it at that. I am clearly doing a poor Job trying to explain myself. :D\n\nThanks a million for your help"
+  }
+]

@@ -1,0 +1,122 @@
+[
+  {
+    "poster": {
+      "poster_name": "Wojciech Gwardjak",
+      "poster_handle": "wojciechgwardjak"
+    },
+    "time_stamp": "2022-11-16 02:15:28",
+    "edited": {
+      "time_stamp": "2022-11-16 02:18:34"
+    },
+    "text": "Hello Community! I was wondering if it is possible to generate items from HUBdb table after button being clicked. Example: one button generates first 5 items of the table and second one generates another 5 items. Or after second time button being clicked it generates another 5 items of a table. Important thing is that I don't want the items being generated immediately after DOM is loaded but they get pulled only after clicking in order to not overload the website with unnecessary items being loaded. Is that possible?"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2022-11-16 04:17:22",
+    "text": "Hey everyone, I’ve set a module up for “inner pages” that has information to be displayed on the listing page as well as to be displayed in the hero of the page\n\nI use the page field in a repeater on the listing page to specify all the pages that should show. I use the following code to pull out the information\n\n```// Set the contents from the ids in the repeater\n{% set contents = content_by_ids(module.report_listings|map('reports_page')) %}\n\n// loop through the repeater\n{% for item in module.report_listings %}\n//Get the content for the specific ID from the previously set var\n\t{% set content = contents[item.reports_page] %}\n//Go through various dictionaries to get to the module\n\t{% for widgetContainer in content.widgetContainers %}\n\t\t{% for widget in widgetContainer.widgets %}\n//If the module label is equal to the hero pull out the information\n\t\t\t{% if widget.label == \"V3 - Report Hero 2022\" %}\n\t\t\t\t{% set thisModule = widget.body %}\n\t\t\t\t{% set title = thisModule.listing_page_display.title ? thisModule.listing_page_display.title : thisModule.title %}\n\t\t\t\t{% set image = thisModule.listing_page_display.image.src ? thisModule.listing_page_display.image : thisModule.background_image %}\n\t\t\t\t{{ title }}\n\t\t\t\t{{ thisModule.listing_page_display.introduction }}\n\t\t\t\t{{ image.src }}\n\t\t\t\t&lt;br&gt;&lt;br&gt;\n\t\t\t{% endif %}\n\t\t{% endfor %}\n\t{% endfor %}\n{% endfor %}```\nThe only annoying thing is I have specific listing page fields in the module that as default inherit from the main title. Using inherited fields <https://developers.HubSpot.com/docs/cms/building-blocks/module-theme-fields-overview#inherited-fields>\n\nBut as you can see in my code I’ve still had to set up the following to get the title to display\n```{% set title = thisModule.listing_page_display.title ? thisModule.listing_page_display.title : thisModule.title %}```\nOn the page it’s self I don’t have to do this extra step, as it just pulls through the inherited content as it should.\n\nIt seems that the information doesn’t get passed correctly when using the content_by_ids field does anyone have any suggestions or do I just need to leave my workaround in there?"
+  },
+  {
+    "poster": {
+      "poster_name": "Rodrigo",
+      "poster_handle": "rodrigo.castro"
+    },
+    "time_stamp": "2022-11-16 05:33:39",
+    "text": "Hello! has anyone tried to let a user select from all the blog listing and then render the selected ones into the browser? It would be really similar to row_db, but since the blog it doesn't behave like a DB I wonder if anyone has implemented that or has an interesting idea on how this could be implemented.",
+    "reply_count": 4,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2022-11-16 05:49:31"
+      },
+      {
+        "time_stamp": "2022-11-16 06:58:09"
+      },
+      {
+        "time_stamp": "2022-11-16 07:25:39"
+      },
+      {
+        "time_stamp": "2022-11-16 07:42:50"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "M Patel",
+      "poster_handle": "mitesh726"
+    },
+    "time_stamp": "2022-11-16 05:49:31",
+    "text": "do you mean in a module?"
+  },
+  {
+    "poster": {
+      "poster_name": "Rodrigo",
+      "poster_handle": "rodrigo.castro"
+    },
+    "time_stamp": "2022-11-16 06:58:09",
+    "text": "yeah, creating a custom module or with hubl tags... The only way I can think of is creating a HubDB with all the columns when exporting a blog as a CSV, and then using the hubdb_row function to retrieve the information"
+  },
+  {
+    "poster": {
+      "poster_name": "Twentyninetimes",
+      "poster_handle": "tech817"
+    },
+    "time_stamp": "2022-11-16 07:25:39",
+    "edited": {
+      "time_stamp": "2022-11-16 07:27:43"
+    },
+    "text": "Use the blog field in a module, like so (number of blog posts should be a number field if you want the user to decide the amount of posts displayed each time they insert the module on a page):\n\n```&lt;ul class=\"events__posts\"&gt;\n                {# Select blog #}\n                {% set rec_posts = blog_recent_posts(module.blog_field, module.number_of_blog_posts) %}\n                {# Loop #} \n                {% for post in rec_posts %} \n                    &lt;li class=\"events__post\"&gt;\n                        &lt;div class=\"events__post-wrapper\"&gt;\n                            &lt;a href=\"{{ post.url }}\" title=\"{{ post.name }}\"&gt;\n                                {# Image #}\n                                &lt;div class=\"events__post-image\"&gt;\n                                    &lt;img src=\"{{ post.featured_image }}\" alt=\"{{ post.name }}\" loading=\"lazy\"&gt;\n                                &lt;/div&gt;\n                                {# Text #}\n                                &lt;div class=\"events__post-text\"&gt;\n                                    {# Header #}\n                                    &lt;p class=\"text-header text-header--h6\"&gt;{{ post.name }}&lt;/p&gt;\n                                    {# Dates #}\n                                    &lt;div class=\"events__post-date\"&gt;\n                                        {% if module.type == 'event' %}                                        \n                                            {# Get event date, if added #}\n                                            {% if post.widgets.event_time %}                                            \n                                                &lt;svg class=\"icon events__post-date-icon events__post-date-icon--calendar\"&gt;\n                                                    &lt;use xmlns:xlink=\"<http://www.w3.org/1999/xlink>\" xlink:href=\"#calendar\"&gt;&lt;/use&gt;\n                                                &lt;/svg&gt;\n                                                &lt;span&gt;{{ post.widgets.event_time.body.value }}&lt;/span&gt;\n                                            {% endif %}\n                                        {% else %}                                        \n                                            &lt;time datetime=\"{{ post.publish_date }}\"&gt;{{ post.publishDate|datetimeformat('%e %b, %Y') }}&lt;/time&gt;\n                                        {% endif %}\n                                    &lt;/div&gt;                                \n                                    {# Body #}\n                                    &lt;span&gt;{{ post.post_body|striptags|truncate(170, true, \"...\") }}&lt;/span&gt;                                    \n                                &lt;/div&gt;\n                            &lt;/a&gt;\n                            {# Tags #}\n                            &lt;ul class=\"events__post-tags\"&gt;\n                                {% for tag in post.tag_list %}\n                                    {# Get the first two tags #}\n                                    {% if loop.index &lt;= 2 %}\n                                        &lt;li&gt;\n                                            &lt;a href=\"{{ blog_tag_url(group.id, tag.slug) }}\"&gt;{{ tag.name }}&lt;/a&gt;\n                                        &lt;/li&gt;\n                                    {% endif %}\n                                {% endfor %}\n                            &lt;/ul&gt;\n                        &lt;/div&gt;\n                    &lt;/li&gt;        \n                {% endfor %}\n            &lt;/ul&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "M Patel",
+      "poster_handle": "mitesh726"
+    },
+    "time_stamp": "2022-11-16 07:42:50",
+    "text": "<@U01RBF0UXD0> you may be render blog post by url using link field in the module. hope that works for you"
+  },
+  {
+    "poster": {
+      "poster_name": "Dennis K",
+      "poster_handle": "dennis579"
+    },
+    "time_stamp": "2022-11-16 11:27:09",
+    "text": "Hey! How could I sort the db rows on name? Can I add something like &amp;orderBy to the query? And how would I achieve that the dbrows will be sorted based on the title/name of the value? Right now the output is as following:\n```Bee\nDee\nFoo\nAaa\n\n{% set filters_department = hubdb_table_rows(module.filter_table, query_filters~'&amp;type=area_of_expertise') %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin",
+      "poster_handle": "justin145"
+    },
+    "time_stamp": "2022-11-16 11:51:44",
+    "edited": {
+      "time_stamp": "2022-11-16 11:52:43"
+    },
+    "text": "<@U04AQA0QM8E> Thank you so much! Got me half way to where I needed to be. For some reason the post_origin would not update even though post.id == el.id. Here is where I ended up:\n```{% set blog_one_posts = blog_recent_posts('30876158279', limit=10) %}\n{% set blog_two_posts = blog_recent_posts('88420670533', limit=10) %}\n{% set all_posts = (blog_one_posts + blog_two_posts) | sort(true, false, 'publish_date')  %} \n        \n&lt;ul id=\"blog_posts\"&gt;\n\n\t{# Generate listing previews #}\n   \t{% for post in all_posts %}\n\n    \t{% set post_info = {name: post.name} %}\n\n    \t{# Check current post ID against items in blog_two_posts #}\n    \t{% for el in blog_two_posts %}\n    \t\t{% if post.id == el.id %}\n        \t\t{% do post_info.update ( { name: \"Read \" + post.name + \"'s Story\" } ) %}\n        \t{% endif %}\n    \t{% endfor %}\n  \n    \t&lt;li class=\"blog_post\"&gt;\n    \t\t{# Blog listing content goes here #}\n        \t{{  post_info.name }}\n    \t&lt;/li&gt;\n   {% endfor %}\n   \n&lt;/ul&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2022-11-16 11:55:54",
+    "text": "Glad you got it working! Cheers. :)"
+  },
+  {
+    "poster": {
+      "poster_name": "Rolando Carias",
+      "poster_handle": "rolando"
+    },
+    "time_stamp": "2022-11-16 16:25:33",
+    "text": "Hi team. How can I force a script between:\n```{% require_js %} {% end_require_js %} to render at the head level? I tried the normal require_js() function, but since my script url needs to interpolate some dynamic values; I cannot use it. Meaning, I do this for the src \"<https://myscript>.{{module.selected_environment}}.js```",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-11-17 10:50:17"
+      }
+    ]
+  }
+]

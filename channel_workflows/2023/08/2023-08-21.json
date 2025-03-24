@@ -1,0 +1,100 @@
+[
+  {
+    "poster": {
+      "poster_name": "Tommy Hansen",
+      "poster_handle": "th"
+    },
+    "time_stamp": "2023-08-21 01:14:30",
+    "text": "Hi, is there some sort of caching on contacts, when used in workflows?\nI'm seeing that users sometimes has to trigger a workflow multiple times, for the correct information to be used in a workflow.\n\nI have a system where you can send SMS messages, and you can use this from HubSpot workflows.\nSo let's say you send a message with the text \"Hello {{ Contact.Name }}\".\nYou already have a contact called \"ContactA\".\nYou then add a new contact called \"ContactB\".\nYou set up the workflow, and run it on existing contacts.\n\nMy system receives \"Hello ContactA\" twice.\nIf you run the workflow again, then i receive \"Hello ContactA\" and \"Hello ContactB\""
+  },
+  {
+    "poster": {
+      "poster_name": "Cody Koscielski",
+      "poster_handle": "codykoscielski"
+    },
+    "time_stamp": "2023-08-21 07:18:02",
+    "edited": {
+      "time_stamp": "2023-08-21 07:18:36"
+    },
+    "text": "Hello!\n\nI am trying to create a workflow that involves a custom action, but I can't seem to troubleshoot the custom code. I build a serverless function inside of HubSpot to query a custom object and then return a value for a custom property and then I am trying to assign value to a contact's custom property. When a contact is create, it will check to see if there is a known postal code, then if the postal code is ran, it will run my custom Node.JS script to get the terotiry ID based on that postal code. I tested this script in a local Node environment, it returned the value as expected but I cannot seem to get it to work in the workflow.\n`const axios = require('axios');`\n\n\nexports.main = (event, callback) =&gt; {\n    // Store the postal code of the current contact enrolled in the workflow\n    const postalCode = '15222';\n\n    let data = {\n        value: postalCode\n    }\n\n    let jsonData = JSON.stringify(data)\n\n    // If the postal code value is not indicated, throw an error\n    if (postalCode != null &amp;&amp; postalCode != '') {\n        console.log(`Found a zip code: ${postalCode}. Assignment in progress.`);\n    } else {\n        console.log('Contact doesn\\'t have a zip code defined, no basis to assign a sales rep');\n        throw new Error(\"Contact doesn't have a zip code\");\n    }\n\n    let territoryID = async function getTerritoryID(jsonData) {\n        try {\n            const res = await <http://axios.post|axios.post>('SERVERLESS FUNCTION URL HERE', jsonData, {\n                headers: {\n                    'Content-Type': 'application/json'\n                },\n            })\n            const territoryID = res.data.results[0].properties.territory_id;\n            return res.json({ territoryID });\n\n        } catch (error) {\n            console.error(`There was an error: ${error}`)\n            throw error;\n        }\n    }\n}\n\nAnyone have any advice on trying to console.log or have anyway to find a value from a log?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-08-22 09:15:15"
+      },
+      {
+        "time_stamp": "2023-08-22 13:17:12"
+      },
+      {
+        "time_stamp": "2023-08-22 13:44:09"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Dan Robinson",
+      "poster_handle": "dan94.robinson"
+    },
+    "time_stamp": "2023-08-21 12:22:42",
+    "text": "hey guys! does anyone know if it’s possible for me to set a workflow to trigger any time an email is received at my email address? I realize that zappier can be used for this in many cases, but hoping to use my HubSpot account to trigger some flows"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Haywood",
+      "poster_handle": "michael801"
+    },
+    "time_stamp": "2023-08-21 12:50:57",
+    "text": "Custom Code action question: Can the output of a custom code block be copied to a date property (currently using the *copy property value* action)? Getting nothing but `Unable to update property because property value isn't valid` errors when trying to pass the date in multiple formats",
+    "reply_count": 3,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-08-21 21:58:44"
+      },
+      {
+        "time_stamp": "2023-08-22 09:04:27"
+      },
+      {
+        "time_stamp": "2023-08-23 09:26:20"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Zimo",
+      "poster_handle": "matt_zimo"
+    },
+    "time_stamp": "2023-08-21 14:23:48",
+    "text": "Man. I still couldn't get this to work when trying to delete an association."
+  },
+  {
+    "poster": {
+      "poster_name": "Dan Robinson",
+      "poster_handle": "dan94.robinson"
+    },
+    "time_stamp": "2023-08-21 21:58:44",
+    "text": "I’m not sure on that! You’ve stumped me :confused:"
+  },
+  {
+    "poster": {
+      "poster_name": "Dan Robinson",
+      "poster_handle": "dan94.robinson"
+    },
+    "time_stamp": "2023-08-21 22:01:21",
+    "text": "I’ve set up a workflow to get triggered when a ticket ID is known. I have my HubSpot conversations set to create a ticket when an email is received. When i go into my workflow to check if my ticket from new emails qualifies to trigger my workflow, it says it does, but the workflow is never triggered. Anyone have any thoughts on how to resolve this? Is there a time limit on when HubSpot checks to see if new enrollments need to be made in a workflow?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-08-22 07:05:06"
+      },
+      {
+        "time_stamp": "2023-08-22 09:27:33"
+      },
+      {
+        "time_stamp": "2023-08-22 09:27:50"
+      }
+    ]
+  }
+]

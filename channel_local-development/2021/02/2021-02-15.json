@@ -1,0 +1,143 @@
+[
+  {
+    "poster": {
+      "poster_name": "Hanna Storaker",
+      "poster_handle": "hs054"
+    },
+    "time_stamp": "2021-02-15 03:12:54",
+    "edited": {
+      "time_stamp": "2021-02-15 04:57:24"
+    },
+    "text": "Hi! I am working on a HubSpot website which we just set live. When we are making changes with hs watch and debugging in preview, the changes is also reflected in the live website - which let users on the website see some unfinished changes (while we are working on them). Very annoying :see_no_evil: We have also set up Github action for deploy from master, but even though we develop in other branches than master the changes appear live. What is best practice with development to a dev-environment and not just making changes directly to production environment? Do you for example set up a hs watch to a “dev”-environment?",
+    "reply_count": 14,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2021-02-15 03:26:45"
+      },
+      {
+        "time_stamp": "2021-02-15 03:33:51"
+      },
+      {
+        "time_stamp": "2021-02-15 03:45:37"
+      },
+      {
+        "time_stamp": "2021-02-15 03:50:39"
+      },
+      {
+        "time_stamp": "2021-02-15 03:56:48"
+      },
+      {
+        "time_stamp": "2021-02-15 03:59:00"
+      },
+      {
+        "time_stamp": "2021-02-15 04:01:18"
+      },
+      {
+        "time_stamp": "2021-02-15 04:45:24"
+      },
+      {
+        "time_stamp": "2021-02-15 05:03:07"
+      },
+      {
+        "time_stamp": "2021-02-16 08:42:53"
+      },
+      {
+        "time_stamp": "2021-02-16 09:43:59"
+      },
+      {
+        "time_stamp": "2021-02-16 09:45:41"
+      },
+      {
+        "time_stamp": "2021-02-23 13:33:50"
+      },
+      {
+        "time_stamp": "2021-07-30 16:37:52"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-02-15 03:26:45",
+    "text": "I would recommend a development environment. Some people have one per developer, others have one per developer + a staging environment."
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-02-15 03:33:51",
+    "edited": {
+      "time_stamp": "2021-02-15 03:36:18"
+    },
+    "text": "Having in place a process for deployment too could help , eg:\n\n1. All new features require a branch. git-flow could help with standardising this.\n2. All developers have their own development site.\n3. Developer have hs watch running, but will only have access to their development environment - revoke access to production.\n4. Once they’re happy with the changes, they’ll submit a pull request into the master branch. The code will be reviewed by other developers, once approved github will merge this into the master branch. \n5. A git-flow action is watching master for any new pushes. Once it detects one, it can run npm install, any gulp/webpack tasks and build the code. It can then auto deploy this to a “staging” or test server. If you have any automated selenium/cypress/e2e tests, you can run them at this point.\n6. Once all is OK simply tag the release \n7. Another github action will trigger based on the tag, and build/use the artefacts from the staging build. I wouldn’t auto-deploy this, but instead make it a manual deploy.\nI’m missing the “develop” branch part of git-flow from this, feel free to add if team is larger/more features are built in parallel."
+  },
+  {
+    "poster": {
+      "poster_name": "Hanna Storaker",
+      "poster_handle": "hs054"
+    },
+    "time_stamp": "2021-02-15 03:45:37",
+    "text": "Thanks! That seems perfect for us. I am very new to this though, so do you know if there is any set-up guide for setting up a development environment?"
+  },
+  {
+    "poster": {
+      "poster_name": "Hanna Storaker",
+      "poster_handle": "hs054"
+    },
+    "time_stamp": "2021-02-15 03:50:39",
+    "edited": {
+      "time_stamp": "2021-02-15 03:50:49"
+    },
+    "text": "And do you usually set up your development environment with a developer sandbox account?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-02-15 03:56:48",
+    "text": "yeah, that should be fine"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-02-15 03:59:00",
+    "text": "It can be a bit laborious as you’ll need to copy over content"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-02-15 04:01:18",
+    "text": "I do have a script which can copy content from one portal to another - let me dig it out."
+  },
+  {
+    "poster": {
+      "poster_name": "Hanna Storaker",
+      "poster_handle": "hs054"
+    },
+    "time_stamp": "2021-02-15 04:45:24",
+    "edited": {
+      "time_stamp": "2021-02-15 04:47:35"
+    },
+    "text": "I see, is there any other recommended way to create a dev environment? It feels a bit unwieldy to set it up with a sandbox account.."
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-02-15 05:03:07",
+    "edited": {
+      "time_stamp": "2021-02-15 05:03:15"
+    },
+    "text": "I don’t believe there is at the moment, although my knowledge on this may be outdated. I think if modules and themes have sane defaults, then  it’s not too difficult to setup. It less accidental pushes to production imo"
+  }
+]

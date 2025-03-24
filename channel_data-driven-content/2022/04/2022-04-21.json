@@ -1,0 +1,10 @@
+[
+  {
+    "poster": {
+      "poster_name": "Matthew Fall",
+      "poster_handle": "matthew506"
+    },
+    "time_stamp": "2022-04-21 07:14:01",
+    "text": "I’m attempting to pass dynamic context into a graphql query from the {{ request.query_dict }} variable, specifically for the querying of a multi-select property based on URL query params, something like this: `?category=marketing_agency&amp;category=branding_agency` … or even `?category=marketing_agency,branding_agency` . I’m struggling to convert this query param into a usable filter for a graphql query.\n\nI’ve attempted to use some hubl filters to create a string that _looks_ like an array from the {{ request.query_dict }} var, but it doesn’t work…. i think I’m missing something:\n\n```# label: \"Search (Chatter)\"\n# description: \"Filter CRM by Query\"\n# $category: {{ request.query_dict.category|split(',', 10)|replace(\"[\", '[\"')|replace(\"]\", '\"]')|replace(', ', '\", \"') }} // equates to [\"marketing_agency\", \"branding_agency\"]\n\nquery querySearch( $category: [HS_Enum]) {\n  CRM {\n    p_enrollify_partners_collection(limit: 500, filter: {tags__in: $category}){\n      items{\n        organization_name,\n        org_logo\n      }\n    }\n  }\n}```\nAny thoughts or suggestions? Thanks!"
+  }
+]

@@ -1,0 +1,452 @@
+[
+  {
+    "poster": {
+      "poster_name": "Abhi",
+      "poster_handle": "abhimanyuaryan"
+    },
+    "time_stamp": "2023-02-19 01:16:50",
+    "edited": {
+      "time_stamp": "2023-02-19 01:19:31"
+    },
+    "text": "I am not able to get the basic HubSpot example to work in nodejs. This is the basic example I took from the v3 documentation:\n\n```var XMLHttpRequest = require(\"xmlhttprequest\").XMLHttpRequest;\n\nconst url = '<https://api.hsforms.com>'\nconst endpoint = 'submissions/v3/integration/secure/submit'\nconst portalId = '26983881'\nconst formId = '53b71b97-0e72-452e-baba-21c9adb7f63f'\nconst hapiKey = 'generated from developer panel'\n\nfunction formv3(){\n    // Create the new request \n    var xhr = new XMLHttpRequest();\n    var apiurl = `${url}/${endpoint}/${portalId}/${formId}?hapikey=${hapiKey}`\n    \n\n    // Example request JSON:\n    var data = {\n        \"fields\": [\n          {\n            \"objectTypeId\": \"0-1\",\n            \"name\": \"firstname\",\n            \"value\": \"Jeff\"\n          },\n          {\n            \"objectTypeId\": \"0-1\",\n            \"name\": \"lastname\",\n            \"value\": \"Nippard\"\n          },\n          {\n            \"objectTypeId\": \"0-1\",\n            \"name\": \"email\",\n            \"value\": \"<mailto:jeffnippard@yt.com|jeffnippard@yt.com>\"\n          } \n        ]\n    }\n\n    var final_data = JSON.stringify(data)\n\n    xhr.open('POST', url);\n\n    xhr.setRequestHeader('Content-Type', 'application/json');\n\n    xhr.onreadystatechange = function() {\n        if(xhr.readyState == 4 &amp;&amp; xhr.status == 200) {\n            console.log('Returns a 200 response if the submission is successful.')\n            console.log(xhr.responseText);\n        } else if (xhr.readyState == 4 &amp;&amp; xhr.status == 400){ \n            console.log('Returns a 400 error the submission is rejected.')\n            console.log(xhr.responseText);        \n        } else if (xhr.readyState == 4 &amp;&amp; xhr.status == 403){\n            console.log('Returns a 403 error if the portal isn\\'t allowed to post submissions.')\n            console.log(xhr.responseText);        \n        } else if (xhr.readyState == 4 &amp;&amp; xhr.status == 404){\n            console.log('Returns a 404 error if the formGuid isn\\'t found')\n            console.log(xhr.responseText);\n        }else {\n            console.log(\"none of the state worked\")\n        }\n       }\n\n\n    // Sends the request \n    \n    xhr.send(final_data)\n}\n\nformv3()```\nand it always goes in the else block. I am running this by `node index.js`\n\nlink to my form: <https://share-eu1.hsforms.com/1U7cblw5yRS66uiHJrbf2Pwg2cw9>",
+    "reply_count": 16,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-02-19 06:52:09"
+      },
+      {
+        "time_stamp": "2023-02-19 06:52:32"
+      },
+      {
+        "time_stamp": "2023-02-19 06:53:38"
+      },
+      {
+        "time_stamp": "2023-02-19 06:54:31"
+      },
+      {
+        "time_stamp": "2023-02-19 06:55:03"
+      },
+      {
+        "time_stamp": "2023-02-19 06:55:32"
+      },
+      {
+        "time_stamp": "2023-02-19 06:55:42"
+      },
+      {
+        "time_stamp": "2023-02-19 06:57:15"
+      },
+      {
+        "time_stamp": "2023-02-19 06:57:42"
+      },
+      {
+        "time_stamp": "2023-02-19 06:57:58"
+      },
+      {
+        "time_stamp": "2023-02-19 06:58:10"
+      },
+      {
+        "time_stamp": "2023-02-19 06:58:25"
+      },
+      {
+        "time_stamp": "2023-02-19 06:58:30"
+      },
+      {
+        "time_stamp": "2023-02-19 06:58:43"
+      },
+      {
+        "time_stamp": "2023-02-19 06:59:50"
+      },
+      {
+        "time_stamp": "2023-02-19 07:00:08"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-19 06:52:09",
+    "text": "Any particular reason you are using the authenicated version?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-19 06:52:32",
+    "text": "Because one of your issues might be that you're using a hapikey instead of a bearer token,"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-19 06:53:38",
+    "text": "I personally always used the unauthenicated version because it's a little easier and pretty much always runs on the frontend (obviously can't show the private app token on the frontend)"
+  },
+  {
+    "poster": {
+      "poster_name": "Abhi",
+      "poster_handle": "abhimanyuaryan"
+    },
+    "time_stamp": "2023-02-19 06:54:31",
+    "text": "yes I am using HapiKey not bearer token"
+  },
+  {
+    "poster": {
+      "poster_name": "Abhi",
+      "poster_handle": "abhimanyuaryan"
+    },
+    "time_stamp": "2023-02-19 06:55:03",
+    "text": "do you an example of Unauthenticated version for form submission and one with `Bearer Token`?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-19 06:55:32",
+    "text": "yes one moment the authenicated version supports bearer tokens now (private apps)"
+  },
+  {
+    "poster": {
+      "poster_name": "Abhi",
+      "poster_handle": "abhimanyuaryan"
+    },
+    "time_stamp": "2023-02-19 06:55:42",
+    "text": "sure"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-19 06:57:15",
+    "text": "```var XMLHttpRequest = require(\"xmlhttprequest\").XMLHttpRequest;\n\nconst url = '<https://api.hsforms.com>'\nconst endpoint = 'submissions/v3/integration/secure/submit'\nconst portalId = '26983881'\nconst formId = '53b71b97-0e72-452e-baba-21c9adb7f63f'\nconst hapiKey = 'generated from developer panel'\n\nfunction formv3(){\n    // Create the new request \n    var xhr = new XMLHttpRequest();\n    var apiurl = `${url}/${endpoint}/${portalId}/${formId}`\n    \n\n    // Example request JSON:\n    var data = {\n        \"fields\": [\n          {\n            \"objectTypeId\": \"0-1\",\n            \"name\": \"firstname\",\n            \"value\": \"Jeff\"\n          },\n          {\n            \"objectTypeId\": \"0-1\",\n            \"name\": \"lastname\",\n            \"value\": \"Nippard\"\n          },\n          {\n            \"objectTypeId\": \"0-1\",\n            \"name\": \"email\",\n            \"value\": \"<mailto:jeffnippard@yt.com|jeffnippard@yt.com>\"\n          } \n        ]\n    }\n\n    var final_data = JSON.stringify(data)\n\n    xhr.open('POST', url);\n\n    xhr.setRequestHeader('Content-Type', 'application/json');\nxhr.setRequestHeader('Authenication', 'Bearer XXXXXXXXXX');\n\n    xhr.onreadystatechange = function() {\n        if(xhr.readyState == 4 &amp;&amp; xhr.status == 200) {\n            console.log('Returns a 200 response if the submission is successful.')\n            console.log(xhr.responseText);\n        } else if (xhr.readyState == 4 &amp;&amp; xhr.status == 400){ \n            console.log('Returns a 400 error the submission is rejected.')\n            console.log(xhr.responseText);        \n        } else if (xhr.readyState == 4 &amp;&amp; xhr.status == 403){\n            console.log('Returns a 403 error if the portal isn\\'t allowed to post submissions.')\n            console.log(xhr.responseText);        \n        } else if (xhr.readyState == 4 &amp;&amp; xhr.status == 404){\n            console.log('Returns a 404 error if the formGuid isn\\'t found')\n            console.log(xhr.responseText);\n        }else {\n            console.log(\"none of the state worked\")\n        }\n       }\n\n\n    // Sends the request \n    \n    xhr.send(final_data)\n}\n\nformv3()```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-19 06:57:42",
+    "text": "Here's the authenticated version, just replace XXXXXXXX with your token"
+  },
+  {
+    "poster": {
+      "poster_name": "Abhi",
+      "poster_handle": "abhimanyuaryan"
+    },
+    "time_stamp": "2023-02-19 06:57:58",
+    "text": "aah I see. Thanks a lot"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-19 06:58:10",
+    "text": "Here's the non authenticated version <https://legacydocs.HubSpot.com/docs/methods/forms/submit_form>"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-19 06:58:25",
+    "text": "```function formv3(){\n    // Create the new request \n    var xhr = new XMLHttpRequest();\n    var url = '<https://api.hsforms.com/submissions/v3/integration/submit/62515/fcc69886-915b-4fef-b35f-27850ef461e1>'\n    \n    // Example request JSON:\n    var data = {\n      \"submittedAt\": \"1517927174000\",\n      \"fields\": [\n        {\n\t\t  \"objectTypeId\": \"0-1\",\n          \"name\": \"email\",\n          \"value\": \"<mailto:example@example.com|example@example.com>\"\n        },\n        {\n\t\t  \"objectTypeId\": \"0-1\",\n          \"name\": \"firstname\",\n          \"value\": \"Jeff\"\n        }\n      ],\n      \"context\": {\n        \"hutk\": ':hutk', // include this parameter and set it to the HubSpotutk cookie value to enable cookie tracking on your submission\n        \"pageUri\": \"<http://www.example.com/page|www.example.com/page>\",\n        \"pageName\": \"Example page\"\n      },\n      \"legalConsentOptions\":{ // Include this object when GDPR options are enabled\n        \"consent\":{\n          \"consentToProcess\":true,\n          \"text\":\"I agree to allow Example Company to store and process my personal data.\",\n          \"communications\":[\n            {\n              \"value\":true,\n              \"subscriptionTypeId\":999,\n              \"text\":\"I agree to receive marketing communications from Example Company.\"\n            }\n          ]\n        }\n      }\n    }\n\n    var final_data = JSON.stringify(data)\n\n    xhr.open('POST', url);\n    // Sets the value of the 'Content-Type' HTTP request headers to 'application/json'\n    xhr.setRequestHeader('Content-Type', 'application/json');\n\n    xhr.onreadystatechange = function() {\n        if(xhr.readyState == 4 &amp;&amp; xhr.status == 200) { \n            alert(xhr.responseText); // Returns a 200 response if the submission is successful.\n        } else if (xhr.readyState == 4 &amp;&amp; xhr.status == 400){ \n            alert(xhr.responseText); // Returns a 400 error the submission is rejected.          \n        } else if (xhr.readyState == 4 &amp;&amp; xhr.status == 403){ \n            alert(xhr.responseText); // Returns a 403 error if the portal isn't allowed to post submissions.           \n        } else if (xhr.readyState == 4 &amp;&amp; xhr.status == 404){ \n            alert(xhr.responseText); //Returns a 404 error if the formGuid isn't found     \n        }\n       }\n\n\n    // Sends the request \n    \n    xhr.send(final_data)\n }```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-19 06:58:30",
+    "text": "Little simpler"
+  },
+  {
+    "poster": {
+      "poster_name": "Abhi",
+      "poster_handle": "abhimanyuaryan"
+    },
+    "time_stamp": "2023-02-19 06:58:43",
+    "text": "you just set the headers to authenticate with bearer token. What is used as bearer token by HubSpot. Is it type jwt? or something else?"
+  },
+  {
+    "poster": {
+      "poster_name": "Abhi",
+      "poster_handle": "abhimanyuaryan"
+    },
+    "time_stamp": "2023-02-19 06:59:50",
+    "text": "also we can strip these right?\n\n```\"context\": {\n        \"hutk\": ':hutk', // include this parameter and set it to the HubSpotutk cookie value to enable cookie tracking on your submission\n        \"pageUri\": \"<http://www.example.com/page|www.example.com/page>\",\n        \"pageName\": \"Example page\"\n      },\n      \"legalConsentOptions\":{ // Include this object when GDPR options are enabled\n        \"consent\":{\n          \"consentToProcess\":true,\n          \"text\":\"I agree to allow Example Company to store and process my personal data.\",\n          \"communications\":[\n            {\n              \"value\":true,\n              \"subscriptionTypeId\":999,\n              \"text\":\"I agree to receive marketing communications from Example Company.\"\n            }\n          ]\n        }\n      }```\nif not needed ??"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-19 07:00:08",
+    "text": "Yeah not needed"
+  },
+  {
+    "text": "Hello,\n\nWe need some guidance on verifying webhook url using  “@HubSpot/api-client”: “^8.4.2\". We’re able to verify the request when the CRM Cards data fetch URL is set to ....<http://ngrok.io|ngrok.io> url, when we change to different domain, we’re unable to validate the signature V3 or V2. Any idea what might be wrong with out integration ?\n\nThanks\n\nplease help! <@UFBNA9K9A>",
+    "time_stamp": "2023-02-19 09:51:21",
+    "edited": {
+      "time_stamp": "2023-02-19 10:00:12"
+    },
+    "reply_count": 27,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-02-19 10:39:08"
+      },
+      {
+        "time_stamp": "2023-02-19 18:36:00"
+      },
+      {
+        "time_stamp": "2023-02-19 19:48:34"
+      },
+      {
+        "time_stamp": "2023-02-19 20:21:57"
+      },
+      {
+        "time_stamp": "2023-02-19 20:22:27"
+      },
+      {
+        "time_stamp": "2023-02-19 20:25:04"
+      },
+      {
+        "time_stamp": "2023-02-19 20:26:00"
+      },
+      {
+        "time_stamp": "2023-02-19 20:27:29"
+      },
+      {
+        "time_stamp": "2023-02-19 20:28:46"
+      },
+      {
+        "time_stamp": "2023-02-19 20:29:33"
+      },
+      {
+        "time_stamp": "2023-02-19 20:30:02"
+      },
+      {
+        "time_stamp": "2023-02-19 20:30:36"
+      },
+      {
+        "time_stamp": "2023-02-19 20:32:06"
+      },
+      {
+        "time_stamp": "2023-02-19 20:32:42"
+      },
+      {
+        "time_stamp": "2023-02-19 20:33:23"
+      },
+      {
+        "time_stamp": "2023-02-19 20:34:16"
+      },
+      {
+        "time_stamp": "2023-02-19 20:36:58"
+      },
+      {
+        "time_stamp": "2023-02-19 20:39:10"
+      },
+      {
+        "time_stamp": "2023-02-19 20:41:09"
+      },
+      {
+        "time_stamp": "2023-02-19 20:41:23"
+      },
+      {
+        "time_stamp": "2023-02-19 20:42:01"
+      },
+      {
+        "time_stamp": "2023-02-19 20:43:26"
+      },
+      {
+        "time_stamp": "2023-02-19 20:45:29"
+      },
+      {
+        "time_stamp": "2023-02-20 06:47:01"
+      },
+      {
+        "time_stamp": "2023-02-20 10:32:42"
+      },
+      {
+        "time_stamp": "2023-02-20 10:38:44"
+      },
+      {
+        "time_stamp": "2023-02-20 10:39:52"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-19 10:39:08",
+    "edited": {
+      "time_stamp": "2023-02-19 10:39:53"
+    },
+    "text": "The domain is part of the verification, so the domain in the app settings needs to match the domain you're providing the api-client"
+  },
+  {
+    "text": "thank you for your response <@U01QVR44MEY> yes, the domain has been validated and match to deployed domain. in addition , custom action setting url also point to the same domain.",
+    "time_stamp": "2023-02-19 18:36:00"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-19 19:48:34",
+    "text": "Ok well do you want to share your verification code? Is it possible that your different domain is redirecting before you verify it?"
+  },
+  {
+    "poster": {
+      "poster_name": "henry",
+      "poster_handle": "henry.wijaya"
+    },
+    "time_stamp": "2023-02-19 20:21:57",
+    "text": "would you please let me know what do you mean by verification code? how do i obtain verification code?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-19 20:22:27",
+    "text": "The code that you use the verify the request"
+  },
+  {
+    "poster": {
+      "poster_name": "henry",
+      "poster_handle": "henry.wijaya"
+    },
+    "time_stamp": "2023-02-19 20:25:04",
+    "text": "do you mean the HubSpot client secret ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-19 20:26:00",
+    "text": "no I just mean the code you're using to try and verify the request, above you mentioned using the \"@HubSpot/api-client” package, so I assume the code is in node"
+  },
+  {
+    "text": "yes, we’re calling this method:",
+    "time_stamp": "2023-02-19 20:27:29"
+  },
+  {
+    "poster": {
+      "poster_name": "henry",
+      "poster_handle": "henry.wijaya"
+    },
+    "time_stamp": "2023-02-19 20:28:46",
+    "text": "the function is working fine on …<http://ngrok.io|ngrok.io> url but when i change domain to the  verified company domain, we’re unable to verify HubSpot signature"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-19 20:29:33",
+    "text": "Yes but are you using the company domain in the verification code, after switching it in the UI?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-19 20:30:02",
+    "text": "That screenshot really doesn't show much of your code at all, fyi"
+  },
+  {
+    "poster": {
+      "poster_name": "henry",
+      "poster_handle": "henry.wijaya"
+    },
+    "time_stamp": "2023-02-19 20:30:36",
+    "text": "i’m confused on the company domain, do you refer to the auth and redirect url ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-19 20:32:06",
+    "text": "Well when you change the url in the UI to send to the company domain instead of the ngrok domain do you also swap the domains in the verification code?"
+  },
+  {
+    "poster": {
+      "poster_name": "henry",
+      "poster_handle": "henry.wijaya"
+    },
+    "time_stamp": "2023-02-19 20:32:42",
+    "text": "yes, i swap the url for auth, uninstall app from the test client"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-19 20:33:23",
+    "text": "But do you swap it in the signature validator?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-19 20:34:16",
+    "text": "<https://developers.HubSpot.com/docs/api/webhooks/validating-requests#validate-requests-using-the-v2-request-signature> both of the signature validators (v2 and v3) require the requestUrl to match"
+  },
+  {
+    "poster": {
+      "poster_name": "henry",
+      "poster_handle": "henry.wijaya"
+    },
+    "time_stamp": "2023-02-19 20:36:58",
+    "text": "yes, those are changes based on the domain"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-19 20:39:10",
+    "text": "Well I just ran a test with one of my apps, once testing with an Ngrok domain and the next time with a normal domain and everything is working fine, is it possible that you can share the code that you use for the ngrok test and then the company test?"
+  },
+  {
+    "text": "here is the debug code that i have",
+    "time_stamp": "2023-02-19 20:41:09"
+  },
+  {
+    "poster": {
+      "poster_name": "henry",
+      "poster_handle": "henry.wijaya"
+    },
+    "time_stamp": "2023-02-19 20:41:23",
+    "text": "when i set the domain to ngrok"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-02-19 20:42:01"
+  },
+  {
+    "text": "when we use different domain than ngrok, we got:",
+    "time_stamp": "2023-02-19 20:43:26"
+  },
+  {
+    "poster": {
+      "poster_name": "henry",
+      "poster_handle": "henry.wijaya"
+    },
+    "time_stamp": "2023-02-19 20:45:29",
+    "text": "do you know if there is special treatment for ngrok domain ? compare to any random domain ?"
+  }
+]

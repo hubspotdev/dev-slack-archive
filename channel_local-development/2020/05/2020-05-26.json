@@ -1,0 +1,61 @@
+[
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2020-05-26 04:54:18",
+    "text": "seriously. it can be painful when you forget to start it up without that param set"
+  },
+  {
+    "poster": {
+      "poster_name": "Melinda Green",
+      "poster_handle": "melinda.green"
+    },
+    "time_stamp": "2020-05-26 06:55:43",
+    "text": "really good point that was so obvious i always overlooked it"
+  },
+  {
+    "poster": {
+      "poster_name": "William Spiro",
+      "poster_handle": "wspiro"
+    },
+    "time_stamp": "2020-05-26 07:01:07",
+    "text": "I created an issue on this topic for further discussion! <https://github.com/HubSpot/HubSpot-cms-tools/issues/213> Thanks for the feedback, all"
+  },
+  {
+    "poster": {
+      "poster_name": "William Spiro",
+      "poster_handle": "wspiro"
+    },
+    "time_stamp": "2020-05-26 07:02:34",
+    "edited": {
+      "time_stamp": "2020-05-26 07:02:44"
+    },
+    "text": "Feel free to give a :thumbsup: on this issue for your vote <https://HubSpotdev.slack.com/archives/CLJJXGTC0/p1590498067396700>"
+  },
+  {
+    "poster": {
+      "poster_name": "Anish Mandal",
+      "poster_handle": "anishmandal240289"
+    },
+    "time_stamp": "2020-05-26 21:27:09",
+    "text": "Thnks :+1:"
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2020-05-26 22:27:12",
+    "text": "<@U22VBL87M> When we create a module with `hs create module` the `meta.json` does not contain an ID (which makes sense). When I sync this module to HubSpot, the module is given an ID. I then retrieve this ID from the portal and add the ID to my local `meta.json`. We have a custom setup for HubSpot development and are not using the boilerplate.\nAre you saying, that fetching the ID for the meta.json should not be necessary?"
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2020-05-26 22:28:48",
+    "text": "```const fetchMeta = async file =&gt; {\n  return new Promise((resolve, reject) =&gt; {\n    console.log('Fetching meta.json from portal');\n    src(file).pipe(\n      through.obj((file, enc, cb) =&gt; {\n        const dir = /modules\\/(.+\\.module)/gm.exec(file.path)[1];\n        const localPath = file.path.replace('local.json', 'global.json');\n\n        exec(\n          `yarn hs fetch --portal=production bright/modules/${dir}/meta.json ${localPath} --overwrite`,\n          (err, stdout, stderr) =&gt; {\n            console.log(stdout);\n            resolve();\n            cb(err);\n          },\n        );\n      }),\n    );\n  });\n};\n\nconst mergeMeta = file =&gt; {\n  return new Promise((resolve, reject) =&gt; {\n    src(file).pipe(\n      through.obj((file, enc, cb) =&gt; {\n        const localFile = file.path.replace('.global.json', '.local.json');\n        const rootFile = file.path.replace('.global.json', '.json');\n        console.log(`Merging ${localFile} with ${file.path} in ${rootFile}`);\n        try {\n          const rootJson = JSON.parse(fs.readFileSync(file.path).toString('utf8'));\n          const localJson = JSON.parse(fs.readFileSync(localFile).toString('utf8'));\n          console.log(rootJson.module_id);\n          // retrieve module_id from portal and set in global file\n          localJson.module_id = rootJson.module_id;\n\n          if (rootJson.status !== 'error') {\n            fs.writeFileSync(rootFile, JSON.stringify(localJson, null, 2));\n            console.log('Succesfully merged meta.json');\n            resolve();\n          } else {\n            fs.writeFileSync(rootFile, fs.readFileSync(localFile).toString('utf8'));\n            resolve();\n          }\n        } catch (error) {\n          console.log('Module is not yet defined.');\n          fs.writeFileSync(rootFile, fs.readFileSync(localFile).toString('utf8'));\n          reject();\n        }\n        cb();\n      }),\n    );\n  });\n};```"
+  }
+]

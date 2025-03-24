@@ -1,0 +1,46 @@
+[
+  {
+    "poster": {
+      "poster_name": "Sean Henri",
+      "poster_handle": "sean615"
+    },
+    "time_stamp": "2022-06-09 15:08:17",
+    "edited": {
+      "time_stamp": "2022-06-11 19:42:11"
+    },
+    "text": "I’m scratching my head. I’d like to append a href in a CTA with a rel=nofollow. Should I be able to do this by following something like:\n\n``` {% module \"cta\" path=\"@HubSpot/cta\" guid=\"id goes here\" label=\"\" %}```\nwith something like:\n\n```          {% set rel = [] %}\n          {% if WHATGOESHERE? %}\n            {% do rel.append(\"nofollow\") %}\n          {% endif %}```",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-06-10 00:57:43"
+      },
+      {
+        "time_stamp": "2022-06-11 19:33:02"
+      },
+      {
+        "time_stamp": "2022-06-12 10:58:05"
+      },
+      {
+        "time_stamp": "2022-06-13 01:01:42"
+      },
+      {
+        "time_stamp": "2022-06-13 01:11:15"
+      },
+      {
+        "time_stamp": "2022-06-13 04:00:13"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ville Pekkarinen",
+      "poster_handle": "ville"
+    },
+    "time_stamp": "2022-06-10 00:57:43",
+    "edited": {
+      "time_stamp": "2022-06-10 02:57:48"
+    },
+    "text": "do `cta(guid)|pprint` and see if you can extract the href for the CTA from there and construct it yourself, or something like this, it's morning and my brains are mush, maybe it helps you along\n```&lt;p&gt;\n  {{ cta(module.cta)|pprint }}\n&lt;/p&gt;\n\n&lt;p&gt;\n  {% if cta(module.cta) is string_containing \" rel=\"noopener\" %}\n    {# Contains rel ie. CTA has open in new window ticked #}\n    {{ cta(module.cta)|replace('rel=\"noopener\"', 'rel=\"noopener nofollow\"')|pprint }}\n  {% else %}\n    {# no rel #}\n    {{ cta(module.cta)|replace('&lt;a href', '&lt;a rel=\"nofollow\" href')|pprint }}\n  {% endif %}\n&lt;/p&gt;```"
+  }
+]

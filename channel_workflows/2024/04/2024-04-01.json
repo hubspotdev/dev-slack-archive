@@ -1,0 +1,139 @@
+[
+  {
+    "poster": {
+      "poster_name": "Christopher Young",
+      "poster_handle": "christopher.young.r"
+    },
+    "time_stamp": "2024-04-01 09:36:38",
+    "text": "Hi all reaching out to see if anyone has experience the same issue and understands the correct format.\n\n```I have a Workflow where I have a Custom Code step. I have an output variable called dateBecameAvailable which generates a unix date. Then I have a \"Set Property Value\" step where I am trying to set the property value of a Date type field using that dateBecameAvailable. HubSpot is not accepting the unix date format in the Set Property Value step.  ```\nDoes anyone know the correct format to Set Property Value?",
+    "reply_count": 5,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-04-01 09:49:17"
+      },
+      {
+        "time_stamp": "2024-04-01 09:50:27"
+      },
+      {
+        "time_stamp": "2024-04-01 09:51:24"
+      },
+      {
+        "time_stamp": "2024-04-01 09:52:04"
+      },
+      {
+        "time_stamp": "2024-04-01 09:52:25"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-04-01 09:49:17",
+    "text": "Try mm/dd/yyyy"
+  },
+  {
+    "poster": {
+      "poster_name": "Christopher Young",
+      "poster_handle": "christopher.young.r"
+    },
+    "time_stamp": "2024-04-01 09:50:27",
+    "text": "oh, set the custom code output to a string in the format as `MM/dd/yyyy` <@U05R380MLMC>?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-04-01 09:51:24",
+    "text": "Yes - give that a try and hope you have success."
+  },
+  {
+    "poster": {
+      "poster_name": "Ryan Ginsberg",
+      "poster_handle": "ryan294"
+    },
+    "time_stamp": "2024-04-01 09:52:04",
+    "text": "Otherwise - you can use the API to set the value at the end of your custom code action rather than output it and use another action to set it."
+  },
+  {
+    "poster": {
+      "poster_name": "Christopher Young",
+      "poster_handle": "christopher.young.r"
+    },
+    "time_stamp": "2024-04-01 09:52:25",
+    "text": "Yes, was trying to avoid an unnecessary API call, but that's the last resort"
+  },
+  {
+    "poster": {
+      "poster_name": "Caroline Santos",
+      "poster_handle": "caroline.santos"
+    },
+    "time_stamp": "2024-04-01 12:33:32",
+    "text": "Hi team\n\nI created a workflow where I collect the date from a certain record, and in the action output I put it in the date/time format, but when copying this output to a date property, an error always appears, I've also tried it in the date format, I tried different formats but it doesn't work, it keeps giving an error\n_\"The property could not be updated because the value is not valid\"_\n*Code in thread*",
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-04-01 12:34:06"
+      },
+      {
+        "time_stamp": "2024-04-01 13:26:39"
+      },
+      {
+        "time_stamp": "2024-04-01 13:26:51"
+      },
+      {
+        "time_stamp": "2024-04-01 13:27:30"
+      },
+      {
+        "time_stamp": "2024-04-01 14:32:40"
+      },
+      {
+        "time_stamp": "2024-04-02 04:53:35"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Caroline Santos",
+      "poster_handle": "caroline.santos"
+    },
+    "time_stamp": "2024-04-01 12:34:06",
+    "text": "```import requests\nfrom datetime import datetime\n\nheaders = {\n    'authorization': 'key',\n    'Content-Type': 'application/json'\n}\n\ndef main(event):\n    companyid = event['inputFields']['companyid']\n    dataresposta = getDataResposta(companyid)\n    data = dataresposta['results'][0]['properties']['data_resposta']\n    # Convertendo a string de data para um objeto datetime\n    data_formatada = datetime.strptime(data, '%Y-%m-%d')\n    # Adicionando a hora desejada\n    data_formatada = data_formatada.replace(hour=0, minute=0, second=0)\n    # Formatando a data com a hora\n    data_formatada_string = data_formatada.strftime('%d/%m/%Y %H:%M:%S')\n    return {\"outputFields\": {\"dataresposta\": data_formatada_string} }\n    \ndef getDataResposta(companyid):\n    requestUrl = '<https://api.hubapi.com/crm/v3/objects/2-25689014/search>'\n    data = {\n        \"filterGroups\": [\n            {\n                \"filters\": [\n                    {\n                        \"value\": companyid,\n                        \"propertyName\": \"companyid\",\n                        \"operator\": \"EQ\"\n                    },\n                    {\n                        \"value\": \"NPS - Produto\",\n                        \"propertyName\": \"pesquisa\",\n                        \"operator\": \"EQ\"\n                    }\n                ]\n            }\n        ],\n        \"properties\": [\n            \"data_resposta\"\n        ],\n        \"sorts\": [\n            {\n                \"propertyName\": \"data_resposta\",\n                \"direction\": \"DESCENDING\"\n            }\n        ],\n        \"limit\": 1\n    }\n    response = <http://requests.post|requests.post>(requestUrl, headers=headers, json=data)\n    return response.json()```"
+  },
+  {
+    "poster": {
+      "poster_name": "Christensen Magtoto",
+      "poster_handle": "chris858"
+    },
+    "time_stamp": "2024-04-01 13:26:39",
+    "text": "Hi Caroline, I believe you need to convert your date to milliseconds."
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2024-04-01 13:26:51",
+    "text": "if it’s just a date field, and not datetime - make sure you set the value to midnight. I don’t know python, so can’t help with syntax."
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2024-04-01 13:27:30",
+    "text": "ah, looks like you’re already doing that. Ignore the above."
+  },
+  {
+    "poster": {
+      "poster_name": "Caroline Santos",
+      "poster_handle": "caroline.santos"
+    },
+    "time_stamp": "2024-04-01 14:32:40",
+    "text": "I already did the above, none of them worked :confused:"
+  }
+]

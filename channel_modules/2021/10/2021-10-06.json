@@ -1,0 +1,141 @@
+[
+  {
+    "text": "Hi all! I’m trying to set default values when using a module snippet in a template.\nI have a boolean named “hide” which is grouped in “styles”. but when i want to set the default (not in the json but in the module snippet) it no works…\n\nI think it has to do with the fact that it’s grouped, but not sure obviously.\n\nIf anyone knows the correct syntax, please let me know!",
+    "time_stamp": "2021-10-06 03:40:29",
+    "edited": {
+      "time_stamp": "2021-10-06 03:40:54"
+    },
+    "reply_count": 11,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2021-10-06 04:08:13"
+      },
+      {
+        "time_stamp": "2021-10-06 04:14:35"
+      },
+      {
+        "time_stamp": "2021-10-06 06:14:14"
+      },
+      {
+        "time_stamp": "2021-10-06 06:17:20"
+      },
+      {
+        "time_stamp": "2021-10-06 07:17:29"
+      },
+      {
+        "time_stamp": "2021-10-06 07:23:56"
+      },
+      {
+        "time_stamp": "2021-10-06 07:34:17"
+      },
+      {
+        "time_stamp": "2021-10-06 07:44:07"
+      },
+      {
+        "time_stamp": "2021-10-06 07:46:21"
+      },
+      {
+        "time_stamp": "2021-10-06 07:46:36"
+      },
+      {
+        "time_stamp": "2021-10-06 15:57:28"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2021-10-06 04:08:13",
+    "text": "I’m not aware of this being an option, is there documentation that shows you being able to do this?"
+  },
+  {
+    "poster": {
+      "poster_name": "Federico Mozzo",
+      "poster_handle": "federico.mozzo"
+    },
+    "time_stamp": "2021-10-06 04:14:35",
+    "text": "you can't set defaults using dot notations, you should do something like styles={\"hide\": true}"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Niemeijer",
+      "poster_handle": "michael915"
+    },
+    "time_stamp": "2021-10-06 06:14:14",
+    "text": "ahh that’s correct! used styles=[“hide”], this sets the hide to true:raised_hands:"
+  },
+  {
+    "poster": {
+      "poster_name": "Mitja Lewin",
+      "poster_handle": "m.lewin"
+    },
+    "time_stamp": "2021-10-06 06:16:37",
+    "edited": {
+      "time_stamp": "2021-10-06 06:17:35"
+    },
+    "text": "<@U02DNBUPP9V> In addition to <@UV23JHEJY> answer. Another way to do it, without the need of blog posts, is just to look up the active tags. Useful if you compensate the missing topic filter for the blog and want to create a bunch of custom tag filters:\n\n```{% set tags_array = [] %}\n{% for tag in blog_tags(your_blog_id, 250) %}\n {% do tags_array.append( tag.name ) %}\n{% endfor %}```\nAnd then you can use:\n```{% if tags_array is containing my_tag %}\n  (...)\n{% endif %}```\nThe variable `my_tag` can be for example the `tag_field` from your module. And I highly recommend that you place the `tags_array` into a global file and import that file into your module where you want to use it. For example like this:\n\n```{% if !tags_array %}{% import '../../global.css' %}{% endif %}```\nThe reason behind this is to reduce the amount of HubL request that sometimes can happen.\n\nRelated to: <https://developers.HubSpot.com/docs/cms/hubl/functions#blog-tags>"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Niemeijer",
+      "poster_handle": "michael915"
+    },
+    "time_stamp": "2021-10-06 06:17:20",
+    "text": "<@U25PYL3Q8> it’s basically the same as giving the module block a path, a label or a module_id, you can set parameters in here to overwrite your default json value"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2021-10-06 07:17:29",
+    "text": "Interesting, is there documentation on this? And, for your example here… in the module is it `{{ module.styles.hide }}` and that is how you are doing the `styles={\"hide\"}` in the module block import?"
+  },
+  {
+    "text": "haven’t found any doc on this, but {{ module.styles.hide }} is how the json is build up, correct!\n\nstill a work in progress because, i’m not able to change the toggle in my template..",
+    "time_stamp": "2021-10-06 07:23:56"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2021-10-06 07:34:17",
+    "text": "cool, thanks."
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Niemeijer",
+      "poster_handle": "michael915"
+    },
+    "time_stamp": "2021-10-06 07:44:07",
+    "text": "oke! things are working again haha"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Niemeijer",
+      "poster_handle": "michael915"
+    },
+    "time_stamp": "2021-10-06 07:46:21",
+    "text": "first off: be carefull, because if you do the syntax wrong, you kill the instance of the module\n\nsecond: by using styles={“hide”:True}\ni can set my value which is grouped"
+  },
+  {
+    "poster": {
+      "poster_name": "Michael Niemeijer",
+      "poster_handle": "michael915"
+    },
+    "time_stamp": "2021-10-06 07:46:36",
+    "text": "hope it helps you also <@U25PYL3Q8>"
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2021-10-06 15:57:28",
+    "text": "cool, I appreciate this. I needed this one time for a template but created a work around.. but next time if I need it again, I’m grateful"
+  }
+]

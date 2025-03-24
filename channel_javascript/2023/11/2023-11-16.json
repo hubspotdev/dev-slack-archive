@@ -1,0 +1,23 @@
+[
+  {
+    "poster": {
+      "poster_name": "Nich Mueller",
+      "poster_handle": "nich"
+    },
+    "time_stamp": "2023-11-16 14:43:04",
+    "edited": {
+      "time_stamp": "2023-11-16 15:29:54"
+    },
+    "text": "I receive requests like the following a lot:\n\n```Place this snippet between the <head> and </head> tags on every page of your site.\n... JS SNIPPET FOR THIRD PARTY ANALYTICS/ADS SERVICE ...```\nThe details of the request also mention...\n\n```Additional information about the [insert tag Tag/Pixel/Whatever name]:\nThe global site tag sets new cookies on your domain```\n*Red flag to me* :thinking_face::alert: If it drops cookies that tells me that the instructions received from the client are incorrect, because (to be compliant) the script shouldn't be loaded in the header on every page (automatically) without any gate mechanism representing the user's consent. It should be loaded after the user has provided consent.\n\nI've been working with legal dpts at clients' companies recently to make sure that we're compliant from a GDPR perspective, and understanding the <https://developers.HubSpot.com/docs/api/events/cookie-banner|HubSpot cookie banner API> has been crucial\n\nSo when I receive these instructions from clients (and even other agencies) I feel at a loss for how to proceed because I disagree with the instructions given, not from a personal opinion but from a legal perspective– Because I feel the client is asking to break the rules (maybe without knowing that's what they're asking... but alas, here we are).\n\nShould we let them break the rules? I feel like everybody in upper management just doesn't know enough about the tech (maybe plays dumb a little bit– like \"apologize rather than ask for permission\" approach– or maybe they just don't know enough) on this topic, resulting in developers placing pixels on websites just because they copied a snippet from some Third Party service. The problem is that the instructions from Third Party Service told them to place their JS snippet at the top of the head. As a result, I see cookies loading in many places where they shouldn't be. Quite often. :cookie: :cookie: :cookie:\n\nManagers don't complain, because they get all this analytics to look at— but I think most people don't realize when they just paste these snippets from Third Party Services into the HTML without any gating mechanism, they are getting more data than users are actually consenting to...\n\nI find the instructions received from the Third Party Service are _usually wrong_, because they would not have enough context for your _*Consent Strategy*_ – rather the scripts should be conditionally loaded, or go through some data layer representing the user's consent.\n\nI use something along the lines of this to conditionally load Third Party Scripts (pulled from the Cookie banner API docs):\n\n```var _hsp = (window._hsp = window._hsp || []);\n_hsp.push([\"addPrivacyConsentListener\", function (consent) {\n    if (consent.allowed) {\n        // create script elements for Third Party Services and append to DOM\n    }\n}])```\nYou can also load Third Party Analytics services separately from Third Party Ads services by the modifying the above for categories.\n\nWhat are your thoughts? Is this the right way of going about it?\n\nThis problem seems to come up with every client eventually... and I want to mention, I am certainly not an expert on this topic! But I am trying to learn :book: If you have any considerations, I would be happy to hear them",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-11-17 13:22:50"
+      },
+      {
+        "time_stamp": "2023-11-17 14:41:10"
+      }
+    ]
+  }
+]

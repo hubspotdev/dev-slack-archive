@@ -1,0 +1,20 @@
+[
+  {
+    "poster": {
+      "poster_name": "Ruben Assouline",
+      "poster_handle": "ruben.assouline"
+    },
+    "time_stamp": "2023-11-17 09:09:05",
+    "edited": {
+      "time_stamp": "2023-11-17 09:09:19"
+    },
+    "text": "Hello everyone,\nI'm currently working on a project involving the HubSpot API, specifically dealing with custom objects and associations. However, I'm facing a challenge and could use some help from the community.\nThe Problem:\nI'm trying to associate a ticket with a custom object called \"Account Manager\" in HubSpot. Each Account Manager has a custom property named \"nom_actualise\", which seems to be an internal user ID. My goal is to find an Account Manager whose \"nom_actualise\" property matches the internal ID of the ticket's owner and then create an association between the ticket and the found Account Manager.\nHere's the logic I've implemented in Python:\n\nDespite the logic appearing sound to me, I'm encountering an issue where no matching Account Manager is found, even though there is an Account Manager with the \"nom_actualise\" property matching the internal ID of the ticket's owner. I've checked the API endpoints, method, and request body structure, but I can't seem to identify where the issue lies.\nI would greatly appreciate any insights or suggestions you might have on where I could be going wrong or what I might be missing.\nThank you in advance for your time and help!\n\n```import os\nimport requests\n\ndef main(event):\n    access_token = os.getenv('jetonHubSpot')  # Access token retrieval\n    headers = {\n        \"Authorization\": f\"Bearer {access_token}\",\n        \"Content-Type\": \"application/json\"\n    }\n\n    # Retrieving values from the input fields\n    owner_internal_id = event.get('inputFields').get('HubSpot_owner_id')\n    ticket_id = event.get('inputFields').get('hs_ticket_id')\n\n    print(f\"Internal ID of the ticket's owner: {owner_internal_id}\")\n    print(f\"Ticket ID: {ticket_id}\")\n\n    # Searching for the Account Manager matching by 'nom_actualise' property\n    am_search_url = \"<https://api.hubapi.com/crm/v4/objects/2-19212820/search>\"\n    search_body = {\n        \"filterGroups\": [{\n            \"filters\": [{\n                \"propertyName\": \"nom_actualise\",\n                \"operator\": \"EQ\",\n                \"value\": owner_internal_id\n            }]\n        }]\n    }\n    response = requests.post(am_search_url, headers=headers, json=search_body)\n    \n    if response.status_code != 200:\n        print(f\"Error during search request: Status {response.status_code}, Response {response.text}\")\n        return {\"outputFields\": {\"error\": \"Error during search request\"}}\n\n    try:\n        response_data = response.json()\n        if response_data['results']:\n            account_manager_id = response_data['results'][0]['id']\n            print(f\"Account Manager ID found: {account_manager_id}\")\n\n            # Creating the association\n            association_url = f\"<https://api.hubapi.com/crm/v4/objects/tickets/{ticket_id}/associations/default/2-19212820/{account_manager_id}>\"\n            association_response = requests.put(association_url, headers=headers)\n\n            if association_response.status_code == 204:\n                print(\"Association between the ticket and Account Manager successful.\")\n            else:\n                print(f\"Error during association: Status {association_response.status_code}, Response {association_response.text}\")\n        else:\n            print(\"No matching Account Manager found or search error.\")\n    except ValueError as e:\n        print(f\"JSON decoding error: {e}\")\n        return {\"outputFields\": {\"error\": \"JSON decoding error\"}}\n\n    return {\"outputFields\": {\"success\": \"Processing completed\"}}```",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2023-11-27 19:20:20"
+      }
+    ]
+  }
+]

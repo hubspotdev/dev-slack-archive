@@ -1,0 +1,164 @@
+[
+  {
+    "text": "anyone have a good solution to filter out accidental empty blocks in rich text fields via hubl?",
+    "time_stamp": "2023-03-16 12:27:56",
+    "reply_count": 14,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-03-16 13:05:16"
+      },
+      {
+        "time_stamp": "2023-03-16 13:06:32"
+      },
+      {
+        "time_stamp": "2023-03-16 13:10:44"
+      },
+      {
+        "time_stamp": "2023-03-16 13:12:22"
+      },
+      {
+        "time_stamp": "2023-03-16 13:12:47"
+      },
+      {
+        "time_stamp": "2023-03-16 13:16:13"
+      },
+      {
+        "time_stamp": "2023-03-16 13:17:19"
+      },
+      {
+        "time_stamp": "2023-03-16 13:25:39"
+      },
+      {
+        "time_stamp": "2023-03-16 13:26:23"
+      },
+      {
+        "time_stamp": "2023-03-16 13:30:42"
+      },
+      {
+        "time_stamp": "2023-03-16 13:31:36"
+      },
+      {
+        "time_stamp": "2023-03-16 13:33:57"
+      },
+      {
+        "time_stamp": "2023-03-16 13:34:31"
+      },
+      {
+        "time_stamp": "2023-03-16 13:47:06"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-03-16 13:05:16",
+    "text": "Not sure I’ve got a HubL solution off the top of my head, but you could use the `:empty` selector in CSS to set `display: none;` on paragraph blocks with no content."
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Kahwe Smith",
+      "poster_handle": "lukas.smith"
+    },
+    "time_stamp": "2023-03-16 13:06:32",
+    "text": "does this also work if there is a &amp;nbsp; or &lt;br&gt; is inside?"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-03-16 13:10:44",
+    "text": "Ah, no — that selector specifically looks to see if a node has no child elements or inner text.\n\nIf you’re looking to filter excess whitespace, that’ll be a more complicated effort. If you’re trying to cut out any block that only has whitespace characters, the only option I can think of would be the <https://developers.HubSpot.com/docs/cms/hubl/filters#regex-replace|regex_replace filter>.\n\nSo, now you’ve got two problems. ;~)"
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Kahwe Smith",
+      "poster_handle": "lukas.smith"
+    },
+    "time_stamp": "2023-03-16 13:12:22",
+    "text": "ok. I tried a regex filter. didn’t work yet. I generally know regexp sufficiently but I suspect the source data gets modified during rendering. "
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Kahwe Smith",
+      "poster_handle": "lukas.smith"
+    },
+    "time_stamp": "2023-03-16 13:12:47",
+    "text": "and I am basing my regexp on the rendered html and not the source. "
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-03-16 13:16:13",
+    "text": "Ah, yeah — there may be some differences there. At minimum, I know that HubL converts some whitespace escape sequences (like `\\n`) to HTML equivalents during rendering. I don’t know all of the details, though."
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Kahwe Smith",
+      "poster_handle": "lukas.smith"
+    },
+    "time_stamp": "2023-03-16 13:17:19",
+    "text": "is there some way to dump the text out without escaping?"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-03-16 13:25:39",
+    "text": "I don’t know if I could say, really — I don’t know in which step of the process that replacement happens.\n\nIf it happens at page render, it’s possible that you’re getting that whenever you reference `rich_text.html`. I don’t think it’s something that there’s any real documentation on.\n\nYou could test it out by trying to replace all `\\n` strings with another value and see if it shows up in your output."
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Kahwe Smith",
+      "poster_handle": "lukas.smith"
+    },
+    "time_stamp": "2023-03-16 13:26:23",
+    "text": "ok thx .. I am on the move atm .. will play with it some more tomorrow"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-03-16 13:30:42",
+    "text": "I will say — I don’t know the details of the project you’re working on — but if I were up against this problem, I’d probably just say “Sorry, you’re just going to need to make sure you’re not inserting extra line breaks.”\n\nTrying to capture all variants of blocks whose only content is one or more whitespace characters is a non-trivial parsing problem, and any solutions you can pull off within a templating language are probably going to be pretty fragile."
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Kahwe Smith",
+      "poster_handle": "lukas.smith"
+    },
+    "time_stamp": "2023-03-16 13:31:36",
+    "text": "yeah. maybe I need to delegate this to the content authors"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-03-16 13:33:57",
+    "text": "Yeah, some issues are better solved outside of code, and I’d suggest this might be one of them."
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2023-03-16 13:34:31",
+    "text": "<https://twitter.com/johnIsFuller/status/1527386105661640704>"
+  },
+  {
+    "poster": {
+      "poster_name": "John Fuller - Blames Bugs",
+      "poster_handle": "john.ascendinbound"
+    },
+    "time_stamp": "2023-03-16 13:47:06",
+    "text": "that is a hubl snippet I put out to fight marketer line breaks"
+  }
+]

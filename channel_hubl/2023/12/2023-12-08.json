@@ -1,0 +1,137 @@
+[
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2023-12-08 08:49:02",
+    "text": "your firstname is nested inside some extra curly brackets\n\nwhich means it’s like an extra loop inside\n```\"usersData\": [\n\t\t{\n\t\t\t\"userId\": 18,\n\t\t\t\"lastName\": \"Haokip\",\n\t\t\t\"firstName\": \"Jangkholun\",\n\t\t\t\"userProfileUrl\": \"<http://localhost:4000/profile?id=18>\"\n\t\t},\n        {\n\t\t\t\"foo\":\"bar\"\n\t\t}\n\t],```\nif you’re certain it’ll always be the first item something like\n```user[0].firstName```\nShould work,\n\nIf that’s not working, do a `|pprint` on user and see what it returns\nyou could also do `(user|first).firstName`  to tell it to get the first item"
+  },
+  {
+    "text": "The Developer info in the sprocket is useful for this sort of thing, just make sure you have a json parser to view the info!\n\nThis one suggests content_group instead of group, but I imagine if I kept searching down the page I’d also find the group one too",
+    "time_stamp": "2023-12-08 08:52:48"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-12-08 08:53:16"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2023-12-08 09:01:15",
+    "edited": {
+      "time_stamp": "2023-12-08 09:01:47"
+    },
+    "text": "If the form submission is all you need to create your record, you could use the form submission api, since this does not require authentication (since anyone can fill in a form) you can just use ajax on the page to submit to the form submission api\n<https://legacydocs.HubSpot.com/docs/methods/forms/submit_form>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2023-12-08 09:08:23",
+    "text": "Also if you just want more ‘smarts’ in the form such as a dropdown filling in a plain text field, you’d have to use JS to update the form\n\nI guess you’ve got 2 options\n\n1 - Edit the form once it’s loaded on the page:\n`onFormReady`\n<https://legacydocs.HubSpot.com/global-form-events>\n\n2 - create you’re own form, hide the HubSpot one, and then fill all the fields in the HubSpot one and submit that instead of you’re own on the onsubmit event\n(note with this you need to trigger a change event on the input fields to make the values take properly)"
+  },
+  {
+    "poster": {
+      "poster_name": "Bobby Makynen",
+      "poster_handle": "bobby605"
+    },
+    "time_stamp": "2023-12-08 13:12:43",
+    "text": "Hello everyone,\n\nI am creating a custom image module that I am placing into an email to invite users to review us on Trustpilot. The review invitation links are created via the Trustpilot API and are specific to each user. Once I generate the link, I am pushing data to a HubDB table that includes a column for the contact's email address, and a column for the link. That part is working fine.\n\nInside of the HubSpot custom image module, I am using HubL to query the table and pull back the correct invitation link for the contact based on the contact's email address. I'm at a loss because, if I hard code an email address into the query, it works fine. However, if I use `contact.email` (which is really what I need to do) it seems to not work at all. Yet if I just `{{ contact.email }}` to the screen it displays just fine. Even if I assign `contact.email` to a variable and then use that variable in the filter it does not work.\n\nAm I doing something wrong? Is using the contact's email address in the query/filter not allowed? I don't understand how that could possibly be the case since it allows me to hard code an email address, and I'm not sure how it would know the difference once assigned to a variable. Here is the relevant code. Any help would be much appreciated. Also, as silly as it seems, I am using `hubdb_table_rows` and limiting the return to 1 since it doesn't seem that I can use `hubdb_table_row` with anything other than the Row ID, which I do not know. I need to query by email address. If anyone has any alternatives to that method, please let me know.\n\n```{# Get contact email and corresponding HubDB data #}\n{% set _email = contact.email %}\n{% set _query = \"contact_email=\" ~ _email ~ \"&amp;limit=1\" %}\n\n{# {{ _email }} #}\n\n{# We can't access the value of a standard variable set inside a for loop outside of the loop itself, according to documentation. #}\n{# What we CAN do is set an array outside of the loop and push values to it. Seems silly when we only need one value, but it works. #}\n{# We can't use hubdb_table_row to get a single row because we don't know the Row ID, which is required. We need to query by email. #}\n{% set links = [] %} \n\n{% for row in hubdb_table_rows(\"trustpilot_review_requests\", _query) %}\n  {# Trustpilot review invitation link associated with email address #}\n  {% do links.append(row.review_request_link) %}\n{% endfor %}\n\n{% set link = links[0] %}\n\n{% linked_image\n    label=\"Linked Image\",\n    src='{{ module.img.src }}',\n    alt='{{ module.img.alt }}',\n    width='{{ module.img.width }}',\n    height='{{ module.img.height }}',\n    link='{{ link }}',\n    target='{{ target }}',\n    open_in_new_tab='{{ target }}',\n    size_type='{{ module.img.size_type }}',\n    max_width='{{ module.img.max_width }}',\n    max_height='{{ module.img.max_height }}',\n    loading='{{ loadingAttr }}'\n%}```\nThank you all in advance!\n\nBobby",
+    "reply_count": 8,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-12-08 13:39:18"
+      },
+      {
+        "time_stamp": "2023-12-08 13:49:44"
+      },
+      {
+        "time_stamp": "2023-12-08 13:49:45"
+      },
+      {
+        "time_stamp": "2023-12-08 13:57:37"
+      },
+      {
+        "time_stamp": "2023-12-08 14:00:50"
+      },
+      {
+        "time_stamp": "2023-12-08 14:23:29"
+      },
+      {
+        "time_stamp": "2023-12-08 14:29:15"
+      },
+      {
+        "time_stamp": "2023-12-08 14:29:56"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Nicholas Decker - Level -22",
+      "poster_handle": "nickdeckerdevs"
+    },
+    "time_stamp": "2023-12-08 13:39:18",
+    "text": "in the email template there is a toggle to use dynamic data. is that turned on?"
+  },
+  {
+    "poster": {
+      "poster_name": "Bobby Makynen",
+      "poster_handle": "bobby605"
+    },
+    "time_stamp": "2023-12-08 13:49:44",
+    "text": "Hi <@U25PYL3Q8> As of now, this is just a standard automation-type email. It is not an email template, so I do not see that setting anywhere. But it does print {{ contact.email }} to the screen just fine, so I'm assuming it isn't having a problem with dynamic data in general.\n\nThanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-12-08 13:49:45",
+    "text": "Unfortunately, contact properties and other personalization tokens work differently within emails than they do in other contexts, making them unsuitable for use in contexts like these.\n\nI’m not sure of the exact details, but my hunch is that — in emails — personalization tokens have their values filled AFTER the rest of the HubL is evaluated. In this case, that would mean that in the context of your `_query` variable, the value of `_email` is `null` at the time of concatenation. The same is true for when you use it within the `hubdb_table_rows` function call."
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-12-08 13:57:37",
+    "text": "Given that limitation, I’m not sure there’s any way to make your current HubDB-based solution work — I think you’ll have to switch approaches.\n\nMy suggestion would be to create a new contact property for the personalized Trustpilot link, and store it there. That’ll help to keep you from duplicating CRM contact data, eliminates the need for a HubDB hit, and gets rid of the need to implement this as a custom module."
+  },
+  {
+    "poster": {
+      "poster_name": "Bobby Makynen",
+      "poster_handle": "bobby605"
+    },
+    "time_stamp": "2023-12-08 14:00:50",
+    "text": "Hi <@U04AQA0QM8E> Thank you for that information! That is very unfortunately, but at least I know I'm not crazy!\n\nIf I used a custom contact property, how would I then dynamically change the link on the button in the email? Is there an easy way to do that?\n\nThank you again for your response. Very helpful and insightful!"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-12-08 14:23:29",
+    "text": "You can just call the contact property using HubL — `{{ contact.trustpilot_link }}`, or whatever you wind up naming the field. The module may complain that it’s not a valid URL, but it’ll ultimately still work.\n\nOne caveat to be aware of when taking this approach: it may cause issues with click tracking. In particular, the clickmap _really_ doesn’t like HubL in your links, but it can impact all forms of click tracking. I would make sure to let your team know to disregard the click reporting for these emails ahead of sending, so they don’t freak out at seeing 0.0% click rates. :sweat_smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Bobby Makynen",
+      "poster_handle": "bobby605"
+    },
+    "time_stamp": "2023-12-08 14:29:15",
+    "text": "Ok, makes sense. I just wasn't sure if there'd be an issue with using a contact property that way, too. Should be a quick thing to try. I will give it a go!\n\nThank you again. You have been very helpful! Have a great weekend! :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-12-08 14:29:56",
+    "text": "Cheers, and good luck!"
+  }
+]

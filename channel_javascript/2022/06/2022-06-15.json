@@ -1,0 +1,56 @@
+[
+  {
+    "poster": {
+      "poster_name": "Fabian Glaw",
+      "poster_handle": "fabian643"
+    },
+    "time_stamp": "2022-06-15 07:02:35",
+    "edited": {
+      "time_stamp": "2022-06-15 08:27:49"
+    },
+    "text": "Hello everyone,\nI have an issue with the order in which js is executed. Sometimes a HubSpot Form takes a long time to be rendered. The `$(window).on(\"load\", function () {}`  seems to be sometimes triggered before the form is in the DOM. That triggers a js error before the form is visible on the page.\nMy form is rendered like this:\n```&lt;div class=\"form__container mt-5\" id=\"module-{{ module.form_field.form_id }}\"&gt;\n  {% form form_to_use=\"{{ module.form_field.form_id }}\"\n  response_response_type=\"{{ module.form_field.response_type }}\"\n  response_message=\"{{ module.form_field.message }}\" response_redirect_id=\"{{\n  module.form_field.redirect_id }}\"\n  response_redirect_url=\"{{module.form_field.redirect_url}}\"\n  gotowebinar_webinar_key=\"{{ module.form_field.gotowebinar_webinar_key }}\" %}\n&lt;/div&gt;```\nDo you know of any way to trigger a js function when the form is completely loaded?\nThank you for your help!",
+    "reply_count": 4,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2022-06-15 10:00:57"
+      },
+      {
+        "time_stamp": "2022-06-15 13:14:36"
+      },
+      {
+        "time_stamp": "2022-06-15 14:18:50"
+      },
+      {
+        "time_stamp": "2022-06-16 01:33:02"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Shayne Plesa-Naden",
+      "poster_handle": "shayne.plesa"
+    },
+    "time_stamp": "2022-06-15 10:00:57",
+    "edited": {
+      "time_stamp": "2022-06-15 10:01:16"
+    },
+    "text": "Hey, for this I would look at using MutationObserver - it's not the most performant so shouldn't be used all the time, but should be fine for a single form.\n\nHere's an example (jquery)\n```var myForm = $(\"#formID\")[0];\n\nvar observer = new MutationObserver(function(mutations) {\n   if (document.contains(myForm)) {\n        console.log(\"HS form has loaded!\");\n        //YOUR JS FUNCTION HERE\n        observer.disconnect();\n    }\n});\n\nobserver.observe(document, {attributes: false, childList: true, characterData: false, subtree:true});```\nI haven't tested this specific snippet on any of my pages/forms, but I've used similar code for years when dealing with async elements. It should work, but if not - it's an opportunity to Google and learn MutationObservers :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Evan Briggs",
+      "poster_handle": "ebriggs"
+    },
+    "time_stamp": "2022-06-15 13:14:36",
+    "text": "As an alternative, you could lean on the form callbacks too\n```  window.addEventListener('message', function (event) {\n    if (event.data.type === 'hsFormCallback' &amp;&amp; event.data.eventName === 'onFormReady') {\n      // Loaded\n    }\n  })```"
+  },
+  {
+    "poster": {
+      "poster_name": "Shayne Plesa-Naden",
+      "poster_handle": "shayne.plesa"
+    },
+    "time_stamp": "2022-06-15 14:18:50",
+    "text": "Evan's solution is the one to go with! Had no idea HS forms emitted events - thanks for the tip!"
+  }
+]

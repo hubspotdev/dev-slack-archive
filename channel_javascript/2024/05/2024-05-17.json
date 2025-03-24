@@ -1,0 +1,38 @@
+[
+  {
+    "text": "",
+    "time_stamp": "2024-05-17 05:35:31"
+  },
+  {
+    "poster": {
+      "poster_name": "José Díaz Rodríguez",
+      "poster_handle": "jose.diaz382"
+    },
+    "time_stamp": "2024-05-17 05:38:17",
+    "text": "Hi <@U01QVR44MEY> I have reached this point, but I get an error when I run it.... do you know where I could be going wrong? Thank you very much for your help!\n\n```const axios = require(\"axios\");\nconst HubSpot = require('@HubSpot/api-client');\n\nexports.main = async (event, callback) =&gt; {\n\n  const HubSpotid = event.inputFields['hs_object_id'];\n  const HubSpotClient = new HubSpot.Client({accessToken: process.env.ACCESS_TOKEN});\n\n        /*****\n          Obtiene los datos de negocio y tarea por id\n        *****/\n        const deal = await HubSpotClient.crm.deals.basicApi.getById(event.object.objectId, [\"HubSpot_owner_id\"], [], [\"task\"]);\n        const task = await HubSpotClient.crm.tasks.basicApi.getById(deal.associations.tasks.results[0].id, [\"HubSpot_owner_id\", \"hs_object_id\", \"hs_all_assigned_business_unit_ids\"], [], []);\n        const owner = await HubSpotClient.crm.owners.ownersApi.getById(deal.properties.HubSpot_owner_id);\n        console.log(\"1\");\n  \n  \t\tvar taskId = task.properties.hs_object_id\n\n          let updateTaskOwnerResponse = await HubSpotClient.apiRequest({\n          method: 'PATCH',\n          path: '/crm/v3/objects/tasks/'+ taskId,\n          body: { \n                \"properties\": \n                {\n                    \"HubSpot_owner_id\": deal.ownerId\n                }\n          }});\n\n  callback({\n    outputFields: {}\n  });\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "José Díaz Rodríguez",
+      "poster_handle": "jose.diaz382"
+    },
+    "time_stamp": "2024-05-17 06:12:29",
+    "text": "I have 2 problems, one:\n- It doesn't work the trigger as we need it to.\n- When I try with a business I get this error:\n\n```2024-05-17T12:05:52.310Z\tERROR\tUnhandled Promise Rejection \t{\"errorType\":\"Runtime.UnhandledPromiseRejection\",\"errorMessage\":\"TypeError: Cannot read properties of undefined (reading 'basicApi')\",\"reason\":{\"errorType\":\"TypeError\",\"errorMessage\":\"Cannot read properties of undefined (reading 'basicApi')\",\"stack\":[\"TypeError: Cannot read properties of undefined (reading 'basicApi')\",\"    at exports.main (/var/task/file.js:13:52)\",\"    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\"]},\"promise\":{},\"stack\":[\"Runtime.UnhandledPromiseRejection: TypeError: Cannot read properties of undefined (reading 'basicApi')\",\"    at process.&lt;anonymous&gt; (file:///var/runtime/index.mjs:1276:17)\",\"    at process.emit (node:events:518:28)\",\"    at emit (node:internal/process/promises:150:20)\",\"    at processPromiseRejections (node:internal/process/promises:284:27)\",\"    at process.processTicksAndRejections (node:internal/process/task_queues:96:32)\"]}\nUnknown application error occurred\nRuntime.Unknown\n\nMemory: 87/128 MB\nRuntime: 2100.69 ms```"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2024-05-17 06:30:03",
+    "text": "Yeah so with a deal workflow you could only run this in deals not companies"
+  },
+  {
+    "poster": {
+      "poster_name": "José Díaz Rodríguez",
+      "poster_handle": "jose.diaz382"
+    },
+    "time_stamp": "2024-05-17 06:45:41",
+    "text": "Yes, we are relating the tasks to the deals, the problem is that I don't know why it says that the property is not defined. Do you know where we could be wrong? Thank you very much!"
+  }
+]

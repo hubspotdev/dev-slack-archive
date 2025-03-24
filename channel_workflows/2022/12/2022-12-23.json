@@ -1,0 +1,62 @@
+[
+  {
+    "poster": {
+      "poster_name": "Nathan De Long",
+      "poster_handle": "ndelong"
+    },
+    "time_stamp": "2022-12-23 12:18:05",
+    "text": "Hello! I have a derpy question. I'm working on a workflow where I would like to return the line item IDs associated with a quote. Then, I would like to look up the SKU for each line item and copy those values to a property on the company record. I know the use case seems a little weird; what I'm really working toward is being able to say \"These are the items we have quoted for this company\" without having to review all of their quotes. So far, I have the code below which will return the IDs for all of the line items on a given quote, and it works wonderfully, but I'm not sure what the next part should even look like (I'm terrible at Node.js) -- has anyone done something like this before by any chance? No worries if not, and hope you are having a great holiday! Also, please steal the method below for working with this particular API; if you don't use .apirequest with it, it throws an authentication error.\n\nCustom Code Action (Used in a quote-based workflow):\n```const HubSpot = require('@HubSpot/api-client');\n\nexports.main = async (event, callback) =&gt; {\n\n  const HubSpotClient = new HubSpot.Client({\n    accessToken: process.env.hstoken\n  }); \n  \ntry {\n  const hs_object_id = event.inputFields['hs_object_id'];\n  const apiResponse = await HubSpotClient\n              .apiRequest({\n              method: 'GET',\n              path: `/crm/v4/objects/quotes/${hs_object_id}/associations/line_item`,\n              body: {}\n            });\n  console.log(\"Line Items Returned\",JSON.stringify(apiResponse.body, null, 2));\n  \n} catch (e) {\n  e.message === 'HTTP request failed'\n    ? console.error(JSON.stringify(e.response, null, 2))\n    : console.error(e)\n}\n}```\nExample Response of line item IDs for a given quote:\n```2022-12-23T19:16:25.120Z\tINFO\tLine Items Returned {\n  \"results\": [\n    {\n      \"toObjectId\": 4315695225,\n      \"associationTypes\": [\n        {\n          \"category\": \"HubSpot_DEFINED\",\n          \"typeId\": 67,\n          \"label\": null\n        }\n      ]\n    },\n    {\n      \"toObjectId\": 4379432345,\n      \"associationTypes\": [\n        {\n          \"category\": \"HubSpot_DEFINED\",\n          \"typeId\": 67,\n          \"label\": null\n        }\n      ]\n    },\n    {\n      \"toObjectId\": 4379432346,\n      \"associationTypes\": [\n        {\n          \"category\": \"HubSpot_DEFINED\",\n          \"typeId\": 67,\n          \"label\": null\n        }\n      ]\n    },\n    {\n      \"toObjectId\": 4379432347,\n      \"associationTypes\": [\n        {\n          \"category\": \"HubSpot_DEFINED\",\n          \"typeId\": 67,\n          \"label\": null\n        }\n      ]\n    },\n    {\n      \"toObjectId\": 4379432348,\n      \"associationTypes\": [\n        {\n          \"category\": \"HubSpot_DEFINED\",\n          \"typeId\": 67,\n          \"label\": null\n        }\n      ]\n    }\n  ]\n}```",
+    "reply_count": 7,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2022-12-23 12:36:05"
+      },
+      {
+        "time_stamp": "2022-12-23 13:47:51"
+      },
+      {
+        "time_stamp": "2022-12-23 13:49:41"
+      },
+      {
+        "time_stamp": "2022-12-28 09:23:18"
+      },
+      {
+        "time_stamp": "2022-12-28 09:31:57"
+      },
+      {
+        "time_stamp": "2022-12-28 09:35:47"
+      },
+      {
+        "time_stamp": "2022-12-28 09:51:02"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Phillip Hargrave",
+      "poster_handle": "phillip"
+    },
+    "time_stamp": "2022-12-23 12:36:05",
+    "text": "Using this methodology your next step would be something along the lines of:\n```apiResponse.body.results.map( resultItem =&gt; resultItem.toObjectId)```\nThis will provide you an array of the toObjectIds, from there you can either hit the batch read endpoint or public search. You'll have to map them again in order to construct the objects.\n\nAlternatively since they are already associated you have two other options depending on your current subscription:\n• Hit the graphql endpoint which will do all of this in one simple query. \n• Add calculated properties for the number of line items associated with a quote and when it changes append those skus to a property on the quote. \n"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-12-23 13:47:51",
+    "edited": {
+      "time_stamp": "2022-12-23 13:47:54"
+    },
+    "text": "Yep just like Phillip said if you have CMS pro or Enterprise you can use graphql which will make this super easy otherwise it will be a pretty long string of api requests"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2022-12-23 13:49:41",
+    "text": "Doable though, it would look like, getting all associated quotes for a given company (associations endpoint), then use your above code to get the line items for the given quote, then use the copy a property workflow action to copy the skus to your company property"
+  }
+]

@@ -1,0 +1,83 @@
+[
+  {
+    "poster": {
+      "poster_name": "Kasper Kristensen",
+      "poster_handle": "kk"
+    },
+    "time_stamp": "2019-11-01 01:16:30",
+    "text": "i have a quick question..\n\ni'm a total noob, but..\n\nif i want to create a library page with webinars, events etc.. is it possible to dynamically create/update a HubDB table with stuff like latest webinars, events etc from HubSpot pages.. or what is the best approach to use for this? i want it to be dynamic",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-11-02 00:18:27"
+      },
+      {
+        "time_stamp": "2019-11-27 08:10:47"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-11-01 06:30:20",
+    "text": "hey <@UNWHHSWHJ> there are a couple ways of handling that:\n\n1) using `for loops` and testing with a `filter query` to grab the items that return true\n```{% for row in hubdb_table_rows(&lt;tableId&gt;, &lt;filterQuery&gt;) %}\n  the value for row {{ row.hs_id }} is {{ row.&lt;column name&gt; }}\n{% endfor %}```\n\n2) Using a query to hit the database and create sets of data that return true to your query\n```{% set all_cars = hubdb_table_rows(&lt;tableId&gt;) %}\n\n{% set cars_with_windows = all_cars|selectattr('windows') %}\n\n{% set teslas = all_cars|selectattr('make','equalto','tesla') %}\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Dana (Holdt) Pesendorfer",
+      "poster_handle": "dana.holdt"
+    },
+    "time_stamp": "2019-11-01 06:33:26",
+    "edited": {
+      "time_stamp": "2019-11-01 06:33:40"
+    },
+    "text": "i.e. If you had something like\n\n```{% set all_events = hubdb_table_rows(&lt;yourtableID&gt;) %}\n\n{% set frankfurt_events = all_events|selectattr('location', equalto', 'frankfurt') %} \n```\n\nyou might start seeing the results you want"
+  },
+  {
+    "poster": {
+      "poster_name": "Jaydip Suvagiya",
+      "poster_handle": "jaydip"
+    },
+    "time_stamp": "2019-11-01 08:32:34",
+    "text": "Hey <@UDFTHC6PK>\n\nthanks for your help :simple_smile: i will check this too"
+  },
+  {
+    "text": "i want this type of result, so i use two tables one for location, and second for events. and i used column type foreign id field and it works",
+    "time_stamp": "2019-11-01 08:34:26"
+  },
+  {
+    "poster": {
+      "poster_name": "Jaydip Suvagiya",
+      "poster_handle": "jaydip"
+    },
+    "time_stamp": "2019-11-01 08:38:06",
+    "text": "working code\n\n```\n{% for location in hubdb_table_rows(&lt;location table id&gt;) %}\n      &lt;h3 class=\"section-title\"&gt;&lt;span&gt;{{ location.location_name }}&lt;/span&gt;&lt;/h3&gt;\n        {% set eventFilter = \"&amp;orderBy=event_date\" %}\n        {% for foreign_row in hubdb_table_rows(&lt;event table id&gt;,eventFilter) %}\n          {% if (foreign_row['event_date']|datetimeformat('%j')) &gt;= (local_dt|datetimeformat('%j')) %}\n            {% for demo in foreign_row.event_location %}\n              {% if demo.hs_id == location.hs_id %}\n                &lt;div class=\"event tw-py-4\"&gt;\n                  &lt;div class=\"event-info\"&gt;\n                    &lt;b&gt;{{ foreign_row.event_date|datetimeformat('%d.%m.%Y') }}&lt;/b&gt; - {{ foreign_row.host_name }}\n                    &lt;br&gt;\n                    &lt;b&gt;{{ module.location_label }}&lt;/b&gt; - {{ foreign_row.event_name }}\n                    {% if foreign_row.event_note %}\n                    &lt;br&gt;\n                    &lt;small class=\"tw-mt-4 tw-block\"&gt;{{ foreign_row.event_note }}&lt;/small&gt;\n                    {% endif %}\n                  &lt;/div&gt;\n                  &lt;div class=\"event-button\"&gt;\n                    {% if foreign_row.event_availability.id == 1 %}\n                      &lt;a href=\"javascript:void(0)\" data-target=\"#bookingModal\" data-activate=\"modal\" class=\"btn\"&gt;{{ module.seats_available_btn }}&lt;/a&gt;\n                    {% elif foreign_row.event_availability.id == 2 %}\n                      &lt;a href=\"javascript:void(0)\" data-target=\"#bookingModal\" data-activate=\"modal\" class=\"btn-orange-300\"&gt;{{ module.almost_sold_out_btn }}&lt;/a&gt;\n                    {% elif foreign_row.event_availability.id == 3 %}\n                      &lt;a href=\"javascript:void(0)\" class=\"btn-orange-100\"&gt;{{ module.sold_out_btn }}&lt;/a&gt;\n                    {% endif %}\n                  &lt;/div&gt;\n                &lt;/div&gt;\n                &lt;hr&gt; \n              {% endif %}\n            {% endfor %}\n          {% endif %}\n        {% endfor %}\n      {% endfor %}\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam McKinney",
+      "poster_handle": "sam"
+    },
+    "time_stamp": "2019-11-01 11:11:52",
+    "text": "Hi Everyone, I have a super quick question, I think, that I can’t seem to find the answer to. The unixtimestamp function. What all options can I pass to it? I have seen ‘unixtimestampe(local_dt)’. What should that return? Is is a timestamp of whatever timezone is set in the settings area?"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam McKinney",
+      "poster_handle": "sam"
+    },
+    "time_stamp": "2019-11-01 11:25:43",
+    "text": "I guess I need to know what ‘local_dt’ returns. Is it a static value, or does it change timezones based on locations"
+  },
+  {
+    "poster": {
+      "poster_name": "Jaydip Suvagiya",
+      "poster_handle": "jaydip"
+    },
+    "time_stamp": "2019-11-02 00:18:27",
+    "text": "Hey <@UPSCA4MMX>\n\ni can’t get question exactly, but please check threads of my question i asked above your question, i guess you can do something like similar :simple_smile:"
+  }
+]

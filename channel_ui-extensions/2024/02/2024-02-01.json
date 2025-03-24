@@ -1,0 +1,75 @@
+[
+  {
+    "poster": {
+      "poster_name": "Federico Bartoli",
+      "poster_handle": "federico.bartoli"
+    },
+    "time_stamp": "2024-02-01 02:34:33",
+    "text": "Hi guys, you've removed Panel from the experimental components, right? You've added Slider, cool! How do I find out when these changes happen? Is there a smarter way to follow them?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-02-01 06:52:18"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Lukas Knobling",
+      "poster_handle": "lukas.knobling"
+    },
+    "time_stamp": "2024-02-01 04:50:02",
+    "text": "Hi Sejal,\n\nNo we are not an ecosystem partner with HubSpot but an Solutions Partner Diamond with HubSpot. Okay good to know, thats not supported for now, but do you know if it's planed for the future? So that sometimes it will be available for public Apps? Or will this feature be an private App only thing?\nOkay that GitHub integration sounds nice to do it, but the question for me there would be how to handle the Accesstoken topic? Would we than safe the Accesstokens in a database within the portalId and use it that way? right?\n\nAs far as our app is concerned, we want to provide for our users a functionality based on your sample project \"<https://developers.HubSpot.com/docs/platform/sample-projects#view-nearby-companies-mapbox-api|View nearby companies: Mapbox API>\" to search around a radius within custom objects, contact or companies for other companies and show them in a UI-Extension Card directly in HubSpot."
+  },
+  {
+    "poster": {
+      "poster_name": "Seth Kaplan",
+      "poster_handle": "skaplan"
+    },
+    "time_stamp": "2024-02-01 06:52:18",
+    "text": "There will be comms soon :slightly_smiling_face:"
+  },
+  {
+    "text": "Hi <@U06F6ML29KP>, thanks for the question! The association table only displays properties for columns. Unfortunately the association label is not a property so we can’t add it as a column.\n\nLooking at your sample code above, I’m wondering if you are able to see the association labels under your company name?\n\nHere is what I’m seeing when I use the same props for my `CrmAssociationTable`\n\nWhen using the “primary display property” as a column, the association labels will display as secondary labels in that cell.",
+    "time_stamp": "2024-02-01 12:14:41"
+  },
+  {
+    "text": "Hey all! quick question. I am new to CRM Customization and getting pretty stuck trying to adapt a simple example from the example repo. I believe I am doing everything in line with the deal-summary example which I am able to deploy, however, when I try to deploy my project I get `Uncaught TypeError: HubSpot.serverless is not a function` . I am doing the import of the library correctly so I’m not sure what’s going on. Any help would be greatly appreciated. Heres the code for reference:\n```import React, { useState, useEffect } from 'react';\nimport {\n  Divider,\n  Link,\n  Button,\n  Text,\n  Input,\n  Flex,\n  StepIndicator,\n  TextArea,\n  ToggleGroup,\n  Alert,\n  LoadingSpinner,\n} from \"<@UDA553DRD>/ui-extensions\";\nimport {\n  CrmPropertyList,\n  CrmAssociationPivot,\n  CrmReport,\n\n} from '<@UDA553DRD>/ui-extensions/crm';\nimport { HubSpot } from '<@UDA553DRD>/ui-extensions';\n\n\n\nconst options = [1, 2, 3, 4].map(n =&gt; ({\n  label: `Checklist ${n}`,\n  value: `${n}`,\n  initialIsChecked: n === 2,\n  readonly: false,\n  description: `This is checklist item ${n}`,\n}));\n\n\n// Define the extension to be run within the HubSpot CRM\nHubSpot.extend(() =&gt; &lt;SalesPipeline /&gt;);\n\n// Define the SalesPipeline component\nconst SalesPipeline = () =&gt; {\n  const [loading, setLoading] = useState(true);\n  const [text, setText] = useState(\"\");\n  const [currentStep, setCurrentStep] = useState(0);\n  const [stepNames, setStepNames] = useState([]);\n  const [errorMessage, setErrorMessage] = useState('');\n\n  useEffect(() =&gt; {\n    // Request statistics data from serverless function\n    HubSpot\n      .serverless('myFunc', {\n        propertiesToSend: ['hs_object_id'],\n      })\n      .then((response) =&gt; {\n        setStepNames(response.stepNames);\n      })\n      .catch((error) =&gt; {\n        setErrorMessage(error.message);\n      })\n      .finally(() =&gt; {\n        setLoading(false);\n      });\n  }, []);\n\n\n  if (loading) {\n    // If loading, show a spinner\n    return &lt;LoadingSpinner /&gt;;\n  }\n  if (errorMessage) {\n    // If there's an error, show an alert\n    return (\n      &lt;Alert title=\"Unable to get deals data\" variant=\"error\"&gt;\n        {errorMessage}\n      &lt;/Alert&gt;\n    );\n  }\n  return (\n    &lt;&gt;\n\n      &lt;Flex direction=\"row\" align=\"end\" gap=\"small\"&gt;\n        &lt;StepIndicator\n          currentStep={currentStep}\n          stepNames={stepNames}\n        /&gt;\n      &lt;/Flex&gt;\n\n      &lt;Flex direction=\"row\" gap=\"large\"&gt;\n        &lt;Flex&gt;&amp;nbsp;&lt;/Flex&gt;\n      &lt;/Flex&gt;\n\n      &lt;CrmPropertyList\n        properties={[\n          'dealname',\n          'dealstage',\n          'createdate',\n          'amount',\n        ]}\n        direction=\"row\"\n      /&gt;\n\n      &lt;Flex gap=\"small\"&gt;\n        &lt;Flex direction=\"column\"&gt;\n          &lt;ToggleGroup\n            name=\"toggle-checkboxes\"\n            label=\"Items required at this stage\"\n            error={false}\n            options={options}\n            tooltip=\"Make sure these options are all selected before closing the deal\"\n            validationMessage=\"Check these items off as they are completed.\"\n            required={false}\n            inline={false}\n            toggleType=\"checkboxList\"\n            variant=\"default\"\n          /&gt;\n        &lt;/Flex&gt;\n        &lt;Flex&gt;\n          &lt;TextArea\n            label=\"Pipeline Stage BIG Comments\"\n            name=\"comments\"\n            tooltip=\"Add commnets to the status of this deal\"\n            description=\"Add any comments relvant to this stage\"\n            placeholder=\"Add comments here\"\n            cols=\"30\"\n            rows=\"15\"\n          /&gt;\n        &lt;/Flex&gt;\n      &lt;/Flex&gt;\n\n      &lt;Flex&gt;\n        &lt;Button onClick={() =&gt; setCurrentStep(currentStep - 1)}&gt;\n          Previous\n        &lt;/Button&gt;\n        &lt;Button onClick={() =&gt; setCurrentStep(currentStep + 1)}&gt;Next&lt;/Button&gt;\n      &lt;/Flex&gt;\n\n\n\n    &lt;/&gt;\n  );\n};```",
+    "time_stamp": "2024-02-01 14:24:08",
+    "reply_count": 10,
+    "reply_users_count": 4,
+    "replies": [
+      {
+        "time_stamp": "2024-02-02 08:23:02"
+      },
+      {
+        "time_stamp": "2024-02-02 08:40:09"
+      },
+      {
+        "time_stamp": "2024-02-02 09:08:09"
+      },
+      {
+        "time_stamp": "2024-02-02 09:18:27"
+      },
+      {
+        "time_stamp": "2024-02-02 09:25:09"
+      },
+      {
+        "time_stamp": "2024-02-02 09:38:59"
+      },
+      {
+        "time_stamp": "2024-02-02 10:43:22"
+      },
+      {
+        "time_stamp": "2024-02-02 10:44:31"
+      },
+      {
+        "time_stamp": "2024-02-02 10:53:28"
+      },
+      {
+        "time_stamp": "2024-02-02 10:54:29"
+      }
+    ]
+  }
+]

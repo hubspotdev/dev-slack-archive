@@ -1,0 +1,123 @@
+[
+  {
+    "poster": {
+      "poster_name": "Luis Martinez",
+      "poster_handle": "luis746"
+    },
+    "time_stamp": "2022-03-11 09:58:36",
+    "edited": {
+      "time_stamp": "2022-03-11 10:10:33"
+    },
+    "text": "Hello everyone. I'm using custom objects. I'm looping through the objects to render them on the index page. I want to use the object info to populate the fields of a custom module. Say, I made an employee module; I want to render an employee module for each employee custom object.  I tried this code, but it does not work:\n```        {% dnd_section  %}\n          {% for employee in employees.results %}\n            {% dnd_module\n              path=\"../modules/employee.module\"\n              employee_name={{employee.name}}\n            %}  \n            {% end_dnd_module%}\n          {% endfor %}\n        {% end_dnd_section %}```\nWould appreciate help on rendering modules with a for loop. Thank you.",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-03-25 08:52:01"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2022-03-11 10:30:18",
+    "text": "<@U035J9LMA4F> you should try using dynamic pages for this. If you have access to the graphQL beta there's an explanation here: <https://developers.HubSpot.com/docs/cms/data/query-HubSpot-data-using-graphql#create-dynamic-pages-using-query-data>"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2022-03-11 10:31:10",
+    "text": "an overview: <https://developers.HubSpot.com/docs/cms/data/dynamic-pages>"
+  },
+  {
+    "poster": {
+      "poster_name": "Luis Martinez",
+      "poster_handle": "luis746"
+    },
+    "time_stamp": "2022-03-11 10:53:25",
+    "edited": {
+      "time_stamp": "2022-03-11 10:58:40"
+    },
+    "text": "<@UDHT6N5SM> Uh, I think I'm using a dynamic page:\n```    {% if dynamic_page_crm_object %}\n\n    {% set employee = dynamic_page_crm_object %}\n\n       ...// code for displaying single object\n\n  {% elif dynamic_page_crm_object_type_fqn %}\n\n  {% set employees = crm_objects(dynamic_page_crm_object_type_fqn, 'limit=10', 'name', 'title', 'profile_pic') %}\n\n// here I want to list the employees using a 'for' loop OVER a hubl module as opposed to using raw HTML:\n\n{% dnd_area %}\n\n      {% dnd_section  %}\n          {% for employee in employees.results %}\n            {% dnd_module\n              path=\"../modules/employee.module\"\n              employee_name={{employee.name}}\n            %}  \n            {% end_dnd_module%}\n          {% endfor %}\n        {% end_dnd_section %}\n\n{% end_dnd_area %}```\nThe problem is that the for loop does not seem to work inside the {% dnd_section %} tag. If I have to write raw HTML for rendering the employees on the index page, then what is the point of having a custom module for employees; I will be basically repeating the code I already have in modules/employee.module/module.html",
+    "reply_count": 6,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2022-03-11 11:01:13"
+      },
+      {
+        "time_stamp": "2022-03-11 11:05:24"
+      },
+      {
+        "time_stamp": "2022-03-11 11:06:40"
+      },
+      {
+        "time_stamp": "2022-03-11 11:07:58"
+      },
+      {
+        "time_stamp": "2022-03-11 11:31:44"
+      },
+      {
+        "time_stamp": "2022-03-11 11:38:23"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jack Smith",
+      "poster_handle": "jasmith"
+    },
+    "time_stamp": "2022-03-11 11:01:13",
+    "text": "I'm not too familiar with dnd things, but have you tried it without any of the dnd tags and just\n```{% module path=\"../modules/employee.module\" employee_name={{employee.name}} %}  ```"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2022-03-11 11:05:24",
+    "text": "oh, you probably can't mix `dnd_areas` and dynamic pages I bet"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2022-03-11 11:06:40",
+    "edited": {
+      "time_stamp": "2022-03-11 11:06:51"
+    },
+    "text": "any errors showing up if you look at in design manager? Can you try printing `{{ employees.results|pprint }}` to see what shows up"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2022-03-11 11:07:58",
+    "text": "if you do figure this out I would be curious to know if dnd_areas are in fact allowed and if it might be possible to edit just one of the dynamically rendered pages (maybe by overwriting the path?)"
+  },
+  {
+    "poster": {
+      "poster_name": "Luis Martinez",
+      "poster_handle": "luis746"
+    },
+    "time_stamp": "2022-03-11 11:31:44",
+    "text": "Yeah, it looks like *dnd tags* do not support 'for' loops or logic. I tried setting a variable within a dnd_area (with and without dnd_section), but the variable is not rendered.\n```    {% set greeting = \"hello\"%}\n            {% dnd_section %}\n              &lt;h1&gt;{{greeting}}&lt;/h1&gt;\n            {% end_dnd_section%}```\nHence, dnd tags seem not to support logic.\nHowever, if you use a module inside the dnd tags, such as a text module, the text will be rendered.\n\nI think one way to get around this problem would be to create a module whose job is to render other modules; basically a \"for loop module\". This is something I might work on, but not now as I'm completing the CMS Developers practicum. Thanks for the help."
+  },
+  {
+    "poster": {
+      "poster_name": "Luis Martinez",
+      "poster_handle": "luis746"
+    },
+    "time_stamp": "2022-03-11 11:38:23",
+    "edited": {
+      "time_stamp": "2022-03-11 11:39:26"
+    },
+    "text": "If I go for it, one way to deal with the offset issue of modules would be to use the cycle tag to alternate the offset value depending on the number of columns you want to render during the iteration, something like:\n```{% for content in contents %}\n    &lt;div class=\"post-item {% cycle 0,4,8 %}\"&gt;Blog post content&lt;/div&gt;\n{% endfor %}```\nThis would produce 3 columns per row."
+  }
+]

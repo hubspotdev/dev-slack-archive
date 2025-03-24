@@ -1,0 +1,138 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-11-01 05:43:53",
+    "text": "Simply some complicated technical challenges. I know it's an issue the email team is well aware of."
+  },
+  {
+    "poster": {
+      "poster_name": "Tony Strack",
+      "poster_handle": "tstrack"
+    },
+    "time_stamp": "2019-11-01 07:52:43",
+    "text": "Hey, Jon. I have a contact property set up in HubSpot called *opt_in* which is a single on/off checkbox. In my custom module, I have a text field with the variable *contact_property*. When a user fills out that text field with a value, for example *opt_in*, my if statement should render like this `{% if contact.opt_in == \"Yes\" %}`\n\nFor context, I'm gating a page with a pop up that has a HS form in it. If a user _hasn't_ ever filled out that form, a pop up will display with this HS form. The HS form has a hidden checkbox that sets the *opt_in* contact property to Yes after form submission. If the user _has_ filled out the form, the pop up won't display anymore, because they have the *opt_in* contact property set to Yes already."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-11-01 07:54:18",
+    "text": "can you DM me a link?"
+  },
+  {
+    "poster": {
+      "poster_name": "Tony Strack",
+      "poster_handle": "tstrack"
+    },
+    "time_stamp": "2019-11-01 07:56:04",
+    "text": "sure!"
+  },
+  {
+    "poster": {
+      "poster_name": "Tim Ostheimer",
+      "poster_handle": "tostheimer"
+    },
+    "time_stamp": "2019-11-01 09:13:52",
+    "edited": {
+      "time_stamp": "2019-11-01 09:15:35"
+    },
+    "text": "Is there a better way to check if a Design Manager asset exists than using `{{ get_public_template_url }}`? I'm trying to conditionally include CSS partials only if they exist. On the frontend I can use this function as a boolean since it will return a null value if the asset doesn't exist, but in the page editor's preview window it returns a URL located on `//preview.hs-sites.com/` which means we can't reliably check if a Design Manager asset exists using this method because the page editor's preview window renders the code differently than the frontend.\n\nAdditionally, using `{% include %}` with a nonexistant asset in a CSS file returns an HTML comment saying `&lt;!-- Missing Template --&gt;`. This is an HTML comment, not a CSS one, so this breaks the syntax of the CSS. Can we update this to be an HTML comment when used in a .HTML file (`&lt;!-- --&gt;`) but a CSS/JS comment if used in a .CSS or .JS file (`/* */`)? If not, can we add the parameter which exists in Jinja `{% include path ignore missing %}` so the include function is ignored when the asset doesn't exist instead of returning an error or warning?\n\nIf there's a better way to be doing this I'm open to any suggestions.",
+    "reply_count": 7,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2019-11-01 09:16:35"
+      },
+      {
+        "time_stamp": "2019-11-01 09:17:13"
+      },
+      {
+        "time_stamp": "2019-11-01 09:20:42"
+      },
+      {
+        "time_stamp": "2019-11-01 09:25:11"
+      },
+      {
+        "time_stamp": "2019-11-01 09:28:21"
+      },
+      {
+        "time_stamp": "2019-11-01 12:30:45"
+      },
+      {
+        "time_stamp": "2019-11-01 13:05:51"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-11-01 09:16:35",
+    "text": "cc <@UBDMV6Y9Y>"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-11-01 09:17:13",
+    "text": "We should be able to fix the include HTML comment"
+  },
+  {
+    "poster": {
+      "poster_name": "Tim Ostheimer",
+      "poster_handle": "tostheimer"
+    },
+    "time_stamp": "2019-11-01 09:20:42",
+    "edited": {
+      "time_stamp": "2019-11-01 09:23:05"
+    },
+    "text": "That would be great, thanks. With that update I'd be able to use `{% include %}` with nonexistant assets without having it break the syntax. It would still be great to be able to reliably check if a Design Manager asset exists even when in the page editor but I understand that would probably require some significant changes. Ideally we'd like to be able to hide the error/warning using `ignore missing` as well but due to minification the comment would only show up in the debug version of the file anyway so that's a low priority request and for debugging purposes it may be useful to show that message anyway even if the `ignore` parameter was used."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-11-01 09:25:11",
+    "edited": {
+      "time_stamp": "2019-11-01 09:27:20"
+    },
+    "text": "Hi Tim, just curious what the use-case is for needing to detect if an asset exists on the CMS. Are you intending to fallback to an external file if it does not exist?\n\nminor side note: `{{ get_public_template_url() }}` is being replaced by `{{ get_asset_url() }}`\n<https://designers.HubSpot.com/en/docs/hubl/hubl-supported-functions#get-asset-url>"
+  },
+  {
+    "poster": {
+      "poster_name": "Tim Ostheimer",
+      "poster_handle": "tostheimer"
+    },
+    "time_stamp": "2019-11-01 09:28:21",
+    "edited": {
+      "time_stamp": "2019-11-01 09:33:49"
+    },
+    "text": "We define global variables, functions, etc. in a dedicated file and template-specific CSS in their own partials. If we kept these as individual CSS files then when a change to the variables or functions are made we would need to go through each individual partial and manually save them before the changes would be reflected on the front end. As a workaround, we have a master CSS file which uses `{% include %}` to pull in all of these files so only one file needs to be saved when a variable is changed.\n\nRather than keeping a manual list of each include we're using an array to dynamically check for these files and with our current setup that means some of the includes may not exist. Being able to return a boolean value for whether the asset exists would prevent us from trying to use `{% include %}` on nonexistant assets and allow us to have fallback assets as well, yeah."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-11-01 12:30:45",
+    "edited": {
+      "time_stamp": "2019-11-01 12:30:54"
+    },
+    "text": "I’m actually not certain that’s true about needing to save the parent file, I’ve done exactly what you’re talking about with having a parent file with a lot of includes. As well as a Vars parent file.\n<https://github.com/TheWebTech/CrankShaft/blob/master/CrankShaft/code/hubl/theme-variables.css>\n\nFor kind of a walk through of what was intended with this framework:\n<https://thewebtech.github.io/CrankShaft/>\n\n I might ping you some more about what you’re doing to better understand and see what can be done to solve for your use-case."
+  },
+  {
+    "poster": {
+      "poster_name": "Tim Ostheimer",
+      "poster_handle": "tostheimer"
+    },
+    "time_stamp": "2019-11-01 13:05:51",
+    "text": "Sure, the only major difference I'm seeing is that we're importing the assets and storing them within a variable using HubL similar to `{% import path as variable %}`. I experimented with it quite a bit and I believe I ran into the issue of having to save the parent file with most of the methods I tried."
+  }
+]

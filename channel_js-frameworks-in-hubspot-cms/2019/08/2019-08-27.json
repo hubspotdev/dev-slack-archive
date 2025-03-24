@@ -1,0 +1,97 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jon K. Wheeler",
+      "poster_handle": "jon.k.wheeler"
+    },
+    "time_stamp": "2019-08-27 03:22:04",
+    "text": "<@UGDF9EBPW> could you humor me? Where is the Preact part? I can't seem to find any react components in the repo.",
+    "reply_count": 7,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2019-08-27 04:21:21"
+      },
+      {
+        "time_stamp": "2019-08-27 04:24:58"
+      },
+      {
+        "time_stamp": "2019-08-27 04:25:06"
+      },
+      {
+        "time_stamp": "2019-08-27 04:25:23"
+      },
+      {
+        "time_stamp": "2019-08-27 04:26:18"
+      },
+      {
+        "time_stamp": "2019-08-27 04:26:28"
+      },
+      {
+        "time_stamp": "2019-08-27 04:27:03"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2019-08-27 04:21:21",
+    "edited": {
+      "time_stamp": "2019-08-27 04:27:53"
+    },
+    "text": "Hi Jon, Preact is set in the package.json and the .babelrc and webpack config has been adjusted so Preact is working. You can create a new folder within the `/js` folder. Here you can create a new folder which contains your app. In the webpack config you can add a new entry:\n```\nentry: {\n    main: './src/js/main.js',\n    app: './src/js/app/'\n  },\n```\nThis will compile a new script which you can connect to your templates."
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2019-08-27 04:24:58",
+    "text": "As an example, our folder structure looks something like this:\n```\n/js\n  main.js\n  /clients\n    index.js\n    /containers\n      App.js\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2019-08-27 04:25:06",
+    "text": "Where our index.js contains the following:"
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2019-08-27 04:25:23",
+    "edited": {
+      "time_stamp": "2019-08-27 04:25:35"
+    },
+    "text": "```\nimport { h, render } from 'preact'\nimport App from './containers/App'\n\n// Tell Babel to transform JSX into h() calls:\n/** @jsx h */\n\nconst container = document.getElementById('js-clients-app')\n\nif ( container ) {\n  render( &lt;App /&gt;, container )\n}\n\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2019-08-27 04:26:18",
+    "text": "webpack.config:"
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2019-08-27 04:26:28",
+    "text": "```\nconst path = require('path')\n\nmodule.exports = {\n  mode: 'production',\n  entry: {\n    main: './src/js/main.js',\n    clients: './src/js/clients/',\n  },\n  output: {\n    filename: '[name].js',\n    path: path.resolve(__dirname, 'dist/js')\n  },\n  module: {\n    rules: [\n      {\n        test: /\\.m?js$/,\n        exclude: /(node_modules)/,\n        use: {\n          loader: 'babel-loader',\n          options: {\n            presets: ['@babel/preset-env']\n          }\n        }\n      }\n    ]\n  }\n}\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Teun Rutten",
+      "poster_handle": "teun"
+    },
+    "time_stamp": "2019-08-27 04:27:03",
+    "text": "In HubSpot you can connect the main.js and client.js scripts to your template"
+  }
+]

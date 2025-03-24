@@ -1,0 +1,145 @@
+[
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-09-19 03:39:58",
+    "text": "After seeing your message I just checked one of my forms, that i’ve built in the past, I’m getting the same console messages\n\nIn that one I add multiple page sections into the form.\nMy initial thought is, can we leave the submit untouched but hide it with CSS then add our own button that triggers the submit?"
+  },
+  {
+    "subtype": "thread_broadcast",
+    "time_stamp": "2024-09-19 03:49:06",
+    "text": "Yes maybe, that seems logical.\n\nI believe it may require to make a direct api submission, not sure.\nThat was never an option for us, because we don't have access to serverless functions.\n\nAnyway I've just heard back again from Support. Here is the message :\n\nHeard back from the team and as far as we could see, our forms v2 script was last modified on Tue, 03 Sep 2024 14:36:36 UTC which might possibly have led to this conflict\n• But to set some expectations, We do reserve the right to make changes to those scripts as needed and it's not a possibility that we update customers on every change that is made\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-09-19 03:49:15",
+    "text": "I’ve just sent my own support ticket, mentioning this thread, and that your already in touch with the dev team, hopefully it will help put more pressure on the matter!"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-09-19 03:50:18",
+    "text": "You don’t need serverless functions or the API key for form submissions, you can just submit it using JS on the page"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-09-19 03:51:18",
+    "text": "Thanks for the update, looks like we might have to figure out our own solution"
+  },
+  {
+    "poster": {
+      "poster_name": "Cathryn Brimhall",
+      "poster_handle": "cathryn.brimhall"
+    },
+    "time_stamp": "2024-09-19 03:52:33",
+    "text": "I think so\nAt any rate, we are probably not the only ones experiencing difficulties with the change.\n\nhope your workaround turns out. :-)"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-09-19 04:05:56",
+    "edited": {
+      "time_stamp": "2024-09-19 04:33:50"
+    },
+    "text": "Looking into the errors and having some guesses, it looks like the new v2.js is more specific in terms of referencing where the error messages are added.\n\ne.g. previously it might have used a selector like `form .hs_submit`\n\nbut now it uses something like `form > .hs_submit`\n\nAnd in fact I think it uses a sibling selector along the way so at somepoint if the dom changes it will break the path"
+  },
+  {
+    "text": "Though saying that it can still add the error messages for fields, so it might just be the error message next to the submit causing the issue",
+    "time_stamp": "2024-09-19 04:10:04"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-09-19 04:39:49",
+    "edited": {
+      "time_stamp": "2024-09-19 04:40:34"
+    },
+    "text": "So I’ve fixed it on mine,\n\nI had\n```<form>\n  <div class=\"section\">\n    //some fieldsets\n  </div>\n  <div class=\"section\">\n    //some fieldsets\n   </div>\n  <div class=\"section\">\n    //some fieldsets\n  </div>\n  <div class=\"section\">\n    //some fieldsets\n    // fieldset including gdpr message\n    //The submit button here (it was hidden anyway as I have a submit outside the form)\n  </div>\n</form>```\nI updated it to\n```<form>\n  <div class=\"section\">\n    //some fieldsets\n  </div>\n  <div class=\"section\">\n    //some fieldsets\n   </div>\n  <div class=\"section\">\n    //some fieldsets\n  </div>\n  <div class=\"section\">\n    //some fieldsets\n    // fieldset with gdpr message\n  </div>\n  //submit button here\n</form>```\nAnd it now works.\n\n\nWhat I suggest is instead of moving the submit button just hide it (display: none)\nThen just add a new button where you want it.\nThen on click of your button just trigger the click of the hidden button\n\nStill not a great that HubSpot have broken it like this"
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-09-19 04:41:44",
+    "text": "In fact if you add a button with type submit I think it submits the form without needing any other js\n\n&lt;button type=“submit” value=“Submit”&gt;Submit&lt;/button&gt;"
+  },
+  {
+    "poster": {
+      "poster_name": "Cathryn Brimhall",
+      "poster_handle": "cathryn.brimhall"
+    },
+    "time_stamp": "2024-09-19 05:12:17",
+    "text": "Great info !\nThanks for the analysis and description of your solution.\nAppreciate it.\nhave a great day."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Scott",
+      "poster_handle": "mscott"
+    },
+    "time_stamp": "2024-09-19 05:32:01",
+    "text": "Cheers and you!"
+  },
+  {
+    "poster": {
+      "poster_name": "George Karakitsios",
+      "poster_handle": "gkarakitsios"
+    },
+    "time_stamp": "2024-09-19 06:13:47",
+    "text": "Helloooooooo, i finally programmed a ReactJs Form as this solution was a bit difficult."
+  },
+  {
+    "poster": {
+      "poster_name": "Kesiena Sowho",
+      "poster_handle": "kesiena.sowho"
+    },
+    "time_stamp": "2024-09-19 07:35:44",
+    "text": "Oh wow. I see. It's crazy though, that HubSpot still doesn't have at least some documentation to achieve this. Thank you."
+  },
+  {
+    "poster": {
+      "poster_name": "George Karakitsios",
+      "poster_handle": "gkarakitsios"
+    },
+    "time_stamp": "2024-09-19 09:48:35",
+    "text": "You re welcome, though you could ask Chat GPT, for it would give u a workaround. :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Kesiena Sowho",
+      "poster_handle": "kesiena.sowho"
+    },
+    "time_stamp": "2024-09-19 09:49:46",
+    "text": "Yes, I tried that as well. But all the solutions didn't give me the result I needed. So I will probably just have to live with the redirect opening in the same tab for now"
+  },
+  {
+    "poster": {
+      "poster_name": "George Karakitsios",
+      "poster_handle": "gkarakitsios"
+    },
+    "time_stamp": "2024-09-19 09:50:25",
+    "text": "Keep searching buddy. For sure there is a way to block it"
+  },
+  {
+    "poster": {
+      "poster_name": "Kesiena Sowho",
+      "poster_handle": "kesiena.sowho"
+    },
+    "time_stamp": "2024-09-19 09:51:01",
+    "text": "Will do. Thank you so much.:sunglasses:"
+  }
+]

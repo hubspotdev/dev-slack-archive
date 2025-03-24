@@ -1,0 +1,234 @@
+[
+  {
+    "poster": {
+      "poster_name": "Olivia Durr",
+      "poster_handle": "olivia.durr"
+    },
+    "time_stamp": "2021-12-21 07:29:06",
+    "text": "Whenever I tried to use `selectattr`, it wouldn't work. I just tried the suggestions you made, but I'm always met with `(SizeLimitingPyList: [])`. So I guess the issue is that `locations2` . I wasn't entirely sure where to put the `if` statement that you were talking about"
+  },
+  {
+    "text": "Hey folks, I’m getting a validation error when I try to grab a Custom Object. Does anyone know what’s going on?",
+    "time_stamp": "2021-12-21 10:08:07",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-12-21 12:01:28"
+      },
+      {
+        "time_stamp": "2021-12-21 13:37:49"
+      },
+      {
+        "time_stamp": "2021-12-21 14:42:40"
+      },
+      {
+        "time_stamp": "2021-12-21 15:06:15"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2021-12-21 12:01:28",
+    "text": "Can you share your portalid and the module you’re working on?"
+  },
+  {
+    "poster": {
+      "poster_name": "Cristian Teichner",
+      "poster_handle": "cristianteichner"
+    },
+    "time_stamp": "2021-12-21 13:37:49",
+    "text": "<@U22PJPGK0> yep, sure. portal id: 19887561, module id: 62377559460"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-12-21 14:30:09",
+    "text": "<@U02J3EFR2MB> can you send an example of how you're using selectattr please?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-12-21 14:31:15",
+    "edited": {
+      "time_stamp": "2021-12-21 14:32:25"
+    },
+    "text": "can we get a slugify filter? I've used macros with regex etc - but it'd be great to have this, especially when working with HubDB etc."
+  },
+  {
+    "poster": {
+      "poster_name": "Olivia Durr",
+      "poster_handle": "olivia.durr"
+    },
+    "time_stamp": "2021-12-21 14:31:54",
+    "text": "<@UQERM7BLY> I've tried these 3:\n```  {% set locations2 = allHubDBRows|selectattr('state', 'equalto', '{{ statename }}' ) %}\n  {% set locations3 = allHubDBRows|selectattr('state', 'equalto', 'statename' ) %}\n  {% set locations4 = allHubDBRows|selectattr('state', 'equalto', statename ) %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Olivia Durr",
+      "poster_handle": "olivia.durr"
+    },
+    "time_stamp": "2021-12-21 14:32:36",
+    "text": "And this is the whole block currently:\n```{% set module_name = 'db-cards' %}\n{% set modifier = ' module--' %}\n\n{% set tableID = module.db_setting.table %}\n{% set allHubDBRows = hubdb_table_rows(tableID) %}\n{% set table_select = hubdb_table_column(tableID, 'state') %}\n{% set location = table_select.optionsByName %}\n\n{% for item in location|sort(False, False, 'name') %}\n  {% set statename = item.name %}\n  {% set query = '&amp;state__eq='~item.name|replace(' ','%20')~'&amp;orderBy=location_name' %}\n  {# set locations = hubdb_table_rows(tableID, query) #}\n  {% set locations2 = allHubDBRows|selectattr('state', 'equalto', '{{ statename }}' ) %}\n  {% set locations3 = allHubDBRows|selectattr('state', 'equalto', 'statename' ) %}\n  {% set locations4 = allHubDBRows|selectattr('state', 'equalto', statename ) %}\n  &lt;h2&gt;{{statename}}&lt;/h2&gt;\n  {{locations2|pprint}}\n  {{locations3|pprint}}\n  {{locations4|pprint}}\n  {% if row in locations2 %}\n    &lt;h3&gt;{{ row[\"location_name\"] }}&lt;/h3&gt;\n    &lt;h4&gt;{{ row[\"address_name\"] }}&lt;/h4&gt;\n\t\t&lt;h4&gt;{{ row[\"address_1\"] }}&lt;/h4&gt;\n\t\t&lt;h4&gt;{{ row[\"address_2\"] }}&lt;/h4&gt;\n\t\t&lt;h4&gt;{{ row[\"office_number\"] }}&lt;/h4&gt;\n\t\t&lt;h4&gt;{{ row[\"office_email\"] }}&lt;/h4&gt;\n\t{% endif %}\n{% endfor %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-12-21 14:33:31",
+    "text": "hey so anything in quotes is going to be interpreted as a literal"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-12-21 14:33:54",
+    "text": "``` {% set locations3 = allHubDBRows|selectattr('state', 'equalto', 'statename' ) %}```\nshould be:\n``` {% set locations3 = allHubDBRows|selectattr('state', 'equalto', statename ) %}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Olivia Durr",
+      "poster_handle": "olivia.durr"
+    },
+    "time_stamp": "2021-12-21 14:38:53",
+    "text": "Setting it to that just returns `(SizeLimitingPyList: [])`"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-12-21 14:42:11",
+    "text": "should work!"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-12-21 14:42:13",
+    "text": "if you | pprint the allHubDBRows is the state column at the top level, or a nested prop"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff Boulter",
+      "poster_handle": "boulter"
+    },
+    "time_stamp": "2021-12-21 14:42:40",
+    "text": "seems to be working now, though I’m not sure why"
+  },
+  {
+    "poster": {
+      "poster_name": "Olivia Durr",
+      "poster_handle": "olivia.durr"
+    },
+    "time_stamp": "2021-12-21 14:45:33",
+    "text": "It's a nested prop I believe?"
+  },
+  {
+    "poster": {
+      "poster_name": "Olivia Durr",
+      "poster_handle": "olivia.durr"
+    },
+    "time_stamp": "2021-12-21 14:45:43",
+    "text": "Here's a snippet of what it prints:\n`(HubDbTableRowResults: [{id=62295305032, createdAt=1640015295529, updatedAt=1640035422877, path='dublin-oh', name='Verdantas Headquarters', 4='{type=string, value=614-973-8777}', 5='{type=string, value=<mailto:communications@verdantas.com|communications@verdantas.com>}', 6='{type=number, value=1}', 7='{type=string, value=6397 Emerald Parkway, Suite 200}', 9='{type=string, value=Dublin, OH 43106}', 10='{type=string, value=Dublin}', 13='{type=option, value={id=10, name='Ohio', order=9}}'}, {id=62297550605, createdAt=1640015646362, updatedAt=1640035425294, path='middletown-ct', name='Middletown, CT', 4='{type=string, value=000-000-0000}', 5='{type=string, value=<mailto:email@verdantas.com|email@verdantas.com>}', 6='{type=number, value=0}', 7='{type=string, value=200 Court Street, 2nd Floor}', 9='{type=string, value=Middletown, CT 06457}', 10='{type=string, value=Middletown}', 13='{type=option, value={id=2, name='Connecticut', order=1}}'},`"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-12-21 14:46:32",
+    "text": "so, state isn't there (unless im blind)"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-12-21 14:46:43",
+    "edited": {
+      "time_stamp": "2021-12-21 14:46:56"
+    },
+    "text": "have you published the table since you added the state column?"
+  },
+  {
+    "poster": {
+      "poster_name": "Olivia Durr",
+      "poster_handle": "olivia.durr"
+    },
+    "time_stamp": "2021-12-21 14:49:41",
+    "text": "I think it's coming up as `13='{type=option, value={id=10, name='Ohio', order=9}}`"
+  },
+  {
+    "text": "This is the column in the DB:",
+    "time_stamp": "2021-12-21 14:50:07"
+  },
+  {
+    "poster": {
+      "poster_name": "Cristian Teichner",
+      "poster_handle": "cristianteichner"
+    },
+    "time_stamp": "2021-12-21 15:06:15",
+    "text": "it does! Thanks for looking into it :raised_hands:"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-12-21 15:07:58",
+    "text": "ahh yeah"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-12-21 15:08:17",
+    "text": "in that case"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-12-21 15:08:21",
+    "text": "``` {% set locations3 = allHubDBRows|selectattr('state.name', 'equalto', statename ) %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2021-12-21 15:23:52",
+    "edited": {
+      "time_stamp": "2021-12-21 15:25:59"
+    },
+    "text": "Maybe useful for others - in hubl you can use the ifchanged tag which is quite useful for grouping, eg:\n```{% set pets = hubdb_table_rows(\"items\") %}\n\n{% for pet in pets %}\n {% ifchanged pet.type %}&lt;h3&gt;{{ pet.type }}&lt;/h3&gt;{% endifchanged %}\n {{ pet.name }}&lt;br /&gt;\n{% endfor %}```\nit'll only output whats inside the tag if the value changes.",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2021-12-22 01:04:18"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Olivia Durr",
+      "poster_handle": "olivia.durr"
+    },
+    "time_stamp": "2021-12-21 16:09:37",
+    "text": "Ah! You're a life saver!! Thank you so much!!"
+  }
+]

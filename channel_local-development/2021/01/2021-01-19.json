@@ -1,0 +1,99 @@
+[
+  {
+    "poster": {
+      "poster_name": "Rowan Blackwood",
+      "poster_handle": "rowanb"
+    },
+    "time_stamp": "2021-01-19 07:33:06",
+    "text": "```hs upload --account=&lt;name&gt; &lt;src&gt; &lt;dest&gt;```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Rowan Blackwood",
+      "poster_handle": "rowanb"
+    },
+    "time_stamp": "2021-01-19 07:35:07",
+    "text": "where `src` is the path to the template locally i.e `my-theme/templates/my-template.html` and `dest` is the same but in the design manager so assuming the same theme/path it would be:\n```hs upload --account=&lt;name&gt; my-theme/templates/my-template.html my-theme/templates/my-template.html```"
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2021-01-19 16:23:25",
+    "edited": {
+      "time_stamp": "2021-01-19 16:37:51"
+    },
+    "text": "Hello everyone! I was trying to get the continuous integration work with bitbucket but had no luck, although I have set up everything, I get an error on the pipeline when generate-config.js runs that says\n```internal/modules/cjs/loader.js:584\n    throw err;\n    ^\nError: Cannot find module 'js-yaml'```\nAnyone having any thoughts or experience with butbucket pipelines?\n\nbtw, my bitbucket-pipelines.yml file like this:\n```pipelines:\n  branches:\n    master:\n      - step:\n          name: 'Install NPM deps'\n          script:\n            - npm install\n      - step:\n          name: 'Deploy'\n          script:\n            - bin/generate-config.js\n            - bin/deploy.sh```\n",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2021-01-25 11:45:07"
+      },
+      {
+        "time_stamp": "2021-08-28 08:34:24"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2021-01-19 16:36:30",
+    "text": "<@U0149PQC0HK> I am trying to integrate bitbucket pipelines into my workflow, have setup the bitbucket-pipelines.yml file like this:\n```pipelines:\n  branches:\n    master:\n      - step:\n          name: 'Install NPM deps'\n          script:\n            - npm install\n      - step:\n          name: 'Deploy'\n          script:\n            - bin/generate-config.js\n            - bin/deploy.sh```\nand I'm having issues with the second step where I get the error\n```internal/modules/cjs/loader.js:584\n    throw err;\n    ^\nError: Cannot find module 'js-yaml'```\nThe rest of the files look like described in <https://developers.HubSpot.com/docs/cms/guides/github-integration>\n\nGot any thoughts on this? Maybe you could be of some help?"
+  },
+  {
+    "poster": {
+      "poster_name": "Vesa Poikajärvi",
+      "poster_handle": "vesa.poikajarvi"
+    },
+    "time_stamp": "2021-01-20 00:27:41",
+    "text": "<@U01D95STUS3> I'd think it's because each step is individual and does not have the data from previous steps unless using cache or artifacts (this is not good for node_modules). Try adding `caches: node` to your steps:\n```- step:\n    name: 'Install NPM deps'\n    caches:\n      - node\n    script:\n      - npm install\n- step:\n    name: 'Deploy'\n    caches:\n      - node\n    script:\n      - bin/generate-config.js\n      - bin/deploy.sh```"
+  },
+  {
+    "text": "Note that if you later add dependencies you need to delete the cache from Bitbucket pipelines UI",
+    "time_stamp": "2021-01-20 00:28:53"
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2021-01-20 00:32:47",
+    "text": "so basically, `caches`, \"stores\" the node_modules  folder somewhere on the cloud so it is used by later steps..?"
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2021-01-20 00:34:11",
+    "text": "thank you very much for the info!"
+  },
+  {
+    "poster": {
+      "poster_name": "Vesa Poikajärvi",
+      "poster_handle": "vesa.poikajarvi"
+    },
+    "time_stamp": "2021-01-20 00:37:10",
+    "text": "Another thing is `artifacts` which is used to store some pipeline step results. These can be downloaded from the UI too, but are also available for later steps. Unlike cache these are stored for each run of the pipeline separately and thus not suitable for node_modules"
+  },
+  {
+    "poster": {
+      "poster_name": "Vesa Poikajärvi",
+      "poster_handle": "vesa.poikajarvi"
+    },
+    "time_stamp": "2021-01-20 00:37:53",
+    "text": "We build our stuff from Sass, TypeScript etc. with webpack to folder `dist` which is stored as artifact in the build stage, and then later in the deploy stage the artifacts are there already"
+  },
+  {
+    "poster": {
+      "poster_name": "Milos Miljkovic",
+      "poster_handle": "miljkovicmisa"
+    },
+    "time_stamp": "2021-01-20 00:40:51",
+    "text": "owww! seems like I missed the picture there because I thought that what is produced in each step should be naturally available in later ones...now I get it!"
+  }
+]

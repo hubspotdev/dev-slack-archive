@@ -1,0 +1,25 @@
+[
+  {
+    "poster": {
+      "poster_name": "Ralph van den Broeck",
+      "poster_handle": "ralph"
+    },
+    "time_stamp": "2021-04-18 17:44:27",
+    "text": "I'm trying to set up a query so only results that have  `booster_send_date` equal to the day of today will be shown. Output of this variable shows as 19/04/21 so for matching purposes I set the senddate as follows:\n`{% set senddate = local_dt|datetimeformat('%d/%m/%y') %}`\nThe full script looks like below, but it is not showing any results for the contact with hs_object_id `55742524` It does when I remove the senddate from the query. Any help on how I can only show objects that have the booster_send_date as the date of today would be much appreciated :slightly_smiling_face:\n```\t\t{% set contact = crm_object(\"contact\", 55742524, \"agent_id, first_name, last_name, agent_full_name, agent_first_name, hs_object_id\") %}\n\t\t{% set senddate = local_dt|datetimeformat('%d/%m/%y') %}\n\t\t{% set query = \"agent_id__eq=\"~contact.agent_id~\"&amp;booster_send_date__eq=\"~senddate~\"\" %}\t\t\n\t\t\t\t{% set associated_listings = crm_associations(contact.hs_object_id, 'USER_DEFINED', 2, query, 'agent_id,booster_send_date', true) %}\n{% for listing in associated_listings.results %}```",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2021-04-18 21:00:34"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Ralph van den Broeck",
+      "poster_handle": "ralph"
+    },
+    "time_stamp": "2021-04-18 21:00:34",
+    "text": "Solved it, this seems to work\n```\t{% set senddate_unix = unixtimestamp(today()) %}\n\t\t\n\t\t{% set query = \"agent_id__eq=\"~contact.agent_id~\"&amp;booster_send_date__eq=\"~senddate_unix~\"\" %}\n\t\t\n\t\t\n\t\t{% set associated_listings = crm_associations(contact.hs_object_id, 'USER_DEFINED', 2, query, 'agent_id,booster_send_date', false) %}```"
+  }
+]

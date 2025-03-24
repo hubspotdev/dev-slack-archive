@@ -1,0 +1,208 @@
+[
+  {
+    "poster": {
+      "poster_name": "Sam McKinney",
+      "poster_handle": "sam"
+    },
+    "time_stamp": "2019-08-12 10:07:29",
+    "text": "Hi HubDB experts. I have a question for everyone. I have a simple Hubdb setup, and my first ‘set’ seems to work just fine. My next set does not seem to include any items in there. Do I have something wrong?\n\n```{% set colorCtas = hubdb_table_rows(1057416, '&amp;limit=3&amp;orderBy=sort_order') %}\n{% set filteredCtas = colorCtas|selectattr('tags','containing','test') %} ```",
+    "reply_count": 14,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-08-12 10:10:22"
+      },
+      {
+        "time_stamp": "2019-08-12 10:11:48"
+      },
+      {
+        "time_stamp": "2019-08-12 10:11:52"
+      },
+      {
+        "time_stamp": "2019-08-12 10:12:15"
+      },
+      {
+        "time_stamp": "2019-08-12 10:12:21"
+      },
+      {
+        "time_stamp": "2019-08-12 10:13:57"
+      },
+      {
+        "time_stamp": "2019-08-12 10:14:09"
+      },
+      {
+        "time_stamp": "2019-08-12 10:14:24"
+      },
+      {
+        "time_stamp": "2019-08-12 10:17:00"
+      },
+      {
+        "time_stamp": "2019-08-12 10:22:10"
+      },
+      {
+        "time_stamp": "2019-08-12 10:22:25"
+      },
+      {
+        "time_stamp": "2019-08-12 10:34:35"
+      },
+      {
+        "time_stamp": "2019-08-12 10:41:42"
+      },
+      {
+        "time_stamp": "2019-08-12 10:42:05"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Sam McKinney",
+      "poster_handle": "sam"
+    },
+    "time_stamp": "2019-08-12 10:07:45",
+    "text": "the ‘tags’ field is a multiselect field"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam McKinney",
+      "poster_handle": "sam"
+    },
+    "time_stamp": "2019-08-12 10:08:41",
+    "text": "I thought maybe I have the operator, ‘containing’, incorrect, but I have tried all that i can find in HS docs, and I cant seem to get any items"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam McKinney",
+      "poster_handle": "sam"
+    },
+    "time_stamp": "2019-08-12 10:08:42",
+    "text": "any ideas?"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2019-08-12 10:10:22",
+    "text": "can u try second line within `{% for row in  colorCtas %}`"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam McKinney",
+      "poster_handle": "sam"
+    },
+    "time_stamp": "2019-08-12 10:11:48",
+    "text": "yep, taht returns items"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam McKinney",
+      "poster_handle": "sam"
+    },
+    "time_stamp": "2019-08-12 10:11:52",
+    "text": "that*"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam McKinney",
+      "poster_handle": "sam"
+    },
+    "time_stamp": "2019-08-12 10:12:15",
+    "text": "```{% for row in filteredCtas %} ```"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam McKinney",
+      "poster_handle": "sam"
+    },
+    "time_stamp": "2019-08-12 10:12:21",
+    "text": "that one does not return any items"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2019-08-12 10:13:57",
+    "text": "```{% set colorCtas = hubdb_table_rows(1057416, '&amp;limit=3&amp;orderBy=sort_order') %}\n{% for row in  colorCtas %}\n    {% set filteredCtas = row|selectattr('tags','containing','test') %}\n{% endfor %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2019-08-12 10:14:09",
+    "text": "did u try this way?"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam McKinney",
+      "poster_handle": "sam"
+    },
+    "time_stamp": "2019-08-12 10:14:24",
+    "text": "I did not try it that way. standby …"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam McKinney",
+      "poster_handle": "sam"
+    },
+    "time_stamp": "2019-08-12 10:17:00",
+    "text": "that did not return any results"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam McKinney",
+      "poster_handle": "sam"
+    },
+    "time_stamp": "2019-08-12 10:22:10",
+    "text": "```{% set colorCtas = hubdb_table_rows(1057416, '&amp;limit=3&amp;orderBy=sort_order&amp;tags__contains=test') %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam McKinney",
+      "poster_handle": "sam"
+    },
+    "time_stamp": "2019-08-12 10:22:25",
+    "text": "this does what I want, but their docs mentioned using the selectattr filter as a better way to do it"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam McKinney",
+      "poster_handle": "sam"
+    },
+    "time_stamp": "2019-08-12 10:27:54",
+    "text": "maybe there is another way to accomplish what i am wanting. I have a custom module that is setup to loop through the items in my Hubdb. I would love to give the user a field in the module that lets the site admin pick an individual item from Hubdb or a group of items without me needing to create a bunch of different module duplicates with different query parameters on them"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam McKinney",
+      "poster_handle": "sam"
+    },
+    "time_stamp": "2019-08-12 10:28:17",
+    "text": "if anyone has any thoughts or ideas, let me know"
+  },
+  {
+    "poster": {
+      "poster_name": "Gobi Selvaraj",
+      "poster_handle": "gselvaraj"
+    },
+    "time_stamp": "2019-08-12 10:34:35",
+    "text": "can't you construct the hubdb query param dynamically with the field thats being selected?"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam McKinney",
+      "poster_handle": "sam"
+    },
+    "time_stamp": "2019-08-12 10:41:42",
+    "text": "i can do it in a ‘module’ that I create, but I was trying to let the client / user be able to type a value in a field that would then add that value to the query"
+  },
+  {
+    "poster": {
+      "poster_name": "Sam McKinney",
+      "poster_handle": "sam"
+    },
+    "time_stamp": "2019-08-12 10:42:05",
+    "text": "so they dont have to understand what is all happening on the code level"
+  }
+]

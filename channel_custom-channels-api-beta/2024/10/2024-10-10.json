@@ -1,0 +1,90 @@
+[
+  {
+    "poster": {
+      "poster_name": "Youssef Farag",
+      "poster_handle": "youssef.amir"
+    },
+    "time_stamp": "2024-10-10 07:00:47",
+    "text": "Hey <@U07LB3YLSRG>, thank you for replying! Not really, I'm still facing the same issue. Let me explain further with an example for a custom channel I created for a public app I'm working on:\n```{\n    \"channelAccountConnectionRedirectUrl\": \"&lt;REDIRECT_URL&gt;\",\n    \"capabilities\": {..}\n    ...more channel configuration\"\n    \"id\": \"365015\"\n}```\nAs you can see, this custom channel has a `channelAccountConnectionRedirectUrl` populated in; however, later on I was trying to remove this URL, as I'm automatically installing the custom channel via API. When I try to do a `PATCH` request with body:\n```{\n   \"channelAccountConnectionRedirectUrl\": null\n}```\nI get the same configuration as above for the custom channel, with nothing being updated. Note than updating the URL with another one works just fine.\n\nThis is the same behavior when trying to update the channel accounts `inboxId`  attribute for a custom channel with whatever new data.\n\nCan you advice if this is expected or is there I'm missing? :pray::skin-tone-4:"
+  },
+  {
+    "poster": {
+      "poster_name": "Sarthak S",
+      "poster_handle": "sasahu"
+    },
+    "time_stamp": "2024-10-10 07:14:09",
+    "text": "let me tag <@U07L87JHRHB> here who would know what to do in this case"
+  },
+  {
+    "poster": {
+      "poster_name": "Nick Drane",
+      "poster_handle": "ndrane"
+    },
+    "time_stamp": "2024-10-10 07:17:41",
+    "text": "Thanks for bringing this up. This was actually called out when we were doing dev on these endpoints. I'll prioritize an issue for it"
+  },
+  {
+    "poster": {
+      "poster_name": "Nick Drane",
+      "poster_handle": "ndrane"
+    },
+    "time_stamp": "2024-10-10 07:18:48",
+    "text": "Should be a simple fix"
+  },
+  {
+    "poster": {
+      "poster_name": "Youssef Farag",
+      "poster_handle": "youssef.amir"
+    },
+    "time_stamp": "2024-10-10 07:19:25",
+    "text": "Thank you <@U07L87JHRHB>, please keep me updated when this gets sorted out :raised_hands::skin-tone-4:"
+  },
+  {
+    "poster": {
+      "poster_name": "Nick Drane",
+      "poster_handle": "ndrane"
+    },
+    "time_stamp": "2024-10-10 07:20:31",
+    "text": "&gt;  This is the same behavior when trying to update the channel accounts `inboxId`  attribute for a custom channel with whatever new data.\nWhere are you trying to update the channel account inboxId?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nick Drane",
+      "poster_handle": "ndrane"
+    },
+    "time_stamp": "2024-10-10 07:37:46",
+    "text": "(I ask because I didn't think that was possible)"
+  },
+  {
+    "poster": {
+      "poster_name": "Youssef Farag",
+      "poster_handle": "youssef.amir"
+    },
+    "time_stamp": "2024-10-10 07:40:03",
+    "text": "&gt; Where are you trying to update the channel account inboxId?\nThanks for following up!\n\nAfter I connected the <https://developers.HubSpot.com/docs/guides/api/conversations/create-custom-channels#connect-channel-accounts-to-HubSpot|custom channel to a channel account> to a specific InboxId, I was trying to move this channel account from one Inbox to another within the same HubSpot account. I try to do so via:\n```PATCH <https://api.hubapi.com/conversations/v3/custom-channels/:CHANNEL_ID/channel-accounts/:CHANNEL_ACCOUNT_ID>\n-d { \"inboxId\": \"&lt;INBOX_ID&gt;\" }```\nI get this error:\n```{\n    \"status\": \"error\",\n    \"message\": \"Failed to update object. The body of the request is empty.\",\n    \"correlationId\": \"9886dc57-42dd-4f02-98f5-d15915a5ba08\",\n    \"category\": \"VALIDATION_ERROR\",\n    \"subCategory\": \"CustomChannelsError.EMPTY_UPDATE_REQUEST_BODY\"\n}```\nI am assuming this a product/technical decision to only let the InboxId decided upon creation without being able to move a channel around, is this correct?"
+  },
+  {
+    "poster": {
+      "poster_name": "Nick Drane",
+      "poster_handle": "ndrane"
+    },
+    "time_stamp": "2024-10-10 07:44:27",
+    "text": "yeah, I don't think we allow moving channels accounts between inboxes anywhere in the product for what it's worth. It's just a messy problem to solve since we need to account for all the existing threads/messages that are in the old inbox. Sometimes we'll see customers want to move connected emails from one inbox to another, and I believe they archive the old channel account and then create a new one with the same delivery identifier in the new inbox"
+  },
+  {
+    "poster": {
+      "poster_name": "Youssef Farag",
+      "poster_handle": "youssef.amir"
+    },
+    "time_stamp": "2024-10-10 07:48:43",
+    "text": "&gt; they archive the old channel account and then create a new one with the same delivery identifier in the new inbox\nThat's what I did as a workaround, just wanted to make sure it's not possible another way. Makes sense about the messiness this can create, thanks for confirming, appreciate it!\n\nLooking forward to hear updates about the first issue, thanks again Nick :sparkles:"
+  },
+  {
+    "poster": {
+      "poster_name": "Nick Drane",
+      "poster_handle": "ndrane"
+    },
+    "time_stamp": "2024-10-10 07:51:40",
+    "text": "of course!"
+  }
+]

@@ -1,0 +1,120 @@
+[
+  {
+    "poster": {
+      "poster_name": "Anthony Perez",
+      "poster_handle": "anthony249"
+    },
+    "time_stamp": "2023-02-17 01:59:13",
+    "text": "Hi all! happy friday, certainly looking forward to the weekend :smile:\n\nGot a small struggle i’m facing which involves custom tagging on a blog template i’ve built, currently the tags are loaded as a choice field with an array of options:\n```{% set post_type_array = ['Cases','Blogs','Webinars','Artikelen','Evenementen'] %}\n\n{% choice \"posttype\" label=\"Type of post\", choices={{post_type_array}}, required=True, export_to_template_context=True, overrideable=True %}```\nAnd is called in the listing for filtering using the `post.widgets.posttype.body.value` function which adds the selected posttype as class that i can then use to filter the posts. However this needs to updated as when a tag name is changed, everything needs to be retagged again because there is no real id. To solve this i’ve created a hubdb table, which loads in on the blogposts via a module, that has the same filters in rows, the rowid is now the identifying factor which means we can change the names of the tags without it being dropped on every blogpost using this. Unfortunately this still requires a 1 time retagging of all blogs to use the new module instead, there are over 500 blogs which will take alot of time, so i was hoping i could set a default value using the previous choice fields. I tried the following but this has not yielded any success\n\n```{% set post_type_array = ['Cases','Blogs','Webinars','Artikelen','Evenementen'] %}\n{% if posttype == 'Cases' %}\n{% set default = 102696257927 %}\n{% elif posttype == 'Blogs' %}\n{% set default = 102745057894 %}\n{% elif posttype == 'Webinars' %}\n{% set default = 102696257928 %}\n{% elif posttype == 'Artikelen' %}\n{% set default = 102696257930 %}\n{% elif posttype == 'Evenementen' %}\n{% set default = 102696257931 %}\n{% endif %}\n\n\n{% module 'posttype2' label=\"Type of Post\" path=\"../modules/filter posttype\" filter={\n\"id\" : default\n} %} \n{% choice \"posttype\" label=\"Type of post\", choices={{post_type_array}}, required=True, export_to_template_context=True, overrideable=True %}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Ahmed Jamal Tariq",
+      "poster_handle": "ahmed.jamal.tariq"
+    },
+    "time_stamp": "2023-02-17 06:19:49",
+    "text": "I have created an email template which has a macro in it, that macro generates some random numbers every time. But the email is sending the same random number every time when I invoke and send email within a workflow after form submission. It seems like template is hard cached by HubSpot. How to get rid if this caching?"
+  },
+  {
+    "poster": {
+      "poster_name": "Alex Woodbridge",
+      "poster_handle": "alex.woodbridge"
+    },
+    "time_stamp": "2023-02-17 07:26:08",
+    "text": "Hi all, has anyone put in place some type of monitoring/ alerting for hyperlinks links that end up pointing to broken pages?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kemish Marvin Salinas Guillermo",
+      "poster_handle": "kemishsalinas93"
+    },
+    "time_stamp": "2023-02-17 07:30:29",
+    "text": "hi people! Are there templates to download or create about the knowledge base section of HubSpot?"
+  },
+  {
+    "poster": {
+      "poster_name": "Amit Das",
+      "poster_handle": "adas"
+    },
+    "time_stamp": "2023-02-17 07:44:40",
+    "text": "Hi team, I am hitting a wall with this code. I am getting the discount value from a Quote and within the http request method I am able to print the discount type correctly but only within res.on(). But I cannot see the variables available for the callback. I cannot print those values after req.end().\n```\nconst HubSpot = require('@HubSpot/api-client');\nvar http = require(\"https\");\n\nexports.main = async (event, callback) =&gt; {\n\n  const HubSpotClient = new HubSpot.Client({\n    accessToken: process.env.Token\n  });\n\n  let dis = 0;\n  const _quoteId = event.object.objectId;\n  const properties = [\n    \"hs_quote_amount\",\n    \"hs_status\"\n  ];\n  const propertiesWithHistory = undefined;\n  const associations = [\n    \"deal\",\n    \"discount\"\n  ];\n  const archived = false;\n  const idProperty = undefined;\n\n      \n  var _discount_type = \"\";\n  var _discount_value = 0;\n\n  var _quoteAmt;\n  var _associations_dis;\n  var _associations_deals;\n  try {\n    const apiResponse = await HubSpotClient.crm.quotes.basicApi.getById(_quoteId, properties, propertiesWithHistory, associations, archived, idProperty);\n    \n    _quoteAmt = apiResponse.properties.hs_quote_amount;\n    \n    _associations_dis = apiResponse.associations.discounts.results[0].id;\n    \n    _associations_deals = apiResponse.associations.deals.results[0].id;\n    \n    console.log(\"Discount \" + _associations_dis);\n    console.log(\"Deals \" + _associations_deals);\n    \n\n\t \n  } catch (err) {\n    console.error(err);\n    throw err;\n  }\n\n\n     \n   //Get the discount details \n    var options = {\n      \"method\": \"GET\",\n      \"hostname\": \"<http://api.hubapi.com|api.hubapi.com>\",\n      \"port\": null,\n      \"path\": \"/crm/v3/objects/discounts/\" + _associations_dis + \"?properties=hs_value&amp;properties=hs_type&amp;archived=false\",\n      \"headers\": {\n        \"Content-Type\": \"application/json\",\n        \"authorization\": \"Bearer \" + process.env.Token\n      }\n    };\n  \n  \tvar jsonObj;\n    var req = http.request(options, function (res) \n    {\n      var chunks = [];\n      res.on(\"data\", function (chunk) {\n        chunks.push(chunk);\n      });\n        \n      \n        \n      res.on(\"end\", function () {\n\t\tjsonObj = JSON.parse(chunks);\n        console.log(\"ID \" + jsonObj.id);\n        _discount_type = jsonObj.properties.hs_type;\n        console.log(\"Type \" + _discount_type);\n        \n        _discount_value = jsonObj.properties.hs_value;\n        \n       \n        var _body = Buffer.concat(chunks);\n        console.log(\"Body \" + _body);\n      });\n    });\n\t\n    req.end();\n    \n  \n  callback({\n    outputFields: {\n      discount_type: _discount_type,\n      discount_value: _discount_value\n    }\n  });\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Logan Armstrong",
+      "poster_handle": "logan565"
+    },
+    "time_stamp": "2023-02-17 09:20:34",
+    "edited": {
+      "time_stamp": "2023-02-17 09:20:48"
+    },
+    "text": "Hey <@U02C45QBF8D>, we haven't done this with dynamic content on the same landing page, only redirecting to different pages based on form data, but I imagine it would work similarly as long as you are passing contact data into the URL as a query parameter and that's what's determining the content. here's exactly what the code looked like for a client we helped who wanted to redirect to different calendars based on the type of company that filled out their contact form.\n\n```&lt;script&gt;\n window.addEventListener('message', event =&gt; {\n if(event.data.type === 'hsFormCallback' &amp;&amp; event.data.eventName === 'onFormSubmit') {\n  var firstname;\n  var lastname;\n  var email;\n\n  for (item in event.data.data) {\n      if (event.data.data[item][\"name\"] == \"firstname\") {\n     firstname = event.data.data[item][\"value\"];\n    }\n    if (event.data.data[item][\"name\"] == \"lastname\") {\n      lastname = event.data.data[item][\"value\"];\n    }\n    if (event.data.data[item][\"name\"] == \"email\") {\n      email = event.data.data[item][\"value\"];\n    }\n   if (event.data.data[item][\"name\"] == \"type_of_entity\") { \n    if (event.data.data[item][\"value\"] == \"Government\") {\n     window.location = \"<https://meetings.HubSpot.com/redacted1?firstname=>\" + firstname + \"&amp;lastname=\" + lastname + \"&amp;email=\" + email;\n    }\n    if (event.data.data[item][\"value\"] == \"Non-Profit\") {\n     window.location = \"<https://meetings.HubSpot.com/redacted2?firstname=>\" + firstname + \"&amp;lastname=\" + lastname + \"&amp;email=\" + email;\n    }\n    if (event.data.data[item][\"value\"] == \"Other\") {\n     window.location = \"<https://meetings.HubSpot.com/redacted3?firstname=>\" + firstname + \"&amp;lastname=\" + lastname + \"&amp;email=\" + email; /** this is a general round-robin meeting link **/\n    }\n    else {\n     window.location = \"<https://meetings.HubSpot.com/redacted4?firstname=>\" + firstname + \"&amp;lastname=\" + lastname + \"&amp;email=\" + email;\n    }\n   }\n  }\n }\n});\n&lt;/script&gt;```"
+  },
+  {
+    "poster": {
+      "poster_name": "Doug Wilhelm",
+      "poster_handle": "sarrus25"
+    },
+    "time_stamp": "2023-02-17 09:50:56",
+    "text": "Hi team, checking in. We’ve noticed a discrepancy with the V2 Blog API that has caused a production issue for our applications. *It appears that the `archived` field has been changed to `archived_at` unexpectedly; same for `deleted` changing to `deleted_at`.* Any thoughts on why this happened / why the documentation does not match either?"
+  },
+  {
+    "subtype": "bot_message",
+    "text": ":sparkles:Slack Tips and Best Practices:sparkles:\n\nTo get the most out the HubSpot Developer Slack, follow these best practices:\n\n• Will your post/question potentially help more than one person? Ask in a public channel instead of 1:1 DMs to help as many folks as possible. \n• Thread all replies to keep topics organized and searchable\n• Thread followup questions/comments to your original post\n• Don't post the same question in multiple channels. If you must, link to your original question in new channels.\nMore <https://slack.com/blog/collaboration/etiquette-tips-in-slack|great tips here>. Thanks for making the HubSpot Developer Slack easier to use for everyone!",
+    "username": "Slack Best Practices",
+    "time_stamp": "2023-02-17 11:05:11",
+    "edited": {
+      "time_stamp": "2023-02-17 11:05:14"
+    }
+  },
+  {
+    "poster": {
+      "poster_name": "Edward Addo",
+      "poster_handle": "edward479"
+    },
+    "time_stamp": "2023-02-17 11:33:52",
+    "text": "Hey guys, kinda new here but I want to know if it’s possible to add custom attributes ( such as `autocomplete=\"off\"`) to fields in a HubSpot form?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-02-17 21:37:45"
+      },
+      {
+        "time_stamp": "2023-02-20 14:24:57"
+      },
+      {
+        "time_stamp": "2023-02-20 16:02:54"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Dustin Perolio",
+      "poster_handle": "dustin.perolio"
+    },
+    "time_stamp": "2023-02-17 16:49:37",
+    "edited": {
+      "time_stamp": "2023-02-17 16:50:05"
+    },
+    "text": "If I have a dynamic HubDB template, and decide to change to a standard dnd template, and create pages for each of the formerly auto-generated dynamic child pages, will the new pages retain the old analytics, assuming we keep the same URLs?",
+    "reply_count": 2,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-02-18 06:36:58"
+      },
+      {
+        "time_stamp": "2023-02-19 07:22:45"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-02-17 21:37:45",
+    "text": "are you embedding your form? you could do this using the advanced form options: <https://legacydocs.HubSpot.com/docs/methods/forms/advanced_form_options> you'll need to work out a couple of things but all-in-all not to hard to set it up"
+  }
+]

@@ -1,0 +1,50 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jeff Huffman",
+      "poster_handle": "jeff.huffman"
+    },
+    "time_stamp": "2023-11-13 10:48:49",
+    "text": "Hi all. First-time user. Asking here first, but maybe <#C2YH119N2|hubl> is the better thread. Has anyone had success using hubl if statements in JS script?  I know you have to do the {% require_js %} thing, but can't seem to find the correct syntax. If this is even possible. Thanks!",
+    "reply_count": 3,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2023-11-13 12:59:40"
+      },
+      {
+        "time_stamp": "2023-11-13 14:30:36"
+      },
+      {
+        "time_stamp": "2023-11-13 16:33:23"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Balandin",
+      "poster_handle": "andrey.balandin"
+    },
+    "time_stamp": "2023-11-13 12:59:40",
+    "text": "also interested in this"
+  },
+  {
+    "poster": {
+      "poster_name": "Niko Dixon",
+      "poster_handle": "niko209"
+    },
+    "time_stamp": "2023-11-13 14:30:36",
+    "edited": {
+      "time_stamp": "2023-11-13 14:31:04"
+    },
+    "text": "```{% set hublVar = 'test' %}\n\n{% if hublVar %} \n<script> \n  console.log({{ hublVar }})\n</script> \n{% endif %} ```\nThat should work."
+  },
+  {
+    "poster": {
+      "poster_name": "Evelynn Ulsh",
+      "poster_handle": "evelynn"
+    },
+    "time_stamp": "2023-11-13 16:33:23",
+    "text": "So long as the JS is contained with in an HTML + HubL file, you can use HubL’s templating tools and functionality freely. HubL will be parsed and interpreted server-side, and users will only be served the resulting output. So, it’s totally valid to do something like this:\n```&lt;script&gt;\n  {% if foo == \"bar\" %}\n    let myVar = \"foo bar\"\n  {% else %}\n    let myVar = \"baz buzz\"\n  {% endif %}\n\n  if(myVar) { ... }\n&lt;/script&gt;```\nYou’re correct that you’ll typically want to contain this in a `require_js` or `require_head` block, but those don’t influence the interpreting of the JS or HubL in any way — they’ll just move the contents of that block to the page head, or to the bottom of the markup.\n\nAll of that said — I recommend trying to avoid the pattern of HubL-in-JS whenever you can. You’ll almost always be better off trying to write more robust JS, and keeping your HubL output contained to what it’s intended for and best at: templating for markup.\n\nYou’ll get smaller, more reliable, and easier-to-maintain code with less risk of conflicts or unexpected behavior by avoiding multiple, repeated variants of near-identical scripts."
+  }
+]

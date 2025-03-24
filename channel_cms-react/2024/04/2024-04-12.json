@@ -1,0 +1,370 @@
+[
+  {
+    "poster": {
+      "poster_name": "Matias Vad",
+      "poster_handle": "matias618"
+    },
+    "time_stamp": "2024-04-12 05:58:44",
+    "text": "I’m having a hard time understanding the concept of SharedIslandState and SharedIslandReducer (or perhaps the whole “State” thing in general), and I don’t feel the docs are thorough enough. The React documentation is not sufficient, since we - in my understanding - can’t use state with a common parent.\n\nDo any of you have good examples of using these SharedIsland thing?\n\nMy current project requires me to control the filtering of a set of items in a list, based on a Filter component and a Listing component.\nYou could say it’s like filtering blog posts by a category, but with the introduced complexity of GraphQL (through a Serverless Function endpoint) and HubDB for the data.\n\nI understand you can’t send state functions to the components, this is why I’m guessing the SharedIslandState is the best approach. I may be wrong."
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-04-12 07:04:24",
+    "text": "<@U05D5QEBWS3> another thing to try is the separate `<https://hslocal.net:3000/proxy>` endpoint we have. That gives a input where you can create a different kind of proxy URL. For example, I used it to create `<https://hslocal.net:3000/proxy?page=https%3A%2F%2Fdesigners.HubSpot.com%2Finspire%2F>` (i.e. the page to proxy and domain for it is in a URL param instead of doing the fancy subdomain thing).\n\nIt seems like you are hitting a different underlying problem, but ^ is worth a shot."
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-04-12 07:09:03",
+    "text": "To further clarify Marcus’s question ^. In your preferred world  would “taking control” of the form still connect back to the HubSpot form editor UI? I.e. is it important still for other non-developers in the future to be able to edit the form, like add a new field, change labels, change the thank message/redirect, etc?"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-04-12 07:11:13",
+    "edited": {
+      "time_stamp": "2024-04-12 07:11:19"
+    },
+    "text": "Is it possible to get at that npm debug log file to see the specific error messages in there?"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-04-12 07:12:36",
+    "text": "Unfortunately, I do not think so. It is something we need to get to but haven’t had the chance."
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-04-12 07:24:25",
+    "text": "Sounds like `SharedIslandState`/`SharedIslandReducer` would be useful for you.  As for an example, the <https://github.com/HubSpot/cms-react/tree/main/examples/todo-mvc|todo-mvc example>  (specifically the `todomvc-separate-islands` module) we have uses `SharedIslandReducer`:\n\n• The shared reducer and its initial state is set in <https://github.com/HubSpot/cms-react/blob/ac10483db8f7fd7296915516b6e14fa7c77bc49c/examples/todo-mvc/todo-mvc-project/todo-mvc-app/components/todomvc-separate-islands/index.jsx#L11-L13|the module>\n• Three other islands inside of that module use `useSharedIslandReducer`:\n    ◦ The <https://github.com/HubSpot/cms-react/blob/ac10483db8f7fd7296915516b6e14fa7c77bc49c/examples/todo-mvc/todo-mvc-project/todo-mvc-app/components/todomvc-separate-islands/components/list/list.jsx#L5|list of todos> use it to both render the list of todos, apply filtering, and to remove/edit them (dispatch actions <https://github.com/HubSpot/cms-react/blob/ac10483db8f7fd7296915516b6e14fa7c77bc49c/examples/todo-mvc/todo-mvc-project/todo-mvc-app/components/todomvc-separate-islands/store/reducers/todo.js|defined here>)\n    ◦ The <https://github.com/HubSpot/cms-react/blob/ac10483db8f7fd7296915516b6e14fa7c77bc49c/examples/todo-mvc/todo-mvc-project/todo-mvc-app/components/todomvc-separate-islands/components/header/TodoInput.jsx#L3|input field> uses it to create a new todo\n    ◦ The <https://github.com/HubSpot/cms-react/blob/ac10483db8f7fd7296915516b6e14fa7c77bc49c/examples/todo-mvc/todo-mvc-project/todo-mvc-app/components/todomvc-separate-islands/components/header/TodoInput.jsx#L3|footer> uses it for the clear completed action and to change copy depending on how many todos are available \n• And here is the <https://github.com/HubSpot/cms-react/blob/ac10483db8f7fd7296915516b6e14fa7c77bc49c/examples/todo-mvc/todo-mvc-project/todo-mvc-app/components/todomvc-separate-islands/store/reducers/todo.js|actual reducer itself>, which defines the client logic that updates the “shared state” on every dispatch",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-04-15 07:11:32"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-04-12 07:29:24",
+    "text": "So all in all, the `SharedIslandReducer` and `useSharedIslandReducer` pair helps you:\n• Define some shared “state” (a object with some variables) in the browser\n• Use those shared variables across different islands on the page (that do _not_ share a common React parent)\n• Put all of your client update state/data logic in a single place (i.e. the todo list doesn’t need to know the details of how the todo items are stored, it just does `dispatch(onRemove(id))`  to say “Hey, could you remove the todo with this id for me”)"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-04-12 07:36:01",
+    "text": "For folx that haven’t used React’s `useReducer`<https://react.dev/reference/react/useReducer| hook> or something like <https://redux.js.org/|Redux> before, the reducer &amp; dispatch pattern can feel a little awkward. But after getting beyond that, it is surprisingly powerful, leads to more maintainable code, etc. So I’d encourage you to try it.\n\nNote, we do have `SharedIslandState` and `useSharedIslandState` that do not do the reducer/dispatch thing. Instead `useSharedIslandState` returns `const [sharedState, updateSharedState] = useSharedIslandState();` which you can use just like React’s `useState`<https://react.dev/reference/react/useState| hook> (i.e. `updateSharedState(newValue)` or `updateSharedShare((prevState) =&gt; prevState.counter += 1)`). And that might be a little simpler to understand. But for more complex code, I definitely think the reducer pattern is the way to go",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-04-12 08:07:40"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Stefano Chiala",
+      "poster_handle": "stefano599"
+    },
+    "time_stamp": "2024-04-12 07:52:55",
+    "text": "I am wondering how? I can't replicate this issue locally and access that file from my machine.. I guess this log file is somewhere  in HubSpot? :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-04-12 07:54:16",
+    "text": "Oh, I was under the impression that was something outside our build and in the  git action. But I could be misunderstanding (hard to get the full picture with these smaller log snippets)"
+  },
+  {
+    "text": "The `npm run deploy` command works just fine. It builds and deploys correctly. What I am trying to fix here is a git action in a yml file that should run the build and deploy on merge to master.\n\nI am going for a git action, instead of the 'HubSpot GitHub connection' feature, because that one also fails for some reason but it's too generic for me to understand why",
+    "time_stamp": "2024-04-12 08:00:41"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 08:07:40",
+    "text": "thanks for the explanation, definitely looking forward to trying this out. It took me forever to just kind of understand the basic .reduce method so it always felt overwhelming"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 08:08:21",
+    "text": "I'm trying to send a custom analytics event and noticed that it does not include \"asset type\" (default property)"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 08:08:33",
+    "text": "are those values available from a module somehow?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 08:08:55",
+    "text": "so that I can add them to this kind of thing:\n```{\n  \"eventName\": \"pe1234567_manually_tracked_event\",\n  \"properties\": {\n    \"hs_page_title\": \"Sweepstakes Sign Up\",\n    \"hs_page_content_type\": \"LANDING_PAGE\"\n  },\n...```\n",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-04-12 08:17:42"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 08:17:42",
+    "text": "looks like in the event analytics, \"PAGE CONTENT TYPE\" is set\n\nnot sure when \"asset type\" or \"asset description\" are useful"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 08:27:28",
+    "text": "<https://HubSpotdev.slack.com/archives/C22PU4LV8/p1712931918963149>"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 08:39:34",
+    "text": "is there a `cms-components` hook that is preferred over `window.location.href` for navigational changes? Looks like `pushHistoryState()` mentions non-navigational URL changes but doesn't suggest what to use when it IS a navigational URL change"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-04-12 09:22:32",
+    "edited": {
+      "time_stamp": "2024-04-12 09:22:48"
+    },
+    "text": "I’m pretty sure that debug file is only in the github action running and not in HubSpot. We do not have `/home/runner/` in our infrastructure. And I see things like <https://stackoverflow.com/questions/68253588/github-com-actions-npm-run-build-debug-log> where others are trying to figure out how to get access to npm debug logs created during a github action"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-04-12 09:23:31",
+    "text": "It is possible the root of the error is on the HubSpot side, but the best way to debug that would be the errors in the github action itself (and its error/debug log)"
+  },
+  {
+    "poster": {
+      "poster_name": "Timothy Finley",
+      "poster_handle": "tfinley"
+    },
+    "time_stamp": "2024-04-12 09:24:09",
+    "text": "If you dm me the portal ID and project name, I can poke around a little deeper to double check a few things"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeff W",
+      "poster_handle": "jwaterfall"
+    },
+    "time_stamp": "2024-04-12 10:18:16",
+    "text": "Tried proxying `<http://localhost:3000/proxy?page=https://39924883.hs-sites.com/>`. Got an error:\n\n```Error: 404 Not Found - Unable to obtain HEAD information from <http://localhost:3000/proxy?page=https://39924883.hs-sites.com/>. \n    at fetchContentMetadata (file:///Users/jwaterfall@venacorp.com/Dev/venasolutions.com-V2/vena-project/vena-app/node_modules/@HubSpot/cms-dev-server/dist/run.js:1634:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async proxyPathPageRouteHandler (file:///Users/jwaterfall@venacorp.com/Dev/venasolutions.com-V2/vena-project/vena-app/node_modules/@HubSpot/cms-dev-server/dist/run.js:2419:45)```\nI get the same issue on `<http://39924883.hs-sites.com.localhost:3000/>`.\n\nIt still just continually makes requests to:\n`Proxying request to <http://39924883.hs-sites.com/?hs_preview=rxwYVbwp-118935330728&amp;hsLocalProxyProject=%40projects%2Fvena-project&amp;localProxySchemaVersion=2&amp;previewKey=rxwYVbwp&amp;contentId=118935330728T>`"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:13:31",
+    "text": "Hey, can someone please share their serverless function setup for cms-react projects? I'm getting a 404 that I can't seem to figure out"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:13:55",
+    "edited": {
+      "time_stamp": "2024-04-12 11:28:02"
+    },
+    "text": "```// src/project/app/app.functions/serverless.json \n{\n  \"appFunctions\": {\n    \"functionName\": {\n      \"file\": \"posts.js\",\n      \"endpoint\": {\n        \"path\": \"posts\",\n        \"method\": [\"GET\"]\n      }\n    }\n  }\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:14:35",
+    "text": "```// in module \n...\nreturn axios(\"/hs/serverless/posts\", {\n...```",
+    "reply_count": 14,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-04-12 11:46:39"
+      },
+      {
+        "time_stamp": "2024-04-12 11:55:28"
+      },
+      {
+        "time_stamp": "2024-04-12 11:57:16"
+      },
+      {
+        "time_stamp": "2024-04-12 11:57:24"
+      },
+      {
+        "time_stamp": "2024-04-12 11:57:27"
+      },
+      {
+        "time_stamp": "2024-04-12 11:57:46"
+      },
+      {
+        "time_stamp": "2024-04-12 11:58:18"
+      },
+      {
+        "time_stamp": "2024-04-12 11:59:11"
+      },
+      {
+        "time_stamp": "2024-04-12 11:59:16"
+      },
+      {
+        "time_stamp": "2024-04-12 12:01:04"
+      },
+      {
+        "time_stamp": "2024-04-12 12:01:28"
+      },
+      {
+        "time_stamp": "2024-04-15 06:48:56"
+      },
+      {
+        "time_stamp": "2024-04-18 06:08:52"
+      },
+      {
+        "time_stamp": "2024-04-18 08:57:13"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Rich McNeary",
+      "poster_handle": "rich960"
+    },
+    "time_stamp": "2024-04-12 11:32:42",
+    "text": "<@U04DLJH3W94> <@UCY83QS6Q> That’s a great question! I can’t see it being a problem in our organization’s use of HubSpot if only developers can modify the form through code."
+  },
+  {
+    "poster": {
+      "poster_name": "Marcelo Candil",
+      "poster_handle": "marcelo.candil"
+    },
+    "time_stamp": "2024-04-12 11:46:39",
+    "text": "I think the correct path would be “/_hcms/api/posts”"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcelo Candil",
+      "poster_handle": "marcelo.candil"
+    },
+    "time_stamp": "2024-04-12 11:55:28",
+    "text": "You can also run hs functions list, to check if the function exists"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:57:16",
+    "text": "that's what I had when a had a separate serverless functions folder"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:57:24",
+    "text": "but now I'm nesting it inside of a `cms-react` project"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:57:27",
+    "text": "and apparently the url changes"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:57:46",
+    "text": "but I'll try the old one again just in case"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcelo Candil",
+      "poster_handle": "marcelo.candil"
+    },
+    "time_stamp": "2024-04-12 11:58:18",
+    "text": "Oh! I didn’t know you could do that, is there documentation about it?"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:59:11",
+    "text": "<https://developers.HubSpot.com/docs/platform/platform-versioning#changes-in-2023-2>"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 11:59:16",
+    "text": "let me know if you can get it to work"
+  },
+  {
+    "poster": {
+      "poster_name": "Marcelo Candil",
+      "poster_handle": "marcelo.candil"
+    },
+    "time_stamp": "2024-04-12 12:01:04",
+    "text": "sure! let me try, and thanks! I was wondering if there was something like this"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2024-04-12 12:01:28",
+    "text": "yea, if it works it'll be nice. It seems to be upgraded/improved in ways too"
+  }
+]

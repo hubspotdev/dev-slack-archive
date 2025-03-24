@@ -1,0 +1,47 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-04-29 10:33:29",
+    "text": "<@U6GNQ7JBU> We found an IE11 bug in hubdbclient.js I don’t think it’s always been there, is there a repo or anything for it that we can use to help fix it?",
+    "reply_count": 3,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-04-29 10:36:51"
+      },
+      {
+        "time_stamp": "2019-04-29 10:37:38"
+      },
+      {
+        "time_stamp": "2019-04-29 11:27:12"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-04-29 10:36:51",
+    "text": "We found this polyfill js fixed the IE 11 bug\n```\n// <https://tc39.github.io/ecma262/#sec-array.prototype.findindex>\nif (!Array.prototype.findIndex) {\n  Object.defineProperty(Array.prototype, 'findIndex', {\n    value: function(predicate) {\n     // 1. Let O be ? ToObject(this value).\n      if (this == null) {\n        throw new TypeError('\"this\" is null or not defined');\n      }\n\n      var o = Object(this);\n\n      // 2. Let len be ? ToLength(? Get(O, \"length\")).\n      var len = o.length &gt;&gt;&gt; 0;\n\n      // 3. If IsCallable(predicate) is false, throw a TypeError exception.\n      if (typeof predicate !== 'function') {\n        throw new TypeError('predicate must be a function');\n      }\n\n      // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.\n      var thisArg = arguments[1];\n\n      // 5. Let k be 0.\n      var k = 0;\n\n      // 6. Repeat, while k &lt; len\n      while (k &lt; len) {\n        // a. Let Pk be ! ToString(k).\n        // b. Let kValue be ? Get(O, Pk).\n        // c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).\n        // d. If testResult is true, return k.\n        var kValue = o[k];\n        if (predicate.call(thisArg, kValue, k, o)) {\n          return k;\n        }\n        // e. Increase k by 1.\n        k++;\n      }\n\n      // 7. Return -1.\n      return -1;\n    },\n    configurable: true,\n    writable: true\n  });\n}\n```"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-04-29 10:37:38",
+    "text": "Let us know if you add this directly into the HubDBClientJS and we’ll remove it from our modules using it."
+  },
+  {
+    "poster": {
+      "poster_name": "Matt Coley",
+      "poster_handle": "mcoley"
+    },
+    "time_stamp": "2019-04-29 11:27:12",
+    "text": ":eyes: <@UG52C29EE> should be able to implement the fix and bump the verison up"
+  }
+]

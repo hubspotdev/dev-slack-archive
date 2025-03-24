@@ -1,0 +1,228 @@
+[
+  {
+    "poster": {
+      "poster_name": "Andrea Arestigue",
+      "poster_handle": "andrea.arestigue121"
+    },
+    "time_stamp": "2024-07-18 01:56:07",
+    "text": "<@U07A0FAALSY> Interesting! We have the same usecase, maybe it is related, we'll test it to see if it works. Thanks :)"
+  },
+  {
+    "poster": {
+      "poster_name": "George Grigorita",
+      "poster_handle": "george571"
+    },
+    "time_stamp": "2024-07-18 04:20:56",
+    "text": "What would be the \"go-to\" solution for caching tokens server-side (i.e., in a module's index)?",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2024-07-18 05:30:41"
+      },
+      {
+        "time_stamp": "2024-07-18 05:32:24"
+      },
+      {
+        "time_stamp": "2024-07-18 05:33:28"
+      },
+      {
+        "time_stamp": "2024-07-18 05:37:26"
+      },
+      {
+        "time_stamp": "2024-07-18 05:39:54"
+      },
+      {
+        "time_stamp": "2024-07-18 05:45:13"
+      }
+    ]
+  },
+  {
+    "text": "<@UAYBXDG4U> Thanks for the reply! I'm sharing a screenshot of the structure for the theme and project folders. <@U07CTVC86D8> i think can add more input :)",
+    "time_stamp": "2024-07-18 05:16:44"
+  },
+  {
+    "poster": {
+      "poster_name": "Krasimir Stavrev",
+      "poster_handle": "stavrev.krasimir"
+    },
+    "time_stamp": "2024-07-18 05:19:13",
+    "text": "we basically have the same as the examples - `/project/app`  and `/theme`\n\nthe only thing that comes to my mind as a difference is that we install all the dependencies in the root of the repo - I guess we need our react dependencies in `/project/app` ? I'll try that asap"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-07-18 05:29:37",
+    "text": "within `test.hubl.html` what is the path you are using to point to the module?"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-07-18 05:30:41",
+    "text": "you mean like where to store secrets or tokens for use on the server?"
+  },
+  {
+    "poster": {
+      "poster_name": "George Grigorita",
+      "poster_handle": "george571"
+    },
+    "time_stamp": "2024-07-18 05:32:24",
+    "edited": {
+      "time_stamp": "2024-07-18 05:34:49"
+    },
+    "text": "Not really, something like this:\n\n```let tokenCache = {\n  authToken: null,\n  expiration: null,\n};\n\nconst currentTime = new Date().getTime();\n// Check if token exists and is not expired\nif (tokenCache.authToken && currentTime < tokenCache.expiration) {\n  return tokenCache.authToken;\n}\n\n// If no token or expired, update cache\ntokenCache.authToken = `Bearer ${access_token}`;\ntokenCache.expiration = currentTime + expires_in * 1000;```"
+  },
+  {
+    "poster": {
+      "poster_name": "George Grigorita",
+      "poster_handle": "george571"
+    },
+    "time_stamp": "2024-07-18 05:33:28",
+    "text": "\"caching\" a token bearer so that I wouldn't have to get a new one on each request"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-07-18 05:37:26",
+    "edited": {
+      "time_stamp": "2024-07-18 05:38:13"
+    },
+    "text": "You couldn't do that on the server - well rather just with CMS React on the server. We don't have a concept of persisted storage."
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-07-18 05:39:54",
+    "text": "You _could_ use HubDB for this I suppose where you pull from hubdb during the render, check the expiration, renew if needed, use and persist back to HubDB..."
+  },
+  {
+    "poster": {
+      "poster_name": "Krasimir Stavrev",
+      "poster_handle": "stavrev.krasimir"
+    },
+    "time_stamp": "2024-07-18 05:41:35",
+    "text": "&gt; within `test.hubl.html` what is the path you are using to point to the module?\nThis helped me resolve it! It seems like when I have e.g. `/Header/Header.tsx`  I can't do `path=\"/Header/Header.tsx\"` but I need to have it as `index.tsx` and set the folder as the path... I guess this is in the documentation but I missed it"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-07-18 05:42:42",
+    "text": "For partials, you need to include the file extension i.e. `tsx|jsx`"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-07-18 05:43:48",
+    "edited": {
+      "time_stamp": "2024-07-18 05:43:53"
+    },
+    "text": "For modules you do not include the suffix ...\n\n```... path=\"@projects/project-path/app-path/components/modules/MyModule\"```\nvs\n\n```... path=\"@projects/project-path/app-path/components/partials/MyPartial.tsx\"```"
+  },
+  {
+    "poster": {
+      "poster_name": "Krasimir Stavrev",
+      "poster_handle": "stavrev.krasimir"
+    },
+    "time_stamp": "2024-07-18 05:44:10",
+    "text": ":man-bowing:"
+  },
+  {
+    "poster": {
+      "poster_name": "George Grigorita",
+      "poster_handle": "george571"
+    },
+    "time_stamp": "2024-07-18 05:45:13",
+    "text": "Understood, thanks for helping! Good idea about HubDB, I'll look into that."
+  },
+  {
+    "poster": {
+      "poster_name": "Krasimir Stavrev",
+      "poster_handle": "stavrev.krasimir"
+    },
+    "time_stamp": "2024-07-18 05:46:42",
+    "text": "after resolving that, I realised the build pipeline doesn't support sass for css modules. That's easy to resolve though, I'll just convert all our styles :smile: thanks again for helping us!"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-07-18 06:08:26",
+    "text": "It does support sass and css modules"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-07-18 06:10:29",
+    "text": "We are using Vite for build - read here <https://vitejs.dev/guide/features#css-pre-processors>"
+  },
+  {
+    "poster": {
+      "poster_name": "Krasimir Stavrev",
+      "poster_handle": "stavrev.krasimir"
+    },
+    "time_stamp": "2024-07-18 06:12:33",
+    "text": "yeah, but it was ignoring my dev dependencies"
+  },
+  {
+    "poster": {
+      "poster_name": "Krasimir Stavrev",
+      "poster_handle": "stavrev.krasimir"
+    },
+    "time_stamp": "2024-07-18 06:13:14",
+    "text": "it seems like `cms-js-build` doesn't care about dev dependencies so I had to put `sass` in dependencies even though it is a dev dependency"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2024-07-18 06:13:32",
+    "text": "yes, that makes sense."
+  },
+  {
+    "poster": {
+      "poster_name": "Krasimir Stavrev",
+      "poster_handle": "stavrev.krasimir"
+    },
+    "time_stamp": "2024-07-18 06:13:36",
+    "text": "anyway, it solved it :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Krasimir Stavrev",
+      "poster_handle": "stavrev.krasimir"
+    },
+    "time_stamp": "2024-07-18 06:13:46",
+    "text": "thanks again :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Dennis K",
+      "poster_handle": "dennis579"
+    },
+    "time_stamp": "2024-07-18 08:55:32",
+    "text": "Any way to put Fields inside the Styling tab when using CMS React?",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2024-07-19 05:52:55"
+      }
+    ]
+  }
+]

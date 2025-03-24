@@ -1,0 +1,66 @@
+[
+  {
+    "poster": {
+      "poster_name": "Sandro Berchier",
+      "poster_handle": "sandro"
+    },
+    "time_stamp": "2023-08-30 01:56:22",
+    "text": "hi everyone :slightly_smiling_face:\n\n2 quick questions on Custom Code (Python) in HubSpot workflows:\n\n1) Has anyone found a simple solution to import libraries (e.g., pandas, stripe, etc.) in the custom code?\n\n2) Has anyone figured out how to return dates from a custom code and copy them to an object property?\n• I’ve tried returning both UNIX int or ISO 8601 `YYYY-MM-DDTHH:mm:ssZ` in the data outputs and then using a copy to property block in the workflow, but that always fails\n• My solution so far has been calling the HubSpot API and directly copying the date property, but it sometimes it would be much easier to just use a copy to property block\nthank you very much in advance :pray:"
+  },
+  {
+    "poster": {
+      "poster_name": "Peter Hix",
+      "poster_handle": "peter215"
+    },
+    "time_stamp": "2023-08-30 05:11:34",
+    "text": "hey all, just wanted to confirm something to avoid continuing to bang my head against the wall: for Python custom code, the version of `HubSpot` available to import is not the most recent version available <https://github.com/HubSpot/HubSpot-api-python|here>, right? I'm missing the `HubSpot.crm.associations.v4` endpoint that is mentioned in <https://developers.HubSpot.com/docs/api/crm/associations|the official documentation>. When I iterate through the packages available in `HubSpot.crm.associations` within the custom code tool, I get:\n```['api', 'api_client', 'configuration', 'exceptions', 'models', 'rest']```\nwith `v4` noticeably absent.\n\nWhen importing `HubSpot.crm.associations.v4` I get:\n```[ERROR] Runtime.ImportModuleError: Unable to import module 'HubSpotHandler': No module named 'HubSpot.crm.associations.v4'\nTraceback (most recent call last):\nMemory: 52/128 MB\nRuntime: 1.25 ms```\nThis is an issue as I want to create contact-to-contact associations, which HubSpot.crm.associations v3 doesn't support. Assume there's no way on my end to upgrade to the most recent API client version?"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2023-08-30 09:31:29",
+    "text": "<@U05PXJHQZAA> what specifically isn’t working? Empty report, not executing the console.logs, etc.. what?"
+  },
+  {
+    "poster": {
+      "poster_name": "Shawn O'Brien",
+      "poster_handle": "shawn.obrien"
+    },
+    "time_stamp": "2023-08-30 09:33:29",
+    "text": "I believe it's not executing in general"
+  },
+  {
+    "poster": {
+      "poster_name": "Justin Givens - Level 2",
+      "poster_handle": "jgivens"
+    },
+    "time_stamp": "2023-08-30 10:01:19",
+    "text": "It looks like your code doesn’t look like the standard code sample. Try moving all your functions into the async event. (aka `//Function/Logic here`  section)\n\nAlso, there’s no reason to request the `job_delivery` field if this is a deal workflow, just pass it in within the deal id.\n\nThen your callback section should include the outputs function (see below).\n\nCheck out this <https://developers.HubSpot.com/docs/api/workflows/custom-code-actions|section> of the dev docs about custom code workflow actions\n\n```const HubSpot = require('@HubSpot/api-client');\n\nexports.main = async (event, callback) =&gt; {\n\n    const HubSpotClient = new HubSpot.Client({\n        accessToken: process.env.SECRET_NAME\n    });    \n\n    /*****\n     Use inputs to get data from any action in your workflow and use it in your code instead of having to use the HubSpot API.\n     *****/\n    let input_args = event.inputFields;\n    let result = false;\n\n    //Function/Logic here\n\n\n    callback({\n        outputFields: {\n            results: result\n        }\n    });\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Shawn O'Brien",
+      "poster_handle": "shawn.obrien"
+    },
+    "time_stamp": "2023-08-30 11:15:07",
+    "text": "<@U03REFNRMB3> Thank you! I'll give this is a try! :call_me_hand:"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeffrey DeAnna",
+      "poster_handle": "jeffrey.deanna"
+    },
+    "time_stamp": "2023-08-30 13:00:28",
+    "text": "yessir!!! it works excellent in one step. mid is awesome"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-08-30 13:01:38",
+    "text": "sick, glad I could help"
+  }
+]

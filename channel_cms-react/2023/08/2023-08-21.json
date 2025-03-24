@@ -1,0 +1,100 @@
+[
+  {
+    "poster": {
+      "poster_name": "Janne Toikka",
+      "poster_handle": "janne.toikka"
+    },
+    "time_stamp": "2023-08-21 01:36:36",
+    "text": "<@UAYBXDG4U> Easiest way to do that would be to just to add a new field along the CTA field (so we don’t break the old behaviour), which would return an object instead, with the values that are needed for the custom cta template to work :thinking_face:"
+  },
+  {
+    "text": "Hi everyone, me and my friend Göran are using this react boiler plate theme to develop a new HS website. Our approach is to use the main.css file within the app directory and by including the `main.scss` (which also includes sass files of every component) in the Base component which also includes or imports `main.scss` as shown below,\n```// --------- Main Stylesheet SASS ---------\nimport '../../../styles/main.scss';\n\nexport const Component = () =&gt; {\n    return null;\n};\n\nexport const meta = {\n    label: 'Base Component',\n};\n\nexport { fields } from './fields.js';```\nSo, we're including this Base component using `js_partial` hubl function in the `&lt;head&gt;` tag of `base.hubl.html` file of the theme as shown below,\n```&lt;!--\n  templateType: none\n--&gt;\n<!DOCTYPE html>\n&lt;html lang=\"{{ html_lang }}\" {{ html_lang_dir }}&gt;\n  &lt;head&gt;\n    {% js_partial\n      path=\"@projects/igm-project/igm-app/components/modules/BaseComponent/index.tsx\",\n      no_wrapper=True %}\n\n    {{ standard_header_includes }}\n  &lt;/head&gt;```\nBUT, the issue is after we upload theme to portal and deploy the app to portal, it renders the main style sheet twice in the `&lt;head&gt;` tag as show in screenshot. Does anyone know why it is happening or how to fix it?",
+    "time_stamp": "2023-08-21 05:21:28",
+    "reply_count": 6,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-08-21 06:45:35"
+      },
+      {
+        "time_stamp": "2023-08-21 07:11:28"
+      },
+      {
+        "time_stamp": "2023-08-21 07:35:26"
+      },
+      {
+        "time_stamp": "2023-08-21 07:44:19"
+      },
+      {
+        "time_stamp": "2023-08-21 08:01:32"
+      },
+      {
+        "time_stamp": "2023-08-21 08:32:42"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-08-21 06:45:35",
+    "text": "Hello Ahmed - thank you for flagging this. Taking a look :eyes:"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-08-21 07:11:28",
+    "text": "Question about this implementation:\n\nYou are using the `js_partial` HubL tag, but you are pointing to a Component that is in the `modules` directory. Is the intent that the Component be a partial or a module?"
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-08-21 07:35:26",
+    "text": "Follow up question -\n\nIs the reason you are including the partial in the document head because you want to use the project build to handle your style assets i.e. `scsss` ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Ahmed Jamal Tariq",
+      "poster_handle": "ahmed.jamal.tariq"
+    },
+    "time_stamp": "2023-08-21 07:44:19",
+    "text": "Hi <@UAYBXDG4U>, thanks for you response here. In the component, (which we're calling in `js_partial`), we're importing the `main.scss`. So this component is a global component which includes main theme stylesheet."
+  },
+  {
+    "poster": {
+      "poster_name": "Byron Matto",
+      "poster_handle": "bmatto"
+    },
+    "time_stamp": "2023-08-21 08:01:32",
+    "text": "So there's a few things here I would not recommend:\n\n1. Modules and Partials are different things. You are calling to a module JSX file from a partial tag. The `modules` and `partials` directories are special and have meaning to our build process. So the existence of BaseComponent in `modules` is creating a module in the HubSpot system … You then call to the `index.jsx`of the module from a `js_partial` tag. While this works now (somewhat surprising) it’s not supported behavior and may change in the future.\n\n2. While placing a `js_partial` in the head of the document isn’t inherently problematic, you aren’t actually producing any HTML from the Component. What’s happening instead is that the build system is generating the CSS asset it thinks the component needs based in the imports within, then it will include all of these assets in the head of the document. You could place this `js_partial` at the closing body tag and the CSS asset would still be loaded in the head.\n\n3. I think generally a better approach would be to have a `&lt;Layout&gt;` or `&lt;App&gt;` or `&lt;Base&gt;` Component that references this “main” stylesheet and then wraps other components … instead of a “phantom” component that forces the system to load a stylesheet."
+  },
+  {
+    "poster": {
+      "poster_name": "Ahmed Jamal Tariq",
+      "poster_handle": "ahmed.jamal.tariq"
+    },
+    "time_stamp": "2023-08-21 08:32:42",
+    "text": "Thanks for responding. I created a partial called layout in `partials` directory in `components` folder. And then calling that partial (which import `main.scss` file and returns null) using `js_partial` tag before closing of `&lt;/body&gt;` tag in main template. It is working but there's one layout.css in `&lt;head&gt;` tag and one before closing of the `&lt;/body&gt;` tag.\nYou can also take a look at this test page,\n<https://143154179.hs-sites-eu1.com/home>"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-08-21 13:28:53",
+    "text": "i’d recommend trying the `/* @vite-ignore */` comment that the message suggests"
+  },
+  {
+    "poster": {
+      "poster_name": "Ben Briggs",
+      "poster_handle": "bbriggs"
+    },
+    "time_stamp": "2023-08-21 13:30:03",
+    "text": "`import()`-ing the current module though seems like it’s not going to work - what are you hoping to get out of that import exactly?"
+  }
+]

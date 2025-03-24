@@ -1,0 +1,196 @@
+[
+  {
+    "text": "Hi guys, I am using the custom code in workflows and I  have this issue. I want to get a variable from my code and then copy it into a property that already exists in HubSpot. I get a success when I test it on a contact but I get something in yellow telling me \" Be sure to define the \"final\" result in the data results form using the name you used in the code.\". I have declared this variable with the same name and it is in the callbacks... Thanks for your help :slightly_smiling_face:",
+    "time_stamp": "2023-03-29 02:06:25",
+    "reply_count": 18,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2023-03-29 08:14:06"
+      },
+      {
+        "time_stamp": "2023-03-29 08:24:21"
+      },
+      {
+        "time_stamp": "2023-03-29 08:26:08"
+      },
+      {
+        "time_stamp": "2023-03-29 08:26:38"
+      },
+      {
+        "time_stamp": "2023-03-29 08:26:44"
+      },
+      {
+        "time_stamp": "2023-03-29 08:27:05"
+      },
+      {
+        "time_stamp": "2023-03-29 08:32:41"
+      },
+      {
+        "time_stamp": "2023-03-29 08:32:59"
+      },
+      {
+        "time_stamp": "2023-03-29 08:37:28"
+      },
+      {
+        "time_stamp": "2023-03-29 08:38:08"
+      },
+      {
+        "time_stamp": "2023-03-29 08:38:33"
+      },
+      {
+        "time_stamp": "2023-03-29 08:39:20"
+      },
+      {
+        "time_stamp": "2023-03-29 08:40:37"
+      },
+      {
+        "time_stamp": "2023-03-29 08:42:04"
+      },
+      {
+        "time_stamp": "2023-03-29 08:44:14"
+      },
+      {
+        "time_stamp": "2023-03-29 08:44:31"
+      },
+      {
+        "time_stamp": "2023-03-29 08:44:37"
+      },
+      {
+        "time_stamp": "2023-03-29 08:45:21"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 08:14:06",
+    "text": "This is because it doesn't look like you have a value inside of `final` when you output it"
+  },
+  {
+    "poster": {
+      "poster_name": "Nadjet",
+      "poster_handle": "nadjet.bouzid"
+    },
+    "time_stamp": "2023-03-29 08:24:21",
+    "text": "Hey, I have the logs, the value is not null or empty ..."
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 08:26:08",
+    "text": "Are you possibly only giving final a value after you output?"
+  },
+  {
+    "text": "Some code I just tested:",
+    "time_stamp": "2023-03-29 08:26:38"
+  },
+  {
+    "text": "",
+    "time_stamp": "2023-03-29 08:26:44"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 08:27:05",
+    "text": "if you shared your code that would help us troubleshoot"
+  },
+  {
+    "text": "I don't quite understand , here is the code",
+    "time_stamp": "2023-03-29 08:32:41"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 08:32:59",
+    "text": "that's not the full code..."
+  },
+  {
+    "poster": {
+      "poster_name": "Nadjet",
+      "poster_handle": "nadjet.bouzid"
+    },
+    "time_stamp": "2023-03-29 08:37:28",
+    "text": "```var axios = require('axios');\n\nexports.main = async (event, callback) =&gt; {\n\n  const email = event.inputFields['email'];\n  const hs_object_id = event.inputFields['hs_object_id'];\n  const date_d_envoi_du_prochain_questionnaire = event.inputFields['date_d_envoi_du_prochain_questionnaire'];\n  \n  let datelist = [];\n  let temp;\n  let datefinale= [];\n  let final;\n  let a;\n  let b;\n  let dateProchain;\n  let date_ok;\n  \n  var data = JSON.stringify({\n    \"filterGroups\": [\n      {\n        \"filters\": [\n          {\n            \"value\": ${hs_object_id}, // ceci doit devenir une variable - OK\n            \"propertyName\": \"associations.contact\",\n            \"operator\": \"EQ\"\n          }\n        ]\n      }\n    ],\n    \"properties\": [\n      \"date_de_fin_de_mission\",\n      \"dealname\",\n      \"etape___si\",\n    ],\n    \n  });\n\n  var config = {\n    method: 'post',\n    url: '<https://api.hubapi.com/crm/v3/objects/deals/search>',\n    headers: { \n      'Authorization': '', \n      'Content-Type': 'application/json'\n    },\n    data : data\n  };\n  \n  axios(config)\n  .then(function (response) {\n    let mydate = response.data.results.length//[0].properties.date_de_fin_de_mission;\n    console.log(\"mydate \" +mydate);\n    // tester si mydate = 0 alors on fait rien \n    // Si = 1 alors vérifier qu'elle rentre dans les critères :c'est cette date qui sera copié dans 'date d'envoi du prochain'\n    // SI &gt; 1 on calcule ....365j\n    // Vérifier si on a plusieurs \n    for (var i=0; i&lt;response.data.results.length; i++) {\n      \n      console.log(\"inside the for \");\n      if (response.data.results[i].properties.etape__si == 6 || response.data.results[i].properties.etape__si == 7) { \n        temp = response.data.results[i].properties.date_de_fin_de_mission;\n        console.log(\"temp 1er for = \"+temp);\n        datelist.push(temp);\n        console.log(datelist);\n      }\n      \n    }\n    // Trier la liste sortante des deals associés qui sont à l'étape 6 et 7\n    let datelistf = datelist; //.sort();\n    datelistf.sort();\n    console.log(\"datelist sorted = \"+datelistf);\n    var day_diff;\n    for (var j=0; j&lt;datelistf.length;j++ ) {\n      console.log(\"dans la boucle for\"+datelistf.length);\n      if(datelistf.length == 0) { // SI la liste est vide ALORS \"pas de missions\"  //ce cas peut etre supp car  il est pris en compte plus haut ?\n        datefinale.push('0');\n        day_diff = null;\n        final = \"day_diff 00 \";\n\n      }else if(datelistf.length == 1) { // SI y a qu'1 mission associée ALORS c'est cette date là qui sera copiée\n        datefinale.push(1);\n        day_diff = null;\n\t\tfinal = \"day_diff 01\";\n        \n      } else if(datelistf.length &gt; 1){ // SI y a plusieurs dates ALORS on compare avec \"date d'envoi du prochain quest\" si y a 365j \n        console.log(\"Le dernier else()-- length \"+datelistf.length);\n\n        //Traitement su date d'envoi du prochain questionnaire\n        //var datef = 1677715200000; \n        \n        var da = new Date(parseInt(date_d_envoi_du_prochain_questionnaire)); \n        console.log(\"date du prochain envoie - changement  = \"+date_d_envoi_du_prochain_questionnaire);\n        console.log(\" new date() = \"+da);\n        \n        let temp1 = da.toLocaleDateString();\n        console.log(\"temp1 localString= \"+temp1);\n        \n        temp = temp1.replace('/', '-');\n        dateProchain = temp.replace('/', '-');\n        console.log(\"après changement de / = \"+dateProchain);\n        \n        console.log(\"date prochain = \"+dateProchain);\n        datefinale.push(dateProchain);\n\n        console.log(\"fin : \"+datefinale);\n        \n        //transformer en timestamp       \n        \n        console.log(\"datelistf[i]\"+datelistf[j]);\n        // Comparaison \n\n        a = new Date(dateProchain.toString()); //new Date(\"2023-01-10\"); //\n        b = new Date(datelistf[j].toString()); //new Date(\"2023-03-01\"); //new Date(datelistf[0]);\n        var time_diff = (b.getTime())/1000 - (a.getTime())/1000;\n        day_diff = time_diff / (1000*3600*24);   //86 400 000\n        console.log(\"day_diff \"+day_diff);\n        if ((day_diff*1000) == 365 || (day_diff*1000) == -365) {\n          final = \" We have a winner ! \"\n        } else {\n          let f = \"01/01/2003\";\n          final = f;\n          console.log(\"final final =\"+final);\n          console.log(\"type of \"+typeof(final));\n        }        \n      }\n    }\n    \n  })\n  /*****\n    Utilisez la fonction de rappel pour sortir des données qui peuvent être utilisées lors d'actions ultérieures dans votre workflow.\n  *****/\n  callback({\n    outputFields: {\n      final: final,\n    }\n  });\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Nadjet",
+      "poster_handle": "nadjet.bouzid"
+    },
+    "time_stamp": "2023-03-29 08:38:08",
+    "text": "it's quite long and full of console.log... :sweat_smile:"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 08:38:33",
+    "text": "no problem so yeah the issue was that you were outputting before defining"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 08:39:20",
+    "text": "try this instead:\n```var axios = require('axios');\n\nexports.main = async (event, callback) =&gt; {\n\n    const email = event.inputFields['email'];\n    const hs_object_id = event.inputFields['hs_object_id'];\n    const date_d_envoi_du_prochain_questionnaire = event.inputFields['date_d_envoi_du_prochain_questionnaire'];\n\n    let datelist = [];\n    let temp;\n    let datefinale = [];\n    let final;\n    let a;\n    let b;\n    let dateProchain;\n    let date_ok;\n\n    var data = JSON.stringify({\n        \"filterGroups\": [{\n            \"filters\": [{\n                \"value\": $ {\n                    hs_object_id\n                }, // ceci doit devenir une variable - OK\n                \"propertyName\": \"associations.contact\",\n                \"operator\": \"EQ\"\n            }]\n        }],\n        \"properties\": [\n            \"date_de_fin_de_mission\",\n            \"dealname\",\n            \"etape___si\",\n        ],\n\n    });\n\n    var config = {\n        method: 'post',\n        url: '<https://api.hubapi.com/crm/v3/objects/deals/search>',\n        headers: {\n            'Authorization': '',\n            'Content-Type': 'application/json'\n        },\n        data: data\n    };\n\n    axios(config)\n        .then(function(response) {\n            let mydate = response.data.results.length //[0].properties.date_de_fin_de_mission;\n            console.log(\"mydate \" + mydate);\n            // tester si mydate = 0 alors on fait rien \n            // Si = 1 alors vérifier qu'elle rentre dans les critères :c'est cette date qui sera copié dans 'date d'envoi du prochain'\n            // SI &gt; 1 on calcule ....365j\n            // Vérifier si on a plusieurs \n            for (var i = 0; i &lt; response.data.results.length; i++) {\n\n                console.log(\"inside the for \");\n                if (response.data.results[i].properties.etape__si == 6 || response.data.results[i].properties.etape__si == 7) {\n                    temp = response.data.results[i].properties.date_de_fin_de_mission;\n                    console.log(\"temp 1er for = \" + temp);\n                    datelist.push(temp);\n                    console.log(datelist);\n                }\n\n            }\n            // Trier la liste sortante des deals associés qui sont à l'étape 6 et 7\n            let datelistf = datelist; //.sort();\n            datelistf.sort();\n            console.log(\"datelist sorted = \" + datelistf);\n            var day_diff;\n            for (var j = 0; j &lt; datelistf.length; j++) {\n                console.log(\"dans la boucle for\" + datelistf.length);\n                if (datelistf.length == 0) { // SI la liste est vide ALORS \"pas de missions\"  //ce cas peut etre supp car  il est pris en compte plus haut ?\n                    datefinale.push('0');\n                    day_diff = null;\n                    final = \"day_diff 00 \";\n\n                } else if (datelistf.length == 1) { // SI y a qu'1 mission associée ALORS c'est cette date là qui sera copiée\n                    datefinale.push(1);\n                    day_diff = null;\n                    final = \"day_diff 01\";\n\n                } else if (datelistf.length &gt; 1) { // SI y a plusieurs dates ALORS on compare avec \"date d'envoi du prochain quest\" si y a 365j \n                    console.log(\"Le dernier else()-- length \" + datelistf.length);\n\n                    //Traitement su date d'envoi du prochain questionnaire\n                    //var datef = 1677715200000; \n\n                    var da = new Date(parseInt(date_d_envoi_du_prochain_questionnaire));\n                    console.log(\"date du prochain envoie - changement  = \" + date_d_envoi_du_prochain_questionnaire);\n                    console.log(\" new date() = \" + da);\n\n                    let temp1 = da.toLocaleDateString();\n                    console.log(\"temp1 localString= \" + temp1);\n\n                    temp = temp1.replace('/', '-');\n                    dateProchain = temp.replace('/', '-');\n                    console.log(\"après changement de / = \" + dateProchain);\n\n                    console.log(\"date prochain = \" + dateProchain);\n                    datefinale.push(dateProchain);\n\n                    console.log(\"fin : \" + datefinale);\n\n                    //transformer en timestamp       \n\n                    console.log(\"datelistf[i]\" + datelistf[j]);\n                    // Comparaison \n\n                    a = new Date(dateProchain.toString()); //new Date(\"2023-01-10\"); //\n                    b = new Date(datelistf[j].toString()); //new Date(\"2023-03-01\"); //new Date(datelistf[0]);\n                    var time_diff = (b.getTime()) / 1000 - (a.getTime()) / 1000;\n                    day_diff = time_diff / (1000 * 3600 * 24); //86 400 000\n                    console.log(\"day_diff \" + day_diff);\n                    if ((day_diff * 1000) == 365 || (day_diff * 1000) == -365) {\n                        final = \" We have a winner ! \"\n                    } else {\n                        let f = \"01/01/2003\";\n                        final = f;\n                        console.log(\"final final =\" + final);\n                        console.log(\"type of \" + typeof(final));\n                    }\n                    /*****\n      Utilisez la fonction de rappel pour sortir des données qui peuvent être utilisées lors d'actions ultérieures dans votre workflow.\n    *****/\n                    callback({\n                        outputFields: {\n                            final: final,\n                        }\n                    });\n                }\n            }\n\n        })\n\n\n}```\n"
+  },
+  {
+    "poster": {
+      "poster_name": "Nadjet",
+      "poster_handle": "nadjet.bouzid"
+    },
+    "time_stamp": "2023-03-29 08:40:37",
+    "text": "Can you tell me what did you change ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 08:42:04",
+    "text": "placed the output right after you define it"
+  },
+  {
+    "poster": {
+      "poster_name": "Nadjet",
+      "poster_handle": "nadjet.bouzid"
+    },
+    "time_stamp": "2023-03-29 08:44:14",
+    "text": "Ahh I see, thanks a lot for your help :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 08:44:31",
+    "text": "of course"
+  },
+  {
+    "poster": {
+      "poster_name": "Carter McKay - Level 17",
+      "poster_handle": "carter"
+    },
+    "time_stamp": "2023-03-29 08:44:37",
+    "text": "let me know if you run into any other issues"
+  },
+  {
+    "poster": {
+      "poster_name": "Nadjet",
+      "poster_handle": "nadjet.bouzid"
+    },
+    "time_stamp": "2023-03-29 08:45:21",
+    "text": "I sure will :laughing:, we'll talk soon hihihihi"
+  }
+]

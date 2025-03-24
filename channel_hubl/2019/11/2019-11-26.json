@@ -1,0 +1,203 @@
+[
+  {
+    "poster": {
+      "poster_name": "Ashish Bule",
+      "poster_handle": "abule"
+    },
+    "time_stamp": "2019-11-26 03:24:46",
+    "text": "Hello everyone\nCan anyone know that How to filter blogs with multiple tags with AND condition?"
+  },
+  {
+    "poster": {
+      "poster_name": "Lisa Ellington",
+      "poster_handle": "lisa326"
+    },
+    "time_stamp": "2019-11-26 09:55:16",
+    "text": "Hey devs, I'm trying to create a custom menu. I feel like i'm close but i can't seem to loop the parent items, just the child items. Does anyone know the HUBL code for looping the parent items? Thanks!",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2019-11-26 13:34:48"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-26 10:03:54",
+    "text": ".children i believe"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-26 10:04:28",
+    "text": "are you supporting just a 2 level nav?"
+  },
+  {
+    "poster": {
+      "poster_name": "Lisa Ellington",
+      "poster_handle": "lisa326"
+    },
+    "time_stamp": "2019-11-26 10:05:21",
+    "text": "Trying to go 3 deep."
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-26 10:05:59",
+    "text": "In that case may be easier to use recursion",
+    "reply_count": 10,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2019-11-26 10:13:51"
+      },
+      {
+        "time_stamp": "2019-11-26 10:13:53"
+      },
+      {
+        "time_stamp": "2019-11-26 10:15:07"
+      },
+      {
+        "time_stamp": "2019-11-26 10:15:46"
+      },
+      {
+        "time_stamp": "2019-11-26 10:31:50"
+      },
+      {
+        "time_stamp": "2019-11-26 10:39:33"
+      },
+      {
+        "time_stamp": "2019-11-26 10:40:26"
+      },
+      {
+        "time_stamp": "2019-11-26 10:48:26"
+      },
+      {
+        "time_stamp": "2019-11-26 10:53:50"
+      },
+      {
+        "time_stamp": "2019-11-26 11:27:12"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-26 10:13:51",
+    "edited": {
+      "time_stamp": "2019-11-26 10:14:38"
+    },
+    "text": "You can use macros (essentially functions) to check for children. e.g:\n\n\n```{% macro menuItem(menuObj) %}\n<li class=\"menu__item\">\n  <a href=\"{{ menuObj.link }}\">{{ menuObj.label }}</a>\n {% if menuObj.children %}\n   {{ renderMenu(menuObj.children) }}\n {% endif %}\n</li>\n{% endmacro %}\n\n{% macro renderMenu(menuObj) %}\n<ul class=\"menu__items\">\n  {% for item in menuObj.children %}\n    {{ menuItem(item) }}\n  {% endfor %}\n</ul>\n{% endmacro %}\n\n<nav>\n<ul class=\"menu\">\n  {{ renderMenu(menu(module.menufield)) }}\n</ul>\n</nav>```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-26 10:13:53",
+    "text": "somethign like that."
+  },
+  {
+    "poster": {
+      "poster_name": "Lisa Ellington",
+      "poster_handle": "lisa326"
+    },
+    "time_stamp": "2019-11-26 10:15:07",
+    "text": "thank you!"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-26 10:15:46",
+    "edited": {
+      "time_stamp": "2019-11-26 10:15:52"
+    },
+    "text": "If you need to know the level,  you can add a incrementing var inside renderMenu"
+  },
+  {
+    "poster": {
+      "poster_name": "Lisa Ellington",
+      "poster_handle": "lisa326"
+    },
+    "time_stamp": "2019-11-26 10:31:50",
+    "text": "how would i do that?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-26 10:39:33",
+    "text": "throw {% set level = level + 1 %} into renderMenu"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-26 10:40:26",
+    "text": "e.g.\n\n\n```{% macro renderMenu(menuObj) %}\n  {% set level = level + 1 %}\n&lt;ul class=\"menu__items menu__items--level-{{ level }}\"&gt;\n  \n  {% for item in menuObj.children %}\n    {{ menuItem(item) }}\n  {% endfor %}\n&lt;/ul&gt;\n{% endmacro %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Lisa Ellington",
+      "poster_handle": "lisa326"
+    },
+    "time_stamp": "2019-11-26 10:48:26",
+    "text": "thanks!"
+  },
+  {
+    "poster": {
+      "poster_name": "Kieran",
+      "poster_handle": "kieran073"
+    },
+    "time_stamp": "2019-11-26 10:53:50",
+    "text": "no worries!"
+  },
+  {
+    "poster": {
+      "poster_name": "Lisa Ellington",
+      "poster_handle": "lisa326"
+    },
+    "time_stamp": "2019-11-26 11:27:12",
+    "text": "Can i just pay you to write this for me?"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2019-11-26 13:34:48",
+    "text": "Here’s kind of a demo of how you could use the menu function. This generates HTML that is similar to what the menu module outputs, that way you can tweak it from that starting point, as that is already a great place to start.\n<https://designers.HubSpot.com/code-gallery/entry/founders/TheWebTech-Basic-Menu-using-Menu-Function>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jaydip Suvagiya",
+      "poster_handle": "jaydip"
+    },
+    "time_stamp": "2019-11-26 21:48:28",
+    "edited": {
+      "time_stamp": "2019-11-26 22:51:54"
+    },
+    "text": "*How can i order Blog Comments from `Newest to the Oldest`* -> right now it showing oldest to newest\n\n```{% blog_comments \"blog_comments\" %}```\n\n<https://community.HubSpot.com/t5/HubSpot-Ideas/Blog-Comment-order-from-Newest-to-the-Oldest/idi-p/215391>",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2019-11-28 05:23:55"
+      }
+    ]
+  }
+]

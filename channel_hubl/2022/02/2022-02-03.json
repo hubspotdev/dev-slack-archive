@@ -1,0 +1,200 @@
+[
+  {
+    "poster": {
+      "poster_name": "Christopher Chiha",
+      "poster_handle": "christopher051"
+    },
+    "time_stamp": "2022-02-03 07:26:22",
+    "text": "Hello All,\nI want to populate my email template with data from hubDB.\nFor each customer, i want the data in the equivalent row to show on his email version.\n\nWhat is the best approach to do so ?\nFor example, if email address is ... show data from this table/row..\n\nI don't know if i am complicating this more than i should, i just want to display the data from HubDB into my email with respect to the receiver. Would HIGHLY appreciate your help here as i am at a dead end.\n\nThank you!",
+    "reply_count": 14,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-02-03 07:26:55"
+      },
+      {
+        "time_stamp": "2022-02-03 07:29:38"
+      },
+      {
+        "time_stamp": "2022-02-03 08:18:04"
+      },
+      {
+        "time_stamp": "2022-02-03 08:24:34"
+      },
+      {
+        "time_stamp": "2022-02-03 08:24:48"
+      },
+      {
+        "time_stamp": "2022-02-03 08:25:50"
+      },
+      {
+        "time_stamp": "2022-02-03 08:25:55"
+      },
+      {
+        "time_stamp": "2022-02-03 08:26:18"
+      },
+      {
+        "time_stamp": "2022-02-03 08:27:39"
+      },
+      {
+        "time_stamp": "2022-02-03 08:37:36"
+      },
+      {
+        "time_stamp": "2022-02-03 08:39:32"
+      },
+      {
+        "time_stamp": "2022-02-03 08:39:35"
+      },
+      {
+        "time_stamp": "2022-02-03 08:40:34"
+      },
+      {
+        "time_stamp": "2022-02-03 08:41:00"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Joe O'Hara",
+      "poster_handle": "johara"
+    },
+    "time_stamp": "2022-02-03 07:26:55",
+    "text": "Hey <@U02J1440N13>. Your best bet is the programmable email beta <https://developers.HubSpot.com/docs/cms/guides/email/hubdb-crm-objects?fbclid=IwAR3KWGLMukmyPBhlPuJ5rW7emq6C6KXO9K-C_YxteL9Brfeg6Vp60Pi_Uys>"
+  },
+  {
+    "poster": {
+      "poster_name": "Christopher Chiha",
+      "poster_handle": "christopher051"
+    },
+    "time_stamp": "2022-02-03 07:29:38",
+    "text": "This means i should add the contact property in a column and filter with respect to it? Are you aware of any real life sample that i can refer to ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Christopher Chiha",
+      "poster_handle": "christopher051"
+    },
+    "time_stamp": "2022-02-03 08:18:04",
+    "text": "I am able now to fetch data from hubdb and display in my emails, my issue is with filtering data with respect to recipient.\nWhen i set the filter criteria, my email is still showing all data without taking it into consideration.\n\nHow i am writing it now :\n{% set rows = hubdb_table_rows(tableid) %}\n{% if rows|length %}\n{% for row in rows %}\n{% set query = \"email__contains=\"~contact.email %}\n\nCan you please advise on the issue with my current code? <@U9KA594Q3>"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe O'Hara",
+      "poster_handle": "johara"
+    },
+    "time_stamp": "2022-02-03 08:24:34",
+    "text": "There are some examples here <https://community.HubSpot.com/t5/HubSpot-Community-Blog/Programmable-Email-Use-Case-Library-not-an-exhaustive-list-but/ba-p/562030>"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe O'Hara",
+      "poster_handle": "johara"
+    },
+    "time_stamp": "2022-02-03 08:24:48",
+    "text": "One of the code samples here <https://github.com/HubSpot/Sample-Programmable-Email-Module-Code/blob/main/samples/recruiting-example.html>"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe O'Hara",
+      "poster_handle": "johara"
+    },
+    "time_stamp": "2022-02-03 08:25:50",
+    "text": "Because of the limits on table rows returned by `hubdb_table_rows` its best to be as specific as possible with the queries passed"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe O'Hara",
+      "poster_handle": "johara"
+    },
+    "time_stamp": "2022-02-03 08:25:55",
+    "text": "For example\n```{% set jobs = hubdb_table_rows(TABLE_ID, \"email_id=\"~contact.email_id~\"&amp;limit=10\") %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe O'Hara",
+      "poster_handle": "johara"
+    },
+    "time_stamp": "2022-02-03 08:26:18",
+    "text": "In your case, if its is only one row, just use `hubdb_table_row`"
+  },
+  {
+    "poster": {
+      "poster_name": "Christopher Chiha",
+      "poster_handle": "christopher051"
+    },
+    "time_stamp": "2022-02-03 08:27:39",
+    "edited": {
+      "time_stamp": "2022-02-03 08:40:08"
+    },
+    "text": "<@U9KA594Q3> For me, i want to show all rows that have email = \"\"\nSorry here i meant email = to specific provided email****"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe O'Hara",
+      "poster_handle": "johara"
+    },
+    "time_stamp": "2022-02-03 08:37:36",
+    "text": "Email as an empty string?"
+  },
+  {
+    "poster": {
+      "poster_name": "Joe O'Hara",
+      "poster_handle": "johara"
+    },
+    "time_stamp": "2022-02-03 08:39:32",
+    "text": "``` hubdb_table_rows(TABLE_ID, \"email__is_null=\")```"
+  },
+  {
+    "poster": {
+      "poster_name": "Christopher Chiha",
+      "poster_handle": "christopher051"
+    },
+    "time_stamp": "2022-02-03 08:39:35",
+    "edited": {
+      "time_stamp": "2022-02-03 08:40:34"
+    },
+    "text": "I just tried this :\n{% set rows = hubdb_table_rows(5294924, \"email=\"~contact.email~\"&amp;limit=10\") %}\n{% if rows|length %}\n{% for row in rows %}\n\nI enrolled my self in the workflow, and the code is still displaying all rows, even those who doesn't have my email under column \"email\"."
+  },
+  {
+    "poster": {
+      "poster_name": "Joe O'Hara",
+      "poster_handle": "johara"
+    },
+    "time_stamp": "2022-02-03 08:40:34",
+    "text": "Can you link me to the email?"
+  },
+  {
+    "poster": {
+      "poster_name": "Christopher Chiha",
+      "poster_handle": "christopher051"
+    },
+    "time_stamp": "2022-02-03 08:41:00",
+    "text": "My template is in my HubSpot account, any fast way to share it with you ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin-C",
+      "poster_handle": "kevin285"
+    },
+    "time_stamp": "2022-02-03 13:47:41",
+    "edited": {
+      "time_stamp": "2022-02-03 13:49:41"
+    },
+    "text": "Hey all,\n\n*Context:*\nI'm getting a list of custom objects using the crm_associations function on a membership page\nThen I selecteattr 2 times, var_1 to get type \"A\", and var_2 to get type \"C\". The intent is to exclude type \"B\". _&lt;- returns the expected results_\nI then join var_1 and var_2 using |union and assign it to \"var_joined\" _&lt;- returns expected result_\nThen we attempt to loop through the var_joined|sort(false. false, \"type\")\n\n*The result* is that no data is printed.\nChecking the type of var_joined returns null, and checking is iterable returns false.\n\n*The kicker:*\nThis is only happening to a few of contacts, not all of them…",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-02-03 13:48:23"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Kevin-C",
+      "poster_handle": "kevin285"
+    },
+    "time_stamp": "2022-02-03 13:48:23",
+    "text": "Is anyone else experiencing or have seen this before?"
+  }
+]

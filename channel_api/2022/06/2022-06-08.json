@@ -1,0 +1,177 @@
+[
+  {
+    "text": "Hello Folks,\n\nI am facing an issue in CRM card creation, I created a card for the deal object on the test portal and everything worked perfectly fine there, we are creating a link through that card and displaying that generated link in the card only using the results array ( refer to this doc for more info: <https://developers.HubSpot.com/docs/api/crm/extensions/custom-cards>) but when I switched everything on the client's portal, the issue gets started, I am getting the card but when I am generating the link then the link is not displaying in the card but I can see everything working fine in the request body\n\nplease refer to the first screenshot, if the request URL is having everything that I want to show in the card then why the card is not displaying this thing\n\nand see second screenshot, this is how I need to show, also the thing is some time my code runs and shows the desired things but sometimes it doesn't work at all\n\n\n\nThanks in advance for your help, below is the code snippet\n\n$deal_id = ( !empty( $_GET['associatedObjectId'] ) ) ? $_GET['associatedObjectId'] : '';\n$userEmail = ( !empty( $_GET['userEmail'] ) ) ? $_GET['userEmail'] : '';\n\n$form_page_url = get_permalink( get_option( 'custom_link_form_page' ) );\n$custom_link_form_page_url = $form_page_url . '?deal_id=' . $deal_id .'&amp;userEmail'. $userEmail;\nglobal $wpdb;\n$sql_data = $wpdb-&gt;get_results( \"SELECT `id`, `product_array`, `created_date`, `modified_date`, `created_by`, `use`, `deal_id`, `checkout_link` FROM `wp_mwb_card_data` WHERE `random_string` = '\". $deal_id .\"' \" );\nforeach( $sql_data as $data ) {\n$checkout_link = $data-&gt;checkout_link;\n}\n\nif( ! empty( $checkout_link ) ) {\n$form_data = array(\n\"results\" =&gt; [\narray(\n\"objectId\" =&gt; $deal_id,\n\"title\" =&gt; $checkout_link,\n\"description\" =&gt; \"Created Link\",\n),\n],\n\"primaryAction\" =&gt; array(\n\"type\" =&gt; \"IFRAME\",\n\"width\" =&gt; 1100,\n\"height\" =&gt; 850,\n\"uri\" =&gt; $custom_link_form_page_url,\n\"label\" =&gt; \"Create Link\"\n),\n);\n} else {\n$form_data = array(\n\"results\" =&gt; [],\n\"primaryAction\" =&gt; array(\n\"type\" =&gt; \"IFRAME\",\n\"width\" =&gt; 1100,\n\"height\" =&gt; 850,\n\"uri\" =&gt; $custom_link_form_page_url,\n\"label\" =&gt; \"Create Link\"\n),\n);\n}\n$form_data_encoded = json_encode($form_data);\nprint_r($form_data_encoded);\n\n\n\nIn the above code, I am generating the link and saving it in the database then after checking the HubSpot's response and taking the deal id from there, processing that deal id further and checking in the database whether any link is generated for this deal or not in the past, if yes then just show the created link there, if no then show the crate link button again\n\nplease help me in this case",
+    "time_stamp": "2022-06-08 01:17:22"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas LÉVEIL",
+      "poster_handle": "tleveil"
+    },
+    "time_stamp": "2022-06-08 02:26:18",
+    "text": "See <https://developers.HubSpot.com/docs/api/migrate-an-api-key-integration-to-a-private-app>"
+  },
+  {
+    "poster": {
+      "poster_name": "Thomas LÉVEIL",
+      "poster_handle": "tleveil"
+    },
+    "time_stamp": "2022-06-08 02:29:02",
+    "text": "Hi there :corgi-wave:,\nI'm looking for an endpoint that would list the scopes the current private app allows to use. Any pointers ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kumar B",
+      "poster_handle": "kumar.b"
+    },
+    "time_stamp": "2022-06-08 03:59:40",
+    "text": "how to create HubSpot ticket associate to particular contact ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kumar B",
+      "poster_handle": "kumar.b"
+    },
+    "time_stamp": "2022-06-08 04:51:30",
+    "text": "how to search contact using phone number ?"
+  },
+  {
+    "poster": {
+      "poster_name": "Kumar B",
+      "poster_handle": "kumar.b"
+    },
+    "time_stamp": "2022-06-08 05:26:14",
+    "text": "<https://developers.HubSpot.com/docs/api/crm/contacts>"
+  },
+  {
+    "poster": {
+      "poster_name": "Kumar B",
+      "poster_handle": "kumar.b"
+    },
+    "time_stamp": "2022-06-08 05:26:30",
+    "text": "{\n    \"status\": \"error\",\n    \"message\": \"Invalid input JSON on line 12, column 9: Cannot construct instance of `com.HubSpot.inbounddb.publicobject.core.v3.search.Filter`, problem: value and values are mutually exclusive\",\n    \"correlationId\": \"f05d9d99-95ec-43aa-a08f-7c6656f81891\"\n}"
+  },
+  {
+    "poster": {
+      "poster_name": "Kumar B",
+      "poster_handle": "kumar.b"
+    },
+    "time_stamp": "2022-06-08 05:26:52",
+    "text": "search contact api getting this type of error",
+    "reply_count": 2,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-06-08 07:19:34"
+      },
+      {
+        "time_stamp": "2022-06-08 07:23:22"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jeremy C",
+      "poster_handle": "jeremy.cirujales"
+    },
+    "time_stamp": "2022-06-08 07:02:49",
+    "edited": {
+      "time_stamp": "2022-06-08 07:03:24"
+    },
+    "text": "Hey guys! Is there a way to get the timestamp for when a custom object record entered a specific stage? This is doable for Deals and Tickets but I'm not sure how this could work for custom objects. Thanks for your help!",
+    "reply_count": 4,
+    "reply_users_count": 2,
+    "replies": [
+      {
+        "time_stamp": "2022-06-08 07:20:27"
+      },
+      {
+        "time_stamp": "2022-06-08 07:21:00"
+      },
+      {
+        "time_stamp": "2022-06-08 07:22:01"
+      },
+      {
+        "time_stamp": "2022-06-08 07:22:50"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2022-06-08 07:19:34",
+    "text": "might try this: <https://developers.HubSpot.com/docs/api/crm/search>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2022-06-08 07:20:27",
+    "text": "i don’t know a ton about custom objects, but it sounds like you may need a workflow that updates a property on the custom object whenever it hits a certain stage"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2022-06-08 07:21:00",
+    "text": "custom code may be required in the workflow to do that, but i’m certain there is an api that would allow you to make the update"
+  },
+  {
+    "poster": {
+      "poster_name": "Jeremy C",
+      "poster_handle": "jeremy.cirujales"
+    },
+    "time_stamp": "2022-06-08 07:22:01",
+    "text": "Thanks for your insights, <@U02CUFSCXHQ>"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2022-06-08 07:22:50",
+    "text": "i’d probably call them “shots in the dark” but happy to help haha"
+  },
+  {
+    "poster": {
+      "poster_name": "Jon Fulk",
+      "poster_handle": "jonfulk"
+    },
+    "time_stamp": "2022-06-08 07:23:22",
+    "text": "i may have spoken too soon… this may indeed be what you’re already trying to use"
+  },
+  {
+    "poster": {
+      "poster_name": "김태수",
+      "poster_handle": "cookehwk.hello"
+    },
+    "time_stamp": "2022-06-08 20:37:40",
+    "edited": {
+      "time_stamp": "2022-06-08 20:39:14"
+    },
+    "text": "how can use v2 search site blog and hubdb\nnow im watching this page\n<https://legacydocs.HubSpot.com/docs/methods/content/search-for-content>\nwhat is that “HubDB Query” i cant see any site\nhelp me…"
+  },
+  {
+    "text": "",
+    "time_stamp": "2022-06-08 21:18:40"
+  },
+  {
+    "poster": {
+      "poster_name": "Pascal Sellerberg",
+      "poster_handle": "pascal.sellerberg"
+    },
+    "time_stamp": "2022-06-08 23:54:42",
+    "text": "Hello, i want to read a batch of objects by a custom property. Following this: <https://developers.HubSpot.com/docs/api/crm/crm-custom-objects|CRM | custom objects>\nOn the section _\"Read a batch of objects by internal ID, or unique property values\"_ there are many parameters that I don't really understand.\n\nFor example if I want to get all objects with the property _\"my_property\"_ set to _\"abc123\"_ how would I do it?\n```{\n    \"properties\" : [\"my_property\"],\n    \"propertiesWithHistory\" : [\"my_property\"],\n    \"idProperty\" : \"my_property\",\n    \"inputs\" : [\n        {\n            \"id\": \"abc123\"\n        }\n    ]\n}```\n",
+    "reply_count": 1,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2022-06-09 06:47:43"
+      }
+    ]
+  }
+]

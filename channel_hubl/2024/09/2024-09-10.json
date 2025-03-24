@@ -1,0 +1,142 @@
+[
+  {
+    "poster": {
+      "poster_name": "Matthew Grant",
+      "poster_handle": "mgrant"
+    },
+    "time_stamp": "2024-09-10 13:13:22",
+    "text": "Can I use HubL to store HTML in a variable and then output it in a module property?",
+    "reply_count": 15,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-09-10 13:22:01"
+      },
+      {
+        "time_stamp": "2024-09-10 13:37:49"
+      },
+      {
+        "time_stamp": "2024-09-10 13:38:24"
+      },
+      {
+        "time_stamp": "2024-09-10 13:52:34"
+      },
+      {
+        "time_stamp": "2024-09-10 13:56:31"
+      },
+      {
+        "time_stamp": "2024-09-10 13:57:06"
+      },
+      {
+        "time_stamp": "2024-09-10 13:58:45"
+      },
+      {
+        "time_stamp": "2024-09-10 14:02:50"
+      },
+      {
+        "time_stamp": "2024-09-10 14:03:20"
+      },
+      {
+        "time_stamp": "2024-09-10 14:09:24"
+      },
+      {
+        "time_stamp": "2024-09-12 02:30:46"
+      },
+      {
+        "time_stamp": "2024-09-12 08:18:46"
+      },
+      {
+        "time_stamp": "2024-09-12 08:26:08"
+      },
+      {
+        "time_stamp": "2024-09-12 08:26:46"
+      },
+      {
+        "time_stamp": "2024-09-12 08:33:39"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2024-09-10 13:22:01",
+    "text": "Technically yes. but you have to come up with some (advanced) \"workarounds\".\n\nIf you want to store HTML variables globally I'd recommend to create either a seperate file in your theme like \"html-variables.html\", import it via `{% import 'PATH-TO-VARIABLE' %}` in every module you'd like to reference it and last but not least call from those variables. I'd say the easiest solution would be to create some sort of if-statement paired with a choice field like\n\n```{% if module.content_from_variable == \"OPTION A\"%}\n{{ VARIABLE_A }}\n{% elif module.content_from_variable == \"OPTION B\" %}\n{{ VARIABLE_A }}\n...\n{% else %}\n{# Fallback if no option applies #}\n{% endif %}```\nAnother option could be to use HubDB and reference those inputs in the module"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Grant",
+      "poster_handle": "mgrant"
+    },
+    "time_stamp": "2024-09-10 13:37:49",
+    "text": "Oh I don't need something so advanced. It's more like I have specific placeholder HTML that needs to go into the rich_text module, but having a huge single line of HTML in a property surrounded by double quotes is messy."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Grant",
+      "poster_handle": "mgrant"
+    },
+    "time_stamp": "2024-09-10 13:38:24",
+    "text": "But I like your idea about storing that in a separate html file and importing"
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2024-09-10 13:52:34",
+    "text": "ohh - you're talking about placeholders... :smile:\nYou're right. If it's a lot of HTML, I wouldn't suggest to set them as variables.\nbut something like this:\n{% set headline_text = \"Hello world\" %}\nis totally fine (and also a good workaround to have editable system pages)\n\nPersonally I'd always recommend to create custom modules for almost everything and also recommend to <https://developers.HubSpot.com/beta-docs/reference/cms/fields/rich-text-editor#configuring-the-rich-text-editor|limit the rich-text>(possible via local development).\n\nwhile creating a custom module with a rich-text you could set your desired default content right in the rich-text and HubSpot would load it everytime you're using this specific module. Downside: The user would need to remove it every time.\n\nWhat kind of content do you want to add?\nIf it's something like instructions or so you could wrap it inside an <https://developers.HubSpot.com/beta-docs/reference/cms/hubl/variables#in-app-editor-and-preview-variables|page_editor statement >like\n```{% if is_in_page_editor %} \n{# custom content that is only visibile while you're inside the page editor/builder #}\n{% endif %}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Grant",
+      "poster_handle": "mgrant"
+    },
+    "time_stamp": "2024-09-10 13:56:31",
+    "text": "It would be just some basic things like header text, paragraphs, a list or two, etc."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Grant",
+      "poster_handle": "mgrant"
+    },
+    "time_stamp": "2024-09-10 13:57:06",
+    "text": "The whole point is just to have some kind of filler in the rich text module in order to fill out a landing page that is meant to serve as a template for other people to copy and make new landing pages."
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Grant",
+      "poster_handle": "mgrant"
+    },
+    "time_stamp": "2024-09-10 13:58:45",
+    "text": "I could definitely not have advanced workarounds and fancy features involved. Simply saying html=\"&lt;p&gt;Lorem ipsum&lt;/p&gt;\" (only much longer) is totally viable, I'm just trying to be a little more elegant and future-proof in my design."
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2024-09-10 14:02:50",
+    "text": "are you using a custom module?\nIf so - put the whole default content inside the rich-text field in the custom module"
+  },
+  {
+    "poster": {
+      "poster_name": "Matthew Grant",
+      "poster_handle": "mgrant"
+    },
+    "time_stamp": "2024-09-10 14:03:20",
+    "text": "No I'm using the default \"rich_text\" module provided by HubSpot"
+  },
+  {
+    "poster": {
+      "poster_name": "Anton Bujanowski - Level 36",
+      "poster_handle": "info748"
+    },
+    "time_stamp": "2024-09-10 14:09:24",
+    "edited": {
+      "time_stamp": "2024-09-10 14:10:27"
+    },
+    "text": "I see... Personally I'd create a custom module, set the desired placeholder inside the rich-text field of the module and <https://developers.HubSpot.com/beta-docs/guides/cms/content/modules/hide-modules-and-sections#hide-default-modules-in-a-theme|disable the default rich-text in the theme> but you could try to set up a seperated file with <https://developers.HubSpot.com/beta-docs/reference/cms/hubl/variables-macros-syntax#macros|macros> and <https://developers.HubSpot.com/beta-docs/reference/cms/hubl/variables-macros-syntax#call|call> them, use the <https://developers.HubSpot.com/beta-docs/reference/cms/hubl/variables-macros-syntax#from|from> function or try the <https://developers.HubSpot.com/beta-docs/reference/cms/hubl/filters#default|default filter>"
+  }
+]

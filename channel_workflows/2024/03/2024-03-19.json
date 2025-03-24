@@ -1,0 +1,161 @@
+[
+  {
+    "text": "would you care to have a look?\n\nworkflow:\n<https://app-eu1.HubSpot.com/workflows/139717975/platform/flow/1423167423/edit>\n\nExample of a task that was triggered: <https://app-eu1.HubSpot.com/tasks/139717975/view/all/task/25662428095>\n\ncurrently the trigger is very simplified, see attachment. I have as well had it more complex with deal-filters added. Now I have simplified things in order to get at least 1 trigger in.\n\nThis im not successful at.\n\nWould be great if you can provide feedback",
+    "time_stamp": "2024-03-19 01:01:39"
+  },
+  {
+    "poster": {
+      "poster_name": "Rens Bekkers",
+      "poster_handle": "rens927"
+    },
+    "time_stamp": "2024-03-19 07:22:24",
+    "text": "<@UHVJJUWFN> Any thoughts? It would be really helpful as I build all the actions and they work. However the trigger seems to give problems now."
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2024-03-19 08:31:22",
+    "text": "Hi Rens, let me read through and see if I can help"
+  },
+  {
+    "poster": {
+      "poster_name": "Zeke Schmois",
+      "poster_handle": "zschmois"
+    },
+    "time_stamp": "2024-03-19 08:32:26",
+    "text": "Right, unfortunately there isn’t as much flexibility in the filters feature so this may not be an easily solvable problem"
+  },
+  {
+    "poster": {
+      "poster_name": "Parameshwaran Palanisamy",
+      "poster_handle": "parameshwaran.palanis"
+    },
+    "time_stamp": "2024-03-19 09:40:59",
+    "edited": {
+      "time_stamp": "2024-03-19 09:44:50"
+    },
+    "text": "Hi Scott, sorry to bother again.\n\nEven though the code is working, I couldn't achieve what I am trying to which is associate the deal with respective contact.\nhere is the output\n```INFO\tContact with Record ID 11093089244NOT FOUND.```\n*Here are difficulties I think in this custom action is I am trying to associate two different objects in HubSpot*.\n\n\n\n\nhere is the working code after the fix.\n\nconst HubSpot = require('@HubSpot/api-client');\nexports.main = (event, callback) => {\n\n  const HubSpotClient = new HubSpot.Client({\n    accessToken: process.env.Oauth\n  });\n\n  // Retrive the currently enrolled contacts \"Record ID\" property\n\n const properties = [\"main_salesforce_contact\", \"hs_object_id\"];\n\n  HubSpotClient.crm.deals.basicApi.getById(event.object.objectId,[\"hs_object_id\"])\n\n    .then(results => {\n\t// Get data from the results and store in variables\n\tlet RecordIDValue = results.properties.hs_object_id;\n\n        //console.log(\"SEARCH TERM: \" + RecordIDValueValue); // - FOR DEBUG\n\t// Create search criteria\n\tconst filter = { propertyName: 'hs_object_id', operator: 'EQ', value: RecordIDValue }\n\tconst filterGroup = { filters:\t[filter] \t}\n        const sort = JSON.stringify({ propertyName: 'hs_object_id', direction: 'DESCENDING'})\n\n        const limit = 1\n        const after = 0\n\n        const searchCriteria = {\n          filterGroups: [filterGroup],\n          sorts: [sort],\n          properties,\n          limit,\n          after\n        }\n\n      // Search the CRM for Deals matching \"RecordIDValue\" variable defined earlier\n      HubSpotClient.crm.contacts.searchApi.doSearch(searchCriteria).then(searchDealResponse => {\n\n         //console.log(\"RESULTS: \" + searchDealResponse.body.total); // - FOR DEBUG\n\n         // If total equals 0 no results found\n         if(searchDealResponse.total == 0){ console.log(\"Contact with Record ID \" + RecordIDValue  + \"NOT FOUND.\") // - FOR DEBUG\n\n         }else{ // MATCH FOUND - ASSOCIATE DEAL TO CONTACT\n           // console.log(\"DEAL \" + MRecord ID + \" FOUND: ASSOCIATE RECORDS\"); // - FOR DEBUG\n          //Associate Deal with Contact\n           HubSpotClient.crm.deals.associationsApi.create(searchDealResponse.body.results[0].id,'contacts', event.object.objectId,'hs_object_id');\n         }\n      });\n\n      callback({outputFields: {}});\n\n    })\n    .catch(err => {\n      console.error(err);\n    });\n}"
+  },
+  {
+    "text": "Hi everyone :slightly_smiling_face: Happy Tuesday. I am currently trying to run a contact deduplication custom coded workflow that will dedup contacts if they\n1. share the same first name, last name, and phone OR \n2. if they share the same first name, last name, and job title\nSeems like the dedup function is working, but the issue I'm running into is that this needs to be ran against 23k contacts (historical deduplication), and I keep running into rate limit errors.\n\nI have a few checks in the code to see if error 429 happens and if so, to delay and try again. I also have an output field \"RateLimit\" so if error 429 happens, it sets RateLimit to YES - and I have a branch in the workflow that will branch if workflow output ratelimit = yes, wait 2 mins, and try the code again. Not sure what I'm doing wrong but 1. I don't think the code's timeout function is working 2. I don't think the branch based on output fields is working.\n\nIt's quite long so I didn't want to paste here, here it my code - <https://github.com/tomieaoba/loriauna/blob/main/hsddup>\n\nAppreciate the help for this noob :pleading_face: :pray:",
+    "time_stamp": "2024-03-19 10:32:20",
+    "reply_count": 9,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2024-03-19 10:58:21"
+      },
+      {
+        "time_stamp": "2024-03-19 11:06:29"
+      },
+      {
+        "time_stamp": "2024-03-19 11:06:36"
+      },
+      {
+        "time_stamp": "2024-03-19 11:12:54"
+      },
+      {
+        "time_stamp": "2024-03-19 11:18:31"
+      },
+      {
+        "time_stamp": "2024-03-19 11:24:25"
+      },
+      {
+        "time_stamp": "2024-03-19 11:30:59"
+      },
+      {
+        "time_stamp": "2025-02-12 17:21:18"
+      },
+      {
+        "time_stamp": "2025-02-14 14:33:48"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Christensen Magtoto",
+      "poster_handle": "chris858"
+    },
+    "time_stamp": "2024-03-19 10:58:21",
+    "edited": {
+      "time_stamp": "2024-03-19 10:59:08"
+    },
+    "text": "Hello Loriauna, 23k is not a lot. Maybe this is getting triggered a lot of times in a short amount of time. What is your workflow trigger?\n\nI've run similar operation to a 200k+ contacts plus tickets association but never hit a 429 limit."
+  },
+  {
+    "text": "Hi <@U061DEA4H4P> Here is my enrollment criteria. I turned on re-enrollment since the first time I ran this, most failed. Here is the preview screen I get. Not sure what's going on :cry_think:",
+    "time_stamp": "2024-03-19 11:06:29"
+  },
+  {
+    "poster": {
+      "poster_name": "Loriauna Mora",
+      "poster_handle": "loriauna"
+    },
+    "time_stamp": "2024-03-19 11:06:36",
+    "text": "Thanks for your help btw :slightly_smiling_face:"
+  },
+  {
+    "poster": {
+      "poster_name": "Christensen Magtoto",
+      "poster_handle": "chris858"
+    },
+    "time_stamp": "2024-03-19 11:12:54",
+    "edited": {
+      "time_stamp": "2024-03-19 11:27:22"
+    },
+    "text": "I see. If I'm not wrong. Your workflow is getting triggered 23k plus assuming all have the phone, first and last name when you re-enroll them. Then base on your code each contact that triggers the workflow is tapping on the search API which is the most rate limited endpoint, of 4 request per second."
+  },
+  {
+    "poster": {
+      "poster_name": "Christensen Magtoto",
+      "poster_handle": "chris858"
+    },
+    "time_stamp": "2024-03-19 11:18:31",
+    "text": "You probably need to come up with a solution that will take into account the Search limit and trigger criteria."
+  },
+  {
+    "poster": {
+      "poster_name": "Christensen Magtoto",
+      "poster_handle": "chris858"
+    },
+    "time_stamp": "2024-03-19 11:24:25",
+    "text": "If it's me then I'll make a workflow that will be triggered by schedule then call on the Contacts API to retrieve all the Contacts and do the deduping logic in there so it will only trigger once. Or a different solution might be needed depending on the scope of the operation."
+  },
+  {
+    "poster": {
+      "poster_name": "Loriauna Mora",
+      "poster_handle": "loriauna"
+    },
+    "time_stamp": "2024-03-19 11:30:59",
+    "text": "Thank you Chris!!! I'll give that a shot"
+  },
+  {
+    "poster": {
+      "poster_name": "Scott Marion",
+      "poster_handle": "scott943"
+    },
+    "time_stamp": "2024-03-19 13:11:39",
+    "edited": {
+      "time_stamp": "2024-03-19 13:13:50"
+    },
+    "text": "Is this workflow Contact-based - or Deal-based?  I ask this because your first comment states you will get the contact's Record ID - but your code calls the deals.basicApi endpoint - then later your comment says you'll Search the CRM for Deals... but your code calls the contacts.searchApi.... endpoint.  I think you need to straighten this out because that seems to be the root of the issue to me."
+  },
+  {
+    "poster": {
+      "poster_name": "Amalia",
+      "poster_handle": "amalia.reodica"
+    },
+    "time_stamp": "2024-03-19 13:52:28",
+    "text": "<@U06PZGR7KAR> A bit of a hack, if you have the subscription account level to use <https://app.HubSpot.com/graphiql/|graphql> to get the task id and use a callback in a CCA to set the task id as a output field to use in following CCA steps. Lemme know if you want help to try this.\n```query MyQuery {\n  CRM {\n    deal(uniqueIdentifier: \"hs_object_id\", uniqueIdentifierValue: dealId) {\n      associations {\n        task_collection__deal_to_task(limit: 1, orderBy: hs_task_completion_date__desc, filter: {hs_task_status__eq: \"COMPLETED\"}) {\n          items {\n            hs_object_id\n            hs_task_subject\n            hs_lastmodifieddate\n            hs_task_completion_date\n          }\n        }\n      }\n    }\n  }\n}```"
+  },
+  {
+    "poster": {
+      "poster_name": "Kim",
+      "poster_handle": "kim.goethals"
+    },
+    "time_stamp": "2024-03-19 15:04:56",
+    "text": "Hi, I know this comment is from a long time ago, but do you recall how this was fixed?"
+  }
+]

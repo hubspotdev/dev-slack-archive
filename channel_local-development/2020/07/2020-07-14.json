@@ -1,0 +1,158 @@
+[
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2020-07-14 10:19:57",
+    "text": "You do not need to provide the id. HubSpot autogenerates that for you.\n\nHubSpot also should successfully identify the module in the portal and update it appropriately even if your local version doesn’t have the id but the rest is the same"
+  },
+  {
+    "poster": {
+      "poster_name": "Brian Krainer",
+      "poster_handle": "bkrainer"
+    },
+    "time_stamp": "2020-07-14 10:38:18",
+    "text": "if you do provide the ids for whatever reason, they should be unique _within_ the module. i.e. an ID can be repeated in two separate modules, but can only be used once in a single module"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2020-07-14 11:54:43",
+    "text": "Thanks for the reply. That all makes sense."
+  },
+  {
+    "poster": {
+      "poster_name": "Clarke Bishop",
+      "poster_handle": "cbishop"
+    },
+    "time_stamp": "2020-07-14 13:28:40",
+    "text": "In your HubSpot.config.yml file, there’s a name.\n&gt; portals:\n&gt;   - name: dev-demo\nWhen you run hs init or hs auth, it prompts you for a name. That’s where this comes from.\n\nthen\n&gt; --portal=dev-demo\nWill use the portal you specified."
+  },
+  {
+    "poster": {
+      "poster_name": "Clarke Bishop",
+      "poster_handle": "cbishop"
+    },
+    "time_stamp": "2020-07-14 13:49:34",
+    "text": "The documentation says, The CMS CLI is used to `upload`, and `fetch` files from the *<https://developers.HubSpot.com/docs/cms/key-concepts#developer-file-system|developer file system>*.\n(<https://developers.HubSpot.com/docs/cms/guides/getting-started-with-local-development>)\n\nIf I understand correctly, that means upload/fetch only work with the items you can see in Design Tools.\n\nI want to have a Website Page that I can also fetch or upload.\n\nWhy? So that I can include my module in a Website Page for testing and validation.\n\nIs this possible?",
+    "reply_count": 8,
+    "reply_users_count": 3,
+    "replies": [
+      {
+        "time_stamp": "2020-07-14 13:51:38"
+      },
+      {
+        "time_stamp": "2020-07-14 13:56:23"
+      },
+      {
+        "time_stamp": "2020-07-14 14:11:31"
+      },
+      {
+        "time_stamp": "2020-07-15 00:21:21"
+      },
+      {
+        "time_stamp": "2020-07-15 07:11:41"
+      },
+      {
+        "time_stamp": "2020-07-15 07:28:56"
+      },
+      {
+        "time_stamp": "2020-07-15 13:53:16"
+      },
+      {
+        "time_stamp": "2020-07-15 13:59:20"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2020-07-14 13:51:38",
+    "text": "Interesting use-case.\n\nRight now there are no page commands in the CLI.\n\n\nThat said you could integrate the pages API into your workflow <https://legacydocs.HubSpot.com/docs/methods/pages/post_pages>"
+  },
+  {
+    "poster": {
+      "poster_name": "Clarke Bishop",
+      "poster_handle": "cbishop"
+    },
+    "time_stamp": "2020-07-14 13:56:23",
+    "text": "Thanks <@U7SL518D6>\n\nUltimately, I’m trying to build a traditional CI/CD workflow around HubSpot. Let’s say I have a “dev” HubSpot instance. I create and test my modules and have a website page that uses the module.\n\nThen, I want to promote the code to “staging.” I had hoped I could do this with just the CLI."
+  },
+  {
+    "poster": {
+      "poster_name": "Jon McLaren",
+      "poster_handle": "jon558"
+    },
+    "time_stamp": "2020-07-14 14:11:31",
+    "edited": {
+      "time_stamp": "2020-07-14 14:13:01"
+    },
+    "text": "These might be useful to you:\n<https://developers.HubSpot.com/docs/cms/guides/creating-an-efficient-development-workflow>\n<https://developers.HubSpot.com/docs/cms/guides/github-integration>\n\nSpecifically digging into the workflow issue you’re talking about. Internally when we’ve been doing this we actually have been creating yarn scripts to do that.\n\nSo for example you can do `yarn deploy-stage` or `yarn deploy-prod`\n\nhAnd your dev sandbox account you’re just using\nthose scripts would effectively just be shortcuts for hs CLI commands, and include build if you need it.\n`\"deploy-stage\": \"yarn build &amp;&amp; hs upload --portal=1234567 dist my-website\",`\n\n\nAs for creating and fetching pages. The APIs exist so it’s possible to do it without the CLI.\n\nPerhaps you could add it as a yarn script."
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2020-07-14 15:51:07",
+    "text": "is there a way to prevent pages in content staging to not load jquery and/or the other settings of the “original” page?",
+    "reply_count": 3,
+    "reply_users_count": 1,
+    "replies": [
+      {
+        "time_stamp": "2020-07-14 15:52:19"
+      },
+      {
+        "time_stamp": "2020-07-14 15:52:43"
+      },
+      {
+        "time_stamp": "2020-07-14 16:32:42"
+      }
+    ]
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2020-07-14 15:51:22",
+    "text": "You would think setting the “default” setting to not load jquery would be enough"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2020-07-14 15:52:19",
+    "text": "Also, does it matter if I don’t use content staging when updating my sites homepage to a completely different page (but same URL)"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2020-07-14 15:52:43",
+    "text": "the URL updating is convenient and it seems like the “right thing to do” but is causing a ruckus for testing"
+  },
+  {
+    "poster": {
+      "poster_name": "Andrey Kondratyuk",
+      "poster_handle": "andrey"
+    },
+    "time_stamp": "2020-07-14 16:32:42",
+    "text": "I would still like to know but I ended up cloning and publishing with an added /staging-site"
+  },
+  {
+    "poster": {
+      "poster_name": "Vesa Poikajärvi",
+      "poster_handle": "vesa.poikajarvi"
+    },
+    "time_stamp": "2020-07-15 00:21:21",
+    "text": "I too would like to be able to use production site content on a staging environment for module changes validation etc. At the moment this is apparently possible only by configuring a sandbox CMS the same way the production CMS is configured, and copy pages using the API. I have not yet tried that, but I’d suspect the module IDs are broken when copying pages from one env to another?\n\nWe are setting up an Enterprise CMS, and we do have a need for serverless functions so we will eventually run to bigger problems as apparently if we have serverless functions in the setup we cannot upload the theme to the developer sandboxes at all anymore (there are questions about this here on Slack).\n\nWould really really like to see HubSpot providing a proper staging environment with a purchase of CMS. Serverless functions can now be tested only on production :grimacing:"
+  }
+]
