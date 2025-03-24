@@ -1,6 +1,6 @@
 # Processed Data Documentation
 
-This directory contains processed JSON files from the Slack data export. The data has been cleaned and standardized while maintaining the original structure and content.
+This directory contains processed JSON files from the Slack data export. The data has been cleaned and standardized while maintaining the original structure and content. Reference the process log for more detailed information.
 
 ## Disclaimer
 HubSpot is not responsible for or accountable to the accuracy, nature, or content of the conversations recorded in these JSON files. The data represents raw exports from Slack and has been processed for organizational purposes only.
