@@ -1,9 +1,9 @@
 # Processed Data Documentation
 
-This directory contains processed JSON files from the Slack data export. The data has been cleaned and standardized while maintaining the original structure and content. Reference the process log for more detailed information.
+This directory contains processed JSON files from any public channel data from the [HubSpot Developer Community Slack](https://developers.hubspot.com/docs/getting-started/slack/developer-slack) from August 18th, 2016 through February 24th, 2025. The data has been cleaned and standardized while maintaining the original structure and content. Reference the process log for more detailed information.
 
 ## Disclaimer
-HubSpot is not responsible for or accountable to the accuracy, nature, or content of the conversations recorded in these JSON files. The data represents raw exports from Slack and has been processed for organizational purposes only.
+HubSpot is not responsible for or accountable to the accuracy, nature, or content of the conversations recorded in these JSON files. The data represents raw exports from Slack and has been processed for organizational purposes only. As such, some content may violate our [Developer Slack Code of Conduct](https://developers.hubspot.com/docs/getting-started/slack/code-of-conduct) if it wasn't reported and moderated. 
 
 ## Processing Details
 
